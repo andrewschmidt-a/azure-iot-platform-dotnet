@@ -1,0 +1,24 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+container: 3maschmidt4/3mgithubssl:latest
+steps:
+- task: DockerInstaller@0
+  inputs:
+    dockerVersion: '17.09.0-ce'
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'ls'
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+    scriptLocation: 'scriptPath'
+    scriptPath: 'storage-adapter/scripts/docker/build'
