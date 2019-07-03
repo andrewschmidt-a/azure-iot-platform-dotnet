@@ -1,0 +1,16 @@
+{
+  "author": "Brock Allen, Dominick Baier",
+  "classifications": [
+    "Web",
+    "IdentityServer4"
+  ],
+  "name": "IdentityServer4 Quickstart UI (UI assets only)",
+  "identity": "IdentityServer4.UI",
+  "groupIdentity": "IdentityServer4.UI",
+  "shortName": "is4ui",
+  "tags": {
+    "language": "C#"
+  },
+  "sourceName": "IdentityServer4.Quickstart.UI",
+  "preferNameDirectory": "true"
+}
