@@ -1,7 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -29,6 +32,9 @@ namespace Services.Test
         public DocumentDbKeyValueContainerTest()
         {
             this.mockClient = new Mock<IDocumentClient>();
+
+            // mock a specific tenant
+            MockIdentity.mockClaims("b8865dd1-b3e0-47a9-8e23-e8d764eac485");
 
             this.container = new DocumentDbKeyValueContainer(
                 new MockFactory<IDocumentClient>(this.mockClient),
