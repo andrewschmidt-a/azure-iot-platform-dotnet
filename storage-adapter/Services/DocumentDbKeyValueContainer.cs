@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -42,7 +44,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             this.log = logger;
 
             this.docDbDatabase = config.DocumentDbDatabase;
-            this.docDbCollection = config.DocumentDbCollection;
+            this.docDbCollection = ((Dictionary<string, string>)((ClaimsPrincipal)Thread.CurrentPrincipal).Claims)["tenant"] + "_" + config.DocumentDbCollection;
             this.docDbRUs = config.DocumentDbRUs;
             this.docDbOptions = this.GetDocDbOptions();
         }

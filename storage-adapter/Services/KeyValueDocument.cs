@@ -1,9 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Security.Claims;
-using System.Threading;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
 
@@ -21,7 +18,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         {
             this.Id = DocumentIdHelper.GenerateId(collectionId, key);
             // TODO: Perhaps this should go into a Claims Helper? Much like our previous one?? ~ Andrew Schmidt
-            this.CollectionId = ((Dictionary<string, string>)((ClaimsPrincipal)Thread.CurrentPrincipal).Claims)["tenant"]+ "_" + collectionId;
+            this.CollectionId = collectionId;
             this.Key = key;
             this.Data = data;
         }
