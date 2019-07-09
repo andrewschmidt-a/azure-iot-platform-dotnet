@@ -44,7 +44,6 @@ namespace Services.Test
                     StorageType = "documentDb",
                     DocumentDbConnString = "",
                     DocumentDbDatabase = MOCK_DB_ID,
-                    DocumentDbCollection = MOCK_COLL_ID,
                     DocumentDbRUs = 567
                 },
                 new Logger("UnitTest", LogLevel.Debug));

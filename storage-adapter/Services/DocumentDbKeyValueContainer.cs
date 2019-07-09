@@ -25,7 +25,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         private readonly ILogger log;
 
         private readonly string docDbDatabase;
-        private readonly string docDbCollection;
         private readonly int docDbRUs;
         private readonly RequestOptions docDbOptions;
         private bool disposedValue;
@@ -44,10 +43,17 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             this.log = logger;
 
             this.docDbDatabase = config.DocumentDbDatabase;
-            // TODO: Perhaps this should go into a Claims Helper? Much like our previous one?? ~ Andrew Schmidt
-            this.docDbCollection = ((Dictionary<string, string>)((ClaimsPrincipal)Thread.CurrentPrincipal).Claims)["tenant"];
             this.docDbRUs = config.DocumentDbRUs;
             this.docDbOptions = this.GetDocDbOptions();
+        }
+
+        private string docDbCollection
+        {
+            get
+            {
+                // TODO: Perhaps this should go into a Claims Helper? Much like our previous one?? ~ Andrew Schmidt
+                return ((Dictionary<string, string>)((ClaimsPrincipal)Thread.CurrentPrincipal).Claims)["tenant"];
+            }
         }
 
         public async Task<StatusResultServiceModel> PingAsync()

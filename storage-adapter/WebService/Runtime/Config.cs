@@ -22,7 +22,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
         private const string STORAGE_TYPE_KEY = APPLICATION_KEY + "storageType";
         private const string DOCUMENT_DB_CONNECTION_STRING_KEY = APPLICATION_KEY + "documentDBConnectionString";
         private const string DOCUMENT_DB_DATABASE_KEY = APPLICATION_KEY + "documentDBdatabase";
-        private const string DOCUMENT_DB_COLLECTION_KEY = APPLICATION_KEY + "documentDBcollection";
         private const string DOCUMENT_DB_RUS_KEY = APPLICATION_KEY + "documentDBRUs";
 
         /// <summary>Web service listening port</summary>
@@ -60,7 +59,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
                 StorageType = storageType,
                 DocumentDbConnString = documentDbConnString,
                 DocumentDbDatabase = configData.GetString(DOCUMENT_DB_DATABASE_KEY),
-                DocumentDbCollection = configData.GetString(DOCUMENT_DB_COLLECTION_KEY),
                 DocumentDbRUs = configData.GetInt(DOCUMENT_DB_RUS_KEY),
             };
         }
