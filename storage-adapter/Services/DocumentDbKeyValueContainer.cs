@@ -44,6 +44,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             this.log = logger;
 
             this.docDbDatabase = config.DocumentDbDatabase;
+            // TODO: Perhaps this should go into a Claims Helper? Much like our previous one?? ~ Andrew Schmidt
             this.docDbCollection = ((Dictionary<string, string>)((ClaimsPrincipal)Thread.CurrentPrincipal).Claims)["tenant"] + "_" + config.DocumentDbCollection;
             this.docDbRUs = config.DocumentDbRUs;
             this.docDbOptions = this.GetDocDbOptions();

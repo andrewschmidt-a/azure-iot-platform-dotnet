@@ -17,7 +17,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         public KeyValueDocument(string collectionId, string key, string data)
         {
             this.Id = DocumentIdHelper.GenerateId(collectionId, key);
-            // TODO: Perhaps this should go into a Claims Helper? Much like our previous one?? ~ Andrew Schmidt
             this.CollectionId = collectionId;
             this.Key = key;
             this.Data = data;
