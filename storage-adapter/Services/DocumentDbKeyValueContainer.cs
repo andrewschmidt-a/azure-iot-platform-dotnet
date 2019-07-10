@@ -37,11 +37,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             ILogger logger)
         {
             this.disposedValue = false;
-
             this.client = clientFactory.Create();
             this.exceptionChecker = exceptionChecker;
             this.log = logger;
-
             this.docDbDatabase = config.DocumentDbDatabase;
             this.docDbRUs = config.DocumentDbRUs;
             this.docDbOptions = this.GetDocDbOptions();
@@ -52,7 +50,16 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             get
             {
                 // TODO: Perhaps this should go into a Claims Helper? Much like our previous one?? ~ Andrew Schmidt
-                return ((Dictionary<string, string>)((ClaimsPrincipal)Thread.CurrentPrincipal).Claims)["tenant"];
+                // return $"{((Dictionary<string, string>)((ClaimsPrincipal)Thread.CurrentPrincipal).Claims)["tenant"]}-tenant-data";
+                try
+                {
+                    return ((ClaimsPrincipal)Thread.CurrentPrincipal).Claims.Where(c => c.Type == "tenant").Select(c => c.Value).First();
+                }
+                catch (Exception ex)
+                {
+                    this.log.Info("A valid DocumentDb Collection Id was not included in the Claim.", () => new { ex });
+                    throw;
+                }
             }
         }
 
