@@ -6,3 +6,11 @@
 version: "3"
 
 services:
+  storageadapter:
+    ports:
+      - "9022:9022"
+    image: storageadapter:test
+    environment:
+      - PCS_KEYVAULT_NAME=keyvault-hzgvu
+      - PCS_AAD_APPID=95d3c662-23ea-4e2d-8d3d-ea2448706934
+      - PCS_AAD_APPSECRET=YWIwYzhkYjktNjFmZi00MTI5LWE0YjAtNjAyZGNmNWFlNzVk=

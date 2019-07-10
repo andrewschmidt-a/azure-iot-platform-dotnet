@@ -1,10 +1,10 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "storageadapter.fullname" . }}
+  name: {{ template "device-telemetry.fullname" . }}
   labels:
-    app: {{ template "storageadapter.name" . }}
-    chart: {{ template "storageadapter.chart" . }}
+    app: {{ template "device-telemetry.name" . }}
+    chart: {{ template "device-telemetry.chart" . }}
     draft: {{ default "draft-app" .Values.draft }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,12 +12,12 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "storageadapter.name" . }}
+      app: {{ template "device-telemetry.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "storageadapter.name" . }}
+        app: {{ template "device-telemetry.name" . }}
         draft: {{ default "draft-app" .Values.draft }}
         release: {{ .Release.Name }}
       annotations:
@@ -29,30 +29,26 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.internalPort }} 
+              containerPort: 80
               protocol: TCP
-          {{- if not .Values.disableProbes }}
+          {{- if .Values.probes.enabled }}
           livenessProbe:
             httpGet:
-              path: /v1/status
+              path: /
               port: http
-              periodSeconds: 120
-              initialDelaySeconds: 300
           readinessProbe:
             httpGet:
-              path: /v1/status
+              path: /
               port: http
-              periodSeconds: 120
-              initialDelaySeconds: 300
           {{- end }}
           env:
             {{- $root := . }}
             {{- range $ref, $values := .Values.secrets }}
             {{- range $key, $value := $values }}
-            - name: {{ $key }}
+            - name: {{ $ref }}_{{ $key }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "storageadapter.fullname" $root }}-{{ $ref | lower }}
+                  name: {{ template "device-telemetry.fullname" $root }}-{{ $ref | lower }}
                   key: {{ $key }}
             {{- end }}
             {{- end }}
@@ -74,4 +70,3 @@ spec:
       tolerations:
 {{ toYaml . | indent 8 }}
     {{- end }}
-    

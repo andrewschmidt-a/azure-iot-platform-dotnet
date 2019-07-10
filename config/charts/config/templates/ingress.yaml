@@ -1,14 +1,14 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "storageadapter.fullname" . -}}
-{{- $servicePort := .Values.service.externalPort -}}
+{{- $fullName := include "config.fullname" . -}}
+{{- $servicePort := .Values.service.port -}}
 {{- $ingressPath := .Values.ingress.path -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    app: {{ template "storageadapter.name" . }}
-    chart: {{ template "storageadapter.chart" . }}
+    app: {{ template "config.name" . }}
+    chart: {{ template "config.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 {{- with .Values.ingress.annotations }}
@@ -33,7 +33,7 @@ spec:
         paths:
           - path: {{ $ingressPath }}
             backend:
-              serviceName: {{ $fullName }}
-              servicePort: {{ $servicePort }}
+              serviceName: {{ $fullName }}-svc
+              servicePort: 9005
   {{- end }}
 {{- end }}
