@@ -52,7 +52,14 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         {
             get
             {
-                return this.config.DocumentDbDatabase(this.DocumentDataType);  // TODO: maybe don't hard code this? ~ Joe Bethke
+                string docDbDatabase = this.config.DocumentDbDatabase(this.DocumentDataType);
+                if (String.IsNullOrEmpty(docDbDatabase))
+                {
+                    string message = $"A valid DocumentDb Database Id could not be retrieved for {this.DocumentDataType}";
+                    this.log.Info(message, () => new { this.DocumentDataType });
+                    throw new Exception(message);
+                } 
+                return docDbDatabase;  // TODO: maybe don't hard code this? ~ Joe Bethke
             }
         }
 
