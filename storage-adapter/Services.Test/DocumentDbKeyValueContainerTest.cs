@@ -25,6 +25,8 @@ namespace Services.Test
         private const string MOCK_COLL_ID = "mockcoll";
         private static readonly string mockCollectionLink = $"/dbs/{MOCK_DB_ID}/colls/{MOCK_COLL_ID}";
 
+        private const string appConfigConnString = "";
+
         private readonly Mock<IDocumentClient> mockClient;
         private readonly DocumentDbKeyValueContainer container;
         private readonly Random rand = new Random();
@@ -39,14 +41,9 @@ namespace Services.Test
             this.container = new DocumentDbKeyValueContainer(
                 new MockFactory<IDocumentClient>(this.mockClient),
                 new MockExceptionChecker(),
-                new ServicesConfig
-                {
-                    StorageType = "documentDb",
-                    DocumentDbConnString = "",
-                    DocumentDbDatabase = MOCK_DB_ID,
-                    DocumentDbRUs = 567
-                },
-                new Logger("UnitTest", LogLevel.Debug));
+                new ServicesConfig("documentDb", "test", 567, appConfigConnString),
+                new Logger("UnitTest", LogLevel.Debug),
+                MOCK_DB_ID);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

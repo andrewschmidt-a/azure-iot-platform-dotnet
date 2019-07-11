@@ -23,8 +23,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         private readonly IDocumentClient client;
         private readonly IExceptionChecker exceptionChecker;
         private readonly ILogger log;
+        private readonly IServicesConfig config;
 
-        private readonly string docDbDatabase;
+        private string DocumentDataType;  // a datatype for this type of key value container. This could go into the constructor later if necessary
         private readonly int docDbRUs;
         private readonly RequestOptions docDbOptions;
         private bool disposedValue;
@@ -34,15 +35,25 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             IFactory<IDocumentClient> clientFactory,
             IExceptionChecker exceptionChecker,
             IServicesConfig config,
-            ILogger logger)
+            ILogger logger,
+            string DocumentDataType = "pcs")
         {
             this.disposedValue = false;
             this.client = clientFactory.Create();
             this.exceptionChecker = exceptionChecker;
             this.log = logger;
-            this.docDbDatabase = config.DocumentDbDatabase;
             this.docDbRUs = config.DocumentDbRUs;
             this.docDbOptions = this.GetDocDbOptions();
+            this.config = config;
+            this.DocumentDataType = DocumentDataType;
+        }
+
+        private string docDbDatabase
+        {
+            get
+            {
+                return this.config.DocumentDbDatabase(this.DocumentDataType);  // TODO: maybe don't hard code this? ~ Joe Bethke
+            }
         }
 
         private string docDbCollection
@@ -50,10 +61,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             get
             {
                 // TODO: Perhaps this should go into a Claims Helper? Much like our previous one?? ~ Andrew Schmidt
-                // return $"{((Dictionary<string, string>)((ClaimsPrincipal)Thread.CurrentPrincipal).Claims)["tenant"]}-tenant-data";
                 try
                 {
-                    return ((ClaimsPrincipal)Thread.CurrentPrincipal).Claims.Where(c => c.Type == "tenant").Select(c => c.Value).First();
+                    string tenant = ((ClaimsPrincipal)Thread.CurrentPrincipal).Claims.Where(c => c.Type == "tenant").Select(c => c.Value).First();
+                    return this.config.DocumentDbCollection(tenant, this.DocumentDataType);
                 }
                 catch (Exception ex)
                 {
