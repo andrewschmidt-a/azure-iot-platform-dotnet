@@ -49,21 +49,21 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
     public class Jobs : IJobs
     {
-        private IDeviceProperties deviceProperties;
+        private IDeviceProperties _deviceProperties;
 
         private const string DEVICE_DETAILS_QUERY_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}'";
         private const string DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}' and devices.jobs.status = '{1}'";
         private ITenantConnectionHelper tenantHelper;
 
-        public Jobs(IServicesConfig config, IDeviceProperties deviceProperties)
+        public Jobs(IServicesConfig _config, IDeviceProperties _deviceProperties)
         {
-            if (config == null)
+            if (_config == null)
             {
                 throw new ArgumentNullException("config");
             }
-            tenantHelper = new TenantConnectionHelper(config.AppConfigConnection);
+            tenantHelper = new TenantConnectionHelper(_config.AppConfigConnection);
 
-            this.deviceProperties = deviceProperties;
+            this._deviceProperties = _deviceProperties;
 
         }
 
@@ -151,7 +151,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             {
                 model.Reported = new HashSet<string>(reportedRoot.GetAllLeavesPath());
             }
-            var unused = deviceProperties.UpdateListAsync(model);
+            var unused = _deviceProperties.UpdateListAsync(model);
 
             return new JobServiceModel(result);
         }

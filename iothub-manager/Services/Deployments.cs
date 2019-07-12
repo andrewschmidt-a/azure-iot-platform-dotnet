@@ -53,7 +53,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
         private readonly ILogger log;
 
-        private ITenantConnectionHelper tenantHelper;
+        private ITenantConnectionHelper _tenantHelper;
 
         public Deployments(
             IServicesConfig _config,
@@ -64,14 +64,14 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 throw new ArgumentNullException("config");
             }
 
-            this.tenantHelper = new TenantConnectionHelper(_config.AppConfigConnection);
+            this._tenantHelper = new TenantConnectionHelper(_config.AppConfigConnection);
 
             this.log = logger;
         }
 
-        public Deployments(ITenantConnectionHelper tenantHelper)
+        public Deployments(ITenantConnectionHelper _tenantHelper)
         {
-            this.tenantHelper = tenantHelper ?? throw new ArgumentNullException("tenantHelper");
+            this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper");
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             var configuration = ConfigurationsHelper.ToHubConfiguration(model);
             // TODO: Add specific exception handling when exception types are exposed
             // https://github.com/Azure/azure-iot-sdk-csharp/issues/649
-            return new DeploymentServiceModel(await tenantHelper.getRegistry().AddConfigurationAsync(configuration));
+            return new DeploymentServiceModel(await _tenantHelper.getRegistry().AddConfigurationAsync(configuration));
         }
 
         /// <summary>
@@ -127,11 +127,11 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         public async Task<DeploymentServiceListModel> ListAsync()
         {
             // TODO: Currently they only support 20 deployments
-            var deployments = await tenantHelper.getRegistry().GetConfigurationsAsync(MAX_DEPLOYMENTS);
+            var deployments = await _tenantHelper.getRegistry().GetConfigurationsAsync(MAX_DEPLOYMENTS);
 
             if (deployments == null)
             {
-                throw new ResourceNotFoundException($"No deployments found for {tenantHelper.getIoTHubName()} hub.");
+                throw new ResourceNotFoundException($"No deployments found for {_tenantHelper.getIoTHubName()} hub.");
             }
 
             List<DeploymentServiceModel> serviceModelDeployments = 
@@ -156,7 +156,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            var deployment = await tenantHelper.getRegistry().GetConfigurationAsync(deploymentId);
+            var deployment = await _tenantHelper.getRegistry().GetConfigurationAsync(deploymentId);
 
             if (deployment == null)
             {
@@ -192,7 +192,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            await tenantHelper.getRegistry().RemoveConfigurationAsync(deploymentId);
+            await _tenantHelper.getRegistry().RemoveConfigurationAsync(deploymentId);
         }
 
         private bool CheckIfDeploymentWasMadeByRM(Configuration conf)
@@ -260,7 +260,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         private HashSet<string> GetDevicesInQuery(string hubQuery, string deploymentId)
         {
             var query = string.Format(hubQuery, deploymentId);
-            var queryResponse = tenantHelper.getRegistry().CreateQuery(query);
+            var queryResponse = _tenantHelper.getRegistry().CreateQuery(query);
             var deviceIds = new HashSet<string>();
 
             try

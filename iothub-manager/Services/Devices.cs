@@ -41,7 +41,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         private const string MODULE_QUERY_PREFIX = "SELECT * FROM devices.modules";
         private const string DEVICES_CONNECTED_QUERY = "connectionState = 'Connected'";
 
-        private ITenantConnectionHelper tenantHelper;
+        private ITenantConnectionHelper _tenantHelper;
 
         public Devices(
             IServicesConfig _config)
@@ -50,13 +50,13 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             {
                 throw new ArgumentNullException("config");
             }
-            tenantHelper = new TenantConnectionHelper(_config.AppConfigConnection);
+            _tenantHelper = new TenantConnectionHelper(_config.AppConfigConnection);
 
         }
         //used for testing
-        public Devices(ITenantConnectionHelper tenantHelper)
+        public Devices(ITenantConnectionHelper _tenantHelper)
         {
-            this.tenantHelper = tenantHelper ?? throw new ArgumentNullException("tenantHelper");
+            this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper");
         }
 
         // Ping the registry to see if the connection is healthy
@@ -65,7 +65,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             var result = new StatusResultServiceModel(false, "");
             try
             {
-                await tenantHelper.getRegistry().GetDeviceAsync("healthcheck");
+                await _tenantHelper.getRegistry().GetDeviceAsync("healthcheck");
                 result.IsHealthy = true;
                 result.Message = "Alive and Well!";
             }
@@ -104,7 +104,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
             var resultModel = new DeviceServiceListModel(twins.Result
                     .Select(azureTwin => new DeviceServiceModel(azureTwin,
-                                                                  tenantHelper.getIoTHubName(),
+                                                                  _tenantHelper.getIoTHubName(),
                                                                   connectedEdgeDevices.ContainsKey(azureTwin.DeviceId))),
                                                                   twins.ContinuationToken);
             
@@ -124,8 +124,8 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
         public async Task<DeviceServiceModel> GetAsync(string id)
         {
-            var device = tenantHelper.getRegistry().GetDeviceAsync(id);
-            var twin = tenantHelper.getRegistry().GetTwinAsync(id);
+            var device = _tenantHelper.getRegistry().GetDeviceAsync(id);
+            var twin = _tenantHelper.getRegistry().GetTwinAsync(id);
 
             await Task.WhenAll(device, twin);
 
@@ -136,7 +136,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
             var isEdgeConnectedDevice = await this.DoesDeviceHaveConnectedModules(device.Result.Id);
 
-            return new DeviceServiceModel(device.Result, twin.Result, tenantHelper.getIoTHubName(), isEdgeConnectedDevice);
+            return new DeviceServiceModel(device.Result, twin.Result, _tenantHelper.getIoTHubName(), isEdgeConnectedDevice);
         }
 
         public async Task<DeviceServiceModel> CreateAsync(DeviceServiceModel device)
@@ -154,19 +154,19 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 device.Id = Guid.NewGuid().ToString();
             }
 
-            var azureDevice = await tenantHelper.getRegistry().AddDeviceAsync(device.ToAzureModel());
+            var azureDevice = await _tenantHelper.getRegistry().AddDeviceAsync(device.ToAzureModel());
 
             Twin azureTwin;
             if (device.Twin == null)
             {
-                azureTwin = await tenantHelper.getRegistry().GetTwinAsync(device.Id);
+                azureTwin = await _tenantHelper.getRegistry().GetTwinAsync(device.Id);
             }
             else
             {
-                azureTwin = await tenantHelper.getRegistry().UpdateTwinAsync(device.Id, device.Twin.ToAzureModel(), "*");
+                azureTwin = await _tenantHelper.getRegistry().UpdateTwinAsync(device.Id, device.Twin.ToAzureModel(), "*");
             }
 
-            return new DeviceServiceModel(azureDevice, azureTwin, tenantHelper.getIoTHubName());
+            return new DeviceServiceModel(azureDevice, azureTwin, _tenantHelper.getIoTHubName());
         }
 
         /// <summary>
@@ -178,20 +178,20 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         public async Task<DeviceServiceModel> CreateOrUpdateAsync(DeviceServiceModel device, DevicePropertyDelegate devicePropertyDelegate)
         {
             // validate device module
-            var azureDevice = await tenantHelper.getRegistry().GetDeviceAsync(device.Id);
+            var azureDevice = await _tenantHelper.getRegistry().GetDeviceAsync(device.Id);
             if (azureDevice == null)
             {
-                azureDevice = await tenantHelper.getRegistry().AddDeviceAsync(device.ToAzureModel());
+                azureDevice = await _tenantHelper.getRegistry().AddDeviceAsync(device.ToAzureModel());
             }
 
             Twin azureTwin;
             if (device.Twin == null)
             {
-                azureTwin = await tenantHelper.getRegistry().GetTwinAsync(device.Id);
+                azureTwin = await _tenantHelper.getRegistry().GetTwinAsync(device.Id);
             }
             else
             {
-                azureTwin = await tenantHelper.getRegistry().UpdateTwinAsync(device.Id, device.Twin.ToAzureModel(), device.Twin.ETag);
+                azureTwin = await _tenantHelper.getRegistry().UpdateTwinAsync(device.Id, device.Twin.ToAzureModel(), device.Twin.ETag);
 
                 // Update the deviceGroupFilter cache, no need to wait
                 var model = new DevicePropertyServiceModel();
@@ -210,12 +210,12 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 var unused = devicePropertyDelegate(model);
             }
 
-            return new DeviceServiceModel(azureDevice, azureTwin, tenantHelper.getIoTHubName());
+            return new DeviceServiceModel(azureDevice, azureTwin, _tenantHelper.getIoTHubName());
         }
 
         public async Task DeleteAsync(string id)
         {
-            await tenantHelper.getRegistry().RemoveDeviceAsync(id);
+            await _tenantHelper.getRegistry().RemoveDeviceAsync(id);
         }
 
         public async Task<TwinServiceModel> GetModuleTwinAsync(string deviceId, string moduleId)
@@ -230,7 +230,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 throw new InvalidInputException("A valid moduleId must be provided.");
             }
 
-            var twin = await tenantHelper.getRegistry().GetTwinAsync(deviceId, moduleId);
+            var twin = await _tenantHelper.getRegistry().GetTwinAsync(deviceId, moduleId);
             return new TwinServiceModel(twin);
         }
 
@@ -261,7 +261,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
             var twins = new List<Twin>();
 
-            var twinQuery = tenantHelper.getRegistry().CreateQuery(query);
+            var twinQuery = _tenantHelper.getRegistry().CreateQuery(query);
 
             QueryOptions options = new QueryOptions();
             options.ContinuationToken = continuationToken;
