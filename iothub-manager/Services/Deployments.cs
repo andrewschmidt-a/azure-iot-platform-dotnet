@@ -51,8 +51,6 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         private const string DEVICE_ID_KEY = "DeviceId";
         private const string EDGE_MANIFEST_SCHEMA = "schemaVersion";
 
-        //private RegistryManager registry;
-        //private string ioTHubHostName;
         private readonly ILogger log;
 
         private ITenantConnectionHelper tenantHelper;

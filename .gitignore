@@ -1,3 +1,4 @@
 **/launchSettings.json
-./vs
+./.vs
+**/.DS_Store
 
