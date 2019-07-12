@@ -20,7 +20,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
         private const string APPLICATION_KEY = "StorageAdapter:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string STORAGE_TYPE_KEY = APPLICATION_KEY + "storageType";
-        // private const string DOCUMENT_DB_CONNECTION_STRING_KEY = APPLICATION_KEY + "documentDBConnectionString";
         private const string DOCUMENT_DB_RUS_KEY = APPLICATION_KEY + "documentDBRUs";
         private const string APP_CONFIG_CONNECTION_STRING_KEY = APPLICATION_KEY + "appConfigConnectionString";
 
@@ -36,7 +35,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
 
             var storageType = configData.GetString(STORAGE_TYPE_KEY).ToLowerInvariant();
             var appConfigConnectionString = configData.GetString(APP_CONFIG_CONNECTION_STRING_KEY); //.ToLowerInvariant();
-            // var documentDbConnString = configData.GetString(DOCUMENT_DB_CONNECTION_STRING_KEY);
             if (storageType == "documentdb" &&
                 (string.IsNullOrEmpty(appConfigConnectionString)
                  || appConfigConnectionString.StartsWith("${")
@@ -55,13 +53,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
                                     "value in the 'appsettings.ini' configuration file.");
             }
 
+            // Hard coded value hgzvu is for determing the correct cosmos db connection string from app configuration
             this.ServicesConfig = new ServicesConfig(storageType, "hgzvu", configData.GetInt(DOCUMENT_DB_RUS_KEY), appConfigConnectionString);
-            // this.ServicesConfig = new ServicesConfig
-            // {
-            //     StorageType = storageType,
-            //     DocumentDbConnString = documentDbConnString,
-            //     DocumentDbRUs = configData.GetInt(DOCUMENT_DB_RUS_KEY),
-            // };
         }
     }
 }
