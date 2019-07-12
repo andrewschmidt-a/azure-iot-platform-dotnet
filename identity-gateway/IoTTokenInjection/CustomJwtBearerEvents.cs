@@ -31,7 +31,6 @@ namespace IoTTokenValidation
         }
         public override Task AuthenticationFailed(AuthenticationFailedContext context)
         {
-            throw context.Exception; // throw it so it spits up in your face
             return Task.CompletedTask;
         }
     }
