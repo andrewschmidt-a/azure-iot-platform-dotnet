@@ -1,0 +1,33 @@
+kind: helm-release
+apiVersion: 1.1
+build:
+  context: .
+  dockerfile: Dockerfile
+install:
+  chart: charts/device-telemetry
+  values:
+  - values.dev.yaml?
+  - secrets.dev.yaml?
+  set:
+    replicaCount: 1
+    image:
+      repository: device-telemetry
+      tag: $(tag)
+      pullPolicy: Never
+    ingress: 
+      annotations:
+        kubernetes.io/ingress.class: traefik-azds
+      hosts:
+      # This expands to form the service's public URL: [space.s.][rootSpace.]device-telemetry.<random suffix>.<region>.azds.io
+      # Customize the public URL by changing the 'device-telemetry' text between the $(rootSpacePrefix) and $(hostSuffix) tokens
+      # For more information see https://aka.ms/devspaces/routing
+      - $(spacePrefix)$(rootSpacePrefix)device-telemetry$(hostSuffix)
+    secrets: 
+      PCS:
+        KEYVAULT_NAME: keyvault-hzgvu 
+        AAD_APPID: 95d3c662-23ea-4e2d-8d3d-ea2448706934
+        AAD_APPSECRET: YWIwYzhkYjktNjFmZi00MTI5LWE0YjAtNjAyZGNmNWFlNzVk=
+configurations:
+  develop:
+    build:
+      useGitIgnore: true
