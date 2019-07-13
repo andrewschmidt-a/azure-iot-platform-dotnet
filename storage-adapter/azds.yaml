@@ -4,7 +4,7 @@ build:
   context: .
   dockerfile: Dockerfile
 install:
-  chart: charts/storage-adapter
+  chart: ../charts/generic-service
   # values:
   # - values.dev.yaml?
   # - secrets.dev.yaml?
@@ -16,6 +16,10 @@ install:
       repository: storage-adapter
       tag: $(tag)
       pullPolicy: Never
+    service:
+      type: ClusterIP
+      port: 9022
+      targetPort: 9022
     ingress:
       annotations:
         kubernetes.io/ingress.class: traefik-azds
@@ -29,11 +33,7 @@ install:
       type: ClusterIP
       port: 9022
       targetPort: 9022
-    secrets: 
-      PCS:
-        KEYVAULT_NAME: keyvault-hzgvu 
-        AAD_APPID: 95d3c662-23ea-4e2d-8d3d-ea2448706934
-        AAD_APPSECRET: YWIwYzhkYjktNjFmZi00MTI5LWE0YjAtNjAyZGNmNWFlNzVk=
+
 configurations:
   develop:
     build:

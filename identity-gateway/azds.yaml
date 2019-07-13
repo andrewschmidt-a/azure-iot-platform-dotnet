@@ -9,25 +9,24 @@ install:
   - values.dev.yaml?
   - secrets.dev.yaml?
   set:
-    fullnameOverride: config
+    fullnameOverride: identity-gateway
     replicaCount: 1
     image:
-      repository: config
+      repository: identity-gateway
       tag: $(tag)
       pullPolicy: Never
+    service:
+      type: ClusterIP
+      port: 5001
+      targetPort: 443
     ingress:
       annotations:
         kubernetes.io/ingress.class: traefik-azds
       hosts:
-      # This expands to form the service's public URL: [space.s.][rootSpace.]config.<random suffix>.<region>.azds.io
-      # Customize the public URL by changing the 'config' text between the $(rootSpacePrefix) and $(hostSuffix) tokens
+      # This expands to form the service's public URL: [space.s.][rootSpace.]iothub-manager.<random suffix>.<region>.azds.io
+      # Customize the public URL by changing the 'iothub-manager' text between the $(rootSpacePrefix) and $(hostSuffix) tokens
       # For more information see https://aka.ms/devspaces/routing
-      - $(spacePrefix)$(rootSpacePrefix)config$(hostSuffix)
-    
-    service:
-      type: ClusterIP
-      port: 9005
-      targetPort: 9005
+      - $(spacePrefix)$(rootSpacePrefix)identity-gateway$(hostSuffix) 
 configurations:
   develop:
     build:

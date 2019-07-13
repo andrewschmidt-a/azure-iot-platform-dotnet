@@ -1,10 +1,10 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "device-telemetry.fullname" . }}
+  name: {{ template "generic-service.fullname" . }}
   labels:
-    app: {{ template "device-telemetry.name" . }}
-    chart: {{ template "device-telemetry.chart" . }}
+    app: {{ template "generic-service.name" . }}
+    chart: {{ template "generic-service.chart" . }}
     draft: {{ default "draft-app" .Values.draft }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,12 +12,12 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "device-telemetry.name" . }}
+      app: {{ template "generic-service.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "device-telemetry.name" . }}
+        app: {{ template "generic-service.name" . }}
         draft: {{ default "draft-app" .Values.draft }}
         release: {{ .Release.Name }}
       annotations:
@@ -48,9 +48,17 @@ spec:
             - name: {{ $ref }}_{{ $key }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "device-telemetry.fullname" $root }}-{{ $ref | lower }}
+                  name: {{ template "generic-service.fullname" $root }}-{{ $ref | lower }}
                   key: {{ $key }}
             {{- end }}
+            {{- end }}
+            
+            {{- range $ref := .Values.secretsRef }}
+            - name: {{ $ref }}
+              valueFrom:
+                secretKeyRef:
+                  name: globalsecrets
+                  key: {{ $ref }}
             {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
