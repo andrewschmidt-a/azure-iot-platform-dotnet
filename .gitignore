@@ -1,5 +1,4 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+**/launchSettings.json
+./.vs
+**/.DS_Store
 
-/.vs/remote-monitoring/v15

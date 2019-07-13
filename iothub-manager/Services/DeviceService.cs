@@ -24,9 +24,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             {
                 throw new ArgumentNullException("config");
             }
+            TenantConnectionHelper tenantHelper = new TenantConnectionHelper(config.AppConfigConnection);
 
             IoTHubConnectionHelper.CreateUsingHubConnectionString(
-                config.IoTHubConnString,
+                tenantHelper.getIoTHubConnectionString(),
                 conn => { this.serviceClient = ServiceClient.CreateFromConnectionString(conn); });
         }
 

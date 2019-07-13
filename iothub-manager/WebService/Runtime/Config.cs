@@ -44,6 +44,9 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
         private const string JWT_AUDIENCE_KEY = JWT_KEY + "aadAppId";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
+        //test
+        private const string APPCONFIG_CONNSTRING_KEY = APPLICATION_KEY + "appconfigconnection";
+
         public int Port { get; }
         public IServicesConfig ServicesConfig { get; }
         public IClientAuthConfig ClientAuthConfig { get; }
@@ -72,12 +75,12 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
 
             this.ServicesConfig = new ServicesConfig
             {
-                IoTHubConnString = configData.GetString(IOTHUB_CONNSTRING_KEY),
                 DevicePropertiesWhiteList = configData.GetString(DEVICE_PROPERTIES_WHITELIST_KEY),
                 DevicePropertiesTTL = configData.GetInt(DEVICE_PROPERTIES_TTL_KEY),
                 DevicePropertiesRebuildTimeout = configData.GetInt(DEVICE_PROPERTIES_REBUILD_TIMEOUT_KEY),
                 StorageAdapterApiUrl = configData.GetString(STORAGE_ADAPTER_URL_KEY),
-                UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY)
+                UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
+                AppConfigConnection = configData.GetString(APPCONFIG_CONNSTRING_KEY)
             };
 
             this.ClientAuthConfig = new ClientAuthConfig
