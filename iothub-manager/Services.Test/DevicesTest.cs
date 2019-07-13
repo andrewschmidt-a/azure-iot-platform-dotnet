@@ -8,7 +8,9 @@ using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
+using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Services.Test.helpers;
 using Xunit;
@@ -21,11 +23,22 @@ namespace Services.Test
         private readonly IDevices devices;
         private readonly Mock<RegistryManager> registryMock;
         private readonly string ioTHubHostName = "ioTHubHostName";
+        private Mock<ITenantConnectionHelper> tenantHelper;
 
         public DevicesTest()
         {
+
             this.registryMock = new Mock<RegistryManager>();
-            this.devices = new Devices(registryMock.Object, this.ioTHubHostName);
+            tenantHelper = new Mock<ITenantConnectionHelper>();
+
+
+            tenantHelper.Setup(e => e.getIoTHubName()).Returns(this.ioTHubHostName);
+            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registryMock.Object);
+
+            MockIdentity.mockClaims("one");
+
+            this.devices = new Devices(tenantHelper.Object);
+            
         }
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -35,6 +48,7 @@ namespace Services.Test
         [InlineData("asdf", "qwer", false)]
         public async Task GetModuleTwinTest(string deviceId, string moduleId, bool throwsException)
         {
+
             if (throwsException)
             {
                 // Act & Assert
