@@ -27,5 +27,5 @@ steps:
     chartPath: 'charts/generic-service'
     releaseName: 'iothub-manager'
     recreate: true
-    tillerNamespace: 'tiller'
+    tillerNamespace: 'default'
     
