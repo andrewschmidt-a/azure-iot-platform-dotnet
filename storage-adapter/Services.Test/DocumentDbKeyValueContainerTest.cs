@@ -1,7 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
@@ -22,6 +25,8 @@ namespace Services.Test
         private const string MOCK_COLL_ID = "mockcoll";
         private static readonly string mockCollectionLink = $"/dbs/{MOCK_DB_ID}/colls/{MOCK_COLL_ID}";
 
+        private const string appConfigConnString = "";
+
         private readonly Mock<IDocumentClient> mockClient;
         private readonly DocumentDbKeyValueContainer container;
         private readonly Random rand = new Random();
@@ -30,18 +35,15 @@ namespace Services.Test
         {
             this.mockClient = new Mock<IDocumentClient>();
 
+            // mock a specific tenant
+            MockIdentity.mockClaims("b8865dd1-b3e0-47a9-8e23-e8d764eac485");
+
             this.container = new DocumentDbKeyValueContainer(
                 new MockFactory<IDocumentClient>(this.mockClient),
                 new MockExceptionChecker(),
-                new ServicesConfig
-                {
-                    StorageType = "documentDb",
-                    DocumentDbConnString = "",
-                    DocumentDbDatabase = MOCK_DB_ID,
-                    DocumentDbCollection = MOCK_COLL_ID,
-                    DocumentDbRUs = 567
-                },
-                new Logger("UnitTest", LogLevel.Debug));
+                new ServicesConfig("documentDb", "test", 567, appConfigConnString),
+                new Logger("UnitTest", LogLevel.Debug),
+                MOCK_DB_ID);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

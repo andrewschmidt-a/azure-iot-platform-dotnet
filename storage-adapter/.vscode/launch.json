@@ -13,8 +13,11 @@
 
                 // Environment variables used in appsettings.ini.  
                 // Required Settings. 
-                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "your document DB connection string"
+                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "your document DB connection string",
                 // Optional Settings. For additonal optional settings, refer to appsettings.ini directly.
+                "PCS_KEYVAULT_NAME": "",
+                "PCS_AAD_APPID": "",
+                "PCS_AAD_APPSECRET": ""
             },
             "stopAtEntry": false,
             "justMyCode":false,
