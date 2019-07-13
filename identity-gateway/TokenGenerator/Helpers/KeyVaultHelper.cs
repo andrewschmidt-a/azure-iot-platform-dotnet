@@ -7,23 +7,38 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using DependencyResolver;
+using Microsoft.Azure.KeyVault.Models;
 
 namespace TokenGenerator.Helpers
 {
-    public static class KeyVaultHelper
+    public class KeyVaultHelper : IDisposable
     {
-        public static KeyVaultClient getKeyVault(IConfiguration _config)
+        private IKeyVaultClient client;
+        private IConfiguration _config;
+        public KeyVaultHelper(IConfiguration _config)
         {
-            string AzureServicesAuthConnectionString = "RunAs=App;AppId=" + _config["keyvaultAppId"] + ";TenantId=" +
-                    _config["tenantId"] + ";AppKey=" + _config["keyvaultAppKey"] + ";";
+            string AzureServicesAuthConnectionString =
+                $"RunAs=App;AppId={_config["keyvaultAppId"]};TenantId={_config["tenantId"]};AppKey={_config["keyvaultAppKey"]};";
 
             AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider(AzureServicesAuthConnectionString);
 
-            return new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+            client = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+
         }
-        public static string getKeyVaultSecretIdentifier(string secret, IConfiguration _config)
+
+        public string getKeyVaultSecretIdentifier(string secret, IConfiguration _config)
         {
-            return "https://" + _config["keyvaultName"] + ".vault.azure.net/secrets/" + secret;
+            return $"https://{ _config["keyvaultName"]}.vault.azure.net/secrets/{secret}";
+        }
+        public async Task<string> getSecretAsync(string secret)
+        {
+            return (await client.GetSecretAsync(getKeyVaultSecretIdentifier("tenantStorageAccountConnectionString", this._config))).Value;
+            
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

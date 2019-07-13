@@ -25,9 +25,13 @@ namespace TokenGenerator.Controllers
     public class AuthorizeController : Controller
     {
         private IConfiguration _config;
+        public KeyVaultHelper keyVaultHelper; //used for Testing
+        public TenantTableHelper tenantTableHelper; //used for Testing
         public AuthorizeController(IConfiguration config)
         {
             this._config = config;
+            this.keyVaultHelper = new KeyVaultHelper(this._config);
+            this.tenantTableHelper = new TenantTableHelper();
         }
         // GET: connect/authorize
         [HttpGet]
@@ -53,16 +57,15 @@ namespace TokenGenerator.Controllers
                 try
                 {
                     /* Get Secrets From KeyVault */
-                    using (KeyVaultClient kv = KeyVaultHelper.getKeyVault(this._config))
-                    {
-                        var listOfTasks = new Task<SecretBundle>[] {
-                            kv.GetSecretAsync(KeyVaultHelper.getKeyVaultSecretIdentifier("tenantStorageAccountConnectionString", this._config)),
-                            kv.GetSecretAsync(KeyVaultHelper.getKeyVaultSecretIdentifier("identityGatewayPrivateKey", this._config))
-                        };
-                        Task.WaitAll(listOfTasks);
-                        tenantStorageAccountConnectionString = listOfTasks[0].Result.Value;
-                        identityGatewayPrivateKey = listOfTasks[1].Result.Value;
-                    }
+
+                    var listOfTasks = new Task<string>[] {
+
+                        keyVaultHelper.getSecretAsync("tenantStorageAccountConnectionString"),
+                        keyVaultHelper.getSecretAsync("identityGatewayPrivateKey")
+                    };
+                    Task.WaitAll(listOfTasks);
+                    tenantStorageAccountConnectionString = listOfTasks[0].Result;
+                    identityGatewayPrivateKey = listOfTasks[1].Result;
                 }
                 /* If you have throttling errors see this tutorial https://docs.microsoft.com/azure/key-vault/tutorial-net-create-vault-azure-web-app */
                 /// <exception cref="KeyVaultErrorException">
@@ -78,7 +81,7 @@ namespace TokenGenerator.Controllers
                 // Bring over Subject and Name
                 var claims = jwt.Claims.Where(t=> new List<string> { "sub", "name" }.Contains(t.Type)).ToList();
 
-                TenantModel tenantModel =  await TenantTableHelper.GetUserTenantInfo(tenantStorageAccountConnectionString, authState.tenant, jwt.Claims.First(t=>t.Type=="sub").Value);
+                TenantModel tenantModel = await tenantTableHelper.GetUserTenantInfo(tenantStorageAccountConnectionString, authState.tenant, jwt.Claims.First(t => t.Type == "sub").Value);
 
                 // If User not associated with Tenant then dont add claims return token without 
                 if (tenantModel != null)

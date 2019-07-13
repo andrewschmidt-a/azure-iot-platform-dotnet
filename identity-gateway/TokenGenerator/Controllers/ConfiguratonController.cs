@@ -42,11 +42,9 @@ namespace TokenGenerator.Controllers
         {
             var publicKey = "";
             /* Get Secrets From KeyVault */
-            using (KeyVaultClient kv = KeyVaultHelper.getKeyVault(this._config))
+            using (KeyVaultHelper kvh = new KeyVaultHelper(this._config))
             {
-                var bundle = await kv.GetSecretAsync(KeyVaultHelper.getKeyVaultSecretIdentifier("identityGatewayPublicKey", this._config));
-
-                publicKey = bundle.Value.Replace("\\n", "\n");
+                publicKey = (await kvh.getSecretAsync(kvh.getKeyVaultSecretIdentifier("identityGatewayPublicKey", this._config))).Replace("\\n", "\n");
             }
                 JsonWebKeySet jsonWebKeySet = new JsonWebKeySet();
             using (var textReader = new StringReader(publicKey))

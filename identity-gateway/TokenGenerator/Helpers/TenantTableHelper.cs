@@ -10,12 +10,13 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using tenant_manager.Models;
+using System.Linq.Expressions;
 
 namespace tenant_manager.Helpers
 {
     public class TenantTableHelper
     {
-        public static async Task<TenantModel> GetUserTenantInfo(string storageAccountConnectionString, string tenantGuid, string userId)
+        public async Task<TenantModel> GetUserTenantInfo(string storageAccountConnectionString, string tenantGuid, string userId)
         {
             /* Writes a new tenant object to a storage table */
 
