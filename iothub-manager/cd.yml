@@ -4,7 +4,13 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+  branches:
+    include:
+    - master
+    - releases/*
+  paths:
+    include:
+    - iothub-manager/**
 
 pool:
   vmImage: 'ubuntu-latest'
