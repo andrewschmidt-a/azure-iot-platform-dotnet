@@ -51,34 +51,27 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         private const string DEVICE_ID_KEY = "DeviceId";
         private const string EDGE_MANIFEST_SCHEMA = "schemaVersion";
 
-        private RegistryManager registry;
-        private string ioTHubHostName;
         private readonly ILogger log;
 
+        private ITenantConnectionHelper _tenantHelper;
+
         public Deployments(
-            IServicesConfig config,
+            IServicesConfig _config,
             ILogger logger)
         {
-            if (config == null)
+            if (_config == null)
             {
-                throw new ArgumentNullException(nameof(config));
+                throw new ArgumentNullException("config");
             }
 
-            IoTHubConnectionHelper.CreateUsingHubConnectionString(config.IoTHubConnString, (conn) =>
-            {
-                this.registry = RegistryManager.CreateFromConnectionString(conn);
-                this.ioTHubHostName = IotHubConnectionStringBuilder.Create(conn).HostName;
-            });
+            this._tenantHelper = new TenantConnectionHelper(_config.AppConfigConnection);
 
             this.log = logger;
         }
 
-        public Deployments(
-            RegistryManager registry,
-            string ioTHubHostName)
+        public Deployments(ITenantConnectionHelper _tenantHelper)
         {
-            this.registry = registry;
-            this.ioTHubHostName = ioTHubHostName;
+            this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper");
         }
 
         /// <summary>
@@ -123,7 +116,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             var configuration = ConfigurationsHelper.ToHubConfiguration(model);
             // TODO: Add specific exception handling when exception types are exposed
             // https://github.com/Azure/azure-iot-sdk-csharp/issues/649
-            return new DeploymentServiceModel(await this.registry.AddConfigurationAsync(configuration));
+            return new DeploymentServiceModel(await _tenantHelper.getRegistry().AddConfigurationAsync(configuration));
         }
 
         /// <summary>
@@ -134,11 +127,11 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         public async Task<DeploymentServiceListModel> ListAsync()
         {
             // TODO: Currently they only support 20 deployments
-            var deployments = await this.registry.GetConfigurationsAsync(MAX_DEPLOYMENTS);
+            var deployments = await _tenantHelper.getRegistry().GetConfigurationsAsync(MAX_DEPLOYMENTS);
 
             if (deployments == null)
             {
-                throw new ResourceNotFoundException($"No deployments found for {this.ioTHubHostName} hub.");
+                throw new ResourceNotFoundException($"No deployments found for {_tenantHelper.getIoTHubName()} hub.");
             }
 
             List<DeploymentServiceModel> serviceModelDeployments = 
@@ -163,7 +156,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            var deployment = await this.registry.GetConfigurationAsync(deploymentId);
+            var deployment = await _tenantHelper.getRegistry().GetConfigurationAsync(deploymentId);
 
             if (deployment == null)
             {
@@ -199,7 +192,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            await this.registry.RemoveConfigurationAsync(deploymentId);
+            await _tenantHelper.getRegistry().RemoveConfigurationAsync(deploymentId);
         }
 
         private bool CheckIfDeploymentWasMadeByRM(Configuration conf)
@@ -267,7 +260,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         private HashSet<string> GetDevicesInQuery(string hubQuery, string deploymentId)
         {
             var query = string.Format(hubQuery, deploymentId);
-            var queryResponse = this.registry.CreateQuery(query);
+            var queryResponse = _tenantHelper.getRegistry().CreateQuery(query);
             var deviceIds = new HashSet<string>();
 
             try

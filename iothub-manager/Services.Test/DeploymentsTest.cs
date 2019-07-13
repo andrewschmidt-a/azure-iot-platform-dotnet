@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Services.Test.helpers;
 using Microsoft.Azure.Devices;
 using System.Linq;
+using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
 
 namespace Services.Test
 {
@@ -17,6 +18,8 @@ namespace Services.Test
     {
         private readonly Deployments deployments;
         private readonly Mock<RegistryManager> registry;
+        private Mock<ITenantConnectionHelper> tenantHelper;
+        private readonly string ioTHubHostName = "mockIoTHub";
 
         private const string DEPLOYMENT_NAME_LABEL = "Name";
         private const string DEPLOYMENT_GROUP_ID_LABEL = "DeviceGroupId";
@@ -155,14 +158,18 @@ namespace Services.Test
                     ""metrics"": {
                         ""results"": {},
                         ""queries"": {}
-                    }
+                    }mockIoTHub
                  }";
 
         public DeploymentsTest()
         {
             this.registry = new Mock<RegistryManager>();
-            this.deployments = new Deployments(this.registry.Object,
-                                               "mockIoTHub");
+            tenantHelper = new Mock<ITenantConnectionHelper>();
+            tenantHelper.Setup(e => e.getIoTHubName()).Returns(this.ioTHubHostName);
+            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+
+            MockIdentity.mockClaims("one");
+            this.deployments = new Deployments(tenantHelper.Object);
         }
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -207,6 +214,8 @@ namespace Services.Test
                     c.Labels[RM_CREATED_LABEL] == bool.TrueString)))
                 .ReturnsAsync(newConfig);
 
+            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+
             // Act
             if (string.IsNullOrEmpty(expectedException))
             {
@@ -233,6 +242,7 @@ namespace Services.Test
 
             this.registry.Setup(r => r.GetConfigurationAsync(It.IsAny<string>()))
                 .ReturnsAsync(configuration);
+            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
 
             // Act & Assert
             await Assert.ThrowsAsync(Type.GetType(RESOURCE_NOT_FOUND_EXCEPTION),
@@ -253,6 +263,7 @@ namespace Services.Test
             }
 
             this.registry.Setup(r => r.GetConfigurationsAsync(20)).ReturnsAsync(configurations);
+            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployments = await this.deployments.ListAsync();
@@ -278,6 +289,7 @@ namespace Services.Test
             IQuery queryResult = new ResultQuery(3);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(queryResult);
 
+            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId, true);
             var deviceStatuses = returnedDeployment.DeploymentMetrics.DeviceStatuses;
@@ -330,6 +342,7 @@ namespace Services.Test
             this.registry.Setup(r => r.GetConfigurationAsync(deploymentId)).ReturnsAsync(configuration);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(new ResultQuery(0));
 
+            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId);
 
@@ -390,6 +403,7 @@ namespace Services.Test
             var deploymentId = configuration.Id;
             this.registry.Setup(r => r.GetConfigurationAsync(deploymentId)).ReturnsAsync(configuration);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(new ResultQuery(0));
+            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId);
@@ -443,6 +457,8 @@ namespace Services.Test
                     c.Labels[RM_CREATED_LABEL] == bool.TrueString)))
                 .ReturnsAsync(newConfig);
 
+            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+
             // Act
             var createdDeployment = await this.deployments.CreateAsync(depModel);
 
@@ -467,6 +483,7 @@ namespace Services.Test
 
             this.registry.Setup(r => r.GetConfigurationsAsync(20))
                 .ReturnsAsync(configurations);
+            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployments = await this.deployments.ListAsync();

@@ -148,7 +148,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         // Check whether the configuration contains a connection string
         private bool IsHubConnectionStringConfigured()
         {
-            var cs = this.servicesConfig?.IoTHubConnString?.ToLowerInvariant().Trim();
+            var cs = this.servicesConfig?.AppConfigConnection?.ToLowerInvariant().Trim();
             return (!string.IsNullOrEmpty(cs)
                     && cs.Contains("hostname=")
                     && cs.Contains("sharedaccesskeyname=")
