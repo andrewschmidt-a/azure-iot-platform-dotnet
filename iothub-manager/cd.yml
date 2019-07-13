@@ -9,7 +9,7 @@ trigger:
     - master
   paths:
     include:
-    - iothub-manager/**
+    - iothub-manager/
 
 pool:
   vmImage: 'ubuntu-latest'
