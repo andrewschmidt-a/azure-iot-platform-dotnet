@@ -13,6 +13,14 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin
+      azds up
+    workingDirectory: 'storage-adapter'
 # - task: HelmDeploy@0
 #  inputs:
 #    connectionType: 'Azure Resource Manager'
