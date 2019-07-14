@@ -19,7 +19,7 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |-
       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
-      azds up
+      azds up &
     workingDirectory: 'storage-adapter'
 # - task: HelmDeploy@0
 #  inputs:
