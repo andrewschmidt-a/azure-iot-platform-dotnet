@@ -18,7 +18,7 @@ steps:
     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
     scriptLocation: 'inlineScript'
     inlineScript: |-
-      az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin
+      az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
       azds up
     workingDirectory: 'storage-adapter'
 # - task: HelmDeploy@0
