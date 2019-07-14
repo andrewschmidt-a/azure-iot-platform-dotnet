@@ -53,6 +53,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
                                     "value in the 'appsettings.ini' configuration file.");
             }
 
+
+            Console.Write(appConfigConnectionString);
             // Hard coded value hgzvu is for determing the correct cosmos db connection string from app configuration
             this.ServicesConfig = new ServicesConfig(storageType, "hgzvu", configData.GetInt(DOCUMENT_DB_RUS_KEY), appConfigConnectionString);
         }

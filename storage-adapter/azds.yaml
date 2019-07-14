@@ -4,7 +4,7 @@ build:
   context: .
   dockerfile: Dockerfile
 install:
-  chart: ../charts/generic-service
+  chart: charts/dev-spaces
   # values:
   # - values.dev.yaml?
   # - secrets.dev.yaml?

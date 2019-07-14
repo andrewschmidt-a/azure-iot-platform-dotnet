@@ -7,7 +7,7 @@ trigger:
     - master
   paths:
     include:
-    - iothub-manager/
+    - config/
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -20,7 +20,7 @@ steps:
     inlineScript: |-
       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
       azds up -d
-    workingDirectory: 'iothub-manager'
+    workingDirectory: 'config'
 # - task: HelmDeploy@0
 #  inputs:
 #    connectionType: 'Azure Resource Manager'

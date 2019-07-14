@@ -2,7 +2,6 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 fullnameOverride: generic-service
-name: test
 replicaCount: 1
 image:
   repository: generic-service

@@ -3,7 +3,7 @@ COPY . /src
 WORKDIR /src
 RUN dotnet restore
 RUN dotnet build --configuration Release
-RUN dotnet publish WebService --configuration Release --output /app
+RUN dotnet publish WebService --configuration Release --output /app/webservice
 
 
 
