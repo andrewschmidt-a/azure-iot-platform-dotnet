@@ -7,7 +7,7 @@ trigger:
     - master
   paths:
     include:
-    - iothub-manager/
+    - storage-adpater/
 
 pool:
   vmImage: 'ubuntu-latest'
