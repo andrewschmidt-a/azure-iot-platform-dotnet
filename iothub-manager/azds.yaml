@@ -15,6 +15,10 @@ install:
       repository: iothub-manager
       tag: $(tag)
       pullPolicy: Never
+    service:
+      type: ClusterIP
+      port: 9002
+      targetPort: 9002
     ingress:
       annotations:
         kubernetes.io/ingress.class: traefik-azds
