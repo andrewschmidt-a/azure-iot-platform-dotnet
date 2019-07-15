@@ -2,6 +2,7 @@
 [![Issues][issues-badge]][issues-url]
 [![Gitter][gitter-badge]][gitter-url]
 
+
 # IoTHub Manager Overview
 
 This service manages most of Azure IoT Hub interactions, such as creating and managing IoT devices, device twins, invoking methods, managing IoT credentials, etc. This service is also used to run queries to retrieve devices belonging to a particular group (defined by the user).
