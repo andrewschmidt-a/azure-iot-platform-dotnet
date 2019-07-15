@@ -17,6 +17,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
+        private const string COSMOS_CONNECTION_STRING_APP_CONFIG_KEY = "cosmos-odin-mt-proc";
         private const string APPLICATION_KEY = "StorageAdapter:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string STORAGE_TYPE_KEY = APPLICATION_KEY + "storageType";
@@ -52,11 +53,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
                                     "used in project properties and the 'appConfigurationConnectionString' " +
                                     "value in the 'appsettings.ini' configuration file.");
             }
-
-
-            Console.Write(appConfigConnectionString);
-            // Hard coded value hgzvu is for determing the correct cosmos db connection string from app configuration
-            this.ServicesConfig = new ServicesConfig(storageType, "hgzvu", configData.GetInt(DOCUMENT_DB_RUS_KEY), appConfigConnectionString);
+            this.ServicesConfig = new ServicesConfig(storageType, COSMOS_CONNECTION_STRING_APP_CONFIG_KEY, configData.GetInt(DOCUMENT_DB_RUS_KEY), appConfigConnectionString);
         }
     }
 }
