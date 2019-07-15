@@ -23,16 +23,17 @@ namespace TokenGenerator.Helpers
             AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider(AzureServicesAuthConnectionString);
 
             client = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+            this._config = _config;
 
         }
 
-        public string getKeyVaultSecretIdentifier(string secret, IConfiguration _config)
+        public string getKeyVaultSecretIdentifier(string secret)
         {
-            return $"https://{ _config["keyvaultName"]}.vault.azure.net/secrets/{secret}";
+            return $"https://{ this._config["keyvaultName"]}.vault.azure.net/secrets/{secret}";
         }
         public async Task<string> getSecretAsync(string secret)
         {
-            return (await client.GetSecretAsync(getKeyVaultSecretIdentifier("tenantStorageAccountConnectionString", this._config))).Value;
+            return (await client.GetSecretAsync(getKeyVaultSecretIdentifier(secret))).Value;
             
         }
 

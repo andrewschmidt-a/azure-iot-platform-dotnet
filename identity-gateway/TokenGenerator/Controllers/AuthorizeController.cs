@@ -38,10 +38,16 @@ namespace TokenGenerator.Controllers
         [Route("connect/authorize")]
         public IActionResult Get([FromQuery] string  returnUrl, [FromQuery] string state, [FromQuery] string tenant)
         {
+            var uri = new UriBuilder(this._config["AzureB2CBaseUri"]);
+
+            // Need to build Query carefully to not clobber other query items -- just injecting state
+            var query = HttpUtility.ParseQueryString(uri.Query);
+            query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = returnUrl, state = state, tenant = tenant });
+            query["redirect_uri"] = "http://"+HttpContext.Request.Host.ToString() + "/connect/callback";
+            uri.Query = query.ToString();
             return Redirect(
-                this._config["AzureB2CBaseUri"]
-                //Add State Variable with needed information
-                +"&state="+ HttpUtility.UrlEncode(JsonConvert.SerializeObject(new AuthState { returnUrl = returnUrl, state=state, tenant=tenant})));
+                uri.Uri.ToString()
+            );
         }
 
         // GET connect/callback
