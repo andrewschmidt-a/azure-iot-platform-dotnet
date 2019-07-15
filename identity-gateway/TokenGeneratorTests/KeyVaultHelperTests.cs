@@ -31,7 +31,7 @@ namespace TokenGeneratorTests
         public void TestSecretIdentifier()
         {
             // Act
-            var secretID = (new KeyVaultHelper(this._config)).getKeyVaultSecretIdentifier(secret, this._config);
+            var secretID = (new KeyVaultHelper(this._config)).getKeyVaultSecretIdentifier(secret);
 
             // Assert
             Assert.AreEqual(secretID, $"https://{keyVaultName}.vault.azure.net/secrets/{secret}");

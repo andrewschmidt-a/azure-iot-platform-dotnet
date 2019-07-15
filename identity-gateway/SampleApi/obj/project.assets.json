@@ -4438,6 +4438,21 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
+      },
+      "IoTTokenValidator/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.Authentication": "2.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "2.0.0",
+          "Microsoft.AspNetCore.Authentication.OpenIdConnect": "2.0.0"
+        },
+        "compile": {
+          "bin/placeholder/IoTTokenValidator.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/IoTTokenValidator.dll": {}
+        }
       }
     }
   },
@@ -12102,10 +12117,16 @@
         "system.xml.xpath.xdocument.4.3.0.nupkg.sha512",
         "system.xml.xpath.xdocument.nuspec"
       ]
+    },
+    "IoTTokenValidator/1.0.0": {
+      "type": "project",
+      "path": "../IoTTokenValidator/IoTTokenValidator.csproj",
+      "msbuildProject": "../IoTTokenValidator/IoTTokenValidator.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.2": [
+      "IoTTokenValidator >= 1.0.0",
       "Microsoft.AspNetCore.App >= 2.2.0",
       "Microsoft.AspNetCore.Razor.Design >= 2.2.0",
       "Microsoft.NETCore.App >= 2.2.0"
@@ -12140,7 +12161,11 @@
       },
       "frameworks": {
         "netcoreapp2.2": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\a95lgzz\\source\\repos\\azure-iot-services-dotnet\\identity-gateway\\IoTTokenValidator\\IoTTokenValidator.csproj": {
+              "projectPath": "C:\\Users\\a95lgzz\\source\\repos\\azure-iot-services-dotnet\\identity-gateway\\IoTTokenValidator\\IoTTokenValidator.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
