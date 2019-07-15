@@ -7,6 +7,8 @@ image:
   repository: generic-service
   tag: stable
   pullPolicy: IfNotPresent
+container:
+  exposePort: 5001
 imagePullSecrets: []
   # Optionally specify an array of imagePullSecrets.
   # Secrets must be manually created in the namespace.

@@ -34,6 +34,6 @@ spec:
           - path: {{ $ingressPath }}
             backend:
               serviceName: {{ $fullName }}-svc
-              servicePort: 9022
+              servicePort: http
   {{- end }}
 {{- end }}
