@@ -3,7 +3,7 @@
 [![Issues][issues-badge]][issues-url]
 [![Gitter][gitter-badge]][gitter-url]
 
-### ![Dev Spaces (default)](https://dev.azure.com/3M-Bluebird/AzurePlatform/_apis/build/status/azure-iot-services-dotnet/config-cicd?branchName=master)](https://dev.azure.com/3M-Bluebird/AzurePlatform/_build/latest?definitionId=148&branchName=master)
+### ![Dev Spaces (default)](https://dev.azure.com/3M-Bluebird/AzurePlatform/_apis/build/status/azure-iot-services-dotnet/config-cicd?branchName=master)
 
 # Config Service Overview
 
