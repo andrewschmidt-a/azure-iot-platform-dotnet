@@ -13,7 +13,7 @@ namespace TokenGenerator.Helpers.Encryption
 {
     public class RSA
     {
-        public static RSACryptoServiceProvider DecodeRSA(string privateRsaKey)
+        public static System.Security.Cryptography.RSA DecodeRSA(string privateRsaKey)
         {
             RSAParameters rsaParams;
             using (var tr = new StringReader(privateRsaKey.Replace("\\n", "\n")))
@@ -27,7 +27,8 @@ namespace TokenGenerator.Helpers.Encryption
                 var privateRsaParams = keyPair.Private as RsaPrivateCrtKeyParameters;
                 rsaParams = DotNetUtilities.ToRSAParameters(privateRsaParams);
             }
-            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
+
+            System.Security.Cryptography.RSA rsa = System.Security.Cryptography.RSA.Create();
             rsa.ImportParameters(rsaParams);
             return rsa;
         }
