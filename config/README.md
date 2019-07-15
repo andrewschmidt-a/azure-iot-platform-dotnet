@@ -6,7 +6,8 @@
 [![Gitter][gitter-badge]][gitter-url]
 
 ## 3M
-### Dev Spaces: ![Dev Spaces (default)](https://dev.azure.com/3M-Bluebird/AzurePlatform/_apis/build/status/azure-iot-services-dotnet/config-cicd?branchName=master)
+### Dev Spaces: 
+![Dev Spaces (default)](https://dev.azure.com/3M-Bluebird/AzurePlatform/_apis/build/status/azure-iot-services-dotnet/config-cicd?branchName=master)
 
 # Config Service Overview
 
