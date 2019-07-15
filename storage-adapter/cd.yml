@@ -7,7 +7,7 @@ trigger:
     - master
   paths:
     include:
-    - storage-adpater
+    - storage-adpater/
 
 pool:
   vmImage: 'ubuntu-latest'
