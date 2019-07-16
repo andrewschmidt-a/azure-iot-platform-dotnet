@@ -38,6 +38,9 @@ spec:
             - name: http
               containerPort: 10080
               protocol: TCP
+            - name: https
+              containerPort: 443
+              protocol: TCP
           {{- if .Values.probes.enabled }}
           livenessProbe:
             httpGet:

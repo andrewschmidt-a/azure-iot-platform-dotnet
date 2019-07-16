@@ -17,20 +17,28 @@ install:
     ingress:
       annotations:
         kubernetes.io/ingress.class: traefik-azds
+        ingress.kubernetes.io/protocol: https
       hosts:
       # This expands to form the service's public URL: [space.s.][rootSpace.]reverse-proxy.<random suffix>.<region>.azds.io
       # Customize the public URL by changing the 'reverse-proxy' text between the $(rootSpacePrefix) and $(hostSuffix) tokens
       # For more information see https://aka.ms/devspaces/routing
       - $(spacePrefix)$(rootSpacePrefix)reverse-proxy$(hostSuffix)
-      # tls: 
-      #   - host: $(spacePrefix)$(rootSpacePrefix)reverse-proxy$(hostSuffix)
-      #     secretName: 
+      # - aziotplatform3m.centralus.cloudapp.azure.com
+      tls: 
+        - hosts:
+            # - aziotplatform3m.centralus.cloudapp.azure.com
+            - $(spacePrefix)$(rootSpacePrefix)reverse-proxy$(hostSuffix)
+          secretName: tls-cert2
     service:
       type: ClusterIP
       internalPort: 10080
       externalPort: 10080
-      internalHttpsPort: 10443
-      externalHttpsPort: 10443
+      internalHttpsPort: 443
+      externalHttpsPort: 443
+    secrets:
+      letsencrypt:
+        ALLOWED_DOMAINS: azds.io
+        SITES: "*.azds.io"
 configurations:
   develop:
     build:

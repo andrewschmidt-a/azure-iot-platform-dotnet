@@ -25,3 +25,4 @@ RUN chown -R $user.$user /app
 WORKDIR /app
 
 USER $user
+EXPOSE 9022
