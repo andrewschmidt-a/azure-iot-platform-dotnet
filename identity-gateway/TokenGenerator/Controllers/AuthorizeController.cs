@@ -16,6 +16,7 @@ using Microsoft.Azure.KeyVault.Models;
 using Microsoft.Azure.KeyVault;
 using TokenGenerator.Helpers;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -43,7 +44,7 @@ namespace TokenGenerator.Controllers
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
             query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = returnUrl, state = state, tenant = tenant });
-            query["redirect_uri"] = "http://"+HttpContext.Request.Host.ToString() + "/connect/callback";
+            query["redirect_uri"] = (HttpContext.Request.IsHttps? "https" : "http") +"://"+HttpContext.Request.Host.ToString() + "/connect/callback";
             uri.Query = query.ToString();
             return Redirect(
                 uri.Uri.ToString()
