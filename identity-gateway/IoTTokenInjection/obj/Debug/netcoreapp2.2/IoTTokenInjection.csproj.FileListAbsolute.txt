@@ -1,6 +1,0 @@
-C:\Users\a90q9zz\source\repos\IoTTokenInjection\IoTTokenInjection\bin\Debug\netcoreapp2.2\IoTTokenInjection.deps.json
-C:\Users\a90q9zz\source\repos\IoTTokenInjection\IoTTokenInjection\bin\Debug\netcoreapp2.2\IoTTokenInjection.dll
-C:\Users\a90q9zz\source\repos\IoTTokenInjection\IoTTokenInjection\obj\Debug\netcoreapp2.2\IoTTokenInjection.csprojAssemblyReference.cache
-C:\Users\a90q9zz\source\repos\IoTTokenInjection\IoTTokenInjection\obj\Debug\netcoreapp2.2\IoTTokenInjection.csproj.CoreCompileInputs.cache
-C:\Users\a90q9zz\source\repos\IoTTokenInjection\IoTTokenInjection\obj\Debug\netcoreapp2.2\IoTTokenInjection.AssemblyInfoInputs.cache
-C:\Users\a90q9zz\source\repos\IoTTokenInjection\IoTTokenInjection\obj\Debug\netcoreapp2.2\IoTTokenInjection.AssemblyInfo.cs

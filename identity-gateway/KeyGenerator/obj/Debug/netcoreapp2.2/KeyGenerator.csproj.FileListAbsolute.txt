@@ -20,3 +20,13 @@ C:\Users\a90q9zz\git\azure-iot-services-dotnet\identity-gateway\KeyGenerator\obj
 C:\Users\a90q9zz\git\azure-iot-services-dotnet\identity-gateway\KeyGenerator\obj\Debug\netcoreapp2.2\KeyGenerator.AssemblyInfo.cs
 C:\Users\a90q9zz\git\azure-iot-services-dotnet\identity-gateway\KeyGenerator\obj\Debug\netcoreapp2.2\KeyGenerator.dll
 C:\Users\a90q9zz\git\azure-iot-services-dotnet\identity-gateway\KeyGenerator\obj\Debug\netcoreapp2.2\KeyGenerator.pdb
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\KeyGenerator\bin\Debug\netcoreapp2.2\KeyGenerator.deps.json
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\KeyGenerator\bin\Debug\netcoreapp2.2\KeyGenerator.runtimeconfig.json
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\KeyGenerator\bin\Debug\netcoreapp2.2\KeyGenerator.runtimeconfig.dev.json
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\KeyGenerator\bin\Debug\netcoreapp2.2\KeyGenerator.dll
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\KeyGenerator\bin\Debug\netcoreapp2.2\KeyGenerator.pdb
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\KeyGenerator\obj\Debug\netcoreapp2.2\KeyGenerator.csproj.CoreCompileInputs.cache
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\KeyGenerator\obj\Debug\netcoreapp2.2\KeyGenerator.AssemblyInfoInputs.cache
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\KeyGenerator\obj\Debug\netcoreapp2.2\KeyGenerator.AssemblyInfo.cs
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\KeyGenerator\obj\Debug\netcoreapp2.2\KeyGenerator.dll
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\KeyGenerator\obj\Debug\netcoreapp2.2\KeyGenerator.pdb

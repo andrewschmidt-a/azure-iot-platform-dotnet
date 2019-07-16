@@ -39,19 +39,19 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 
         public string DocumentDbCollection(string tenant, string dataType)
         {
-            return this.AppConfig[$"tenant:{dataType}-collection:{tenant}"];
+            return this.AppConfig[$"tenant:{tenant}:{dataType}-collection"];
         }
 
         public string DocumentDbDatabase(string dataType)
         {
-            return this.AppConfig["storage-adapter:database:" + dataType];
+            return this.AppConfig[$"storage-adapter:{dataType}:database"];
         }
 
         public string DocumentDbConnString
         {
             get
             {
-                return this.AppConfig["storage-adapter:connstring:" + this.AdapterType];
+                return this.AppConfig[$"storage-adapter:{this.AdapterType}:connstring"];
             }
         }
     }

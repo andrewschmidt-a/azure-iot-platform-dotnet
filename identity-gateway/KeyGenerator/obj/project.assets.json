@@ -709,23 +709,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\a90q9zz\\.nuget\\packages\\": {},
+    "C:\\Users\\a95lgzz\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\a90q9zz\\git\\azure-iot-services-dotnet\\identity-gateway\\KeyGenerator\\KeyGenerator.csproj",
+      "projectUniqueName": "C:\\Users\\a95lgzz\\source\\repos\\azure-iot-services-dotnet\\identity-gateway\\KeyGenerator\\KeyGenerator.csproj",
       "projectName": "KeyGenerator",
-      "projectPath": "C:\\Users\\a90q9zz\\git\\azure-iot-services-dotnet\\identity-gateway\\KeyGenerator\\KeyGenerator.csproj",
-      "packagesPath": "C:\\Users\\a90q9zz\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\a90q9zz\\git\\azure-iot-services-dotnet\\identity-gateway\\KeyGenerator\\obj\\",
+      "projectPath": "C:\\Users\\a95lgzz\\source\\repos\\azure-iot-services-dotnet\\identity-gateway\\KeyGenerator\\KeyGenerator.csproj",
+      "packagesPath": "C:\\Users\\a95lgzz\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\a95lgzz\\source\\repos\\azure-iot-services-dotnet\\identity-gateway\\KeyGenerator\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\a90q9zz\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\a95lgzz\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
