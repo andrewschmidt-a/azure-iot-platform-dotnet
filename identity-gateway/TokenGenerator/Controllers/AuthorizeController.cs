@@ -44,7 +44,7 @@ namespace TokenGenerator.Controllers
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
             query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = returnUrl, state = state, tenant = tenant });
-            query["redirect_uri"] = "https://"+HttpContext.Request.Host.ToString() + "/connect/callback"; // must be https for B2C
+            query["redirect_uri"] = "https://"+HttpContext.Request.Host.ToString() + " /connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
             return Redirect(
                 uri.Uri.ToString()
@@ -109,9 +109,9 @@ namespace TokenGenerator.Controllers
                                   (securityKey, SecurityAlgorithms.RsaSha256);
 
                 var token = new JwtSecurityToken(
-                  issuer: "https://"+HttpContext.Request.Host.ToString(),
+                  issuer: "https://"+HttpContext.Request.Host.ToString()+"/",
                   audience: "IoTPlatform",
-                  expires: DateTime.Now.AddMinutes(30),
+                  expires: DateTime.Now.AddDays(30),
                   claims: claims.ToArray(),                      
                   signingCredentials: credentials
                 );
