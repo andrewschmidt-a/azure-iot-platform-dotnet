@@ -44,7 +44,7 @@ namespace TokenGenerator.Controllers
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
             query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = returnUrl, state = state, tenant = tenant });
-            query["redirect_uri"] = "https://"+HttpContext.Request.Host.ToString() + " /connect/callback"; // must be https for B2C
+            query["redirect_uri"] = "https://"+HttpContext.Request.Host.ToString() + "/connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
             return Redirect(
                 uri.Uri.ToString()
