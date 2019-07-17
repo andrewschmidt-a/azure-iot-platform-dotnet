@@ -15,7 +15,7 @@ namespace TokenGenerator
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args)
-            .UseUrls("http://*:5000/")
+            .UseUrls("http://*:5000/", "https://*:5001/", "https://localhost:5001")
             .Build().Run();
         }
 

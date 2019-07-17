@@ -21,7 +21,10 @@ namespace TokenGenerator
         public Startup(IConfiguration configuration)
         {
             var builder = new ConfigurationBuilder();
-            builder.AddAzureAppConfiguration("Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0=");  // TODO: Yes slap my hand for hard-coding... waiting to discuss how we plan to store this
+            builder.AddIniFile("appsettings.ini", optional: false, reloadOnChange: true);
+            builder.AddEnvironmentVariables();
+            var settings = builder.Build();
+            builder.AddAzureAppConfiguration(settings["PCS_APPLICATION_CONFIGURATION"]); 
             Configuration = builder.Build(); 
         }
 
