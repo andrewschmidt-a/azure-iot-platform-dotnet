@@ -20,21 +20,6 @@ steps:
     command: 'buildAndPush'
     Dockerfile: 'identity-gateway/Dockerfile'
     buildContext: 'identity-gateway'
-- task: AzureWebAppContainer@1
-  inputs:
-    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
-    appName: 'aziotidentitygateway'
-    deployToSlotOrASE: true
-    resourceGroupName: 'rg-crslbbiot-odin-dev'
-    slotName: 'staging'
-    containers: 'odinarc.azurecr.io/identity-gateway:$(Build.BuildId)'
-- task: AzureAppServiceManage@0
-  inputs:
-    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
-    Action: 'Swap Slots'
-    WebAppName: 'aziotidentitygateway'
-    ResourceGroupName: 'rg-crslbbiot-odin-dev'
-    SourceSlot: 'staging'
 - task: AzureCLI@1
   inputs:
     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
@@ -46,17 +31,17 @@ steps:
 - task: HelmInstaller@1
   inputs:
     helmVersionToInstall: 'latest'
-# - task: HelmDeploy@0
-#   inputs:
-#     connectionType: 'Azure Resource Manager'
-#     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
-#     azureResourceGroup: 'rg-crslbbiot-odin-dev'
-#     kubernetesCluster: 'aks-dev-spaces-odin'
-#     namespace: 'identity'
-#     command: 'upgrade'
-#     chartType: 'Name'
-#     chartName: 'scripts/cd/identity-gateway'
-#     releaseName: 'identity-gateway'
+- task: HelmDeploy@0
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+    azureResourceGroup: 'rg-crslbbiot-odin-dev'
+    kubernetesCluster: 'aks-dev-spaces-odin'
+    namespace: 'identity'
+    command: 'upgrade'
+    chartType: 'Name'
+    chartName: 'scripts/cd/identity-gateway'
+    releaseName: 'identity-gateway'
 # - task: HelmDeploy@0
 #  inputs:
 #    connectionType: 'Azure Resource Manager'

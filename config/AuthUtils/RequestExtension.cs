@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
+namespace Microsoft.Azure.IoTSolutions.Auth
 {
     public static class RequestExtension
     {
