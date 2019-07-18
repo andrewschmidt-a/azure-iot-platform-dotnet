@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 
@@ -36,6 +37,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
         // Clock skew allowed when validating tokens expiration
         // Default: 2 minutes
         TimeSpan JwtClockSkew { get; set; }
+        List<JsonWebKey> JwtSecurityKeys { get; set; }
     }
 
     public class ClientAuthConfig : IClientAuthConfig
@@ -49,5 +51,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
         public string JwtIssuer { get; set; }
         public string JwtAudience { get; set; }
         public TimeSpan JwtClockSkew { get; set; }
+        public List<JsonWebKey> JwtSecurityKeys { get; set; }
     }
 }

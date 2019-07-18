@@ -3,6 +3,7 @@
 using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using IoTTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth;
@@ -11,6 +12,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ILogger = Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics.ILogger;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
 {
@@ -26,8 +35,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true);
+                .SetBasePath(env.ContentRootPath);
+
             this.Configuration = builder.Build();
         }
 
@@ -38,10 +47,23 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
         {
             // Setup (not enabling yet) CORS
             services.AddCors();
+            //services.AddIoTTokenValidator(new IoTTokenValidatorOptions
+            //{
+            //    Authority = "https://aziotidentity3m.centralus.cloudapp.azure.com"
+            //});
+
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //    .AddJwtBearer(options =>
+            //    {
+            //        options.Authority = "https://aziotidentity3m.centralus.cloudapp.azure.com";
+            //        options.Audience = "IoTPlatform";
+            //        options.RequireHttpsMetadata = false;
+            //        options.EventsType = typeof(CustomJwtBearerEvents);
+            //    });
 
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
-
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // Prepare DI container
             this.ApplicationContainer = DependencyResolution.Setup(services);
 
@@ -69,6 +91,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
             // Enable CORS - Must be before UseMvc
             // see: https://docs.microsoft.com/en-us/aspnet/core/security/cors
             corsSetup.UseMiddleware(app);
+            //app.UseAuthentication();
 
             app.UseMvc();
 

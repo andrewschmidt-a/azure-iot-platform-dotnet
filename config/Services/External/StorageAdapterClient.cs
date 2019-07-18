@@ -4,30 +4,39 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
 using Newtonsoft.Json;
+using HttpRequest = Microsoft.Azure.IoTSolutions.UIConfig.Services.Http.HttpRequest;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
 {
     public class StorageAdapterClient : IStorageAdapterClient
     {
+        private const string TENANT_HEADER = "ApplicationTenantID";
+        private const string TENANT_ID = "TenantID";
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private readonly IHttpClient httpClient;
         private readonly ILogger log;
         private readonly string serviceUri;
 
-        public StorageAdapterClient(IHttpClient httpClient, IServicesConfig config, ILogger logger)
+
+        public StorageAdapterClient(IHttpClient httpClient, IServicesConfig config, ILogger logger, IHttpContextAccessor httpContextAccessor)
         {
             this.httpClient = httpClient;
             this.log = logger;
             this.serviceUri = config.StorageAdapterApiUrl;
+            this._httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<ValueApiModel> GetAsync(string collectionId, string key)
         {
             var request = this.CreateRequest($"collections/{collectionId}/values/{key}");
+            
             var response = await this.httpClient.GetAsync(request);
             this.CheckStatusCode(response, request);
 
@@ -75,7 +84,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
             this.CheckStatusCode(response, request);
         }
 
-        private HttpRequest CreateRequest(string path, ValueApiModel content = null)
+        private HttpRequest CreateRequest(string path, ValueApiModel content = null, IHttpContextAccessor _httpContextAccessorLocal=null)
         {
             var request = new HttpRequest();
             request.SetUriFromString($"{this.serviceUri}/{path}");
@@ -88,6 +97,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
             {
                 request.SetContent(content);
             }
+            request.Headers.Add(TENANT_HEADER, _httpContextAccessorLocal.HttpContext.Items[TENANT_ID].ToString());
 
             return request;
         }

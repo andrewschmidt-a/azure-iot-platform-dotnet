@@ -1,7 +1,9 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -12,6 +14,7 @@ using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
 {
@@ -110,7 +113,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
             // Store this setting to skip validating authorization in the controller if enabled
             context.Request.SetAuthRequired(this.config.AuthRequired);
 
-            if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER))
+            if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER) && false)
             {
                 // This is a service to service request running in the private
                 // network, so we skip the auth required for user requests
@@ -197,13 +200,20 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
                     var roles = context.Request.GetCurrentUserRoleClaim().ToList();
                     if (roles.Any())
                     {
-                        var allowedActions = this.userManagementClient.GetAllowedActionsAsync(userObjectId, roles).Result;
-                        context.Request.SetCurrentUserAllowedActions(allowedActions);
+                        // This is where you can add custom rules (assuming read all)
+
+                        //var allowedActions = this.userManagementClient.GetAllowedActionsAsync(userObjectId, roles).Result;
+                        
                     }
                     else
                     {
                         this.log.Warn("JWT token doesn't include any role claims.", () => { });
                     }
+                    //DISBABLED RBAC -- adding all access 
+                    context.Request.SetCurrentUserAllowedActions(new List<string>() { "ReadAll" });
+
+                    //Set Tenant Information
+                    context.Request.SetTenant();
 
                     return true;
                 }
@@ -226,6 +236,18 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
             {
                 this.log.Info("Initializing OpenID configuration", () => { });
                 var openIdConfig = await this.openIdCfgMan.GetConfigurationAsync(token);
+
+                //Attempted to do it myself still issue with SSL
+                //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.config.JwtIssuer+ "/.well-known/openid-configuration/jwks");
+                //request.AutomaticDecompression = DecompressionMethods.GZip;
+                //IdentityKeys
+
+                //using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                //using (Stream stream = response.GetResponseStream())
+                //using (StreamReader reader = new StreamReader(stream))
+                //{
+                //    keys = JsonConvert.DeserializeObject<IdentityGatewayKeys>(reader.ReadToEnd());
+                //}
 
                 this.tokenValidationParams = new TokenValidationParameters
                 {
