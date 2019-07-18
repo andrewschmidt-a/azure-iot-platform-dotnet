@@ -28,14 +28,13 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
             string StorageType,
             string AdapterType,
             int DocumentDbRUs,
-            string AppConfigConnString,
-            IAppConfigurationHelper appConfigurationHelper)
+            string AppConfigConnString)
         {
             this.StorageType = StorageType;
             this.AdapterType = AdapterType;
             this.DocumentDbRUs = DocumentDbRUs;
             this.AppConfigConnString = AppConfigConnString;
-            this.AppConfig = appConfigurationHelper.GetAppConfig(this.AppConfigConnString);
+            this.AppConfig = AppConfigurationHelper.GetAppConfig(this.AppConfigConnString);
         }
 
         public string DocumentDbCollection(string tenant, string dataType)
