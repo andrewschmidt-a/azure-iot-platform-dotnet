@@ -41,6 +41,7 @@ namespace Services.Test
             this.mockClient.Setup(t => t.ReadDatabaseAsync(It.IsAny<Uri>(), It.IsAny<RequestOptions>()))
                 .Returns(Task.FromResult<ResourceResponse<Database>>(new Mock<ResourceResponse<Database>>().Object));
             this.mockClient.Setup(t => t.ReadDocumentCollectionAsync(It.IsAny<Uri>(), It.IsAny<RequestOptions>())).Returns(Task.FromResult(new Mock<ResourceResponse<DocumentCollection>>().Object));
+
             // mock a specific tenant
             MockIdentity.mockClaims("b8865dd1-b3e0-47a9-8e23-e8d764eac485");
             Mock<IAppConfigurationHelper> mockAppConfigHelper = new Mock<IAppConfigurationHelper>();
@@ -59,7 +60,7 @@ namespace Services.Test
             this.container = new DocumentDbKeyValueContainer(
                 new MockFactory<IDocumentClient>(this.mockClient),
                 new MockExceptionChecker(),
-                mockServicesConfig.Object, 
+                mockServicesConfig.Object,
                 new Logger("UnitTest", LogLevel.Debug),
                 MOCK_DB_ID);
         }
