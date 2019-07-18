@@ -37,7 +37,7 @@ namespace Services.Test
 
             MockIdentity.mockClaims("one");
 
-            this.devices = new Devices(tenantHelper.Object);
+            this.devices = new Devices(tenantHelper.Object, ioTHubHostName);
             
         }
 

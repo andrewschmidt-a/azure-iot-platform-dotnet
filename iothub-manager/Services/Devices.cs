@@ -54,9 +54,9 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
         }
         //used for testing
-        public Devices(ITenantConnectionHelper _tenantHelper)
+        public Devices(ITenantConnectionHelper _tenantHelper, string ioTHubHostName)
         {
-            this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper");
+            this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper "+ioTHubHostName);
         }
 
         // Ping the registry to see if the connection is healthy
