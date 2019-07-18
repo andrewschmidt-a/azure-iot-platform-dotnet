@@ -7,6 +7,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
@@ -15,6 +16,7 @@ using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 {
@@ -30,12 +32,14 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         private readonly RequestOptions docDbOptions;
         private bool disposedValue;
         private string collectionLink;
+        private IHttpContextAccessor _httpContextAccessor;
 
         public DocumentDbKeyValueContainer(
             IFactory<IDocumentClient> clientFactory,
             IExceptionChecker exceptionChecker,
             IServicesConfig config,
             ILogger logger,
+            IHttpContextAccessor httpContextAcessor,
             string DocumentDataType = "pcs")  // hard coded value pcs is for determing the correct collection and database for the default container
         {
             this.disposedValue = false;
@@ -46,6 +50,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             this.docDbRUs = config.DocumentDbRUs;
             this.docDbOptions = this.GetDocDbOptions();
             this.DocumentDataType = DocumentDataType;
+            this._httpContextAccessor = httpContextAcessor;
         }
 
         private string docDbDatabase
@@ -70,7 +75,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 // TODO: Perhaps this should go into a Claims Helper? Much like our previous one?? ~ Andrew Schmidt
                 try
                 {
-                    string tenant = ((ClaimsPrincipal)Thread.CurrentPrincipal).Claims.Where(c => c.Type == "tenant").Select(c => c.Value).First();
+                    string tenant = this._httpContextAccessor.HttpContext.Request.GetTenant();
                     return this._config.DocumentDbCollection(tenant, this.DocumentDataType);
                 }
                 catch (Exception ex)

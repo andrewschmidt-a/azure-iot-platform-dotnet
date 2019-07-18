@@ -5,9 +5,11 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+    using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
 {
@@ -35,6 +37,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
         {
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
+            
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             this.ApplicationContainer = DependencyResolution.Setup(services);
 
@@ -51,7 +55,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
             IApplicationLifetime appLifetime)
         {
             loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
-
+            
+            app.UseMiddleware<Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.AuthMiddleware>();
             app.UseMvc();
 
             // If you want to dispose of resources that have been resolved in the
