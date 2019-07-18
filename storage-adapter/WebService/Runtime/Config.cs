@@ -2,6 +2,7 @@
 
 using System;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
 {
@@ -53,7 +54,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
                                     "used in project properties and the 'appConfigurationConnectionString' " +
                                     "value in the 'appsettings.ini' configuration file.");
             }
-            this.ServicesConfig = new ServicesConfig(storageType, COSMOS_CONNECTION_STRING_APP_CONFIG_KEY, configData.GetInt(DOCUMENT_DB_RUS_KEY), appConfigConnectionString);
+            AppConfigurationHelper appConfig = new AppConfigurationHelper(appConfigConnectionString);
+            this.ServicesConfig = new ServicesConfig(storageType, COSMOS_CONNECTION_STRING_APP_CONFIG_KEY, configData.GetInt(DOCUMENT_DB_RUS_KEY), appConfig);
         }
     }
 }
