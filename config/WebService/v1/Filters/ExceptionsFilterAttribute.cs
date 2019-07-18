@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Exceptions;
+
+using Microsoft.Azure.IoTSolutions.Auth;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Filters
@@ -51,7 +53,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Filters
             {
                 context.Result = this.GetResponse(HttpStatusCode.InternalServerError, context.Exception);
             }
-            else if (context.Exception is Auth.NotAuthorizedException ||
+            else if (context.Exception is NotAuthorizedException ||
                      context.Exception is Services.Exceptions.NotAuthorizedException)
             {
                 context.Result = this.GetResponse(HttpStatusCode.Forbidden, context.Exception);

@@ -9,14 +9,15 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
 using Newtonsoft.Json;
-
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
+using Microsoft.Azure.IoTSolutions.Auth;
+using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
+namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
 {
     /// <summary>
     /// Validate every incoming request checking for a valid authorization header.
@@ -55,7 +56,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
         private readonly IClientAuthConfig config;
         private readonly ILogger log;
         private TokenValidationParameters tokenValidationParams;
-        private readonly bool authRequired;
+        private readonly bool authRequired;     
         private bool tokenValidationInitialized;
         private readonly IUserManagementClient userManagementClient;
 
@@ -113,7 +114,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
             // Store this setting to skip validating authorization in the controller if enabled
             context.Request.SetAuthRequired(this.config.AuthRequired);
 
-            if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER) && false)
+            if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER))
             {
                 // This is a service to service request running in the private
                 // network, so we skip the auth required for user requests

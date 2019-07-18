@@ -3,10 +3,8 @@
 using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using IoTTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +43,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
         // Configure method below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            // Setup (not enabling yet) CORS
+            // Setup (not enabling yet) CORS 
             services.AddCors();
             //services.AddIoTTokenValidator(new IoTTokenValidatorOptions
             //{
@@ -63,7 +61,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
 
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            
             // Prepare DI container
             this.ApplicationContainer = DependencyResolution.Setup(services);
 

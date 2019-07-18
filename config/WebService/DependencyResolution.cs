@@ -10,6 +10,8 @@ using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
+
+using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService

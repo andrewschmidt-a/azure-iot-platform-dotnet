@@ -11,7 +11,8 @@ using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
 using Newtonsoft.Json;
 using HttpRequest = Microsoft.Azure.IoTSolutions.UIConfig.Services.Http.HttpRequest;
-
+using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
+using Microsoft.Azure.IoTSolutions.Auth;
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
 {
     public class StorageAdapterClient : IStorageAdapterClient
@@ -84,7 +85,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
             this.CheckStatusCode(response, request);
         }
 
-        private HttpRequest CreateRequest(string path, ValueApiModel content = null, IHttpContextAccessor _httpContextAccessorLocal=null)
+        private HttpRequest CreateRequest(string path, ValueApiModel content = null)
         {
             var request = new HttpRequest();
             request.SetUriFromString($"{this.serviceUri}/{path}");
@@ -97,7 +98,9 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
             {
                 request.SetContent(content);
             }
-            request.Headers.Add(TENANT_HEADER, _httpContextAccessorLocal.HttpContext.Items[TENANT_ID].ToString());
+
+            string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+            request.Headers.Add(TENANT_HEADER, tenantId);
 
             return request;
         }

@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth;
+using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
