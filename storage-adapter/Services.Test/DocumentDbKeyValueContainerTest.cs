@@ -48,11 +48,11 @@ namespace Services.Test
             //Mock service returns dummy data
             Mock<IServicesConfig> mockServicesConfig = new Mock<IServicesConfig>();
             mockServicesConfig.Setup(t => t.DocumentDbRUs).Returns(400);
-            mockServicesConfig.Setup((t => t.DocumentDbDatabase(It.IsAny<string>()))).Returns("test_database");
-            mockServicesConfig.Setup((t => t.DocumentDbCollection(It.IsAny<string>(), It.IsAny<string>()))).Returns("test_collection");
+            mockServicesConfig.Setup((t => t.DocumentDbDatabase(It.IsAny<string>()))).Returns("mockdb");
+            mockServicesConfig.Setup((t => t.DocumentDbCollection(It.IsAny<string>(), It.IsAny<string>()))).Returns("mockcoll");
             
             //Returns Empty configuration
-            mockAppConfigHelper.Setup(t => t.GetAppConfig(It.IsAny<string>()))
+            mockAppConfigHelper.Setup(t => t.GetAppConfig())
                 .Returns(new ConfigurationBuilder().Build());
             
             

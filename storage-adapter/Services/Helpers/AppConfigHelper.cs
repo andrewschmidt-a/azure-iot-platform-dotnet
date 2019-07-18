@@ -5,14 +5,22 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers
 {
     public interface IAppConfigurationHelper
     {
-        IConfigurationRoot GetAppConfig(string appconfigconnection);
+        IConfigurationRoot GetAppConfig();
     }
-    public class AppConfigurationHelper
+
+    public class AppConfigurationHelper : IAppConfigurationHelper
     {
-        public static IConfigurationRoot GetAppConfig(string appconfigconnection)
+        public string appConfigConnectionString;
+
+        public AppConfigurationHelper(string appConfigConnectionString)
+        {
+            this.appConfigConnectionString = appConfigConnectionString;
+        }
+
+        public IConfigurationRoot GetAppConfig()
         {
             var builder = new ConfigurationBuilder();
-            builder.AddAzureAppConfiguration(appconfigconnection);
+            builder.AddAzureAppConfiguration(this.appConfigConnectionString);
             return builder.Build();
         }
     }

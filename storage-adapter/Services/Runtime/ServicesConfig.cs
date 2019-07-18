@@ -9,8 +9,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
         string StorageType { get; set; }
         string AdapterType { get; set; }
         string DocumentDbConnString { get; }
-        string AppConfigConnString { get; set; }
         int DocumentDbRUs { get; set; }
+        IConfigurationRoot AppConfig { get; set; }
 
         string DocumentDbDatabase(string dataType);
         string DocumentDbCollection(string tenant, string dataType);
@@ -21,21 +21,18 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
         public string StorageType { get; set; }
         public string AdapterType { get; set; }
         public int DocumentDbRUs { get; set; }
-        public string AppConfigConnString { get; set; }
-        public IConfigurationRoot AppConfig;
+        public IConfigurationRoot AppConfig { get; set; }
 
         public ServicesConfig(
             string StorageType,
             string AdapterType,
             int DocumentDbRUs,
-            string AppConfigConnString,
             IAppConfigurationHelper appConfigurationHelper)
         {
             this.StorageType = StorageType;
             this.AdapterType = AdapterType;
             this.DocumentDbRUs = DocumentDbRUs;
-            this.AppConfigConnString = AppConfigConnString;
-            this.AppConfig = appConfigurationHelper.GetAppConfig(this.AppConfigConnString);
+            this.AppConfig = appConfigurationHelper.GetAppConfig();
         }
 
         public string DocumentDbCollection(string tenant, string dataType)
