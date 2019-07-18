@@ -30,7 +30,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         private readonly RequestOptions docDbOptions;
         private bool disposedValue;
         private string collectionLink;
-
         public DocumentDbKeyValueContainer(
             IFactory<IDocumentClient> clientFactory,
             IExceptionChecker exceptionChecker,

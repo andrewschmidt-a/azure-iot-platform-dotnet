@@ -3,6 +3,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers
 {
+    public interface IAppConfigurationHelper
+    {
+        IConfigurationRoot GetAppConfig(string appconfigconnection);
+    }
     public class AppConfigurationHelper
     {
         public static IConfigurationRoot GetAppConfig(string appconfigconnection)
