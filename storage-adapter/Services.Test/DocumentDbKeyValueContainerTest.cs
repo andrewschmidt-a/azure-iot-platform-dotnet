@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
@@ -28,12 +29,14 @@ namespace Services.Test
         private const string appConfigConnString = "";
 
         private readonly Mock<IDocumentClient> mockClient;
+        private readonly Mock<IHttpContextAccessor> mockContextAccessor;
         private readonly DocumentDbKeyValueContainer container;
         private readonly Random rand = new Random();
 
         public DocumentDbKeyValueContainerTest()
         {
             this.mockClient = new Mock<IDocumentClient>();
+            this.mockContextAccessor = new Mock<IHttpContextAccessor>();
 
             // mock a specific tenant
             MockIdentity.mockClaims("b8865dd1-b3e0-47a9-8e23-e8d764eac485");
@@ -43,6 +46,7 @@ namespace Services.Test
                 new MockExceptionChecker(),
                 new ServicesConfig("documentDb", "test", 567, appConfigConnString),
                 new Logger("UnitTest", LogLevel.Debug),
+                this.mockContextAccessor.Object,
                 MOCK_DB_ID);
         }
 

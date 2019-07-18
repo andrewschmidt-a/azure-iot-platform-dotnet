@@ -1,5 +1,8 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models;
@@ -26,10 +29,11 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
         public async Task<StatusApiModel> GetAsync()
         {
             var result = new StatusApiModel(await this.statusService.GetStatusAsync());
-
+                    
             result.Properties.Add("AuthRequired", this.config.ClientAuthConfig?.AuthRequired.ToString());
             result.Properties.Add("Port", this.config.Port.ToString());
             return result;
         }
     }
 }
+

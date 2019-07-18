@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
+namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
 {
     public static class RequestExtension
     {

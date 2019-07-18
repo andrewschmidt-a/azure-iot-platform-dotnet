@@ -61,11 +61,11 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
                 this.servicesConfig.DeviceSimulationApiUrl);
             SetServiceStatus(deviceSimulationName, deviceSimulationResult, result, errors);
 
-            // Check access to Auth
-            var authResult = await this.PingServiceAsync(
+            // Check access to Auth -- commented out due to not using Auth ~ Andrew Schmidt
+            /*var authResult = await this.PingServiceAsync(
                 authName,
                 this.servicesConfig.UserManagementApiUrl);
-            SetServiceStatus(authName, authResult, result, errors);
+            SetServiceStatus(authName, authResult, result, errors);*/
 
             // Add properties
             result.Properties.Add("DeviceSimulationApiUrl", this.servicesConfig?.DeviceSimulationApiUrl);

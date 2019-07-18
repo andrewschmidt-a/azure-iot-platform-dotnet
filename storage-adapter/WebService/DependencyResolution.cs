@@ -3,6 +3,7 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
@@ -68,6 +69,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
             builder.RegisterType<DocumentDbKeyValueContainer>().As<IKeyValueContainer>().SingleInstance();
             builder.RegisterType<DocumentClientFactory>().As<IFactory<IDocumentClient>>().SingleInstance();
             builder.RegisterType<DocumentClientExceptionChecker>().As<IExceptionChecker>().SingleInstance();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
             builder.RegisterType<GuidKeyGenerator>().As<IKeyGenerator>().SingleInstance();
         }
 

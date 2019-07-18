@@ -2,6 +2,7 @@
 
 using System;
 using Autofac;
+using Microsoft.Azure.IoTSolutions.UIConfig.WebService;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
