@@ -31,7 +31,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         private readonly int docDbRUs;
         private readonly RequestOptions docDbOptions;
         private bool disposedValue;
-        private string collectionLink;
         private IHttpContextAccessor _httpContextAccessor;
 
         public DocumentDbKeyValueContainer(
@@ -83,6 +82,14 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                     this._log.Info("A valid DocumentDb Collection Id was not included in the Claim.", () => new { ex });
                     throw;
                 }
+            }
+        }
+
+        private string collectionLink
+        {
+            get
+            {
+                return $"/dbs/{this.docDbDatabase}/colls/{this.docDbCollection}";
             }
         }
 
@@ -218,12 +225,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
         private async Task SetupStorageAsync()
         {
-            if (string.IsNullOrEmpty(this.collectionLink))
-            {
-                await this.CreateDatabaseIfNotExistsAsync();
-                await this.CreateCollectionIfNotExistsAsync();
-                this.collectionLink = $"/dbs/{this.docDbDatabase}/colls/{this.docDbCollection}";
-            }
+            await this.CreateDatabaseIfNotExistsAsync();
+            await this.CreateCollectionIfNotExistsAsync();
         }
 
         private async Task CreateDatabaseIfNotExistsAsync()
