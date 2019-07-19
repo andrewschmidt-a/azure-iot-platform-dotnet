@@ -1,9 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
@@ -13,6 +15,7 @@ using Moq;
 using Newtonsoft.Json;
 using Services.Test.helpers;
 using Xunit;
+using HttpResponse = Microsoft.Azure.IoTSolutions.UIConfig.Services.Http.HttpResponse;
 
 namespace Services.Test
 {
@@ -21,19 +24,27 @@ namespace Services.Test
         private const string MOCK_SERVICE_URI = @"http://mockstorageadapter";
 
         private readonly Mock<IHttpClient> mockHttpClient;
+        private readonly Mock<IHttpContextAccessor> mockHTTPContext;
         private readonly StorageAdapterClient client;
         private readonly Random rand;
 
         public StorageAdapterClientTest()
         {
             this.mockHttpClient = new Mock<IHttpClient>();
+            this.mockHTTPContext = new Mock<IHttpContextAccessor>();
+            
+            this.mockHTTPContext.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
+                {{"TenantID", "test_tenant"}});
+            
+            
             this.client = new StorageAdapterClient(
                 this.mockHttpClient.Object,
                 new ServicesConfig
                 {
                     StorageAdapterApiUrl = MOCK_SERVICE_URI
                 },
-                new Logger("UnitTest", LogLevel.Debug));
+                new Logger("UnitTest", LogLevel.Debug), this.mockHTTPContext.Object);
+            
             this.rand = new Random();
         }
 

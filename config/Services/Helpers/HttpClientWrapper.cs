@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
@@ -15,19 +18,27 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
         Task<T> GetAsync<T>(string uri, string description, bool acceptNotFound = false);
         Task PostAsync(string uri, string description, object content = null);
         Task PutAsync(string uri, string description, object content = null);
+        void SetHeaders(Dictionary<string,string> headers);
     }
-
+    
     public class HttpClientWrapper : IHttpClientWrapper
     {
         private readonly ILogger log;
         private readonly IHttpClient client;
+        private Dictionary<string, string> headers;
 
         public HttpClientWrapper(
             ILogger logger,
-            IHttpClient client)
+            IHttpClient client,
+            Dictionary<string, string> headers = null)
         {
             this.log = logger;
             this.client = client;
+            this.headers = headers;
+            if (this.headers == null)
+            {
+                this.headers = new Dictionary<string, string>();
+            }
         }
 
         public async Task<T> GetAsync<T>(
@@ -40,6 +51,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Cache-Control", "no-cache");
             request.Headers.Add("User-Agent", "Config");
+            this.AddDefaultHeaders(request);
+            
             if (uri.ToLowerInvariant().StartsWith("https:"))
             {
                 request.Options.AllowInsecureSSLServer = true;
@@ -89,6 +102,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Cache-Control", "no-cache");
             request.Headers.Add("User-Agent", "Config");
+            this.AddDefaultHeaders(request);
             if (uri.ToLowerInvariant().StartsWith("https:"))
             {
                 request.Options.AllowInsecureSSLServer = true;
@@ -128,6 +142,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
             request.Headers.Add("Accept", "application/json");
             request.Headers.Add("Cache-Control", "no-cache");
             request.Headers.Add("User-Agent", "Config");
+            this.AddDefaultHeaders(request);
+            
             if (uri.ToLowerInvariant().StartsWith("https:"))
             {
                 request.Options.AllowInsecureSSLServer = true;
@@ -155,6 +171,18 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
                 this.log.Error("Request failed", () => new { uri, response.StatusCode, response.Content });
                 throw new ExternalDependencyException($"Unable to put {description}");
             }
+        }
+
+        private void AddDefaultHeaders(HttpRequest request)
+        {
+            foreach (var key in this.headers.Keys)
+            {
+                request.Headers.Add(key,this.headers[key]);
+            }
+        }
+        public void SetHeaders(Dictionary<string, string> headers)
+        {
+            this.headers = headers;
         }
     }
 }
