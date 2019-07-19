@@ -1,18 +1,22 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.External;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-
+using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
+using Newtonsoft.Json;
+using Microsoft.Azure.IoTSolutions.Auth;
+using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
 {
     /// <summary>
@@ -52,7 +56,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
         private readonly IClientAuthConfig config;
         private readonly ILogger log;
         private TokenValidationParameters tokenValidationParams;
-        private readonly bool authRequired;
+        private readonly bool authRequired;     
         private bool tokenValidationInitialized;
         private readonly IUserManagementClient userManagementClient;
 
@@ -110,7 +114,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
             // Store this setting to skip validating authorization in the controller if enabled
             context.Request.SetAuthRequired(this.config.AuthRequired);
 
-            if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER))
+            if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER)  && false)
             {
                 // This is a service to service request running in the private
                 // network, so we skip the auth required for user requests
@@ -135,7 +139,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
 
             if (!this.InitializeTokenValidationAsync(context.RequestAborted).Result)
             {
-                context.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                context.Response.StatusCode = (int) HttpStatusCode.ServiceUnavailable;
                 context.Response.Headers["Content-Type"] = "application/json";
                 context.Response.WriteAsync(ERROR503_AUTH);
                 return Task.CompletedTask;
@@ -166,7 +170,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
             }
 
             this.log.Warn("Authentication required", () => { });
-            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
             context.Response.Headers["Content-Type"] = "application/json";
             context.Response.WriteAsync(ERROR401);
 
@@ -197,13 +201,20 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
                     var roles = context.Request.GetCurrentUserRoleClaim().ToList();
                     if (roles.Any())
                     {
-                        var allowedActions = this.userManagementClient.GetAllowedActionsAsync(userObjectId, roles).Result;
-                        context.Request.SetCurrentUserAllowedActions(allowedActions);
+                        // This is where you can add custom rules (assuming read all)
+
+                        //var allowedActions = this.userManagementClient.GetAllowedActionsAsync(userObjectId, roles).Result;
+                        
                     }
                     else
                     {
-                        this.log.Error("JWT token doesn't include any role claims.", () => { });
+                        this.log.Warn("JWT token doesn't include any role claims.", () => { });
                     }
+                    //DISBABLED RBAC -- adding all access 
+                    context.Request.SetCurrentUserAllowedActions(new List<string>() { "ReadAll" });
+
+                    //Set Tenant Information
+                    context.Request.SetTenant();
 
                     return true;
                 }
@@ -226,6 +237,18 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
             {
                 this.log.Info("Initializing OpenID configuration", () => { });
                 var openIdConfig = await this.openIdCfgMan.GetConfigurationAsync(token);
+
+                //Attempted to do it myself still issue with SSL
+                //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.config.JwtIssuer+ "/.well-known/openid-configuration/jwks");
+                //request.AutomaticDecompression = DecompressionMethods.GZip;
+                //IdentityKeys
+
+                //using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                //using (Stream stream = response.GetResponseStream())
+                //using (StreamReader reader = new StreamReader(stream))
+                //{
+                //    keys = JsonConvert.DeserializeObject<IdentityGatewayKeys>(reader.ReadToEnd());
+                //}
 
                 this.tokenValidationParams = new TokenValidationParameters
                 {
