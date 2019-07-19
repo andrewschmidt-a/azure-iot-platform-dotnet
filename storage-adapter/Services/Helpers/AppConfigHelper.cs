@@ -3,12 +3,24 @@ using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers
 {
-    public class AppConfigurationHelper
+    public interface IAppConfigurationHelper
     {
-        public static IConfigurationRoot GetAppConfig(string appconfigconnection)
+        IConfigurationRoot GetAppConfig();
+    }
+
+    public class AppConfigurationHelper : IAppConfigurationHelper
+    {
+        public string appConfigConnectionString;
+
+        public AppConfigurationHelper(string appConfigConnectionString)
+        {
+            this.appConfigConnectionString = appConfigConnectionString;
+        }
+
+        public IConfigurationRoot GetAppConfig()
         {
             var builder = new ConfigurationBuilder();
-            builder.AddAzureAppConfiguration(appconfigconnection);
+            builder.AddAzureAppConfiguration(this.appConfigConnectionString);
             return builder.Build();
         }
     }

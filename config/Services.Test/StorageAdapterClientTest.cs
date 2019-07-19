@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -31,6 +32,11 @@ namespace Services.Test
         {
             this.mockHttpClient = new Mock<IHttpClient>();
             this.mockHTTPContext = new Mock<IHttpContextAccessor>();
+            
+            this.mockHTTPContext.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
+                {{"TenantID", "test_tenant"}});
+            
+            
             this.client = new StorageAdapterClient(
                 this.mockHttpClient.Object,
                 new ServicesConfig
