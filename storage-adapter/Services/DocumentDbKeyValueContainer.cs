@@ -16,7 +16,7 @@ using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.AuthUtils;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 {

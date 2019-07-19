@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.AuthUtils;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
