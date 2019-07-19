@@ -34,6 +34,9 @@ ingress:
     #   hosts:
     #     - chart-example.local
 secrets: {}
+
+secretsRef: 
+  - REACT_APP_BASE_SERVICE_URL
   # Optionally specify a set of secret objects whose values
   # will be injected as environment variables by default.
   # You should add this section to a file like secrets.yaml

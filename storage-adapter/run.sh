@@ -4,9 +4,6 @@ cd /app/
 
 cd webservice
 
-#add environment variables here
-#export VARNAME="my value"  
-
-export PCS_APPLICATION_CONFIGURATION=""
-
+#Can add environment variables here 
+echo $PCS_KEYVAULT_NAME
 dotnet Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.dll
