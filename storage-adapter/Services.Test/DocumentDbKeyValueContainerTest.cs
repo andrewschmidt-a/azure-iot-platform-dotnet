@@ -37,7 +37,9 @@ namespace Services.Test
         public DocumentDbKeyValueContainerTest()
         {
             this.mockContextAccessor = new Mock<IHttpContextAccessor>();
-            this.mockContextAccessor.Setup(t => t.HttpContext).Returns(new DefaultHttpContext());
+            DefaultHttpContext context = new DefaultHttpContext();
+            context.Items.Add("TenantID", MOCK_TENANT_ID);
+            this.mockContextAccessor.Setup(t => t.HttpContext).Returns(context);
 
             this.mockClient = new Mock<IDocumentClient>();
             var database = new Mock<ResourceResponse<Database>>();
@@ -47,7 +49,6 @@ namespace Services.Test
                 .Returns(Task.FromResult(new Mock<ResourceResponse<DocumentCollection>>().Object));
 
             // mock a specific tenant
-            MockIdentity.mockClaims(MOCK_TENANT_ID);
             Mock<IAppConfigurationHelper> mockAppConfigHelper = new Mock<IAppConfigurationHelper>();
 
             //Mock service returns dummy data
