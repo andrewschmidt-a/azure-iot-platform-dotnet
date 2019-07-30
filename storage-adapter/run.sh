@@ -4,4 +4,5 @@ cd /app/
 
 cd webservice
 
+#Can add environment variables here 
 dotnet Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.dll
