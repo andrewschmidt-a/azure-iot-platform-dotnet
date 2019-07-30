@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
@@ -57,14 +58,15 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
         public Deployments(
             IServicesConfig _config,
-            ILogger logger)
+            ILogger logger, 
+            IHttpContextAccessor httpContextAccessor)
         {
             if (_config == null)
             {
                 throw new ArgumentNullException("config");
             }
 
-            this._tenantHelper = new TenantConnectionHelper(_config.AppConfigConnection);
+            this._tenantHelper = new TenantConnectionHelper(httpContextAccessor, _config);
 
             this.log = logger;
         }

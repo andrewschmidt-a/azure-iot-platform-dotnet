@@ -15,6 +15,7 @@ using JobStatus = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models.Job
 using JobType = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models.JobType;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 {
@@ -55,13 +56,13 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         private const string DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}' and devices.jobs.status = '{1}'";
         private ITenantConnectionHelper tenantHelper;
 
-        public Jobs(IServicesConfig _config, IDeviceProperties _deviceProperties)
+        public Jobs(IServicesConfig _config, IDeviceProperties _deviceProperties, IHttpContextAccessor httpContextAccessor)
         {
             if (_config == null)
             {
                 throw new ArgumentNullException("config");
             }
-            tenantHelper = new TenantConnectionHelper(_config.AppConfigConnection);
+            tenantHelper = new TenantConnectionHelper(httpContextAccessor, _config);
 
             this._deviceProperties = _deviceProperties;
 

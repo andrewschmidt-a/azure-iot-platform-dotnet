@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
+namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
 {
     public interface ICorsSetup
     {

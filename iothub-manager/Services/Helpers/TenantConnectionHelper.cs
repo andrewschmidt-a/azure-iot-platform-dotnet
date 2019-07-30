@@ -7,6 +7,9 @@ using System.Linq;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
+using Microsoft.Azure.IoTSolutions.Auth;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
 {
@@ -27,7 +30,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
                 // return $"{((Dictionary<string, string>)((ClaimsPrincipal)Thread.CurrentPrincipal).Claims)["tenant"]}-tenant-data";
                 try
                 {
-                    return ((ClaimsPrincipal)Thread.CurrentPrincipal).Claims.Where(c => c.Type == "tenant").Select(c => c.Value).First();
+                    return this._httpContextAccessor.HttpContext.Request.GetTenant();
                 }
                 catch (Exception ex)
                 {
@@ -37,15 +40,23 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
         }
 
         private IConfigurationRoot appConfig;
+        private IHttpContextAccessor _httpContextAccessor;
+        private IServicesConfig _config;
 
         /// <summary>
         /// Create connection to appconfig resource
         /// </summary>
         /// <param name="appConfigConnection">Connection string for app config</param>
         /// <returns></returns>
-        public TenantConnectionHelper(string appConfigConnection)
+        public TenantConnectionHelper(IHttpContextAccessor httpContextAccessor, IServicesConfig config)
         {
-            appConfig = AppConfigurationHelper.GetAppConfig(appConfigConnection);
+            this._httpContextAccessor = httpContextAccessor;
+            this.appConfig = AppConfigurationHelper.GetAppConfig(config.AppConfigConnection);
+            this._config = config;
+        }
+
+        public TenantConnectionHelper()
+        {
         }
 
         /// <summary>
