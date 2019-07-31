@@ -22,6 +22,7 @@
       "launchBrowser": true,
       "launchUrl": "test",
       "environmentVariables": {
+<<<<<<< HEAD
         "PCS_APPLICATION_CONFIGURATION": "Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0=",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -33,6 +34,11 @@
       "resourceGroup": "rg-crslbbiot-odin-dev",
       "aksName": "aks-dev-spaces-odin",
       "subscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
+=======
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "PCS_APPLICATION_CONFIGURATION":"$(PCS_APPLICATION_CONFIGURATION)"
+      }
+>>>>>>> 2fbdb15a0817b46295a42a445c7b2f09e0525d04
     }
   }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Auth
+namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
 {
     public interface ICorsSetup
     {

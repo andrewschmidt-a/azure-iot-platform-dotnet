@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
 {
@@ -39,6 +40,10 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddIniFile("appsettings.ini", optional: true, reloadOnChange: true);
+            configurationBuilder.AddEnvironmentVariables();
+
+            this.configuration = configurationBuilder.Build();
+            configurationBuilder.AddAzureAppConfiguration(this.configuration["PCS_APPLICATION_CONFIGURATION"]);
             this.configuration = configurationBuilder.Build();
 
             // Set up Key Vault

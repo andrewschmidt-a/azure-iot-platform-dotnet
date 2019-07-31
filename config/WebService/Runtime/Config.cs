@@ -42,12 +42,12 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
         private const string CLIENT_AUTH_KEY = APPLICATION_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";
         private const string AUTH_TYPE_KEY = CLIENT_AUTH_KEY + "authType";
-        private const string AUTH_REQUIRED_KEY = CLIENT_AUTH_KEY + "authRequired";
+        private const string AUTH_REQUIRED_KEY = "AuthRequired";
 
         private const string JWT_KEY = APPLICATION_KEY + "ClientAuth:JWT:";
         private const string JWT_ALGOS_KEY = JWT_KEY + "allowedAlgorithms";
-        private const string JWT_ISSUER_KEY = JWT_KEY + "authIssuer";
-        private const string JWT_AUDIENCE_KEY = JWT_KEY + "aadAppId";
+        private const string JWT_ISSUER_KEY = "authIssuer";
+        private const string JWT_AUDIENCE_KEY = "aadAppId";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
         private const string JWT_SECURITY_KEYS = JWT_KEY + "issuerKeys";
 

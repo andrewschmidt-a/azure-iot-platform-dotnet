@@ -6,6 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
@@ -44,13 +45,14 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         private ITenantConnectionHelper _tenantHelper;
 
         public Devices(
-            IServicesConfig _config)
+            IServicesConfig _config, 
+            IHttpContextAccessor httpContextAccessor)
         {
             if (_config == null)
             {
                 throw new ArgumentNullException("config");
             }
-            _tenantHelper = new TenantConnectionHelper(_config.AppConfigConnection);
+            _tenantHelper = new TenantConnectionHelper(httpContextAccessor, _config);
 
         }
         //used for testing
