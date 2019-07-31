@@ -4,8 +4,6 @@ using System;
 using Autofac;
 using Microsoft.Azure.IoTSolutions.IotHubManager.WebService;
 using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
