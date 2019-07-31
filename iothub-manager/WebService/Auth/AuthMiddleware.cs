@@ -17,8 +17,6 @@ using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
 using Newtonsoft.Json;
 using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.External;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
 {
