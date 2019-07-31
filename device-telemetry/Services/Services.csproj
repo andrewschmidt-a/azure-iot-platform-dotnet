@@ -21,4 +21,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AuthUtils\AuthUtils.csproj" />
+  </ItemGroup>
 </Project>
