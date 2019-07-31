@@ -134,7 +134,6 @@ namespace TokenGenerator.Controllers
                 throw new Exception("Invalid Token!");
             }
 
-            return View();
         }
 
     }
