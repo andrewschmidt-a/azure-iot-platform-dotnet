@@ -3,6 +3,7 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.IotHubManager.RecurringTasksAgent;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
@@ -82,6 +83,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
             builder.RegisterType<StorageAdapterClient>().As<IStorageAdapterClient>().SingleInstance();
             builder.RegisterType<DeviceProperties>().As<IDeviceProperties>().SingleInstance();
             builder.RegisterType<UserManagementClient>().As<IUserManagementClient>().SingleInstance();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
         }
 
         private static void RegisterFactory(IContainer container)
