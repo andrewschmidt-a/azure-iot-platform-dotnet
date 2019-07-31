@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
 using Newtonsoft.Json;
+using HttpRequest = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpRequest;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
 {
@@ -26,14 +29,17 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
     public class DiagnosticsClient : IDiagnosticsClient
     {
         public bool CanLogToDiagnostics { get; }
-
+        
+        private const string TENANT_HEADER = "ApplicationTenantID";
+        private const string TENANT_ID = "TenantID";
         private readonly IHttpClient httpClient;
         private readonly ILogger log;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string serviceUrl;
         private readonly int maxRetries;
         private const int RETRY_SLEEP_MS = 500;
 
-        public DiagnosticsClient(IHttpClient httpClient, IServicesConfig config, ILogger logger)
+        public DiagnosticsClient(IHttpClient httpClient, IServicesConfig config, ILogger logger, IHttpContextAccessor contextAccessor)
         {
             this.httpClient = httpClient;
             this.log = logger;
@@ -48,6 +54,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
             {
                 this.CanLogToDiagnostics = true;
             }
+
+            this._httpContextAccessor = contextAccessor;
         }
 
         /**
@@ -69,6 +77,9 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
             try
             {
                 request.SetUriFromString($"{this.serviceUrl}/diagnosticsevents");
+                
+                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                request.Headers.Add(TENANT_HEADER, tenantId);
                 DiagnosticsRequestModel model = new DiagnosticsRequestModel
                 {
                     EventType = eventName,
@@ -133,6 +144,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
             try
             {
                 request.SetUriFromString($"{this.serviceUrl}/status");
+                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                request.Headers.Add(TENANT_HEADER, tenantId);
                 var response = await this.httpClient.GetAsync(request);
 
                 if (response.IsError)
