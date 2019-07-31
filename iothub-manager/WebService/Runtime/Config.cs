@@ -45,7 +45,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
         //test
-        private const string APPCONFIG_CONNSTRING_KEY = APPLICATION_KEY + "appconfigconnection";
+        private const string APPCONFIG_CONNSTRING_KEY = "PCS_APPLICATION_CONFIGURATION";
 
         public int Port { get; }
         public IServicesConfig ServicesConfig { get; }

@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
+namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
 {
     /// <summary>
     /// Validate every incoming request checking for a valid authorization header.
@@ -200,8 +200,9 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
                     // authorization later in the controller.
                     var userObjectId = context.Request.GetCurrentUserObjectId();
                     var roles = context.Request.GetCurrentUserRoleClaim().ToList();
-                    if (roles.Any())
+                    if (!roles.Any())
                     {
+<<<<<<< HEAD
                         // This is where you can add custom rules (assuming read all)
 
                         //var allowedActions = this.userManagementClient.GetAllowedActionsAsync(userObjectId, roles).Result;
@@ -210,6 +211,9 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
                     else
                     {
                         this.log.Warn("JWT token doesn't include any role claims.", () => { });
+=======
+                        this.log.Warn("JWT token does not include any role claims", () => {});
+>>>>>>> master
                     }
                     //DISBABLED RBAC -- adding all access 
                     context.Request.SetCurrentUserAllowedActions(new List<string>() { "ReadAll" });
