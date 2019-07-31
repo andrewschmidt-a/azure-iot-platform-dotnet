@@ -114,7 +114,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             // Store this setting to skip validating authorization in the controller if enabled
             context.Request.SetAuthRequired(this.config.AuthRequired);
 
-            if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER) )
+            if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER) && false )
             {
                 // This is a service to service request running in the private
                 // network, so we skip the auth required for user requests
