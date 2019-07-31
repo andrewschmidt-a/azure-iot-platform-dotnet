@@ -108,6 +108,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthUtils", "iothub-manager
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthUtils", "device-telemetry\AuthUtils\AuthUtils.csproj", "{00ABCF8B-853F-4E74-8114-A20E578CEE10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthUtils", "storage-adapter\AuthUtils\AuthUtils.csproj", "{87D349FB-22AF-461B-A893-F36C59E70773}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -610,6 +612,18 @@ Global
 		{00ABCF8B-853F-4E74-8114-A20E578CEE10}.Release|x64.Build.0 = Release|Any CPU
 		{00ABCF8B-853F-4E74-8114-A20E578CEE10}.Release|x86.ActiveCfg = Release|Any CPU
 		{00ABCF8B-853F-4E74-8114-A20E578CEE10}.Release|x86.Build.0 = Release|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Debug|x64.Build.0 = Debug|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Debug|x86.Build.0 = Debug|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Release|x64.ActiveCfg = Release|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Release|x64.Build.0 = Release|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Release|x86.ActiveCfg = Release|Any CPU
+		{87D349FB-22AF-461B-A893-F36C59E70773}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -656,6 +670,7 @@ Global
 		{D5C65E7E-6725-49A1-ADD3-150F5C1526CC} = {C3ACFC91-515E-4229-9CF5-1D12FBF14CF3}
 		{84113CFB-B0CB-483B-B82D-5135617803BF} = {3D5ADBC7-89F4-4C08-8CC0-809D87FA152A}
 		{00ABCF8B-853F-4E74-8114-A20E578CEE10} = {1E149DA3-0A5A-41A3-809B-EC9546336F8F}
+		{87D349FB-22AF-461B-A893-F36C59E70773} = {AAF4FB3E-29B8-4A42-89AD-CA7687FC0A79}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE5A6A54-C5FC-423B-88B0-E891CDC68C46}
