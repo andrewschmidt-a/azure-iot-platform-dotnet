@@ -18,6 +18,7 @@ C:\Users\a90q9zz\git\azure-iot-services-dotnet\identity-gateway\TokenGeneratorTe
 C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\TokenGeneratorTests\bin\Debug\netcoreapp2.2\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
 C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\TokenGeneratorTests\bin\Debug\netcoreapp2.2\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
 C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\TokenGeneratorTests\bin\Debug\netcoreapp2.2\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\TokenGeneratorTests\bin\Debug\netcoreapp2.2\appsettings.ini
 C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\TokenGeneratorTests\bin\Debug\netcoreapp2.2\TokenGeneratorTests.deps.json
 C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\TokenGeneratorTests\bin\Debug\netcoreapp2.2\TokenGeneratorTests.runtimeconfig.json
 C:\Users\a95lgzz\source\repos\azure-iot-services-dotnet\identity-gateway\TokenGeneratorTests\bin\Debug\netcoreapp2.2\TokenGeneratorTests.runtimeconfig.dev.json

@@ -7,9 +7,15 @@
     <WebStackScaffolding_IsReferencingScriptLibrariesSelected>True</WebStackScaffolding_IsReferencingScriptLibrariesSelected>
     <WebStackScaffolding_LayoutPageFile />
     <WebStackScaffolding_IsAsyncSelected>False</WebStackScaffolding_IsAsyncSelected>
-    <ActiveDebugProfile>IIS Express</ActiveDebugProfile>
+    <ActiveDebugProfile>Azure Dev Spaces</ActiveDebugProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <ItemGroup>
+    <DevSpacesDebugProfileUserSetting Include="Azure Dev Spaces">
+      <SpaceName>swami</SpaceName>
+      <LaunchUrl>api/values</LaunchUrl>
+    </DevSpacesDebugProfileUserSetting>
+  </ItemGroup>
 </Project>

@@ -30,8 +30,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
             this.httpClient = httpClient;
             this.serviceUri = config.TelemetryApiUrl;
             this._httpContextAccessor = httpContextAccessor;
-            
-            
+
+
             string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
             this.httpClient.SetHeaders(new Dictionary<string, string> {{TENANT_HEADER, tenantId}});
         }

@@ -85,6 +85,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{251AB4CA-6
 		docs\API_SPEC_ACTION_SETTINGS.md = docs\API_SPEC_ACTION_SETTINGS.md
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthUtils", "AuthUtils\AuthUtils.csproj", "{78BD0008-D7A6-4F9A-A786-28015E08863E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,10 @@ Global
 		{1BC54189-1DF9-448E-AE5F-66EB2EF51D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BC54189-1DF9-448E-AE5F-66EB2EF51D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BC54189-1DF9-448E-AE5F-66EB2EF51D82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78BD0008-D7A6-4F9A-A786-28015E08863E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78BD0008-D7A6-4F9A-A786-28015E08863E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78BD0008-D7A6-4F9A-A786-28015E08863E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78BD0008-D7A6-4F9A-A786-28015E08863E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

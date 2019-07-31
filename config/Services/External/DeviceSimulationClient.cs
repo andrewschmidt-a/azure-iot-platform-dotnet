@@ -35,8 +35,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
             
             this.serviceUri = config.DeviceSimulationApiUrl;
             this._httpContextAccessor = httpContextAccessor;
-            
-            
+
+
             string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
             this.httpClient.SetHeaders(new Dictionary<string, string> {{TENANT_HEADER, tenantId}});
         }
