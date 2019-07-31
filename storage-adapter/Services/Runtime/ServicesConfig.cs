@@ -1,4 +1,5 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
+using System;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
 using Microsoft.Extensions.Configuration;
 
@@ -35,21 +36,31 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
             this.AppConfig = appConfigurationHelper.GetAppConfig();
         }
 
+        private string AppConfigValue(string key)
+        {
+            try
+            {
+                return this.AppConfig[key];
+            }
+            catch (Exception ex)
+            {
+                throw new NullReferenceException($"{key} could not be found in your App Configuration instance.", ex);
+            }
+        }
+
         public string DocumentDbCollection(string tenant, string dataType)
         {
-            return this.AppConfig[$"tenant:{tenant}:{dataType}-collection"];
+            return this.AppConfigValue($"tenant:{tenant}:{dataType}-collection");
         }
-
         public string DocumentDbDatabase(string dataType)
         {
-            return this.AppConfig[$"storage-adapter:{dataType}:database"];
+            return this.AppConfigValue($"storage-adapter:{dataType}:database");
         }
-
         public string DocumentDbConnString
         {
             get
             {
-                return this.AppConfig[$"storage-adapter:{this.AdapterType}:connstring"];
+                return this.AppConfigValue($"storage-adapter:{this.AdapterType}:connstring");
             }
         }
     }
