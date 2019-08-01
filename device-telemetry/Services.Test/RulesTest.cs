@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
@@ -18,6 +19,8 @@ using Moq;
 using Newtonsoft.Json;
 using Services.Test.helpers;
 using Xunit;
+using HttpRequest = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpRequest;
+using HttpResponse = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpResponse;
 
 namespace Services.Test
 {
@@ -31,6 +34,7 @@ namespace Services.Test
         private readonly Mock<IHttpClient> httpClientMock;
         private readonly IRules rules;
         private readonly IDiagnosticsClient diagnosticsClient;
+        private readonly Mock<IHttpContextAccessor> httpContextAccessor;
 
         private const int LIMIT = 1000;
 
@@ -46,7 +50,8 @@ namespace Services.Test
             this.rulesMock = new Mock<IRules>();
             this.alarms = new Mock<IAlarms>();
             this.httpClientMock = new Mock<IHttpClient>();
-            this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.servicesConfig, this.logger.Object);
+            this.httpContextAccessor = new Mock<IHttpContextAccessor>();
+            this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.servicesConfig, this.logger.Object, this.httpContextAccessor.Object);
             this.rules = new Rules(this.storageAdapter.Object, this.logger.Object, this.alarms.Object, this.diagnosticsClient);
 
         }
