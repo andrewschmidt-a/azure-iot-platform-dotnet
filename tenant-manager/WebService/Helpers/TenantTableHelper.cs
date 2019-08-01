@@ -15,7 +15,7 @@ namespace tenant_manager.Helpers
 {
     public class TenantTableHelper
     {
-        public static async void WriteNewTenantToTableAsync(string storageAccountConnectionString, string tenantGuid, string tableName, string iotHubConnectionString)
+        public static async void WriteNewTenantToTableAsync(string storageAccountConnectionString, string tableName, TenantModel tenant)
         {
             /* Writes a new tenant object to a storage table */
 
@@ -28,9 +28,26 @@ namespace tenant_manager.Helpers
             await table.CreateIfNotExistsAsync();
 
             // Create and save the new tenant
-            var tenant = new TenantModel(tenantGuid, iotHubConnectionString);
             TableOperation insertOp = TableOperation.Insert(tenant);
             await table.ExecuteAsync(insertOp);
+        }
+
+        public static async Task<TenantModel> ReadTenantFromTableAsync(string storageAccountConnectionString, string tableName, string tenantId)
+        {
+            /* Return a tenant from table storage */
+
+            // Get a reference to the storage table
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
+            CloudTableClient client = storageAccount.CreateCloudTableClient();
+            CloudTable table = client.GetTableReference(tableName);
+
+            // Get the tenant object
+            string partitionKey = tenantId.Substring(0, 1);
+            TableOperation readOp = TableOperation.Retrieve<TenantModel>(partitionKey, tenantId);
+            TableResult tableResult = await table.ExecuteAsync(readOp);
+            TenantModel result = (TenantModel) tableResult.Result;
+
+            return result;
         }
     }
 }

@@ -1,13 +1,18 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using tenant_manager.Helpers;
+using tenant_manager.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Azure.ApplicationModel.Configuration;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace tenant_manager.Controllers
 {
@@ -21,38 +26,73 @@ namespace tenant_manager.Controllers
         {
             /* Creates a new tenant */
 
-            // Generate a GUID to identify the new tenant
-            string tenantGuid = Guid.NewGuid().ToString();
-
-            // Load the subscription and resource group
+            // Load variables from key vault
             string subscriptionId = "c36fb2f8-f98d-40d0-90a9-d65e93acb428";
             string rgName = "rg-crslbbiot-odin-dev";
+            string appConfigurationConnectionString = "Endpoint=https://configinfo.azconfig.io;Id=0-l3-s0:yS689kB3EvQhGLxmJ7Aa;Secret=BTx9mm1sZht6JI71g2gYgZ/Vxop14LUDZ831fqtmhSY=";
+            string storageAccountConnectionString = "DefaultEndpointsProtocol=https;AccountName=functiondefinition;AccountKey=bTwW6MmAElpi6U1s2lvC9C4QCW1jC6AVURjmmvrDBT9pmKocJCN7DVt21GW8G4SL0NM+HAyXu2pwTGiAJmNMcA==;EndpointSuffix=core.windows.net";
+            string createIotHubWebHookUrl = "https://s25events.azure-automation.net/webhooks?token=hWvfeFes46W0F0WREyD55NdKF58Oih0jlGpTHhZWewY%3d";
+            string updateFunctionsWebHookUrl = "https://s25events.azure-automation.net/webhooks?token=VXIbEy02Wm2DNlJsI42%2fTjGYlnXbhdT8zfV1%2baHAsvk%3d";
 
-            var appConfigClient = new ConfigurationClient("Endpoint=https://configinfo.azconfig.io;Id=0-l3-s0:yS689kB3EvQhGLxmJ7Aa;Secret=BTx9mm1sZht6JI71g2gYgZ/Vxop14LUDZ831fqtmhSY=");
+            // Generate new tenant information
+            string tenantGuid = Guid.NewGuid().ToString();
+            string iotHubName = "iothub-" + tenantGuid.Substring(0, 8);
+            string telemetryCollectionName = "telemetry-" + tenantGuid.Substring(0, 8);
+            string twinChangeCollectionName = "twin-change-" + tenantGuid.Substring(0, 8);
+            string lifecycleCollectionName = "lifecycle-" + tenantGuid.Substring(0, 8);
 
-            // Get the service principle token for authorizing the REST API calls
-            string token = TokenHelper.GetServicePrincipleToken();
-            
-            if (token == "")
-            {
-                return "Authenticating with the service principle failed.";
-            }
+            // Create a new tenant and save it to table storage
+            var tenant = new TenantModel(tenantGuid, iotHubName, telemetryCollectionName);
+            TenantTableHelper.WriteNewTenantToTableAsync(storageAccountConnectionString, "tenant", tenant);
 
-            // Provision a new IoT Hub
-            string iotHubConnectionString = IotHubHelper.CreateIotHub(token, tenantGuid, subscriptionId, rgName);
+            // Write to app config?
+            // var appConfigClient = new ConfigurationClient(appConfigurationConnectionString);
+            // // Write the new IoT Hub connection string to app configuration
+            // appConfigClient.Set(new ConfigurationSetting(string.Format("tenant:{0}:iotHubConnectionString", tenantGuid), iotHubConnectionString));
+            // //Write the new cosmos db collection names to app configuration
+            // appConfigClient.Set(new ConfigurationSetting(string.Format("tenant:{0}:telemetryCosmosCollectionName", tenantGuid), cosmosTelemetryCollectionName));
 
-            // Write the new IoT Hub connection string to app configuration
-            appConfigClient.Set(new ConfigurationSetting(string.Format("tenant:{0}:iotHubConnectionString", tenantGuid), iotHubConnectionString));
+            // Trigger run book to create a new IoT Hub
+            HttpClient client = new HttpClient();
+            var authToken = TokenHelper.GetServicePrincipleToken();
 
-            // Create a new cosmos db collections
-            string cosmosTelemetryCollectionName = CosmosHelper.CreateCosmosDbCollection(token, tenantGuid, "telemetry");
+            var requestBody = new
+            {   
+                tenantId = tenantGuid,
+                iotHubName = iotHubName,
+                token = authToken
+            };
 
-            // Write the new cosmos db collection names to app configuration
-            appConfigClient.Set(new ConfigurationSetting(string.Format("tenant:{0}:telemetryCosmosCollectionName", tenantGuid), cosmosTelemetryCollectionName));
+            var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            client.PostAsync(createIotHubWebHookUrl, bodyContent);
 
-            // Update 3 azure functions to write to new cosmos db collections
+            // Trigger run book to update the azure functions
+            var requestBody2 = new
+            {   
+                tenantId = tenantGuid,
+                telemetryCollectionName = telemetryCollectionName,
+                token = authToken
+            };
 
-            return "Success";
+            bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody2), Encoding.UTF8, "application/json");
+            client.PostAsync(updateFunctionsWebHookUrl, bodyContent);
+
+            return "Your tenant is being created. Your tenant GUID is: " + tenantGuid;
+        }
+
+        // GET api/tenantready/<tenantId>
+        [HttpGet("{tenantId}")]
+        public TenantModel Get(string tenantId)
+        {
+            /* Returns information for a tenant */
+
+            // Load variables from key vault
+            string storageAccountConnectionString = "DefaultEndpointsProtocol=https;AccountName=functiondefinition;AccountKey=bTwW6MmAElpi6U1s2lvC9C4QCW1jC6AVURjmmvrDBT9pmKocJCN7DVt21GW8G4SL0NM+HAyXu2pwTGiAJmNMcA==;EndpointSuffix=core.windows.net";
+
+            // Load the tenant from table storage
+            TenantModel tenant = TenantTableHelper.ReadTenantFromTableAsync(storageAccountConnectionString, "tenant", tenantId).Result;            
+
+            return tenant;
         }
     }
 }
