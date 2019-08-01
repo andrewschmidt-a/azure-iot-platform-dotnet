@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.External;
@@ -13,6 +14,7 @@ using Moq;
 using Newtonsoft.Json;
 using Services.Test.helpers;
 using Xunit;
+using HttpResponse = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Http.HttpResponse;
 
 namespace Services.Test
 {
@@ -23,17 +25,20 @@ namespace Services.Test
         private readonly Mock<IHttpClient> mockHttpClient;
         private readonly StorageAdapterClient client;
         private readonly Random rand;
+        private readonly Mock<IHttpContextAccessor> httpContextAccessor;
 
         public StorageAdapterClientTest()
         {
             this.mockHttpClient = new Mock<IHttpClient>();
+            this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             this.client = new StorageAdapterClient(
                 this.mockHttpClient.Object,
                 new ServicesConfig
                 {
                     StorageAdapterApiUrl = MOCK_SERVICE_URI
                 },
-                new Logger("UnitTest", LogLevel.Debug));
+                new Logger("UnitTest", LogLevel.Debug),
+                this.httpContextAccessor.Object);
             this.rand = new Random();
         }
 
