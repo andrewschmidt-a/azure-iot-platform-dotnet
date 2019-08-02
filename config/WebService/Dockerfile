@@ -4,14 +4,13 @@ EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src
-COPY ["auth/Services/Services.csproj", "auth/Services/"]
-COPY ["config/AuthUtils/AuthUtils.csproj", "config/AuthUtils/"]
-COPY ["config/Services/Services.csproj", "config/Services/"]
-COPY ["config/WebService/WebService.csproj", "config/WebService/"]
+COPY ["AuthUtils/AuthUtils.csproj", "AuthUtils/"]
+COPY ["Services/Services.csproj", "Services/"]
+COPY ["WebService/WebService.csproj", "WebService/"]
 
-RUN dotnet restore "config/WebService/WebService.csproj"
+RUN dotnet restore "WebService/WebService.csproj"
 COPY . .
-WORKDIR "/src/config/WebService"
+WORKDIR "/src/WebService"
 RUN dotnet build "WebService.csproj" -c Release -o /app
 
 FROM build AS publish

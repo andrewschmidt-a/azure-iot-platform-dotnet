@@ -1,8 +1,8 @@
 kind: helm-release
 apiVersion: 1.1
 build:
-  context: ..\..
-  dockerfile: Dockerfile
+  context: ..
+  dockerfile: ./Dockerfile
 install:
   chart: charts/webservice
   values:

@@ -5,14 +5,13 @@ ENV DOTNET_USE_POLLING_FILE_WATCHER=true
 EXPOSE 80
 
 WORKDIR /src
-COPY ["auth/Services/Services.csproj", "auth/Services/"]
-COPY ["config/AuthUtils/AuthUtils.csproj", "config/AuthUtils/"]
-COPY ["config/Services/Services.csproj", "config/Services/"]
-COPY ["config/WebService/WebService.csproj", "config/WebService/"]
+COPY ["AuthUtils/AuthUtils.csproj", "AuthUtils/"]
+COPY ["Services/Services.csproj", "Services/"]
+COPY ["WebService/WebService.csproj", "WebService/"]
 
-RUN dotnet restore "config/WebService/WebService.csproj"
+RUN dotnet restore "WebService/WebService.csproj"
 COPY . .
-WORKDIR "/src/config/WebService"
+WORKDIR "/src/WebService"
 RUN dotnet build --no-restore "WebService.csproj" -c $BUILD_CONFIGURATION
 
 RUN echo "exec dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION --" > /entrypoint.sh

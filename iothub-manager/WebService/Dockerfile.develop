@@ -12,7 +12,7 @@ COPY ["WebService/WebService.csproj", "WebService/"]
 RUN dotnet restore "WebService/WebService.csproj"
 COPY . .
 WORKDIR "/src/WebService"
-RUN dotnet build --no-restore "WebService.csproj" -c $BUILD_CONFIGURATION
+RUN dotnet build  "WebService.csproj" -c $BUILD_CONFIGURATION
 
 RUN echo "exec dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION --" > /entrypoint.sh
 
