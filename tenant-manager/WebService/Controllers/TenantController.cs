@@ -71,6 +71,8 @@ namespace tenant_manager.Controllers
             {   
                 tenantId = tenantGuid,
                 telemetryCollectionName = telemetryCollectionName,
+                twinChangeCollectionName = twinChangeCollectionName,
+                lifecycleCollectionName = lifecycleCollectionName,
                 token = authToken
             };
 

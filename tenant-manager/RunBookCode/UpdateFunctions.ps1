@@ -22,9 +22,17 @@ if (-Not $WebhookData) {
 $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
 $subscriptionId = "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
 $resourceGroup = "rg-crslbbiot-odin-dev"
-$functionUrl = "https://telemetry-processor-odin-mt-poc.scm.azurewebsites.net"
+$databaseName = "iot"
+$cosmosConnectionSetting = "cosmos-odin-mt-poc_DOCUMENTDB"
+$telemetryFunctionUrl = "https://telemetry-processor-odin-mt-poc.scm.azurewebsites.net"
+$twinChangeFunctionUrl = "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net"
+$lifecycleFunctionUrl = "https://lifecycle-processor-odin-mt-poc.scm.azurewebsites.net"
+$telemetryFunctionName = "telemetry-processor"
+$twinChangeFunctionName = "twin-change-processor"
+$lifecycleFunctionName = "lifecycle-processor"
+$storageAccount = "functiondefinition"
+$tableName = "tenant"
 $data.tenantId
-$data.telemetryCollectionName
 $data.token
 
 # Define the authorization headers for REST API requests
@@ -32,48 +40,74 @@ $requestHeader = @{
   "Authorization" = "Bearer " + $data.token
 }
 
-$zipPath = "functionCode.zip"
-$unzippedPath = "functionCode"
-$newZipPath = "funcionCodeNew.zip"
+# Define a function for adding a new Cosmos output to an azure function
+function Add-CosmosOutputToFunction {
+    Param ($requestHeader, $tenantId, $functionUrl, $functionName, $databaseName,
+        $cosmosCollectionName, $cosmosConnectionSetting, $cosmosPartitionKey)
 
-# Download a zip file of the current azure function code
-$functionCodeUri = "$functionUrl/api/zip/site/wwwroot/"
-Invoke-RestMethod -Method 'Get' -Headers $requestheader -Uri $functionCodeUri -OutFile $zipPath
+    $zipPath = "$functionName.zip"
+    $unzippedPath = "$functionName"
+    $newZipPath = "$($functionName)New.zip"
 
-# Uncompress the azure function code
-Expand-Archive -Path $zipPath -DestinationPath $unzippedPath
+    # Download a zip file of the current azure function code
+    $functionCodeUri = "$functionUrl/api/zip/site/wwwroot/"
+    $functionCodeUri
+    Invoke-RestMethod -Method 'Get' -Headers $requestheader -Uri $functionCodeUri -OutFile $zipPath
 
-# Load the function.json file into a powershell json object
-$functionJson = Get-Content -Path "$unzippedPath/telemetry-processor/function.json" | Out-String | ConvertFrom-Json
+    # Uncompress the azure function code
+    Expand-Archive -Path $zipPath -DestinationPath $unzippedPath
 
-# Insert the new output binding into the existing function.json
-$first8CharsOfTenantId = ($data.tenantId).SubString(0,8)
-$newOutputBinding = @"
-    {
-      "type": "cosmosDB",
-      "name": "outputTenant$($first8CharsOfTenantId)",
-      "databaseName": "iot",
-      "collectionName": "$($data.telemetryCollectionName)",
-      "createIfNotExists": true,
-      "connectionStringSetting": "cosmos-odin-mt-poc_DOCUMENTDB",
-      "direction": "out",
-      "partitionKey": "/temperature"
-    }
-"@
-$functionJson.bindings += (ConvertFrom-Json -InputObject $newOutputBinding)
+    # Load the function.json file into a powershell json object
+    $functionJson = Get-Content -Path "$unzippedPath/$functionName/function.json" | Out-String | ConvertFrom-Json
 
-# Write the updated json object to the function.json file
-ConvertTo-Json $functionJson | Out-File -FilePath "$unzippedPath/telemetry-processor/function.json"
+    # Insert the new output binding into the existing function.json
+    $first8CharsOfTenantId = ($tenantId).SubString(0,8)
+    $newOutputBinding = @"
+        {
+        "type": "cosmosDB",
+        "name": "outputTenant$first8CharsOfTenantId",
+        "databaseName": "$databaseName",
+        "collectionName": "$cosmosCollectionName",
+        "createIfNotExists": true,
+        "connectionStringSetting": "$cosmosConnectionSetting",
+        "direction": "out",
+        "partitionKey": "$cosmosPartitionKey"
+        }
+"@ # This is not indented due to powershell wanting the end of a here-string with no whitespace before it
+    
+    $functionJson.bindings += (ConvertFrom-Json -InputObject $newOutputBinding)
 
-# Compress the updated files back into a zip file
-Compress-Archive -Path "$unzippedPath/*" -DestinationPath $newZipPath
+    # Write the updated json object to the function.json file
+    ConvertTo-Json $functionJson | Out-File -FilePath "$unzippedPath/$functionName/function.json"
 
-# Update the Azure Function with the new zip file
-$functionDeployUrl = "$functionUrl/api/zipdeploy"
-$userAgent = "powershell/1.0"
-Invoke-RestMethod -Method POST -Uri $functionDeployUrl -Headers $requestheader -UserAgent $userAgent  -InFile $newZipPath -ContentType "multipart/form-data"
+    # Compress the updated files back into a zip file
+    Compress-Archive -Path "$unzippedPath/*" -DestinationPath $newZipPath
 
-# Authenticate with the service principle
+    # Update the Azure Function with the new zip file
+    $functionDeployUrl = "$functionUrl/api/zipdeploy"
+    $userAgent = "powershell/1.0"
+    Invoke-RestMethod -Method POST -Uri $functionDeployUrl -Headers $requestheader -UserAgent $userAgent  -InFile $newZipPath -ContentType "multipart/form-data"
+}
+
+# Update the telemetry function
+Add-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
+    -functionUrl $telemetryFunctionUrl -functionName $telemetryFunctionName `
+    -databaseName $databaseName -cosmosCollectionName $data.telemetryCollectionName `
+    -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
+
+# Update the twin change function
+Add-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
+    -functionUrl $twinChangeFunctionUrl -functionName $twinChangeFunctionName `
+    -databaseName $databaseName -cosmosCollectionName $data.twinChangeCollectionName `
+    -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
+
+# Update the lifecycle function
+Add-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
+    -functionUrl $lifecycleFunctionUrl -functionName $lifecycleFunctionName `
+    -databaseName $databaseName -cosmosCollectionName $data.lifecycleCollectionName `
+    -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
+
+# Authenticate with the service principle so that we can write to table storage
 $connectionName = "AzureRunAsConnection"
 try
 {
@@ -99,8 +133,6 @@ catch {
 
 # Write to table storage that the functions are updated for the tenant
 "Trying to write to table storage"
-$storageAccount = "functiondefinition"
-$tableName = "tenant"
 $table = Get-AzTableTable -resourceGroup $resourceGroup -tableName $tableName -storageAccountName $storageAccount
 $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
 $row.AreFunctionsUpdated = $true
