@@ -30,14 +30,23 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
             this.httpClient = httpClient;
             this.serviceUri = config.TelemetryApiUrl;
             this._httpContextAccessor = httpContextAccessor;
+        }
 
-
-            string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
-            this.httpClient.SetHeaders(new Dictionary<string, string> {{TENANT_HEADER, tenantId}});
+        /// <summary>
+        /// Sets the Tenant ID in the http headers
+        /// </summary>
+        private void SetHttpClientHeaders()
+        {
+            if (this._httpContextAccessor != null && this.httpClient != null)
+            {
+                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                this.httpClient.SetHeaders(new Dictionary<string, string> { { TENANT_HEADER, tenantId } });
+            }
         }
 
         public async Task UpdateRuleAsync(RuleApiModel rule, string etag)
         {
+            SetHttpClientHeaders();
             rule.ETag = etag;
 
             await this.httpClient.PutAsync($"{this.serviceUri}/rules/{rule.Id}", $"Rule {rule.Id}", rule);
