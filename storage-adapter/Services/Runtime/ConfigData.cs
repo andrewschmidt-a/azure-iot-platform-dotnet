@@ -38,7 +38,11 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
             // More info about configuration at
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration
             var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddIniFile("appsettings.ini", optional: true, reloadOnChange: true);
+            configurationBuilder
+#if  DEBUG
+                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
+#endif
+            .AddEnvironmentVariables();
             this.configuration = configurationBuilder.Build();
 
             // Set up Key Vault
