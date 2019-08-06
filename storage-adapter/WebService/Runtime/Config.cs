@@ -48,7 +48,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
                 // file, or in the PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING environment variable.
                 // When working with VisualStudio, the environment variable can be set in the
                 // WebService project settings, under the "Debug" tab.
-                Console.Write(appConfigConnectionString);
                 throw new Exception("The service configuration is incomplete. " +
                                     "Please provide your App Config connection string. " +
                                     "For more information, see the environment variables " +
