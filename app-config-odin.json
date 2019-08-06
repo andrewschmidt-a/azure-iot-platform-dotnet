@@ -1,5 +1,8 @@
 {
     "Global": {
+        "location": "centralus",
+        "resourceGroup": "rg-crslbbiot-odin-dev",
+        "subscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428",
         "ClientAuth": {
             "JWT": {
                 "aadappid": "95d3c662-23ea-4e2d-8d3d-ea2448706934",
@@ -146,5 +149,9 @@
             "twin-mirror-collection": "testtenant-twin-mirror"
         }
     },
-    "tenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb"
+    "TenantManagerService": {
+        "lifecycleFunctionUri": "https://lifecycle-processor-odin-mt-poc.scm.azurewebsites.net",
+        "telemetryFunctionUri": "https://telemetry-processor-odin-mt-poc.scm.azurewebsites.net",
+        "twinChangeFunctionUri": "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net"
+    }
 }
