@@ -35,19 +35,28 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
             
             this.serviceUri = config.DeviceSimulationApiUrl;
             this._httpContextAccessor = httpContextAccessor;
-            
-            
-            string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
-            this.httpClient.SetHeaders(new Dictionary<string, string> {{TENANT_HEADER, tenantId}});
         }
 
+        /// <summary>
+        /// Sets the Tenant ID in the http headers
+        /// </summary>
+        private void SetHttpClientHeaders()
+        {
+            if (this._httpContextAccessor != null && this.httpClient != null)
+            {
+                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                this.httpClient.SetHeaders(new Dictionary<string, string> { { TENANT_HEADER, tenantId } });
+            }
+        }
         public async Task<SimulationApiModel> GetDefaultSimulationAsync()
         {
+            SetHttpClientHeaders();
             return await this.httpClient.GetAsync<SimulationApiModel>($"{this.serviceUri}/simulations/{DEFAULT_SIMULATION_ID}", $"Simulation {DEFAULT_SIMULATION_ID}", true);
         }
 
         public async Task UpdateSimulationAsync(SimulationApiModel model)
         {
+            SetHttpClientHeaders();
             await this.httpClient.PutAsync($"{this.serviceUri}/simulations/{model.Id}", $"Simulation {model.Id}");
         }
     }

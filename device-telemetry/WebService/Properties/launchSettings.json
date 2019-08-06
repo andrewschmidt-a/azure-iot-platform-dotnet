@@ -19,6 +19,13 @@
         "PCS_AAD_APPSECRET": "$(PCS_AAD_APPSECRET)"
       },
       "applicationUrl": "http://localhost:9004/v1/status"
+    },
+    "Azure Dev Spaces": {
+      "commandName": "AzureDevSpaces",
+      "launchBrowser": true,
+      "resourceGroup": "",
+      "aksName": "",
+      "subscriptionId": ""
     }
   }
 }
