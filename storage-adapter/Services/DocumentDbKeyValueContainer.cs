@@ -43,6 +43,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             IHttpContextAccessor httpContextAcessor)
         {
             this.disposedValue = false;
+            this._clientFactory = clientFactory;
             this._config = config;
             this._exceptionChecker = exceptionChecker;
             this._log = logger;

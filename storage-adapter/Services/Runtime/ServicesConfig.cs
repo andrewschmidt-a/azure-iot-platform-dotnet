@@ -38,14 +38,12 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 
         private string AppConfigValue(string key)
         {
-            try
+            string value = this.AppConfig[key];
+            if (String.IsNullOrEmpty(value))
             {
-                return this.AppConfig[key];
+                throw new NullReferenceException($"App Config returned a null value for {key}");
             }
-            catch (Exception ex)
-            {
-                throw new NullReferenceException($"{key} could not be found in your App Configuration instance.", ex);
-            }
+            return value;
         }
 
         public string DocumentDbCollection(string tenant, string dataType)

@@ -26,12 +26,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers
         {
             try
             {
-                if (String.IsNullOrEmpty(this._config.DocumentDbConnString))
-                {
-                    string message = "Configuration DocumentDbConnString is null or empty. The Connection String was not configured properly.";
-                    throw new InvalidConfigurationException(message);
-                }
-
                 var match = Regex.Match(this._config.DocumentDbConnString, this.connectionStringRegex);
                 if (!match.Success)
                 {
