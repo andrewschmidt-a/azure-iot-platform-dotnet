@@ -12,26 +12,42 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers
 {
     public class DocumentClientFactory : IFactory<IDocumentClient>
     {
-        private readonly Uri docDbEndpoint;
-        private readonly string docDbKey;
+        private IServicesConfig _config;
+        private ILogger _log;
+        private string connectionStringRegex = "^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$";
 
         public DocumentClientFactory(IServicesConfig config, ILogger logger)
         {
-            var match = Regex.Match(config.DocumentDbConnString, "^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$");
-            if (!match.Success)
-            {
-                var message = "Invalid connection string for Cosmos DB";
-                logger.Error(message, () => { });
-                throw new InvalidConfigurationException(message);
-            }
-
-            this.docDbEndpoint = new Uri(match.Groups["endpoint"].Value);
-            this.docDbKey = match.Groups["key"].Value;
+            this._config = config;
+            this._log = logger;
         }
 
         public IDocumentClient Create()
         {
-            return new DocumentClient(this.docDbEndpoint, this.docDbKey);
+            try
+            {
+                if (String.IsNullOrEmpty(this._config.DocumentDbConnString))
+                {
+                    string message = "Configuration DocumentDbConnString is null or empty. The Connection String was not configured properly.";
+                    throw new InvalidConfigurationException(message);
+                }
+
+                var match = Regex.Match(this._config.DocumentDbConnString, this.connectionStringRegex);
+                if (!match.Success)
+                {
+                    string message = "Invalid Connection String for CosmosDb";
+                    throw new InvalidConfigurationException(message);
+                }
+
+                Uri docDbEndpoint = new Uri(match.Groups["endpoint"].Value);
+                string docDbKey = match.Groups["key"].Value;
+                return new DocumentClient(docDbEndpoint, docDbKey);
+            }                       
+            catch (Exception ex)
+            {
+                this._log.Error(ex.Message, () => { });
+                throw;
+            }
         }
     }
 }
