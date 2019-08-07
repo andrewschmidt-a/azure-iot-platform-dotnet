@@ -48,17 +48,18 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 
         public string DocumentDbCollection(string tenant, string dataType)
         {
+            // TODO: Adapt a standard for tenant secret info and update this with the new standard format
             return this.AppConfigValue($"tenant:{tenant}:{dataType}-collection");
         }
         public string DocumentDbDatabase(string dataType)
         {
-            return this.AppConfigValue($"storage-adapter:{dataType}:database");
+            return this.AppConfigValue($"StorageAdapter:{dataType}");
         }
         public string DocumentDbConnString
         {
             get
             {
-                return this.AppConfigValue($"storage-adapter:{this.AdapterType}:connstring");
+                return this.AppConfigValue($"StorageAdapter:{this.AdapterType}");
             }
         }
     }
