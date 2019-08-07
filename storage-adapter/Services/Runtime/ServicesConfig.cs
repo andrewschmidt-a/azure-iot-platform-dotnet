@@ -8,7 +8,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
     public interface IServicesConfig
     {
         string StorageType { get; set; }
-        string AdapterType { get; set; }
+        string ConnectionStringKey { get; set; }
         string DocumentDbConnString { get; }
         int DocumentDbRUs { get; set; }
         IConfigurationRoot AppConfig { get; set; }
@@ -20,18 +20,18 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
     public class ServicesConfig : IServicesConfig
     {
         public string StorageType { get; set; }
-        public string AdapterType { get; set; }
+        public string ConnectionStringKey { get; set; }
         public int DocumentDbRUs { get; set; }
         public IConfigurationRoot AppConfig { get; set; }
 
         public ServicesConfig(
             string StorageType,
-            string AdapterType,
+            string ConnectionStringKey,
             int DocumentDbRUs,
             IAppConfigurationHelper appConfigurationHelper)
         {
             this.StorageType = StorageType;
-            this.AdapterType = AdapterType;
+            this.ConnectionStringKey = ConnectionStringKey;
             this.DocumentDbRUs = DocumentDbRUs;
             this.AppConfig = appConfigurationHelper.GetAppConfig();
         }
@@ -59,7 +59,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
         {
             get
             {
-                return this.AppConfigValue($"StorageAdapter:{this.AdapterType}");
+                return this.AppConfigValue($"StorageAdapter:{this.ConnectionStringKey}");
             }
         }
     }
