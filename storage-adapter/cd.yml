@@ -20,7 +20,7 @@ steps:
     inlineScript: |-
       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
       azds up -d
-    workingDirectory: 'storage-adapter'
+    workingDirectory: 'storage-adapter/WebService'
 # - task: HelmDeploy@0
 #  inputs:
 #    connectionType: 'Azure Resource Manager'
