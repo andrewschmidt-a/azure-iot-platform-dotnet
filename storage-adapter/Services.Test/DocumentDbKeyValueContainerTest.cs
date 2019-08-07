@@ -67,8 +67,7 @@ namespace Services.Test
                 new MockExceptionChecker(),
                 mockServicesConfig.Object,
                 new Logger("UnitTest", LogLevel.Debug),
-                this.mockContextAccessor.Object,
-                MOCK_DB_ID);
+                this.mockContextAccessor.Object);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

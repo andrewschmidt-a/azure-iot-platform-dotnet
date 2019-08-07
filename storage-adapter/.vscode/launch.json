@@ -10,14 +10,10 @@
                 
                 // See https://docs.microsoft.com/aspnet/core/fundamentals/environments
                 "ASPNETCORE_ENVIRONMENT": "Development",
-
                 // Environment variables used in appsettings.ini.  
                 // Required Settings. 
-                "PCS_STORAGEADAPTER_DOCUMENTDB_CONNSTRING": "your document DB connection string",
                 // Optional Settings. For additonal optional settings, refer to appsettings.ini directly.
-                "PCS_KEYVAULT_NAME": "",
-                "PCS_AAD_APPID": "",
-                "PCS_AAD_APPSECRET": ""
+                "PCS_APPLICATION_CONFIGURATION": "Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0="
             },
             "stopAtEntry": false,
             "justMyCode":false,
