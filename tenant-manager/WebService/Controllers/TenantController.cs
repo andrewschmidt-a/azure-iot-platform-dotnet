@@ -20,19 +20,36 @@ namespace tenant_manager.Controllers
     [ApiController]
     public class TenantController : ControllerBase
     {
+        private IConfiguration _config;
+        private KeyVaultHelper keyVaultHelper;
+
+        public TenantController(IConfiguration config)
+        {
+            this._config = config;
+            this.keyVaultHelper = new KeyVaultHelper(this._config);
+        }
+
         // POST api/tenant
         [HttpPost]
         public string Post()
         {
             /* Creates a new tenant */
 
-            // Load variables from key vault
-            string subscriptionId = "c36fb2f8-f98d-40d0-90a9-d65e93acb428";
-            string rgName = "rg-crslbbiot-odin-dev";
-            string appConfigurationConnectionString = "Endpoint=https://configinfo.azconfig.io;Id=0-l3-s0:yS689kB3EvQhGLxmJ7Aa;Secret=BTx9mm1sZht6JI71g2gYgZ/Vxop14LUDZ831fqtmhSY=";
-            string storageAccountConnectionString = "DefaultEndpointsProtocol=https;AccountName=functiondefinition;AccountKey=bTwW6MmAElpi6U1s2lvC9C4QCW1jC6AVURjmmvrDBT9pmKocJCN7DVt21GW8G4SL0NM+HAyXu2pwTGiAJmNMcA==;EndpointSuffix=core.windows.net";
-            string createIotHubWebHookUrl = "https://s25events.azure-automation.net/webhooks?token=hWvfeFes46W0F0WREyD55NdKF58Oih0jlGpTHhZWewY%3d";
-            string updateFunctionsWebHookUrl = "https://s25events.azure-automation.net/webhooks?token=VXIbEy02Wm2DNlJsI42%2fTjGYlnXbhdT8zfV1%2baHAsvk%3d";
+            // Load variables from app config
+            string subscriptionId = this._config["Global:subscriptionId"];
+            string rgName = this._config["Global:resourceGroup"];
+
+            // Load secrets from key vault
+            var secretTasks = new Task<string>[] {
+                keyVaultHelper.getSecretAsync("storageAccountConnectionString"),
+                keyVaultHelper.getSecretAsync("createIotHubWebHookUrl"),
+                keyVaultHelper.getSecretAsync("updateFunctionsWebHookUrl")
+            };
+            Task.WaitAll(secretTasks);
+            
+            string storageAccountConnectionString = secretTasks[0].Result;
+            string createIotHubWebHookUrl = secretTasks[1].Result;
+            string updateFunctionsWebHookUrl = secretTasks[2].Result;
 
             // Generate new tenant information
             string tenantGuid = Guid.NewGuid().ToString();
@@ -89,7 +106,7 @@ namespace tenant_manager.Controllers
             /* Returns information for a tenant */
 
             // Load variables from key vault
-            string storageAccountConnectionString = "DefaultEndpointsProtocol=https;AccountName=functiondefinition;AccountKey=bTwW6MmAElpi6U1s2lvC9C4QCW1jC6AVURjmmvrDBT9pmKocJCN7DVt21GW8G4SL0NM+HAyXu2pwTGiAJmNMcA==;EndpointSuffix=core.windows.net";
+            var storageAccountConnectionString = this.keyVaultHelper.getSecretAsync("storageAccountConnectionString").Result;
 
             // Load the tenant from table storage
             TenantModel tenant = TenantTableHelper.ReadTenantFromTableAsync(storageAccountConnectionString, "tenant", tenantId).Result;            

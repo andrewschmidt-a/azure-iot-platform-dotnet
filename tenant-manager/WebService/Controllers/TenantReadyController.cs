@@ -20,6 +20,15 @@ namespace tenant_manager.Controllers
     [ApiController]
     public class TenantReadyController : ControllerBase
     {
+        private IConfiguration _config;
+        private KeyVaultHelper keyVaultHelper;
+
+        public TenantReadyController(IConfiguration config)
+        {
+            this._config = config;
+            this.keyVaultHelper = new KeyVaultHelper(this._config);
+        }
+        
         // GET api/tenantready/<tenantId>
         [HttpGet("{tenantId}", Name = "Get")]
         public bool Get(string tenantId)
@@ -27,7 +36,7 @@ namespace tenant_manager.Controllers
             /* Checks whether a tenant currently exists or not */
 
             // Load variables from key vault
-            string storageAccountConnectionString = "DefaultEndpointsProtocol=https;AccountName=functiondefinition;AccountKey=bTwW6MmAElpi6U1s2lvC9C4QCW1jC6AVURjmmvrDBT9pmKocJCN7DVt21GW8G4SL0NM+HAyXu2pwTGiAJmNMcA==;EndpointSuffix=core.windows.net";
+            var storageAccountConnectionString = this.keyVaultHelper.getSecretAsync("storageAccountConnectionString").Result;
 
             // Load the tenant from table storage
             TenantModel tenant = TenantTableHelper.ReadTenantFromTableAsync(storageAccountConnectionString, "tenant", tenantId).Result;
