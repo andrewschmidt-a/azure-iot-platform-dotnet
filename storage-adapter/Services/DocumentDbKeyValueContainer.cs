@@ -27,7 +27,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         private readonly ILogger _log;
         private readonly IServicesConfig _config;  // injected
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private static string documentDataType = "pcs";  // a datatype for this type of key value container. This could go into the constructor later if necessary
+        private readonly string documentDataType = "pcs";  // a datatype for this type of key value container. This could go into the constructor later if necessary
 
         private IDocumentClient client;
         private int docDbRUs;
@@ -54,11 +54,11 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         {
             get
             {
-                string docDbDatabase = this._config.DocumentDbDatabase(DocumentDbKeyValueContainer.documentDataType);
+                string docDbDatabase = this._config.DocumentDbDatabase(this.documentDataType);
                 if (String.IsNullOrEmpty(docDbDatabase))
                 {
-                    string message = $"A valid DocumentDb Database Id could not be retrieved for {DocumentDbKeyValueContainer.documentDataType}";
-                    this._log.Info(message, () => new { DocumentDbKeyValueContainer.documentDataType });
+                    string message = $"A valid DocumentDb Database Id could not be retrieved for {this.documentDataType}";
+                    this._log.Info(message, () => new { this.documentDataType });
                     throw new Exception(message);
                 } 
                 return docDbDatabase;
@@ -73,7 +73,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 try
                 {
                     string tenant = this._httpContextAccessor.HttpContext.Request.GetTenant();
-                    return this._config.DocumentDbCollection(tenant, DocumentDbKeyValueContainer.documentDataType);
+                    return this._config.DocumentDbCollection(tenant, this.documentDataType);
                 }
                 catch (Exception ex)
                 {
