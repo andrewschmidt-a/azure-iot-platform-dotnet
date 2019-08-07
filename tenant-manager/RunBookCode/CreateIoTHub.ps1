@@ -44,12 +44,7 @@ catch {
 
 # Retrieve the data from the Webhook request body
 $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
-$location = "centralus"
-$subscriptionId = "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
-$resourceGroup = "rg-crslbbiot-odin-dev"
-$telemetryEventHubConnString = "Endpoint=sb://eventhubs-odin-mt-poc.servicebus.windows.net/;SharedAccessKeyName=iothubs;SharedAccessKey=GMDsM1ecndjoJGEgKxoGCbrb5Qmc+6Jgle6OURn4FqQ=;EntityPath=telemetry"
-$twinChangeEventHubConnString = "Endpoint=sb://eventhubs-odin-mt-poc.servicebus.windows.net/;SharedAccessKeyName=iothubs;SharedAccessKey=fnwp1rbEbYVhWZFviQ6jj90IpROYAv59uziBJ6r3pIM=;EntityPath=twin-change"
-$lifecycleEventHubConnString = "Endpoint=sb://eventhubs-odin-mt-poc.servicebus.windows.net/;SharedAccessKeyName=iothubs;SharedAccessKey=jByrkWFWTLVyxtNpPORS3tx+e40/Q4GcyyBPn/aUYW4=;EntityPath=lifecycle"
+$appConfigUri = "https://app-config-odin.azconfig.io"
 $data.token
 
 # Define template for creating IoT Hub
@@ -57,7 +52,7 @@ $iotHubTemplate = @"
 {  
   "name":"$($data.iotHubName)",
   "type":"Microsoft.Devices/IotHubs",
-  "location":"$location",
+  "location":"$($data.location)",
   "sku":{  
     "name":"S1",
     "tier":"Standard",
@@ -84,22 +79,22 @@ $iotHubTemplate = @"
 				],
 				"eventHubs":[  
 					{
-            "connectionString": "$($telemetryEventHubConnString)",
+            "connectionString": "$($data.telemetryEventHubConnString)",
             "name": "event-hub-telemetry",
-            "subscriptionId": "$($subscriptionId)",
-            "resourceGroup": "$($resourceGroup)"
+            "subscriptionId": "$($data.subscriptionId)",
+            "resourceGroup": "$($data.resourceGroup)"
           },
 					{
-            "connectionString": "$($twinChangeEventHubConnString)",
+            "connectionString": "$($data.twinChangeEventHubConnString)",
             "name": "event-hub-twin-change",
-            "subscriptionId": "$($subscriptionId)",
-            "resourceGroup": "$($resourceGroup)"
+            "subscriptionId": "$($data.subscriptionId)",
+            "resourceGroup": "$($data.resourceGroup)"
           },
 					{
-            "connectionString": "$($lifecycleEventHubConnString)",
+            "connectionString": "$($data.lifecycleEventHubConnString)",
             "name": "event-hub-lifecycle",
-            "subscriptionId": "$($subscriptionId)",
-            "resourceGroup": "$($resourceGroup)"
+            "subscriptionId": "$($data.subscriptionId)",
+            "resourceGroup": "$($data.resourceGroup)"
           }
 				],
 				"storageContainers":[  
@@ -145,7 +140,7 @@ $requestHeader = @{
   "Content-Type" = "application/json"
 }
 
-$iotHubUri = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)?api-version=2019-03-22-preview"
+$iotHubUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)?api-version=2019-03-22-preview"
 
 # Create IoT Hub using Azure REST API
 $result = (Invoke-RestMethod -Method Put -Headers $requestheader -Uri $iotHubUri -Body $iotHubTemplate)
@@ -153,14 +148,14 @@ $result = (Invoke-RestMethod -Method Put -Headers $requestheader -Uri $iotHubUri
 # Wait for IoT Hub to be created
 $tries = 0
 while (($result.properties.state -ne "Active") -and ($tries -lt 30)) {
-    Start-Sleep -Second 15
-    $result = (Invoke-RestMethod -Method Get -Headers $requestheader -Uri $iotHubUri)
-    $tries++
+   Start-Sleep -Second 15
+   $result = (Invoke-RestMethod -Method Get -Headers $requestheader -Uri $iotHubUri)
+   $tries++
 }
 
 # Load the connection string
 $policy = "iothubowner" 
-$iotHubKeysUri = "https://management.azure.com/subscriptions/$subscriptionId/resourceGroups/$resourceGroup/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)/IotHubKeys/$policy/listkeys?api-version=2019-03-22-preview"
+$iotHubKeysUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)/IotHubKeys/$policy/listkeys?api-version=2019-03-22-preview"
 $result = (Invoke-RestMethod -Method Post -Headers $requestheader -Uri $iotHubKeysUri)
 $result
 
@@ -168,11 +163,20 @@ $result
 $sharedAccessKey = $result.primaryKey
 $connectionString = "HostName=$($data.iotHubName).azure-devices.net;SharedAccessKeyName=$policy;SharedAccessKey=$sharedAccessKey"
 
+# Write the IoT Hub connection string to app config
+# $appConfigKey = "tenant:$($data.tenantId):iotHubConnectionString"
+# $appConfigUri = "$appConfigUri/kv/$appConfigKey"
+# $appConfigBody = @{
+#   "value" = "$connectionString"
+# }
+# # Authentication in the request header is not valid for this API
+# Invoke-RestMethod -Method Put -Headers $requestheader -Uri $iotHubUri -Body $iotHubTemplate
+
 # Write to table storage
 "Trying to write to table storage"
 $storageAccount = "functiondefinition"
 $tableName = "tenant"
-$table = Get-AzTableTable -resourceGroup $resourceGroup -tableName $tableName -storageAccountName $storageAccount
+$table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $tableName -storageAccountName $storageAccount
 $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
 $row.IsIotHubDeployed = $true
 $row.IotHubConnectionString = $connectionString

@@ -20,19 +20,6 @@ if (-Not $WebhookData) {
 
 # Retrieve the data from the Webhook request body
 $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
-$subscriptionId = "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
-$resourceGroup = "rg-crslbbiot-odin-dev"
-$databaseName = "iot"
-$cosmosConnectionSetting = "cosmos-odin-mt-poc_DOCUMENTDB"
-$telemetryFunctionUrl = "https://telemetry-processor-odin-mt-poc.scm.azurewebsites.net"
-$twinChangeFunctionUrl = "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net"
-$lifecycleFunctionUrl = "https://lifecycle-processor-odin-mt-poc.scm.azurewebsites.net"
-$telemetryFunctionName = "telemetry-processor"
-$twinChangeFunctionName = "twin-change-processor"
-$lifecycleFunctionName = "lifecycle-processor"
-$storageAccount = "functiondefinition"
-$tableName = "tenant"
-$data.tenantId
 $data.token
 
 # Define the authorization headers for REST API requests
@@ -66,7 +53,7 @@ function Add-CosmosOutputToFunction {
         {
         "type": "cosmosDB",
         "name": "outputTenant$first8CharsOfTenantId",
-        "databaseName": "$databaseName",
+        "databaseName": "$($data.databaseName)",
         "collectionName": "$cosmosCollectionName",
         "createIfNotExists": true,
         "connectionStringSetting": "$cosmosConnectionSetting",
@@ -91,20 +78,20 @@ function Add-CosmosOutputToFunction {
 
 # Update the telemetry function
 Add-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
-    -functionUrl $telemetryFunctionUrl -functionName $telemetryFunctionName `
-    -databaseName $databaseName -cosmosCollectionName $data.telemetryCollectionName `
+    -functionUrl $data.telemetryFunctionUrl -functionName $data.telemetryFunctionName `
+    -databaseName $data.databaseName -cosmosCollectionName $data.telemetryCollectionName `
     -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
 
 # Update the twin change function
 Add-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
-    -functionUrl $twinChangeFunctionUrl -functionName $twinChangeFunctionName `
-    -databaseName $databaseName -cosmosCollectionName $data.twinChangeCollectionName `
+    -functionUrl $data.twinChangeFunctionUrl -functionName $data.twinChangeFunctionName `
+    -databaseName $data.databaseName -cosmosCollectionName $data.twinChangeCollectionName `
     -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
 
 # Update the lifecycle function
 Add-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
-    -functionUrl $lifecycleFunctionUrl -functionName $lifecycleFunctionName `
-    -databaseName $databaseName -cosmosCollectionName $data.lifecycleCollectionName `
+    -functionUrl $data.lifecycleFunctionUrl -functionName $data.lifecycleFunctionName `
+    -databaseName $data.databaseName -cosmosCollectionName $data.lifecycleCollectionName `
     -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
 
 # Authenticate with the service principle so that we can write to table storage
@@ -133,7 +120,7 @@ catch {
 
 # Write to table storage that the functions are updated for the tenant
 "Trying to write to table storage"
-$table = Get-AzTableTable -resourceGroup $resourceGroup -tableName $tableName -storageAccountName $storageAccount
+$table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $data.tableName -storageAccountName $data.storageAccount
 $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
 $row.AreFunctionsUpdated = $true
 $row | Update-AzTableRow -Table $table

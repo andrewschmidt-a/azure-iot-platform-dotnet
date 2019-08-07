@@ -38,6 +38,8 @@ namespace tenant_manager.Controllers
             // Load variables from app config
             string subscriptionId = this._config["Global:subscriptionId"];
             string rgName = this._config["Global:resourceGroup"];
+            string location = this._config["Global:location"];
+            
 
             // Load secrets from key vault
             var secretTasks = new Task<string>[] {
@@ -77,6 +79,12 @@ namespace tenant_manager.Controllers
             {   
                 tenantId = tenantGuid,
                 iotHubName = iotHubName,
+                location = location,
+                subscriptionId = subscriptionId,
+                resourceGroup = rgName,
+                telemetryEventHubConnString = this._config["TenantManagerService:telemetryEventHubConnString"],
+                twinChangeEventHubConnString = this._config["TenantManagerService:twinChangeEventHubConnString"],
+                lifecycleEventHubConnString = this._config["TenantManagerService:lifecycleEventHubConnString"],
                 token = authToken
             };
 
@@ -87,9 +95,20 @@ namespace tenant_manager.Controllers
             var requestBody2 = new
             {   
                 tenantId = tenantGuid,
+                resourceGroup = rgName,
+                cosmosConnectionSetting = this._config["TenantManagerService:cosmosConnectionSetting"],
+                telemetryFunctionUrl = this._config["TenantManagerService:telemetryFunctionUri"],
+                twinChangeFunctionUrl = this._config["TenantManagerService:twinChangeFunctionUri"],
+                lifecycleFunctionUrl = this._config["TenantManagerService:lifecycleFunctionUri"],
+                telemetryFunctionName = this._config["TenantManagerService:telemetryFunctionName"],
+                twinChangeFunctionName = this._config["TenantManagerService:twinChangeFunctionName"],
+                lifecycleFunctionName = this._config["TenantManagerService:lifecycleFunctionName"],
                 telemetryCollectionName = telemetryCollectionName,
                 twinChangeCollectionName = twinChangeCollectionName,
                 lifecycleCollectionName = lifecycleCollectionName,
+                storageAccount = this._config["StorageAccount:name"],
+                databaseName = this._config["TenantManagerService:databaseName"],
+                tableName = this._config["TenantManagerService:tableName"],
                 token = authToken
             };
 
