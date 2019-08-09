@@ -24,14 +24,16 @@ namespace IdentityGateway.Controllers
     {
 
         private IConfiguration _config;
-        private UserTenantContainer _table;
+        public UserTenantContainer _userTenantContainer;
+        public UserSettingsContainer _userSettingsContainer;
 
         public KeyVaultHelper keyVaultHelper;
 
-        public AuthorizeController(IConfiguration config, UserTenantContainer table)
+        public AuthorizeController(IConfiguration config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer)
         {
             this._config = config;
-            this._table = table;
+            this._userTenantContainer = userTenantContainer;
+            this._userSettingsContainer = userSettingsContainer;
             this.keyVaultHelper = new KeyVaultHelper(this._config);
         }
         // GET: connect/authorize
@@ -85,13 +87,41 @@ namespace IdentityGateway.Controllers
 
                 // Bring over Subject and Name
                 var claims = jwt.Claims.Where(t=> new List<string> { "sub", "name" }.Contains(t.Type)).ToList();
+                var userId = jwt.Claims.First(t => t.Type == "sub").Value;
+
+                // Create a userTenantInput for the purpose of finding the full tenant list associated with this user
+                UserTenantInput tenantInput = new UserTenantInput
+                {
+                    userId = userId
+                };
+                List<UserTenantModel> tenantList = await this._userTenantContainer.GetAllAsync(tenantInput);
+
+                if (authState.tenant == null)
+                {
+                    // authState has no tenant, so we should use either the User's last used tenant, or the first tenant available to them
+                    // Create a UserSettingsInput for the purpose of finding the LastUsedTenant setting for this user
+                    UserSettingsInput settingsInput = new UserSettingsInput
+                    {
+                        userId = userId,
+                        settingKey = "LastUsedTenant"
+                    };
+                    UserSettingsModel lastUsedSetting = await this._userSettingsContainer.GetAsync(settingsInput);
+                    string tenant = lastUsedSetting.Value;  // Get the value of the last used tenant setting
+
+                    if (String.IsNullOrEmpty(tenant))
+                    {
+                        tenant = tenantList.First().RowKey;  // Set the tenant to the first tenant in the list of tenants for this user
+                    }
+
+                    authState.tenant = tenant;
+                }
 
                 UserTenantInput input = new UserTenantInput
                 {
-                    userId = authState.tenant,
-                    roles = jwt.Claims.First(t => t.Type == "sub").Value
+                    userId = userId,
+                    tenant = authState.tenant
                 };
-                UserTenantModel tenantModel = await this._table.GetAsync(input);
+                UserTenantModel tenantModel = await this._userTenantContainer.GetAsync(input);
 
                 // If User not associated with Tenant then dont add claims return token without 
                 if (tenantModel != null)
@@ -101,6 +131,9 @@ namespace IdentityGateway.Controllers
                     // Add Roles
                     tenantModel.RoleList.ForEach(role => claims.Add(new Claim("role", role)));
                 }
+
+                // add all tenants they have access to
+                claims.AddRange(tenantList.Select(t=> new Claim("available_tenants", t.RowKey)));
 
                 // Create Security key  using private key above:
                 // not that latest version of JWT using Microsoft namespace instead of System

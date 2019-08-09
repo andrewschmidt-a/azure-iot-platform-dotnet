@@ -12,6 +12,7 @@ namespace IdentityGateway.Services
         // interface members
         public string userId { get; set; }
 
+        public string tenant;
         public string roles;
     }
 
