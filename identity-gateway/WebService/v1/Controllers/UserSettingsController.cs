@@ -51,7 +51,7 @@ namespace IdentityGateway.WebService.Controllers
         }
 
         [HttpDelete("{userId}/{setting}")]
-        public async Task<string> Delete(string userId, string setting)
+        public async Task<string> DeleteAsync(string userId, string setting)
         {
             return "delete";
         }
