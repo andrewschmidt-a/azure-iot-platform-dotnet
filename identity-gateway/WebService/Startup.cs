@@ -24,6 +24,10 @@ namespace IdentityGateway.WebService
 #endif
                 ;
             this.Configuration = builder.Build();
+            builder.AddEnvironmentVariables();
+            var settings = builder.Build();
+            builder.AddAzureAppConfiguration(settings["PCS_APPLICATION_CONFIGURATION"]); 
+            Configuration = builder.Build();
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
