@@ -18,8 +18,8 @@ steps:
     containerRegistry: '3M-CRSLAD16-BBIoTP-Dev-odinarc'
     repository: 'identity-gateway'
     command: 'buildAndPush'
-    Dockerfile: 'identity-gateway/Dockerfile'
-    buildContext: 'identity-gateway'
+    Dockerfile: 'identity-gateway/TokenGenerator/Dockerfile'
+    buildContext: 'identity-gateway/TokenGenerator'
 # - task: AzureCLI@1
 #   inputs:
 #     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
