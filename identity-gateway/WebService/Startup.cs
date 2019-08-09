@@ -31,7 +31,8 @@ namespace IdentityGateway.WebService
         {
             services.AddMvc().AddControllersAsServices();
 
-            services.AddSingleton<TableHelper>(new TableHelper(this.Configuration));
+            services.AddScoped<TableHelper>();
+            
             services.AddSingleton<UserSettingsContainer>();
             services.AddSingleton<UserTenantContainer>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
