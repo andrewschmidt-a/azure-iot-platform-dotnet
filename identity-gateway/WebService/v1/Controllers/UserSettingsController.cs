@@ -15,11 +15,11 @@ namespace IdentityGateway.WebService.Controllers
     {
 
         private IConfiguration _config;
-        private UserTenantTable _table;
+        private UserSettingsContainer _table;
 
         public KeyVaultHelper keyVaultHelper;
 
-        public UserSettingsController(IConfiguration config, UserTenantTable table)
+        public UserSettingsController(IConfiguration config, UserSettingsContainer table)
         {
             this._config = config;
             this._table = table;
@@ -32,24 +32,28 @@ namespace IdentityGateway.WebService.Controllers
             return  "/api/user requires an id" ;
         }
 
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{userId}/{setting}")]
         public async Task<string> GetAsync(string userId, string setting)
         {
+            return "get";
         }
 
-        [HttpPost("{userId}")]
-        public async Task<string> PostAsync(string userId, string setting, string value)
+        [HttpPost("{userId}/{setting}/{value}")]
+        public async Task<string> PostAsync(string userId, [FromBody] UserSettingsModel model)
         {
+            return "post";
         }
 
-        [HttpPut("{userId}")]
-        public void Put(string userId, string setting, string value)
+        [HttpPut("{userId}/{setting}/{value}")]
+        public async Task<string> PutAsync(string userId, [FromBody] UserSettingsModel model)
         {
+            return "put";
         }
 
-        [HttpDelete("{userId}")]
+        [HttpDelete("{userId}/{setting}")]
         public async Task<string> Delete(string userId, string setting)
         {
+            return "delete";
         }
     }
 }

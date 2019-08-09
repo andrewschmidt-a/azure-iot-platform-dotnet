@@ -15,15 +15,12 @@ namespace IdentityGateway.WebService.Controllers
     {
 
         private IConfiguration _config;
-        private UserTenantTable _table;
+        private UserTenantContainer _table;
 
-        public KeyVaultHelper keyVaultHelper;
-
-        public UserController(IConfiguration config, UserTenantTable table)
+        public UserController(IConfiguration config, UserTenantContainer table)
         {
             this._config = config;
             this._table = table;
-            this.keyVaultHelper = new KeyVaultHelper(this._config);
         }
         
         /// <summary>
@@ -44,9 +41,13 @@ namespace IdentityGateway.WebService.Controllers
         /// <returns></returns>
         // GET: api/User/5
         [HttpGet("{id}", Name = "Get")]
-        public async Task<string> GetAsync(Guid id)
+        public async Task<string> GetAsync(string userId)
         {
-            List <UserModel> TheModel = await this._table.GetUserTenantsAsync(id.ToString());
+            UserTenantInput input = new UserTenantInput
+            {
+                userId = userId
+            };
+            UserTenantModel TheModel = await this._table.GetAsync(input);
             return JsonConvert.SerializeObject(TheModel);
         }
 
@@ -58,7 +59,12 @@ namespace IdentityGateway.WebService.Controllers
         [HttpPost("{userId}")]
         public async Task<string> PostAsync(string userId, [FromBody] string roles)
         {
-            var result = await this._table.CreateUserTenantAsync(userId, roles);
+            UserTenantInput input = new UserTenantInput
+            {
+                userId = userId,
+                roles = roles
+            };
+            var result = await this._table.CreateAsync(input);
             return JsonConvert.SerializeObject(result);
         }
 
@@ -66,7 +72,7 @@ namespace IdentityGateway.WebService.Controllers
         // this is because the table does not consist of any unique identifier, and simply serves the purpose of recording
         // which tenant id a user is associated with, so there really only needs to be create and delete apis...
         [HttpPut("{userId}")]
-        public void Put(string userId, [FromBody] UserModel update)
+        public void Put(string userId, [FromBody] UserTenantModel update)
         {
         }
 
@@ -78,7 +84,11 @@ namespace IdentityGateway.WebService.Controllers
         [HttpDelete("{userId}")]
         public async Task<string> Delete(string userId)
         {
-            var result = await this._table.DeleteUserTenantAsync(userId);
+            UserTenantInput input = new UserTenantInput
+            {
+                userId = userId
+            };
+            var result = await this._table.DeleteAsync(input);
             return JsonConvert.SerializeObject(result);
         }
     }

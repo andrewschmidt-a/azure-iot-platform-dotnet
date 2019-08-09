@@ -24,11 +24,11 @@ namespace IdentityGateway.Controllers
     {
 
         private IConfiguration _config;
-        private UserTenantTable _table;
+        private UserTenantContainer _table;
 
         public KeyVaultHelper keyVaultHelper;
 
-        public AuthorizeController(IConfiguration config, UserTenantTable table)
+        public AuthorizeController(IConfiguration config, UserTenantContainer table)
         {
             this._config = config;
             this._table = table;
@@ -86,7 +86,12 @@ namespace IdentityGateway.Controllers
                 // Bring over Subject and Name
                 var claims = jwt.Claims.Where(t=> new List<string> { "sub", "name" }.Contains(t.Type)).ToList();
 
-                UserModel tenantModel = await this._table.GetUserTenantInfoAsync(authState.tenant, jwt.Claims.First(t => t.Type == "sub").Value);
+                UserTenantInput input = new UserTenantInput
+                {
+                    userId = authState.tenant,
+                    roles = jwt.Claims.First(t => t.Type == "sub").Value
+                };
+                UserTenantModel tenantModel = await this._table.GetAsync(input);
 
                 // If User not associated with Tenant then dont add claims return token without 
                 if (tenantModel != null)

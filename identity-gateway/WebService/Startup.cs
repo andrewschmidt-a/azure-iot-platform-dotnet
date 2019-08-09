@@ -1,5 +1,6 @@
 ﻿
 using IdentityGateway.Services;
+using IdentityGateway.Services.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +30,10 @@ namespace IdentityGateway.WebService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().AddControllersAsServices();
-            services.AddSingleton<UserTenantTable>();
+
+            services.AddSingleton<TableHelper>(new TableHelper(this.Configuration));
+            services.AddSingleton<UserSettingsContainer>();
+            services.AddSingleton<UserTenantContainer>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IStatusService, StatusService>();

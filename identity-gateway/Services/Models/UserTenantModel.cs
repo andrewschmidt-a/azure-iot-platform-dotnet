@@ -4,13 +4,13 @@ using Newtonsoft.Json;
 
 namespace IdentityGateway.Services.Models
 {
-    public class UserModel : TableEntity
+    public class UserTenantModel : TableEntity
     {
         public string TenantId;
         public string UserId;
         public string Roles {  get; set; }
 
-        public UserModel(string userId, string tenantId)
+        public UserTenantModel(string userId, string tenantId)
         {
             this.UserId = userId;
             this.TenantId = tenantId;
@@ -19,7 +19,7 @@ namespace IdentityGateway.Services.Models
             this.Roles = "";
         }
 
-        public UserModel(string userId, string tenantId, string roles)
+        public UserTenantModel(string userId, string tenantId, string roles)
         {
             this.UserId = userId;
             this.TenantId = tenantId;

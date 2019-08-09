@@ -18,15 +18,15 @@ namespace IdentityGateway.Services.Helpers
     {
         private IKeyVaultClient client;
         private IConfiguration _config;
-        public KeyVaultHelper(IConfiguration _config)
+        public KeyVaultHelper(IConfiguration config)
         {
             string AzureServicesAuthConnectionString =
-                $"RunAs=App;AppId={_config["KeyVault:aadappid"]};TenantId={_config["AzureActiveDirectory:aadtenantid"]};AppKey={_config["KeyVault:aadappsecret"]};";
+                $"RunAs=App;AppId={config["KeyVault:aadappid"]};TenantId={config["AzureActiveDirectory:aadtenantid"]};AppKey={config["KeyVault:aadappsecret"]};";
 
             AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider(AzureServicesAuthConnectionString);
 
             client = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-            this._config = _config;
+            this._config = config;
 
         }
         /// <summary>

@@ -12,12 +12,15 @@ namespace IdentityGateway.Services
 {
     public class StatusService : IStatusService
     {
-        private readonly IConfiguration _config;
-        private const string TENANT_STORAGE_CONNECTIONSTRING = "tenantStorageAccountConnectionString";
+        private IConfiguration _config;
+        public UserTenantContainer _userTenantContainer;
+        public UserSettingsContainer _userSettingsContainer;
         
-        public StatusService(IConfiguration config)
+        public StatusService(IConfiguration config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer)
         {
             this._config = config;
+            this._userTenantContainer = userTenantContainer;
+            this._userSettingsContainer = userSettingsContainer;
         }
 
         public async Task<StatusServiceModel> GetStatusAsync()
@@ -26,9 +29,8 @@ namespace IdentityGateway.Services
             var errors = new List<string>();
 
             // Check connection to Table Storage
-            var keyVault = new KeyVaultHelper(this._config);
-            var UserTenantTable = new UserTenantTable(new HttpContextAccessor(), keyVault);
-            var storageResult = await UserTenantTable.PingAsync();
+            // TODO: Add check of settings table as well
+            var storageResult = await this._userTenantContainer.PingAsync();
             SetServiceStatus("TableStorage", storageResult, result, errors);
 
 
