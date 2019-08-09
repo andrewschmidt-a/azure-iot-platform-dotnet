@@ -11,13 +11,13 @@ using Microsoft.Extensions.Configuration;
 namespace IdentityGateway.WebService.Controllers
 {
     [Route("api/[controller]")]
-    public class UserController : ControllerBase
+    public class UserTenantController : ControllerBase
     {
 
         private IConfiguration _config;
         private UserTenantContainer _table;
 
-        public UserController(IConfiguration config, UserTenantContainer table)
+        public UserTenantController(IConfiguration config, UserTenantContainer table)
         {
             this._config = config;
             this._table = table;
