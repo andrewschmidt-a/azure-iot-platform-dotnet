@@ -38,6 +38,6 @@
     <ProjectReference Include="..\Services\Services.csproj"/>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AuthUtils\Authutils.csproj"/>
+    <ProjectReference Include="..\AuthUtils\AuthUtils.csproj"/>
   </ItemGroup>
 </Project>
