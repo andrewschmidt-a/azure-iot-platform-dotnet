@@ -2,12 +2,12 @@ using IdentityGateway.Services.Models;
 
 namespace IdentityGateway.Services
 {
-    public interface IUserTenantInput<TModel>
+    public interface IUserInput<TModel>
     {
         string userId { get; set; }
     }
 
-    public class UserTenantInput : IUserTenantInput<UserTenantModel>
+    public class UserTenantInput : IUserInput<UserTenantModel>
     {
         // interface members
         public string userId { get; set; }
@@ -16,7 +16,7 @@ namespace IdentityGateway.Services
         public string roles;
     }
 
-    public class UserSettingsInput : IUserTenantInput<UserSettingsModel>
+    public class UserSettingsInput : IUserInput<UserSettingsModel>
     {
         // interface members
         public string userId { get; set; }

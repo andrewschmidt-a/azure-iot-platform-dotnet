@@ -55,25 +55,33 @@ namespace IdentityGateway.WebService.Controllers
         /// Create a User in table storage associated with the tenant in the header
         /// </summary>
         /// <param name="value"></param>
-        // POST: api/User
         [HttpPost("{userId}")]
-        public async Task<string> PostAsync(string userId, [FromBody] string roles)
+        public async Task<string> PostAsync(string userId, [FromBody] UserTenantModel model)
         {
             UserTenantInput input = new UserTenantInput
             {
                 userId = userId,
-                roles = roles
+                roles = model.roles
             };
             var result = await this._table.CreateAsync(input);
             return JsonConvert.SerializeObject(result);
         }
 
-        // The way that this user table is structured leads me to thinking that there is no reason to have a put (update) api
-        // this is because the table does not consist of any unique identifier, and simply serves the purpose of recording
-        // which tenant id a user is associated with, so there really only needs to be create and delete apis...
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="update"></param>
         [HttpPut("{userId}")]
-        public void Put(string userId, [FromBody] UserTenantModel update)
+        public async Task<string> PutAsync(string userId, [FromBody] UserTenantModel update)
         {
+            UserTenantInput input = new UserTenantInput
+            {
+                userId = userId,
+                roles = model.roles
+            };
+            var result = await this._table.UpdateAsync(input);
+            return JsonConvert.SerializeObject(result);
         }
 
         /// <summary>

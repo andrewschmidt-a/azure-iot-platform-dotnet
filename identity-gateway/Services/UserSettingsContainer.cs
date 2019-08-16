@@ -32,7 +32,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId and settingKey</param>
         /// <returns></returns>        
-        public async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
+        public override async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
         {
             TableOperation retrieveUserSettings = TableOperation.Retrieve<UserSettingsModel>(input.userId, input.settingKey);
             TableResult result = await this._tableHelper.ExecuteOperationAsync(this.tableName, retrieveUserSettings);
@@ -47,6 +47,11 @@ namespace IdentityGateway.Services
         public async Task<UserSettingsModel> CreateAsync(UserSettingsInput input)
         {
             UserSettingsModel model = new UserSettingsModel(input);
+            if (this.RecordExists(model))
+            {
+                // If this model already exists as is within the table, just return the already existing model
+                return model;
+            }
             TableOperation insertOperation = TableOperation.Insert(model);
             TableResult insert = await this._tableHelper.ExecuteOperationAsync(this.tableName, insertOperation);
             return (UserSettingsModel)insert.Result;

@@ -4,6 +4,7 @@ using IdentityGateway.AuthUtils;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace IdentityGateway.Services
 {
@@ -12,6 +13,7 @@ namespace IdentityGateway.Services
         Task<List<TModel>> GetAllAsync(UInput input);
         Task<TModel> GetAsync(UInput input);
         Task<TModel> CreateAsync(UInput input);
+        Task<TModel> UpdateAsync(UInput input);
         Task<TModel> DeleteAsync(UInput input);
     }
 
@@ -43,6 +45,15 @@ namespace IdentityGateway.Services
         {
             await this._tableHelper.GetTableAsync(this.tableName);
             return new StatusResultServiceModel(true, "Alive and Well!");
+        }
+
+        public async Task<bool> RecordExists(TableEntity model)
+        {
+            return await this.GetAsync(model) != null;
+        }
+
+        abstract public async Task<TableEntity> GetAsync(IUserInput input)
+        {
         }
     }
 }

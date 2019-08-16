@@ -29,31 +29,56 @@ namespace IdentityGateway.WebService.Controllers
         [HttpGet]
         public string Get()
         {
-            return  "/api/user requires an id" ;
         }
 
         [HttpGet("{userId}/{setting}")]
         public async Task<string> GetAsync(string userId, string setting)
         {
-            return "get";
+            UserSettingsInput input = new UserSettingsInput
+            {
+                userId = userId,
+                settingKey = setting
+            };
+            UserSettingsModel model = await this._table.GetAsync(input);
+            return JsonConvert.SerializeObject(model);
         }
 
         [HttpPost("{userId}/{setting}/{value}")]
-        public async Task<string> PostAsync(string userId, [FromBody] UserSettingsModel model)
+        public async Task<string> PostAsync(string userId, string setting, string value)
         {
-            return "post";
+            UserSettingsInput input = new UserSettingsInput
+            {
+                userId = userId,
+                settingKey = setting,
+                value = value
+            };
+            UserSettingsModel model = await this._table.PostAsync(input);
+            return JsonConvert.SerializeObject(model);
         }
 
         [HttpPut("{userId}/{setting}/{value}")]
-        public async Task<string> PutAsync(string userId, [FromBody] UserSettingsModel model)
+        public async Task<string> PutAsync(string userId, string setting, string value)
         {
-            return "put";
+            UserSettingsInput input = new UserSettingsInput
+            {
+                userId = userId,
+                settingKey = setting,
+                value = value
+            };
+            UserSettingsModel model = await this._table.PutAsync(input);
+            return JsonConvert.SerializeObject(model);
         }
 
         [HttpDelete("{userId}/{setting}")]
         public async Task<string> DeleteAsync(string userId, string setting)
         {
-            return "delete";
+            UserSettingsInput input = new UserSettingsInput
+            {
+                userId = userId,
+                settingKey = setting,
+            };
+            UserSettingsModel model = await this._table.DeleteAsync(input);
+            return JsonConvert.SerializeObject(model);
         }
     }
 }
