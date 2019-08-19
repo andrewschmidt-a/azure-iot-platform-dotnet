@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace IdentityGateway.WebService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/tenant")]
     public class UserTenantController : ControllerBase
     {
 
@@ -22,17 +22,6 @@ namespace IdentityGateway.WebService.Controllers
             this._config = config;
             this._table = table;
         }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        // GET: api/User
-        [HttpGet]
-        public string Get()
-        {
-            return  "/api/user requires an id" ;
-        }
 
         /// <summary>
         /// 
@@ -40,7 +29,7 @@ namespace IdentityGateway.WebService.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         // GET: api/User/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{userId}")]
         public async Task<string> GetAsync(string userId)
         {
             UserTenantInput input = new UserTenantInput
@@ -61,7 +50,7 @@ namespace IdentityGateway.WebService.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 userId = userId,
-                roles = model.roles
+                roles = model.Roles
             };
             var result = await this._table.CreateAsync(input);
             return JsonConvert.SerializeObject(result);
@@ -78,7 +67,7 @@ namespace IdentityGateway.WebService.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 userId = userId,
-                roles = model.roles
+                roles = update.Roles
             };
             var result = await this._table.UpdateAsync(input);
             return JsonConvert.SerializeObject(result);

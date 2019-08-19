@@ -46,14 +46,5 @@ namespace IdentityGateway.Services
             await this._tableHelper.GetTableAsync(this.tableName);
             return new StatusResultServiceModel(true, "Alive and Well!");
         }
-
-        public async Task<bool> RecordExists(TableEntity model)
-        {
-            return await this.GetAsync(model) != null;
-        }
-
-        abstract public async Task<TableEntity> GetAsync(IUserInput input)
-        {
-        }
     }
 }

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace IdentityGateway.WebService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/settings")]
     public class UserSettingsController : ControllerBase
     {
 
@@ -26,11 +26,6 @@ namespace IdentityGateway.WebService.Controllers
             this.keyVaultHelper = new KeyVaultHelper(this._config);
         }
         
-        [HttpGet]
-        public string Get()
-        {
-        }
-
         [HttpGet("{userId}/{setting}")]
         public async Task<string> GetAsync(string userId, string setting)
         {
@@ -52,7 +47,7 @@ namespace IdentityGateway.WebService.Controllers
                 settingKey = setting,
                 value = value
             };
-            UserSettingsModel model = await this._table.PostAsync(input);
+            UserSettingsModel model = await this._table.CreateAsync(input);
             return JsonConvert.SerializeObject(model);
         }
 
@@ -65,7 +60,7 @@ namespace IdentityGateway.WebService.Controllers
                 settingKey = setting,
                 value = value
             };
-            UserSettingsModel model = await this._table.PutAsync(input);
+            UserSettingsModel model = await this._table.UpdateAsync(input);
             return JsonConvert.SerializeObject(model);
         }
 

@@ -28,6 +28,15 @@ namespace IdentityGateway.Services.Models
             this.Roles = roles;
         }
 
+        public UserTenantModel(UserTenantInput input)
+        {
+            this.UserId = input.userId;
+            this.TenantId = input.tenant;
+            this.PartitionKey = this.TenantId;
+            this.RowKey = this.UserId;
+            this.Roles = input.roles;
+        }
+
         public List<string> RoleList
         {
             get
