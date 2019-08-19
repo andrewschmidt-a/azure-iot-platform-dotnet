@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Helpers;
@@ -47,12 +48,17 @@ namespace IdentityGateway.Services
         /// <returns></returns>
         public async Task<UserSettingsModel> CreateAsync(UserSettingsInput input)
         {
-            UserSettingsModel model = new UserSettingsModel(input);
-            if (await this.GetAsync(input) != null)
+            UserSettingsModel existingModel = await this.GetAsync(input);
+            if (existingModel != null)
             {
                 // If this record already exists, return it without continuing with the insert operation
-                return model;
+                throw new StorageException
+                (
+                    $"That UserSetting already exists with value {existingModel.Value}." +
+                    " Use PUT instead to update this user instead."
+                );
             }
+            UserSettingsModel model = new UserSettingsModel(input);
             TableOperation insertOperation = TableOperation.Insert(model);
             TableResult insert = await this._tableHelper.ExecuteOperationAsync(this.tableName, insertOperation);
             return (UserSettingsModel)insert.Result;
@@ -66,7 +72,7 @@ namespace IdentityGateway.Services
         public async Task<UserSettingsModel> UpdateAsync(UserSettingsInput input)
         {
             UserSettingsModel model = new UserSettingsModel(input);
-            model.ETag = "*";
+            model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
             TableOperation replaceOperation = TableOperation.Replace(model);
             TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
             return (UserSettingsModel)replace.Result;

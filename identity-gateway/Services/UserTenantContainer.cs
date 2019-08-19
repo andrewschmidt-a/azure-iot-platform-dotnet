@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Helpers;
@@ -49,12 +50,17 @@ namespace IdentityGateway.Services
         public async Task<UserTenantModel> CreateAsync(UserTenantInput input)
         {
             // Create the user and options for creating the user record in the user table
-            UserTenantModel user = new UserTenantModel(input);
-            if (await this.GetAsync(input) != null)
+            UserTenantModel existingModel = await this.GetAsync(input);
+            if (existingModel != null)
             {
                 // If this record already exists, return it without continuing with the insert operation
-                return user;
+                throw new StorageException
+                (
+                    $"That UserTenant record already exists with value {existingModel.Roles}." +
+                    " Use PUT instead to update this setting instead."
+                );
             }
+            UserTenantModel user = new UserTenantModel(input);
             // Insert the user record. Return the user model from the user table insert
             TableOperation insertOperation = TableOperation.Insert(user);
             TableResult userInsert = await this._tableHelper.ExecuteOperationAsync(this.tableName, insertOperation);
@@ -74,7 +80,7 @@ namespace IdentityGateway.Services
                 // If the RoleList of the model is empty, throw an exception. The RoleList is the only updateable feature of the UserTenant Table
                 throw new ArgumentException("The UserTenant update model must contain a serialized role array.");
             }
-            model.ETag = "*";
+            model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
             TableOperation replaceOperation = TableOperation.Replace(model);
             TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
             return (UserTenantModel)replace.Result;

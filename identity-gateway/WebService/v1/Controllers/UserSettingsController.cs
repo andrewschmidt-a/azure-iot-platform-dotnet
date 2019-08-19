@@ -1,16 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using IdentityGateway.Services;
 using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Helpers;
+using IdentityGateway.WebService.v1.Filters;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 
-namespace IdentityGateway.WebService.Controllers
+namespace IdentityGateway.WebService.v1.Controllers
 {
-    [Route("v1/settings")]
+    [Route("v1/settings"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class UserSettingsController : ControllerBase
     {
 
