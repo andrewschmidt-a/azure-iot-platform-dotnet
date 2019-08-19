@@ -74,6 +74,7 @@ namespace IdentityGateway.Services
                 // If the RoleList of the model is empty, throw an exception. The RoleList is the only updateable feature of the UserTenant Table
                 throw new ArgumentException("The UserTenant update model must contain a serialized role array.");
             }
+            model.ETag = "*";
             TableOperation replaceOperation = TableOperation.Replace(model);
             TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
             return (UserTenantModel)replace.Result;

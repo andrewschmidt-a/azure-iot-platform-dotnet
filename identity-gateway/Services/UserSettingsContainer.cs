@@ -34,6 +34,7 @@ namespace IdentityGateway.Services
         /// <returns></returns>        
         public async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
         {
+            // TableOperation retrieveUserSettings = TableOperation.Retrieve<TableEntity>(input.userId, input.settingKey);
             TableOperation retrieveUserSettings = TableOperation.Retrieve<UserSettingsModel>(input.userId, input.settingKey);
             TableResult result = await this._tableHelper.ExecuteOperationAsync(this.tableName, retrieveUserSettings);
             return (UserSettingsModel)result.Result;
@@ -65,6 +66,7 @@ namespace IdentityGateway.Services
         public async Task<UserSettingsModel> UpdateAsync(UserSettingsInput input)
         {
             UserSettingsModel model = new UserSettingsModel(input);
+            model.ETag = "*";
             TableOperation replaceOperation = TableOperation.Replace(model);
             TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
             return (UserSettingsModel)replace.Result;

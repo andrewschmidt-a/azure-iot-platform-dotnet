@@ -6,26 +6,39 @@ namespace IdentityGateway.Services.Models
 {
     public class UserSettingsModel : TableEntity
     {
-        public string UserId;
-        public string SettingKey;
-        public string Value;
+        public string Value { get; set; }
+
+        public UserSettingsModel() { }
 
         public UserSettingsModel(string userId, string settingKey, string value)
         {
-            this.UserId = userId;
-            this.PartitionKey = this.UserId;
-            this.SettingKey = settingKey;
-            this.RowKey = this.SettingKey;
+            this.PartitionKey = userId;
+            this.RowKey = settingKey;
             this.Value = value;
         }
 
         public UserSettingsModel(UserSettingsInput input)
         {
-            this.UserId = input.userId;
-            this.PartitionKey = this.UserId;
-            this.SettingKey = input.settingKey;
-            this.RowKey = this.SettingKey;
+            this.PartitionKey = input.userId;
+            this.RowKey = input.settingKey;
             this.Value = input.value;
+        }
+
+        // Define aliases for the partition and row keys
+        public string UserId
+        {
+            get
+            {
+                return this.PartitionKey;
+            }
+        }
+
+        public string SettingKey
+        {
+            get
+            {
+                return this.RowKey;
+            }
         }
     }
 }

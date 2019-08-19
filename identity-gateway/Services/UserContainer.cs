@@ -32,7 +32,7 @@ namespace IdentityGateway.Services
             this._tableHelper = tableHelper;
         }
 
-        protected string tenant
+        public string tenant
         {
             // get the tenant guid from the http context - this utilizes AuthUtil's request extension
             get

@@ -15,15 +15,26 @@ namespace IdentityGateway.WebService.Controllers
     {
 
         private IConfiguration _config;
-        private UserSettingsContainer _table;
+        private UserSettingsContainer _container;
 
         public KeyVaultHelper keyVaultHelper;
 
-        public UserSettingsController(IConfiguration config, UserSettingsContainer table)
+        public UserSettingsController(IConfiguration config, UserSettingsContainer container)
         {
             this._config = config;
-            this._table = table;
+            this._container = container;
             this.keyVaultHelper = new KeyVaultHelper(this._config);
+        }
+
+        [HttpGet("{userId}")]
+        public async Task<string> GetAllAsync(string userId)
+        {
+            UserSettingsInput input = new UserSettingsInput
+            {
+                userId = userId,
+            };
+            List<UserSettingsModel> models = await this._container.GetAllAsync(input);
+            return JsonConvert.SerializeObject(models);
         }
         
         [HttpGet("{userId}/{setting}")]
@@ -34,7 +45,7 @@ namespace IdentityGateway.WebService.Controllers
                 userId = userId,
                 settingKey = setting
             };
-            UserSettingsModel model = await this._table.GetAsync(input);
+            UserSettingsModel model = await this._container.GetAsync(input);
             return JsonConvert.SerializeObject(model);
         }
 
@@ -47,7 +58,7 @@ namespace IdentityGateway.WebService.Controllers
                 settingKey = setting,
                 value = value
             };
-            UserSettingsModel model = await this._table.CreateAsync(input);
+            UserSettingsModel model = await this._container.CreateAsync(input);
             return JsonConvert.SerializeObject(model);
         }
 
@@ -60,7 +71,7 @@ namespace IdentityGateway.WebService.Controllers
                 settingKey = setting,
                 value = value
             };
-            UserSettingsModel model = await this._table.UpdateAsync(input);
+            UserSettingsModel model = await this._container.UpdateAsync(input);
             return JsonConvert.SerializeObject(model);
         }
 
@@ -72,7 +83,7 @@ namespace IdentityGateway.WebService.Controllers
                 userId = userId,
                 settingKey = setting,
             };
-            UserSettingsModel model = await this._table.DeleteAsync(input);
+            UserSettingsModel model = await this._container.DeleteAsync(input);
             return JsonConvert.SerializeObject(model);
         }
     }

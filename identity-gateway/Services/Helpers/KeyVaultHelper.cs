@@ -21,11 +21,11 @@ namespace IdentityGateway.Services.Helpers
         public KeyVaultHelper(IConfiguration config)
         {
             string AzureServicesAuthConnectionString =
-                $"RunAs=App;AppId={config["KeyVault:aadappid"]};TenantId={config["AzureActiveDirectory:aadtenantid"]};AppKey={config["KeyVault:aadappsecret"]};";
+                $"RunAs=App;AppId={config["KeyVault:aadappid"]};TenantId={config["Global:AzureActiveDirectory:aadtenantid"]};AppKey={config["KeyVault:aadappsecret"]};";
 
             AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider(AzureServicesAuthConnectionString);
 
-            client = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+            this.client = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
             this._config = config;
 
         }
@@ -40,7 +40,7 @@ namespace IdentityGateway.Services.Helpers
         }
         public async Task<string> getSecretAsync(string secret)
         {
-            return (await client.GetSecretAsync(getKeyVaultSecretIdentifier(secret))).Value;
+            return (await this.client.GetSecretAsync(getKeyVaultSecretIdentifier(secret))).Value;
         }
 
         public void Dispose()
