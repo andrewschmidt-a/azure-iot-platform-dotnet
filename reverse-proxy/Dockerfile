@@ -1,28 +1,27 @@
-FROM valian/docker-nginx-auto-ssl
+FROM nginx:1.13
 
-# MAINTAINER Devis Lucato (https://github.com/dluc)
+MAINTAINER Devis Lucato (https://github.com/dluc)
 
-# LABEL Tags="Azure,IoT,Solutions,Proxy,nginx"
+LABEL Tags="Azure,IoT,Solutions,Proxy,nginx"
 
 # ARG user=app
 
 # RUN groupadd $user && useradd --no-log-init -r -g $user $user
 
-# COPY ./content/ /app
-RUN  mkdir -p /app/config/  \
+COPY ./content/ /app
+RUN  mkdir -p /app/config/ && mv /app/nginx.conf /app/config/ \
+#  && chown -R $user:$user /app \
  && mkdir -p /var/lib/nginx /var/cache/nginx /var/tmp/nginx \
 #  && chown -R $user:$user /var/lib/nginx /var/cache/nginx /var/tmp/nginx
 
 RUN mkdir /app/logs && touch /app/logs/error.log && touch /app/logs/nginx.pid 
-# WORKDIR /app
+#&& chown -R $user:$user /app/logs
+WORKDIR /app
 
 # TODO: remove port 10080
-EXPOSE 10080 
-EXPOSE 10443
-EXPOSE 443
-# VOLUME ["/app/certs", "/app/config"]
-COPY ./content/nginx.conf /usr/local/openresty/nginx/conf/
+EXPOSE 10080
+VOLUME ["/app/certs", "/app/config"]
 
-# ENTRYPOINT ["/bin/bash", "/app/run.sh"]
+ENTRYPOINT ["/bin/bash", "/app/run.sh"]
 
 # USER $user
