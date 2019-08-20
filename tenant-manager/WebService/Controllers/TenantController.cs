@@ -79,6 +79,8 @@ namespace tenant_manager.Controllers
                 telemetryEventHubConnString = this._config["TenantManagerService:telemetryEventHubConnString"],
                 twinChangeEventHubConnString = this._config["TenantManagerService:twinChangeEventHubConnString"],
                 lifecycleEventHubConnString = this._config["TenantManagerService:lifecycleEventHubConnString"],
+                appConfigConnectionString = (Environment.GetEnvironmentVariable("appConfigConnectionString", EnvironmentVariableTarget.User)),
+                setAppConfigEndpoint = this._config["TenantManagerService:setAppConfigEndpoint"],
                 token = authToken
             };
 
