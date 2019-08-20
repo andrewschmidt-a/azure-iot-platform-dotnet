@@ -45,9 +45,6 @@ secrets: {}
 
 secretsRef: 
   - PCS_APPLICATION_CONFIGURATION
-  - PCS_KEYVAULT_NAME
-  - PCS_AAD_APPID
-  - PCS_AAD_APPSECRET
   # list of global secrets to pull in
   # - secret1
   # - secret2

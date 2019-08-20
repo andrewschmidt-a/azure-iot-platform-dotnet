@@ -13,7 +13,11 @@ namespace TokenGenerator.Models
         {
             get
             {
-                return "https://" + _httpContext.Request.Host.ToString();
+                string forwardedFor = null;
+                if(_httpContext.Request.Headers["X-Forwarded-For"].Count > 0){
+                    forwardedFor = _httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+                }
+                return forwardedFor ?? "https://" + _httpContext.Request.Host.ToString();
             }
         }
 

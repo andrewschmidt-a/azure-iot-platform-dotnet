@@ -17,7 +17,7 @@ install:
     ingress:
       annotations:
         kubernetes.io/ingress.class: traefik-azds
-        ingress.kubernetes.io/protocol: https
+        ingress.kubernetes.io/protocol: http
       hosts:
       # This expands to form the service's public URL: [space.s.][rootSpace.]reverse-proxy.<random suffix>.<region>.azds.io
       # Customize the public URL by changing the 'reverse-proxy' text between the $(rootSpacePrefix) and $(hostSuffix) tokens

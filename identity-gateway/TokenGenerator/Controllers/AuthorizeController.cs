@@ -25,6 +25,7 @@ namespace TokenGenerator.Controllers
 
     public class AuthorizeController : Controller
     {
+        const string AzureB2CBaseUri = "Global:AzureB2CBaseUri";
         private IConfiguration _config;
         public KeyVaultHelper keyVaultHelper; //used for Testing
         public TenantTableHelper tenantTableHelper; //used for Testing
@@ -37,14 +38,15 @@ namespace TokenGenerator.Controllers
         // GET: connect/authorize
         [HttpGet]
         [Route("connect/authorize")]
-        public IActionResult Get([FromQuery] string  returnUrl, [FromQuery] string state, [FromQuery] string tenant)
+        public IActionResult Get([FromQuery] string  redirect_uri, [FromQuery] string state, [FromQuery] string client_id)
         {
-            var uri = new UriBuilder(this._config["AzureB2CBaseUri"]);
+            var config = new Configuration(HttpContext);
+            var uri = new UriBuilder(this._config[AzureB2CBaseUri]);
 
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
-            query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = returnUrl, state = state, tenant = tenant });
-            query["redirect_uri"] = "https://"+HttpContext.Request.Host.ToString() + "/connect/callback"; // must be https for B2C
+            query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = redirect_uri, state = state, tenant = client_id });
+            query["redirect_uri"] = config.issuer+"/connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
             return Redirect(
                 uri.Uri.ToString()
@@ -108,8 +110,10 @@ namespace TokenGenerator.Controllers
                 var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials
                                   (securityKey, SecurityAlgorithms.RsaSha256);
 
+                var forwardedFor = HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value.First();
+                Console.Write(forwardedFor);
                 var token = new JwtSecurityToken(
-                  issuer: "https://"+HttpContext.Request.Host.ToString()+"/",
+                  issuer: forwardedFor ?? "https://"+HttpContext.Request.Host.ToString()+"/",
                   audience: "IoTPlatform",
                   expires: DateTime.Now.AddDays(30),
                   claims: claims.ToArray(),                      
