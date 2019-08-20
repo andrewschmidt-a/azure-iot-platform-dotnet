@@ -90,6 +90,7 @@ namespace tenant_manager.Controllers
             {   
                 tenantId = tenantGuid,
                 resourceGroup = rgName,
+                automationAccountName = this._config["TenantManagerService:automationAccountName"],
                 cosmosConnectionSetting = this._config["TenantManagerService:cosmosConnectionSetting"],
                 telemetryFunctionUrl = this._config["TenantManagerService:telemetryFunctionUri"],
                 twinChangeFunctionUrl = this._config["TenantManagerService:twinChangeFunctionUri"],

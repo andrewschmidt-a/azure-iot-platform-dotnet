@@ -12,15 +12,68 @@ param
     [object] $WebhookData
 )
 
+# Record start time
+$startTime = Get-Date
+
 # If runbook was called from Webhook, WebhookData will not be null.
 if (-Not $WebhookData) {
     # Error
     write-Error "This runbook is meant to be started from a webhook only."
 }
 
+# Authenticate with the service principle so that we can write to table storage
+$connectionName = "AzureRunAsConnection"
+try
+{
+    $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName
+
+    "Logging in to Azure..."
+    $connectionResult =  Connect-AzAccount -Tenant $servicePrincipalConnection.TenantID `
+                             -ApplicationId $servicePrincipalConnection.ApplicationID   `
+                             -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint `
+                             -ServicePrincipal
+    "Logged in."
+}
+catch {
+    if (!$servicePrincipalConnection)
+    {
+        $ErrorMessage = "Connection $connectionName not found."
+        throw $ErrorMessage
+    } else{
+        Write-Error -Message $_.Exception
+        throw $_.Exception
+    }
+}
+
 # Retrieve the data from the Webhook request body
 $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
 $data.token
+
+# Get the automation account name and runbook name
+$currentJobId= $PSPrivateMetadata.JobId.Guid
+$job = Get-AzAutomationJob -ResourceGroupName $data.resourceGroup -AutomationAccountName $data.automationAccountName -Id $currentJobId `
+    -ErrorAction SilentlyContinue
+
+if ($job) 
+{
+    $runbookName = $job.RunbookName
+}
+
+# Wait for any run books of this type that started earlier to finish before starting
+$clearedToContinue = 0
+while ($clearedToContinue -eq 0) {
+    $clearedToContinue = 1
+    $currentRunningJobs = Get-AzAutomationJob -AutomationAccountName $data.automationAccountName -ResourceGroupName $data.resourceGroup `
+        -Status "Running" -RunbookName $runbookName
+    foreach ($job in $currentRunningJobs) {
+        if ($job.JobId.tostring() -ne $currentJobId -And $job.StartTime -lt $startTime) {
+            "Already running job detected. Sleeping for 30 seconds"
+            $clearedToContinue = 0
+            Start-Sleep -Second 30
+            break
+        }
+    }
+}
 
 # Define the authorization headers for REST API requests
 $requestHeader = @{
@@ -93,30 +146,6 @@ Add-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantI
     -functionUrl $data.lifecycleFunctionUrl -functionName $data.lifecycleFunctionName `
     -databaseName $data.databaseName -cosmosCollectionName $data.lifecycleCollectionName `
     -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
-
-# Authenticate with the service principle so that we can write to table storage
-$connectionName = "AzureRunAsConnection"
-try
-{
-    $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName
-
-    "Logging in to Azure..."
-    $connectionResult =  Connect-AzAccount -Tenant $servicePrincipalConnection.TenantID `
-                             -ApplicationId $servicePrincipalConnection.ApplicationID   `
-                             -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint `
-                             -ServicePrincipal
-    "Logged in."
-}
-catch {
-    if (!$servicePrincipalConnection)
-    {
-        $ErrorMessage = "Connection $connectionName not found."
-        throw $ErrorMessage
-    } else{
-        Write-Error -Message $_.Exception
-        throw $_.Exception
-    }
-}
 
 # Write to table storage that the functions are updated for the tenant
 "Trying to write to table storage"
