@@ -5,7 +5,7 @@ AUTH_SERVER_URL=""
 RESOURCE_TYPE=""
 AUTH_TOKEN=""
 
-# Acquires auth token for authroizating against key vault.
+# Acquires auth token for authorizing against key vault.
 _acquire_token() {
     __set_keyvault_auth_server
 
