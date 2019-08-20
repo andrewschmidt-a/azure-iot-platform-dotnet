@@ -16,12 +16,18 @@ namespace IdentityGateway.Services.Helpers
     /// </summary>
     public class KeyVaultHelper : IDisposable
     {
+        const string KeyVaultAppId = "KeyVault:aadappid";
+        const string KeyVaultSecret = "KeyVault:aadappsecret";
+        const string KeyVaultName = "KeyVault:name";
+        const string TenantID = "Global:AzureActiveDirectory:aadtenantid";
+
         private IKeyVaultClient client;
         private IConfiguration _config;
+        
         public KeyVaultHelper(IConfiguration config)
         {
             string AzureServicesAuthConnectionString =
-                $"RunAs=App;AppId={config["KeyVault:aadappid"]};TenantId={config["Global:AzureActiveDirectory:aadtenantid"]};AppKey={config["KeyVault:aadappsecret"]};";
+                $"RunAs=App;AppId={config[KeyVaultAppId]};TenantId={config[TenantID]};AppKey={config[KeyVaultSecret]};";
 
             AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider(AzureServicesAuthConnectionString);
 
@@ -36,7 +42,7 @@ namespace IdentityGateway.Services.Helpers
         /// <returns></returns>
         public string getKeyVaultSecretIdentifier(string secret)
         {
-            return $"https://{ this._config["KeyVault:name"]}.vault.azure.net/secrets/{secret}";
+            return $"https://{ this._config[KeyVaultName]}.vault.azure.net/secrets/{secret}";
         }
         public async Task<string> getSecretAsync(string secret)
         {
