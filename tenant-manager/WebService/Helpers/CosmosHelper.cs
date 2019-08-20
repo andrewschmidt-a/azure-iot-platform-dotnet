@@ -9,18 +9,24 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace tenant_manager.Helpers
 {
     public class CosmosHelper
     {
-        public static string CreateCosmosDbCollection(string token, string tenantGuid, string collectionPrefix)
-        {
-            /* Creates an IoT Hub with the given configurations and returns the connection string. An empty
-                string is returned on failure. */
+        private IConfiguration _config;
 
-            string databaseAccount = "cosmos-odin-mt-poc";
-            string dbId = "iot";
+        public CosmosHelper(IConfiguration _config)
+        {
+            this._config = _config;
+        }
+        public string CreateCosmosDbCollection(string token, string tenantGuid, string collectionPrefix)
+        {
+            /* Creates a new Cosmos DB colletion. An empty string is returned on failure. */
+
+            string databaseAccount = this._config["TenantManagerService:cosmosAccount"];
+            string dbId = this._config["TenantManagerService:databaseName"];
             string collectionName = collectionPrefix + "-" + token;
 
             // Create an Http Client
