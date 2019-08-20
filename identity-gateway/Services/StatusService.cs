@@ -12,7 +12,10 @@ namespace IdentityGateway.Services
 {
     public class StatusService : IStatusService
     {
+        const string AzureB2CBaseUri = "Global:AzureB2CBaseUri";
+
         private IConfiguration _config;
+
         public UserTenantContainer _userTenantContainer;
         public UserSettingsContainer _userSettingsContainer;
         
@@ -35,11 +38,11 @@ namespace IdentityGateway.Services
 
 
             // Check Azure B2C instance
-            StatusResultServiceModel resultTwo;
+            StatusResultServiceModel azureB2CResult;
 
             try
             {
-                string authUri = this._config["Global:AzureB2CBaseUri"];
+                string authUri = this._config[AzureB2CBaseUri];
                 HttpClient client = new HttpClient();
                 var response = await client.GetAsync(authUri);
                 string responseMessage = "Alive and Well.";
@@ -48,14 +51,14 @@ namespace IdentityGateway.Services
                 {
                     responseMessage = $"It failed with a code of {response.StatusCode}.";
                 }
-                resultTwo = new StatusResultServiceModel(response.IsSuccessStatusCode, responseMessage);
+                azureB2CResult = new StatusResultServiceModel(response.IsSuccessStatusCode, responseMessage);
             }
             catch (Exception E)
             {
-                resultTwo = new StatusResultServiceModel(false, E.Message);
+                azureB2CResult = new StatusResultServiceModel(false, E.Message);
             }
 
-            SetServiceStatus("AzureB2C", resultTwo, result, errors);
+            SetServiceStatus("AzureB2C", azureB2CResult, result, errors);
 
             if (errors.Count > 0)
             {
