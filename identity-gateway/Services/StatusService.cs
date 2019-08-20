@@ -39,7 +39,7 @@ namespace IdentityGateway.Services
 
             try
             {
-                var theURL = this._config["AzureB2CBaseUri"];
+                var theURL = this._config["Global:AzureB2CBaseUri"];
                 HttpClient client = new HttpClient();
                 var responseString = await client.GetAsync(theURL);
                 var responseMessage = "Alive and Well.";
