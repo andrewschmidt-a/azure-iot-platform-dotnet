@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
@@ -16,12 +17,19 @@ namespace tenant_manager.Helpers
 {
     public class TokenHelper
     {
-        public static string GetServicePrincipleToken()
+        private IConfiguration _config;
+
+        public TokenHelper(IConfiguration _config)
         {
-            /* Returns a token  */
-            string tenantId = "facac3c4-e2a5-4257-af76-205c8a821ddb";
-            string applicationId = "95d3c662-23ea-4e2d-8d3d-ea2448706934";
-            string applicationSecret = "YWIwYzhkYjktNjFmZi00MTI5LWE0YjAtNjAyZGNmNWFlNzVk=";
+            this._config = _config;
+        }
+        
+        public string GetServicePrincipleToken()
+        {
+            /* Returns a token  */            
+            string tenantId = this._config["Global:AzureActiveDirectory:aadtenantid"];
+            string applicationId = this._config["Global:AzureActiveDirectory:aadappid"];
+            string applicationSecret = this._config["KeyVault:aadappsecret"];
             
             // Retrieve a token from Azure AD using the application id and password.
             var authContext = new AuthenticationContext(string.Format("https://login.microsoftonline.com/{0}", tenantId));

@@ -22,11 +22,13 @@ namespace tenant_manager.Controllers
     {
         private IConfiguration _config;
         private KeyVaultHelper keyVaultHelper;
+        private TokenHelper tokenHelper;
 
         public TenantController(IConfiguration config)
         {
             this._config = config;
             this.keyVaultHelper = new KeyVaultHelper(this._config);
+            this.tokenHelper = new TokenHelper(this._config);
         }
 
         // POST api/tenant
@@ -40,12 +42,11 @@ namespace tenant_manager.Controllers
             string rgName = this._config["Global:resourceGroup"];
             string location = this._config["Global:location"];
             
-
             // Load secrets from key vault
             var secretTasks = new Task<string>[] {
-                keyVaultHelper.getSecretAsync("storageAccountConnectionString"),
-                keyVaultHelper.getSecretAsync("createIotHubWebHookUrl"),
-                keyVaultHelper.getSecretAsync("updateFunctionsWebHookUrl")
+                this.keyVaultHelper.getSecretAsync("storageAccountConnectionString"),
+                this.keyVaultHelper.getSecretAsync("createIotHubWebHookUrl"),
+                this.keyVaultHelper.getSecretAsync("updateFunctionsWebHookUrl")
             };
             Task.WaitAll(secretTasks);
             
@@ -64,16 +65,9 @@ namespace tenant_manager.Controllers
             var tenant = new TenantModel(tenantGuid, iotHubName, telemetryCollectionName);
             TenantTableHelper.WriteNewTenantToTableAsync(storageAccountConnectionString, "tenant", tenant);
 
-            // Write to app config?
-            // var appConfigClient = new ConfigurationClient(appConfigurationConnectionString);
-            // // Write the new IoT Hub connection string to app configuration
-            // appConfigClient.Set(new ConfigurationSetting(string.Format("tenant:{0}:iotHubConnectionString", tenantGuid), iotHubConnectionString));
-            // //Write the new cosmos db collection names to app configuration
-            // appConfigClient.Set(new ConfigurationSetting(string.Format("tenant:{0}:telemetryCosmosCollectionName", tenantGuid), cosmosTelemetryCollectionName));
-
             // Trigger run book to create a new IoT Hub
             HttpClient client = new HttpClient();
-            var authToken = TokenHelper.GetServicePrincipleToken();
+            var authToken = this.tokenHelper.GetServicePrincipleToken();
 
             var requestBody = new
             {   

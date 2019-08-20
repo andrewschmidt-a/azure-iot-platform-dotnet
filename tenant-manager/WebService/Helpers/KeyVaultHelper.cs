@@ -20,7 +20,7 @@ namespace tenant_manager.Helpers
             string keyVaultAppId = _config["Global:AzureActiveDirectory:aadappid"];
             string keyVaultAppKey = _config["KeyVault:aadappsecret"];
             string aadTenantId = _config["Global:AzureActiveDirectory:aadtenantid"];
-
+            
             string AzureServicesAuthConnectionString = $"RunAs=App;AppId={keyVaultAppId};TenantId={aadTenantId};AppKey={keyVaultAppKey};";
 
             AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider(AzureServicesAuthConnectionString);
