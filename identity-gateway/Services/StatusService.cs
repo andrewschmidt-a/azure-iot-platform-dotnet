@@ -39,16 +39,16 @@ namespace IdentityGateway.Services
 
             try
             {
-                var theURL = this._config["AzureB2CBaseUri"];
+                string authUri = this._config["Global:AzureB2CBaseUri"];
                 HttpClient client = new HttpClient();
-                var responseString = await client.GetAsync(theURL);
-                var responseMessage = "Alive and Well.";
+                var response = await client.GetAsync(authUri);
+                string responseMessage = "Alive and Well.";
 
-                if (!responseString.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
                 {
-                    responseMessage = $"It failed with a code of {responseString.StatusCode}.";
+                    responseMessage = $"It failed with a code of {response.StatusCode}.";
                 }
-                resultTwo = new StatusResultServiceModel(responseString.IsSuccessStatusCode, responseMessage);
+                resultTwo = new StatusResultServiceModel(response.IsSuccessStatusCode, responseMessage);
             }
             catch (Exception E)
             {
