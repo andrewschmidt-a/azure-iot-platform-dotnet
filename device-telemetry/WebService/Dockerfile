@@ -4,6 +4,7 @@ EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src
+COPY ["AuthUtils/AuthUtils.csproj", "AuthUtils/"]
 COPY ["ActionsAgent/ActionsAgent.csproj", "ActionsAgent/"]
 COPY ["Services/Services.csproj", "Services/"]
 COPY ["WebService/WebService.csproj", "WebService/"]
