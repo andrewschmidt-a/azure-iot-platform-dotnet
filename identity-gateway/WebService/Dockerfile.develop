@@ -1,0 +1,19 @@
+FROM microsoft/aspnetcore-build:2.0
+ARG BUILD_CONFIGURATION=Debug
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+EXPOSE 5000
+
+WORKDIR /src
+COPY ["AuthUtils/AuthUtils.csproj", "AuthUtils/"]
+COPY ["Services/Services.csproj", "Services/"]
+COPY ["WebService/WebService.csproj", "WebService/"]
+
+RUN dotnet restore "WebService/WebService.csproj"
+COPY . .
+WORKDIR /src/WebService
+RUN dotnet build --no-restore "WebService.csproj" -c $BUILD_CONFIGURATION
+
+RUN echo "exec dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION --" > /entrypoint.sh
+
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
