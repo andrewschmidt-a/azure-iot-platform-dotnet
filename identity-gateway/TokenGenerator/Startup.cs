@@ -27,7 +27,7 @@ namespace TokenGenerator
             builder.AddAzureAppConfiguration(settings["PCS_APPLICATION_CONFIGURATION"]); 
             Configuration = builder.Build(); 
         }
-
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -39,6 +39,16 @@ namespace TokenGenerator
                 .AddInMemoryApiResources(new ApiResource[] { })
                 .AddInMemoryClients(new Client[] { })
                 */
+                services.AddCors(options =>
+                {
+                    options.AddPolicy(MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins("*")
+                                        .AllowAnyHeader()
+                                        .AllowAnyMethod();
+                    });
+                });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -58,6 +68,7 @@ namespace TokenGenerator
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseCors(MyAllowSpecificOrigins);
             //app.UseHttpsRedirection();  //handled by ingress
             //app.UseIdentityServer();
             app.UseMvc();
