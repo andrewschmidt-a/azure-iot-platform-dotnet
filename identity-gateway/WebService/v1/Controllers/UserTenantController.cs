@@ -1,37 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using IdentityGateway.Services;
 using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Helpers;
+using IdentityGateway.WebService.v1.Filters;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 
-namespace IdentityGateway.WebService.Controllers
+namespace IdentityGateway.WebService.v1.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/tenants"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class UserTenantController : ControllerBase
     {
 
         private IConfiguration _config;
-        private UserTenantContainer _table;
+        private UserTenantContainer _container;
 
-        public UserTenantController(IConfiguration config, UserTenantContainer table)
+        public UserTenantController(IConfiguration config, UserTenantContainer container)
         {
             this._config = config;
-            this._table = table;
-        }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        // GET: api/User
-        [HttpGet]
-        public string Get()
-        {
-            return  "/api/user requires an id" ;
+            this._container = container;
         }
 
         /// <summary>
@@ -40,19 +27,20 @@ namespace IdentityGateway.WebService.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         // GET: api/User/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{userId}")]
         public async Task<string> GetAsync(string userId)
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId
+                userId = userId,
+                tenant = this._container.tenant
             };
-            UserTenantModel TheModel = await this._table.GetAsync(input);
-            return JsonConvert.SerializeObject(TheModel);
+            UserTenantModel model = await this._container.GetAsync(input);
+            return JsonConvert.SerializeObject(model);
         }
 
         /// <summary>
-        /// Create a User in table storage associated with the tenant in the header
+        /// Create a User in container storage associated with the tenant in the header
         /// </summary>
         /// <param name="value"></param>
         [HttpPost("{userId}")]
@@ -61,9 +49,10 @@ namespace IdentityGateway.WebService.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 userId = userId,
-                roles = model.roles
+                tenant = this._container.tenant,
+                roles = model.Roles,
             };
-            var result = await this._table.CreateAsync(input);
+            var result = await this._container.CreateAsync(input);
             return JsonConvert.SerializeObject(result);
         }
 
@@ -78,9 +67,10 @@ namespace IdentityGateway.WebService.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 userId = userId,
-                roles = model.roles
+                tenant = this._container.tenant,
+                roles = update.Roles,
             };
-            var result = await this._table.UpdateAsync(input);
+            var result = await this._container.UpdateAsync(input);
             return JsonConvert.SerializeObject(result);
         }
 
@@ -94,9 +84,10 @@ namespace IdentityGateway.WebService.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId
+                userId = userId,
+                tenant = this._container.tenant
             };
-            var result = await this._table.DeleteAsync(input);
+            var result = await this._container.DeleteAsync(input);
             return JsonConvert.SerializeObject(result);
         }
     }

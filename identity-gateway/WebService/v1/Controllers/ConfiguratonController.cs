@@ -14,7 +14,7 @@ using IdentityGateway.Services.Models;
 using JsonWebKey = IdentityModel.Jwk.JsonWebKey;
 using JsonWebKeySet = IdentityModel.Jwk.JsonWebKeySet;
 
-namespace IdentityGateway.WebService.Controllers
+namespace IdentityGateway.WebService.v1.Controllers
 {
     [Route("")]
     public class ConfiguratonController : ControllerBase

@@ -6,26 +6,46 @@ namespace IdentityGateway.Services.Models
 {
     public class UserTenantModel : TableEntity
     {
-        public string TenantId;
-        public string UserId;
-        public string Roles {  get; set; }
+        public string Roles { get; set; }
+
+        public UserTenantModel() { }
 
         public UserTenantModel(string userId, string tenantId)
         {
-            this.UserId = userId;
-            this.TenantId = tenantId;
-            this.PartitionKey = this.UserId;
-            this.RowKey = this.TenantId;
+            this.PartitionKey = userId;
+            this.RowKey = tenantId;
             this.Roles = "";
         }
 
         public UserTenantModel(string userId, string tenantId, string roles)
         {
-            this.UserId = userId;
-            this.TenantId = tenantId;
-            this.PartitionKey = this.TenantId;
-            this.RowKey = this.UserId;
+            this.PartitionKey = userId;
+            this.RowKey = tenantId;
             this.Roles = roles;
+        }
+
+        public UserTenantModel(UserTenantInput input)
+        {
+            this.PartitionKey = input.userId;
+            this.RowKey = input.tenant;
+            this.Roles = input.roles;
+        }
+
+        // Define aliases for the partition and row keys
+        public string UserId
+        {
+            get
+            {
+                return this.PartitionKey;
+            }
+        }
+
+        public string TenantId
+        {
+            get
+            {
+                return this.RowKey;
+            }
         }
 
         public List<string> RoleList

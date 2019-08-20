@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Helpers;
@@ -32,8 +33,9 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId and settingKey</param>
         /// <returns></returns>        
-        public override async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
+        public async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
         {
+            // TableOperation retrieveUserSettings = TableOperation.Retrieve<TableEntity>(input.userId, input.settingKey);
             TableOperation retrieveUserSettings = TableOperation.Retrieve<UserSettingsModel>(input.userId, input.settingKey);
             TableResult result = await this._tableHelper.ExecuteOperationAsync(this.tableName, retrieveUserSettings);
             return (UserSettingsModel)result.Result;
@@ -46,12 +48,17 @@ namespace IdentityGateway.Services
         /// <returns></returns>
         public async Task<UserSettingsModel> CreateAsync(UserSettingsInput input)
         {
-            UserSettingsModel model = new UserSettingsModel(input);
-            if (this.RecordExists(model))
+            UserSettingsModel existingModel = await this.GetAsync(input);
+            if (existingModel != null)
             {
-                // If this model already exists as is within the table, just return the already existing model
-                return model;
+                // If this record already exists, return it without continuing with the insert operation
+                throw new StorageException
+                (
+                    $"That UserSetting already exists with value {existingModel.Value}." +
+                    " Use PUT instead to update this user instead."
+                );
             }
+            UserSettingsModel model = new UserSettingsModel(input);
             TableOperation insertOperation = TableOperation.Insert(model);
             TableResult insert = await this._tableHelper.ExecuteOperationAsync(this.tableName, insertOperation);
             return (UserSettingsModel)insert.Result;
@@ -65,6 +72,7 @@ namespace IdentityGateway.Services
         public async Task<UserSettingsModel> UpdateAsync(UserSettingsInput input)
         {
             UserSettingsModel model = new UserSettingsModel(input);
+            model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
             TableOperation replaceOperation = TableOperation.Replace(model);
             TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
             return (UserSettingsModel)replace.Result;
