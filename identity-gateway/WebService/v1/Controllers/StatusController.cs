@@ -4,7 +4,7 @@ using IdentityGateway.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
-namespace IdentityGateway.WebService.Controllers
+namespace IdentityGateway.WebService.v1.Controllers
 {
     [Route("api/[controller]")]
     public sealed class StatusController : Controller

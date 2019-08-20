@@ -1,11 +1,10 @@
-# Default values for generic-service.
+# Default values for storage-adapter.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
-fullnameOverride: generic-service
-name: test
+fullnameOverride: identity-gateway
 replicaCount: 1
 image:
-  repository: generic-service
+  repository: identity-gateway
   tag: stable
   pullPolicy: IfNotPresent
 imagePullSecrets: []

@@ -38,9 +38,9 @@ namespace IdentityGateway.Controllers
         }
         // GET: connect/authorize
         [HttpGet("connect/authorize")]
-        public IActionResult Get([FromQuery] string  returnUrl, [FromQuery] string state, [FromQuery] string tenant)
+        public IActionResult Get([FromQuery] string  returnUrl, [FromQuery] string state, [FromQuery(Name = "client_id")] string tenant)
         {
-            var uri = new UriBuilder(this._config["AzureB2CBaseUri"]);
+            var uri = new UriBuilder(this._config["Global:AzureB2CBaseUri"]);
 
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
@@ -63,10 +63,8 @@ namespace IdentityGateway.Controllers
                 string identityGatewayPrivateKey = "";
                 try
                 {
-                    /* Get Secrets From KeyVault */
-
+                    // Get Secrets From KeyVault
                     var listOfTasks = new Task<string>[] {
-
                         keyVaultHelper.getSecretAsync("tenantStorageAccountConnectionString"),
                         keyVaultHelper.getSecretAsync("identityGatewayPrivateKey")
                     };
@@ -112,7 +110,6 @@ namespace IdentityGateway.Controllers
                     {
                         tenant = tenantList.First().RowKey;  // Set the tenant to the first tenant in the list of tenants for this user
                     }
-
                     authState.tenant = tenant;
                 }
 
@@ -169,8 +166,6 @@ namespace IdentityGateway.Controllers
             {
                 throw new Exception("Invalid Token!");
             }
-
         }
-
     }
 }

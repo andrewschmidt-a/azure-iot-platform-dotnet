@@ -41,10 +41,10 @@ namespace IdentityGateway.Services.Helpers
             return await table.ExecuteQuerySegmentedAsync(query, token);
         }
 
-        public async Task<TableResult> ExecuteOperationAsync(string tableName, TableOperation retrievalOperation)
+        public async Task<TableResult> ExecuteOperationAsync(string tableName, TableOperation operation)
         {
             CloudTable table = await this.GetTableAsync(tableName);
-            return await table.ExecuteAsync(retrievalOperation);
+            return await table.ExecuteAsync(operation);
         }
     }
 }

@@ -22,33 +22,31 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 {
     public sealed class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
     {
-        private readonly IDocumentClient _client;
+        private readonly IFactory<IDocumentClient> _clientFactory; 
         private readonly IExceptionChecker _exceptionChecker;
         private readonly ILogger _log;
         private readonly IServicesConfig _config;  // injected
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly string documentDataType = "pcs";  // a datatype for this type of key value container. This could go into the constructor later if necessary
 
-        private string DocumentDataType;  // a datatype for this type of key value container. This could go into the constructor later if necessary
-        private readonly int docDbRUs;
-        private readonly RequestOptions docDbOptions;
+        private IDocumentClient client;
+        private int docDbRUs;
+        private RequestOptions docDbOptions;
         private bool disposedValue;
-        private IHttpContextAccessor _httpContextAccessor;
+
 
         public DocumentDbKeyValueContainer(
             IFactory<IDocumentClient> clientFactory,
             IExceptionChecker exceptionChecker,
             IServicesConfig config,
             ILogger logger,
-            IHttpContextAccessor httpContextAcessor,
-            string DocumentDataType = "pcs")  // hard coded value pcs is for determing the correct collection and database for the default container
+            IHttpContextAccessor httpContextAcessor)
         {
             this.disposedValue = false;
+            this._clientFactory = clientFactory;
             this._config = config;
-            this._client = clientFactory.Create();
             this._exceptionChecker = exceptionChecker;
             this._log = logger;
-            this.docDbRUs = config.DocumentDbRUs;
-            this.docDbOptions = this.GetDocDbOptions();
-            this.DocumentDataType = DocumentDataType;
             this._httpContextAccessor = httpContextAcessor;
         }
 
@@ -56,11 +54,11 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         {
             get
             {
-                string docDbDatabase = this._config.DocumentDbDatabase(this.DocumentDataType);
+                string docDbDatabase = this._config.DocumentDbDatabase(this.documentDataType);
                 if (String.IsNullOrEmpty(docDbDatabase))
                 {
-                    string message = $"A valid DocumentDb Database Id could not be retrieved for {this.DocumentDataType}";
-                    this._log.Info(message, () => new { this.DocumentDataType });
+                    string message = $"A valid DocumentDb Database Id could not be retrieved for {this.documentDataType}";
+                    this._log.Info(message, () => new { this.documentDataType });
                     throw new Exception(message);
                 } 
                 return docDbDatabase;
@@ -75,7 +73,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 try
                 {
                     string tenant = this._httpContextAccessor.HttpContext.Request.GetTenant();
-                    return this._config.DocumentDbCollection(tenant, this.DocumentDataType);
+                    return this._config.DocumentDbCollection(tenant, this.documentDataType);
                 }
                 catch (Exception ex)
                 {
@@ -95,15 +93,16 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
         public async Task<StatusResultServiceModel> PingAsync()
         {
+            this.SetClientOptions();
             var result = new StatusResultServiceModel(false, "Storage check failed");
 
             try
             {
                 DatabaseAccount response = null;
-                if (this._client != null)
+                if (this.client != null)
                 {
                     // make generic call to see if storage client can be reached
-                    response = await this._client.GetDatabaseAccountAsync();
+                    response = await this.client.GetDatabaseAccountAsync();
                 }
 
                 if (response != null)
@@ -127,7 +126,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             try
             {
                 var docId = DocumentIdHelper.GenerateId(collectionId, key);
-                var response = await this._client.ReadDocumentAsync($"{this.collectionLink}/docs/{docId}");
+                var response = await this.client.ReadDocumentAsync($"{this.collectionLink}/docs/{docId}");
                 return new ValueServiceModel(response);
             }
             catch (Exception ex)
@@ -149,7 +148,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         {
             await this.SetupStorageAsync();
 
-            var query = this._client.CreateDocumentQuery<KeyValueDocument>(this.collectionLink)
+            var query = this.client.CreateDocumentQuery<KeyValueDocument>(this.collectionLink)
                 .Where(doc => doc.CollectionId.ToLower() == collectionId.ToLower())
                 .ToList();
             return await Task.FromResult(query.Select(doc => new ValueServiceModel(doc)));
@@ -161,7 +160,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
             try
             {
-                var response = await this._client.CreateDocumentAsync(
+                var response = await this.client.CreateDocumentAsync(
                     this.collectionLink,
                     new KeyValueDocument(collectionId, key, input.Data));
                 return new ValueServiceModel(response);
@@ -182,7 +181,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
             try
             {
-                var response = await this._client.UpsertDocumentAsync(
+                var response = await this.client.UpsertDocumentAsync(
                     this.collectionLink,
                     new KeyValueDocument(collectionId, key, input.Data),
                     IfMatch(input.ETag));
@@ -204,7 +203,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
             try
             {
-                await this._client.DeleteDocumentAsync($"{this.collectionLink}/docs/{DocumentIdHelper.GenerateId(collectionId, key)}");
+                await this.client.DeleteDocumentAsync($"{this.collectionLink}/docs/{DocumentIdHelper.GenerateId(collectionId, key)}");
             }
             catch (Exception ex)
             {
@@ -225,8 +224,16 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 
         private async Task SetupStorageAsync()
         {
+            this.SetClientOptions();
             await this.CreateDatabaseIfNotExistsAsync();
             await this.CreateCollectionIfNotExistsAsync();
+        }
+
+        private void SetClientOptions()
+        {
+            this.client = this._clientFactory.Create();
+            this.docDbRUs = this._config.DocumentDbRUs;
+            this.docDbOptions = this.GetDocDbOptions();
         }
 
         private async Task CreateDatabaseIfNotExistsAsync()
@@ -234,7 +241,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             try
             {
                 var uri = "/dbs/" + this.docDbDatabase;
-                await this._client.ReadDatabaseAsync(uri, this.docDbOptions);
+                await this.client.ReadDatabaseAsync(uri, this.docDbOptions);
             }
             catch (DocumentClientException e)
             {
@@ -252,7 +259,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             try
             {
                 var uri = $"/dbs/{this.docDbDatabase}/colls/{this.docDbCollection}";
-                await this._client.ReadDocumentCollectionAsync(uri, this.docDbOptions);
+                await this.client.ReadDocumentCollectionAsync(uri, this.docDbOptions);
             }
             catch (DocumentClientException e)
             {
@@ -272,7 +279,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 this._log.Info("Creating DocumentDb database",
                     () => new { this.docDbDatabase });
                 var db = new Database { Id = this.docDbDatabase };
-                await this._client.CreateDatabaseAsync(db);
+                await this.client.CreateDatabaseAsync(db);
             }
             catch (DocumentClientException e)
             {
@@ -309,7 +316,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 //coll.PartitionKey = new PartitionKeyDefinition { Paths = new Collection<string> { "/CollectionId" } };
 
                 var dbUri = "/dbs/" + this.docDbDatabase;
-                await this._client.CreateDocumentCollectionAsync(dbUri, coll, this.docDbOptions);
+                await this.client.CreateDocumentCollectionAsync(dbUri, coll, this.docDbOptions);
             }
             catch (DocumentClientException e)
             {
@@ -355,7 +362,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             {
                 if (disposing)
                 {
-                    (this._client as IDisposable)?.Dispose();
+                    (this.client as IDisposable)?.Dispose();
                 }
                 this.disposedValue = true;
             }

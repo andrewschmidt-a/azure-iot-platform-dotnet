@@ -31,7 +31,6 @@ namespace IdentityGateway.WebService
          
             context.Request.SetTenant(tenantId);
             return this.requestDelegate(context);
-
         }
     }
 }

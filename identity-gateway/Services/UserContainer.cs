@@ -32,7 +32,7 @@ namespace IdentityGateway.Services
             this._tableHelper = tableHelper;
         }
 
-        protected string tenant
+        public string tenant
         {
             // get the tenant guid from the http context - this utilizes AuthUtil's request extension
             get
@@ -45,15 +45,6 @@ namespace IdentityGateway.Services
         {
             await this._tableHelper.GetTableAsync(this.tableName);
             return new StatusResultServiceModel(true, "Alive and Well!");
-        }
-
-        public async Task<bool> RecordExists(TableEntity model)
-        {
-            return await this.GetAsync(model) != null;
-        }
-
-        abstract public async Task<TableEntity> GetAsync(IUserInput input)
-        {
         }
     }
 }
