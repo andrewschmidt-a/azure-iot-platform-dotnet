@@ -4,6 +4,7 @@
 
     .NOTES
         AUTHOR: Nate Oelke
+                Sean Dubiel (AppConfig)
 #>
 
 param
@@ -44,7 +45,8 @@ catch {
 
 # Retrieve the data from the Webhook request body
 $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
-$appConfigUri = "https://app-config-odin.azconfig.io"
+$appConfigConnectionString = data.appConfigConnectionString
+$setAppConfigEndpoint = data.setAppConfigEndpoint
 $data.token
 
 # Define template for creating IoT Hub
@@ -164,13 +166,16 @@ $sharedAccessKey = $result.primaryKey
 $connectionString = "HostName=$($data.iotHubName).azure-devices.net;SharedAccessKeyName=$policy;SharedAccessKey=$sharedAccessKey"
 
 # Write the IoT Hub connection string to app config
-# $appConfigKey = "tenant:$($data.tenantId):iotHubConnectionString"
-# $appConfigUri = "$appConfigUri/kv/$appConfigKey"
-# $appConfigBody = @{
-#   "value" = "$connectionString"
-# }
-# # Authentication in the request header is not valid for this API
-# Invoke-RestMethod -Method Put -Headers $requestheader -Uri $iotHubUri -Body $iotHubTemplate
+$requestHeader = @{
+  "Content-Type" = "application/json"
+}
+$appConfigKey = "tenant:$($data.tenantId):iotHubConnectionString"
+$appConfigBody = @"
+{
+     connectionstring : "$appConfigConnectionString", name : "$appConfigKey", value : "$connectionString"
+}
+"@
+$result = (Invoke-RestMethod -Method Post -Headers $requestheader -Uri $setAppConfigEndpoint -Body $appConfigBody)
 
 # Write to table storage
 "Trying to write to table storage"
