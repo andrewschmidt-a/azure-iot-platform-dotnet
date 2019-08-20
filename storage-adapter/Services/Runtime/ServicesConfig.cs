@@ -8,10 +8,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
     public interface IServicesConfig
     {
         string StorageType { get; set; }
-        string AdapterType { get; set; }
-        string DocumentDbConnString { get; }
+        string DocumentDbConnStringKey { get; set; }
         int DocumentDbRUs { get; set; }
         IConfigurationRoot AppConfig { get; set; }
+        string DocumentDbConnString { get; }
 
         string DocumentDbDatabase(string dataType);
         string DocumentDbCollection(string tenant, string dataType);
@@ -20,47 +20,53 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
     public class ServicesConfig : IServicesConfig
     {
         public string StorageType { get; set; }
-        public string AdapterType { get; set; }
+        public string DocumentDbConnStringKey { get; set; }
         public int DocumentDbRUs { get; set; }
         public IConfigurationRoot AppConfig { get; set; }
 
         public ServicesConfig(
             string StorageType,
-            string AdapterType,
+            string DocumentDbConnStringKey,
             int DocumentDbRUs,
             IAppConfigurationHelper appConfigurationHelper)
         {
             this.StorageType = StorageType;
-            this.AdapterType = AdapterType;
+            this.DocumentDbConnStringKey = DocumentDbConnStringKey;
             this.DocumentDbRUs = DocumentDbRUs;
             this.AppConfig = appConfigurationHelper.GetAppConfig();
         }
 
         private string AppConfigValue(string key)
         {
-            try
+            if (String.IsNullOrEmpty(key))
             {
-                return this.AppConfig[key];
+                throw new NullReferenceException("App Config cannot take a null key parameter. The given key was not correctly configured.");
             }
-            catch (Exception ex)
+
+            string value = this.AppConfig[key];
+            if (String.IsNullOrEmpty(value))
             {
-                throw new NullReferenceException($"{key} could not be found in your App Configuration instance.", ex);
+                throw new NullReferenceException($"App Config returned a null value for {key}");
             }
+
+            return value;
         }
 
         public string DocumentDbCollection(string tenant, string dataType)
         {
+            // TODO: Adapt a standard for tenant secret info and update this with the new standard format
             return this.AppConfigValue($"tenant:{tenant}:{dataType}-collection");
         }
         public string DocumentDbDatabase(string dataType)
         {
-            return this.AppConfigValue($"storage-adapter:{dataType}:database");
+            return this.AppConfigValue($"StorageAdapter:{dataType}");
         }
+
         public string DocumentDbConnString
         {
             get
             {
-                return this.AppConfigValue($"storage-adapter:{this.AdapterType}:connstring");
+                return this.AppConfigValue(this.DocumentDbConnStringKey);
             }
         }
     }
