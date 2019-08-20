@@ -15,10 +15,14 @@ namespace TokenGenerator.Helpers
     {
         private IKeyVaultClient client;
         private IConfiguration _config;
+        const string KeyVaultAppId = "KeyVault:aadappid";
+        const string KeyVaultSecret = "KeyVault:aadappsecret";
+        const string KeyVaultName = "KeyVault:name";
+        const string TenantID = "Global:AzureActiveDirectory:aadtenantid";
         public KeyVaultHelper(IConfiguration _config)
         {
             string AzureServicesAuthConnectionString =
-                $"RunAs=App;AppId={_config["keyvaultAppId"]};TenantId={_config["tenantId"]};AppKey={_config["keyvaultAppKey"]};";
+                $"RunAs=App;AppId={_config[KeyVaultAppId]};TenantId={_config[TenantID]};AppKey={_config[KeyVaultSecret]};";
 
             AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider(AzureServicesAuthConnectionString);
 
@@ -29,7 +33,7 @@ namespace TokenGenerator.Helpers
 
         public string getKeyVaultSecretIdentifier(string secret)
         {
-            return $"https://{ this._config["keyvaultName"]}.vault.azure.net/secrets/{secret}";
+            return $"https://{ this._config[KeyVaultName]}.vault.azure.net/secrets/{secret}";
         }
         public async Task<string> getSecretAsync(string secret)
         {
