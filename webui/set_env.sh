@@ -113,6 +113,7 @@ set_env_vars() {
   do
       _key=$1
       _value=$(_get_keyvault_secret $2)
+      echo ${_value}
 
       # change webui config
       modify_webui_config $_key $_value
@@ -127,6 +128,14 @@ main() {
   # PCS_AAD_APPID, PCS_AAD_APPSECRET must be available as "environment" variables.
   if [[ "$PCS_KEYVAULT_NAME" != "" ]] && [[ "$PCS_AAD_APPID" != "" ]] && [[ "$PCS_AAD_APPSECRET" != "" ]]; then
     set_env_vars $@
+  else
+    echo "Required KeyVault Infomation does not exist in Environment Variables, the following environment variables must be set to run this script:"
+    echo "PCS_KEYVAULT_NAME"
+    echo "PCS_AAD_APPID"
+    echo "PCS_AAD_APPSECRET"
+    echo
+    echo "Exiting set_env.sh"
+    exit 1
   fi
 }
 

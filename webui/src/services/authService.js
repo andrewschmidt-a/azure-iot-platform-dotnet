@@ -2,6 +2,7 @@
 
 import Config from 'app.config';
 import AuthenticationContext from 'adal-angular/dist/adal.min.js'
+import { OAuthService, AuthConfig } from 'angular-oauth2-oidc';
 import { Observable } from 'rxjs';
 import { HttpClient } from 'utilities/httpClient';
 import { toUserModel, authDisabledUser } from './models';
@@ -16,6 +17,7 @@ export class AuthService {
   static appId = '00000000-0000-0000-0000-000000000000';
   static tenantId = '00000000-0000-0000-0000-000000000000';
   static clientId = '00000000-0000-0000-0000-000000000000';
+  static issuer = '';
 
   static initialize() {
     if (typeof global.DeploymentConfig === 'undefined') {
@@ -34,6 +36,7 @@ export class AuthService {
     AuthService.clientId = global.DeploymentConfig.aad.appId;
     AuthService.appId = global.DeploymentConfig.aad.appId;
     AuthService.aadInstance = global.DeploymentConfig.aad.instance;
+    AuthService.issuer = global.DeploymentConfig.issuer;
 
     if (AuthService.aadInstance && AuthService.aadInstance.endsWith('{0}')) {
       AuthService.aadInstance = AuthService.aadInstance.substr(0, AuthService.aadInstance.length - 3);
@@ -54,6 +57,27 @@ export class AuthService {
     });
   }
 
+  static get oauth() {
+    var oauth = new OAuthService();
+    oauth.http = HttpClient;
+    oauth.configure({
+      issuer: AuthService.issuer,
+      // URL of the SPA to redirect the user to after login
+      redirectUri: window.location.origin,
+
+      clientId: AuthService.clientId,
+
+      // set the scope for the permissions the client should request
+      // The first three are defined by OIDC. The 4th is a usecase-specific one
+      //scope: 'openid ebce2d28-8fb8-4cc7-83ae-accc9d73ee9d',
+      scope: '',
+
+      strictDiscoveryDocumentValidation: true
+    });
+    oauth.loadDiscoveryDocument(AuthService.issuer + './well-known/openid-configuration');
+    return oauth;
+  }
+
   static isDisabled() {
     return AuthService.authEnabled === false;
   }
@@ -69,29 +93,33 @@ export class AuthService {
       if (successCallback) successCallback();
       return;
     };
+    var oauth = AuthService.oauth;
+    oauth.initImplicitFlow();
+    var token = oauth.getAccessToken();
+    console.log(token);
 
     // Note: "window.location.hash" is the anchor part attached by
     //       the Identity Provider when redirecting the user after
     //       a successful authentication.
-    if (AuthService.authContext.isCallback(window.location.hash)) {
-      console.debug('Handling Auth Window callback');
-      // Handle redirect after authentication
-      AuthService.authContext.handleWindowCallback();
-      const error = AuthService.authContext.getLoginError();
-      if (error) {
-        throw new Error(`Authentication Error: ${error}`);
-      }
-    } else {
-      AuthService.getUserName(user => {
-        if (user) {
-          console.log(`Signed in as ${user.Name} with ${user.Email}`);
-          if (successCallback) successCallback();
-        } else {
-          console.log('The user is not signed in');
-          AuthService.authContext.login();
-        }
-      });
-    }
+    // if (AuthService.authContext.isCallback(window.location.hash)) {
+    //   console.debug('Handling Auth Window callback');
+    //   // Handle redirect after authentication
+    //   AuthService.authContext.handleWindowCallback();
+    //   const error = AuthService.authContext.getLoginError();
+    //   if (error) {
+    //     throw new Error(`Authentication Error: ${error}`);
+    //   }
+    // } else {
+    //   AuthService.getUserName(user => {
+    //     if (user) {
+    //       console.log(`Signed in as ${user.Name} with ${user.Email}`);
+    //       if (successCallback) successCallback();
+    //     } else {
+    //       console.log('The user is not signed in');
+    //       AuthService.authContext.login();
+    //     }
+    //   });
+    // }
   }
 
   static getUserName(callback) {
@@ -133,6 +161,10 @@ export class AuthService {
       return Observable.of('client-auth-disabled');
     }
 
+    // var oauth = AuthService.oauth;
+    // var token = oauth.getAccessToken();
+    // console.log(token);
+    // return Observable.of(token);
     return Observable.create(observer => {
       return AuthService.authContext.acquireToken(
         AuthService.appId,
