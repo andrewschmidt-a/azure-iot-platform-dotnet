@@ -54,7 +54,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 
         public string DocumentDbCollection(string tenant, string dataType)
         {
-            // TODO: Adapt a standard for tenant secret info and update this with the new standard format
+            if (String.IsNullOrEmpty(tenant))
+            {
+                throw new NullReferenceException("The given tenant value was null. Ensure that your request has attached an ApplicationTenantId in the headers.");
+            }
             return this.AppConfigValue($"tenant:{tenant}:{dataType}-collection");
         }
         public string DocumentDbDatabase(string dataType)
