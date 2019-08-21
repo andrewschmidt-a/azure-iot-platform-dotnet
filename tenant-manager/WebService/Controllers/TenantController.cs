@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using tenant_manager.Helpers;
-using tenant_manager.Models;
+using MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers;
+using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Azure.ApplicationModel.Configuration;
@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 
-namespace tenant_manager.Controllers
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

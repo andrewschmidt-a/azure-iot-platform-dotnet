@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace tenant_manager.Models
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Models
 {
     public class TenantModel : TableEntity
     {

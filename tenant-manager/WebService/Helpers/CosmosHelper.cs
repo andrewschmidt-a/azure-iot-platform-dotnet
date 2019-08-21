@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Configuration;
 
-namespace tenant_manager.Helpers
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
 {
     public class CosmosHelper
     {
