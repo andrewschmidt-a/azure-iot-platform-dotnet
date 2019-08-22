@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
 
-import { AuthService } from 'services';
+import AuthService from 'services/authService';
 import { getUser } from 'store/reducers/appReducer';
 import { Profile } from './profile';
 

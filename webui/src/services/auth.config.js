@@ -3,7 +3,7 @@ import { AuthConfig } from 'angular-oauth2-oidc';
 // class IoTPlatformAuth extends AuthConfig {
 //   tenant: string;
 // }
-export const authConfig: AuthConfig = {
+var authConfig = new AuthConfig({
   issuer: 'https://crsliotkubedev.centralus.cloudapp.azure.com/auth',
   // URL of the SPA to redirect the user to after login
   redirectUri: window.location.origin,
@@ -16,5 +16,6 @@ export const authConfig: AuthConfig = {
   scope: '',
 
   strictDiscoveryDocumentValidation: false
+});
 
-}
+export default authConfig;
