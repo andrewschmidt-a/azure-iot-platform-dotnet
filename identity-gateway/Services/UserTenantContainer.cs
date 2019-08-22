@@ -27,7 +27,8 @@ namespace IdentityGateway.Services
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            return (List<UserTenantModel>)resultSegment.Results;  // cast to a UserTenantModel list to easily parse result
+            Console.WriteLine((UserTenantModel)resultSegment.Results.First());
+            return resultSegment.Results.Select(t => (UserTenantModel)t).ToList();  // cast to a UserTenantModel list to easily parse result
         }
 
         /// <summary>
@@ -37,9 +38,9 @@ namespace IdentityGateway.Services
         /// <returns></returns>
         public async Task<UserTenantModel> GetAsync(UserTenantInput input)
         {
-            TableOperation retrieveUserTenant = TableOperation.Retrieve<UserTenantModel>(input.userId, this.tenant);
+            TableOperation retrieveUserTenant = TableOperation.Retrieve<UserTenantModel>(input.userId, input.tenant);
             TableResult result = await this._tableHelper.ExecuteOperationAsync(this.tableName, retrieveUserTenant);
-            return (UserTenantModel)result.Result;
+            return result.Result as UserTenantModel;
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace IdentityGateway.Services
             // Insert the user record. Return the user model from the user table insert
             TableOperation insertOperation = TableOperation.Insert(user);
             TableResult userInsert = await this._tableHelper.ExecuteOperationAsync(this.tableName, insertOperation);
-            return (UserTenantModel)userInsert.Result;  // cast to UserTenantModel to parse results
+            return userInsert.Result as UserTenantModel;  // cast to UserTenantModel to parse results
         }
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace IdentityGateway.Services
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
             TableOperation replaceOperation = TableOperation.Replace(model);
             TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
-            return (UserTenantModel)replace.Result;
+            return replace.Result as UserTenantModel;
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace IdentityGateway.Services
 
             // delete the record and return the deleted user model
             TableResult deleteUser = await this._tableHelper.ExecuteOperationAsync(this.tableName, deleteOperation);
-            return (UserTenantModel)deleteUser.Result;
+            return deleteUser.Result as UserTenantModel;
         }
     }
 }

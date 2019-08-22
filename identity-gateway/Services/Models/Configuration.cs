@@ -36,14 +36,14 @@ namespace IdentityGateway.Services.Models
         {
             get
             {
-                return this.host + "/.well-known/openid-configuration/jwks";
+                return this.host + ".well-known/openid-configuration/jwks";
             }
         }
         public string authorization_endpoint
         {
             get
             {
-                return this.host + "/connect/authorize";
+                return this.host + "connect/authorize";
             }
         }
         /*
@@ -130,7 +130,7 @@ namespace IdentityGateway.Services.Models
 
             get
             {
-                return new List<string> { "token" };
+                return new List<string> { "token", "id_token" };
             }
         }
         public List<string> response_modes_supported
