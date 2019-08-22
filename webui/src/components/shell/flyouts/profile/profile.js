@@ -58,6 +58,17 @@ export const Profile = (props) => {
             </div>
 
             <Section.Container>
+              <Section.Header>{t('profileFlyout.tenant')}</Section.Header>
+              <Section.Content>
+                {/* Fill in with programmable tenant options list */}
+                <select>
+                  <option>A</option>
+                  <option>B</option>
+                </select>
+              </Section.Content>
+            </Section.Container>
+
+            <Section.Container>
               <Section.Header>{t('profileFlyout.roles')}</Section.Header>
               <Section.Content>
                 {

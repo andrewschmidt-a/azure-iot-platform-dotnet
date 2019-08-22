@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 import { Observable } from 'rxjs';
-import AuthService from 'services/authService';
+import { AuthService } from 'services';
 import Config from 'app.config';
 import { AjaxError, RetryableAjaxError } from './ajaxModels';
 
