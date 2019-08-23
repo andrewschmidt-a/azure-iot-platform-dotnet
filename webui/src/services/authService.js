@@ -12,7 +12,7 @@ const ENDPOINT = Config.serviceUrls.auth;
 export class AuthService {
 
   static authContext; // Created on AuthService.initialize()
-  static authEnabled = false;
+  static authEnabled = true;
   static aadInstance = '';
   static appId = '00000000-0000-0000-0000-000000000000';
   static tenantId = '00000000-0000-0000-0000-000000000000';
@@ -59,19 +59,12 @@ export class AuthService {
     // });
 
     AuthService.settings = {
-      authority: AuthService.aadInstance,
-      client_id: AuthService.clientId,
+      authority: 'https://crsliotkubedev.centralus.cloudapp.azure.com/auth/',
+      client_id: '',
       redirect_uri: window.location.origin,
       post_logout_redirect_uri: window.location.origin,
       response_type: 'token',
-      userStore: new WebStorageStateStore({ store: window.localStorage }),
-      metadata: {
-        issuer: AuthService.issuer,
-        authorization_endpoint: `${AuthService.aadInstance}/${AuthService.tenantId}/oauth2/v2.0/authorize`,
-        token_endpoint: `${AuthService.aadInstance}/${AuthService.tenantId}/oauth2/v2.0/token`,
-        jwks_uri: `https://login.microsoftonline.com/common/discovery/keys`,
-        end_session_endpoint: `${AuthService.aadInstance}/${AuthService.tenantId}/oauth2/v2.0/logout`
-      }
+      userStore: new WebStorageStateStore({ store: window.localStorage })
     };
     AuthService._userManager = new UserManager(AuthService.settings);
   }

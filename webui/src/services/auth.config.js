@@ -1,4 +1,4 @@
-import { AuthConfig } from 'angular-oauth2-oidc';
+import { AuthConfig } from 'oidc-client';
 
 // class IoTPlatformAuth extends AuthConfig {
 //   tenant: string;
