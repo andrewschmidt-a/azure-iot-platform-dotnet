@@ -89,6 +89,7 @@ namespace IdentityGateway.Controllers
                     }
                     var jwt = jwtHandler.ReadJwtToken(id_token);
                     var authState = JsonConvert.DeserializeObject<AuthState>(state);
+                    var originalAudience = authState.tenant; //save or
 
                     Console.Write("Before Reading Claim Values");
                     // Bring over Subject and Name
@@ -164,7 +165,7 @@ namespace IdentityGateway.Controllers
                     Console.Write(forwardedFor);
                     var token = new JwtSecurityToken(
                       issuer: forwardedFor ?? "https://" + HttpContext.Request.Host.ToString() + "/",
-                      audience: authState.tenant,
+                      audience: originalAudience,
                       expires: DateTime.Now.AddDays(30),
                       claims: claims.ToArray(),
                       signingCredentials: credentials
