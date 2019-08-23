@@ -171,11 +171,11 @@ namespace IdentityGateway.Controllers
                     var returnUri = new UriBuilder(authState.returnUrl);
 
                     // Need to build Query carefully to not clobber other query items -- just injecting state
-                    var query = HttpUtility.ParseQueryString(returnUri.Query);
-                    query["state"] = HttpUtility.UrlEncode(authState.state);
-                    returnUri.Query = query.ToString();
+                    //var query = HttpUtility.ParseQueryString(returnUri.Query);
+                    //query["state"] = HttpUtility.UrlEncode(authState.state);
+                    //returnUri.Query = query.ToString();
 
-                    returnUri.Fragment = "id_token=" + tokenString; // pass token in Fragment for more security (Browser wont forward...)
+                    returnUri.Fragment = "id_token=" + tokenString+"&state="+HttpUtility.UrlEncode(authState.state); // pass token in Fragment for more security (Browser wont forward...)
                     return Redirect(returnUri.Uri.ToString());
                 }
                 else
