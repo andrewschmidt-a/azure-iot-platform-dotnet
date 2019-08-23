@@ -164,7 +164,7 @@ namespace IdentityGateway.Controllers
                     Console.Write(forwardedFor);
                     var token = new JwtSecurityToken(
                       issuer: forwardedFor ?? "https://" + HttpContext.Request.Host.ToString() + "/",
-                      audience: "IoTPlatform",
+                      audience: authState.tenant,
                       expires: DateTime.Now.AddDays(30),
                       claims: claims.ToArray(),
                       signingCredentials: credentials
