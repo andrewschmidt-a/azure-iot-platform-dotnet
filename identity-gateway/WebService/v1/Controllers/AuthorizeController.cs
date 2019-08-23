@@ -41,7 +41,7 @@ namespace IdentityGateway.Controllers
         // GET: connect/authorize
         [HttpGet]
         [Route("connect/authorize")]
-        public IActionResult Get([FromQuery] string  redirect_uri, [FromQuery] string state, [FromQuery(Name = "client_id")] string tenant)
+        public IActionResult Get([FromQuery] string  redirect_uri, [FromQuery] string state, [FromQuery(Name = "client_id")] string tenant, [FromQuery] string nonce)
         {
             var config = new Configuration(HttpContext);
             Console.Write(config.issuer);
@@ -49,7 +49,7 @@ namespace IdentityGateway.Controllers
 
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
-            query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = redirect_uri, state = state, tenant = tenant });
+            query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce});
             query["redirect_uri"] = config.issuer+"connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
             return Redirect(
@@ -143,6 +143,11 @@ namespace IdentityGateway.Controllers
                     }
                     // add all tenants they have access to
                     claims.AddRange(tenantList.Select(t => new Claim("available_tenants", t.RowKey)));
+
+                    if (!String.IsNullOrEmpty(authState.nonce))
+                    {
+                        claims.Add(new Claim("nonce", authState.nonce));
+                    }
                     Console.WriteLine("Test Before RSA");
                     // Create Security key  using private key above:
                     // not that latest version of JWT using Microsoft namespace instead of System
