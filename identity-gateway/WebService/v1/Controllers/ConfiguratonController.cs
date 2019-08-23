@@ -33,7 +33,7 @@ namespace IdentityGateway.WebService.v1.Controllers
 
         // GET api/values
         [HttpGet(".well-known/openid-configuration/jwks")]
-        public async Task<string> GetAsync()
+        public async Task<ContentResult> GetAsync()
         {
             var publicKey = "";
             /* Get Secrets From KeyVault */
@@ -64,7 +64,7 @@ namespace IdentityGateway.WebService.v1.Controllers
                 };
                 jsonWebKeySet.Keys.Add(jsonWebKey);
             }
-            return JsonConvert.SerializeObject(jsonWebKeySet);
+            return new ContentResult() {Content = JsonConvert.SerializeObject(jsonWebKeySet), ContentType = "application/json"};
         }
     }
 }
