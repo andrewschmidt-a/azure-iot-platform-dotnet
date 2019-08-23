@@ -26,9 +26,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         }
         // GET api/values
         [HttpGet(".well-known/openid-configuration")]
-        public string Get()
+        public ContentResult Get()
         {
-            return JsonConvert.SerializeObject(new Configuration(HttpContext)); 
+            return new ContentResult() {Content = JsonConvert.SerializeObject(new Configuration(HttpContext)), ContentType = "application/json"}; 
         }
 
         // GET api/values
