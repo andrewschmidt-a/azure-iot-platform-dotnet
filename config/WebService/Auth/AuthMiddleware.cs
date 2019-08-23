@@ -262,7 +262,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
                     ValidIssuer = this.config.JwtIssuer,
 
                     // Validate the token audience
-                    ValidateAudience = true,
+                    ValidateAudience = false,
                     ValidAudience = this.config.JwtAudience,
 
                     // Validate token lifetime
