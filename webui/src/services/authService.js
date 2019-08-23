@@ -60,7 +60,7 @@ export class AuthService {
 
     AuthService.settings = {
       authority: 'https://crsliotkubedev.centralus.cloudapp.azure.com/auth/',
-      client_id: '',
+      client_id: 'None',
       redirect_uri: window.location.origin,
       post_logout_redirect_uri: window.location.origin,
       response_type: 'token',
