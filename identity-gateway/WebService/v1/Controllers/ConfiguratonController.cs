@@ -11,6 +11,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Models;
+using Newtonsoft.Json.Serialization;
 using JsonWebKey = IdentityModel.Jwk.JsonWebKey;
 using JsonWebKeySet = IdentityModel.Jwk.JsonWebKeySet;
 
@@ -64,7 +65,16 @@ namespace IdentityGateway.WebService.v1.Controllers
                 };
                 jsonWebKeySet.Keys.Add(jsonWebKey);
             }
-            return new ContentResult() {Content = JsonConvert.SerializeObject(jsonWebKeySet), ContentType = "application/json"};
+            var serializerSettings = new JsonSerializerSettings();
+            serializerSettings.ContractResolver = new LowercaseContractResolver();
+            return new ContentResult() {Content = JsonConvert.SerializeObject(jsonWebKeySet, serializerSettings), ContentType = "application/json"};
         }
+    }
+}
+public class LowercaseContractResolver : DefaultContractResolver
+{
+    protected override string ResolvePropertyName(string propertyName)
+    {
+        return propertyName.ToLower();
     }
 }
