@@ -151,7 +151,8 @@ namespace IdentityGateway.Controllers
                     }
                     
                     //add iat claim
-                    claims.Add(new Claim("iat", DateTime.Now.Ticks.ToString()));
+                    var timeSinceEpoch = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+                    claims.Add(new Claim("iat", timeSinceEpoch.ToString()));
                     Console.WriteLine("Test Before RSA");
                     // Create Security key  using private key above:
                     // not that latest version of JWT using Microsoft namespace instead of System
