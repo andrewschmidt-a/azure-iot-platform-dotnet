@@ -144,11 +144,14 @@ namespace IdentityGateway.Controllers
                     }
                     // add all tenants they have access to
                     claims.AddRange(tenantList.Select(t => new Claim("available_tenants", t.RowKey)));
-
+                    
                     if (!String.IsNullOrEmpty(authState.nonce))
                     {
                         claims.Add(new Claim("nonce", authState.nonce));
                     }
+                    
+                    //add iat claim
+                    claims.Add(new Claim("iat", DateTime.Now.Ticks.ToString()));
                     Console.WriteLine("Test Before RSA");
                     // Create Security key  using private key above:
                     // not that latest version of JWT using Microsoft namespace instead of System
