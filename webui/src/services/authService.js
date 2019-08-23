@@ -63,7 +63,8 @@ export class AuthService {
       client_id: 'None',
       redirect_uri: window.location.origin,
       post_logout_redirect_uri: window.location.origin,
-      response_type: 'token',
+      response_type: 'id_token',
+      response_mode: 'fragment',
       userStore: new WebStorageStateStore({ store: window.localStorage })
     };
     AuthService._userManager = new UserManager(AuthService.settings);
@@ -95,6 +96,7 @@ export class AuthService {
 
     // atempt to sign in if the current window is not a callback
     if (!AuthService.isCallback(window.location.hash)) {
+      AuthService._userManager.removeUser();
       AuthService._userManager.getUser().then(user => {
         if (user) {
           console.log(user);
@@ -105,6 +107,11 @@ export class AuthService {
           AuthService._userManager.signinRedirect();
         }
       });
+    }else{
+      window.location.hash = decodeURIComponent(window.location.hash); // decode hash
+      AuthService._userManager.signinRedirectCallback().then(user=>{
+        console.log(user)
+      })
     }
 
     // Note: "window.location.hash" is the anchor part attached by
