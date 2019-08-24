@@ -1,11 +1,12 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 import Config from 'app.config';
-import AuthenticationContext from 'adal-angular/dist/adal.min.js'
+// import AuthenticationContext from 'adal-angular/dist/adal.min.js'
 import { UserManager, UserManagerSettings, User, WebStorageStateStore, } from 'oidc-client';
 import { Observable } from 'rxjs';
 import { HttpClient } from 'utilities/httpClient';
 import { toUserModel, authDisabledUser } from './models';
+import{ Policies } from './policies.json'
 
 const ENDPOINT = Config.serviceUrls.auth;
 
@@ -27,27 +28,27 @@ export class AuthService {
       throw new Error('The global configuration is missing. Verify the content of webui-config.js.');
     }
 
-    if (typeof global.DeploymentConfig.authEnabled !== 'undefined') {
-      AuthService.authEnabled = global.DeploymentConfig.authEnabled;
-      if (!AuthService.authEnabled) {
-        console.warn('Auth is disabled! (see webui-config.js)');
-      }
-    }
+    // if (typeof global.DeploymentConfig.authEnabled !== 'undefined') {
+    //   AuthService.authEnabled = global.DeploymentConfig.authEnabled;
+    //   if (!AuthService.authEnabled) {
+    //     console.warn('Auth is disabled! (see webui-config.js)');
+    //   }
+    // }
 
-    AuthService.tenantId = global.DeploymentConfig.aad.tenant;
-    AuthService.clientId = global.DeploymentConfig.aad.appId;
-    AuthService.appId = global.DeploymentConfig.aad.appId;
-    AuthService.aadInstance = global.DeploymentConfig.aad.instance;
-    AuthService.issuer = global.DeploymentConfig.issuer;
+    // AuthService.tenantId = global.DeploymentConfig.aad.tenant;
+    // AuthService.clientId = global.DeploymentConfig.aad.appId;
+    // AuthService.appId = global.DeploymentConfig.aad.appId;
+    // AuthService.aadInstance = global.DeploymentConfig.aad.instance;
+    // AuthService.issuer = global.DeploymentConfig.issuer;
 
-    if (AuthService.aadInstance && AuthService.aadInstance.endsWith('{0}')) {
-      AuthService.aadInstance = AuthService.aadInstance.substr(0, AuthService.aadInstance.length - 3);
-    }
+    // if (AuthService.aadInstance && AuthService.aadInstance.endsWith('{0}')) {
+    //   AuthService.aadInstance = AuthService.aadInstance.substr(0, AuthService.aadInstance.length - 3);
+    // }
 
-    // TODO: support multiple types/providers
-    if (AuthService.isEnabled() && global.DeploymentConfig.authType !== 'aad') {
-      throw new Error(`Unknown auth type: ${global.DeploymentConfig.authType}`);
-    }
+    // // TODO: support multiple types/providers
+    // if (AuthService.isEnabled() && global.DeploymentConfig.authType !== 'aad') {
+    //   throw new Error(`Unknown auth type: ${global.DeploymentConfig.authType}`);
+    // }
 
     // AuthService.authContext = new AuthenticationContext({
     //   instance: AuthService.aadInstance,
@@ -93,14 +94,14 @@ export class AuthService {
       if (successCallback) successCallback();
       return;
     };
-
+    console.log("Loading Auth....")
     // atempt to sign in if the current window is not a callback
     if (!AuthService.isCallback(window.location.hash)) {
-      AuthService._userManager.removeUser();
-      AuthService._userManager.getUser().then(user => {
+      console.log("is not a callback.. attempt to find user")
+      AuthService.getCurrentUser().subscribe(user => {
         if (user) {
           console.log(user);
-          console.log(`Signed in as ${user.Name} with ${user.Email}`);
+          console.log(`Signed in as ${user.name} with ${user.email}`);
           if (successCallback) successCallback();
         } else {
           console.log('The user is not signed in');
@@ -110,7 +111,7 @@ export class AuthService {
     }else{
       window.location.hash = decodeURIComponent(window.location.hash); // decode hash
       AuthService._userManager.signinRedirectCallback().then(user=>{
-        console.log(user)
+        window.location = window.location.origin
       })
     }
 
@@ -165,8 +166,27 @@ export class AuthService {
       return Observable.of(authDisabledUser);
     }
 
-    return HttpClient.get(`${ENDPOINT}users/current`)
-      .map(toUserModel);
+    return Observable.create(observer => {
+      return AuthService._userManager.getUser().then(user => {
+        if (user) {
+          var roles = typeof(user.profile.role) == 'string'?[user.profile.role]:user.profile.role;
+          console.log(Policies)
+          console.log(roles)
+          console.log(user.profile.role)
+          var flattenedPermissions = Policies.filter(policy => roles.indexOf(policy.Role) > -1).map(policy => policy.AllowedActions).flat();
+          observer.next(toUserModel({
+            id: user.profile.sub,
+            name: user.profile.name,
+            email: "a90q9zz@mmm.com",
+            roles: roles,
+            allowedActions: flattenedPermissions
+          }));
+        } else {
+          observer.next(null);
+        }
+        observer.complete();
+      });
+    });
   }
 
   static logout() {
@@ -187,7 +207,7 @@ export class AuthService {
     return Observable.create(observer => {
       return AuthService._userManager.getUser().then(user => {
         if (user) {
-          observer.next(user.access_token);
+          observer.next(user.id_token);
         } else {
           console.log('Authentication Error while Aquiring Access Token');
           observer.error('Authentication Error while Aquiring Access Token');

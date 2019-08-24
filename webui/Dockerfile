@@ -21,9 +21,10 @@ RUN echo "Installing web server..." \
  && apk del --force --purge alpine-keys apk-tools \
  && rm -rf /var/cache/apk /etc/apk /lib/apk
 
-EXPOSE 10080 10443
+EXPOSE 10080
 VOLUME /app/logs
 
 RUN ["chmod", "+x", "/app/run.sh"]
-
-ENTRYPOINT ["/bin/bash", "-c", "/app/run.sh"]
+RUN "/app/run.sh"
+ENTRYPOINT [ "nginx", "-c", "/app/nginx.conf" ]
+#ENTRYPOINT ["/bin/bash", "-c", "/app/run.sh"]
