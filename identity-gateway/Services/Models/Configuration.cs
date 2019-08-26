@@ -46,6 +46,14 @@ namespace IdentityGateway.Services.Models
                 return this.host + "connect/authorize";
             }
         }
+        
+        public string end_session_endpoint
+        {
+            get
+            {
+                return this.host + "connect/logout";
+            }
+        }
         /*
         public string token_endpoint
         {

@@ -8,6 +8,7 @@ using System.IdentityModel.Tokens.Jwt;
 using IdentityGateway.Services;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Models;
+using IdentityServer4.Extensions;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -43,6 +44,18 @@ namespace IdentityGateway.Controllers
         [Route("connect/authorize")]
         public IActionResult Get([FromQuery] string  redirect_uri, [FromQuery] string state, [FromQuery(Name = "client_id")] string clientId, [FromQuery] string nonce, [FromQuery] string tenant)
         {
+            // Validate Input
+            if (!Uri.IsWellFormedUriString(redirect_uri, UriKind.Absolute))
+            {
+                throw new Exception("Redirect Uri is not valid!");
+            }
+            Guid validatedGuid = Guid.Empty;
+            if (!tenant.IsNullOrEmpty() && !Guid.TryParse(tenant, out validatedGuid))
+            {
+                throw new Exception("Tenant is not valid!");
+            }
+            
+            
             var config = new Configuration(HttpContext);
             Console.Write(config.issuer);
             var uri = new UriBuilder(this._config[AzureB2CBaseUri]);
@@ -56,7 +69,30 @@ namespace IdentityGateway.Controllers
                 uri.Uri.ToString()
             );
         }
-
+        // GET: connect/authorize
+        /// <summary>
+        /// This is a pass-through auth gateway so there is no need to officially end session.
+        /// Session state is never saved. Therefore, simply return to redirect. 
+        /// </summary>
+        /// <param name="post_logout_redirect_uri"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        [HttpGet]
+        [Route("connect/logout")]
+        public IActionResult Get([FromQuery] string post_logout_redirect_uri)
+        {
+            // Validate Input
+            if (!Uri.IsWellFormedUriString(post_logout_redirect_uri, UriKind.Absolute))
+            {
+                throw new Exception("Redirect Uri is not valid!");
+            }
+            
+            var uri = new UriBuilder(post_logout_redirect_uri);
+          
+            return Redirect(
+                uri.Uri.ToString()
+            );
+        }
         // GET connect/callback
         [HttpPost("connect/callback")]
         public async Task<IActionResult> PostAsync([FromForm] string state, [FromForm] string id_token)
@@ -88,8 +124,17 @@ namespace IdentityGateway.Controllers
                         throw keyVaultException;
                     }
                     var jwt = jwtHandler.ReadJwtToken(id_token);
-                    var authState = JsonConvert.DeserializeObject<AuthState>(state);
-                    var originalAudience = authState.client_id; //save or
+                    AuthState authState = null;
+                    try
+                    {
+                        authState = JsonConvert.DeserializeObject<AuthState>(state);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception("Invlid state from auth redirect!");
+                    }
+                    
+                    var originalAudience = authState.client_id; 
 
                     Console.Write("Before Reading Claim Values");
                     // Bring over Subject and Name
