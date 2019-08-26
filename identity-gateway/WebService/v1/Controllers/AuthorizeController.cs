@@ -57,7 +57,6 @@ namespace IdentityGateway.Controllers
             
             
             var config = new Configuration(HttpContext);
-            Console.Write(config.issuer);
             var uri = new UriBuilder(this._config[AzureB2CBaseUri]);
 
             // Need to build Query carefully to not clobber other query items -- just injecting state
@@ -136,7 +135,6 @@ namespace IdentityGateway.Controllers
                     
                     var originalAudience = authState.client_id; 
 
-                    Console.Write("Before Reading Claim Values");
                     // Bring over Subject and Name
                     var claims = jwt.Claims.Where(t => new List<string> { "sub", "name" }.Contains(t.Type)).ToList();
                     
@@ -148,7 +146,6 @@ namespace IdentityGateway.Controllers
                     }
                     
                     var userId = jwt.Claims.First(t => t.Type == "sub").Value;
-                    Console.WriteLine(userId);
                     // Create a userTenantInput for the purpose of finding the full tenant list associated with this user
                     UserTenantInput tenantInput = new UserTenantInput
                     {
@@ -175,14 +172,13 @@ namespace IdentityGateway.Controllers
                         }
                         authState.tenant = tenant;
                     }
-                    Console.WriteLine(authState.tenant);
                     UserTenantInput input = new UserTenantInput
                     {
                         userId = userId,
                         tenant = authState.tenant
                     };
                     UserTenantModel tenantModel = await this._userTenantContainer.GetAsync(input);
-                    Console.WriteLine(tenantModel.RowKey);
+
                     // If User not associated with Tenant then dont add claims return token without 
                     if (tenantModel != null)
                     {
@@ -191,11 +187,12 @@ namespace IdentityGateway.Controllers
                         // Add Roles
                         tenantModel.RoleList.ForEach(role => claims.Add(new Claim("role", role)));
                     }
-                    Console.Write("Before available tenants");
+
                     foreach(UserTenantModel test in tenantList)
                     {
                         Console.Write(test.RowKey);
                     }
+
                     // add all tenants they have access to
                     claims.AddRange(tenantList.Select(t => new Claim("available_tenants", t.RowKey)));
                     
@@ -207,7 +204,7 @@ namespace IdentityGateway.Controllers
                     //add iat claim
                     var timeSinceEpoch = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
                     claims.Add(new Claim("iat", timeSinceEpoch.ToString()));
-                    Console.WriteLine("Test Before RSA");
+
                     // Create Security key  using private key above:
                     // not that latest version of JWT using Microsoft namespace instead of System
                     var securityKey = new RsaSecurityKey(IdentityGateway.Services.Helpers.RSA.DecodeRSA(identityGatewayPrivateKey));
@@ -217,7 +214,6 @@ namespace IdentityGateway.Controllers
                     var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials
                                       (securityKey, SecurityAlgorithms.RsaSha256);
 
-                    Console.Write("Test before Forwarded");
                     var forwardedFor = HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value.First();
                     Console.Write(forwardedFor);
                     Console.Write(forwardedFor);
@@ -246,8 +242,7 @@ namespace IdentityGateway.Controllers
                 {
                     throw new Exception("Invalid Token!");
                 }
-
-            }catch(Exception e)
+            } catch (Exception e)
             {
                 Console.Write(e.Message);
                 return View(new ErrorVM { ErrorMessage = e.Message });
