@@ -21,10 +21,14 @@ import './profile.scss';
 const Section = Flyout.Section;
 
 export const Profile = (props) => {
-  const { t, user, logout, onClose } = props;
+  const { t, user, logout, switchTenant, onClose } = props;
 
   const roleArray = Array.from(user.roles);
   const permissionArray = Array.from(user.permissions);
+  const tenantArray = Array.from(user.availableTenants);
+  console.log(user);
+  const currentTenant = user.tenant;
+
 
   return (
     <Flyout.Container header={t('profileFlyout.title')} t={t} onClose={onClose}>
@@ -60,11 +64,24 @@ export const Profile = (props) => {
             <Section.Container>
               <Section.Header>{t('profileFlyout.tenant')}</Section.Header>
               <Section.Content>
+              {currentTenant}
                 {/* Fill in with programmable tenant options list */}
-                <select>
-                  <option>A</option>
-                  <option>B</option>
-                </select>
+                {
+                  (tenantArray.length === 0)
+                    ? t('profileFlyout.noRoles')
+                    :
+                    <Grid>
+                      {
+                        tenantArray.map((tenantGuid, idx) =>
+                          <Row key={idx}>
+                            <Cell>{
+                              (tenantGuid == currentTenant) ? tenantGuid : <a onClick={() => switchTenant(tenantGuid)} href="#">{tenantGuid}</a>
+                            }</Cell>
+                          </Row>
+                        )
+                      }
+                    </Grid>
+                }
               </Section.Content>
             </Section.Container>
 

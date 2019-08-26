@@ -9,6 +9,9 @@ import { toUserModel, authDisabledUser } from './models';
 import{ Policies } from './policies.json'
 
 const ENDPOINT = Config.serviceUrls.auth;
+function getQueryStringValue (key) {
+  return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+}
 
 export class AuthService {
 
@@ -105,7 +108,7 @@ export class AuthService {
           if (successCallback) successCallback();
         } else {
           console.log('The user is not signed in');
-          AuthService._userManager.signinRedirect();
+          AuthService._userManager.signinRedirect({state: getQueryStringValue('tenant')});
         }
       });
     }else{
@@ -169,17 +172,20 @@ export class AuthService {
     return Observable.create(observer => {
       return AuthService._userManager.getUser().then(user => {
         if (user) {
+          // Following two should be Arrays but claims will return a string if only one value.
           var roles = typeof(user.profile.role) == 'string'?[user.profile.role]:user.profile.role;
-          console.log(Policies)
-          console.log(roles)
-          console.log(user.profile.role)
+          var availableTenants = typeof(user.profile.available_tenants) == 'string'?[user.profile.available_tenants]:user.profile.available_tenants
+
+          // Followed format but really shouldnt the data structure be a Map? not a list? -- Andrew Schmidt
           var flattenedPermissions = Policies.filter(policy => roles.indexOf(policy.Role) > -1).map(policy => policy.AllowedActions).flat();
           observer.next(toUserModel({
             id: user.profile.sub,
             name: user.profile.name,
             email: "a90q9zz@mmm.com",
             roles: roles,
-            allowedActions: flattenedPermissions
+            allowedActions: flattenedPermissions,
+            tenant: user.profile.tenant,
+            availableTenants: availableTenants
           }));
         } else {
           observer.next(null);

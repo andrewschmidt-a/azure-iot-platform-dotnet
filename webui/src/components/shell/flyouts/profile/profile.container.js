@@ -13,7 +13,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = () => ({
-  logout: () => AuthService.logout()
+  logout: () => AuthService.logout(),
+  switchTenant: (tenant) => AuthService._userManager.signinRedirect({state: tenant})
 });
 
 // const mapTenantToProps = state => ({
