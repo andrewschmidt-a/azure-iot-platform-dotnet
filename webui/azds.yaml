@@ -22,10 +22,8 @@ install:
       # Customize the public URL by changing the 'webui' text between the $(rootSpacePrefix) and $(hostSuffix) tokens
       # For more information see https://aka.ms/devspaces/routing
       - $(spacePrefix)$(rootSpacePrefix)webui$(hostSuffix)
-    secretsRef: 
-      - PCS_KEYVAULT_NAME
-      - PCS_AAD_APPID
-      - PCS_AAD_APPSECRET
+    secretsRef:
+      - PCS_APPLICATION_CONFIGURATION
 
 configurations:
   develop:

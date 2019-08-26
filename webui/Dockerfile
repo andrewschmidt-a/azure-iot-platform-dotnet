@@ -39,6 +39,7 @@ VOLUME /app/logs
 
 RUN ["chmod", "+x", "/app/run.sh"]
 RUN ["chmod", "+x", "/app/build.sh"]
+RUN ["chmod", "+x", "/app/set_env.sh"]
 RUN "/app/build.sh"
 
 ENTRYPOINT ["/bin/bash", "-c", "/app/run.sh"]
