@@ -18,10 +18,6 @@ export class AuthService {
   static authContext; // Created on AuthService.initialize()
   static authEnabled = true;
   static aadInstance = '';
-  static appId = '00000000-0000-0000-0000-000000000000';
-  static tenantId = '00000000-0000-0000-0000-000000000000';
-  static clientId = '00000000-0000-0000-0000-000000000000';
-  static issuer = '';
   static _userManager = null;
   static settings = { };
 
@@ -30,40 +26,9 @@ export class AuthService {
       alert('The dashboard configuration is missing.\n\nVerify the content of webui-config.js.');
       throw new Error('The global configuration is missing. Verify the content of webui-config.js.');
     }
-
-    // if (typeof global.DeploymentConfig.authEnabled !== 'undefined') {
-    //   AuthService.authEnabled = global.DeploymentConfig.authEnabled;
-    //   if (!AuthService.authEnabled) {
-    //     console.warn('Auth is disabled! (see webui-config.js)');
-    //   }
-    // }
-
-    // AuthService.tenantId = global.DeploymentConfig.aad.tenant;
-    // AuthService.clientId = global.DeploymentConfig.aad.appId;
-    // AuthService.appId = global.DeploymentConfig.aad.appId;
-    // AuthService.aadInstance = global.DeploymentConfig.aad.instance;
-    // AuthService.issuer = global.DeploymentConfig.issuer;
-
-    // if (AuthService.aadInstance && AuthService.aadInstance.endsWith('{0}')) {
-    //   AuthService.aadInstance = AuthService.aadInstance.substr(0, AuthService.aadInstance.length - 3);
-    // }
-
-    // // TODO: support multiple types/providers
-    // if (AuthService.isEnabled() && global.DeploymentConfig.authType !== 'aad') {
-    //   throw new Error(`Unknown auth type: ${global.DeploymentConfig.authType}`);
-    // }
-
-    // AuthService.authContext = new AuthenticationContext({
-    //   instance: AuthService.aadInstance,
-    //   tenant: AuthService.tenantId,
-    //   clientId: AuthService.clientId,
-    //   redirectUri: window.location.origin,
-    //   expireOffsetSeconds: 300, // default is 120
-    //   postLogoutRedirectUri: window.location.origin
-    // });
-
+    AuthService.authEnabled = global.DeploymentConfig.authEnabled;
     AuthService.settings = {
-      authority: 'https://crsliotkubedev.centralus.cloudapp.azure.com/auth/',
+      authority: global.DeploymentConfig.issuer,
       client_id: 'IoTPlatform',
       redirect_uri: window.location.origin,
       post_logout_redirect_uri: window.location.origin,
@@ -183,11 +148,12 @@ export class AuthService {
           observer.next(toUserModel({
             id: user.profile.sub,
             name: user.profile.name,
-            email: "a90q9zz@mmm.com",
+            email: user.profile.email,
             roles: roles,
             allowedActions: flattenedPermissions,
             tenant: user.profile.tenant,
-            availableTenants: availableTenants
+            availableTenants: availableTenants,
+            token: user.id_token
           }));
         } else {
           observer.next(null);

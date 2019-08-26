@@ -39,7 +39,8 @@ export const toUserModel = (user = {}) => camelCaseReshape(user, {
   'roles': 'roles',
   'allowedActions': 'permissions',
   'tenant': 'tenant',
-  'availableTenants': 'availableTenants'
+  'availableTenants': 'availableTenants',
+  'token': 'token'
 });
 
 //When authentication is disabled, this user has all permissions.

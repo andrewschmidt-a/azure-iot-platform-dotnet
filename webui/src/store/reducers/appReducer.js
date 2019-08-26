@@ -252,7 +252,8 @@ const updateUserReducer = (state, { payload, fromAction }) => {
       roles: { $set: new Set(payload.roles) },
       permissions: { $set: new Set(payload.permissions) },
       availableTenants: { $set: new Set(payload.availableTenants) },
-      tenant: { $set: payload.tenant }
+      tenant: { $set: payload.tenant },
+      token: { $set: payload.token }
     },
     ...setPending(fromAction.type, false)
   });

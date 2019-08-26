@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Trans } from 'react-i18next';
-
 import Config from 'app.config';
 import { svgs, getEnumTranslation } from 'utilities';
 import {
@@ -19,7 +18,7 @@ import Flyout from 'components/shared/flyout';
 import './profile.scss';
 
 const Section = Flyout.Section;
-
+const jwt_decode = require('jwt-decode');
 export const Profile = (props) => {
   const { t, user, logout, switchTenant, onClose } = props;
 
@@ -123,7 +122,26 @@ export const Profile = (props) => {
                 }
               </Section.Content>
             </Section.Container>
-
+            {
+              (global.DeploymentConfig.developmentMode)
+                ?
+                <Section.Container>
+                  <Section.Header>Development Variables</Section.Header>
+                  <Section.Content>
+                    <Grid>
+                      id_token: <br/>{
+                        user.token
+                      }
+                    </Grid>
+                    <Grid>
+                      payload: <br/>{
+                        JSON.stringify(jwt_decode(user.token), null, 2)
+                      }
+                    </Grid>
+                  </Section.Content>
+                </Section.Container>
+                : ''
+            }
             <BtnToolbar>
               <Btn svg={svgs.cancelX} onClick={onClose}>{t('profileFlyout.close')}</Btn>
             </BtnToolbar>
