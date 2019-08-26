@@ -9,10 +9,6 @@ import { toUserModel, authDisabledUser } from './models';
 import{ Policies } from './policies.json'
 
 const ENDPOINT = Config.serviceUrls.auth;
-function getQueryStringValue (key) {
-  return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
-}
-
 export class AuthService {
 
   static authContext; // Created on AuthService.initialize()
@@ -68,19 +64,16 @@ export class AuthService {
       console.log("is not a callback.. attempt to find user")
       AuthService.getCurrentUser().subscribe(user => {
         if (user) {
-          console.log(user);
           console.log(`Signed in as ${user.name} with ${user.email}`);
           if (successCallback) successCallback();
         } else {
           console.log('The user is not signed in');
-          AuthService._userManager.signinRedirect({state: getQueryStringValue('tenant')});
+          AuthService._userManager.signinRedirect();
         }
       });
     }else{
       window.location.hash = decodeURIComponent(window.location.hash); // decode hash
       AuthService._userManager.signinRedirectCallback().then(user=>{
-        console.log("User state Log at callback")
-        console.log(user.state)
         window.location = window.location.origin
       })
     }

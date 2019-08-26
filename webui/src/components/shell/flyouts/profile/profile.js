@@ -25,7 +25,6 @@ export const Profile = (props) => {
   const roleArray = Array.from(user.roles);
   const permissionArray = Array.from(user.permissions);
   const tenantArray = Array.from(user.availableTenants);
-  console.log(user);
   const currentTenant = user.tenant;
 
 
