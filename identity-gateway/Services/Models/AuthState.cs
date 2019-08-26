@@ -7,5 +7,6 @@ namespace IdentityGateway.Services.Models
         public string state;
         public string tenant;
         public string nonce;
+        public string client_id;
     }
 }

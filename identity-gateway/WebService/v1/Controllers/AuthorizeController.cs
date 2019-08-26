@@ -41,15 +41,33 @@ namespace IdentityGateway.Controllers
         // GET: connect/authorize
         [HttpGet]
         [Route("connect/authorize")]
-        public IActionResult Get([FromQuery] string  redirect_uri, [FromQuery] string state, [FromQuery(Name = "client_id")] string tenant, [FromQuery] string nonce)
+        public IActionResult Get([FromQuery] string  redirect_uri, [FromQuery] string state, [FromQuery(Name = "client_id")] string clientId, [FromQuery] string nonce)
         {
             var config = new Configuration(HttpContext);
             Console.Write(config.issuer);
             var uri = new UriBuilder(this._config[AzureB2CBaseUri]);
+            var tenant = clientId;
+            
+            //attempt to use the tenant from state variable if in correct format and exists
+            // must be JSON object with key 'tenant'
+            try
+            {
+
+                Dictionary<string, object> stateDictionary =
+                    JsonConvert.DeserializeObject<Dictionary<string, object>>(state);
+                if (stateDictionary.ContainsKey("tenant"))
+                {
+                    tenant = (string) stateDictionary.GetValueOrDefault("tenant");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.Write("Can't read tenant from state using the client id instead");
+            }
 
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
-            query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce});
+            query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce, client_id = clientId});
             query["redirect_uri"] = config.issuer+"connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
             return Redirect(
@@ -89,7 +107,7 @@ namespace IdentityGateway.Controllers
                     }
                     var jwt = jwtHandler.ReadJwtToken(id_token);
                     var authState = JsonConvert.DeserializeObject<AuthState>(state);
-                    var originalAudience = authState.tenant; //save or
+                    var originalAudience = authState.client_id; //save or
 
                     Console.Write("Before Reading Claim Values");
                     // Bring over Subject and Name
