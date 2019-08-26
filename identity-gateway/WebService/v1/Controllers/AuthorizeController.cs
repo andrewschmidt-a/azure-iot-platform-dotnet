@@ -41,29 +41,11 @@ namespace IdentityGateway.Controllers
         // GET: connect/authorize
         [HttpGet]
         [Route("connect/authorize")]
-        public IActionResult Get([FromQuery] string  redirect_uri, [FromQuery] string state, [FromQuery(Name = "client_id")] string clientId, [FromQuery] string nonce)
+        public IActionResult Get([FromQuery] string  redirect_uri, [FromQuery] string state, [FromQuery(Name = "client_id")] string clientId, [FromQuery] string nonce, [FromQuery] string tenant)
         {
             var config = new Configuration(HttpContext);
             Console.Write(config.issuer);
             var uri = new UriBuilder(this._config[AzureB2CBaseUri]);
-            var tenant = clientId;
-            
-            //attempt to use the tenant from state variable if in correct format and exists
-            // must be JSON object with key 'tenant'
-            try
-            {
-
-                Dictionary<string, object> stateDictionary =
-                    JsonConvert.DeserializeObject<Dictionary<string, object>>(state);
-                if (stateDictionary.ContainsKey("tenant"))
-                {
-                    tenant = (string) stateDictionary.GetValueOrDefault("tenant");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.Write("Can't read tenant from state using the client id instead");
-            }
 
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
@@ -121,7 +103,8 @@ namespace IdentityGateway.Controllers
                     };
                     List<UserTenantModel> tenantList = await this._userTenantContainer.GetAllAsync(tenantInput);
                      
-                    if (String.IsNullOrEmpty(authState.tenant) || authState.tenant == "IoTPlatform")
+                    //User did not specify the tenant to log into so get the default or last used
+                    if (String.IsNullOrEmpty(authState.tenant))
                     {
                         // authState has no tenant, so we should use either the User's last used tenant, or the first tenant available to them
                         // Create a UserSettingsInput for the purpose of finding the LastUsedTenant setting for this user
