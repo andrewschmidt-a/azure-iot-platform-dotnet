@@ -93,7 +93,7 @@ namespace IdentityGateway.Controllers
 
                     Console.Write("Before Reading Claim Values");
                     // Bring over Subject and Name
-                    var claims = jwt.Claims.Where(t => new List<string> { "sub", "name" }.Contains(t.Type)).ToList();
+                    var claims = jwt.Claims.Where(t => new List<string> { "sub", "name", "email" }.Contains(t.Type)).ToList();
                     var userId = jwt.Claims.First(t => t.Type == "sub").Value;
                     Console.WriteLine(userId);
                     // Create a userTenantInput for the purpose of finding the full tenant list associated with this user
