@@ -59,7 +59,7 @@ export class AuthService {
       return;
     };
     console.log("Loading Auth....")
-    // atempt to sign in if the current window is not a callback
+    // Attempt to sign in if the current window is not a callback
     if (!AuthService.isCallback(window.location.hash)) {
       console.log("is not a callback.. attempt to find user")
       AuthService.getCurrentUser().subscribe(user => {
@@ -71,9 +71,9 @@ export class AuthService {
           AuthService._userManager.signinRedirect();
         }
       });
-    }else{
+    } else {
       window.location.hash = decodeURIComponent(window.location.hash); // decode hash
-      AuthService._userManager.signinRedirectCallback().then(user=>{
+      AuthService._userManager.signinRedirectCallback().then(user => {
         window.location = window.location.origin
       })
     }
