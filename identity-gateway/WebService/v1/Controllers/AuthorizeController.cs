@@ -55,7 +55,6 @@ namespace IdentityGateway.Controllers
                 throw new Exception("Tenant is not valid!");
             }
             
-            
             var config = new Configuration(HttpContext);
             var uri = new UriBuilder(this._config[AzureB2CBaseUri]);
 
