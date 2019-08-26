@@ -64,7 +64,6 @@ export const Profile = (props) => {
             <Section.Container>
               <Section.Header>{t('profileFlyout.tenant')}</Section.Header>
               <Section.Content>
-              {currentTenant}
                 {/* Fill in with programmable tenant options list */}
                 {
                   (tenantArray.length === 0)
