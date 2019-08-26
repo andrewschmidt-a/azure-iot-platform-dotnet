@@ -121,7 +121,7 @@ namespace IdentityGateway.Controllers
                     };
                     List<UserTenantModel> tenantList = await this._userTenantContainer.GetAllAsync(tenantInput);
                      
-                    if (String.IsNullOrEmpty(authState.tenant) || authState.tenant == "None")
+                    if (String.IsNullOrEmpty(authState.tenant) || authState.tenant == "IoTPlatform")
                     {
                         // authState has no tenant, so we should use either the User's last used tenant, or the first tenant available to them
                         // Create a UserSettingsInput for the purpose of finding the LastUsedTenant setting for this user
