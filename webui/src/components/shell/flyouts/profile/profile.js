@@ -27,7 +27,6 @@ export const Profile = (props) => {
   const tenantArray = Array.from(user.availableTenants);
   const currentTenant = user.tenant;
 
-
   return (
     <Flyout.Container header={t('profileFlyout.title')} t={t} onClose={onClose}>
       <div className="profile-container">
