@@ -38,6 +38,7 @@ EXPOSE 10080
 VOLUME /app/logs
 
 RUN ["chmod", "+x", "/app/run.sh"]
+RUN ["chmod", "+x", "/app/build.sh"]
 RUN "/app/build.sh"
 
 ENTRYPOINT ["/bin/bash", "-c", "/app/run.sh"]
