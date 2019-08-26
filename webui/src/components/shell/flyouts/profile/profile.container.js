@@ -14,7 +14,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = () => ({
   logout: () => AuthService.logout(),
-  switchTenant: (tenant) => AuthService._userManager.signinRedirect({state: tenant})
+  switchTenant: (tenant) => AuthService._userManager.signinRedirect({extraQueryParams: {"tenant": tenant}})
 });
 
 // const mapTenantToProps = state => ({

@@ -64,7 +64,7 @@ export class AuthService {
 
     AuthService.settings = {
       authority: 'https://crsliotkubedev.centralus.cloudapp.azure.com/auth/',
-      client_id: 'None',
+      client_id: 'IoTPlatform',
       redirect_uri: window.location.origin,
       post_logout_redirect_uri: window.location.origin,
       response_type: 'id_token',
@@ -114,6 +114,8 @@ export class AuthService {
     }else{
       window.location.hash = decodeURIComponent(window.location.hash); // decode hash
       AuthService._userManager.signinRedirectCallback().then(user=>{
+        console.log("User state Log at callback")
+        console.log(user.state)
         window.location = window.location.origin
       })
     }
