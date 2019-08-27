@@ -8,7 +8,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Microsoft.Azure.Cosmos.Table;
-using tenant_manager.Models;
 using Microsoft.Azure.Documents;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 
