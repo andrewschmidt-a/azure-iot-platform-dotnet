@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-    <RootNamespace>tenant_manager</RootNamespace>
+    <RootNamespace>MMM.Azure.IoTSolutions.TenantManager.WebService</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

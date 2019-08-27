@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace tenant_manager
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
     public class Startup
     {

@@ -10,8 +10,9 @@ using Newtonsoft.Json;
 using Microsoft.Azure.Cosmos.Table;
 using tenant_manager.Models;
 using Microsoft.Azure.Documents;
+using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 
-namespace tenant_manager.Helpers
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
 {
     public class TenantTableHelper
     {

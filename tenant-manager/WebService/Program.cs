@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace tenant_manager
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
     public class Program
     {

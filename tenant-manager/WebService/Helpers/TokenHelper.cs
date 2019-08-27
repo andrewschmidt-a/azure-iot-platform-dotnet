@@ -10,10 +10,10 @@ using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
-using tenant_manager.Models;
+using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
-namespace tenant_manager.Helpers
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
 {
     public class TokenHelper
     {

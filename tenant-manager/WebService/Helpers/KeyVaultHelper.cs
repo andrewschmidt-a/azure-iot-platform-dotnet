@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Azure.KeyVault.Models;
 
-namespace tenant_manager.Helpers
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
 {
     public class KeyVaultHelper : IDisposable
     {
