@@ -7,12 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.6.2" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="1.0.0-preview-008520001" />
     <PackageReference Include="Azure.ApplicationModel.Configuration" Version="1.0.0-preview.2" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
     <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.3" />
+  </ItemGroup>
+
+<ItemGroup>
+    <!-- <ProjectReference Include="..\AuthUtils\AuthUtils.csproj" /> -->
+    <!-- <ProjectReference Include="..\RecurringTasksAgent\RecurringTasksAgent.csproj" /> -->
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

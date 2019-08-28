@@ -13,11 +13,11 @@ using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
 {
-    public class TenantTableHelper
+    public class TableStorageHelper<T> where T: TableEntity
     {
-        public static async void WriteNewTenantToTableAsync(string storageAccountConnectionString, string tableName, TenantModel tenant)
+        public static async void WriteToTableAsync(string storageAccountConnectionString, string tableName, T tableEntity)
         {
-            /* Writes a new tenant object to a storage table */
+            /* Writes a new table entity object to a storage table */
 
             // Get a reference to the storage table
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
@@ -27,25 +27,24 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
             // Create the table if it doesn't already exist
             await table.CreateIfNotExistsAsync();
 
-            // Create and save the new tenant
-            TableOperation insertOp = TableOperation.Insert(tenant);
+            // Create and save the new table entity
+            TableOperation insertOp = TableOperation.Insert(tableEntity);
             await table.ExecuteAsync(insertOp);
         }
 
-        public static async Task<TenantModel> ReadTenantFromTableAsync(string storageAccountConnectionString, string tableName, string tenantId)
+        public static async Task<T> ReadFromTableAsync(string storageAccountConnectionString, string tableName, string partitionKey, string rowKey)
         {
-            /* Return a tenant from table storage */
+            /* Return an object from table storage */
 
             // Get a reference to the storage table
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
             CloudTableClient client = storageAccount.CreateCloudTableClient();
             CloudTable table = client.GetTableReference(tableName);
 
-            // Get the tenant object
-            string partitionKey = tenantId.Substring(0, 1);
-            TableOperation readOp = TableOperation.Retrieve<TenantModel>(partitionKey, tenantId);
+            // Get the object
+            TableOperation readOp = TableOperation.Retrieve<T>(partitionKey, rowKey);
             TableResult tableResult = await table.ExecuteAsync(readOp);
-            TenantModel result = (TenantModel) tableResult.Result;
+            T result = (T) tableResult.Result;
 
             return result;
         }

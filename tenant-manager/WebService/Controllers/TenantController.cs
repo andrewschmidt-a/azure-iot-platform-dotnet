@@ -7,12 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using Azure.ApplicationModel.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.IoTSolutions.Auth;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {
@@ -21,19 +20,21 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
     public class TenantController : ControllerBase
     {
         private IConfiguration _config;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private KeyVaultHelper keyVaultHelper;
         private TokenHelper tokenHelper;
 
-        public TenantController(IConfiguration config)
+        public TenantController(IConfiguration config, IHttpContextAccessor httpContextAccessor)
         {
             this._config = config;
+            this._httpContextAccessor = httpContextAccessor;
             this.keyVaultHelper = new KeyVaultHelper(this._config);
             this.tokenHelper = new TokenHelper(this._config);
         }
 
         // POST api/tenant
         [HttpPost]
-        public string Post()
+        public IActionResult Post()
         {
             /* Creates a new tenant */
 
@@ -63,7 +64,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantGuid, iotHubName, telemetryCollectionName);
-            TenantTableHelper.WriteNewTenantToTableAsync(storageAccountConnectionString, "tenant", tenant);
+            TableStorageHelper<TenantModel>.WriteToTableAsync(storageAccountConnectionString, "tenant", tenant);
 
             // Trigger run book to create a new IoT Hub
             HttpClient client = new HttpClient();
@@ -79,7 +80,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 telemetryEventHubConnString = this._config["TenantManagerService:telemetryEventHubConnString"],
                 twinChangeEventHubConnString = this._config["TenantManagerService:twinChangeEventHubConnString"],
                 lifecycleEventHubConnString = this._config["TenantManagerService:lifecycleEventHubConnString"],
-                appConfigConnectionString = (Environment.GetEnvironmentVariable("appConfigConnectionString", EnvironmentVariableTarget.User)),
+                appConfigConnectionString = (Environment.GetEnvironmentVariable("PCS_APPLICATION_CONFIGURATION", EnvironmentVariableTarget.User)),
                 setAppConfigEndpoint = this._config["TenantManagerService:setAppConfigEndpoint"],
                 token = authToken
             };
@@ -112,22 +113,46 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody2), Encoding.UTF8, "application/json");
             client.PostAsync(updateFunctionsWebHookUrl, bodyContent);
 
-            return "Your tenant is being created. Your tenant GUID is: " + tenantGuid;
+            // Update the user table in table storage to give the requesting user an admin role to the new tenant
+            var userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
+            var role = "[\"admin\"]";
+            var userTenant = new UserTenantModel(userId, tenantGuid, role);
+            TableStorageHelper<UserTenantModel>.WriteToTableAsync(storageAccountConnectionString, "user", userTenant);
+
+            // Update the userSettings table with the lastUsedTenant if there isn't already a lastUsedTenant
+            var lastUsedTenant = TableStorageHelper<UserSettingsModel>.ReadFromTableAsync(storageAccountConnectionString, "userSettings", userId, "LastUsedTenant").Result;
+            if (lastUsedTenant == null) {
+                // Set the last used tenant to be this new tenant
+                var userSettings = new UserSettingsModel(userId, "LastUsedTenant", tenantGuid);
+                TableStorageHelper<UserSettingsModel>.WriteToTableAsync(storageAccountConnectionString, "userSettings", userSettings);
+            }
+
+            return Ok("Your tenant is being created. Your tenant GUID is: " + tenantGuid);
         }
 
-        // GET api/tenantready/<tenantId>
+        // GET api/tenant/<tenantId>
         [HttpGet("{tenantId}")]
-        public TenantModel Get(string tenantId)
+        public ActionResult<TenantModel> Get(string tenantId)
         {
             /* Returns information for a tenant */
 
             // Load variables from key vault
             var storageAccountConnectionString = this.keyVaultHelper.getSecretAsync("storageAccountConnectionString").Result;
 
-            // Load the tenant from table storage
-            TenantModel tenant = TenantTableHelper.ReadTenantFromTableAsync(storageAccountConnectionString, "tenant", tenantId).Result;            
+            // Verify that the user has access to the specified tenant
+            var userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
+            var userTenant = TableStorageHelper<UserTenantModel>.ReadFromTableAsync(storageAccountConnectionString, "user", userId, tenantId).Result;
 
-            return tenant;
+            if (userTenant == null) {
+                // User does not have access
+                return Unauthorized();
+            }
+
+            // Load the tenant from table storage
+            string partitionKey = tenantId.Substring(0, 1);
+            TenantModel tenant = TableStorageHelper<TenantModel>.ReadFromTableAsync(storageAccountConnectionString, "tenant", partitionKey, tenantId).Result;            
+
+            return Ok(tenant);
         }
     }
 }
