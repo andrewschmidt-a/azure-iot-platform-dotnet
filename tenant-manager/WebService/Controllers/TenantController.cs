@@ -34,7 +34,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
         // POST api/tenant
         [HttpPost]
-        public IActionResult Post()
+        public async Task<IActionResult> Post()
         {
             /* Creates a new tenant */
 
@@ -47,13 +47,15 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             var secretTasks = new Task<string>[] {
                 this.keyVaultHelper.getSecretAsync("storageAccountConnectionString"),
                 this.keyVaultHelper.getSecretAsync("createIotHubWebHookUrl"),
-                this.keyVaultHelper.getSecretAsync("updateFunctionsWebHookUrl")
+                this.keyVaultHelper.getSecretAsync("updateFunctionsWebHookUrl"),
+                this.keyVaultHelper.getSecretAsync("deleteIotHubWebHookUrl")
             };
             Task.WaitAll(secretTasks);
             
             string storageAccountConnectionString = secretTasks[0].Result;
             string createIotHubWebHookUrl = secretTasks[1].Result;
             string updateFunctionsWebHookUrl = secretTasks[2].Result;
+            string deleteIotHubWebHookUrl = secretTasks[3].Result;
 
             // Generate new tenant information
             string tenantGuid = Guid.NewGuid().ToString();
@@ -64,7 +66,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantGuid, iotHubName, telemetryCollectionName);
-            TableStorageHelper<TenantModel>.WriteToTableAsync(storageAccountConnectionString, "tenant", tenant);
+            await TableStorageHelper<TenantModel>.WriteToTableAsync(storageAccountConnectionString, "tenant", tenant);
 
             // Trigger run book to create a new IoT Hub
             HttpClient client = new HttpClient();
@@ -86,11 +88,11 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             };
 
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-            client.PostAsync(createIotHubWebHookUrl, bodyContent);
-
+            var response = await client.PostAsync(createIotHubWebHookUrl, bodyContent);
             // Trigger run book to update the azure functions
             var requestBody2 = new
-            {   
+            {
+                type = "create",
                 tenantId = tenantGuid,
                 resourceGroup = rgName,
                 automationAccountName = this._config["TenantManagerService:automationAccountName"],
@@ -111,20 +113,20 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             };
 
             bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody2), Encoding.UTF8, "application/json");
-            client.PostAsync(updateFunctionsWebHookUrl, bodyContent);
+            await client.PostAsync(updateFunctionsWebHookUrl, bodyContent);
 
             // Update the user table in table storage to give the requesting user an admin role to the new tenant
             var userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
             var role = "[\"admin\"]";
             var userTenant = new UserTenantModel(userId, tenantGuid, role);
-            TableStorageHelper<UserTenantModel>.WriteToTableAsync(storageAccountConnectionString, "user", userTenant);
+            await TableStorageHelper<UserTenantModel>.WriteToTableAsync(storageAccountConnectionString, "user", userTenant);
 
             // Update the userSettings table with the lastUsedTenant if there isn't already a lastUsedTenant
             var lastUsedTenant = TableStorageHelper<UserSettingsModel>.ReadFromTableAsync(storageAccountConnectionString, "userSettings", userId, "LastUsedTenant").Result;
             if (lastUsedTenant == null) {
                 // Set the last used tenant to be this new tenant
                 var userSettings = new UserSettingsModel(userId, "LastUsedTenant", tenantGuid);
-                TableStorageHelper<UserSettingsModel>.WriteToTableAsync(storageAccountConnectionString, "userSettings", userSettings);
+                await TableStorageHelper<UserSettingsModel>.WriteToTableAsync(storageAccountConnectionString, "userSettings", userSettings);
             }
 
             return Ok("Your tenant is being created. Your tenant GUID is: " + tenantGuid);
@@ -153,6 +155,88 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             TenantModel tenant = TableStorageHelper<TenantModel>.ReadFromTableAsync(storageAccountConnectionString, "tenant", partitionKey, tenantId).Result;            
 
             return Ok(tenant);
+        }
+
+         // DELETE api/tenantready/<tenantId>
+        [HttpDelete("{tenantId}")]
+        public async Task DeleteAsync(string tenantId)
+        {
+            string subscriptionId = this._config["Global:subscriptionId"];
+            string rgName = this._config["Global:resourceGroup"];
+            string location = this._config["Global:location"];
+
+            // Load secrets from key vault
+            var secretTasks = new Task<string>[] {
+                this.keyVaultHelper.getSecretAsync("storageAccountConnectionString"),
+                this.keyVaultHelper.getSecretAsync("updateFunctionsWebHookUrl"),
+                this.keyVaultHelper.getSecretAsync("deleteIotHubWebHookUrl")
+            };
+            Task.WaitAll(secretTasks);
+
+            string storageAccountConnectionString = secretTasks[0].Result;
+            string updateFunctionsWebHookUrl = secretTasks[1].Result;
+            string deleteIotHubWebHookUrl = secretTasks[2].Result;
+
+            // Load the tenant from table storage
+            string partitionKey = tenantId.Substring(0, 1);
+            TenantModel tenant = TableStorageHelper<TenantModel>.ReadFromTableAsync(storageAccountConnectionString, "tenant", partitionKey, tenantId).Result;
+            await TableStorageHelper<TenantModel>.DeleteEntityAsync(storageAccountConnectionString, "tenant", tenant);
+
+            HttpClient client = new HttpClient();
+            var authToken = this.tokenHelper.GetServicePrincipleToken();
+
+            // Gather tenant information
+            string tenantGuid = tenantId;
+            string iotHubName = "iothub-" + tenantGuid.Substring(0, 8);
+            string telemetryCollectionName = "telemetry-" + tenantGuid.Substring(0, 8);
+            string twinChangeCollectionName = "twin-change-" + tenantGuid.Substring(0, 8);
+            string lifecycleCollectionName = "lifecycle-" + tenantGuid.Substring(0, 8);
+
+            //trigger delete iothub runbook
+            var requestBody = new
+            {
+                tenantId = tenantGuid,
+                iotHubName = iotHubName,
+                location = location,
+                subscriptionId = subscriptionId,
+                resourceGroup = rgName,
+                telemetryEventHubConnString = this._config["TenantManagerService:telemetryEventHubConnString"],
+                twinChangeEventHubConnString = this._config["TenantManagerService:twinChangeEventHubConnString"],
+                lifecycleEventHubConnString = this._config["TenantManagerService:lifecycleEventHubConnString"],
+                appConfigConnectionString = this._config["appConfigConnectionString"],
+                setAppConfigEndpoint = this._config["TenantManagerService:setAppConfigEndpoint"],
+                token = authToken
+            };
+
+            var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+
+            var response = await client.PostAsync(deleteIotHubWebHookUrl, bodyContent);
+
+            //trigger remove bindings from azure functions runbook
+            var requestBody2 = new
+            {
+                type = "delete",
+                tenantId = tenantGuid,
+                resourceGroup = rgName,
+                automationAccountName = this._config["TenantManagerService:automationAccountName"],
+                cosmosConnectionSetting = this._config["TenantManagerService:cosmosConnectionSetting"],
+                telemetryFunctionUrl = this._config["TenantManagerService:telemetryFunctionUri"],
+                twinChangeFunctionUrl = this._config["TenantManagerService:twinChangeFunctionUri"],
+                lifecycleFunctionUrl = this._config["TenantManagerService:lifecycleFunctionUri"],
+                telemetryFunctionName = this._config["TenantManagerService:telemetryFunctionName"],
+                twinChangeFunctionName = this._config["TenantManagerService:twinChangeFunctionName"],
+                lifecycleFunctionName = this._config["TenantManagerService:lifecycleFunctionName"],
+                telemetryCollectionName = telemetryCollectionName,
+                twinChangeCollectionName = twinChangeCollectionName,
+                lifecycleCollectionName = lifecycleCollectionName,
+                storageAccount = this._config["StorageAccount:name"],
+                databaseName = this._config["TenantManagerService:databaseName"],
+                tableName = this._config["TenantManagerService:tableName"],
+                token = authToken
+            };
+
+            bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody2), Encoding.UTF8, "application/json");
+            await client.PostAsync(updateFunctionsWebHookUrl, bodyContent);
         }
     }
 }
