@@ -134,7 +134,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
         // GET api/tenant/<tenantId>
         [HttpGet("{tenantId}")]
-        public ActionResult<TenantModel> Get(string tenantId)
+        public async Task<ActionResult<TenantModel>> Get(string tenantId)
         {
             /* Returns information for a tenant */
 
@@ -143,7 +143,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             // Verify that the user has access to the specified tenant
             var userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
-            var userTenant = TableStorageHelper<UserTenantModel>.ReadFromTableAsync(storageAccountConnectionString, "user", userId, tenantId).Result;
+            var userTenant = await TableStorageHelper<UserTenantModel>.ReadFromTableAsync(storageAccountConnectionString, "user", userId, tenantId);
 
             if (userTenant == null) {
                 // User does not have access
@@ -152,14 +152,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
-            TenantModel tenant = TableStorageHelper<TenantModel>.ReadFromTableAsync(storageAccountConnectionString, "tenant", partitionKey, tenantId).Result;            
+            TenantModel tenant = await TableStorageHelper<TenantModel>.ReadFromTableAsync(storageAccountConnectionString, "tenant", partitionKey, tenantId);            
 
             return Ok(tenant);
         }
 
          // DELETE api/tenantready/<tenantId>
         [HttpDelete("{tenantId}")]
-        public async Task DeleteAsync(string tenantId)
+        public async Task<IActionResult> DeleteAsync(string tenantId)
         {
             string subscriptionId = this._config["Global:subscriptionId"];
             string rgName = this._config["Global:resourceGroup"];
@@ -176,6 +176,15 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             string storageAccountConnectionString = secretTasks[0].Result;
             string updateFunctionsWebHookUrl = secretTasks[1].Result;
             string deleteIotHubWebHookUrl = secretTasks[2].Result;
+
+            // Verify that the user has access to the specified tenant
+            var userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
+            var userTenant = TableStorageHelper<UserTenantModel>.ReadFromTableAsync(storageAccountConnectionString, "user", userId, tenantId).Result;
+
+            if (userTenant == null) {
+                // User does not have access
+                return Unauthorized();
+            }
 
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
@@ -237,6 +246,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody2), Encoding.UTF8, "application/json");
             await client.PostAsync(updateFunctionsWebHookUrl, bodyContent);
+
+            return Ok();
         }
     }
 }
