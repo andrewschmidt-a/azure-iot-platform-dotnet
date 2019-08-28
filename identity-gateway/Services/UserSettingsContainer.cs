@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.WindowsAzure.Storage;
@@ -25,7 +26,7 @@ namespace IdentityGateway.Services
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            return (List<UserSettingsModel>)resultSegment.Results;
+            return resultSegment.Results.Select(t=> (UserSettingsModel)t).ToList();
         }
 
         /// <summary>

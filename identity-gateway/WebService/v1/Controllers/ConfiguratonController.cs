@@ -11,6 +11,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Models;
+using Newtonsoft.Json.Serialization;
 using JsonWebKey = IdentityModel.Jwk.JsonWebKey;
 using JsonWebKeySet = IdentityModel.Jwk.JsonWebKeySet;
 
@@ -26,14 +27,14 @@ namespace IdentityGateway.WebService.v1.Controllers
         }
         // GET api/values
         [HttpGet(".well-known/openid-configuration")]
-        public string Get()
+        public ContentResult Get()
         {
-            return JsonConvert.SerializeObject(new Configuration(HttpContext)); 
+            return new ContentResult() {Content = JsonConvert.SerializeObject(new Configuration(HttpContext)), ContentType = "application/json"}; 
         }
 
         // GET api/values
         [HttpGet(".well-known/openid-configuration/jwks")]
-        public async Task<string> GetAsync()
+        public async Task<ContentResult> GetAsync()
         {
             var publicKey = "";
             /* Get Secrets From KeyVault */
@@ -64,7 +65,16 @@ namespace IdentityGateway.WebService.v1.Controllers
                 };
                 jsonWebKeySet.Keys.Add(jsonWebKey);
             }
-            return JsonConvert.SerializeObject(jsonWebKeySet);
+            var serializerSettings = new JsonSerializerSettings();
+            serializerSettings.ContractResolver = new LowercaseContractResolver();
+            return new ContentResult() {Content = JsonConvert.SerializeObject(jsonWebKeySet, serializerSettings), ContentType = "application/json"};
         }
+    }
+}
+public class LowercaseContractResolver : DefaultContractResolver
+{
+    protected override string ResolvePropertyName(string propertyName)
+    {
+        return propertyName.ToLower();
     }
 }

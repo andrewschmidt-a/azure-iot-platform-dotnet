@@ -24,6 +24,12 @@ namespace IdentityGateway.Services.Models
             this.Value = input.value;
         }
 
+        public UserSettingsModel(DynamicTableEntity tableEntity)
+        {
+            this.PartitionKey = tableEntity.PartitionKey;
+            this.RowKey = tableEntity.RowKey;
+            this.Value = tableEntity.Properties["Value"].StringValue;
+        }
         // Define aliases for the partition and row keys
         public string UserId
         {
@@ -40,5 +46,6 @@ namespace IdentityGateway.Services.Models
                 return this.RowKey;
             }
         }
+        public static explicit operator UserSettingsModel(DynamicTableEntity v) => new UserSettingsModel(v);
     }
 }

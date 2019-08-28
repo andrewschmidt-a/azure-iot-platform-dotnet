@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
@@ -13,7 +14,7 @@ namespace IdentityGateway.Services.Helpers
         public TableHelper(IConfiguration config)
         {
             this._keyVaultHelper = new KeyVaultHelper(config);
-            this.storageAccountConnectionStringKey = config["StorageAccountConnectionStringKeyVaultSecret"];
+            this.storageAccountConnectionStringKey = config["Global:StorageAccountConnectionStringKeyVaultSecret"];
         }
 
         private CloudStorageAccount storageAccount

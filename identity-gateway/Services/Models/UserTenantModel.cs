@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -29,6 +30,12 @@ namespace IdentityGateway.Services.Models
             this.PartitionKey = input.userId;
             this.RowKey = input.tenant;
             this.Roles = input.roles;
+        }
+        public UserTenantModel(DynamicTableEntity tableEntity)
+        {
+            this.PartitionKey = tableEntity.PartitionKey;
+            this.RowKey = tableEntity.RowKey;
+            this.Roles = tableEntity.Properties["Roles"].StringValue;
         }
 
         // Define aliases for the partition and row keys
@@ -62,5 +69,7 @@ namespace IdentityGateway.Services.Models
                 }
             }
         }
+
+        public static explicit operator UserTenantModel(DynamicTableEntity v) => new UserTenantModel(v);
     }
 }
