@@ -13,23 +13,24 @@ using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
 {
-    public class TenantTableHelper
+    public class TableStorageHelper<T> where T: TableEntity
     {
-        public static async Task WriteNewTenantToTableAsync(string storageAccountConnectionString, string tableName, TenantModel tenant)
+        public static async Task WriteToTableAsync(string storageAccountConnectionString, string tableName, T tableEntity)
         {
-            /* Writes a new tenant object to a storage table */
+            /* Writes a new table entity object to a storage table */
 
-                // Get a reference to the storage table
-                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
-                CloudTableClient client = storageAccount.CreateCloudTableClient();
-                CloudTable table = client.GetTableReference(tableName);
+            // Get a reference to the storage table
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
+            CloudTableClient client = storageAccount.CreateCloudTableClient();
+            CloudTable table = client.GetTableReference(tableName);
+            
             try
             {
                 // Create the table if it doesn't already exist
                 await table.CreateIfNotExistsAsync();
 
-                // Create and save the new tenant
-                TableOperation insertOp = TableOperation.Insert(tenant);
+                // Create and save the new table entity
+                TableOperation insertOp = TableOperation.Insert(tableEntity);
                 TableResult tableResult = await table.ExecuteAsync(insertOp);
             }
             catch (StorageException e)
@@ -40,35 +41,33 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
             }
         }
 
-        public static async Task<TenantModel> ReadTenantFromTableAsync(string storageAccountConnectionString, string tableName, string tenantId)
+        public static async Task<T> ReadFromTableAsync(string storageAccountConnectionString, string tableName, string partitionKey, string rowKey)
         {
-            /* Return a tenant from table storage */
+            /* Return a object from table storage */
+
             try { 
-            // Get a reference to the storage table
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
-            CloudTableClient client = storageAccount.CreateCloudTableClient();
-            CloudTable table = client.GetTableReference(tableName);
+                // Get a reference to the storage table
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
+                CloudTableClient client = storageAccount.CreateCloudTableClient();
+                CloudTable table = client.GetTableReference(tableName);
 
-            // Get the tenant object
-            string partitionKey = tenantId.Substring(0, 1);
-            TableOperation readOp = TableOperation.Retrieve<TenantModel>(partitionKey, tenantId);
-            TableResult tableResult = await table.ExecuteAsync(readOp);
-            TenantModel result = tableResult.Result as TenantModel;
-            if (result != null)
-            {
-                Console.WriteLine("\t{0}\t{1}, result.PartitionKey, result.RowKey");
+                // Get the object
+                TableOperation readOp = TableOperation.Retrieve<T>(partitionKey, rowKey);
+                TableResult tableResult = await table.ExecuteAsync(readOp);
+                T result = (T) tableResult.Result;
+                if (result != null)
+                {
+                    Console.WriteLine("\t{0}\t{1}, result.PartitionKey, result.RowKey");
+                }
+                return result;
             }
-            return result;
+            catch (StorageException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.ReadLine();
+                throw;
+            }
         }
-        catch (StorageException e)
-        {
-           Console.WriteLine(e.Message);
-           Console.ReadLine();
-           throw;
-        }
-}
-
-
 
         public static async Task DeleteEntityAsync(string storageAccountConnectionString, string tableName, TenantModel deleteEntity)
         {
@@ -90,7 +89,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
                 {
                     Console.WriteLine("Request Charge of Delete Operation: " + result.RequestCharge);
                 }
-
             }
             catch (StorageException e)
             {
@@ -99,6 +97,5 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
                 throw;
             }
         }
-
     }
 }
