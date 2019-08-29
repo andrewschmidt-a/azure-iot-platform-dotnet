@@ -17,6 +17,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         string GetString(string key, string defaultValue = "");
         bool GetBool(string key, bool defaultValue = false);
         int GetInt(string key, int defaultValue = 0);
+        string GetSecretsFromKeyVault(string key);
     }
 
     public class ConfigData : IConfigData
@@ -30,7 +31,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         // Constants
         private const string CLIENT_ID = "KeyVault:aadAppId";
         private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
-        private const string KEY_VAULT_NAME = "KeyVault:name";
+        private const string KEY_VAULT_NAME = "KeyVault:newName";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
 
         public ConfigData(ILogger logger)
@@ -113,7 +114,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
             return !string.IsNullOrEmpty(value) ? value : defaultValue;
         }
 
-        private string GetSecretsFromKeyVault(string key) {
+        public string GetSecretsFromKeyVault(string key) {
             return this.keyVault.GetSecret(key);
         }
 

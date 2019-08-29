@@ -9,6 +9,7 @@ using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Filters;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services;
+using System.Collections.Generic;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
 {
@@ -28,8 +29,13 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
         [Authorize("ReadAll")]
         public async Task<StatusApiModel> GetAsync()
         {
+            if (this.Request.Headers.ContainsKey("azds-route-as"))
+            {
+                // Propagate the dev space routing header
+                //request.Headers.Add("azds-route-as", this.Request.Headers["azds-route-as"] as IEnumerable<string>);
+            }
             var result = new StatusApiModel(await this.statusService.GetStatusAsync());
-                    
+            
             result.Properties.Add("AuthRequired", this.config.ClientAuthConfig?.AuthRequired.ToString());
             result.Properties.Add("Port", this.config.Port.ToString());
             return result;

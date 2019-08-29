@@ -22,9 +22,9 @@
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",
       "launchBrowser": true,
-      "resourceGroup": "",
-      "aksName": "",
-      "subscriptionId": ""
+      "resourceGroup": "rg-crslbbiot-odin-dev",
+      "aksName": "aks-dev-spaces-odin",
+      "subscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
     }
   }
 }

@@ -25,6 +25,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
+        private const string GLOBAL_KEY = "Global:";
         private const string APPLICATION_KEY = "ConfigService:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string SOLUTION_TYPE_KEY = APPLICATION_KEY + "solutionType";
@@ -39,7 +40,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
         private const string DEVICE_SIMULATION_KEY = "DeviceSimulationService:";
         private const string TELEMETRY_KEY = "TelemetryService:";
 
-        private const string CLIENT_AUTH_KEY = APPLICATION_KEY + "ClientAuth:";
+        private const string CLIENT_AUTH_KEY = GLOBAL_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";
         private const string AUTH_TYPE_KEY = CLIENT_AUTH_KEY + "authType";
         private const string AUTH_REQUIRED_KEY = "AuthRequired";
@@ -49,10 +50,10 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
         private const string JWT_ISSUER_KEY = "authIssuer";
         private const string JWT_AUDIENCE_KEY = "aadAppId";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
-        private const string JWT_SECURITY_KEYS = JWT_KEY + "issuerKeys";
+        private const string JWT_SECURITY_KEYS = JWT_KEY + "issuerKeys"; // unused across the project
 
         private const string USER_MANAGEMENT_KEY = "UserManagementService:";
-        private const string USER_MANAGEMENT_URL_KEY = USER_MANAGEMENT_KEY + "authWebServiceUrl";
+        private const string USER_MANAGEMENT_URL_KEY = USER_MANAGEMENT_KEY + "authWebServiceUrl"; // not needed remove
 
         private const string ACTIONS_KEY = APPLICATION_KEY + "Actions:";
         private const string OFFICE365_LOGIC_APP_URL_KEY = ACTIONS_KEY + "office365ConnectionUrl";

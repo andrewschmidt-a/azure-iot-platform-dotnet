@@ -19,6 +19,12 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 
     public class ServicesConfig : IServicesConfig
     {
+        private const string APPPLICATION_KEY = "StorageAdapter:";
+        private const string TENANT_KEY = "Tenant:";
+        private const string DATABASE_KEY = "Database";
+        private const string COLLECTION_KEY = "Collection";
+        private const string COSMOS_CONNECTION_KEY = "ConnectionString";
+
         public string StorageType { get; set; }
         public string AdapterType { get; set; }
         public int DocumentDbRUs { get; set; }
@@ -50,17 +56,18 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 
         public string DocumentDbCollection(string tenant, string dataType)
         {
-            return this.AppConfigValue($"tenant:{tenant}:{dataType}-collection");
+            return this.AppConfigValue($"{TENANT_KEY}{tenant}:{dataType}-{COLLECTION_KEY}");
         }
         public string DocumentDbDatabase(string dataType)
         {
-            return this.AppConfigValue($"storage-adapter:{dataType}:database");
+            return this.AppConfigValue($"{APPPLICATION_KEY}{dataType}:{DATABASE_KEY}");
+
         }
         public string DocumentDbConnString
         {
             get
             {
-                return this.AppConfigValue($"storage-adapter:{this.AdapterType}:connstring");
+                return this.AppConfigValue($"{APPPLICATION_KEY}{this.AdapterType}:{COSMOS_CONNECTION_KEY}");
             }
         }
     }

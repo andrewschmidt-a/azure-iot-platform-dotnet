@@ -29,7 +29,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
         // Constants
         private const string CLIENT_ID = "KeyVault:aadAppId";
         private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
-        private const string KEY_VAULT_NAME = "KeyVault:name";
+        private const string KEY_VAULT_NAME = "KeyVault:newName";
 
         public ConfigData(ILogger logger)
         {
