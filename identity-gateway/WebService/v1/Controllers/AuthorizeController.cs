@@ -61,7 +61,7 @@ namespace IdentityGateway.Controllers
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
             query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce, client_id = clientId});
-            query["redirect_uri"] = config.issuer+"connect/callback"; // must be https for B2C
+            query["redirect_uri"] = config.issuer+"/connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
             return Redirect(
                 uri.Uri.ToString()
