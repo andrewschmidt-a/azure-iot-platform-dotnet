@@ -27,7 +27,7 @@ steps:
     inlineScript: |-
       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
       azds up -d
-    workingDirectory: 'identity-gateway'
+    workingDirectory: 'identity-gateway/WebService'
 # - task: HelmInstaller@1
 #   inputs:
 #     helmVersionToInstall: 'latest'
