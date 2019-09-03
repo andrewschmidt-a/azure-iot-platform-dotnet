@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Trans } from 'react-i18next';
-
 import Config from 'app.config';
 import { svgs, getEnumTranslation } from 'utilities';
 import {
@@ -19,12 +18,14 @@ import Flyout from 'components/shared/flyout';
 import './profile.scss';
 
 const Section = Flyout.Section;
-
+const jwt_decode = require('jwt-decode');
 export const Profile = (props) => {
-  const { t, user, logout, onClose } = props;
+  const { t, user, logout, switchTenant, onClose } = props;
 
   const roleArray = Array.from(user.roles);
   const permissionArray = Array.from(user.permissions);
+  const tenantArray = Array.from(user.availableTenants);
+  const currentTenant = user.tenant;
 
   return (
     <Flyout.Container header={t('profileFlyout.title')} t={t} onClose={onClose}>
@@ -56,6 +57,29 @@ export const Profile = (props) => {
                 </Row>
               </Grid>
             </div>
+
+            <Section.Container>
+              <Section.Header>{t('profileFlyout.tenant')}</Section.Header>
+              <Section.Content>
+                {/* Fill in with programmable tenant options list */}
+                {
+                  (tenantArray.length === 0)
+                    ? t('profileFlyout.noRoles')
+                    :
+                    <Grid>
+                      {
+                        tenantArray.map((tenantGuid, idx) =>
+                          <Row key={idx}>
+                            <Cell>{
+                              (tenantGuid == currentTenant) ? tenantGuid : <a onClick={() => switchTenant(tenantGuid)} href="#">{tenantGuid}</a>
+                            }</Cell>
+                          </Row>
+                        )
+                      }
+                    </Grid>
+                }
+              </Section.Content>
+            </Section.Container>
 
             <Section.Container>
               <Section.Header>{t('profileFlyout.roles')}</Section.Header>
@@ -96,7 +120,26 @@ export const Profile = (props) => {
                 }
               </Section.Content>
             </Section.Container>
-
+            {
+              (global.DeploymentConfig.developmentMode)
+                ?
+                <Section.Container>
+                  <Section.Header>Development Variables</Section.Header>
+                  <Section.Content>
+                    <Grid>
+                      id_token: <br/>{
+                        user.token
+                      }
+                    </Grid>
+                    <Grid>
+                      payload: <br/>{
+                        JSON.stringify(jwt_decode(user.token), null, 2)
+                      }
+                    </Grid>
+                  </Section.Content>
+                </Section.Container>
+                : ''
+            }
             <BtnToolbar>
               <Btn svg={svgs.cancelX} onClick={onClose}>{t('profileFlyout.close')}</Btn>
             </BtnToolbar>

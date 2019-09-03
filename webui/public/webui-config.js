@@ -5,11 +5,7 @@
 // The file is public, so don't expect secrets here.
 
 var DeploymentConfig = {
-  authEnabled: false,
-  authType: 'aad',
-  aad : {
-    tenant: '00000000-0000-0000-0000-000000000000',
-    appId: '00000000-0000-0000-0000-000000000000',
-    instance: ''
-  }
+  authEnabled: true,
+  issuer: "https://crsliotkubedev.centralus.cloudapp.azure.com/auth/",
+  developmentMode: false,
 }

@@ -34,6 +34,6 @@ spec:
           - path: {{ $ingressPath }}
             backend:
               serviceName: {{ $fullName }}
-              servicePort: https
+              servicePort: http
   {{- end }}
 {{- end }}

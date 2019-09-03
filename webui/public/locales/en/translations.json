@@ -118,7 +118,8 @@
     "noRoles": "No roles found",
     "permissions": "Permissions",
     "noPermissions": "No permissions found",
-    "close": "Close"
+    "close": "Close",
+    "tenant": "Tenant"
   },
   "deviceGroupsFlyout": {
     "actions": "Actions",

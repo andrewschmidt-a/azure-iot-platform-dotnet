@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 {
@@ -31,6 +32,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
         private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
         private const string KEY_VAULT_NAME = "KeyVault:newName";
 
+        private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
+
         public ConfigData(ILogger logger)
         {
             this.log = logger;
@@ -43,6 +46,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
                 .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
             .AddEnvironmentVariables();
+            this.configuration = configurationBuilder.Build();
+            configurationBuilder.AddAzureAppConfiguration(this.configuration[APP_CONFIGURATION]);
             this.configuration = configurationBuilder.Build();
 
             // Set up Key Vault

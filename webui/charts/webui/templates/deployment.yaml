@@ -52,6 +52,13 @@ spec:
                   key: {{ $key }}
             {{- end }}
             {{- end }}
+            {{- range $ref := .Values.secretsRef }}
+            - name: {{ $ref }}
+              valueFrom:
+                secretKeyRef:
+                  name: globalsecrets
+                  key: {{ $ref }}
+            {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.imagePullSecrets }}

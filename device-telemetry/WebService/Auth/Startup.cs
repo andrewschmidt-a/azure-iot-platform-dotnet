@@ -35,7 +35,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Auth
             }
 
             return new ConfigurationManager<OpenIdConnectConfiguration>(
-                config.ClientAuthConfig.JwtIssuer + ".well-known/openid-configuration",
+                config.ClientAuthConfig.JwtIssuer + "/.well-known/openid-configuration",
                 new OpenIdConnectConfigurationRetriever())
             {
                 // How often the list of keys in memory is refreshed. Default is 24 hours.
