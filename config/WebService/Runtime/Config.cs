@@ -27,7 +27,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
     {
         private const string GLOBAL_KEY = "Global:";
         private const string APPLICATION_KEY = "ConfigService:";
-        private const string GLOBAL_KEY = "Global:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string SOLUTION_TYPE_KEY = APPLICATION_KEY + "solutionType";
         private const string SEED_TEMPLATE_KEY = APPLICATION_KEY + "seedTemplate";
@@ -51,10 +50,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
         private const string JWT_ISSUER_KEY = JWT_KEY + "authissuer";
         private const string JWT_AUDIENCE_KEY = JWT_KEY + "audience";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
-<<<<<<< HEAD
-        private const string JWT_SECURITY_KEYS = JWT_KEY + "issuerKeys"; // unused across the project
-=======
->>>>>>> 5068a01b217b01c4a1e591a12249cb9c4498b3a4
 
         private const string USER_MANAGEMENT_KEY = "UserManagementService:";
         private const string USER_MANAGEMENT_URL_KEY = USER_MANAGEMENT_KEY + "authWebServiceUrl"; // not needed remove
