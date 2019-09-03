@@ -51,8 +51,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
         private const string JWT_AUDIENCE_KEY = JWT_KEY + "audience";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
-        private const string USER_MANAGEMENT_KEY = "UserManagementService:";
-        private const string USER_MANAGEMENT_URL_KEY = USER_MANAGEMENT_KEY + "authWebServiceUrl"; // not needed remove
 
         private const string ACTIONS_KEY = APPLICATION_KEY + "Actions:";
         private const string OFFICE365_LOGIC_APP_URL_KEY = ACTIONS_KEY + "office365ConnectionUrl";
@@ -77,7 +75,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
                 SolutionType = configData.GetString(SOLUTION_TYPE_KEY),
                 SeedTemplate = configData.GetString(SEED_TEMPLATE_KEY),
                 AzureMapsKey = configData.GetString(AZURE_MAPS_KEY),
-                UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
+                //UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
                 Office365LogicAppUrl = configData.GetString(OFFICE365_LOGIC_APP_URL_KEY),
                 ResourceGroup = configData.GetString(RESOURCE_GROUP_KEY),
                 SubscriptionId = configData.GetString(SUBSCRIPTION_ID_KEY),
