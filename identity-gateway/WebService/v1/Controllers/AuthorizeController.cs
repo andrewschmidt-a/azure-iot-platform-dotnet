@@ -106,7 +106,7 @@ namespace IdentityGateway.Controllers
                     {
                         // Get Secrets From KeyVault
                         var listOfTasks = new Task<string>[] {
-                        keyVaultHelper.getSecretAsync("tenantStorageAccountConnectionString"),
+                        keyVaultHelper.getSecretAsync(this._config["Global:StorageAccountConnectionStringKeyVaultSecret"]),
                         keyVaultHelper.getSecretAsync("identityGatewayPrivateKey")
                     };
                         Task.WaitAll(listOfTasks);
@@ -167,7 +167,7 @@ namespace IdentityGateway.Controllers
 
                         if (String.IsNullOrEmpty(tenant))
                         {
-                            tenant = tenantList.First().RowKey;  // Set the tenant to the first tenant in the list of tenants for this user
+                            tenant = tenantList.First().TenantId;  // Set the tenant to the first tenant in the list of tenants for this user
                         }
                         authState.tenant = tenant;
                     }
@@ -182,18 +182,13 @@ namespace IdentityGateway.Controllers
                     if (tenantModel != null)
                     {
                         // Add Tenant
-                        claims.Add(new Claim("tenant", tenantModel.RowKey));
+                        claims.Add(new Claim("tenant", tenantModel.TenantId));
                         // Add Roles
                         tenantModel.RoleList.ForEach(role => claims.Add(new Claim("role", role)));
                     }
 
-                    foreach(UserTenantModel test in tenantList)
-                    {
-                        Console.Write(test.RowKey);
-                    }
-
                     // add all tenants they have access to
-                    claims.AddRange(tenantList.Select(t => new Claim("available_tenants", t.RowKey)));
+                    claims.AddRange(tenantList.Select(t => new Claim("available_tenants", t.TenantId)));
                     
                     if (!String.IsNullOrEmpty(authState.nonce))
                     {
@@ -212,10 +207,11 @@ namespace IdentityGateway.Controllers
                     //
                     var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials
                                       (securityKey, SecurityAlgorithms.RsaSha256);
-
-                    var forwardedFor = HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value.First();
-                    Console.Write(forwardedFor);
-                    Console.Write(forwardedFor);
+                    string forwardedFor = null;
+                    // add issuer with forwarded for address if exists (added by reverse proxy)
+                    if (HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0) { 
+                        forwardedFor = HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value.First();
+                    }
                     var token = new JwtSecurityToken(
                       issuer: forwardedFor ?? "https://" + HttpContext.Request.Host.ToString() + "/",
                       audience: originalAudience,
