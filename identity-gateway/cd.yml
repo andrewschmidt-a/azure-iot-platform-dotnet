@@ -13,21 +13,21 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: Docker@2
-  inputs:
-    containerRegistry: '3M-CRSLAD16-BBIoTP-Dev-odinarc'
-    repository: 'identity-gateway'
-    command: 'buildAndPush'
-    Dockerfile: 'identity-gateway/WebService/Dockerfile'
-    buildContext: 'identity-gateway'
-# - task: AzureCLI@1
+# - task: Docker@2
 #   inputs:
-#     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
-#     scriptLocation: 'inlineScript'
-#     inlineScript: |-
-#       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
-#       azds up -d
-#     workingDirectory: 'identity-gateway'
+#     containerRegistry: '3M-CRSLAD16-BBIoTP-Dev-odinarc'
+#     repository: 'identity-gateway'
+#     command: 'buildAndPush'
+#     Dockerfile: 'identity-gateway/WebService/Dockerfile'
+#     buildContext: 'identity-gateway'
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
+      azds up -d
+    workingDirectory: 'identity-gateway'
 # - task: HelmInstaller@1
 #   inputs:
 #     helmVersionToInstall: 'latest'
