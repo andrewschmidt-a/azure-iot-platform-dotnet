@@ -17,7 +17,7 @@ namespace IdentityGateway.Services.Models
                 if(_httpContext.Request.Headers["X-Forwarded-For"].Count > 0){
                     forwardedFor = _httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
                 }
-                return forwardedFor ?? "https://" + _httpContext.Request.Host.ToString() + "/";
+                return forwardedFor ?? "https://" + _httpContext.Request.Host.ToString();
             }
         }
 
@@ -36,14 +36,14 @@ namespace IdentityGateway.Services.Models
         {
             get
             {
-                return this.host + ".well-known/openid-configuration/jwks";
+                return this.host + "/.well-known/openid-configuration/jwks";
             }
         }
         public string authorization_endpoint
         {
             get
             {
-                return this.host + "connect/authorize";
+                return this.host + "/connect/authorize";
             }
         }
         
@@ -51,7 +51,7 @@ namespace IdentityGateway.Services.Models
         {
             get
             {
-                return this.host + "connect/logout";
+                return this.host + "/connect/logout";
             }
         }
         /*
