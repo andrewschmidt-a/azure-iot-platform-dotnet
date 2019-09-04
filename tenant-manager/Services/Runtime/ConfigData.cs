@@ -40,15 +40,12 @@ namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.Runtime
             // More info about configuration at
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration
             var configurationBuilder = new ConfigurationBuilder();
-#if DEBUG
-            configurationBuilder.AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
-#endif
-            ;
+            configurationBuilder.AddIniFile("appsettings.ini", optional: true, reloadOnChange: true);
             configurationBuilder.AddEnvironmentVariables();
 
             this.configuration = configurationBuilder.Build();
             configurationBuilder.AddAzureAppConfiguration(this.configuration[APP_CONFIGURATION]);
-            this.configuration = configurationBuilder.Build();
+            // this.configuration = configurationBuilder.Build();
 
             // Set up Key Vault
             this.SetUpKeyVault();
