@@ -33,8 +33,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
         private const string KEY_VAULT_NAME = "KeyVault:name";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
-
         private const string ALLOWED_ACTION_KEY = "Global:Permissions";
+        
         public ConfigData(ILogger logger)
         {
             this.log = logger;
@@ -66,6 +66,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
 
             return permissions;
         }
+
         public string GetString(string key, string defaultValue = "")
         {
             var value = this.GetSecrets(key, defaultValue);

@@ -117,6 +117,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         public string SolutionUrl { get; set; }
         
         public string TemplateFolder { get; set; }
+        
         public Dictionary<string, List<string>> UserPermissions { get; set; }
     }
 }
