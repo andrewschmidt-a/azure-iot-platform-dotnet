@@ -15,6 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Azure.KeyVault.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -44,28 +45,33 @@ namespace IdentityGateway.Controllers
         [Route("connect/authorize")]
         public IActionResult Get([FromQuery] string  redirect_uri, [FromQuery] string state, [FromQuery(Name = "client_id")] string clientId, [FromQuery] string nonce, [FromQuery] string tenant)
         {
-            // Validate Input
-            if (!Uri.IsWellFormedUriString(redirect_uri, UriKind.Absolute))
-            {
-                throw new Exception("Redirect Uri is not valid!");
-            }
-            Guid validatedGuid = Guid.Empty;
-            if (!tenant.IsNullOrEmpty() && !Guid.TryParse(tenant, out validatedGuid))
-            {
-                throw new Exception("Tenant is not valid!");
-            }
+            try { 
+                // Validate Input
+                if (!Uri.IsWellFormedUriString(redirect_uri, UriKind.Absolute))
+                {
+                    throw new Exception("Redirect Uri is not valid!");
+                }
+                Guid validatedGuid = Guid.Empty;
+                if (!tenant.IsNullOrEmpty() && !Guid.TryParse(tenant, out validatedGuid))
+                {
+                    throw new Exception("Tenant is not valid!");
+                }
             
-            var config = new Configuration(HttpContext);
-            var uri = new UriBuilder(this._config[AzureB2CBaseUri]);
+                var config = new Configuration(HttpContext);
+                var uri = new UriBuilder(this._config[AzureB2CBaseUri]);
 
-            // Need to build Query carefully to not clobber other query items -- just injecting state
-            var query = HttpUtility.ParseQueryString(uri.Query);
-            query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce, client_id = clientId});
-            query["redirect_uri"] = config.issuer+"/connect/callback"; // must be https for B2C
-            uri.Query = query.ToString();
-            return Redirect(
-                uri.Uri.ToString()
-            );
+                // Need to build Query carefully to not clobber other query items -- just injecting state
+                var query = HttpUtility.ParseQueryString(uri.Query);
+                query["state"] = JsonConvert.SerializeObject(new AuthState { returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce, client_id = clientId});
+                query["redirect_uri"] = config.issuer+"/connect/callback"; // must be https for B2C
+                uri.Query = query.ToString();
+                return Redirect(
+                    uri.Uri.ToString()
+                );
+            } catch (Exception e)
+            {
+                return StatusCode(500, new ErrorModel { ErrorMessage = e.Message });
+            }
         }
         // GET: connect/authorize
         /// <summary>
@@ -79,24 +85,35 @@ namespace IdentityGateway.Controllers
         [Route("connect/logout")]
         public IActionResult Get([FromQuery] string post_logout_redirect_uri)
         {
-            // Validate Input
-            if (!Uri.IsWellFormedUriString(post_logout_redirect_uri, UriKind.Absolute))
+            try
             {
-                throw new Exception("Redirect Uri is not valid!");
-            }
+                // Validate Input
+                if (!Uri.IsWellFormedUriString(post_logout_redirect_uri, UriKind.Absolute))
+                {
+                    throw new Exception("Redirect Uri is not valid!");
+                }
             
-            var uri = new UriBuilder(post_logout_redirect_uri);
+                var uri = new UriBuilder(post_logout_redirect_uri);
           
-            return Redirect(
-                uri.Uri.ToString()
-            );
+                return Redirect(
+                    uri.Uri.ToString()
+                );
+            } catch (Exception e)
+            {
+                return StatusCode(500, new ErrorModel { ErrorMessage = e.Message });
+            }
         }
         // GET connect/callback
         [HttpPost("connect/callback")]
-        public async Task<IActionResult> PostAsync([FromForm] string state, [FromForm] string id_token)
+        public async Task<IActionResult> PostAsync([FromForm] string state, [FromForm] string id_token, [FromForm] string error, [FromForm] string error_description)
         {
             try
             {
+                // Error from B2C - throw the error so it gets returned
+                if (!String.IsNullOrEmpty(error))
+                {
+                    throw new Exception($"{error}: {error_description}");
+                }
                 var jwtHandler = new JwtSecurityTokenHandler();
                 if (jwtHandler.CanReadToken(id_token))
                 {
@@ -163,24 +180,26 @@ namespace IdentityGateway.Controllers
                             settingKey = "LastUsedTenant"
                         };
                         UserSettingsModel lastUsedSetting = await this._userSettingsContainer.GetAsync(settingsInput);
-                        string tenant = lastUsedSetting.Value;  // Get the value of the last used tenant setting
-
-                        if (String.IsNullOrEmpty(tenant))
+                        if (lastUsedSetting != null)
                         {
-                            tenant = tenantList.First().TenantId;  // Set the tenant to the first tenant in the list of tenants for this user
-                        }
-                        authState.tenant = tenant;
-                    }
-                    UserTenantInput input = new UserTenantInput
-                    {
-                        userId = userId,
-                        tenant = authState.tenant
-                    };
-                    UserTenantModel tenantModel = await this._userTenantContainer.GetAsync(input);
 
+                            authState.tenant = lastUsedSetting.Value;
+                        }
+
+                        if (String.IsNullOrEmpty(authState.tenant) && tenantList.Count > 0)
+                        {
+                            authState.tenant = tenantList.First().TenantId;  // Set the tenant to the first tenant in the list of tenants for this user
+                        }
+                    }
                     // If User not associated with Tenant then dont add claims return token without 
-                    if (tenantModel != null)
+                    if (authState.tenant != null)
                     {
+                        UserTenantInput input = new UserTenantInput
+                        {
+                            userId = userId,
+                            tenant = authState.tenant
+                        };
+                        UserTenantModel tenantModel = await this._userTenantContainer.GetAsync(input);
                         // Add Tenant
                         claims.Add(new Claim("tenant", tenantModel.TenantId));
                         // Add Roles
@@ -239,13 +258,12 @@ namespace IdentityGateway.Controllers
                 }
             } catch (Exception e)
             {
-                Console.Write(e.Message);
-                return View(new ErrorVM { ErrorMessage = e.Message });
+                return StatusCode(500, new ErrorModel { ErrorMessage = e.Message });
             }
         }
     }
 }
-public class ErrorVM
+public class ErrorModel
 {
     public string ErrorMessage { get; set; }
 }
