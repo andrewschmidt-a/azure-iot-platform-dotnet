@@ -22,6 +22,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
     public class Config : IConfig
     {
         private const string APPLICATION_KEY = "IothubManagerService:";
+        private const string GLOBAL_KEY = "Global:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string IOTHUB_CONNSTRING_KEY = APPLICATION_KEY + "iotHubConnectionString";
         private const string DEVICE_PROPERTIES_KEY = APPLICATION_KEY + "DevicePropertiesCache:"; 
@@ -33,16 +34,19 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
         private const string STORAGE_ADAPTER_URL_KEY = EXTERNAL_DEPENDENCIES + "storageAdapterWebServiceUrl";
         private const string USER_MANAGEMENT_URL_KEY = EXTERNAL_DEPENDENCIES + "authWebServiceUrl";
 
-        private const string CLIENT_AUTH_KEY = APPLICATION_KEY + "ClientAuth:";
+        private const string CLIENT_AUTH_KEY = GLOBAL_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";
         private const string AUTH_TYPE_KEY = CLIENT_AUTH_KEY + "authType";
-        private const string AUTH_REQUIRED_KEY = CLIENT_AUTH_KEY + "authRequired";
+        private const string AUTH_REQUIRED_KEY = CLIENT_AUTH_KEY + "authrequired";
 
-        private const string JWT_KEY = APPLICATION_KEY + "ClientAuth:JWT:";
+        private const string JWT_KEY = CLIENT_AUTH_KEY + "JWT:";
         private const string JWT_ALGOS_KEY = JWT_KEY + "allowedAlgorithms";
-        private const string JWT_ISSUER_KEY = JWT_KEY + "authIssuer";
-        private const string JWT_AUDIENCE_KEY = JWT_KEY + "aadAppId";
+        private const string JWT_ISSUER_KEY = JWT_KEY + "authissuer";
+        private const string JWT_AUDIENCE_KEY = "aadAppId";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
+
+        //test
+        private const string APPCONFIG_CONNSTRING_KEY = "PCS_APPLICATION_CONFIGURATION";
 
         public int Port { get; }
         public IServicesConfig ServicesConfig { get; }
@@ -72,12 +76,13 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
 
             this.ServicesConfig = new ServicesConfig
             {
-                IoTHubConnString = configData.GetString(IOTHUB_CONNSTRING_KEY),
                 DevicePropertiesWhiteList = configData.GetString(DEVICE_PROPERTIES_WHITELIST_KEY),
                 DevicePropertiesTTL = configData.GetInt(DEVICE_PROPERTIES_TTL_KEY),
                 DevicePropertiesRebuildTimeout = configData.GetInt(DEVICE_PROPERTIES_REBUILD_TIMEOUT_KEY),
                 StorageAdapterApiUrl = configData.GetString(STORAGE_ADAPTER_URL_KEY),
-                UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY)
+                UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
+                AppConfigConnection = configData.GetString(APPCONFIG_CONNSTRING_KEY),
+                UserPermissions = configData.GetUserPermissions()
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

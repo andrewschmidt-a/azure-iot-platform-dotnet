@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
+namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions
 {
     /// <summary>
     /// This exception is thrown when the user is not authorized to perform the action.

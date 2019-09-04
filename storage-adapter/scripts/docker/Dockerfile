@@ -10,7 +10,13 @@ RUN useradd -m -s /bin/bash -U $user
 
 ENTRYPOINT ["/bin/bash", "/app/run.sh"]
 
-COPY . /app/
+COPY . /src
+
+WORKDIR /src
+RUN dotnet restore
+RUN dotnet build --configuration Release
+RUN 
+
 RUN chown -R $user.$user /app
 WORKDIR /app
 

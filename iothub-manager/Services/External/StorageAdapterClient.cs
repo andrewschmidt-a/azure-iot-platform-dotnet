@@ -5,25 +5,32 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Http;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
 using Newtonsoft.Json;
+using HttpRequest = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Http.HttpRequest;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.External
 {
     public class StorageAdapterClient : IStorageAdapterClient
     {
+        private const string TENANT_HEADER = "ApplicationTenantID";
+        private const string TENANT_ID = "TenantID";
         private readonly IHttpClient httpClient;
         private readonly ILogger log;
         private readonly string serviceUri;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public StorageAdapterClient(IHttpClient httpClient, IServicesConfig config, ILogger logger)
+        public StorageAdapterClient(IHttpClient httpClient, IServicesConfig config, ILogger logger, IHttpContextAccessor contextAccessor)
         {
             this.httpClient = httpClient;
             this.log = logger;
             this.serviceUri = config.StorageAdapterApiUrl;
+            this._httpContextAccessor = contextAccessor;
         }
 
         public async Task<ValueApiModel> GetAsync(string collectionId, string key)
@@ -61,6 +68,9 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.External
             {
                 request.SetContent(content);
             }
+            
+            string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+            request.Headers.Add(TENANT_HEADER, tenantId);
 
             return request;
         }

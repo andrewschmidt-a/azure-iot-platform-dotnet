@@ -3,13 +3,17 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.AuthUtils;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Services.Test.helpers;
 using Xunit;
@@ -18,30 +22,47 @@ namespace Services.Test
 {
     public class DocumentDbKeyValueContainerTest
     {
+        private const string MOCK_TENANT_ID = "mocktenant";
         private const string MOCK_DB_ID = "mockdb";
         private const string MOCK_COLL_ID = "mockcoll";
         private static readonly string mockCollectionLink = $"/dbs/{MOCK_DB_ID}/colls/{MOCK_COLL_ID}";
 
+        private const string appConfigConnString = "";
+
         private readonly Mock<IDocumentClient> mockClient;
+        private readonly Mock<IHttpContextAccessor> mockContextAccessor;
         private readonly DocumentDbKeyValueContainer container;
         private readonly Random rand = new Random();
 
         public DocumentDbKeyValueContainerTest()
         {
-            this.mockClient = new Mock<IDocumentClient>();
+            this.mockContextAccessor = new Mock<IHttpContextAccessor>();
+            DefaultHttpContext context = new DefaultHttpContext();
+            context.Items.Add("TenantID", MOCK_TENANT_ID);
+            this.mockContextAccessor.Setup(t => t.HttpContext).Returns(context);
 
+            this.mockClient = new Mock<IDocumentClient>();
+            var database = new Mock<ResourceResponse<Database>>();
+            this.mockClient.Setup(t => t.ReadDatabaseAsync(It.IsAny<Uri>(), It.IsAny<RequestOptions>()))
+                .Returns(Task.FromResult<ResourceResponse<Database>>(new Mock<ResourceResponse<Database>>().Object));
+            this.mockClient.Setup(t => t.ReadDocumentCollectionAsync(It.IsAny<Uri>(), It.IsAny<RequestOptions>()))
+                .Returns(Task.FromResult(new Mock<ResourceResponse<DocumentCollection>>().Object));
+
+            // mock a specific tenant
+            Mock<IAppConfigurationHelper> mockAppConfigHelper = new Mock<IAppConfigurationHelper>();
+
+            //Mock service returns dummy data
+            Mock<IServicesConfig> mockServicesConfig = new Mock<IServicesConfig>();
+            mockServicesConfig.Setup(t => t.DocumentDbRUs).Returns(400);
+            mockServicesConfig.Setup((t => t.DocumentDbDatabase(It.IsAny<string>()))).Returns(MOCK_DB_ID);
+            mockServicesConfig.Setup((t => t.DocumentDbCollection(It.IsAny<string>(), It.IsAny<string>()))).Returns(MOCK_COLL_ID);
+            
             this.container = new DocumentDbKeyValueContainer(
                 new MockFactory<IDocumentClient>(this.mockClient),
                 new MockExceptionChecker(),
-                new ServicesConfig
-                {
-                    StorageType = "documentDb",
-                    DocumentDbConnString = "",
-                    DocumentDbDatabase = MOCK_DB_ID,
-                    DocumentDbCollection = MOCK_COLL_ID,
-                    DocumentDbRUs = 567
-                },
-                new Logger("UnitTest", LogLevel.Debug));
+                mockServicesConfig.Object,
+                new Logger("UnitTest", LogLevel.Debug),
+                this.mockContextAccessor.Object);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

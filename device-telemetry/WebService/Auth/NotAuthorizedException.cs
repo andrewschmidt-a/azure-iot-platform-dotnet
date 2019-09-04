@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Auth
+namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions
 {
     /// <summary>
     /// This exception is thrown when the user is not authorized to perform the action.

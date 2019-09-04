@@ -2,6 +2,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
@@ -18,15 +19,16 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
     {
         private ServiceClient serviceClient;
 
-        public DeviceService(IServicesConfig config)
+        public DeviceService(IServicesConfig config, IHttpContextAccessor httpContextAccessor)
         {
             if (config == null)
             {
                 throw new ArgumentNullException("config");
             }
+            TenantConnectionHelper tenantHelper = new TenantConnectionHelper(httpContextAccessor, config);
 
             IoTHubConnectionHelper.CreateUsingHubConnectionString(
-                config.IoTHubConnString,
+                tenantHelper.getIoTHubConnectionString(),
                 conn => { this.serviceClient = ServiceClient.CreateFromConnectionString(conn); });
         }
 

@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Auth
+namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
 {
     class CorsWhitelistModel
     {

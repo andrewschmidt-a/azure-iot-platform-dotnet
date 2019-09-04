@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
 
@@ -35,6 +36,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         string LogicAppEndpointUrl { get; }
         string SolutionUrl { get; }
         string TemplateFolder { get; }
+        Dictionary<string, List<string>> UserPermissions { get; }
     }
 
     public class ServicesConfig : IServicesConfig
@@ -115,5 +117,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         public string SolutionUrl { get; set; }
         
         public string TemplateFolder { get; set; }
+        
+        public Dictionary<string, List<string>> UserPermissions { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
 {
@@ -16,6 +17,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         string GetString(string key, string defaultValue = "");
         bool GetBool(string key, bool defaultValue = false);
         int GetInt(string key, int defaultValue = 0);
+        Dictionary<string, List<string>> GetUserPermissions();
     }
 
     public class ConfigData : IConfigData
@@ -30,7 +32,9 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         private const string CLIENT_ID = "KeyVault:aadAppId";
         private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
         private const string KEY_VAULT_NAME = "KeyVault:name";
-
+        private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
+        private const string ALLOWED_ACTION_KEY = "Global:Permissions";
+        
         public ConfigData(ILogger logger)
         {
             this.log = logger;
@@ -38,11 +42,29 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
             // More info about configuration at
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration
             var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddIniFile("appsettings.ini", optional: true, reloadOnChange: true);
+            configurationBuilder
+#if DEBUG
+            .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+#endif
+            .AddEnvironmentVariables();
+
+            this.configuration = configurationBuilder.Build();
+            configurationBuilder.AddAzureAppConfiguration(this.configuration[APP_CONFIGURATION]);
             this.configuration = configurationBuilder.Build();
 
             // Set up Key Vault
             this.SetUpKeyVault();
+        }
+
+        public Dictionary<string, List<string>> GetUserPermissions()
+        {
+            Dictionary<string, List<string>> permissions = new Dictionary<string, List<string>>();
+            foreach (var roleSection in this.configuration.GetSection(ALLOWED_ACTION_KEY).GetChildren())
+            {
+                permissions.Add(roleSection.Key, roleSection.GetChildren().Select(t => t.Key).ToList());
+            }
+
+            return permissions;
         }
 
         public string GetString(string key, string defaultValue = "")

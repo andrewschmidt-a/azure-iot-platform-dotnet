@@ -22,11 +22,12 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
+        private const string GLOBAL_KEY = "Global:";
         private const string APPLICATION_KEY = "TelemetryService:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
 
-        private const string COSMOSDB_KEY = "TelemetryService:CosmosDb:";
-        private const string COSMOSDB_CONNSTRING_KEY = COSMOSDB_KEY + "documentDBConnectionString";
+        private const string COSMOSDB_KEY = "TelemetryService:CosmosDb:"; // Prefix
+        private const string COSMOSDB_CONNSTRING_KEY = COSMOSDB_KEY + "documentDBConnectionString"; //Global
         private const string COSMOSDB_RUS_KEY = COSMOSDB_KEY + "RUs";
 
         private const string TIME_SERIES_KEY = APPLICATION_KEY + "TimeSeries:";
@@ -59,15 +60,15 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
         private const string DIAGNOSTICS_URL_KEY = EXT_DEPENDENCIES_KEY + "diagnosticsWebServiceUrl";
         private const string DIAGNOSTICS_MAX_LOG_RETRIES = EXT_DEPENDENCIES_KEY + "diagnosticsMaxLogRetries";
 
-        private const string CLIENT_AUTH_KEY = APPLICATION_KEY + "ClientAuth:";
+        private const string CLIENT_AUTH_KEY = GLOBAL_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";
         private const string AUTH_TYPE_KEY = CLIENT_AUTH_KEY + "authType";
-        private const string AUTH_REQUIRED_KEY = CLIENT_AUTH_KEY + "authRequired";
+        private const string AUTH_REQUIRED_KEY = "AuthRequired";
 
-        private const string JWT_KEY = APPLICATION_KEY + "ClientAuth:JWT:";
+        private const string JWT_KEY = GLOBAL_KEY + "ClientAuth:JWT:";
         private const string JWT_ALGOS_KEY = JWT_KEY + "allowedAlgorithms";
-        private const string JWT_ISSUER_KEY = JWT_KEY + "authIssuer";
-        private const string JWT_AUDIENCE_KEY = JWT_KEY + "aadAppId";
+        private const string JWT_ISSUER_KEY = JWT_KEY + "authissuer";
+        private const string JWT_AUDIENCE_KEY = JWT_KEY + "audience";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
         private const string ACTIONS_KEY = "Actions:";
@@ -119,7 +120,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
                 BlobStorageConnectionString = configData.GetString(ACTIONS_AZUREBLOB_CONNSTRING),
                 ActionsBlobStorageContainer = configData.GetString(ACTIONS_AZUREBLOB_CONTAINER),
                 SolutionUrl = configData.GetString(SOLUTION_URL),
-                TemplateFolder = AppContext.BaseDirectory + Path.DirectorySeparatorChar + configData.GetString(TEMPLATE_FOLDER)
+                TemplateFolder = AppContext.BaseDirectory + Path.DirectorySeparatorChar + configData.GetString(TEMPLATE_FOLDER),
+                UserPermissions = configData.GetUserPermissions()
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

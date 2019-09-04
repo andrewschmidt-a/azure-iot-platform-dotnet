@@ -1,19 +1,25 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.External;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
+using Newtonsoft.Json;
+using Microsoft.Azure.IoTSolutions.Auth;
+using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
+using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
+namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
 {
     /// <summary>
     /// Validate every incoming request checking for a valid authorization header.
@@ -52,9 +58,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
         private readonly IClientAuthConfig config;
         private readonly ILogger log;
         private TokenValidationParameters tokenValidationParams;
-        private readonly bool authRequired;
+        private readonly bool authRequired;     
         private bool tokenValidationInitialized;
         private readonly IUserManagementClient userManagementClient;
+        private readonly IServicesConfig servicesConfig;
 
         public AuthMiddleware(
             // ReSharper disable once UnusedParameter.Local
@@ -62,7 +69,8 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
             IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan,
             IClientAuthConfig config,
             IUserManagementClient userManagementClient,
-            ILogger log)
+            ILogger log,
+            IServicesConfig servicesConfig)
         {
             this.requestDelegate = requestDelegate;
             this.openIdCfgMan = openIdCfgMan;
@@ -71,6 +79,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
             this.authRequired = config.AuthRequired;
             this.tokenValidationInitialized = false;
             this.userManagementClient = userManagementClient;
+            this.servicesConfig = servicesConfig;
 
             // This will show in development mode, or in case auth is turned off
             if (!this.authRequired)
@@ -135,7 +144,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
 
             if (!this.InitializeTokenValidationAsync(context.RequestAborted).Result)
             {
-                context.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
+                context.Response.StatusCode = (int) HttpStatusCode.ServiceUnavailable;
                 context.Response.Headers["Content-Type"] = "application/json";
                 context.Response.WriteAsync(ERROR503_AUTH);
                 return Task.CompletedTask;
@@ -166,7 +175,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
             }
 
             this.log.Warn("Authentication required", () => { });
-            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
             context.Response.Headers["Content-Type"] = "application/json";
             context.Response.WriteAsync(ERROR401);
 
@@ -195,15 +204,24 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
                     // authorization later in the controller.
                     var userObjectId = context.Request.GetCurrentUserObjectId();
                     var roles = context.Request.GetCurrentUserRoleClaim().ToList();
+                    List<string> allowedActions = new List<string>();
                     if (roles.Any())
                     {
-                        var allowedActions = this.userManagementClient.GetAllowedActionsAsync(userObjectId, roles).Result;
-                        context.Request.SetCurrentUserAllowedActions(allowedActions);
+                        foreach (string role in roles)
+                        {
+                            allowedActions.AddRange(this.servicesConfig.UserPermissions[role]);
+                        }
+
                     }
                     else
                     {
-                        this.log.Error("JWT token doesn't include any role claims.", () => { });
+                        this.log.Warn("JWT token doesn't include any role claims.", () => { });
                     }
+                    // Add Allowed Actions
+                    context.Request.SetCurrentUserAllowedActions(allowedActions);
+
+                    //Set Tenant Information
+                    context.Request.SetTenant();
 
                     return true;
                 }
@@ -227,6 +245,18 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
                 this.log.Info("Initializing OpenID configuration", () => { });
                 var openIdConfig = await this.openIdCfgMan.GetConfigurationAsync(token);
 
+                //Attempted to do it myself still issue with SSL
+                //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.config.JwtIssuer+ "/.well-known/openid-configuration/jwks");
+                //request.AutomaticDecompression = DecompressionMethods.GZip;
+                //IdentityKeys
+
+                //using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                //using (Stream stream = response.GetResponseStream())
+                //using (StreamReader reader = new StreamReader(stream))
+                //{
+                //    keys = JsonConvert.DeserializeObject<IdentityGatewayKeys>(reader.ReadToEnd());
+                //}
+
                 this.tokenValidationParams = new TokenValidationParameters
                 {
                     // Validate the token signature
@@ -239,7 +269,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
                     ValidIssuer = this.config.JwtIssuer,
 
                     // Validate the token audience
-                    ValidateAudience = true,
+                    ValidateAudience = false,
                     ValidAudience = this.config.JwtAudience,
 
                     // Validate token lifetime

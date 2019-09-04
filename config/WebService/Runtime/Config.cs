@@ -1,8 +1,12 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth;
+using Microsoft.Azure.IoTSolutions.Auth;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
 {
@@ -22,6 +26,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
     public class Config : IConfig
     {
         private const string APPLICATION_KEY = "ConfigService:";
+        private const string GLOBAL_KEY = "Global:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string SOLUTION_TYPE_KEY = APPLICATION_KEY + "solutionType";
         private const string SEED_TEMPLATE_KEY = APPLICATION_KEY + "seedTemplate";
@@ -35,15 +40,15 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
         private const string DEVICE_SIMULATION_KEY = "DeviceSimulationService:";
         private const string TELEMETRY_KEY = "TelemetryService:";
 
-        private const string CLIENT_AUTH_KEY = APPLICATION_KEY + "ClientAuth:";
+        private const string CLIENT_AUTH_KEY = GLOBAL_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";
         private const string AUTH_TYPE_KEY = CLIENT_AUTH_KEY + "authType";
-        private const string AUTH_REQUIRED_KEY = CLIENT_AUTH_KEY + "authRequired";
+        private const string AUTH_REQUIRED_KEY = "AuthRequired";
 
-        private const string JWT_KEY = APPLICATION_KEY + "ClientAuth:JWT:";
+        private const string JWT_KEY = GLOBAL_KEY + "ClientAuth:JWT:";
         private const string JWT_ALGOS_KEY = JWT_KEY + "allowedAlgorithms";
-        private const string JWT_ISSUER_KEY = JWT_KEY + "authIssuer";
-        private const string JWT_AUDIENCE_KEY = JWT_KEY + "aadAppId";
+        private const string JWT_ISSUER_KEY = JWT_KEY + "authissuer";
+        private const string JWT_AUDIENCE_KEY = JWT_KEY + "audience";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
         private const string USER_MANAGEMENT_KEY = "UserManagementService:";
@@ -77,7 +82,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
                 ResourceGroup = configData.GetString(RESOURCE_GROUP_KEY),
                 SubscriptionId = configData.GetString(SUBSCRIPTION_ID_KEY),
                 ManagementApiVersion = configData.GetString(MANAGEMENT_API_VERSION_KEY),
-                ArmEndpointUrl = configData.GetString(ARM_ENDPOINT_URL_KEY)
+                ArmEndpointUrl = configData.GetString(ARM_ENDPOINT_URL_KEY),
+                UserPermissions = configData.GetUserPermissions()
             };
 
             this.ClientAuthConfig = new ClientAuthConfig
@@ -92,6 +98,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
                 JwtAllowedAlgos = configData.GetString(JWT_ALGOS_KEY, "RS256,RS384,RS512").Split(','),
                 JwtIssuer = configData.GetString(JWT_ISSUER_KEY),
                 JwtAudience = configData.GetString(JWT_AUDIENCE_KEY),
+                JwtSecurityKeys = null,
                 // By default the allowed clock skew is 2 minutes
                 JwtClockSkew = TimeSpan.FromSeconds(configData.GetInt(JWT_CLOCK_SKEW_KEY, 120)),
             };

@@ -3,12 +3,15 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
+
+using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
@@ -74,6 +77,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
             // leaks, but not so good for the overall performance.
             builder.RegisterType<Storage>().As<IStorage>().SingleInstance();
             builder.RegisterType<StorageAdapterClient>().As<IStorageAdapterClient>().SingleInstance();
+
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
 
             // TODO: why is the HTTP client registered as a singleton? shouldn't be required
             var httpClient = new HttpClient(logger);

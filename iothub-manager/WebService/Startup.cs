@@ -28,7 +28,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true);
+#if DEBUG
+                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+#endif
+                ;
             this.Configuration = builder.Build();
         }
 

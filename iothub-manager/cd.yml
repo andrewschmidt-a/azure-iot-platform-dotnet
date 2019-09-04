@@ -1,0 +1,37 @@
+# 
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - iothub-manager/
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
+      azds up -d
+    workingDirectory: 'iothub-manager/WebService'
+# - task: HelmDeploy@0
+#  inputs:
+#    connectionType: 'Azure Resource Manager'
+#    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+#    azureResourceGroup: 'rg-crslbbiot-odin-dev'
+#    kubernetesCluster: 'aks-dev-spaces-odin'
+#    namespace: 'default'
+#    command: 'upgrade'
+#    chartType: 'FilePath'
+#    chartPath: 'storage-adapter'
+#    releaseName: 'iothub-manager'
+#    recreate: true
+#    tillerNamespace: 'tiller'
+    
