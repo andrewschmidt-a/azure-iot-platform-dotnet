@@ -57,11 +57,6 @@ namespace Services.Test
             mockServicesConfig.Setup((t => t.DocumentDbDatabase(It.IsAny<string>()))).Returns(MOCK_DB_ID);
             mockServicesConfig.Setup((t => t.DocumentDbCollection(It.IsAny<string>(), It.IsAny<string>()))).Returns(MOCK_COLL_ID);
             
-            //Returns Empty configuration
-            mockAppConfigHelper.Setup(t => t.GetAppConfig())
-                .Returns(new ConfigurationBuilder().Build());
-            
-            
             this.container = new DocumentDbKeyValueContainer(
                 new MockFactory<IDocumentClient>(this.mockClient),
                 new MockExceptionChecker(),
