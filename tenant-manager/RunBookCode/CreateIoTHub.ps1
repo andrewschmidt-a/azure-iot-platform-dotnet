@@ -4,6 +4,7 @@
 
     .NOTES
         AUTHOR: Nate Oelke
+				Sean Dubiel (AppConfig)	
 #>
 
 param
