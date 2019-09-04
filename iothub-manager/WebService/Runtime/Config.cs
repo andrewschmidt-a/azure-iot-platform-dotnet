@@ -37,11 +37,11 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
         private const string CLIENT_AUTH_KEY = GLOBAL_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";
         private const string AUTH_TYPE_KEY = CLIENT_AUTH_KEY + "authType";
-        private const string AUTH_REQUIRED_KEY = "AuthRequired";
+        private const string AUTH_REQUIRED_KEY = CLIENT_AUTH_KEY + "authrequired";
 
         private const string JWT_KEY = GLOBAL_KEY + "ClientAuth:JWT:";
         private const string JWT_ALGOS_KEY = JWT_KEY + "allowedAlgorithms";
-        private const string JWT_ISSUER_KEY = "authIssuer";
+        private const string JWT_ISSUER_KEY = JWT_KEY + "authissuer";
         private const string JWT_AUDIENCE_KEY = "aadAppId";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
@@ -81,7 +81,8 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
                 DevicePropertiesRebuildTimeout = configData.GetInt(DEVICE_PROPERTIES_REBUILD_TIMEOUT_KEY),
                 StorageAdapterApiUrl = configData.GetString(STORAGE_ADAPTER_URL_KEY),
                 UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
-                AppConfigConnection = configData.GetString(APPCONFIG_CONNSTRING_KEY)
+                AppConfigConnection = configData.GetString(APPCONFIG_CONNSTRING_KEY),
+                UserPermissions = configData.GetUserPermissions()
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

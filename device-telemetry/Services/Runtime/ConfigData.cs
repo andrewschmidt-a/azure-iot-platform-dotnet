@@ -17,7 +17,11 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         string GetString(string key, string defaultValue = "");
         bool GetBool(string key, bool defaultValue = false);
         int GetInt(string key, int defaultValue = 0);
+<<<<<<< HEAD
         string GetSecretsFromKeyVault(string key);
+=======
+        Dictionary<string, List<string>> GetUserPermissions();
+>>>>>>> 7422204bf3c4b3fe452b5cae0a1210fa1e1ecbfd
     }
 
     public class ConfigData : IConfigData
@@ -33,7 +37,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
         private const string KEY_VAULT_NAME = "KeyVault:newName";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
-
+        private const string ALLOWED_ACTION_KEY = "Global:Permissions";
+        
         public ConfigData(ILogger logger)
         {
             this.log = logger;
@@ -53,6 +58,17 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
 
             // Set up Key Vault
             this.SetUpKeyVault();
+        }
+
+        public Dictionary<string, List<string>> GetUserPermissions()
+        {
+            Dictionary<string, List<string>> permissions = new Dictionary<string, List<string>>();
+            foreach (var roleSection in this.configuration.GetSection(ALLOWED_ACTION_KEY).GetChildren())
+            {
+                permissions.Add(roleSection.Key, roleSection.GetChildren().Select(t => t.Key).ToList());
+            }
+
+            return permissions;
         }
 
         public string GetString(string key, string defaultValue = "")

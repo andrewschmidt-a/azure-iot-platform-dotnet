@@ -80,7 +80,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
                 ResourceGroup = configData.GetString(RESOURCE_GROUP_KEY),
                 SubscriptionId = configData.GetString(SUBSCRIPTION_ID_KEY),
                 ManagementApiVersion = configData.GetString(MANAGEMENT_API_VERSION_KEY),
-                ArmEndpointUrl = configData.GetString(ARM_ENDPOINT_URL_KEY)
+                ArmEndpointUrl = configData.GetString(ARM_ENDPOINT_URL_KEY),
+                UserPermissions = configData.GetUserPermissions()
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

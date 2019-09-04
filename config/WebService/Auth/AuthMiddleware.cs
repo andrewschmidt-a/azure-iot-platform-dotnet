@@ -17,6 +17,8 @@ using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
 using Newtonsoft.Json;
 using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
+using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
 {
     /// <summary>
@@ -59,6 +61,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
         private readonly bool authRequired;     
         private bool tokenValidationInitialized;
         private readonly IUserManagementClient userManagementClient;
+        private readonly IServicesConfig servicesConfig;
 
         public AuthMiddleware(
             // ReSharper disable once UnusedParameter.Local
@@ -66,7 +69,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
             IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan,
             IClientAuthConfig config,
             IUserManagementClient userManagementClient,
-            ILogger log)
+            ILogger log,
+            IServicesConfig servicesConfig)
         {
             this.requestDelegate = requestDelegate;
             this.openIdCfgMan = openIdCfgMan;
@@ -75,6 +79,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
             this.authRequired = config.AuthRequired;
             this.tokenValidationInitialized = false;
             this.userManagementClient = userManagementClient;
+            this.servicesConfig = servicesConfig;
 
             // This will show in development mode, or in case auth is turned off
             if (!this.authRequired)
@@ -199,11 +204,13 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
                     // authorization later in the controller.
                     var userObjectId = context.Request.GetCurrentUserObjectId();
                     var roles = context.Request.GetCurrentUserRoleClaim().ToList();
+                    List<string> allowedActions = new List<string>();
                     if (roles.Any())
                     {
-                        // This is where you can add custom rules (assuming read all)
-
-                        //var allowedActions = this.userManagementClient.GetAllowedActionsAsync(userObjectId, roles).Result;
+                        foreach(string role in roles)
+                        {
+                            allowedActions.AddRange(this.servicesConfig.UserPermissions[role]);
+                        }
                         
                     }
                     else
@@ -211,7 +218,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
                         this.log.Warn("JWT token doesn't include any role claims.", () => { });
                     }
                     //DISBABLED RBAC -- adding all access 
-                    context.Request.SetCurrentUserAllowedActions(new List<string>() { "ReadAll" });
+                    context.Request.SetCurrentUserAllowedActions(allowedActions);
 
                     //Set Tenant Information
                     context.Request.SetTenant();
