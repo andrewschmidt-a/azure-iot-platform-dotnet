@@ -29,11 +29,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
         [Authorize("ReadAll")]
         public async Task<StatusApiModel> GetAsync()
         {
-            if (this.Request.Headers.ContainsKey("azds-route-as"))
-            {
-                // Propagate the dev space routing header
-                //request.Headers.Add("azds-route-as", this.Request.Headers["azds-route-as"] as IEnumerable<string>);
-            }
             var result = new StatusApiModel(await this.statusService.GetStatusAsync());
             
             result.Properties.Add("AuthRequired", this.config.ClientAuthConfig?.AuthRequired.ToString());
