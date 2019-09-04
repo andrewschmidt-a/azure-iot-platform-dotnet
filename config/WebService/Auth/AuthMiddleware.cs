@@ -43,7 +43,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
         // Usual authorization header, carrying the bearer token
         private const string AUTH_HEADER = "Authorization";
 
-
         // User requests are marked with this header by the reverse proxy
         // TODO ~devis: this is a temporary solution for public preview only
         // TODO ~devis: remove this approach and use the service to service authentication

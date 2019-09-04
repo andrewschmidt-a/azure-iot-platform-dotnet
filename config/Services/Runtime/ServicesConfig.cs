@@ -35,7 +35,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
         public string SubscriptionId { get; set; }
         public string ManagementApiVersion { get; set; }
         public string ArmEndpointUrl { get; set; }
-
         public Dictionary<string, List<string>> UserPermissions { get; set; }
     }
 }
