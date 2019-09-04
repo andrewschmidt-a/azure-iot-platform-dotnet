@@ -4,7 +4,7 @@
 
     .NOTES
         AUTHOR: Nate Oelke
-                Sean Dubiel (AppConfig)
+				Sean Dubiel (AppConfig)	
 #>
 
 param
@@ -45,8 +45,8 @@ catch {
 
 # Retrieve the data from the Webhook request body
 $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
-$appConfigConnectionString = data.appConfigConnectionString
-$setAppConfigEndpoint = data.setAppConfigEndpoint
+$appConfigConnectionString = $data.appConfigConnectionString
+$setAppConfigEndpoint = $data.setAppConfigEndpoint
 $data.token
 
 # Define template for creating IoT Hub
