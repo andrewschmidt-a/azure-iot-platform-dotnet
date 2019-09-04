@@ -120,7 +120,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
                 BlobStorageConnectionString = configData.GetString(ACTIONS_AZUREBLOB_CONNSTRING),
                 ActionsBlobStorageContainer = configData.GetString(ACTIONS_AZUREBLOB_CONTAINER),
                 SolutionUrl = configData.GetString(SOLUTION_URL),
-                TemplateFolder = AppContext.BaseDirectory + Path.DirectorySeparatorChar + configData.GetString(TEMPLATE_FOLDER)
+                TemplateFolder = AppContext.BaseDirectory + Path.DirectorySeparatorChar + configData.GetString(TEMPLATE_FOLDER),
+                UserPermissions = configData.GetUserPermissions()
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

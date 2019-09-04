@@ -1,5 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using System.Collections.Generic;
+
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
 {
     public interface IServicesConfig
@@ -16,6 +18,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
         string SubscriptionId { get; }
         string ManagementApiVersion { get; }
         string ArmEndpointUrl { get; }
+        Dictionary<string, List<string>> UserPermissions { get; }
     }
 
     public class ServicesConfig : IServicesConfig
@@ -32,5 +35,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
         public string SubscriptionId { get; set; }
         public string ManagementApiVersion { get; set; }
         public string ArmEndpointUrl { get; set; }
+
+        public Dictionary<string, List<string>> UserPermissions { get; set; }
     }
 }

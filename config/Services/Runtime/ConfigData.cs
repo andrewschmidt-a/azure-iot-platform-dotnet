@@ -17,6 +17,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
         string GetString(string key, string defaultValue = "");
         bool GetBool(string key, bool defaultValue = false);
         int GetInt(string key, int defaultValue = 0);
+        Dictionary<string, List<string>> GetUserPermissions();
     }
 
     public class ConfigData : IConfigData
@@ -32,6 +33,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
         private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
         private const string KEY_VAULT_NAME = "KeyVault:name";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
+
+        private const string ALLOWED_ACTION_KEY = "Global:Permissions";
 
         public ConfigData(ILogger logger)
         {
@@ -54,6 +57,16 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
             this.SetUpKeyVault();
         }
 
+        public Dictionary<string, List<string>> GetUserPermissions()
+        {
+            Dictionary<string, List<string>> permissions = new Dictionary<string, List<string>>();
+            foreach(var roleSection in this.configuration.GetSection(ALLOWED_ACTION_KEY).GetChildren())
+            {
+                permissions.Add(roleSection.Key,roleSection.GetChildren().Select(t => t.Key).ToList());
+            }
+            
+            return permissions;
+        }
         public string GetString(string key, string defaultValue = "")
         {
             var value = this.GetSecrets(key, defaultValue);
