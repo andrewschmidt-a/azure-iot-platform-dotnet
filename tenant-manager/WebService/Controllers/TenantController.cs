@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.Auth;
+using Azure.ApplicationModel.Configuration;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {
@@ -60,9 +61,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             // Generate new tenant information
             string tenantGuid = Guid.NewGuid().ToString();
             string iotHubName = "iothub-" + tenantGuid.Substring(0, 8);
-            string telemetryCollectionName = "telemetry-" + tenantGuid.Substring(0, 8);
-            string twinChangeCollectionName = "twin-change-" + tenantGuid.Substring(0, 8);
-            string lifecycleCollectionName = "lifecycle-" + tenantGuid.Substring(0, 8);
+            string telemetryCollectionName = "telemetry-" + tenantGuid;
+            string twinChangeCollectionName = "twin-change-" + tenantGuid;
+            string lifecycleCollectionName = "lifecycle-" + tenantGuid;
 
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantGuid, iotHubName, telemetryCollectionName);
@@ -82,7 +83,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 telemetryEventHubConnString = this._config["TenantManagerService:telemetryEventHubConnString"],
                 twinChangeEventHubConnString = this._config["TenantManagerService:twinChangeEventHubConnString"],
                 lifecycleEventHubConnString = this._config["TenantManagerService:lifecycleEventHubConnString"],
-                appConfigConnectionString = (Environment.GetEnvironmentVariable("PCS_APPLICATION_CONFIGURATION", EnvironmentVariableTarget.User)),
+                appConfigConnectionString = this._config["PCS_APPLICATION_CONFIGURATION"],
                 setAppConfigEndpoint = this._config["TenantManagerService:setAppConfigEndpoint"],
                 token = authToken
             };
@@ -128,6 +129,11 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 var userSettings = new UserSettingsModel(userId, "LastUsedTenant", tenantGuid);
                 await TableStorageHelper<UserSettingsModel>.WriteToTableAsync(storageAccountConnectionString, "userSettings", userSettings);
             }
+
+            // Write tenant info cosmos db collection name to app config
+            var appConfgiClient = new ConfigurationClient(this._config["PCS_APPLICATION_CONFIGURATION"]);
+            var setting = new ConfigurationSetting("tenant:" + tenantGuid + ":pcs-collection", tenantGuid + "-pcsCollection");
+            appConfgiClient.Set(setting);
 
             return Ok("Your tenant is being created. Your tenant GUID is: " + tenantGuid);
         }
