@@ -43,7 +43,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             string subscriptionId = this._config["Global:subscriptionId"];
             string rgName = this._config["Global:resourceGroup"];
             string location = this._config["Global:location"];
-            string appConfigConnectionString = this._config["PCS_APPLICATION_CONFIGURATION"];
             
             // Load secrets from key vault
             var secretTasks = new Task<string>[] {
@@ -84,7 +83,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 telemetryEventHubConnString = this._config["TenantManagerService:telemetryEventHubConnString"],
                 twinChangeEventHubConnString = this._config["TenantManagerService:twinChangeEventHubConnString"],
                 lifecycleEventHubConnString = this._config["TenantManagerService:lifecycleEventHubConnString"],
-                appConfigConnectionString = appConfigConnectionString,
+                appConfigConnectionString = this._config["PCS_APPLICATION_CONFIGURATION"],
                 setAppConfigEndpoint = this._config["TenantManagerService:setAppConfigEndpoint"],
                 token = authToken
             };
@@ -132,7 +131,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             }
 
             // Write tenant info cosmos db collection name to app config
-            var appConfgiClient = new ConfigurationClient(appConfigConnectionString);
+            var appConfgiClient = new ConfigurationClient(this._config["PCS_APPLICATION_CONFIGURATION"]);
             var setting = new ConfigurationSetting("tenant:" + tenantGuid + ":pcs-collection", tenantGuid + "-pcsCollection");
             appConfgiClient.Set(setting);
 
