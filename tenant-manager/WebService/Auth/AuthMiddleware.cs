@@ -191,20 +191,6 @@ namespace Microsoft.Azure.IoTSolutions.TenantManager.WebService
                     // header doesn't need to be parse again later in the User controller.
                     context.Request.SetCurrentUserClaims(jwtToken.Claims);
 
-                    // Store the user allowed actions in the request context to validate
-                    // authorization later in the controller.
-                    var userObjectId = context.Request.GetCurrentUserObjectId();
-                    var roles = context.Request.GetCurrentUserRoleClaim().ToList();
-                    if (!roles.Any())
-                    {
-                        this.log.Warn("JWT token does not include any role claims", () => {});
-                    }
-                    //DISBABLED RBAC -- adding all access 
-                    context.Request.SetCurrentUserAllowedActions(new List<string>() { "ReadAll" });
-
-                    //Set Tenant Information
-                    context.Request.SetTenant();
-
                     return true;
                 }
 
