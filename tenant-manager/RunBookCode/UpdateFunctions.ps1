@@ -1,4 +1,4 @@
-<<#
+<#
     .DESCRIPTION
         A run book for adding a new Cosmos DB output to the 3 Azure Functions (Telemetry, Lifecycle, and Twin Change)
 
@@ -105,11 +105,10 @@ if($data.type -eq "create"){
         $functionJson = Get-Content -Path "$unzippedPath/$functionName/function.json" | Out-String | ConvertFrom-Json
 
         # Insert the new output binding into the existing function.json
-        $first8CharsOfTenantId = ($tenantId).SubString(0,8)
         $newOutputBinding = @"
             {
             "type": "cosmosDB",
-            "name": "outputTenant$first8CharsOfTenantId",
+            "name": "outputTenant$tenantId",
             "databaseName": "$($data.databaseName)",
             "collectionName": "$cosmosCollectionName",
             "createIfNotExists": true,
@@ -158,8 +157,6 @@ if($data.type -eq "create"){
     $row.AreFunctionsUpdated = $true
     $row | Update-AzTableRow -Table $table
     "Done"
-
-
 }
 
 if($data.type -eq "delete"){
