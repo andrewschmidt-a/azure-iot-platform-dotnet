@@ -17,7 +17,8 @@ namespace IdentityGateway.Services.Models
                 if(_httpContext.Request.Headers["X-Forwarded-For"].Count > 0){
                     forwardedFor = _httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
                 }
-                return forwardedFor ?? "https://" + _httpContext.Request.Host.ToString();
+                // checks for http vs https using _httpContext.Request.IsHttps and creates the url accordingly
+                return forwardedFor ?? $"http{(_httpContext.Request.IsHttps ? "s" : "")}://{_httpContext.Request.Host.ToString()}";
             }
         }
 
