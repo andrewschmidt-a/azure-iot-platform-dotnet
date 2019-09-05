@@ -137,19 +137,19 @@ if($data.type -eq "create"){
     Add-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
         -functionUrl $data.telemetryFunctionUrl -functionName $data.telemetryFunctionName `
         -databaseName $data.databaseName -cosmosCollectionName $data.telemetryCollectionName `
-        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
+        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "/_deviceId"
 
     # Update the twin change function
     Add-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
         -functionUrl $data.twinChangeFunctionUrl -functionName $data.twinChangeFunctionName `
         -databaseName $data.databaseName -cosmosCollectionName $data.twinChangeCollectionName `
-        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
+        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "/_deviceId"
 
     # Update the lifecycle function
     Add-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
         -functionUrl $data.lifecycleFunctionUrl -functionName $data.lifecycleFunctionName `
         -databaseName $data.databaseName -cosmosCollectionName $data.lifecycleCollectionName `
-        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
+        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "/_deviceId"
 
     # Write to table storage that the functions are updated for the tenant
     "Trying to write to table storage"
@@ -216,19 +216,19 @@ if($data.type -eq "delete"){
     Remove-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
         -functionUrl $data.telemetryFunctionUrl -functionName $data.telemetryFunctionName `
         -databaseName $data.databaseName -cosmosCollectionName $data.telemetryCollectionName `
-        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
+        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "/_deviceId"
 
     # Update the twin change function
     Remove-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
         -functionUrl $data.twinChangeFunctionUrl -functionName $data.twinChangeFunctionName `
         -databaseName $data.databaseName -cosmosCollectionName $data.twinChangeCollectionName `
-        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
+        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "/_deviceId"
 
     # Update the lifecycle function
     Remove-CosmosOutputToFunction -requestHeader $requestHeader -tenantId $data.tenantId `
         -functionUrl $data.lifecycleFunctionUrl -functionName $data.lifecycleFunctionName `
         -databaseName $data.databaseName -cosmosCollectionName $data.lifecycleCollectionName `
-        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "idk"
+        -cosmosConnectionSetting $cosmosConnectionSetting -cosmosPartitionKey "/_deviceId"
 }
 
 "Done"
