@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "tenant-manager.fullname" . }}
+  name: {{ template "webservice.fullname" . }}
   labels:
-    app: {{ template "tenant-manager.name" . }}
-    chart: {{ template "tenant-manager.chart" . }}
+    app: {{ template "webservice.name" . }}
+    chart: {{ template "webservice.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
@@ -15,5 +15,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "tenant-manager.name" . }}
+    app: {{ template "webservice.name" . }}
     release: {{ .Release.Name }}

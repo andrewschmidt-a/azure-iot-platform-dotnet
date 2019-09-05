@@ -1,10 +1,10 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "tenant-manager.fullname" . }}
+  name: {{ template "webservice.fullname" . }}
   labels:
-    app: {{ template "tenant-manager.name" . }}
-    chart: {{ template "tenant-manager.chart" . }}
+    app: {{ template "webservice.name" . }}
+    chart: {{ template "webservice.chart" . }}
     draft: {{ .Values.draft | default "draft-app" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -12,12 +12,12 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "tenant-manager.name" . }}
+      app: {{ template "webservice.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "tenant-manager.name" . }}
+        app: {{ template "webservice.name" . }}
         draft: {{ .Values.draft | default "draft-app" }}
         release: {{ .Release.Name }}
       annotations:
@@ -48,9 +48,16 @@ spec:
             - name: {{ $ref }}_{{ $key }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "tenant-manager.fullname" $root }}-{{ $ref | lower }}
+                  name: {{ template "webservice.fullname" $root }}-{{ $ref | lower }}
                   key: {{ $key }}
             {{- end }}
+            {{- end }}
+			{{- range $ref := .Values.secretsRef }}
+            - name: {{ $ref }}
+              valueFrom:
+                secretKeyRef:
+                  name: globalsecrets
+                  key: {{ $ref }}
             {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}

@@ -22,7 +22,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
         public Startup(IConfiguration configuration)
         {
             var builder = new ConfigurationBuilder();
+#if DEBUG
             builder.AddIniFile("appsettings.ini", optional: false, reloadOnChange: true);
+#endif
             builder.AddEnvironmentVariables();
             var settings = builder.Build();
             builder.AddAzureAppConfiguration(settings["PCS_APPLICATION_CONFIGURATION"]);

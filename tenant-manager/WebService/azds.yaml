@@ -1,7 +1,7 @@
 kind: helm-release
 apiVersion: 1.1
 build:
-  context: .
+  context: ..
   dockerfile: Dockerfile
 install:
   chart: charts/tenant-manager
