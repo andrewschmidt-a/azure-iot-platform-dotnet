@@ -132,8 +132,12 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             // Write tenant info cosmos db collection name to app config
             var appConfgiClient = new ConfigurationClient(this._config["PCS_APPLICATION_CONFIGURATION"]);
-            var setting = new ConfigurationSetting("tenant:" + tenantGuid + ":pcs-collection", tenantGuid + "-pcsCollection");
-            appConfgiClient.Set(setting);
+            var PcsCollectionSetting = new ConfigurationSetting("tenant:" + tenantGuid + ":pcs-collection", tenantGuid + "-pcsCollection");
+            appConfgiClient.Set(PcsCollectionSetting);
+
+            // Write telemetry cosmos db collection name to app config
+            var telemetryCollectionSetting = new ConfigurationSetting("tenant:" + tenantGuid + ":telemetry-collection", "telemetry-" + tenantGuid);
+            appConfgiClient.Set(telemetryCollectionSetting);
 
             return Ok("Your tenant is being created. Your tenant GUID is: " + tenantGuid);
         }
