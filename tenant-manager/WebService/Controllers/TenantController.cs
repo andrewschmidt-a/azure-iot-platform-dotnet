@@ -89,7 +89,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             };
 
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-            var response = await client.PostAsync(createIotHubWebHookUrl, bodyContent);
+            var createIoTHubResponse = await client.PostAsync(createIotHubWebHookUrl, bodyContent);
+            
             // Trigger run book to update the azure functions
             var requestBody2 = new
             {
@@ -139,7 +140,12 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             var telemetryCollectionSetting = new ConfigurationSetting("tenant:" + tenantGuid + ":telemetry-collection", "telemetry-" + tenantGuid);
             appConfgiClient.Set(telemetryCollectionSetting);
 
-            return Ok("Your tenant is being created. Your tenant GUID is: " + tenantGuid);
+            var response = new {
+                message = "Your tenant is being created.",
+                tenantId = tenantGuid
+            };
+
+            return Ok(JsonConvert.SerializeObject(response));
         }
 
         // GET api/tenant/<tenantId>
