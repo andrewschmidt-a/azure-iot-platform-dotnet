@@ -47,7 +47,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder
 #if DEBUG
-            .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+            .AddIniFile("appsettings.ini", optional: false, reloadOnChange: false)
 #endif
             .AddEnvironmentVariables();
 

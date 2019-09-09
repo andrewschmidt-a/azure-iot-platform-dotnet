@@ -21,9 +21,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
     {
         private const string APPPLICATION_KEY = "StorageAdapter:";
         private const string TENANT_KEY = "Tenant:";
-        private const string DATABASE_KEY = "Database";
         private const string COLLECTION_KEY = "Collection";
-        private const string COSMOS_CONNECTION_KEY = "ConnectionString";
 
         public string StorageType { get; set; }
         public string DocumentDbConnStringKey { get; set; }

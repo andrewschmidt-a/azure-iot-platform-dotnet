@@ -27,7 +27,6 @@ namespace IdentityGateway.Services
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            Console.WriteLine((UserTenantModel)resultSegment.Results.First());
             return resultSegment.Results.Select(t => (UserTenantModel)t).ToList();  // cast to a UserTenantModel list to easily parse result
         }
 

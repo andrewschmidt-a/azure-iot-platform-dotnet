@@ -22,11 +22,12 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
+        private const string APP_CONFIG_KEY = "PCS_APPLICATION_CONFIGURATION";
         private const string GLOBAL_KEY = "Global:";
         private const string APPLICATION_KEY = "TelemetryService:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
 
-        private const string COSMOSDB_KEY = "Global:CosmosDb:"; // Prefix
+        private const string COSMOSDB_KEY = GLOBAL_KEY + "CosmosDb:"; // Prefix
         private const string COSMOSDB_CONNSTRING_KEY = COSMOSDB_KEY + "documentDBConnectionString"; //Global
         private const string COSMOSDB_RUS_KEY = COSMOSDB_KEY + "RUs";
 
@@ -91,8 +92,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
             this.ServicesConfig = new ServicesConfig
             {
                 MessagesConfig = new StorageConfig(
-                    configData.GetString(MESSAGES_DB_DATABASE_KEY),
-                    configData.GetString(MESSAGES_DB_COLLECTION_KEY)),
+                    configData.GetString(MESSAGES_DB_DATABASE_KEY)),
                 AlarmsConfig = new AlarmsConfig(
                     configData.GetString(ALARMS_DB_DATABASE_KEY),
                     configData.GetString(ALARMS_DB_COLLECTION_KEY),
@@ -121,7 +121,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
                 ActionsBlobStorageContainer = configData.GetString(ACTIONS_AZUREBLOB_CONTAINER),
                 SolutionUrl = configData.GetString(SOLUTION_URL),
                 TemplateFolder = AppContext.BaseDirectory + Path.DirectorySeparatorChar + configData.GetString(TEMPLATE_FOLDER),
-                UserPermissions = configData.GetUserPermissions()
+                UserPermissions = configData.GetUserPermissions(),
+                ApplicationConfigurationConnectionString = configData.GetString(APP_CONFIG_KEY)
             };
 
             this.ClientAuthConfig = new ClientAuthConfig
