@@ -34,6 +34,6 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/device-telemetry/WebService/Dockerfile'
         tags: |
           $(tag)
