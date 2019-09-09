@@ -30,7 +30,8 @@ export class TenantManagement extends Component {
 
     this.state = {
         table:[
-            {status:"Deploying", name:"TestTenant"}
+            {status:"Deploying....", name:"TestTenant"},
+            {status: "Deployed", name: "tenant1"}
         ]
     };
 
@@ -58,7 +59,7 @@ export class TenantManagement extends Component {
                   <PageTitle titleValue={this.props.t('tenantManagement.title')} />
                     <TenantGrid
                         t={t}
-                        style={{ height: 2 * ROW_HEIGHT + 2 }}
+                        style={{ height: "100%" }}
                         onGridReady={this.onRuleGridReady}
                         // onContextMenuChange={this.onContextMenuChange('ruleContextBtns')}
                         // onHardSelectChange={this.onHardSelectChange('rules')}
