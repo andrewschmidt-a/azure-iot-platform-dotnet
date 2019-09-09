@@ -75,7 +75,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
                 SolutionType = configData.GetString(SOLUTION_TYPE_KEY),
                 SeedTemplate = configData.GetString(SEED_TEMPLATE_KEY),
                 AzureMapsKey = configData.GetString(AZURE_MAPS_KEY),
-                //UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
+                UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
                 Office365LogicAppUrl = configData.GetString(OFFICE365_LOGIC_APP_URL_KEY),
                 ResourceGroup = configData.GetString(RESOURCE_GROUP_KEY),
                 SubscriptionId = configData.GetString(SUBSCRIPTION_ID_KEY),
