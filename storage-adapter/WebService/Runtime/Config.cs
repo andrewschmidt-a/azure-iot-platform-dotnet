@@ -24,6 +24,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
         private const string STORAGE_TYPE_KEY = APPLICATION_KEY + "storageType";
         private const string DOCUMENT_DB_RUS_KEY = APPLICATION_KEY + "documentDBRUs";
         private const string APP_CONFIG_CONNECTION_STRING_KEY = "PCS_APPLICATION_CONFIGURATION";
+        private const string EXTERNAL_DEPENDENCIES = "ExternalDependencies:";
+        private const string USER_MANAGEMENT_URL_KEY = EXTERNAL_DEPENDENCIES + "authWebServiceUrl";
+        private const string AUTH_REQUIRED_KEY = "AuthRequired";
 
         /// <summary>Web service listening port</summary>
         public int Port { get; }
@@ -36,7 +39,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
             this.Port = configData.GetInt(PORT_KEY);
 
             var storageType = configData.GetString(STORAGE_TYPE_KEY).ToLowerInvariant();
-            var appConfigConnectionString = configData.GetString(APP_CONFIG_CONNECTION_STRING_KEY); //.ToLowerInvariant();
+            var appConfigConnectionString = configData.GetString(APP_CONFIG_CONNECTION_STRING_KEY);
             if (storageType == "documentdb" &&
                 (string.IsNullOrEmpty(appConfigConnectionString)
                  || appConfigConnectionString.StartsWith("${")
@@ -59,8 +62,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
             {
                 StorageType = configData.GetString(STORAGE_TYPE_KEY),
                 DocumentDbConnString = configData.GetString(COSMOS_CONNECTION_STRING_KEY),
-                DocumentDbDatabase = configData.GetString($"{APPLICATION_KEY}:{configData.GetString(STORAGE_TYPE_KEY)}"),
+                DocumentDbDatabase = configData.GetString($"{APPLICATION_KEY}{configData.GetString(STORAGE_TYPE_KEY)}"),
                 DocumentDbRUs = configData.GetInt(DOCUMENT_DB_RUS_KEY),
+                UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
                 AppConfig = appConfig
             };
         }
