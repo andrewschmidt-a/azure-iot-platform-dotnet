@@ -1,12 +1,6 @@
-﻿using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using Microsoft.Extensions.Configuration;
-using System.Security.Claims;
-using System.Threading;
-using System;
-using System.Linq;
+﻿using System;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.Auth;
@@ -39,7 +33,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
             }
         }
 
-        private IConfigurationRoot appConfig;
+        private IAppConfigurationHelper appConfig;
         private IHttpContextAccessor _httpContextAccessor;
         private IServicesConfig _config;
 
@@ -51,7 +45,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
         public TenantConnectionHelper(IHttpContextAccessor httpContextAccessor, IServicesConfig config)
         {
             this._httpContextAccessor = httpContextAccessor;
-            this.appConfig = AppConfigurationHelper.GetAppConfig(config.AppConfigConnection);
+            this.appConfig = new AppConfigurationHelper(config.AppConfigConnection);
             this._config = config;
         }
 
@@ -65,7 +59,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
         /// <returns>iothub connection string</returns>
         public string getIoTHubConnectionString()
         {
-            return appConfig["tenant:"+ tenantName +":iotHubConnectionString"];
+            return appConfig.GetValue("tenant:"+ tenantName +":iotHubConnectionString");
         }
 
         public string getIoTHubName()

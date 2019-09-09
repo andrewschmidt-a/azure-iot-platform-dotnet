@@ -37,6 +37,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         string SolutionUrl { get; }
         string TemplateFolder { get; }
         Dictionary<string, List<string>> UserPermissions { get; }
+        string ApplicationConfigurationConnectionString { get; }
     }
 
     public class ServicesConfig : IServicesConfig
@@ -119,5 +120,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         public string TemplateFolder { get; set; }
         
         public Dictionary<string, List<string>> UserPermissions { get; set; }
+        
+        public string ApplicationConfigurationConnectionString { get; set; }
     }
 }

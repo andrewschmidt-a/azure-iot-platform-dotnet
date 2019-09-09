@@ -10,8 +10,8 @@
   <ItemGroup>
     <PackageReference Include="BouncyCastle" Version="1.8.5" />
     <PackageReference Include="DependencyResolver" Version="1.0.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1"/>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.0.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
     <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.3" />
@@ -23,6 +23,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.4" />
     <!-- <PackageReference Include="Microsoft.WindowsAzure.ConfigurationManager" Version="3.2.3" /> -->
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>

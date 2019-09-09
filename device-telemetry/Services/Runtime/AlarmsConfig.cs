@@ -12,7 +12,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
             string cosmosDbCollection,
             int maxDeleteRetries)
         {
-            this.StorageConfig = new StorageConfig(cosmosDbDatabase, cosmosDbCollection);
+            this.StorageConfig = new StorageConfig(cosmosDbDatabase);
             this.MaxDeleteRetries = maxDeleteRetries;
         }
     }
