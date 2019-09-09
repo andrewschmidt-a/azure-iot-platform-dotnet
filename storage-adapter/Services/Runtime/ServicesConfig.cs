@@ -9,11 +9,12 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
     {
         bool AuthRequired { get; set; }
         string StorageType { get; set; }
-        string DocumentDbDatabase { get; set; }
-        string DocumentDbConnString { get; set; }
+        string DocumentDbConnStringKey { get; set; }
         int DocumentDbRUs { get; set; }
         IAppConfigurationHelper AppConfig { get; set; }
+        string DocumentDbConnString { get; }
 
+        string DocumentDbDatabase(string dataType);
         string DocumentDbCollection(string tenant, string dataType);
     }
 
@@ -21,8 +22,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
     {
         public bool AuthRequired { get; set; }
         public string StorageType { get; set; }
-        public string DocumentDbDatabase { get; set; }
-        public string DocumentDbConnString { get; set; }
+        public string DocumentDbConnStringKey { get; set; }
         public int DocumentDbRUs { get; set; }
         public string UserManagementApiUrl { get; set; }
         public IAppConfigurationHelper AppConfig { get; set; }
@@ -45,6 +45,19 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
                 throw new NullReferenceException("The given tenant value was null. Ensure that your request has attached an ApplicationTenantId in the headers.");
             }
             return this.AppConfig.GetValue($"tenant:{tenant}:{dataType}-collection");
+        }
+        
+        public string DocumentDbDatabase(string dataType)
+        {
+            return this.AppConfig.GetValue($"StorageAdapter:{dataType}");
+        }
+
+        public string DocumentDbConnString
+        {
+            get
+            {
+                return this.AppConfig.GetValue(this.DocumentDbConnStringKey);
+            }
         }
     }
 }
