@@ -14,12 +14,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = () => ({
   logout: () => AuthService.logout(),
-  switchTenant: (tenant) => AuthService._userManager.signinRedirect({extraQueryParams: {"tenant": tenant}})
+  switchTenant: (tenant) => AuthService.switchTenant(tenant)
 });
-
-// const mapTenantToProps = state => ({
-//   tenantOptions: TenantService.AllTenants(getUser(state)),
-//   currentTenant: TenantService.currentTenant(getUser(state))
-// })
 
 export const ProfileContainer = withRouter(withNamespaces()(connect(mapStateToProps, mapDispatchToProps)(Profile)));

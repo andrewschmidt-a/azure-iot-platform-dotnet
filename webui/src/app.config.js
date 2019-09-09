@@ -4,7 +4,7 @@ const validExtensions = ['.png', '.jpeg', '.jpg', '.svg'];
 
 const Config = {
   serviceUrls: {
-    auth: `${baseUrl}/auth/v1/`,
+    auth: `${baseUrl}/auth/`,
     config: `${baseUrl}/config/v1/`,
     iotHubManager: `${baseUrl}/iothubmanager/v1/`,
     telemetry: `${baseUrl}/telemetry/v1/`,

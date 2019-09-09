@@ -9,6 +9,9 @@
     <WarningLevel>0</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="RecurringTasks.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="appsettings.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
