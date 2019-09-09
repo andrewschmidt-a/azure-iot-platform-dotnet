@@ -50,9 +50,10 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
             .AddIniFile("appsettings.ini", optional: false, reloadOnChange: false)
 #endif
             .AddEnvironmentVariables();
-
-            this.configuration = configurationBuilder.Build();
-            configurationBuilder.AddAzureAppConfiguration(this.configuration[APP_CONFIGURATION]);
+            // build configuration with environment variables
+            var preConfig = configurationBuilder.Build();
+            // Add app config settings to the configuration builder
+            this.SetUpAppConfigSettings(configurationBuilder, preConfig[APP_CONFIGURATION]);
             this.configuration = configurationBuilder.Build();
 
             // Set up Key Vault
@@ -110,6 +111,29 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
 
             // Initailize key vault
             this.keyVault = new KeyVault(keyVaultName, clientId, clientSecret, this.log);
+        }
+
+        private void SetUpAppConfigSettings(IConfigurationBuilder builder, string appConfigConnectionString)
+        {
+            // Get all app config settings in a config root
+            ConfigurationBuilder appConfigBuilder = new ConfigurationBuilder();
+            appConfigBuilder.AddAzureAppConfiguration(appConfigConnectionString);
+            IConfigurationRoot appConfig = appConfigBuilder.Build();
+
+            // Settings and children added to this.configuration are chosen based on elements in this list
+            var appConfigKeys = AppConfigSettings.AppConfigSettingKeys;
+
+            // Add new configurations
+            foreach (var key in appConfigKeys)
+            {
+                // keys are the section strings, values are the binding instances
+                IConfiguration keySettings = appConfig.GetSection(key);
+                var keySettingsResult = keySettings.GetChildren().ToList();
+                foreach (var config in keySettingsResult)
+                {
+                    builder.AddConfiguration(config);
+                }
+            }
         }
 
         private string GetSecrets(string key, string defaultValue = "")
