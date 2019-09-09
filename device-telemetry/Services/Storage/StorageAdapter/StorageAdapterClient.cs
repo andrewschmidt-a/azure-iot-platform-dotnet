@@ -103,7 +103,13 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter
 
         private Http.HttpRequest PrepareRequest(string path, ValueApiModel content = null)
         {
-            string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+            string tenantId = null;
+            if(this._httpContextAccessor.HttpContext != null){
+                tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+            }else{
+                throw new Exception("No tenant Found");
+            }
+            
 
             var request = new Http.HttpRequest();
             request.AddHeader(HttpRequestHeader.Accept.ToString(), "application/json");
