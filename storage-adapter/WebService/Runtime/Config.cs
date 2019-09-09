@@ -62,7 +62,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
             {
                 StorageType = configData.GetString(STORAGE_TYPE_KEY),
                 DocumentDbConnString = configData.GetString(COSMOS_CONNECTION_STRING_KEY),
-                DocumentDbDatabase = configData.GetString($"{APPLICATION_KEY}:{configData.GetString(STORAGE_TYPE_KEY)}"),
+                DocumentDbDatabase = configData.GetString($"{APPLICATION_KEY}{configData.GetString(STORAGE_TYPE_KEY)}"),
                 DocumentDbRUs = configData.GetInt(DOCUMENT_DB_RUS_KEY),
                 UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
                 AppConfig = appConfig
