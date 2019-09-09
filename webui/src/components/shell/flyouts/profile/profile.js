@@ -63,8 +63,8 @@ export const Profile = (props) => {
               <Section.Content>
                 {/* Fill in with programmable tenant options list */}
                 {
-                  (tenantArray.length === 0)
-                    ? t('profileFlyout.noRoles')
+                  (!tenantArray || tenantArray.length === 0)
+                    ? t('profileFlyout.noTenant')
                     :
                     <Grid>
                       {

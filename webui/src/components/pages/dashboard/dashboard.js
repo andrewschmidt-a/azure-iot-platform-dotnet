@@ -49,7 +49,7 @@ const initialState = {
   analyticsIsPending: true,
   analyticsError: null,
 
-  // Summary data
+  // Create data
   openWarningCount: undefined,
   openCriticalCount: undefined,
 
@@ -198,7 +198,7 @@ export class Dashboard extends Component {
           criticalAlertsChange,
           alertsPerDeviceId: currentAlertsStats.alertsPerDeviceId,
 
-          // Summary data
+          // Create data
           openWarningCount: currentAlertsStats.openWarningCount,
           openCriticalCount: currentAlertsStats.openCriticalCount,
 

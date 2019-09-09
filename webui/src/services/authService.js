@@ -154,6 +154,10 @@ export class AuthService {
           var roles = typeof(user.profile.role) == 'string'?[user.profile.role]:user.profile.role;
           var availableTenants = typeof(user.profile.available_tenants) == 'string'?[user.profile.available_tenants]:user.profile.available_tenants
 
+          if(roles == undefined){
+            roles = []
+          }
+
           // Followed format but really shouldnt the data structure be a Map? not a list? -- Andrew Schmidt
           var flattenedPermissions = Policies.filter(policy => roles.indexOf(policy.Role) > -1).map(policy => policy.AllowedActions).flat();
           observer.next(toUserModel({
