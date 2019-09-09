@@ -45,29 +45,30 @@ catch {
 
 # Retrieve the data from the Webhook request body
 $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
-$appConfigConnectionString = data.appConfigConnectionString
-$setAppConfigEndpoint=data.setAppConfigEndpoint
-$data.token
+$appConfigConnectionString = $data.appConfigConnectionString
+$setAppConfigEndpoint=$data.setAppConfigEndpoint
 
-$requestHeader = @{
+$requestheader = @{
   "Authorization" = "Bearer " + $data.token
   "Content-Type" = "application/json"
 }
 
+
 $iotHubUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)?api-version=2019-03-22-preview"
 # Delete IoT Hub using Azure REST API
-$result = (Invoke-RestMethod -Method delete -Headers $requestheader -Uri $iotHubUri -Body $iotHubTemplate)
+$result = (Invoke-RestMethod -Method delete -Headers $requestheader -Uri $iotHubUri)
 
 # Delete the IoT Hub connection string to app config
-$requestHeader = @{
+$requestheader = @{
   "Content-Type" = "application/json"
 }
-$appConfigKey = "tenant:$($data.tenantId):iotHubConnectionString"
+$appConfigKey= "tenant:$($data.tenantId):iotHubConnectionString"
+
 $appConfigBody = @"
 {
-     name : "$appConfigKey"
+     connectionstring : "$appConfigConnectionString", name : "$appConfigKey",
 }
 "@
-$result = (Invoke-RestMethod -Method Delete -Headers $requestheader -Uri $setAppConfigEndpoint -Body $appConfigBody)
+$result = (Invoke-RestMethod -ContentType 'application/json' -Method delete -Headers $requestheader -Uri $setAppConfigEndpoint -Body $appConfigBody)
 
 "Done"
