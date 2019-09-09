@@ -54,7 +54,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         {
             get
             {
-                string docDbDatabase = this._config.DocumentDbDatabase(this.documentDataType);
+                string docDbDatabase = this._config.DocumentDbDatabase;
                 if (String.IsNullOrEmpty(docDbDatabase))
                 {
                     string message = $"A valid DocumentDb Database Id could not be retrieved for {this.documentDataType}";
