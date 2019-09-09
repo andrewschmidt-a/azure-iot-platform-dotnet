@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
@@ -31,24 +33,39 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
     {
         private const string DATA_PROPERTY_NAME = "data";
         private const string DATA_PREFIX = DATA_PROPERTY_NAME + ".";
+        private const string SYSTEM_PREFIX = "_";
         private const string DATA_SCHEMA_TYPE = DATA_PREFIX + "schema";
         private const string DATA_PARTITION_ID = "PartitionId";
         private const string TSI_STORAGE_TYPE_KEY = "tsi";
+        private const string TENANT_INFO_KEY = "tenant";
+        private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
 
         private readonly ILogger log;
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
+        private readonly IServicesConfig _config;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         private readonly bool timeSeriesEnabled;
         private readonly DocumentClient documentClient;
         private readonly string databaseName;
-        private readonly string collectionId;
+
+        private string collectionId
+        {
+            get
+            {
+                var appConfigHelper = new AppConfigurationHelper(_config.ApplicationConfigurationConnectionString);
+                return appConfigHelper.GetValue(
+                    $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
+            }
+        }
 
         public Messages(
             IServicesConfig config,
             IStorageClient storageClient,
             ITimeSeriesClient timeSeriesClient,
-            ILogger logger)
+            ILogger logger,
+            IHttpContextAccessor contextAccessor)
         {
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
@@ -56,8 +73,9 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 TSI_STORAGE_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
             this.documentClient = storageClient.GetDocumentClient();
             this.databaseName = config.MessagesConfig.CosmosDbDatabase;
-            this.collectionId = config.MessagesConfig.CosmosDbCollection;
             this.log = logger;
+            this._config = config;
+            this._httpContextAccessor = contextAccessor;
         }
 
         public async Task<MessageList> ListAsync(
@@ -101,14 +119,14 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             int dataPrefixLen = DATA_PREFIX.Length;
 
             var sql = QueryBuilder.GetDocumentsSql(
-                "d2cmessage",
+                "message",
                 null, null,
-                from, "device.msg.received",
-                to, "device.msg.received",
-                order, "device.msg.received",
+                from, "_timeReceived",
+                to, "_timeReceived",
+                order, "_timeReceived",
                 skip,
                 limit,
-                devices, "device.id");
+                devices, "_deviceId");
 
             this.log.Debug("Created Message Query", () => new { sql });
 
@@ -137,7 +155,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 
                 // Extract all the telemetry data and types
                 var jsonDoc = JObject.Parse(doc.ToString());
-
+/*
                 string dataSchema = jsonDoc.GetValue(DATA_SCHEMA_TYPE)?.ToString();
                 SchemaType schemaType;
                 Enum.TryParse(dataSchema, true, out schemaType);
@@ -156,25 +174,24 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                         };
                         break;
                     // Process messages output by telemetry agent
-                    default:
+                    default:*/
                         foreach (var item in jsonDoc)
                         {
-                            // Ignore fields that don't start with "data."
-                            if (item.Key.StartsWith(DATA_PREFIX))
+                            // Ignore fields that werent sent by device (system fields)"
+                            if (!item.Key.StartsWith(SYSTEM_PREFIX) && item.Key != "id")
                             {
-                                // Remove the "data." prefix
-                                string key = item.Key.ToString().Substring(dataPrefixLen);
+                                string key = item.Key.ToString();
                                 data.Add(key, item.Value);
 
                                 // Telemetry types auto-discovery magic through union of all keys
                                 properties.Add(key);
                             }
                         }
-                        break;
-                }
+//                        break;
+//                }
                 messages.Add(new Message(
-                    doc.GetPropertyValue<string>("device.id"),
-                    doc.GetPropertyValue<long>("device.msg.received"),
+                    doc.GetPropertyValue<string>("_deviceId"),
+                    doc.GetPropertyValue<long>("_timeReceived"),
                     data));
             }
 

@@ -5,8 +5,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
@@ -54,9 +56,10 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
     {
         private readonly ILogger log;
         private readonly IStorageClient storageClient;
+        private readonly IServicesConfig _config;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         private readonly string databaseName;
-        private readonly string collectionId;
         private readonly int maxDeleteRetryCount;
 
         // constants for storage keys
@@ -68,19 +71,35 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 
         private const string ALARM_STATUS_OPEN = "open";
         private const string ALARM_STATUS_ACKNOWLEDGED = "acknowledged";
+        
+        private const string TENANT_INFO_KEY = "tenant";
+        private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
 
         private const int DOC_QUERY_LIMIT = 1000;
+        
+        
+        private string collectionId
+        {
+            get
+            {
+                var appConfigHelper = new AppConfigurationHelper(_config.ApplicationConfigurationConnectionString);
+                return appConfigHelper.GetValue(
+                    $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
+            }
+        }
 
         public Alarms(
             IServicesConfig config,
             IStorageClient storageClient,
-            ILogger logger)
+            ILogger logger,
+            IHttpContextAccessor contextAccessor)
         {
             this.storageClient = storageClient;
             this.databaseName = config.AlarmsConfig.StorageConfig.CosmosDbDatabase;
-            this.collectionId = config.AlarmsConfig.StorageConfig.CosmosDbCollection;
             this.log = logger;
             this.maxDeleteRetryCount = config.AlarmsConfig.MaxDeleteRetries;
+            this._config = config;
+            this._httpContextAccessor = contextAccessor;
         }
 
         public Alarm Get(string id)
