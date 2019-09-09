@@ -14,9 +14,7 @@ namespace Microsoft.Azure.IoTSolutions.Auth
         private const string CONTEXT_KEY_AUTH_REQUIRED = "AuthRequired";
         private const string CONTEXT_KEY_ALLOWED_ACTIONS = "CurrentUserAllowedActions";
         private const string CONTEXT_KEY_EXTERNAL_REQUEST = "ExternalRequest";
-
         private const string CONTEXT_KEY_TENANT_ID = "TenantID";
-
         private const string CLAIM_KEY_TENANT_ID = "tenant";
         private const string HEADER_KEY_TENANT_ID = "ApplicationTenantID";
         // Role claim type
@@ -26,7 +24,9 @@ namespace Microsoft.Azure.IoTSolutions.Auth
         // Store the current user claims in the current request
         public static void SetCurrentUserClaims(this HttpRequest request, IEnumerable<Claim> claims)
         {
-            request.HttpContext.Items[CONTEXT_KEY_USER_CLAIMS] = claims;
+            if (request != null && request.HttpContext != null) {
+                request.HttpContext.Items[CONTEXT_KEY_USER_CLAIMS] = claims;
+            }
         }
 
         // Get the user claims from the current request
@@ -77,16 +77,32 @@ namespace Microsoft.Azure.IoTSolutions.Auth
         public static string GetCurrentUserObjectId(this HttpRequest request)
         {
             var claims = GetCurrentUserClaims(request);
-            return claims.Where(c => c.Type.ToLowerInvariant().Equals(USER_OBJECT_ID_CLAIM_TYPE, StringComparison.CurrentCultureIgnoreCase))
-                .Select(c => c.Value).First();
+
+            if (claims != null)
+            {
+                return claims.Where(c => c.Type.ToLowerInvariant().Equals(USER_OBJECT_ID_CLAIM_TYPE, StringComparison.CurrentCultureIgnoreCase))
+                    .Select(c => c.Value).First();
+            }
+            else
+            {
+                return "";
+            }
         }
 
         // Get the user's role claims from the current request
         public static IEnumerable<string> GetCurrentUserRoleClaim(this HttpRequest request)
         {
             var claims = GetCurrentUserClaims(request);
-            return claims.Where(c => c.Type.ToLowerInvariant().Equals(ROLE_CLAIM_TYPE, StringComparison.CurrentCultureIgnoreCase))
-                .Select(c => c.Value);
+
+            if (claims != null)
+            {
+                return claims.Where(c => c.Type.ToLowerInvariant().Equals(ROLE_CLAIM_TYPE, StringComparison.CurrentCultureIgnoreCase))
+                    .Select(c => c.Value);
+            }
+            else 
+            {
+                return Enumerable.Empty<string>();
+            }
         }
 
         // Store the current user allowed actions in the current request
@@ -114,7 +130,6 @@ namespace Microsoft.Azure.IoTSolutions.Auth
                 return null;
             }
             return request.HttpContext.Items[CONTEXT_KEY_TENANT_ID] as string;
-            
         }
         // Set the user's Tenant  based off request
         public static void SetTenant(this HttpRequest request)
@@ -141,14 +156,12 @@ namespace Microsoft.Azure.IoTSolutions.Auth
 
             SetTenant(request, tenantId);
 
-
             return; 
         }
-        // Set the user's Tenant  from string
+        // Set the user's Tenant from string
         public static void SetTenant(this HttpRequest request, string tenantId)
         {
             request.HttpContext.Items.Add(new KeyValuePair<object, object>(CONTEXT_KEY_TENANT_ID, tenantId));
-
 
             return; 
         }
