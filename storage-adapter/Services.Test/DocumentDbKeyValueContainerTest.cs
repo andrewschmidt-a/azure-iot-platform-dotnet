@@ -54,7 +54,7 @@ namespace Services.Test
             //Mock service returns dummy data
             Mock<IServicesConfig> mockServicesConfig = new Mock<IServicesConfig>();
             mockServicesConfig.Setup(t => t.DocumentDbRUs).Returns(400);
-            mockServicesConfig.Setup((t => t.DocumentDbDatabase(It.IsAny<string>()))).Returns(MOCK_DB_ID);
+            mockServicesConfig.Setup((t => t.DocumentDbDatabase)).Returns(MOCK_DB_ID);
             mockServicesConfig.Setup((t => t.DocumentDbCollection(It.IsAny<string>(), It.IsAny<string>()))).Returns(MOCK_COLL_ID);
             
             this.container = new DocumentDbKeyValueContainer(
