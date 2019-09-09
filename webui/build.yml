@@ -8,8 +8,7 @@ trigger:
     - master
   paths:
     include:
-    - config/
-
+    - webui/
 
 pr:
   branches:
@@ -17,7 +16,7 @@ pr:
     - master
   paths:
     include:
-    - config/
+    - webui/
 
 resources:
 - repo: self
@@ -38,6 +37,6 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/webui/Dockerfile'
         tags: |
           $(tag)

@@ -37,6 +37,6 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        dockerfile: '$(Build.SourcesDirectory)/reverse-proxy/WebService/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/reverse-proxy/Dockerfile'
         tags: |
           $(tag)
