@@ -44,18 +44,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             // Check connection to CosmosDb
             var storageResult = await this._keyValueContainer.PingAsync();
             SetServiceStatus("Storage", storageResult, result, errors);
-
-
-            if (this._servicesConfig.AuthRequired)
-            {
-                // Check access to Auth
-                var authResult = await this.PingServiceAsync(
-                    AUTH_NAME,
-                    this._servicesConfig.UserManagementApiUrl);
-                SetServiceStatus(AUTH_NAME, authResult, result, errors);
-                result.Properties.Add("UserManagementApiUrl", this._servicesConfig?.UserManagementApiUrl);
-            }
-
+            
             result.Properties.Add("StorageType", this._servicesConfig.StorageType);
             this._log.Info(
                 "Service status request",
