@@ -7,6 +7,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 {
     public interface IServicesConfig
     {
+        bool AuthRequired { get; set; }
         string StorageType { get; set; }
         string DocumentDbDatabase { get; set; }
         string DocumentDbConnString { get; set; }
@@ -18,12 +19,23 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 
     public class ServicesConfig : IServicesConfig
     {
+        public bool AuthRequired { get; set; }
         public string StorageType { get; set; }
         public string DocumentDbDatabase { get; set; }
         public string DocumentDbConnString { get; set; }
         public int DocumentDbRUs { get; set; }
+        public string UserManagementApiUrl { get; set; }
         public IAppConfigurationHelper AppConfig { get; set; }
 
+        /// <summary>
+        /// Use the object initializer pattern to set the object's attributes
+        /// bool AuthRequire
+        /// string StorageType
+        /// string DocumentDbConnStringKey
+        /// int DocumentDbRUs
+        /// string UserManagementApiUrl
+        /// IConfigurationRoot AppConfig
+        /// </summary>
         public ServicesConfig() { }
 
         public string DocumentDbCollection(string tenant, string dataType)

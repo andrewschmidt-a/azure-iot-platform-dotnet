@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using DependencyResolver;
 using Microsoft.Azure.KeyVault.Models;
+using IdentityGateway.Services.Models;
 
 namespace IdentityGateway.Services.Helpers
 {
@@ -20,6 +21,7 @@ namespace IdentityGateway.Services.Helpers
         const string KeyVaultSecret = "KeyVault:aadappsecret";
         const string KeyVaultName = "KeyVault:name";
         const string TenantID = "Global:AzureActiveDirectory:aadtenantid";
+        const string IdentityGatewayPrivateKey = "IdentityGatewayPrivateKey";
 
         private IKeyVaultClient client;
         private IConfiguration _config;
@@ -35,18 +37,32 @@ namespace IdentityGateway.Services.Helpers
             this._config = config;
 
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="secret"></param>
-        /// <returns></returns>
+        
         public string getKeyVaultSecretIdentifier(string secret)
         {
             return $"https://{ this._config[KeyVaultName]}.vault.azure.net/secrets/{secret}";
         }
+        
         public async Task<string> getSecretAsync(string secret)
         {
             return (await this.client.GetSecretAsync(getKeyVaultSecretIdentifier(secret))).Value;
+        }
+
+        public async Task<StatusResultServiceModel> PingAsync()
+        {
+            try
+            {
+                var value = await this.getSecretAsync(IdentityGatewayPrivateKey);
+                if (value != null && value != "")
+                {
+                    return new StatusResultServiceModel(true, "Alive and well!");
+                }
+            }
+            catch (Exception E)
+            {
+                return new StatusResultServiceModel(false, E.Message);
+            }
+            return new StatusResultServiceModel(false, "Could not get value from KeyVault");
         }
 
         public void Dispose()
