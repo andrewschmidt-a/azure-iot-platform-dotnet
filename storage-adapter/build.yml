@@ -38,5 +38,6 @@ stages:
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/storage-adapter/WebService/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/storage-adapter'
         tags: |
           $(tag)
