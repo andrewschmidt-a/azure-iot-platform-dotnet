@@ -82,7 +82,7 @@ for more information. More information on environment variables
 ## Configuration values used from Key Vault
 Some of the configuration needed by the microservice is stored in an instance of Key Vault that was created on initial deployment. The auth microservice uses:
 
-* `documentDBConnectionString` = Azure Cosmos DB Connection String
+* `documentDbConnectionString` = Azure Cosmos DB Connection String
 
 ## Project Structure
 

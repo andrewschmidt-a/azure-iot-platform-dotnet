@@ -44,7 +44,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
             "ConfigService",
             "ConfigService:Actions",
             "ExternalDependencies",
-            "UserManagementService"
         };
 
         public ConfigData(ILogger logger)
