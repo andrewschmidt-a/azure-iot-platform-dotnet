@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Azure.IoTSolutions.TenantManager.WebService;
 using ILogger = Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
+using Microsoft.Azure.IoTSolutions.TenantManager.Services.External;
 using Microsoft.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.TenantManager.WebService.Runtime;
 using Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
@@ -44,6 +45,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             services.AddSingleton<IConfig>(config);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddSingleton<IIdentityGatewayClient, IdentityGatewayClient>();
 
             Microsoft.Azure.IoTSolutions.TenantManager.WebService.Auth.Startup.SetupDependencies(services, config);
 

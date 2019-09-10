@@ -13,6 +13,7 @@ using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.Auth;
 using Azure.ApplicationModel.Configuration;
+using Microsoft.Azure.IoTSolutions.TenantManager.Services.External;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {
@@ -24,13 +25,16 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private KeyVaultHelper keyVaultHelper;
         private TokenHelper tokenHelper;
+        private IIdentityGatewayClient idGatewayClient;
 
-        public TenantController(IConfiguration config, IHttpContextAccessor httpContextAccessor)
+        public TenantController(IConfiguration config, IHttpContextAccessor httpContextAccessor,
+                IIdentityGatewayClient identityGatewayClient)
         {
             this._config = config;
             this._httpContextAccessor = httpContextAccessor;
             this.keyVaultHelper = new KeyVaultHelper(this._config);
             this.tokenHelper = new TokenHelper(this._config);
+            this.idGatewayClient = identityGatewayClient;
         }
 
         // POST api/tenant
