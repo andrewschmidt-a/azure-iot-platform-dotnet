@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Microsoft.Azure.IoTSolutions.UIConfig.AppConfiguration;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
 {
@@ -35,6 +35,18 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
         private const string ALLOWED_ACTION_KEY = "Global:Permissions";
 
+        private readonly List<string> appConfigKeys = new List<string>
+        {
+            "Global",
+            "Global:ClientAuth",
+            "Global:ClientAuth:JWT",
+            "Global:Permissions",
+            "ConfigService",
+            "ConfigService:Actions",
+            "ExternalDependencies",
+            "UserManagementService"
+        };
+
         public ConfigData(ILogger logger)
         {
             this.log = logger;
@@ -51,7 +63,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
             // build configuration with environment variables
             var preConfig = configurationBuilder.Build();
             // Add app config settings to the configuration builder
-            configurationBuilder.Add(new AppConfigSettingsSource(preConfig[APP_CONFIGURATION]));
+            configurationBuilder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
             this.configuration = configurationBuilder.Build();
             // Set up Key Vault
             this.SetUpKeyVault();

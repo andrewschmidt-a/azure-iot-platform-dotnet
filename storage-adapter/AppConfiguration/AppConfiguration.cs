@@ -1,4 +1,4 @@
-/*
+﻿/*
 The classes in this file define the required settings from app config
  */
 using System.Linq;
@@ -6,36 +6,28 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
-namespace IdentityGateway.Services.Runtime
+namespace Microsoft.Azure.IoTSolutions.StorageAdapter.AppConfiguration
 {
-    public class AppConfigSettingsProvider : ConfigurationProvider
+    public class AppConfigurationProvider : ConfigurationProvider
     {
-        private string appConfigConnectionString;
+        private string appConfigurationConnectionString;
+        private List<string> appConfigurationKeys;
 
-        // Add the parent keys for each required key (does not grab children-of-children keys)
-        public static List<string> AppConfigSettingKeys = new List<string>
+        public AppConfigurationProvider(string appConfigConnectionString, List<string> appConfigurationKeys)
         {
-            "Global",
-            "Global:AzureActiveDirectory",
-        };
-
-        public AppConfigSettingsProvider(string appConfigConnectionString)
-        {
-            this.appConfigConnectionString = appConfigConnectionString;
+            this.appConfigurationConnectionString = appConfigConnectionString;
+            this.appConfigurationKeys = appConfigurationKeys;
         }
         
         public override void Load()
         {
             // Get all app config settings in a config root
             ConfigurationBuilder appConfigBuilder = new ConfigurationBuilder();
-            appConfigBuilder.AddAzureAppConfiguration(appConfigConnectionString);
+            appConfigBuilder.AddAzureAppConfiguration(appConfigurationConnectionString);
             IConfigurationRoot appConfig = appConfigBuilder.Build();
 
-            // Settings and children added to this.configuration are chosen based on elements in this list
-            var appConfigKeys = AppConfigSettingsProvider.AppConfigSettingKeys;
-
             // Add new configurations
-            foreach (var key in appConfigKeys)
+            foreach (string key in this.appConfigurationKeys)
             {
                 // keys are the section strings, values are the binding instances
                 IConfiguration keySettings = appConfig.GetSection(key);
@@ -49,18 +41,20 @@ namespace IdentityGateway.Services.Runtime
         }
     }
 
-    public class AppConfigSettingsSource : IConfigurationSource
+    public class AppConfigurationSource : IConfigurationSource
     {
         public string appConfigConnectionString;
+        public List<string> appConfigurationKeys;
 
-        public AppConfigSettingsSource(string appConfigConnectionString)
+        public AppConfigurationSource(string appConfigConnectionString, List<string> appConfigurationKeys)
         {
             this.appConfigConnectionString = appConfigConnectionString;
+            this.appConfigurationKeys = appConfigurationKeys;
         }
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            return new AppConfigSettingsProvider(this.appConfigConnectionString);
+            return new AppConfigurationProvider(this.appConfigConnectionString, this.appConfigurationKeys);
         }
     }
 }

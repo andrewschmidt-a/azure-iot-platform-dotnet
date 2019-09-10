@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Microsoft.Azure.IoTSolutions.DeviceTelemetry.AppConfiguration;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
 {
@@ -34,6 +34,22 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         private const string KEY_VAULT_NAME = "KeyVault:name";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
         private const string ALLOWED_ACTION_KEY = "Global:Permissions";
+
+        private readonly List<string> appConfigKeys = new List<string>
+        {
+            "Global",
+            "Global:ClientAuth",
+            "Global:ClientAuth:JWT",
+            "Global:AzureActiveDirectory",
+            "Global:Permissions",
+            "TelemetryService",
+            "TelemetryService:TimeSeries",
+            "TelemetryService:CosmosDb",
+            "TelemetryService:Messages",
+            "TelemetryService:Alarms",
+            "ExternalDependencies",
+            "Actions"
+        };
         
         public ConfigData(ILogger logger)
         {
@@ -50,7 +66,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
             // build configuration with environment variables
             var preConfig = configurationBuilder.Build();
             // Add app config settings to the configuration builder
-            configurationBuilder.Add(new AppConfigSettingsSource(preConfig[APP_CONFIGURATION]));
+            configurationBuilder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
             this.configuration = configurationBuilder.Build();
 
             // Set up Key Vault
