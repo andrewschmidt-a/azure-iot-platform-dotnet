@@ -35,5 +35,6 @@ stages:
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/device-telemetry/WebService/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/device-telemetry'
         tags: |
           $(tag)

@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using IdentityGateway.Services;
 using IdentityGateway.Services.Helpers;
@@ -13,6 +14,9 @@ namespace IdentityGateway.WebService
 {
     public class Startup
     {
+
+        private const string CORS_CONFIG_KEY = "Global:ClientAuth:CORSWhiteList";
+        private const string CORS_POLICY_NAME = "identityCORS";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
 
         private readonly List<string> appConfigKeys = new List<string>
@@ -43,6 +47,24 @@ namespace IdentityGateway.WebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add CORS if available
+            if (!String.IsNullOrEmpty(Configuration[CORS_CONFIG_KEY]))
+            {
+                services.AddCors(options =>
+                {
+                    options.AddPolicy(CORS_POLICY_NAME,
+                        builder =>
+                        {
+                            builder.WithOrigins(Configuration[CORS_CONFIG_KEY]);
+                            //builder.AllowAnyOrigin();
+                            builder.AllowCredentials();
+                            builder.AllowAnyMethod();
+                            builder.AllowAnyHeader();
+
+                        });
+                });
+            }
+            
             services.AddMvc().AddControllersAsServices();
 
             services.AddScoped<TableHelper>();
@@ -57,6 +79,11 @@ namespace IdentityGateway.WebService
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Add CORS if available
+            if (!String.IsNullOrEmpty(Configuration[CORS_CONFIG_KEY]))
+            {
+                app.UseCors(CORS_POLICY_NAME); 
+            }
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();
         }

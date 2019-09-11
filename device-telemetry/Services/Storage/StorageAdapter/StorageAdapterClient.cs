@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter
         // TODO: make it configurable, default to false
         private const bool ALLOW_INSECURE_SSL_SERVER = true;
         private const string TENANT_HEADER = "ApplicationTenantID";
+        private const string AZDS_ROUTE_KEY = "azds-route-as";
 
         private readonly IHttpClient httpClient;
         private readonly ILogger log;
@@ -110,12 +112,18 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter
                 throw new Exception("No tenant Found");
             }
             
-
             var request = new Http.HttpRequest();
             request.AddHeader(HttpRequestHeader.Accept.ToString(), "application/json");
             request.AddHeader(HttpRequestHeader.CacheControl.ToString(), "no-cache");
             request.AddHeader(HttpRequestHeader.UserAgent.ToString(), "Device Simulation " + this.GetType().FullName);
             request.Headers.Add(TENANT_HEADER, tenantId);
+            
+            // Add Azds route if exists
+            if (this._httpContextAccessor.HttpContext.Request.Headers.Count( p => p.Key == AZDS_ROUTE_KEY) > 0)
+            {
+                request.Headers.Add(AZDS_ROUTE_KEY, this._httpContextAccessor.HttpContext.Request.Headers.First(p => p.Key == AZDS_ROUTE_KEY).Value.First());
+            }
+            
             request.SetUriFromString($"{this.serviceUri}/{path}");
             request.Options.EnsureSuccess = false;
             request.Options.Timeout = this.timeout;
