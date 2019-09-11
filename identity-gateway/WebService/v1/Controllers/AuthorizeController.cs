@@ -301,15 +301,9 @@ namespace IdentityGateway.Controllers
             // not that latest version of JWT using Microsoft namespace instead of System
             var securityKey =
                 new RsaSecurityKey(IdentityGateway.Services.Helpers.RSA.DecodeRSA(identityGatewayPrivateKey));
-<<<<<<< HEAD
-            // Also note that securityKey length should be >256b
-            // so you have to make sure that your private key has a proper length
-            //
-=======
             
             // Also note that securityKey length should be >256b
             // so you have to make sure that your private key has a proper length
->>>>>>> master
             var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials
                 (securityKey, SecurityAlgorithms.RsaSha256);
             string forwardedFor = null;
