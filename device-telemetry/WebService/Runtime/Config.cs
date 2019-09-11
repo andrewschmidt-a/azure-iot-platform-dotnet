@@ -28,7 +28,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
 
         private const string COSMOSDB_KEY = GLOBAL_KEY + "CosmosDb:"; // Prefix
-        private const string COSMOSDB_CONNSTRING_KEY = COSMOSDB_KEY + "documentDBConnectionString"; //Global
+        private const string COSMOSDB_CONNSTRING_KEY = COSMOSDB_KEY + "documentDbConnectionString"; //Global
         private const string COSMOSDB_RUS_KEY = COSMOSDB_KEY + "RUs";
 
         private const string TIME_SERIES_KEY = APPLICATION_KEY + "TimeSeries:";
