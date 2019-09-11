@@ -23,11 +23,4 @@
     <!-- "Service Include" required by IntelliJ Rider -->
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
-<<<<<<< HEAD
-  <ItemGroup>
-    <Folder Include="Connected Services\" />
-    <Folder Include="Properties" />
-  </ItemGroup>
-=======
->>>>>>> a80cde15bbba3d91c70fbf5a910caa5919134f5d
 </Project>
