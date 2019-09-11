@@ -31,6 +31,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
         private const string CLIENT_ID = "KeyVault:aadAppId";
         private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
         private const string KEY_VAULT_NAME = "KeyVault:name";
+
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
 
         // a list of parents keys required for this service from app configuration

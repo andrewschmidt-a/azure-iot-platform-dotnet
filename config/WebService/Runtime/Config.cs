@@ -25,8 +25,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
-        private const string APPLICATION_KEY = "ConfigService:";
         private const string GLOBAL_KEY = "Global:";
+        private const string APPLICATION_KEY = "ConfigService:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string SOLUTION_TYPE_KEY = APPLICATION_KEY + "solutionType";
         private const string SEED_TEMPLATE_KEY = APPLICATION_KEY + "seedTemplate";

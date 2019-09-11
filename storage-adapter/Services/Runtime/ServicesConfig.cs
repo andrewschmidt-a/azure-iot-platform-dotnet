@@ -20,6 +20,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 
     public class ServicesConfig : IServicesConfig
     {
+        private const string APPPLICATION_KEY = "StorageAdapter:";
+        private const string TENANT_KEY = "Tenant:";
+        private const string COLLECTION_KEY = "Collection";
+
         public bool AuthRequired { get; set; }
         public string StorageType { get; set; }
         public string DocumentDbDatabase { get; set; }
@@ -41,11 +45,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 
         public string DocumentDbCollection(string tenant, string dataType)
         {
-            if (String.IsNullOrEmpty(tenant))
-            {
-                throw new NullReferenceException("The given tenant value was null. Ensure that your request has attached an ApplicationTenantId in the headers.");
-            }
-            return this.AppConfig.GetValue($"tenant:{tenant}:{dataType}-collection");
+            return this.AppConfig.GetValue($"{TENANT_KEY}{tenant}:{dataType}-{COLLECTION_KEY}");
         }
     }
 }

@@ -5,6 +5,9 @@
     <AssemblyName>Microsoft.Azure.IoTSolutions.UIConfig.WebService</AssemblyName>
     <RootNamespace>Microsoft.Azure.IoTSolutions.UIConfig.WebService</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
     <Content Include="appsettings.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
