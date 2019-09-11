@@ -27,6 +27,7 @@ namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.External
 
             await this.httpClient.PostAsync(request);
         }
+
         private HttpRequest CreateRequest(string path, IdentityGatewayApiModel content)
         {
             var request = new HttpRequest();
