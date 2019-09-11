@@ -39,7 +39,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
         private const string TIME_SERIES_API_VERSION = TIME_SERIES_KEY + "apiVersion";
         private const string TIME_SERIES_TIMEOUT = TIME_SERIES_KEY + "timeout";
 
-        private const string AAD_KEY = APPLICATION_KEY + "AzureActiveDirectory:";
+        private const string AAD_KEY = GLOBAL_KEY + "AzureActiveDirectory:";
         private const string AAD_TENANT = AAD_KEY + "aadTenantId";
         private const string AAD_APP_ID = AAD_KEY + "aadAppId";
         private const string AAD_APP_SECRET = AAD_KEY + "aadAppSecret";
@@ -76,7 +76,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
         private const string ACTIONS_EVENTHUB_NAME = ACTIONS_KEY + "actionsEventHubName";
         private const string ACTIONS_EVENTHUB_CONNSTRING = ACTIONS_KEY + "actionsEventHubConnectionString";
         private const string ACTIONS_LOGICAPP_ENDPOINTURL = ACTIONS_KEY + "logicAppEndpointUrl";
-        private const string ACTIONS_AZUREBLOB_CONNSTRING = ACTIONS_KEY + "storageConnectionString";
+        private const string ACTIONS_AZUREBLOB_CONNSTRING = GLOBAL_KEY + "StorageAccountConnectionStringKeyVaultSecret";
         private const string ACTIONS_AZUREBLOB_CONTAINER = ACTIONS_KEY + "storageContainer";
         private const string SOLUTION_URL = ACTIONS_KEY + "solutionWebsiteUrl";
         private const string TEMPLATE_FOLDER = ACTIONS_KEY + "templateFolder";
@@ -117,7 +117,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
                 ActionsEventHubConnectionString = configData.GetString(ACTIONS_EVENTHUB_CONNSTRING),
                 ActionsEventHubName = configData.GetString(ACTIONS_EVENTHUB_NAME),
                 LogicAppEndpointUrl = configData.GetString(ACTIONS_LOGICAPP_ENDPOINTURL),
-                BlobStorageConnectionString = configData.GetString(ACTIONS_AZUREBLOB_CONNSTRING),
+                BlobStorageConnectionString = configData.GetSecretsFromKeyVault( configData.GetString(ACTIONS_AZUREBLOB_CONNSTRING)),
                 ActionsBlobStorageContainer = configData.GetString(ACTIONS_AZUREBLOB_CONTAINER),
                 SolutionUrl = configData.GetString(SOLUTION_URL),
                 TemplateFolder = AppContext.BaseDirectory + Path.DirectorySeparatorChar + configData.GetString(TEMPLATE_FOLDER),

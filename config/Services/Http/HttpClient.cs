@@ -91,7 +91,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Http
                     using (var response = await client.SendAsync(httpRequest))
                     {
                         if (request.Options.EnsureSuccess) response.EnsureSuccessStatusCode();
-
+                        
                         return new HttpResponse
                         {
                             StatusCode = response.StatusCode,
@@ -144,6 +144,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Http
             {
                 httpRequest.Headers.Add(header.Key, header.Value);
             }
+           
         }
 
         private static void SetServerSSLSecurity(IHttpRequest request, HttpClientHandler clientHandler)

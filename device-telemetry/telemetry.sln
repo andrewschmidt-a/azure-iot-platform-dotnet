@@ -115,10 +115,17 @@ Global
 		{BB60F9AC-6419-40CC-A756-1FBC0882705D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB60F9AC-6419-40CC-A756-1FBC0882705D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB60F9AC-6419-40CC-A756-1FBC0882705D}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
+		{E1DBFE22-816D-4779-A529-7CD13B62C830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1DBFE22-816D-4779-A529-7CD13B62C830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1DBFE22-816D-4779-A529-7CD13B62C830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1DBFE22-816D-4779-A529-7CD13B62C830}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
 		{AD5141D7-F6A8-4BC8-91AB-969482F53FB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AD5141D7-F6A8-4BC8-91AB-969482F53FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD5141D7-F6A8-4BC8-91AB-969482F53FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AD5141D7-F6A8-4BC8-91AB-969482F53FB8}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> 5068a01b217b01c4a1e591a12249cb9c4498b3a4
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

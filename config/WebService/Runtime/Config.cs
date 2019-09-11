@@ -25,8 +25,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
-        private const string APPLICATION_KEY = "ConfigService:";
         private const string GLOBAL_KEY = "Global:";
+        private const string APPLICATION_KEY = "ConfigService:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string SOLUTION_TYPE_KEY = APPLICATION_KEY + "solutionType";
         private const string SEED_TEMPLATE_KEY = APPLICATION_KEY + "seedTemplate";
@@ -36,6 +36,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
         private const string STORAGE_ADAPTER_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "storageAdapterWebServiceUrl";
         private const string DEVICE_SIMULATION_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "deviceSimulationWebServiceUrl";
         private const string TELEMETRY_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "telemetryWebServiceUrl";
+        private const string USER_MANAGEMENT_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "authWebServiceUrl";
 
         private const string DEVICE_SIMULATION_KEY = "DeviceSimulationService:";
         private const string TELEMETRY_KEY = "TelemetryService:";
@@ -51,8 +52,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
         private const string JWT_AUDIENCE_KEY = JWT_KEY + "audience";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
-        private const string USER_MANAGEMENT_KEY = "UserManagementService:";
-        private const string USER_MANAGEMENT_URL_KEY = USER_MANAGEMENT_KEY + "authWebServiceUrl";
 
         private const string ACTIONS_KEY = APPLICATION_KEY + "Actions:";
         private const string OFFICE365_LOGIC_APP_URL_KEY = ACTIONS_KEY + "office365ConnectionUrl";

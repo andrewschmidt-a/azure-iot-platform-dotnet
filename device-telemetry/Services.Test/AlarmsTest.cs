@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
@@ -20,6 +21,7 @@ namespace Services.Test
         private readonly Mock<IStorageClient> storageClient;
         private readonly Mock<ILogger> logger;
         private readonly IAlarms alarms;
+        private readonly Mock<IHttpContextAccessor> httpContextAccessor;
 
         public AlarmsTest()
         {
@@ -28,8 +30,9 @@ namespace Services.Test
                 AlarmsConfig = new AlarmsConfig("database", "collection", 3)
             };
             this.storageClient = new Mock<IStorageClient>();
+            this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             this.logger = new Mock<ILogger>();
-            this.alarms = new Alarms(servicesConfig, this.storageClient.Object, this.logger.Object);
+            this.alarms = new Alarms(servicesConfig, this.storageClient.Object, this.logger.Object,this.httpContextAccessor.Object);
         }
 
         /**
