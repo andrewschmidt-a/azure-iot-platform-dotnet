@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -20,6 +21,8 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.External
     {
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string TENANT_ID = "TenantID";
+        private const string AZDS_ROUTE_KEY = "azds-route-as";
+        
         private readonly IHttpClient httpClient;
         private readonly ILogger log;
         private readonly string serviceUri;
@@ -72,6 +75,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.External
             string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
             request.Headers.Add(TENANT_HEADER, tenantId);
 
+            if (this._httpContextAccessor.HttpContext.Request.Headers.Count( p => p.Key == AZDS_ROUTE_KEY) > 0)
+            {
+                request.Headers.Add(AZDS_ROUTE_KEY, this._httpContextAccessor.HttpContext.Request.Headers.First(p => p.Key == AZDS_ROUTE_KEY).Value.First());
+            }
             return request;
         }
 
