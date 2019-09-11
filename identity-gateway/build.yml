@@ -38,5 +38,6 @@ stages:
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/identity-gateway/WebService/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/identity-gateway'
         tags: |
           $(tag)
