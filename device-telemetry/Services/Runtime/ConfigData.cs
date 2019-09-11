@@ -17,7 +17,10 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         string GetString(string key, string defaultValue = "");
         bool GetBool(string key, bool defaultValue = false);
         int GetInt(string key, int defaultValue = 0);
+   
+        string GetSecretsFromKeyVault(string key);
         Dictionary<string, List<string>> GetUserPermissions();
+
     }
 
     public class ConfigData : IConfigData
@@ -126,7 +129,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
             return !string.IsNullOrEmpty(value) ? value : defaultValue;
         }
 
-        private string GetSecretsFromKeyVault(string key) {
+        public string GetSecretsFromKeyVault(string key) {
             return this.keyVault.GetSecret(key);
         }
 
