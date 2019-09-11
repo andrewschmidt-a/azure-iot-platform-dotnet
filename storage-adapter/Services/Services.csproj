@@ -18,6 +18,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AuthUtils\AuthUtils.csproj" />
-    <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
   </ItemGroup>
 </Project>

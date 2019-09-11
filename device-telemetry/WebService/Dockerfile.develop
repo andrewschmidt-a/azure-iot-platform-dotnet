@@ -5,7 +5,6 @@ ENV DOTNET_USE_POLLING_FILE_WATCHER=true
 EXPOSE 80
 
 WORKDIR /src
-COPY ["AppConfiguration/AppConfiguration.csproj", "AppConfiguration/"]
 COPY ["AuthUtils/AuthUtils.csproj", "AuthUtils/"]
 COPY ["ActionsAgent/ActionsAgent.csproj", "ActionsAgent/"]
 COPY ["Services/Services.csproj", "Services/"]

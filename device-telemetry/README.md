@@ -64,7 +64,7 @@ for more information. More information on environment variables
 ### 3.1 Configuration values used from Key Vault
 Some of the configuration needed by the microservice is stored in an instance of Key Vault that was created on initial deployment. The telemetry microservice uses:
 
-  * `documentDbConnectionString ` = {your Azure Cosmos DB connection string}
+  * `documentDBConnectionString ` = {your Azure Cosmos DB connection string}
   * `storageAdapterWebServiceUrl ` = http://localhost:9022/v1
   * `authWebServiceUrl` = http://localhost:9001/v1
   * `aadTenantId` = {Azure Active Directory Tenant ID}

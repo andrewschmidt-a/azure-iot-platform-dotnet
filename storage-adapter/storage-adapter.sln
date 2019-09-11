@@ -74,8 +74,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{8BAA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthUtils", "AuthUtils\AuthUtils.csproj", "{78C172F4-57C0-41A3-B574-9D94F848B37D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppConfiguration", "AppConfiguration\AppConfiguration.csproj", "{293486BA-D9A0-46DD-A7B7-6A3C7E1ABBDA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,10 +100,6 @@ Global
 		{78C172F4-57C0-41A3-B574-9D94F848B37D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78C172F4-57C0-41A3-B574-9D94F848B37D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78C172F4-57C0-41A3-B574-9D94F848B37D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{293486BA-D9A0-46DD-A7B7-6A3C7E1ABBDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{293486BA-D9A0-46DD-A7B7-6A3C7E1ABBDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{293486BA-D9A0-46DD-A7B7-6A3C7E1ABBDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{293486BA-D9A0-46DD-A7B7-6A3C7E1ABBDA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
