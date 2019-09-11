@@ -39,5 +39,6 @@ stages:
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/config'
         tags: |
           $(tag)
