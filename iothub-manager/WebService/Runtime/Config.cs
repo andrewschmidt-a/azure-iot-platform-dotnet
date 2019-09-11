@@ -21,10 +21,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
-        private const string APPLICATION_KEY = "IothubManagerService:";
         private const string GLOBAL_KEY = "Global:";
+        private const string APPLICATION_KEY = "IothubManagerService:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
-        private const string IOTHUB_CONNSTRING_KEY = APPLICATION_KEY + "iotHubConnectionString";
+        private const string IOTHUB_CONNSTRING_KEY = APPLICATION_KEY + "iotHubConnectionString"; // we will not need this as iot is tenant based
         private const string DEVICE_PROPERTIES_KEY = APPLICATION_KEY + "DevicePropertiesCache:"; 
         private const string DEVICE_PROPERTIES_WHITELIST_KEY = DEVICE_PROPERTIES_KEY + "whitelist";
         private const string DEVICE_PROPERTIES_TTL_KEY = DEVICE_PROPERTIES_KEY + "TTL";
@@ -39,10 +39,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
         private const string AUTH_TYPE_KEY = CLIENT_AUTH_KEY + "authType";
         private const string AUTH_REQUIRED_KEY = CLIENT_AUTH_KEY + "authrequired";
 
-        private const string JWT_KEY = CLIENT_AUTH_KEY + "JWT:";
+        private const string JWT_KEY = GLOBAL_KEY + "ClientAuth:JWT:";
         private const string JWT_ALGOS_KEY = JWT_KEY + "allowedAlgorithms";
         private const string JWT_ISSUER_KEY = JWT_KEY + "authissuer";
-        private const string JWT_AUDIENCE_KEY = "aadAppId";
+        private const string JWT_AUDIENCE_KEY = JWT_KEY + "aadAppId";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
         //test

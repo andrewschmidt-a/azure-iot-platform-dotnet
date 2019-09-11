@@ -13,7 +13,7 @@ const Config = {
     telemetry: `${baseUrl}/telemetry/v1/`,
     deviceSimulation: `${baseUrl}/devicesimulation/v1/`,
     diagnostics: `${baseUrl}/diagnostics/v1/`,
-    identityGateway: 'localhost:5000/v1/' /* ${baseUrl}/identitygateway/v1/ */,
+    tenantManager: `${baseUrl}/tenantmanager/`,
     privacy: 'https://privacy.microsoft.com/privacystatement',
     //TODO: Determine if should query java or dotnet
     gitHubReleases: `https://api.github.com/repos/Azure/azure-iot-pcs-remote-monitoring-dotnet/releases/tags/3.0.0`

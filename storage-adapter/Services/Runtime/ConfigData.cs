@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.AppConfiguration;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 {
@@ -31,7 +31,17 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
         private const string CLIENT_ID = "KeyVault:aadAppId";
         private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
         private const string KEY_VAULT_NAME = "KeyVault:name";
+
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
+
+        // a list of parents keys required for this service from app configuration
+        private readonly List<string> appConfigKeys = new List<string>
+        {
+            "Global",
+            "Global:AzureActiveDirectory",
+            "StorageAdapter",
+            "ExternalDependencies"
+        };
 
         public ConfigData(ILogger logger)
         {
@@ -45,10 +55,11 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
                 .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
             .AddEnvironmentVariables();
+            // build configuration with environment variables
+            var preConfig = configurationBuilder.Build();
+            // Add app config settings to the configuration builder
+            configurationBuilder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
             this.configuration = configurationBuilder.Build();
-            configurationBuilder.AddAzureAppConfiguration(this.configuration[APP_CONFIGURATION]);
-            this.configuration = configurationBuilder.Build();
-
             // Set up Key Vault
             this.SetUpKeyVault();
         }

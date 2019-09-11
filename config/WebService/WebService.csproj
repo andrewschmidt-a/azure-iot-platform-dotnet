@@ -5,6 +5,12 @@
     <AssemblyName>Microsoft.Azure.IoTSolutions.UIConfig.WebService</AssemblyName>
     <RootNamespace>Microsoft.Azure.IoTSolutions.UIConfig.WebService</RootNamespace>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>0</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="RecurringTasks.cs" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

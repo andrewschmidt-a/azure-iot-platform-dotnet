@@ -121,7 +121,8 @@
     "noPermissions": "No permissions found",
     "close": "Close",
     "tenant": "Tenant",
-    "noTenant": "No Tenants found"
+    "noTenant": "No Tenants found",
+    "createTenant": "Create New Tenant"
   },
   "deviceGroupsFlyout": {
     "actions": "Actions",
