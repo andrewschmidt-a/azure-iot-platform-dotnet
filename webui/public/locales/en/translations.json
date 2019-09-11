@@ -13,8 +13,9 @@
     "collapse": "Collapse Side Navigation"
   },
   "accessDenied": {
-    "message": "Oops, you don't have permissions for the the page you requested. Please contact your administrator. <1><0>learnMore</0></1>",
-    "learnMore": "Learn more"
+    "message": "Oops looks like you dont have a tenant. Talk to your administrator to be added or create a new one. <1><0>createTenant</0></1>",
+    "learnMore": "Learn more",
+    "createTenant": "Create Tenant"
   },
   "pageNotFound": {
     "title": "404 - Page not found",
@@ -120,6 +121,7 @@
     "noPermissions": "No permissions found",
     "close": "Close",
     "tenant": "Tenant",
+    "noTenant": "No Tenants found",
     "createTenant": "Create New Tenant"
   },
   "deviceGroupsFlyout": {
@@ -554,6 +556,14 @@
     "checkmark": "Checkmark",
     "uploadError": "Unable to upload file, please check the file type/size and try again.",
     "error": "Error"
+  },
+  "tenantManagement":{
+    "title": "Tenant Management",
+    "tenantGrid":{
+      "tenantName": "Tenant Name",
+      "tenantStatus": "Status"
+    },
+    "create": "Create Tenant"
   },
   "maintenance": {
     "acknowledge": "Acknowledge",

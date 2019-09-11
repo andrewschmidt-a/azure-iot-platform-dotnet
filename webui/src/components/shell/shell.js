@@ -42,7 +42,7 @@ class Shell extends Component {
               <div className="access-denied">
                 <Trans i18nKey={'accessDenied.message'}>
                   You don't have permissions.
-                  <Hyperlink href={Config.contextHelpUrls.accessDenied} target="_blank">{t('accessDenied.learnMore')}</Hyperlink>
+                  <Hyperlink href="/tenantmanagement" target="_blank">{t('accessDenied.createTenant')}</Hyperlink>
                 </Trans>
               </div>
             </Main>
@@ -69,8 +69,8 @@ class Shell extends Component {
   }
 
   getNavProps() {
-    const { pagesConfig, t, denyAccess } = this.props;
-    if (denyAccess || !pagesConfig) {
+    const { pagesConfig, t, denyAccess, limitedAccess } = this.props;
+    if (denyAccess || !pagesConfig || limitedAccess) {
       return null;
     }
 
@@ -115,6 +115,27 @@ class Shell extends Component {
         },
       };
     } else if (pagesConfig) {
+      var toolbarItems = [];
+      if(!this.props.limitedAccess){
+        toolbarItems.push({
+          icon: 'settings',
+          label: t('settingsFlyout.title'),
+          selected: openFlyout === 'settings',
+          onClick: openSystemSettings
+        });
+      }
+      toolbarItems.push({
+        icon: 'help',
+        label: t('helpFlyout.title'),
+        selected: openFlyout === 'help',
+        onClick: openHelpFlyout
+      })
+      toolbarItems.push({
+        icon: 'contact',
+        label: t('profileFlyout.title'),
+        selected: openFlyout === 'profile',
+        onClick: openUserProfile
+      });
       return {
         branding: this.getMastheadBranding(),
         more: {
@@ -122,22 +143,7 @@ class Shell extends Component {
           selected: this.state.isMastheadMoreExpanded,
           onClick: this.handleMastheadMoreToggle,
         },
-        toolbarItems: [{
-          icon: 'settings',
-          label: t('settingsFlyout.title'),
-          selected: openFlyout === 'settings',
-          onClick: openSystemSettings
-        }, {
-          icon: 'help',
-          label: t('helpFlyout.title'),
-          selected: openFlyout === 'help',
-          onClick: openHelpFlyout
-        }, {
-          icon: 'contact',
-          label: t('profileFlyout.title'),
-          selected: openFlyout === 'profile',
-          onClick: openUserProfile
-        }]
+        toolbarItems: toolbarItems
       };
     } else {
       return null; // no masthead
