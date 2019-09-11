@@ -2,9 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
@@ -28,21 +31,26 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter
     {
         // TODO: make it configurable, default to false
         private const bool ALLOW_INSECURE_SSL_SERVER = true;
+        private const string TENANT_HEADER = "ApplicationTenantID";
+        private const string AZDS_ROUTE_KEY = "azds-route-as";
 
         private readonly IHttpClient httpClient;
         private readonly ILogger log;
         private readonly string serviceUri;
         private readonly int timeout;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public StorageAdapterClient(
             IHttpClient httpClient,
             IServicesConfig config,
-            ILogger logger)
+            ILogger logger,
+            IHttpContextAccessor contextAccessor)
         {
             this.httpClient = httpClient;
             this.log = logger;
             this.serviceUri = config.StorageAdapterApiUrl;
             this.timeout = config.StorageAdapterApiTimeout;
+            this._httpContextAccessor = contextAccessor;
         }
 
         public async Task<ValueListApiModel> GetAllAsync(string collectionId)
@@ -95,12 +103,27 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter
             this.ThrowIfError(response, collectionId, key);
         }
 
-        private HttpRequest PrepareRequest(string path, ValueApiModel content = null)
+        private Http.HttpRequest PrepareRequest(string path, ValueApiModel content = null)
         {
-            var request = new HttpRequest();
+            string tenantId = null;
+            if(this._httpContextAccessor.HttpContext != null){
+                tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+            }else{
+                throw new Exception("No tenant Found");
+            }
+            
+            var request = new Http.HttpRequest();
             request.AddHeader(HttpRequestHeader.Accept.ToString(), "application/json");
             request.AddHeader(HttpRequestHeader.CacheControl.ToString(), "no-cache");
             request.AddHeader(HttpRequestHeader.UserAgent.ToString(), "Device Simulation " + this.GetType().FullName);
+            request.Headers.Add(TENANT_HEADER, tenantId);
+            
+            // Add Azds route if exists
+            if (this._httpContextAccessor.HttpContext.Request.Headers.Count( p => p.Key == AZDS_ROUTE_KEY) > 0)
+            {
+                request.Headers.Add(AZDS_ROUTE_KEY, this._httpContextAccessor.HttpContext.Request.Headers.First(p => p.Key == AZDS_ROUTE_KEY).Value.First());
+            }
+            
             request.SetUriFromString($"{this.serviceUri}/{path}");
             request.Options.EnsureSuccess = false;
             request.Options.Timeout = this.timeout;

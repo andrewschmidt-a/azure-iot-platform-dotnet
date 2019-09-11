@@ -7,55 +7,45 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 {
     public interface IServicesConfig
     {
+        bool AuthRequired { get; set; }
         string StorageType { get; set; }
-        string DocumentDbConnStringKey { get; set; }
+        string DocumentDbDatabase { get; set; }
+        string DocumentDbConnString { get; set; }
         int DocumentDbRUs { get; set; }
+        string UserManagementApiUrl { get; set; }
         IAppConfigurationHelper AppConfig { get; set; }
-        string DocumentDbConnString { get; }
 
-        string DocumentDbDatabase(string dataType);
         string DocumentDbCollection(string tenant, string dataType);
     }
 
     public class ServicesConfig : IServicesConfig
     {
+        private const string APPPLICATION_KEY = "StorageAdapter:";
+        private const string TENANT_KEY = "Tenant:";
+        private const string COLLECTION_KEY = "Collection";
+
+        public bool AuthRequired { get; set; }
         public string StorageType { get; set; }
-        public string DocumentDbConnStringKey { get; set; }
+        public string DocumentDbDatabase { get; set; }
+        public string DocumentDbConnString { get; set; }
         public int DocumentDbRUs { get; set; }
+        public string UserManagementApiUrl { get; set; }
         public IAppConfigurationHelper AppConfig { get; set; }
 
-        public ServicesConfig(
-            string StorageType,
-            string DocumentDbConnStringKey,
-            int DocumentDbRUs,
-            IAppConfigurationHelper appConfigurationHelper)
-        {
-            this.StorageType = StorageType;
-            this.DocumentDbConnStringKey = DocumentDbConnStringKey;
-            this.DocumentDbRUs = DocumentDbRUs;
-            this.AppConfig = appConfigurationHelper;
-        }
+        /// <summary>
+        /// Use the object initializer pattern to set the object's attributes
+        /// bool AuthRequire
+        /// string StorageType
+        /// string DocumentDbConnStringKey
+        /// int DocumentDbRUs
+        /// string UserManagementApiUrl
+        /// IConfigurationRoot AppConfig
+        /// </summary>
+        public ServicesConfig() { }
 
         public string DocumentDbCollection(string tenant, string dataType)
         {
-            if (String.IsNullOrEmpty(tenant))
-            {
-                throw new NullReferenceException("The given tenant value was null. Ensure that your request has attached an ApplicationTenantId in the headers.");
-            }
-            return this.AppConfig.GetValue($"tenant:{tenant}:{dataType}-collection");
-        }
-        
-        public string DocumentDbDatabase(string dataType)
-        {
-            return this.AppConfig.GetValue($"StorageAdapter:{dataType}");
-        }
-
-        public string DocumentDbConnString
-        {
-            get
-            {
-                return this.AppConfig.GetValue(this.DocumentDbConnStringKey);
-            }
+            return this.AppConfig.GetValue($"{TENANT_KEY}{tenant}:{dataType}-{COLLECTION_KEY}");
         }
     }
 }

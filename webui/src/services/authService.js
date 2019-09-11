@@ -16,6 +16,7 @@ export class AuthService {
   static aadInstance = '';
   static _userManager = null;
   static settings = { };
+  static ENDPOINT = Config.serviceUrls.auth
 
   static initialize() {
     if (typeof global.DeploymentConfig === 'undefined') {
@@ -121,6 +122,23 @@ export class AuthService {
     //   console.log('The user is not signed in');
     //   AuthService.authContext.login();
     // }
+  }
+
+  static switchTenant(tenant) {
+    if (AuthService.isDisabled()) return;
+
+    AuthService._userManager.getUser().then(user => {
+      if (user) {
+        HttpClient.post(`${global.DeploymentConfig.issuer}/connect/switch/${tenant}`).subscribe(new_token =>{
+          user.id_token = new_token;
+          user.profile.tenant = tenant;
+          AuthService._userManager.storeUser(user)
+          window.location = window.location.origin;
+        })
+      } else {
+        console.log("Must be logged in to switch tenants")
+      }
+    });
   }
 
   /** Returns a the current user */

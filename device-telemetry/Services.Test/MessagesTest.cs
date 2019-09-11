@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
@@ -25,20 +26,21 @@ namespace Services.Test
         private readonly Mock<IStorageClient> storageClient;
         private readonly Mock<ITimeSeriesClient> timeSeriesClient;
         private readonly Mock<ILogger> logger;
-
+        private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly IMessages messages;
 
         public MessagesTest()
         {
             var servicesConfig = new ServicesConfig()
             {
-                MessagesConfig = new StorageConfig("database", "collection"),
+                MessagesConfig = new StorageConfig("database"),
                 StorageType = "tsi"
             };
             this.storageClient = new Mock<IStorageClient>();
             this.timeSeriesClient = new Mock<ITimeSeriesClient>();
+            this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             this.logger = new Mock<ILogger>();
-            this.messages = new Messages(servicesConfig, this.storageClient.Object, this.timeSeriesClient.Object, this.logger.Object);
+            this.messages = new Messages(servicesConfig, this.storageClient.Object, this.timeSeriesClient.Object, this.logger.Object,this.httpContextAccessor.Object);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

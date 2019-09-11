@@ -3,6 +3,7 @@
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.EventHubs.Processor;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.EventHub;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
@@ -99,6 +100,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             builder.RegisterInstance(eventProcessorHostWrapper).As<IEventProcessorHostWrapper>().SingleInstance();
             IEventProcessorFactory eventProcessorFactory = new ActionsEventProcessorFactory(logger, config.ServicesConfig, httpClient);
             builder.RegisterInstance(eventProcessorFactory).As<IEventProcessorFactory>().SingleInstance();
+            
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
         }
 
         private static void RegisterFactory(IContainer container)

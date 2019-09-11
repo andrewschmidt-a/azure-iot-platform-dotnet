@@ -15,6 +15,7 @@ using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter;
 using WebService.Test.helpers;
 using Xunit;
 using Alarm = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Alarm;
+using Microsoft.AspNetCore.Http;
 
 namespace WebService.Test.Controllers
 {
@@ -24,6 +25,7 @@ namespace WebService.Test.Controllers
 
         private readonly Mock<ILogger> log;
         private readonly IStorageClient storage;
+        private readonly Mock<IHttpContextAccessor> httpContextAccessor;
 
         private List<Alarm> sampleAlarms;
 
@@ -49,23 +51,23 @@ namespace WebService.Test.Controllers
             Config config = new Config(configData);
             IServicesConfig servicesConfig = config.ServicesConfig;
             Mock<IStorageAdapterClient> storageAdapterClient = new Mock<IStorageAdapterClient>();
+            this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             this.log = new Mock<ILogger>();
 
             this.storage = new StorageClient(servicesConfig, this.log.Object);
             string dbName = servicesConfig.AlarmsConfig.StorageConfig.CosmosDbDatabase;
-            string collName = servicesConfig.AlarmsConfig.StorageConfig.CosmosDbCollection;
-            this.storage.CreateCollectionIfNotExistsAsync(dbName, collName);
+            this.storage.CreateCollectionIfNotExistsAsync(dbName, "");
 
             this.sampleAlarms = this.getSampleAlarms();
             foreach (Alarm sampleAlarm in this.sampleAlarms)
             {
                 this.storage.UpsertDocumentAsync(
                     dbName,
-                    collName,
+                    "",
                     this.AlarmToDocument(sampleAlarm));
             }
 
-            Alarms alarmService = new Alarms(servicesConfig, this.storage, this.log.Object);
+            Alarms alarmService = new Alarms(servicesConfig, this.storage, this.log.Object,this.httpContextAccessor.Object);
             Rules rulesService = new Rules(storageAdapterClient.Object, this.log.Object, alarmService, new Mock<IDiagnosticsClient>().Object);
             this.controller = new AlarmsByRuleController(alarmService, rulesService, this.log.Object);
         }

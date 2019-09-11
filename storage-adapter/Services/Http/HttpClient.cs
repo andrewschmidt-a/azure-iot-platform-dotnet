@@ -3,9 +3,9 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Http
+namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Http
 {
     public interface IHttpClient
     {
@@ -91,7 +91,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Http
                     using (var response = await client.SendAsync(httpRequest))
                     {
                         if (request.Options.EnsureSuccess) response.EnsureSuccessStatusCode();
-                        
+
                         return new HttpResponse
                         {
                             StatusCode = response.StatusCode,
@@ -144,7 +144,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Http
             {
                 httpRequest.Headers.Add(header.Key, header.Value);
             }
-           
         }
 
         private static void SetServerSSLSecurity(IHttpRequest request, HttpClientHandler clientHandler)

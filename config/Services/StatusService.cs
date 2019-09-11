@@ -59,7 +59,9 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
             var deviceSimulationResult = await this.PingSimulationAsync(
                 deviceSimulationName,
                 this.servicesConfig.DeviceSimulationApiUrl);
-            SetServiceStatus(deviceSimulationName, deviceSimulationResult, result, errors);
+
+            // Andrew Schmidt -- disabling until we stand up simulation
+            //SetServiceStatus(deviceSimulationName, deviceSimulationResult, result, errors);
 
             // Check access to Auth -- commented out due to not using Auth ~ Andrew Schmidt
             /*var authResult = await this.PingServiceAsync(
