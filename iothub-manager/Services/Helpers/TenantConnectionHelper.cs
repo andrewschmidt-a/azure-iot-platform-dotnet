@@ -37,6 +37,9 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
         private IHttpContextAccessor _httpContextAccessor;
         private IServicesConfig _config;
 
+        private const string TENANT_KEY = "tenant:";
+        private const string IOTHUBCONNECTION_KEY = ":iotHubConnectionString";
+
         /// <summary>
         /// Create connection to appconfig resource
         /// </summary>
@@ -59,7 +62,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
         /// <returns>iothub connection string</returns>
         public string getIoTHubConnectionString()
         {
-            return appConfig.GetValue("tenant:"+ tenantName +":iotHubConnectionString");
+            return appConfig.GetValue(TENANT_KEY+ tenantName + IOTHUBCONNECTION_KEY);
         }
 
         public string getIoTHubName()
