@@ -4,6 +4,7 @@
     <LangVersion>7</LangVersion>
     <AssemblyName>Microsoft.Azure.IoTSolutions.IotHubManager.WebService</AssemblyName>
     <RootNamespace>Microsoft.Azure.IoTSolutions.IotHubManager.WebService</RootNamespace>
+    <StartupObject>Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Content Include="appsettings.ini">

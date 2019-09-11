@@ -135,7 +135,7 @@ export class AuthService {
           AuthService._userManager.storeUser(user)
           window.location = window.location.origin;
         })
-      }else{
+      } else {
         console.log("Must be logged in to switch tenants")
       }
     });

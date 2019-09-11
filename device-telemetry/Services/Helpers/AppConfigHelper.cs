@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using Azure.ApplicationModel.Configuration;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
+namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers
 {
     public interface IAppConfigurationHelper
     {

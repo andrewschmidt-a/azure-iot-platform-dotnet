@@ -42,7 +42,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers
 
             var sqlParameterCollection = new SqlParameterCollection();
 
-            var queryBuilder = new StringBuilder("SELECT TOP @top * FROM c WHERE (c[\"doc.schema\"] = @schemaName");
+            var queryBuilder = new StringBuilder("SELECT TOP @top * FROM c WHERE (c[\"_schema\"] = @schemaName");
             sqlParameterCollection.Add(new SqlParameter { Name = "@top", Value = skip + limit });
             sqlParameterCollection.Add(new SqlParameter { Name = "@schemaName", Value = schemaName });
 
