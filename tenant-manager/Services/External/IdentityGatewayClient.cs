@@ -1,7 +1,10 @@
 using System;
 using System.Net.Http;
+using System.Linq;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Azure.IoTSolutions.TenantManager.Services.Http;
+using HttpRequest = Microsoft.Azure.IoTSolutions.TenantManager.Services.Http.HttpRequest;
 using Microsoft.Azure.IoTSolutions.TenantManager.Services.Models;
 
 namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.External
@@ -10,13 +13,16 @@ namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.External
     {
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string URI_KEY = "ExternalDependencies:identitygatewaywebserviceurl";
+        private const string AZDS_ROUTE_KEY = "azds-route-as";
         private readonly IHttpClient httpClient;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly string serviceUri;
 
-        public IdentityGatewayClient(IHttpClient httpClient, IConfiguration config)
+        public IdentityGatewayClient(IHttpClient httpClient, IConfiguration config, IHttpContextAccessor httpContextAccessor)
         {
             this.httpClient = httpClient;
             this.serviceUri = config[URI_KEY];
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async void addUserToTenantAsync(string userId, string tenantId, string roles)
@@ -40,6 +46,11 @@ namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.External
             if (content != null)
             {
                 request.SetContent(content);
+            }
+
+            if (this.httpContextAccessor.HttpContext.Request.Headers.ContainsKey(AZDS_ROUTE_KEY))
+            {
+                request.Headers.Add(AZDS_ROUTE_KEY, this.httpContextAccessor.HttpContext.Request.Headers.First(p => p.Key == AZDS_ROUTE_KEY).Value.First());
             }
             
             return request;
