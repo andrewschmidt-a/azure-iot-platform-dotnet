@@ -119,7 +119,8 @@
     "permissions": "Permissions",
     "noPermissions": "No permissions found",
     "close": "Close",
-    "tenant": "Tenant"
+    "tenant": "Tenant",
+    "createTenant": "Create New Tenant"
   },
   "deviceGroupsFlyout": {
     "actions": "Actions",

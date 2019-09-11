@@ -26,6 +26,10 @@
     @include rem-fallback(padding, 16px);
   }
 
+  .create-tenant-button {
+    margin-top: 20px;
+  }
+
   @include themify($themes) {
     .profile-error { border-color: themed('colorAlert'); }
   }
