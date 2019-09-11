@@ -129,7 +129,7 @@ export class AuthService {
 
     AuthService._userManager.getUser().then(user => {
       if (user) {
-        HttpClient.post(`${ENDPOINT}connect/switch/${tenant}`).subscribe(new_token =>{
+        HttpClient.post(`${global.DeploymentConfig.issuer}/connect/switch/${tenant}`).subscribe(new_token =>{
           user.id_token = new_token;
           user.profile.tenant = tenant;
           AuthService._userManager.storeUser(user)
