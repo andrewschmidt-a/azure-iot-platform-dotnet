@@ -14,6 +14,9 @@ pr:
   branches:
     include:
     - master
+  paths:
+    include:
+    - device-telemetry/
 
 resources:
 - repo: self

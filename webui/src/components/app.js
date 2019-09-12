@@ -6,12 +6,15 @@ import { permissions } from 'services/models';
 import { svgs } from 'utilities';
 import { Protected } from 'components/shared';
 import Shell from "components/shell/shell";
+
+import Config from 'app.config';
 import { ManageDeviceGroupsContainer, SettingsContainer, HelpContainer, ProfileContainer } from 'components/shell/flyouts';
 import {
   DashboardContainer,
   DevicesContainer,
   RulesContainer,
   MaintenanceContainer,
+  TenantManagementContainer,
   PackagesContainer,
   DeploymentsRouter
 } from './pages';
@@ -76,6 +79,13 @@ class App extends Component {
         svg: svgs.tabs.maintenance,
         labelId: 'tabs.maintenance',
         component: MaintenanceContainer
+      },
+      {
+        to: '/tenantmanagement',
+        exact: false,
+        svg: svgs.tabs.create,
+        labelId: 'tabs.create',
+        component: TenantManagementContainer
       }
     ];
 
@@ -153,12 +163,14 @@ class App extends Component {
       openFlyout: this.state.openFlyout,
       ...this.props
     };
-
+    // Allow certain pages to have limited access (no nav bar, settings)
+    var limitedAccess = Config.limitedAccessUrls.includes(window.location.pathname);
+    console.log(limitedAccess)
     return (
       <Protected permission={permissions.readAll}>
         {
           (hasPermission) =>
-            <Shell denyAccess={!hasPermission} {...shellProps}>
+            <Shell denyAccess={!hasPermission && !limitedAccess} limitedAccess={limitedAccess} {...shellProps}>
               {deviceGroupFlyoutIsOpen && <ManageDeviceGroupsContainer />}
               {openFlyout === 'settings' && <SettingsContainer onClose={this.closeFlyout} />}
               {openFlyout === 'help' && <HelpContainer onClose={this.closeFlyout} />}

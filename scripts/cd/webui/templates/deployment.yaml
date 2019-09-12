@@ -43,7 +43,6 @@ spec:
               port: http
               periodSeconds: 120
               initialDelaySeconds: 300
-          {{- end }}
           env:
             {{- $root := . }}
             {{- range $ref, $values := .Values.secrets }}

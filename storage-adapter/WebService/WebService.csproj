@@ -6,6 +6,9 @@
     <RootNamespace>Microsoft.Azure.IoTSolutions.StorageAdapter.WebService</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Content Remove="appsettings.json" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="appsettings.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
