@@ -183,18 +183,6 @@ if($data.type -eq "delete"){
 
         # Gather the new output binding into the existing function.json
         $first8CharsOfTenantId = ($tenantId).SubString(0,8)
-        $newOutputBinding = @"
-            {
-            "type": "cosmosDB",
-            "name": "outputTenant$first8CharsOfTenantId",
-            "databaseName": "$($data.databaseName)",
-            "collectionName": "$cosmosCollectionName",
-            "createIfNotExists": true,
-            "connectionStringSetting": "$cosmosConnectionSetting",
-            "direction": "out",
-            "partitionKey": "$cosmosPartitionKey"
-            }
-"@ # This is not indented due to powershell wanting the end of a here-string with no whitespace before it
 
         $functionJson.bindings = $functionJson.bindings | Select-Object * -ExcludeProperty "outputTenant$first8CharsOfTenantId"
 

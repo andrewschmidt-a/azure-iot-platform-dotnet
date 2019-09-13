@@ -232,7 +232,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 telemetryEventHubConnString = this._config["TenantManagerService:telemetryEventHubConnString"],
                 twinChangeEventHubConnString = this._config["TenantManagerService:twinChangeEventHubConnString"],
                 lifecycleEventHubConnString = this._config["TenantManagerService:lifecycleEventHubConnString"],
-                appConfigConnectionString = this._config["appConfigConnectionString"],
+				CosmosDb = this._config["TenantManagerService:CosmosDb"],
+                appConfigConnectionString = this._config["PCS_APPLICATION_CONFIGURATION"],
                 setAppConfigEndpoint = this._config["TenantManagerService:setAppConfigEndpoint"],
                 token = authToken
             };

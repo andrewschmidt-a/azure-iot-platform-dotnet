@@ -46,13 +46,13 @@ catch {
 # Retrieve the data from the Webhook request body
 $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
 $appConfigConnectionString = $data.appConfigConnectionString
-$setAppConfigEndpoint=$data.setAppConfigEndpoint
+$setAppConfigEndpoint = $data.setAppConfigEndpoint
+$data.token
 
 $requestheader = @{
   "Authorization" = "Bearer " + $data.token
   "Content-Type" = "application/json"
 }
-
 
 $iotHubUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)?api-version=2019-03-22-preview"
 # Delete IoT Hub using Azure REST API
@@ -69,6 +69,38 @@ $appConfigBody = @"
      connectionstring : "$appConfigConnectionString", name : "$appConfigKey",
 }
 "@
+$appConfigBody
 $result = (Invoke-RestMethod -ContentType 'application/json' -Method delete -Headers $requestheader -Uri $setAppConfigEndpoint -Body $appConfigBody)
+
+$dbname = $data.databaseName
+$collectionNameTelemetry = $data.telemetryCollectionName
+$collectionNameTwin = $data.twinChangeCollectionName
+$collectionNameLife = $data.lifecycleCollectionName
+
+$requestheader = @{
+  "Authorization" = "Bearer " + $data.token
+  "Content-Type" = "application/json"
+}
+$CosmosDb = $data.CosmosDb
+$collectionName = $data.telemetryCollectionName
+$uri = $CosmosDb + $dbname + "/colls" + "/" + $collectionName
+$collectionName = $dbname + "/colls" + "/" + $collectionName
+#$hdrs = BuildHeaders -action DELETE -resType colls -resourceId $collectionName
+#Write-Host "resourceId $collectionName"
+$CosmosDb
+$uri
+$response = Invoke-RestMethod -Uri $uri -Method Delete -Headers $requestheader
+
+$collectionName = $data.twinChangeCollectionName
+$uri = $CosmosDb + $dbname + "/colls" + "/" + $collectionName
+$collectionName = $dbname + "/colls" + "/" + $collectionName
+$uri
+$response = Invoke-RestMethod -Uri $uri -Method Delete -Headers $requestheader
+
+$collectionName = $data.lifecycleCollectionName
+$uri = $CosmosDb + $dbname + "/colls" + "/" + $collectionName
+$collectionName = $dbname + "/colls" + "/" + $collectionName
+$uri
+$response = Invoke-RestMethod -Uri $uri -Method Delete -Headers $requestheader
 
 "Done"
