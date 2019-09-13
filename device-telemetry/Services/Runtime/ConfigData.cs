@@ -32,15 +32,16 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         private KeyVault keyVault;
 
         // Constants
-        private const string CLIENT_ID = "KeyVault:aadAppId";
-        private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
-        private const string KEY_VAULT_NAME = "KeyVault:name";
+        private const string CLIENT_ID = "Global:AzureActiveDirectory:aadAppId";
+        private const string CLIENT_SECRET = "Global:AzureActiveDirectory:aadAppSecret";
+        private const string KEY_VAULT_NAME = "Global:KeyVault:name";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
         private const string ALLOWED_ACTION_KEY = "Global:Permissions";
 
         private readonly List<string> appConfigKeys = new List<string>
         {
             "Global",
+            "Global:KeyVault",
             "Global:ClientAuth",
             "Global:CosmosDb",
             "Global:ClientAuth:JWT",

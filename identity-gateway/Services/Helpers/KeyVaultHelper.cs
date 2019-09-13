@@ -17,9 +17,9 @@ namespace IdentityGateway.Services.Helpers
     /// </summary>
     public class KeyVaultHelper : IDisposable
     {
-        const string KeyVaultAppId = "KeyVault:aadappid";
-        const string KeyVaultSecret = "KeyVault:aadappsecret";
-        const string KeyVaultName = "KeyVault:name";
+        const string KeyVaultAppId = "Global:AzureActiveDirectory:aadappid";
+        const string KeyVaultSecret = "Global:AzureActiveDirectory:aadappsecret";
+        const string KeyVaultName = "Global:KeyVault:name";
         const string TenantID = "Global:AzureActiveDirectory:aadtenantid";
         const string IdentityGatewayPrivateKey = "IdentityGatewayPrivateKey";
 

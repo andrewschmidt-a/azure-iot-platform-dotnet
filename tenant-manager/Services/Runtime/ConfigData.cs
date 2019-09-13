@@ -28,9 +28,9 @@ namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.Runtime
         private KeyVault keyVault;
 
         // Constants
-        private const string CLIENT_ID = "KeyVault:aadAppId";
-        private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
-        private const string KEY_VAULT_NAME = "KeyVault:name";
+        private const string CLIENT_ID = "Global:AzureActiveDirectory:aadAppId";
+        private const string CLIENT_SECRET = "Global:AzureActiveDirectory:aadAppSecret";
+        private const string KEY_VAULT_NAME = "Global:KeyVault:name";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
 
         public ConfigData(ILogger logger)
