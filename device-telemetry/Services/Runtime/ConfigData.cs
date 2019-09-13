@@ -130,10 +130,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
             {
                 throw new Exception("One of the required key vault keys was not configured correctly.");
             }
-            if (String.IsNullOrEmpty(clientId) || String.IsNullOrEmpty(clientSecret) || String.IsNullOrEmpty(keyVaultName))
-            {
-                throw new Exception("One of the required key vault keys was not configured correctly.");
-            }
 
             // Initailize key vault
             this.keyVault = new KeyVault(keyVaultName, clientId, clientSecret, this.log);
