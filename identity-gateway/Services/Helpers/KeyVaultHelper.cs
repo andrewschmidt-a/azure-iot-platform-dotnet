@@ -35,7 +35,17 @@ namespace IdentityGateway.Services.Helpers
 
             this.client = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
             this._config = config;
-
+            List<string> requiredKeys = new List<string>
+            {
+                KeyVaultAppId,
+                KeyVaultSecret,
+                KeyVaultName,
+                TenantID
+            };
+            if (requiredKeys.Any(key => this._config[key] == null))
+            {
+                throw new Exception("One of the required Key vault secrets is not configured correctly");
+            }
         }
         
         public string getKeyVaultSecretIdentifier(string secret)

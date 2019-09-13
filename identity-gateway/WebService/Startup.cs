@@ -44,11 +44,6 @@ namespace IdentityGateway.WebService
             // Add app config settings to the configuration builder
             builder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
             Configuration = builder.Build();
-            var x = Configuration.AsEnumerable().ToList();
-            foreach (var keyval in x)
-            {
-                Console.WriteLine($"{keyval.Key}, {keyval.Value}");
-            }
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
