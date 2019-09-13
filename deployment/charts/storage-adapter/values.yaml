@@ -53,6 +53,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
+#need to add the endpoint before deployment of chart
 serviceSecret:
-  PCS_APPLICATION_CONFIGURATION: test
+  PCS_APPLICATION_CONFIGURATION:
