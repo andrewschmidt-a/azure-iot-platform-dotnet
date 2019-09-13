@@ -20,7 +20,7 @@ import './profile.scss';
 const Section = Flyout.Section;
 const jwt_decode = require('jwt-decode');
 export const Profile = (props) => {
-  const { t, user, logout, switchTenant, onClose } = props;
+  const { t, user, logout, switchTenant, createTenant, onClose } = props;
 
   const roleArray = Array.from(user.roles);
   const permissionArray = Array.from(user.permissions);
@@ -63,19 +63,20 @@ export const Profile = (props) => {
               <Section.Content>
                 {/* Fill in with programmable tenant options list */}
                 {
-                  (tenantArray.length === 0)
-                    ? t('profileFlyout.noRoles')
+                  (!tenantArray || tenantArray.length === 0)
+                    ? t('profileFlyout.noTenant')
                     :
                     <Grid>
                       {
                         tenantArray.map((tenantGuid, idx) =>
                           <Row key={idx}>
                             <Cell>{
-                              (tenantGuid == currentTenant) ? tenantGuid : <a onClick={() => switchTenant(tenantGuid)} href="#">{tenantGuid}</a>
+                              (tenantGuid === currentTenant) ? tenantGuid : <a onClick={() => switchTenant(tenantGuid)} href="#">{tenantGuid}</a>
                             }</Cell>
                           </Row>
                         )
                       }
+                      <Cell><Btn className="create-tenant-button" primary={true} onClick={createTenant}>{t('profileFlyout.createTenant')}</Btn></Cell>
                     </Grid>
                 }
               </Section.Content>

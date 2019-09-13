@@ -14,6 +14,9 @@ pr:
   branches:
     include:
     - master
+  paths:
+    include:
+    - device-telemetry/
 
 resources:
 - repo: self
@@ -35,5 +38,6 @@ stages:
       inputs:
         command: build
         dockerfile: '$(Build.SourcesDirectory)/device-telemetry/WebService/Dockerfile'
+        buildContext: '$(Build.SourcesDirectory)/device-telemetry'
         tags: |
           $(tag)

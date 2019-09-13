@@ -20,8 +20,9 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
 
     public class ServicesConfig : IServicesConfig
     {
-        private const string TENANT_KEY = "Tenant:";
-        private const string COLLECTION_KEY = "Collection";
+        private const string APPPLICATION_KEY = "StorageAdapter:";
+        private const string TENANT_KEY = "tenant:";
+        private const string COLLECTION_KEY = "collection";
 
         public bool AuthRequired { get; set; }
         public string StorageType { get; set; }

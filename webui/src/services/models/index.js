@@ -10,3 +10,4 @@ export * from './configModels';
 export * from './gitHubModels';
 export * from './diagnosticsModels';
 export * from './logEventModels';
+export * from './tenantModels';

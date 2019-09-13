@@ -129,7 +129,7 @@ export class AuthService {
 
     AuthService._userManager.getUser().then(user => {
       if (user) {
-        HttpClient.post(`${ENDPOINT}connect/switch/${tenant}`).subscribe(new_token =>{
+        HttpClient.post(`${global.DeploymentConfig.issuer}/connect/switch/${tenant}`).subscribe(new_token =>{
           user.id_token = new_token;
           user.profile.tenant = tenant;
           AuthService._userManager.storeUser(user)
@@ -153,6 +153,10 @@ export class AuthService {
           // Following two should be Arrays but claims will return a string if only one value.
           var roles = typeof(user.profile.role) == 'string'?[user.profile.role]:user.profile.role;
           var availableTenants = typeof(user.profile.available_tenants) == 'string'?[user.profile.available_tenants]:user.profile.available_tenants
+
+          if(roles == undefined){
+            roles = []
+          }
 
           // Followed format but really shouldnt the data structure be a Map? not a list? -- Andrew Schmidt
           var flattenedPermissions = Policies.filter(policy => roles.indexOf(policy.Role) > -1).map(policy => policy.AllowedActions).flat();
