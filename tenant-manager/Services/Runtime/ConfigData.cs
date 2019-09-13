@@ -90,6 +90,10 @@ namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.Runtime
             var clientId = this.GetEnvironmentVariable(CLIENT_ID, string.Empty);
             var clientSecret = this.GetEnvironmentVariable(CLIENT_SECRET, string.Empty);
             var keyVaultName = this.GetEnvironmentVariable(KEY_VAULT_NAME, string.Empty);
+            if (String.IsNullOrEmpty(clientId) || String.IsNullOrEmpty(clientSecret) || String.IsNullOrEmpty(keyVaultName))
+            {
+                throw new Exception("One of the required key vault keys was not configured correctly.");
+            }
 
             // Initailize key vault
             this.keyVault = new KeyVault(keyVaultName, clientId, clientSecret, this.log);
