@@ -17,9 +17,9 @@ namespace IdentityGateway.Services.Helpers
     /// </summary>
     public class KeyVaultHelper : IDisposable
     {
-        const string KeyVaultAppId = "KeyVault:aadappid";
-        const string KeyVaultSecret = "KeyVault:aadappsecret";
-        const string KeyVaultName = "KeyVault:name";
+        const string KeyVaultAppId = "Global:AzureActiveDirectory:aadappid";
+        const string KeyVaultSecret = "Global:AzureActiveDirectory:aadappsecret";
+        const string KeyVaultName = "Global:KeyVault:name";
         const string TenantID = "Global:AzureActiveDirectory:aadtenantid";
         const string IdentityGatewayPrivateKey = "IdentityGatewayPrivateKey";
 
@@ -35,7 +35,17 @@ namespace IdentityGateway.Services.Helpers
 
             this.client = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
             this._config = config;
-
+            List<string> requiredKeys = new List<string>
+            {
+                KeyVaultAppId,
+                KeyVaultSecret,
+                KeyVaultName,
+                TenantID
+            };
+            if (requiredKeys.Any(key => this._config[key] == null))
+            {
+                throw new Exception("One of the required Key vault secrets is not configured correctly");
+            }
         }
         
         public string getKeyVaultSecretIdentifier(string secret)
