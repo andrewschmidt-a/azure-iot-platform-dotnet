@@ -47,6 +47,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
             "Global:ClientAuth:JWT",
             "Global:AzureActiveDirectory",
             "Global:Permissions",
+            "Global:Permissions:admin",
+            "Global:Permissions:readonly",
             "TelemetryService",
             "TelemetryService:TimeSeries",
             "TelemetryService:CosmosDb",

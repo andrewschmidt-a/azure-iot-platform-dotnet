@@ -44,6 +44,8 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime
             "Global:ClientAuth:JWT",
             "Global:AzureActiveDirectory",
             "Global:Permissions",
+            "Global:Permissions:admin",
+            "Global:Permissions:readonly",
             "IothubManagerService",
             "IothubManagerService:DevicePropertiesCache",
             "ExternalDependencies",

@@ -43,6 +43,8 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
             "Global:ClientAuth",
             "Global:ClientAuth:JWT",
             "Global:Permissions",
+            "Global:Permissions:admin",
+            "Global:Permissions:readonly",
             "ConfigService",
             "ConfigService:Actions",
             "ExternalDependencies",
