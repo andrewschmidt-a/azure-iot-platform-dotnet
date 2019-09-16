@@ -38,6 +38,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
         private readonly List<string> appConfigKeys = new List<string>
         {
             "Global",
+            "Global:AzureActiveDirectory",
             "Global:KeyVault",
             "Global:ClientAuth",
             "Global:ClientAuth:JWT",
