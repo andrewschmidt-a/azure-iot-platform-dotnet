@@ -200,7 +200,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             string telemetryCollectionName = "telemetry-" + tenantGuid;
             string twinChangeCollectionName = "twin-change-" + tenantGuid;
             string lifecycleCollectionName = "lifecycle-" + tenantGuid;
-
+            string pcsStorageName = "pcsCollection-" + tenantGuid;
             //trigger delete iothub runbook
             var requestBody = new
             {
@@ -235,7 +235,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 await cosmosHelper.DeleteCosmosDbCollection(dbIdTms, telemetryCollectionName);
                 await cosmosHelper.DeleteCosmosDbCollection(dbIdTms, twinChangeCollectionName);
                 await cosmosHelper.DeleteCosmosDbCollection(dbIdTms, lifecycleCollectionName);
-                await cosmosHelper.DeleteCosmosDbCollection(dbIdStorage, lifecycleCollectionName);
+                await cosmosHelper.DeleteCosmosDbCollection(dbIdStorage, pcsStorageName);
             }catch(Exception e)
             {
                 LogException(e);
