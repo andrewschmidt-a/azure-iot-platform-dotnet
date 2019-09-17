@@ -225,7 +225,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             try
             {
-                var response = await client.PostAsync(deleteIotHubWebHookUrl, bodyContent);
+                await client.PostAsync(deleteIotHubWebHookUrl, bodyContent);
             }catch(Exception e)
             {
                 LogException(e);
