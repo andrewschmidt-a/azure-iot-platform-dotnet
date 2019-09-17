@@ -99,7 +99,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             // Update the user table in table storage to give the requesting user an admin role to the new tenant
             var userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
-            var role = "[\"admin\"]";
+            var role = @"[""admin""]";
             var userTenant = new UserTenantModel(userId, tenantGuid, role);
             await TableStorageHelper<UserTenantModel>.WriteToTableAsync(storageAccountConnectionString, "user", userTenant);
 
