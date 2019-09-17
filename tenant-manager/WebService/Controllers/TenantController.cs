@@ -66,10 +66,10 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             // Generate new tenant information
             string tenantGuid = Guid.NewGuid().ToString();
-            string iotHubName = "iothub-" + tenantGuid.Substring(0, 8);
-            string telemetryCollectionName = "telemetry-" + tenantGuid;
-            string twinChangeCollectionName = "twin-change-" + tenantGuid;
-            string lifecycleCollectionName = "lifecycle-" + tenantGuid;
+            string iotHubName = $"iothub-{tenantGuid.Substring(0, 8)}";
+            string telemetryCollectionName = $"telemetry-{tenantGuid}";
+            string twinChangeCollectionName = $"twin-change-{tenantGuid}";
+            string lifecycleCollectionName = $"lifecycle-{tenantGuid}";
 
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantGuid, iotHubName, telemetryCollectionName);
@@ -114,11 +114,11 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             // Write tenant info cosmos db collection name to app config
             var appConfgiClient = new ConfigurationClient(this._config["PCS_APPLICATION_CONFIGURATION"]);
-            var PcsCollectionSetting = new ConfigurationSetting("tenant:" + tenantGuid + ":pcs-collection", tenantGuid + "-pcsCollection");
+            var PcsCollectionSetting = new ConfigurationSetting($"tenant:{tenantGuid}:pcs-collection", $"pcs-{tenantGuid}");
             appConfgiClient.Set(PcsCollectionSetting);
 
             // Write telemetry cosmos db collection name to app config
-            var telemetryCollectionSetting = new ConfigurationSetting("tenant:" + tenantGuid + ":telemetry-collection", "telemetry-" + tenantGuid);
+            var telemetryCollectionSetting = new ConfigurationSetting($"tenant:{tenantGuid}:telemetry-collection", $"telemetry-{tenantGuid}");
             appConfgiClient.Set(telemetryCollectionSetting);
 
             var response = new {
@@ -218,6 +218,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 token = authToken
             };
 
+
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             string dbIdTms = this._config["TenantManagerService:databaseName"];
             string dbIdStorage = this._config["StorageAdapter:documentDb"];
@@ -239,6 +240,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             {
                 LogException(e);
             }
+            var response = await client.PostAsync(deleteIotHubWebHookUrl, bodyContent);
 
 
             return Ok();
