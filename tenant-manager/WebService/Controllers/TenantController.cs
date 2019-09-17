@@ -71,6 +71,13 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             string twinChangeCollectionName = $"twin-change-{tenantGuid}";
             string lifecycleCollectionName = $"lifecycle-{tenantGuid}";
 
+            string dbIdTms = this._config["TenantManagerService:databaseName"];
+            await cosmosHelper.CreateCosmosDbCollection(dbIdTms, telemetryCollectionName);
+            await cosmosHelper.CreateCosmosDbCollection(dbIdTms, twinChangeCollectionName);
+            await cosmosHelper.CreateCosmosDbCollection(dbIdTms, lifecycleCollectionName);
+
+
+
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantGuid, iotHubName, telemetryCollectionName);
             await TableStorageHelper<TenantModel>.WriteToTableAsync(storageAccountConnectionString, "tenant", tenant);
@@ -185,8 +192,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
             try { 
-            TenantModel tenant = TableStorageHelper<TenantModel>.ReadFromTableAsync(storageAccountConnectionString, "tenant", partitionKey, tenantId).Result;
-            await TableStorageHelper<TenantModel>.DeleteEntityAsync(storageAccountConnectionString, "tenant", tenant);
+                TenantModel tenant = TableStorageHelper<TenantModel>.ReadFromTableAsync(storageAccountConnectionString, "tenant", partitionKey, tenantId).Result;
+                await TableStorageHelper<TenantModel>.DeleteEntityAsync(storageAccountConnectionString, "tenant", tenant);
             }catch(Exception e)
             {
                 LogException(e);
