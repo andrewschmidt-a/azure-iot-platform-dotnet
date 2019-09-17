@@ -11,7 +11,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Models
         public string IotHubConnectionString { get; set; }
         public string TelemetryCollectionName { get; set; }
         public bool IsIotHubDeployed { get; set; }
-        public bool AreFunctionsUpdated { get; set; }
 
         public TenantModel (string id, string iotHubName, string telemetryCollectionName)
         {
@@ -23,7 +22,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Models
             this.IotHubConnectionString = "";
             this.TelemetryCollectionName = telemetryCollectionName;
             this.IsIotHubDeployed = false;
-            this.AreFunctionsUpdated = false;
         }
 
         public TenantModel () { }
