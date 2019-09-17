@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents;
+using System.Collections.ObjectModel;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
 {
@@ -23,6 +24,12 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
         public async Task DeleteCosmosDbCollection(string database, string collectionPrefix)
         {
             await client.DeleteDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(database, collectionPrefix));
+        }
+
+        public async Task CreateCosmosDbCollection(string database, string collectionId)
+        {
+            DocumentCollection collection = new DocumentCollection { Id = collectionId, PartitionKey = new PartitionKeyDefinition { Paths = new Collection<string> { "/_deviceId" } } };
+            await client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(database), collection);
         }
 
         private void LogException(Exception e)
