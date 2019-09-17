@@ -68,12 +68,20 @@ export class IoTHubManagerService {
 
   /** Returns the account's device group filters */
   static getDeviceProperties() {
+    // return Observable
+    //   .forkJoin(
+    //     HttpClient.get(`${ENDPOINT}deviceproperties`),
+    //     HttpClient.get(`${Config.serviceUrls.deviceSimulation}devicemodelproperties`)
+    //   )
+    //   .map(([iotResponse, dsResponse]) => toDevicePropertiesModel(iotResponse, dsResponse));
+
+    // Stop Gap until Device Sim is online
     return Observable
       .forkJoin(
-        HttpClient.get(`${ENDPOINT}deviceproperties`),
-        HttpClient.get(`${Config.serviceUrls.deviceSimulation}devicemodelproperties`)
+        HttpClient.get(`${ENDPOINT}deviceproperties`)//,
+        //HttpClient.get(`${Config.serviceUrls.deviceSimulation}devicemodelproperties`)
       )
-      .map(([iotResponse, dsResponse]) => toDevicePropertiesModel(iotResponse, dsResponse));
+      .map(([iotResponse]) => toDevicePropertiesModel(iotResponse, iotResponse));
   }
 
   /** Returns deployments */

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Microsoft.Azure.IoTSolutions.IoTHubManager.AppConfiguration;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime
 {
@@ -29,11 +29,28 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime
         private KeyVault keyVault;
 
         // Constants
-        private const string CLIENT_ID = "KeyVault:aadAppId";
-        private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
-        private const string KEY_VAULT_NAME = "KeyVault:name";
+        private const string CLIENT_ID = "Global:AzureActiveDirectory:aadAppId";
+        private const string CLIENT_SECRET = "Global:AzureActiveDirectory:aadAppSecret";
+        private const string KEY_VAULT_NAME = "Global:KeyVault:name";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
-        private const string ALLOWED_ACTION_KEY = "Global:Permissions";
+        private const string ALLOWED_ACTION_KEY = "Global:Permissions";        
+        
+        // Add new keys that are necessary for this service
+        private readonly List<string> appConfigKeys = new List<string>
+        {
+            "Global",
+            "Global:KeyVault",
+            "Global:ClientAuth",
+            "Global:ClientAuth:JWT",
+            "Global:AzureActiveDirectory",
+            "Global:Permissions",
+            "Global:Permissions:admin",
+            "Global:Permissions:readonly",
+            "IothubManagerService",
+            "IothubManagerService:DevicePropertiesCache",
+            "ExternalDependencies",
+            // ...
+        };
         
         public ConfigData(ILogger logger)
         {
@@ -48,8 +65,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime
             ;
             configurationBuilder.AddEnvironmentVariables();
 
-            this.configuration = configurationBuilder.Build();
-            configurationBuilder.AddAzureAppConfiguration(this.configuration[APP_CONFIGURATION]);
+            // build configuration with environment variables
+            var preConfig = configurationBuilder.Build();
+            // Add app config settings to the configuration builder
+            configurationBuilder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
             this.configuration = configurationBuilder.Build();
 
             // Set up Key Vault
@@ -103,6 +122,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime
             var clientId = this.GetEnvironmentVariable(CLIENT_ID, string.Empty);
             var clientSecret = this.GetEnvironmentVariable(CLIENT_SECRET, string.Empty);
             var keyVaultName = this.GetEnvironmentVariable(KEY_VAULT_NAME, string.Empty);
+            if (String.IsNullOrEmpty(clientId) || String.IsNullOrEmpty(clientSecret) || String.IsNullOrEmpty(keyVaultName))
+            {
+                throw new Exception("One of the required key vault keys was not configured correctly.");
+            }
 
             // Initailize key vault
             this.keyVault = new KeyVault(keyVaultName, clientId, clientSecret, this.log);

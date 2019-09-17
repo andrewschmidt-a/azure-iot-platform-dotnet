@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
+using Microsoft.Azure.IoTSolutions.UIConfig.AppConfiguration;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
 {
@@ -29,11 +29,26 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
         private KeyVault keyVault;
 
         // Constants
-        private const string CLIENT_ID = "KeyVault:aadAppId";
-        private const string CLIENT_SECRET = "KeyVault:aadAppSecret";
-        private const string KEY_VAULT_NAME = "KeyVault:name";
+        private const string CLIENT_ID = "Global:AzureActiveDirectory:aadAppId";
+        private const string CLIENT_SECRET = "Global:AzureActiveDirectory:aadAppSecret";
+        private const string KEY_VAULT_NAME = "Global:KeyVault:name";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
         private const string ALLOWED_ACTION_KEY = "Global:Permissions";
+
+        private readonly List<string> appConfigKeys = new List<string>
+        {
+            "Global",
+            "Global:AzureActiveDirectory",
+            "Global:KeyVault",
+            "Global:ClientAuth",
+            "Global:ClientAuth:JWT",
+            "Global:Permissions",
+            "Global:Permissions:admin",
+            "Global:Permissions:readonly",
+            "ConfigService",
+            "ConfigService:Actions",
+            "ExternalDependencies",
+        };
 
         public ConfigData(ILogger logger)
         {
@@ -48,9 +63,10 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
 #endif
             .AddEnvironmentVariables();
 
-            this.configuration = configurationBuilder.Build();
-            configurationBuilder.AddAzureAppConfiguration(this.configuration[APP_CONFIGURATION]);
-
+            // build configuration with environment variables
+            var preConfig = configurationBuilder.Build();
+            // Add app config settings to the configuration builder
+            configurationBuilder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
             this.configuration = configurationBuilder.Build();
             // Set up Key Vault
             this.SetUpKeyVault();
@@ -104,11 +120,15 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
             var clientId = this.GetEnvironmentVariable(CLIENT_ID, string.Empty);
             var clientSecret = this.GetEnvironmentVariable(CLIENT_SECRET, string.Empty);
             var keyVaultName = this.GetEnvironmentVariable(KEY_VAULT_NAME, string.Empty);
+            if (String.IsNullOrEmpty(clientId) || String.IsNullOrEmpty(clientSecret) || String.IsNullOrEmpty(keyVaultName))
+            {
+                throw new Exception("One of the required key vault keys was not configured correctly.");
+            }
 
             // Initailize key vault
             this.keyVault = new KeyVault(keyVaultName, clientId, clientSecret, this.log);
         }
-
+        
         private string GetSecrets(string key, string defaultValue = "")
         {
             string value = string.Empty;
