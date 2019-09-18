@@ -147,7 +147,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             var appConfigClient = new ConfigurationClient(this._config[APP_CONFIGURATION_KEY]);
             foreach (string collection in this.tenantCollections)
             {
-                var collectionSetting = new ConfigurationSetting(String.Format(this.appConfigCollectionKeyFormat, tenantGuid, collection), $"{collection}-{tenantGuid}");
+                string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantGuid, collection);
+                string collectionId = $"{collection}-{tenantGuid}";
+                var collectionSetting = new ConfigurationSetting(collectionKey, collectionId);
                 appConfigClient.Set(collectionSetting);
             }
 
@@ -265,7 +267,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 var appConfigClient = new ConfigurationClient(this._config[APP_CONFIGURATION_KEY]);
                 foreach (string collection in this.tenantCollections)
                 {
-                    string collectionId = appConfigClient.Get(String.Format(this.appConfigCollectionKeyFormat, tenantGuid, collection)).Value.Value;
+                    string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantGuid, collection);
+                    string collectionId = appConfigClient.Get(collectionKey).Value.Value;
                     // pcs colleciton uses a different database than the other collections
                     string databaseId = collection == "pcs" ? dbIdStorage : dbIdTms;
                     await cosmosHelper.DeleteCosmosDbCollection(databaseId, collectionId);
