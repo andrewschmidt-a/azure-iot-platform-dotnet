@@ -135,6 +135,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             await TableStorageHelper<UserTenantModel>.WriteToTableAsync(storageAccountConnectionString, USER_TABLE_ID, userTenant);
 
             // Update the userSettings table with the lastUsedTenant if there isn't already a lastUsedTenant
+            // TODO: Use IDGateway
             var lastUsedTenant = TableStorageHelper<UserSettingsModel>.ReadFromTableAsync(storageAccountConnectionString, USER_SETTINGS_TABLE_ID, userId, "LastUsedTenant").Result;
             if (lastUsedTenant == null)
             {
@@ -171,6 +172,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             var storageAccountConnectionString = this.keyVaultHelper.getSecretAsync(STORAGE_ACCOUNT_CONNECTION_STRING_KEY).Result;
 
             // Verify that the user has access to the specified tenant
+            // TODO: Use IDGateway
             var userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
             var userTenant = await TableStorageHelper<UserTenantModel>.ReadFromTableAsync(storageAccountConnectionString, USER_TABLE_ID, userId, tenantId);
 
@@ -201,6 +203,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             string deleteIotHubWebHookUrl = secretTasks[1].Result;
 
             // Verify that the user has access to the specified tenant
+            // TODO: Use IDGateway
             var userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
             var userTenant = TableStorageHelper<UserTenantModel>.ReadFromTableAsync(storageAccountConnectionString, USER_TABLE_ID, userId, tenantId).Result;
 
