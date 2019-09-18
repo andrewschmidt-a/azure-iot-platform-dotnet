@@ -26,17 +26,17 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private KeyVaultHelper keyVaultHelper;
         private TokenHelper tokenHelper;
-        private IIdentityGatewayClient idGatewayClient;
+        //private IIdentityGatewayClient idGatewayClient;
         private CosmosHelper cosmosHelper;
 
 
-        public TenantController(IConfiguration config, IHttpContextAccessor httpContextAccessor, IIdentityGatewayClient identityGatewayClient)
+        public TenantController(IConfiguration config, IHttpContextAccessor httpContextAccessor)
         {
             this._config = config;
             this._httpContextAccessor = httpContextAccessor;
             this.keyVaultHelper = new KeyVaultHelper(this._config);
             this.tokenHelper = new TokenHelper(this._config);
-            this.idGatewayClient = identityGatewayClient;
+            //this.idGatewayClient = identityGatewayClient;
             string cosmosDb = this._config["TenantManagerService:CosmosDb"];
             string cosmosDbToken = this._config["TenantManagerService:cosmoskey"];
             this.cosmosHelper = new CosmosHelper(cosmosDb, cosmosDbToken);
