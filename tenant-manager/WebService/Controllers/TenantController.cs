@@ -26,18 +26,17 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private KeyVaultHelper keyVaultHelper;
         private TokenHelper tokenHelper;
-        //private IIdentityGatewayClient idGatewayClient;
+        private IIdentityGatewayClient idGatewayClient;
         private CosmosHelper cosmosHelper;
 
 
-        public TenantController(IConfiguration config, IHttpContextAccessor httpContextAccessor
-                )
+        public TenantController(IConfiguration config, IHttpContextAccessor httpContextAccessor, IIdentityGatewayClient identityGatewayClient)
         {
             this._config = config;
             this._httpContextAccessor = httpContextAccessor;
             this.keyVaultHelper = new KeyVaultHelper(this._config);
             this.tokenHelper = new TokenHelper(this._config);
-            //this.idGatewayClient = identityGatewayClient;
+            this.idGatewayClient = identityGatewayClient;
             string cosmosDb = this._config["TenantManagerService:CosmosDb"];
             string cosmosDbToken = this._config["TenantManagerService:cosmoskey"];
             this.cosmosHelper = new CosmosHelper(cosmosDb, cosmosDbToken);
@@ -70,13 +69,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             string telemetryCollectionName = $"telemetry-{tenantGuid}";
             string twinChangeCollectionName = $"twin-change-{tenantGuid}";
             string lifecycleCollectionName = $"lifecycle-{tenantGuid}";
-
-            string dbIdTms = this._config["TenantManagerService:databaseName"];
-            await cosmosHelper.CreateCosmosDbCollection(dbIdTms, telemetryCollectionName);
-            await cosmosHelper.CreateCosmosDbCollection(dbIdTms, twinChangeCollectionName);
-            await cosmosHelper.CreateCosmosDbCollection(dbIdTms, lifecycleCollectionName);
-
-
 
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantGuid, iotHubName, telemetryCollectionName);
@@ -228,8 +220,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 token = authToken
             };
 
-
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            //Grab information about cosmosdb
             string dbIdTms = this._config["TenantManagerService:databaseName"];
             string dbIdStorage = this._config["StorageAdapter:documentDb"];
 
@@ -251,7 +243,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 LogException(e);
             }
             var response = await client.PostAsync(deleteIotHubWebHookUrl, bodyContent);
-
 
             return Ok();
         }
