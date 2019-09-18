@@ -72,35 +72,4 @@ $appConfigBody = @"
 $appConfigBody
 $result = (Invoke-RestMethod -ContentType 'application/json' -Method delete -Headers $requestheader -Uri $setAppConfigEndpoint -Body $appConfigBody)
 
-$dbname = $data.databaseName
-$collectionNameTelemetry = $data.telemetryCollectionName
-$collectionNameTwin = $data.twinChangeCollectionName
-$collectionNameLife = $data.lifecycleCollectionName
-
-$requestheader = @{
-  "Authorization" = "Bearer " + $data.token
-  "Content-Type" = "application/json"
-}
-$CosmosDb = $data.CosmosDb
-$collectionName = $data.telemetryCollectionName
-$uri = $CosmosDb + $dbname + "/colls" + "/" + $collectionName
-$collectionName = $dbname + "/colls" + "/" + $collectionName
-#$hdrs = BuildHeaders -action DELETE -resType colls -resourceId $collectionName
-#Write-Host "resourceId $collectionName"
-$CosmosDb
-$uri
-$response = Invoke-RestMethod -Uri $uri -Method Delete -Headers $requestheader
-
-$collectionName = $data.twinChangeCollectionName
-$uri = $CosmosDb + $dbname + "/colls" + "/" + $collectionName
-$collectionName = $dbname + "/colls" + "/" + $collectionName
-$uri
-$response = Invoke-RestMethod -Uri $uri -Method Delete -Headers $requestheader
-
-$collectionName = $data.lifecycleCollectionName
-$uri = $CosmosDb + $dbname + "/colls" + "/" + $collectionName
-$collectionName = $dbname + "/colls" + "/" + $collectionName
-$uri
-$response = Invoke-RestMethod -Uri $uri -Method Delete -Headers $requestheader
-
 "Done"
