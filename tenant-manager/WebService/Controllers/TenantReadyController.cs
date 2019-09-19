@@ -52,7 +52,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             TenantModel tenant = TableStorageHelper<TenantModel>.ReadFromTableAsync(storageAccountConnectionString, "tenant", partitionKey, tenantId).Result;
 
             // Check whether the tenant is done deploying or not
-            if (tenant != null && tenant.IsIotHubDeployed && tenant.AreFunctionsUpdated) {
+            if (tenant != null && tenant.IsIotHubDeployed) {
                 return Ok(true);
             }
 

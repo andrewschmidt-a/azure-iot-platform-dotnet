@@ -1,0 +1,3 @@
+[submodule "azure-iot-messaging-functions"]
+	path = azure-iot-messaging-functions
+	url = git@github.mmm.com:MMM/azure-iot-messaging-functions.git
