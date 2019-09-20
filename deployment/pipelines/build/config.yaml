@@ -30,51 +30,6 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
   steps:
-  - task: Docker@2
-    displayName: Build an image
+  - task: DotNetCoreInstaller@0
     inputs:
-      command: build
-      dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
-      buildContext: '$(Build.SourcesDirectory)/config'
-      tags: |
-        $(tag)
-
-- job: UnitTest
-  displayName: UnitTest
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Test
-    inputs:
-      command: test
-      restoreDirectory: $(Build.SourcesDirectory)/config/WebService'
-      workingDirectory: '$(Build.SourcesDirectory)/config/WebService.test'
-
-# - job: Integration Test
-#   displayName: Integration Test
-#   pool:
-#     vmImage: 'ubuntu-latest'
-#   steps:
-#   - task: Docker@2
-#     displayName: Build an image
-#     inputs:
-#       command: build
-#       dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
-#       buildContext: '$(Build.SourcesDirectory)/config'
-#       tags: |
-#         $(tag)
-
-# - job: Deploy Docker Image to ACR
-#   displayName: Deploy Docker Image to ACR
-#   pool:
-#     vmImage: 'ubuntu-latest'
-#   steps:
-#   - task: Docker@2
-#     displayName: Build an image
-#     inputs:
-#       command: build
-#       dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
-#       buildContext: '$(Build.SourcesDirectory)/config'
-#       tags: |
-#         $(tag)
+      version: '2.0'
