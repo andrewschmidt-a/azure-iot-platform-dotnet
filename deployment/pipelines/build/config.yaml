@@ -47,4 +47,4 @@ jobs:
     displayName: Test
     inputs:
       command: test
-      projects: '**/*Tests/*.csproj'
+      projects: $(Build.SourcesDirectory)/config/*Tests/*.csproj'
