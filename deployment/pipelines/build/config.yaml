@@ -30,6 +30,10 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
   steps:
+  - task: DotNetCoreInstaller@0
+    inputs:
+      version: '2.0.9'
+
   - task: DotNetCoreCLI@2
     displayName: Build
     inputs:
