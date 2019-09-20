@@ -1,0 +1,80 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - config/
+
+pr:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - config/
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+
+
+- job: Build
+  displayName: Build
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
+  - task: Docker@2
+    displayName: Build an image
+    inputs:
+      command: build
+      dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+      buildContext: '$(Build.SourcesDirectory)/config'
+      tags: |
+        $(tag)
+
+# - job: Unit Test
+#   displayName: Unit Test
+#   pool:
+#     vmImage: 'ubuntu-latest'
+#   steps:
+#   - task: DotNetCoreCLI@2
+#     displayName: Test
+#     inputs:
+#       command: test
+#       restoredirectory:
+#       workingDirectory:
+
+# - job: Integration Test
+#   displayName: Integration Test
+#   pool:
+#     vmImage: 'ubuntu-latest'
+#   steps:
+#   - task: Docker@2
+#     displayName: Build an image
+#     inputs:
+#       command: build
+#       dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+#       buildContext: '$(Build.SourcesDirectory)/config'
+#       tags: |
+#         $(tag)
+
+# - job: Deploy Docker Image to ACR
+#   displayName: Deploy Docker Image to ACR
+#   pool:
+#     vmImage: 'ubuntu-latest'
+#   steps:
+#   - task: Docker@2
+#     displayName: Build an image
+#     inputs:
+#       command: build
+#       dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+#       buildContext: '$(Build.SourcesDirectory)/config'
+#       tags: |
+#         $(tag)
