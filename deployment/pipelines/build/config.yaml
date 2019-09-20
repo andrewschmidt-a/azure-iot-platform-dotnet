@@ -35,3 +35,8 @@ jobs:
     inputs:
       command: build
       projects: '**/*.csproj'
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: test
+      projects: '**/*Tests/*.csproj'
