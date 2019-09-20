@@ -34,11 +34,14 @@ jobs:
     inputs:
       version: '2.1.300'
 
-  - task: DotNetCoreCLI@2
-    displayName: Build
+  - task: Docker@2
+    displayName: Build an image
     inputs:
       command: build
-      projects: '**/*.csproj'
+      dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+      buildContext: '$(Build.SourcesDirectory)/config'
+      tags: |
+        $(tag)
       
   - task: DotNetCoreCLI@2
     displayName: Test
