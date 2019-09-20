@@ -39,7 +39,7 @@ jobs:
       tags: |
         $(tag)
 
-- job: Unit Test
+- job: UnitTest
   displayName: UnitTest
   pool:
     vmImage: 'ubuntu-latest'
