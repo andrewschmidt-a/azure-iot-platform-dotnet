@@ -32,4 +32,12 @@ jobs:
   steps:
   - task: DotNetCoreInstaller@0
     inputs:
-      version: '2.0'
+      version: '2.0.1'
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: restore
+      projects: '**/*.csproj'
+      feedsToUse: config
+      nugetConfigPath: NuGet.config    # Relative to root of the repository
+      externalFeedCredentials: <Name of the NuGet service connection>
