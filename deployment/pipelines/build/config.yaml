@@ -44,7 +44,7 @@ jobs:
         $(tag)
       
   - task: DotNetCoreCLI@2
-    displayName: Test
+    displayName: Unit Test
     inputs:
       command: test
       projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
