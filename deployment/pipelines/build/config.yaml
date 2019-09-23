@@ -50,8 +50,18 @@ jobs:
       projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
 
   - task: AzureCLI@1
+    displayName: Create Dev Space
     inputs:
       azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
+
+  - task: AzureCLI@1
+    displayName: Delete Dev Space
+    inputs:
+      azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
+        azds space remove -n config-build
