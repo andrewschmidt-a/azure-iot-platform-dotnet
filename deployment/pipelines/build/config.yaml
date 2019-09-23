@@ -54,5 +54,4 @@ jobs:
       azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin
-        azds space select --name config-build
+        az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
