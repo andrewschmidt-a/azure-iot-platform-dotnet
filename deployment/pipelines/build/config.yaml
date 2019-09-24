@@ -57,7 +57,7 @@ jobs:
       inlineScript: |
         az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
         cd $(System.DefaultWorkingDirectory)/config/WebService
-        kubectl create secret generic globalsecrets --from-literal=passphrase=topsecret
+        kubectl create secret generic config-build/globalsecrets --from-literal=passphrase=topsecret
         azds up
 
   # Integration test
