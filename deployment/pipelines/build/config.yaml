@@ -56,8 +56,8 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
-        cd $(System.DefaultWorkingDirectory)/config/WebService
         kubectl create secret generic --namespace=config-build globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0=
+        cd $(System.DefaultWorkingDirectory)/config/WebService
         azds up
 
   # Integration test
