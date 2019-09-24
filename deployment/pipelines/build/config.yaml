@@ -48,6 +48,10 @@ jobs:
     inputs:
       command: test
       projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
+      
+  - task: KubectlInstaller@0
+    inputs:
+      kubectlVersion: 'latest'
 
   - task: AzureCLI@1
     displayName: Start Up Container in New Dev Space
