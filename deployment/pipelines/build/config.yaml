@@ -30,35 +30,35 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
   steps:
-  # - task: DotNetCoreInstaller@2
-  #   inputs:
-  #     version: '2.2.402'
+  - task: DotNetCoreInstaller@2
+    inputs:
+      version: '2.2.402'
 
-  # # - task: Docker@2
-  # #   displayName: Build the Image
-  # #   inputs:
-  # #     command: build
-  # #     dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
-  # #     buildContext: '$(Build.SourcesDirectory)/config'
-  # #     tags: |
-  # #       $(tag)
+  # - task: Docker@2
+  #   displayName: Build the Image
+  #   inputs:
+  #     command: build
+  #     dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+  #     buildContext: '$(Build.SourcesDirectory)/config'
+  #     tags: |
+  #       $(tag)
       
-  # - task: DotNetCoreCLI@2
-  #   displayName: Unit Test
-  #   inputs:
-  #     command: test
-  #     projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
+  - task: DotNetCoreCLI@2
+    displayName: Unit Test
+    inputs:
+      command: test
+      projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
 
-  # - task: AzureCLI@1
-  #   displayName: Start Up Container in New Dev Space
-  #   inputs:
-  #     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
-  #       cd $(System.DefaultWorkingDirectory)/config/WebService
-  #       kubectl create secret generic --namespace=config-build globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0=
-  #       azds up
+  - task: AzureCLI@1
+    displayName: Start Up Container in New Dev Space
+    inputs:
+      azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
+        cd $(System.DefaultWorkingDirectory)/config/WebService
+        kubectl create secret generic --namespace=config-build globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0=
+        azds up
 
   # Integration test
   
@@ -70,4 +70,4 @@ jobs:
       inlineScript: |
         az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
         azds space remove -n config-build -y
-        kubectl delete namespace --namespace=config-build
+        kubectl delete namespaces config-build
