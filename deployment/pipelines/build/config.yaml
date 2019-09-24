@@ -48,21 +48,24 @@ jobs:
     inputs:
       command: test
       projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
-      
-  - task: KubectlInstaller@0
-    inputs:
-      kubectlVersion: 'latest'
 
   - task: AzureCLI@1
-    displayName: Start Up Container in New Dev Space
+    displayName: Create New Dev Space
     inputs:
       azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
-        kubectl create secret generic --namespace=config-build globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0=
-        cd $(System.DefaultWorkingDirectory)/config/WebService
-        azds up
+
+  - task: KubectlInstaller@0
+    inputs:
+      kubectlVersion: 'latest'
+      
+  - task: Bash@3
+    displayName: Add Secrets to Dev Space
+    inputs:
+      targetType: 'inline'
+      script: 'kubectl create secret generic --namespace=config-build globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0='
 
   # Integration test
   
