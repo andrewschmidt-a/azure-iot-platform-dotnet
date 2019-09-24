@@ -50,22 +50,23 @@ jobs:
       projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
 
   - task: AzureCLI@1
-    displayName: Create Dev Space
+    displayName: Start Up Container in New Dev Space
     inputs:
       azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
+        kubectl create secret generic globalsecrets --from-literal=passphrase=topsecret
         cd $(System.DefaultWorkingDirectory)/config/WebService
         azds up
 
   # Integration test
   
-  - task: AzureCLI@1
-    displayName: Delete Dev Space
-    inputs:
-      azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
-        azds space remove -n config-build -y
+  # - task: AzureCLI@1
+  #   displayName: Delete Dev Space
+  #   inputs:
+  #     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
+  #       azds space remove -n config-build -y
