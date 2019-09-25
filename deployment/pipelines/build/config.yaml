@@ -93,7 +93,12 @@ jobs:
       collectionURL: 'http://config-build.config.9wf5lfcpqz.cus.azds.io/v1/status'
       environmentSourceType: 'none'
       reporters: 'junit'
-      reporterJUnitExport: $(System.DefaultWorkingDirectory)/config/WebService.Test
+      reporterJUnitExport: $(System.DefaultWorkingDirectory)/integrationTestReport.xml
+
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'integrationTestReport.xml'
   
   # - task: AzureCLI@1
   #   displayName: Delete Dev Space
