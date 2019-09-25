@@ -76,7 +76,7 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         cd $(System.DefaultWorkingDirectory)/config/WebService
-        azds up -d
+        azds up -d --output json
 
   # Integration test
   
