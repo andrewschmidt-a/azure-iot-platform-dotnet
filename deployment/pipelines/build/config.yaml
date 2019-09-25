@@ -80,6 +80,11 @@ jobs:
   #       azds list-uris -o json
 
   # Integration test
+  - task: Npm@1
+    inputs:
+      command: 'custom'
+      customCommand: install newman -g
+
   - task: NewmanPostman@4
     inputs:
       collectionSourceType: 'url'
