@@ -88,4 +88,3 @@ jobs:
       inlineScript: |
         az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
         azds space remove -n config-build -y
-        kubectl delete namespaces config-build
