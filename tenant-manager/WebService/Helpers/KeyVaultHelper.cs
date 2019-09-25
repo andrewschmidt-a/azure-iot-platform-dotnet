@@ -47,14 +47,11 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
             try
             {
                 SecretBundle secretBundle = await this.client.GetSecretAsync(GetKeyVaultSecretIdentifier(secret));
-                try
+                if (secretBundle == null)
                 {
-                    return secretBundle.Value;
+                    throw new NullReferenceException("The SecretBundle returned from keyVault was null. A value could not be returned for the requested secret");
                 }
-                catch (Exception e)
-                {
-                    throw new NullReferenceException("The SecretBundle returned from keyVault was null. A value could not be returned for the requested secret", e)
-                }
+                return secretBundle.Value;
             }
             catch (Exception e)
             {
