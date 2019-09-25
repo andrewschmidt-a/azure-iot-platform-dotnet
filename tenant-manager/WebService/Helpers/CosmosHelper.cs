@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents;
 using System.Collections.ObjectModel;
+using Microsoft.Azure.IoTSolutions.TenantManager.Services.Exceptions;
+using ILogger = Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
 {
@@ -18,33 +20,46 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
             }
             catch (Exception e)
             {
-                LogException(e);
+                throw new InvalidConfigurationException("Unable to create CosmosDb DocumentClient with the given Cosmos Key & Token. Check to ensure they are configured correctly.", e);
             }
         }
-        public async Task DeleteCosmosDbCollection(string database, string collectionPrefix)
+
+        public async Task DeleteCosmosDbCollection(string database, string collectionId)
         {
-            await client.DeleteDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(database, collectionPrefix));
+            try
+            {
+                await client.DeleteDocumentCollectionAsync(UriFactory.CreateDocumentCollectionUri(database, collectionId));
+            }
+            catch (DocumentClientException dce)
+            {
+                string message = "";
+                if (dce.Message.Contains("Resource Not Found"))
+                {
+                    // status code 404 for the DocumentClientException means that the colleciton does not exist
+                    message = $"The {collectionId} collection does not exist and cannot be deleted.";
+                }
+                else
+                {
+                    message = $"An error occurred while deleting the {collectionId} collection.";
+                }
+                throw new ResourceNotFoundException(message, dce);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"An error occurred while deleting the {collectionId} collection.", e);  // Throw the same exception thrown by the cosmos client
+            }
         }
 
         public async Task CreateCosmosDbCollection(string database, string collectionId)
         {
-            DocumentCollection collection = new DocumentCollection { Id = collectionId, PartitionKey = new PartitionKeyDefinition { Paths = new Collection<string> { "/_deviceId" } } };
-            await client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(database), collection);
-        }
-
-        private void LogException(Exception e)
-        {
-
-            if (e is DocumentClientException)
+            try
             {
-                DocumentClientException de = (DocumentClientException)e;
-                Exception baseException = de.GetBaseException();
-                Console.WriteLine("{0} error occurred: {1}, Message: {2}", de.StatusCode, de.Message, baseException.Message);
+                DocumentCollection collection = new DocumentCollection { Id = collectionId, PartitionKey = new PartitionKeyDefinition { Paths = new Collection<string> { "/_deviceId" } } };
+                await client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(database), collection);
             }
-            else
+            catch (Exception e)
             {
-                Exception baseException = e.GetBaseException();
-                Console.WriteLine("Error: {0}, Message: {1}", e.Message, baseException.Message);
+                throw new Exception($"Unable to create cosmosDb collection {collectionId}", e);  // Throw the same exception thrown by the cosmos client
             }
         }
     }
