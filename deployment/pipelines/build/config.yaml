@@ -34,20 +34,20 @@ jobs:
   #   inputs:
   #     version: '2.2.402'
 
-  # # - task: Docker@2
-  # #   displayName: Build the Image
-  # #   inputs:
-  # #     command: build
-  # #     dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
-  # #     buildContext: '$(Build.SourcesDirectory)/config'
-  # #     tags: |
-  # #       $(tag)
+  # - task: Docker@2
+  #   displayName: Build the Image
+  #   inputs:
+  #     command: build
+  #     dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+  #     buildContext: '$(Build.SourcesDirectory)/config'
+  #     tags: |
+  #       $(tag)
       
-  # # - task: DotNetCoreCLI@2
-  # #   displayName: Unit Test
-  # #   inputs:
-  # #     command: test
-  # #     projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
+  # - task: DotNetCoreCLI@2
+  #   displayName: Unit Test
+  #   inputs:
+  #     command: test
+  #     projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
 
   # - task: AzureCLI@1
   #   displayName: Create New Dev Space
@@ -79,41 +79,33 @@ jobs:
   #       azds up -d
   #       azds list-uris -o json
 
-  # Integration test
-  - task: Bash@3
-    displayName: Install Newman
-    inputs:
-      targetType: 'inline'
-      script: |
-        sudo npm install newman -g
-
-  - task: NewmanPostman@4
-    inputs:
-      collectionSourceType: 'file'
-      Contents: '**/WebService.Test/configTestCollection.json'
-      environmentSourceType: 'none'
-      reporters: 'cli,junit'
-      reporterJUnitExport: $(System.DefaultWorkingDirectory)/integrationTestReport.xml
-
-  - task: Bash@3
-    condition: always()
-    inputs:
-      targetType: 'inline'
-      script: |
-        ls $(System.DefaultWorkingDirectory)
-        cat $(System.DefaultWorkingDirectory)/integrationTestReport.xml
-
-  - task: PublishTestResults@2
-    condition: always()
-    inputs:
-      testResultsFormat: 'JUnit'
-      testResultsFiles: 'integrationTestReport.xml'
-  
-  # - task: AzureCLI@1
-  #   displayName: Delete Dev Space
+  # - task: Bash@3
+  #   displayName: Install Newman
   #   inputs:
-  #     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
-  #       azds space remove -n config-build -y
+  #     targetType: 'inline'
+  #     script: |
+  #       sudo npm install newman -g
+
+  # - task: NewmanPostman@4
+  #   inputs:
+  #     collectionSourceType: 'file'
+  #     Contents: '**/WebService.Test/configTestCollection.json'
+  #     environmentSourceType: 'none'
+  #     reporters: 'cli,junit'
+  #     reporterJUnitExport: $(System.DefaultWorkingDirectory)/integrationTestReport.xml
+
+  # - task: PublishTestResults@2
+  #   condition: always()
+  #   inputs:
+  #     testResultsFormat: 'JUnit'
+  #     testResultsFiles: 'integrationTestReport.xml'
+  
+  - task: AzureCLI@1
+    condition: always()
+    displayName: Delete Dev Space
+    inputs:
+      azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
+        azds space remove -n config-build -y
