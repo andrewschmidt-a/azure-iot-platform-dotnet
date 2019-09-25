@@ -56,6 +56,7 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
+        az aks get-credentials --resource-group rg-crslbbiot-odin-dev --name aks-dev-spaces-odin
 
   - task: KubectlInstaller@0
     inputs:
@@ -65,16 +66,17 @@ jobs:
     displayName: Add Secrets to Dev Space
     inputs:
       targetType: 'inline'
-      script: 'kubectl create secret generic --namespace=config-build globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0='
+      script:  |
+        kubectl create secret generic --namespace=config-build globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0=
 
   # Integration test
   
-  - task: AzureCLI@1
-    displayName: Delete Dev Space
-    inputs:
-      azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
-        azds space remove -n config-build -y
-        kubectl delete namespaces config-build
+  # - task: AzureCLI@1
+  #   displayName: Delete Dev Space
+  #   inputs:
+  #     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
+  #       azds space remove -n config-build -y
+  #       kubectl delete namespaces config-build
