@@ -77,7 +77,7 @@ jobs:
       inlineScript: |
         cd $(System.DefaultWorkingDirectory)/config/WebService
         azds up -d
-        azds list-uris
+        azds list-uris -o json
 
   # Integration test
   
