@@ -89,8 +89,9 @@ jobs:
 
   - task: NewmanPostman@4
     inputs:
-      collectionSourceType: 'url'
-      collectionURL: 'http://config-build.config.9wf5lfcpqz.cus.azds.io/v1/status'
+      collectionSourceType: 'file'
+      Contents: '**/configTestCollection.json'
+      folder: '$(System.DefaultWorkingDirectory)/config/WebService.Test'
       environmentSourceType: 'none'
       reporters: 'junit'
       reporterJUnitExport: $(System.DefaultWorkingDirectory)/integrationTestReport.xml
