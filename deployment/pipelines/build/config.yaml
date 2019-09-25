@@ -80,10 +80,12 @@ jobs:
   #       azds list-uris -o json
 
   # Integration test
-  - task: Npm@1
+  - task: Bash@3
+    displayName: Install Newman
     inputs:
-      command: 'custom'
-      customCommand: install newman -g
+      targetType: 'inline'
+      script: |
+        sudo npm install newman -g
 
   - task: NewmanPostman@4
     inputs:
