@@ -30,51 +30,81 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
   steps:
-  - task: Docker@2
-    displayName: Build an image
+  # - task: DotNetCoreInstaller@2
+  #   inputs:
+  #     version: '2.2.402'
+
+  # # - task: Docker@2
+  # #   displayName: Build the Image
+  # #   inputs:
+  # #     command: build
+  # #     dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+  # #     buildContext: '$(Build.SourcesDirectory)/config'
+  # #     tags: |
+  # #       $(tag)
+      
+  # # - task: DotNetCoreCLI@2
+  # #   displayName: Unit Test
+  # #   inputs:
+  # #     command: test
+  # #     projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
+
+  # - task: AzureCLI@1
+  #   displayName: Create New Dev Space
+  #   inputs:
+  #     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
+  #       az aks get-credentials --resource-group rg-crslbbiot-odin-dev --name aks-dev-spaces-odin
+
+  # - task: KubectlInstaller@0
+  #   inputs:
+  #     kubectlVersion: 'latest'
+      
+  # - task: Bash@3
+  #   displayName: Add Secrets to Dev Space
+  #   inputs:
+  #     targetType: 'inline'
+  #     script:  |
+  #       kubectl create secret generic --namespace=config-build globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint="https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0="
+
+  # - task: AzureCLI@1
+  #   displayName: Azds Up
+  #   inputs:
+  #     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       cd $(System.DefaultWorkingDirectory)/config/WebService
+  #       azds up -d
+  #       azds list-uris -o json
+
+  # Integration test
+  - task: Bash@3
+    displayName: Install Newman
     inputs:
-      command: build
-      dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
-      buildContext: '$(Build.SourcesDirectory)/config'
-      tags: |
-        $(tag)
+      targetType: 'inline'
+      script: |
+        sudo npm install newman -g
 
-- job: UnitTest
-  displayName: UnitTest
-  pool:
-    vmImage: 'ubuntu-latest'
-  steps:
-  - task: DotNetCoreCLI@2
-    displayName: Test
+  - task: NewmanPostman@4
     inputs:
-      command: test
-      restoreDirectory: $(Build.SourcesDirectory)/config/WebService'
-      workingDirectory: '$(Build.SourcesDirectory)/config/WebService.test'
+      collectionSourceType: 'url'
+      collectionURL: 'http://config-build.config.9wf5lfcpqz.cus.azds.io/v1/status'
+      environmentSourceType: 'none'
+      reporters: 'junit'
+      reporterJUnitExport: $(System.DefaultWorkingDirectory)/integrationTestReport.xml
 
-# - job: Integration Test
-#   displayName: Integration Test
-#   pool:
-#     vmImage: 'ubuntu-latest'
-#   steps:
-#   - task: Docker@2
-#     displayName: Build an image
-#     inputs:
-#       command: build
-#       dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
-#       buildContext: '$(Build.SourcesDirectory)/config'
-#       tags: |
-#         $(tag)
-
-# - job: Deploy Docker Image to ACR
-#   displayName: Deploy Docker Image to ACR
-#   pool:
-#     vmImage: 'ubuntu-latest'
-#   steps:
-#   - task: Docker@2
-#     displayName: Build an image
-#     inputs:
-#       command: build
-#       dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
-#       buildContext: '$(Build.SourcesDirectory)/config'
-#       tags: |
-#         $(tag)
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: 'integrationTestReport.xml'
+  
+  # - task: AzureCLI@1
+  #   displayName: Delete Dev Space
+  #   inputs:
+  #     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+  #     scriptLocation: 'inlineScript'
+  #     inlineScript: |
+  #       az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
+  #       azds space remove -n config-build -y
