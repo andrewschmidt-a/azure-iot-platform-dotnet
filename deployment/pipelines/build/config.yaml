@@ -93,7 +93,7 @@ jobs:
       Contents: '**/WebService.Test/configTestCollection.json'
       environmentSourceType: 'none'
       reporters: 'cli,junit'
-      # reporterJUnitExport: $(System.DefaultWorkingDirectory)/integrationTestReport.xml
+      reporterJUnitExport: $(System.DefaultWorkingDirectory)/integrationTestReport.xml
 
   - task: Bash@3
     condition: always()
