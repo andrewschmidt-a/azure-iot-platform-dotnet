@@ -90,8 +90,7 @@ jobs:
   - task: NewmanPostman@4
     inputs:
       collectionSourceType: 'file'
-      Contents: '**/configTestCollection.json'
-      folder: '$(System.DefaultWorkingDirectory)/config/WebService.Test'
+      Contents: '**/WebService.Test/configTestCollection.json'
       environmentSourceType: 'none'
       reporters: 'cli'
       # reporterJUnitExport: $(System.DefaultWorkingDirectory)/integrationTestReport.xml
