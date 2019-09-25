@@ -100,6 +100,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
+        ls $(System.DefaultWorkingDirectory)
         cat $(System.DefaultWorkingDirectory)/integrationTestReport.xml
 
   - task: PublishTestResults@2
