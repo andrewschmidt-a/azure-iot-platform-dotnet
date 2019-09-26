@@ -87,6 +87,7 @@ jobs:
         sudo npm install newman -g
 
   - task: NewmanPostman@4
+    displayName: Run Postman Integration Tests
     inputs:
       collectionSourceType: 'file'
       Contents: '**/WebService.Test/configTestCollection.json'
