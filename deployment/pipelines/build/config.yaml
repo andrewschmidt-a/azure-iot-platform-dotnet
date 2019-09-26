@@ -23,6 +23,10 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  resourceGroup: rg-crslbbiot-odin-dev
+  aksCluster: aks-dev-spaces-odin
+  devSpace: config-ci-build
+  pcsAppConfig: https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0=
 
 jobs:
 - job: Build
@@ -34,14 +38,14 @@ jobs:
     inputs:
       version: '2.2.402'
 
-  - task: Docker@2
-    displayName: Build the Image
-    inputs:
-      command: build
-      dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
-      buildContext: '$(Build.SourcesDirectory)/config'
-      tags: |
-        $(tag)
+  # - task: Docker@2
+  #   displayName: Build the Image
+  #   inputs:
+  #     command: build
+  #     dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
+  #     buildContext: '$(Build.SourcesDirectory)/config'
+  #     tags: |
+  #       $(tag)
       
   - task: DotNetCoreCLI@2
     displayName: Unit Test
@@ -55,8 +59,8 @@ jobs:
       azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build -y
-        az aks get-credentials --resource-group rg-crslbbiot-odin-dev --name aks-dev-spaces-odin
+        az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
+        az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
 
   - task: KubectlInstaller@0
     inputs:
@@ -67,7 +71,7 @@ jobs:
     inputs:
       targetType: 'inline'
       script:  |
-        kubectl create secret generic --namespace=config-build globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint="https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0="
+        kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=$(pcsAppConfig)
 
   - task: AzureCLI@1
     displayName: Azds Up
@@ -78,6 +82,7 @@ jobs:
         cd $(System.DefaultWorkingDirectory)/config/WebService
         azds up -d
         azds list-uris -o json
+      # Can get the service url from the above command
 
   - task: Bash@3
     displayName: Install Newman
@@ -108,5 +113,5 @@ jobs:
       azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s config-build
-        azds space remove -n config-build -y
+        az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace)
+        azds space remove -n $(devSpace) -y
