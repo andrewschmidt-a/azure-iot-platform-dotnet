@@ -6,18 +6,18 @@
 	},
 	"item": [
 		{
-			"name": "Config Service Postman Tests",
+			"name": "Get config service status",
 			"event": [
 				{
 					"listen": "test",
 					"script": {
 						"id": "159eea66-217d-4bb9-ab27-e035c679d82b",
 						"exec": [
-							"pm.test(\"Response is 200\", function() {",
+							"pm.test(\"Check if response is 200\", function() {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"pm.test(\"Status is healthy\", function() {",
+							"pm.test(\"Check if status is healthy\", function() {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.Status.IsHealthy).to.equal(true);",
 							"});"
@@ -30,10 +30,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://config-build.config.9wf5lfcpqz.cus.azds.io/v1/status",
+					"raw": "http://config-ci-build.s.default.config.9wf5lfcpqz.cus.azds.io/v1/status",
 					"protocol": "http",
 					"host": [
-						"config-build",
+						"config-ci-build",
+						"s",
+						"default",
 						"config",
 						"9wf5lfcpqz",
 						"cus",
