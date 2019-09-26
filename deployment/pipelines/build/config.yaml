@@ -2,13 +2,13 @@
 # Build a Docker image 
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
-trigger:
-  branches:
-    include:
-    - master
-  paths:
-    include:
-    - config/
+# trigger:
+#   branches:
+#     include:
+#     - master
+#   paths:
+#     include:
+#     - config/
 
 pr:
   branches:
@@ -23,6 +23,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  azureSubscription: 3M-CRSLAD16-BBIoTP-Dev
   resourceGroup: rg-crslbbiot-odin-dev
   aksCluster: aks-dev-spaces-odin
   devSpace: config-ci-build
@@ -34,12 +35,13 @@ jobs:
   pool:
     vmImage: 'ubuntu-latest'
   steps:
+
   - task: DotNetCoreInstaller@2
     inputs:
       version: '2.2.402'
 
   - task: Docker@2
-    displayName: Build the Image
+    displayName: Build the Docker Image
     inputs:
       command: build
       dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
@@ -51,12 +53,12 @@ jobs:
     displayName: Unit Test
     inputs:
       command: test
-      projects: '$(System.DefaultWorkingDirectory)/config/WebService.Test/*.csproj'
+      projects: '**/*Test.csproj'
 
   - task: AzureCLI@1
     displayName: Create New Dev Space
     inputs:
-      azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+      azureSubscription: $(azureSubscription)
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
@@ -76,7 +78,7 @@ jobs:
   - task: AzureCLI@1
     displayName: Azds Up
     inputs:
-      azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+      azureSubscription: ''
       scriptLocation: 'inlineScript'
       inlineScript: |
         cd $(System.DefaultWorkingDirectory)/config/WebService
@@ -110,8 +112,8 @@ jobs:
     condition: always()
     displayName: Delete Dev Space
     inputs:
-      azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+      azureSubscription: $(azureSubscription)
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace)
+        az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace)
         azds space remove -n $(devSpace) -y
