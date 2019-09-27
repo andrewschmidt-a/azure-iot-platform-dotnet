@@ -7,15 +7,18 @@ jobs:
   pool:
       vmImage: 'ubuntu-latest'
   steps:
+
   # Check if this service has been edited in the PR
-  - ${{ if eq(git diff master... --name-only | cut -d / -f 1 | grep parameters.service -cim1, 1) }}:
+  - script: |
+      echo "##vso[task.setvariable variable=continue]`git diff master... --name-only | cut -d / -f 1 | grep parameters.service -cim1`"
     
-    # This service has been edited so let's test it
-    - task: DotNetCoreCLI@2
-      displayName: Unit Test
-      inputs:
-        command: test
-        projects: '${{parameters.service}}/**/*Test.csproj'
+  # This service has been edited so let's test it
+  - task: DotNetCoreCLI@2
+    displayName: Unit Test
+    condition: and(succeeded(), eq(`continue`, 1))
+    inputs:
+      command: test
+      projects: '${{parameters.service}}/**/*Test.csproj'
 
   # - task: NewmanPostman@4
   #   displayName: Run Postman Integration Tests
