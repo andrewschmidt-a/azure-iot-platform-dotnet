@@ -17,12 +17,13 @@ using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.StorageAdapt
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter;
 using Moq;
 using Newtonsoft.Json;
-using Services.Test.helpers;
+using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
 using HttpRequest = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpRequest;
 using HttpResponse = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpResponse;
+using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 
-namespace Services.Test
+namespace DeviceTelemetry.Services.Test
 {
     public class RulesTest
     {
@@ -35,6 +36,8 @@ namespace Services.Test
         private readonly IRules rules;
         private readonly IDiagnosticsClient diagnosticsClient;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
+
+        private const string TENANT_ID = "test_tenant";
 
         private const int LIMIT = 1000;
 
@@ -52,8 +55,11 @@ namespace Services.Test
             this.httpClientMock = new Mock<IHttpClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.servicesConfig, this.logger.Object, this.httpContextAccessor.Object);
-            this.rules = new Rules(this.storageAdapter.Object, this.logger.Object, this.alarms.Object, this.diagnosticsClient);
 
+            this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
+                {{"TenantID", TENANT_ID}});
+
+            this.rules = new Rules(this.storageAdapter.Object, this.logger.Object, this.alarms.Object, this.diagnosticsClient);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

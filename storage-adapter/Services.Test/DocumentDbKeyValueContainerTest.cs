@@ -15,10 +15,10 @@ using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.AuthUtils;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using Services.Test.helpers;
+using StorageAdapter.Services.Test.helpers;
 using Xunit;
 
-namespace Services.Test
+namespace StorageAdapter.Services.Test
 {
     public class DocumentDbKeyValueContainerTest
     {

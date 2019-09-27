@@ -1,0 +1,66 @@
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  cosmosDBName: ''
+  aksName: ''
+jobs:
+- job: aks
+  displayName: Deploy AKS
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+## Tags resources by injecting tags into ARM Templates
+  - template: infra/tagARM.yaml
+## Deploys AKS
+  - template: infra/aks.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      aksName: ${{ parameters.aksName }}
+
+- job: resources
+  displayName: Deploy Resources
+  dependsOn: aks
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+## Tags resources by injecting tags into ARM Templates
+  - template: infra/tagARM.yaml
+## Deploys App Config
+  - template: infra/appconfig.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      aksName: ${{ parameters.aksName }}
+      appConfigName: ${{ parameters.appConfigName }}
+## Deploys KeyVault
+  - template: infra/keyvault.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      appConfigName: ${{ parameters.appConfigName }}
+      keyVaultName: ${{parameters.keyVaultName}}
+
+## Deploys CosmosDB
+  - template: infra/cosmosdb.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      cosmosDBName: ${{ parameters.cosmosDBName }}
+      keyVaultName: ${{parameters.keyVaultName}}
+## Deploying Ingress Controller, Cert manager and Ingress for the platform
+- job: ingress
+  displayName: Deploy Ingress
+  dependsOn: aks
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - template: infra/ingress.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      aksName: ${{ parameters.aksName }}
+  
+
+
+        

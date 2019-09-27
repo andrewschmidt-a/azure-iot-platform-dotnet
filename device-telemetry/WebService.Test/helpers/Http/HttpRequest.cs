@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace WebService.Test.helpers.Http
+namespace DeviceTelemetry.WebService.Test.helpers.Http
 {
     public interface IHttpRequest
     {

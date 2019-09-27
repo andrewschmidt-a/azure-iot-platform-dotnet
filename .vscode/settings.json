@@ -1,0 +1,13 @@
+{
+    "csharpfixformat.sort.usings.splitGroups": true,
+    "csharpfixformat.style.indent.regionIgnored": true,
+    "csharpfixformat.style.newline.atEnd": true,
+    "csharpfixformat.style.newline.elseCatch": true,
+    "csharpfixformat.style.newline.maxAmount": 1,
+    "dotnet-test-explorer.testProjectPath": "**/*.Test.csproj",
+    "dotnet-test-explorer.testArguments": "/p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov",
+    "coverage-gutters.showLineCoverage": true,
+    "coverage-gutters.coverageReportFileName": "**/lcov.info",
+    "dotnet-test-explorer.autoExpandTree": true,
+    "dotnet-test-explorer.enableTelemetry": false
+}

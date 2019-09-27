@@ -7,12 +7,12 @@ using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
 using Moq;
 using Xunit;
 using System.Threading.Tasks;
-using Services.Test.helpers;
+using IoTHubManager.Services.Test.helpers;
 using Microsoft.Azure.Devices;
 using System.Linq;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
 
-namespace Services.Test
+namespace IoTHubManager.Services.Test
 {
     public class DeploymentsTest
     {

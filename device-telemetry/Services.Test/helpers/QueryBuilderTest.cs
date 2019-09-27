@@ -5,7 +5,7 @@ using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 using Xunit;
 
-namespace Services.Test.helpers
+namespace DeviceTelemetry.Services.Test.helpers
 {
     public class QueryBuilderTest
     {
@@ -33,7 +33,7 @@ namespace Services.Test.helpers
                 "device.id");
 
             // Assert
-            Assert.Equal($"SELECT TOP @top * FROM c WHERE (c[\"doc.schema\"] = @schemaName AND c[@devicesProperty] IN (@devicesParameterName0,@devicesParameterName1) AND c[@byIdProperty] = @byId AND c[@fromProperty] >= {from.ToUnixTimeMilliseconds()} AND c[@toProperty] <= {to.ToUnixTimeMilliseconds()}) ORDER BY c[@orderProperty] ASC", querySpec.QueryText);
+            Assert.Equal($"SELECT TOP @top * FROM c WHERE (c[\"_schema\"] = @schemaName AND c[@devicesProperty] IN (@devicesParameterName0,@devicesParameterName1) AND c[@byIdProperty] = @byId AND c[@fromProperty] >= {from.ToUnixTimeMilliseconds()} AND c[@toProperty] <= {to.ToUnixTimeMilliseconds()}) ORDER BY c[@orderProperty] ASC", querySpec.QueryText);
             Assert.Equal(100, querySpec.Parameters[0].Value);
             Assert.Equal("alarm", querySpec.Parameters[1].Value);
             Assert.Equal("device.id", querySpec.Parameters[2].Value);
@@ -70,7 +70,7 @@ namespace Services.Test.helpers
                 "device.id");
 
             // Assert
-            Assert.Equal($"SELECT TOP @top * FROM c WHERE (c[\"doc.schema\"] = @schemaName AND c[@devicesProperty] IN (@devicesParameterName0,@devicesParameterName1) AND c[@fromProperty] >= {from.ToUnixTimeMilliseconds()} AND c[@toProperty] <= {to.ToUnixTimeMilliseconds()}) ORDER BY c[@orderProperty] ASC", querySpec.QueryText);
+            Assert.Equal($"SELECT TOP @top * FROM c WHERE (c[\"_schema\"] = @schemaName AND c[@devicesProperty] IN (@devicesParameterName0,@devicesParameterName1) AND c[@fromProperty] >= {from.ToUnixTimeMilliseconds()} AND c[@toProperty] <= {to.ToUnixTimeMilliseconds()}) ORDER BY c[@orderProperty] ASC", querySpec.QueryText);
             Assert.Equal(100, querySpec.Parameters[0].Value);
             Assert.Equal("alarm", querySpec.Parameters[1].Value);
             Assert.Equal("device.id", querySpec.Parameters[2].Value);

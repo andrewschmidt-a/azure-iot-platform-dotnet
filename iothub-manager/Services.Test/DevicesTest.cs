@@ -12,11 +12,11 @@ using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
 using Microsoft.Extensions.Configuration;
 using Moq;
-using Services.Test.helpers;
+using IoTHubManager.Services.Test.helpers;
 using Xunit;
 using AuthenticationType = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models.AuthenticationType;
 
-namespace Services.Test
+namespace IoTHubManager.Services.Test
 {
     public class DevicesTest
     {

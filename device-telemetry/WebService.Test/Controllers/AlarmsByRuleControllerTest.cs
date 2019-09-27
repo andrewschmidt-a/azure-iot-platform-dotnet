@@ -12,12 +12,12 @@ using System.Collections.Generic;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter;
-using WebService.Test.helpers;
+using DeviceTelemetry.WebService.Test.helpers;
 using Xunit;
 using Alarm = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Alarm;
 using Microsoft.AspNetCore.Http;
 
-namespace WebService.Test.Controllers
+namespace DeviceTelemetry.WebService.Test.Controllers
 {
     class AlarmsByRuleControllerTest
     {

@@ -12,10 +12,10 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Filters;
 using Moq;
-using WebService.Test.helpers;
+using StorageAdapter.WebService.Test.helpers;
 using Xunit;
 
-namespace WebService.Test.v1.Filters
+namespace StorageAdapter.WebService.Test.v1.Filters
 {
     public class ExceptionsFilterAttributeTest
     {

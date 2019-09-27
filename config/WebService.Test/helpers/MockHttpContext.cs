@@ -5,7 +5,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Moq;
 
-namespace WebService.Test.helpers
+namespace Config.WebService.Test.helpers
 {
     internal sealed class MockHttpContext : IDisposable
     {

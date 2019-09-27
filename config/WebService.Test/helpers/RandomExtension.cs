@@ -3,7 +3,7 @@
 using System;
 using System.Text;
 
-namespace WebService.Test.helpers
+namespace Config.WebService.Test.helpers
 {
     public static class RandomExtension
     {

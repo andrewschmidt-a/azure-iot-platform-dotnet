@@ -2,7 +2,7 @@
 
 using System;
 
-namespace WebService.Test.helpers
+namespace DeviceTelemetry.WebService.Test.helpers
 {
     public class WebServiceHost
     {

@@ -12,10 +12,10 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Filters;
 using Moq;
-using WebService.Test.helpers;
+using DeviceTelemetry.WebService.Test.helpers;
 using Xunit;
 
-namespace WebService.Test.v1.Filters
+namespace DeviceTelemetry.WebService.Test.v1.Filters
 {
     public class ExceptionsFilterAttributeTest
     {

@@ -4,7 +4,7 @@ using System;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
 
-namespace Services.Test.helpers
+namespace StorageAdapter.Services.Test.helpers
 {
     public class MockExceptionChecker : IExceptionChecker
     {

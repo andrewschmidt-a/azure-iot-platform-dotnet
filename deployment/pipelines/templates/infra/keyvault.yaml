@@ -1,0 +1,40 @@
+
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  appConfigName: ''
+  keyVaultName: ''
+
+steps:
+- task: AzureCLI@1
+  displayName: Get ObjectId of Service Principal
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      objectId=$(az ad sp show --id $servicePrincipalId | jq -r .objectId)
+      echo $objectId
+      echo "##vso[task.setvariable variable=servicePrincipalObjectId]$objectId"
+    addSpnToEnvironment: true
+- task: AzureResourceGroupDeployment@2
+  displayName: "Deploy Key Vault"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: 'Central US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/keyvault.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/keyvault.json'
+    overrideParameters: '-resourceName ${{ parameters.keyVaultName }} -objectId $(servicePrincipalObjectId)'
+    deploymentMode: 'Incremental'
+    #addSpnToEnvironment: true
+- task: AzureCLI@1
+  displayName: Add Keyvault Name to App Config
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      az appconfig kv set --key KeyVault:name --value ${{ parameters.keyVaultName }} --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:KeyVault:name --value ${{ parameters.keyVaultName }} --name ${{ parameters.appConfigName }} --yes
+    addSpnToEnvironment: true

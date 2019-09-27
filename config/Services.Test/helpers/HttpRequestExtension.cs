@@ -4,7 +4,7 @@ using System;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
 using Newtonsoft.Json;
 
-namespace Services.Test.helpers
+namespace Config.Services.Test.helpers
 {
     internal static class HttpRequestExtension
     {

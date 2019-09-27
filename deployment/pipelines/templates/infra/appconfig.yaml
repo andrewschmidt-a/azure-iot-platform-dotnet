@@ -1,0 +1,53 @@
+
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  appConfigName: ''
+  aksName: ''
+
+steps:
+- task: AzureResourceGroupDeployment@2
+  displayName: "Deploy App Configuration"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: 'Central US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/appconfig.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/appconfig.json'
+    overrideParameters: '-resourceName ${{ parameters.appConfigName }}'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true
+- task: AzureCLI@1
+  displayName: Create App Config Secret in Kube
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }}
+      connString=$(az appconfig credential list --name ${{ parameters.appConfigName }} -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString)
+      kubectl create secret generic --namespace=default globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=$connString --dry-run -o yaml | kubectl apply -f -
+
+- task: AzureCLI@1
+  displayName: Add Values to App Config
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      # Needed because Azure Devops has a bug in the extention included, normally the extension will handle the flattening --  Andrew Schmidt
+      jq --arg delim ':' 'reduce (tostream|select(length==2)) as $i ({};
+          .[[$i[0][]|tostring]|join($delim)] = $i[1]
+      )' $(System.DefaultWorkingDirectory)/deployment/pipelines/templates/infra/app-config-template.json > $(System.DefaultWorkingDirectory)/deployment/pipelines/templates/infra/app-config-template-translated.json 
+      # Import Keys
+      az appconfig kv import -y --name ${{ parameters.appConfigName }} --format json --source file --path "$(System.DefaultWorkingDirectory)/deployment/pipelines/templates/infra/app-config-template-translated.json"
+      # Set KeyVault Keys
+      az appconfig kv set --key Global:ClientAuth:JWT:aadappid --value $servicePrincipalId --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:AzureActiveDirectory:aadappid --value $servicePrincipalId --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key KeyVault:aadappid --value $servicePrincipalId --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key KeyVault:aadappsecret --value $servicePrincipalKey --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:AzureActiveDirectory:aadappsecret --value $servicePrincipalKey --name ${{ parameters.appConfigName }} --yes
+      # Set Environment Info
+      az appconfig kv set --key Global:resourceGroup --value ${{ parameters.appConfigName }} --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:subscriptionId --value $(az account show | jq -r .id) --name ${{ parameters.appConfigName }} --yes
+    addSpnToEnvironment: true

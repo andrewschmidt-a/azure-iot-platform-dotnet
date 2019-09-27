@@ -3,7 +3,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 
-namespace WebService.Test.helpers.Http
+namespace Config.WebService.Test.helpers.Http
 {
     public interface IHttpResponse
     {

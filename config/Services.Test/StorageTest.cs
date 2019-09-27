@@ -13,10 +13,10 @@ using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Services.Test.helpers;
+using Config.Services.Test.helpers;
 using Xunit;
 
-namespace Services.Test
+namespace Config.Services.Test
 {
     public class StorageTest
     {

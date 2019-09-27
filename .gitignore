@@ -15,3 +15,5 @@
 **/.vscode/
 .idea/
 webui/package-lock.json
+!.vscode
+**/lcov.info

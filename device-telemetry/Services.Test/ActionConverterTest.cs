@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Actions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Services.Test.helpers;
+using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
 
-namespace Services.Test
+namespace DeviceTelemetry.Services.Test
 {
     public class ActionConverterTest
     {

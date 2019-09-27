@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Xunit.Abstractions;
 
-namespace WebService.Test.helpers.Http
+namespace DeviceTelemetry.WebService.Test.helpers.Http
 {
     public interface IHttpClient
     {

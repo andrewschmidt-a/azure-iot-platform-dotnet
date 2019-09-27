@@ -11,10 +11,11 @@ using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
 using Moq;
-using Services.Test.helpers;
+using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
+using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 
-namespace Services.Test
+namespace DeviceTelemetry.Services.Test
 {
     public class AlarmsTest
     {
@@ -22,7 +23,11 @@ namespace Services.Test
         private readonly Mock<ILogger> logger;
         private readonly IAlarms alarms;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
+        private readonly Mock<IAppConfigurationHelper> appConfigHelper;
 
+        private const string TENANT_INFO_KEY = "tenant";
+        private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
+        private const string TENANT_ID = "test_tenant";
         public AlarmsTest()
         {
             var servicesConfig = new ServicesConfig
@@ -31,8 +36,14 @@ namespace Services.Test
             };
             this.storageClient = new Mock<IStorageClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
+            this.appConfigHelper = new Mock<IAppConfigurationHelper>();
+            this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
+                {{"TenantID", TENANT_ID}});
+            this.appConfigHelper.Setup(t => t.GetValue($"{TENANT_INFO_KEY}:{TENANT_ID}:{TELEMETRY_COLLECTION_KEY}")).Returns("collection");
+
+
             this.logger = new Mock<ILogger>();
-            this.alarms = new Alarms(servicesConfig, this.storageClient.Object, this.logger.Object,this.httpContextAccessor.Object);
+            this.alarms = new Alarms(servicesConfig, this.storageClient.Object, this.logger.Object,this.httpContextAccessor.Object, this.appConfigHelper.Object);
         }
 
         /**

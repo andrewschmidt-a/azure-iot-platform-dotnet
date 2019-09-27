@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceName": {
+            "defaultValue": "app-config-odin",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.AppConfiguration/configurationStores",
+            "apiVersion": "2019-02-01-preview",
+            "name": "[parameters('resourceName')]",
+            "location": "centralus",
+            "tags":{},
+            "properties": {
+                "provisioningState": "Succeeded",
+                "creationDate": "2019-07-10T19:08:06+00:00",
+                "endpoint": "[concat('https://', parameters('resourceName'), '.azconfig.io')]"
+            }
+        }
+    ]
+}

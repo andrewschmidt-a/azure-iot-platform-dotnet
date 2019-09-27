@@ -12,10 +12,10 @@ using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
 using Moq;
 using Newtonsoft.Json;
-using Services.Test.helpers;
+using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
 
-namespace Services.Test
+namespace DeviceTelemetry.Services.Test
 {
     public class UserManagementClientTest
     {

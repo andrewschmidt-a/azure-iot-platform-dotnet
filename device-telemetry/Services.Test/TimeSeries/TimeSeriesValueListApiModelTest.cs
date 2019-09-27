@@ -4,10 +4,10 @@ using System;
 using System.IO;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.TimeSeries;
 using Newtonsoft.Json;
-using Services.Test.helpers;
+using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
 
-namespace Services.Test.TimeSeries
+namespace DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesValueListApiModelTest
     {

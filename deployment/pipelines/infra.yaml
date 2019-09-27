@@ -1,0 +1,53 @@
+
+name: IoT Infrastructure
+
+stages:
+## CRSL
+- stage: DeployCRSL
+  dependsOn: []
+  displayName: Deploy To CRSL
+  jobs:
+  - template: templates/approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment
+  - template: templates/infra.yaml
+    parameters:
+      serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+      resourceGroup: rg-odin-test-deploy
+      cosmosDBName: odin-testing-deployment
+      aksName: crsliotakstestodin2
+      appConfigName: crsliotappconfigtestodin
+      keyVaultName: crsliotkeyvaulttestodin
+      
+
+## PSD
+- stage: DeployPSD
+  dependsOn: []
+  displayName: Deploy To PSD
+  jobs:
+  - template: templates/approval.yaml
+    parameters:
+      environment: IoT_PSD_Environment
+  - template: templates/infra.yaml
+    parameters:
+      serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+      resourceGroup: rg-odin-test-deploy-psd
+      cosmosDBName: odin-testing-deployment-psd
+      aksName: aksTestOdinPSD
+      appConfigName: psdiotappconfigtestodin
+      keyVaultName: psdiotkeyvaulttestodin
+
+- stage: DebugEnv
+  dependsOn: []
+  displayName: DebugZone
+  jobs:
+  - job: 
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - task: Bash@3
+      displayName: "Get ARG Max"
+      inputs:
+        targetType: 'inline'
+        script: 'getconf ARG_MAX'
+        workingDirectory: "$(System.DefaultWorkingDirectory)"

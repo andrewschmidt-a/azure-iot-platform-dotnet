@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace Services.Test.helpers
+namespace Config.Services.Test.helpers
 {
     public static class HashsetExtension
     {
