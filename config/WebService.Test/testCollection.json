@@ -1,0 +1,55 @@
+{
+	"info": {
+		"_postman_id": "fab9adea-c786-45fd-a4ca-2fd29544154d",
+		"name": "Test Config",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get config service status",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "159eea66-217d-4bb9-ab27-e035c679d82b",
+						"exec": [
+							"pm.test(\"Check if response is 200\", function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check if status is healthy\", function() {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.Status.IsHealthy).to.equal(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://config-ci-build.s.default.config.9wf5lfcpqz.cus.azds.io/v1/status",
+					"protocol": "http",
+					"host": [
+						"config-ci-build",
+						"s",
+						"default",
+						"config",
+						"9wf5lfcpqz",
+						"cus",
+						"azds",
+						"io"
+					],
+					"path": [
+						"v1",
+						"status"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

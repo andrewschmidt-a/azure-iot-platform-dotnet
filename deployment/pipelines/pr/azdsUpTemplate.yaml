@@ -1,0 +1,9 @@
+parameters:
+  service: ''
+
+jobs:
+- job:
+  displayName: Start ${{parameters.service}} Service in Dev Spaces
+  pool:
+      vmImage: 'ubuntu-latest'
+  steps:
