@@ -8,7 +8,7 @@ jobs:
       vmImage: 'ubuntu-latest'
   steps:
   # Check if this service has been edited in the PR
-  - ${{ if git diff master... --name-only | cut -d / -f 1 | grep parameters.service }}:
+  - ${{ if [ git diff master... --name-only | cut -d / -f 1 | grep parameters.service ]}}:
     
     # This service has been edited so let's test it
     - task: DotNetCoreCLI@2
