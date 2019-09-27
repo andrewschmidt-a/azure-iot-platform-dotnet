@@ -2,14 +2,6 @@
 # Build a Docker image 
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
-# trigger:
-#   branches:
-#     include:
-#     - master
-#   paths:
-#     include:
-#     - config/
-
 pr:
   branches:
     include:
@@ -75,39 +67,18 @@ jobs:
       script:  |
         kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=$(pcsAppConfig)
 
-  - task: AzureCLI@1
-    displayName: Azds Up
-    inputs:
-      azureSubscription: ''
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        cd $(System.DefaultWorkingDirectory)/config/WebService
-        azds up -d
-        serviceUri=$(azds list-uris -o json | jq '[0].uri')
-        echo $serviceUri
-        echo "##vso[task.setvariable variable=serviceUri]$serviceUri"
-
   - task: Bash@3
     displayName: Install Newman
     inputs:
       targetType: 'inline'
       script: |
         sudo npm install newman -g
-
-  - task: NewmanPostman@4
-    displayName: Run Postman Integration Tests
-    inputs:
-      collectionSourceType: 'file'
-      Contents: '**/WebService.Test/configTestCollection.json'
-      environmentSourceType: 'none'
-      reporters: 'cli,junit'
-      reporterJUnitExport: $(System.DefaultWorkingDirectory)/integrationTestReport.xml
-
+        
   - task: PublishTestResults@2
     condition: always()
     inputs:
       testResultsFormat: 'JUnit'
-      testResultsFiles: 'integrationTestReport.xml'
+      testResultsFiles: '**/*integration-test-report.xml'
   
   - task: AzureCLI@1
     condition: always()
