@@ -17,19 +17,6 @@ jobs:
         command: test
         projects: '${{parameters.service}}/**/*Test.csproj'
 
-  # - task: AzureCLI@1
-  #   displayName: Azds Up
-  #   inputs:
-  #     azureSubscription: ''
-  #     scriptLocation: 'inlineScript'
-  #     inlineScript: |
-  #       cd $(System.DefaultWorkingDirectory)/${{parameters.service}}/WebService
-  #       azds up -d
-  #       serviceUri=$(azds list-uris -o json | jq '[0].uri')
-  #     # Update service uri to include service parameter
-  #       echo $serviceUri
-  #       echo "##vso[task.setvariable variable=serviceUri]$serviceUri"
-
   # - task: NewmanPostman@4
   #   displayName: Run Postman Integration Tests
   #   inputs:
