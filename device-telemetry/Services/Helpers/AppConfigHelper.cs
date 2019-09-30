@@ -1,5 +1,6 @@
 using System;
 using Azure.ApplicationModel.Configuration;
+using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers
 {
@@ -11,10 +12,11 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers
     public class AppConfigurationHelper : IAppConfigurationHelper
     {
         private ConfigurationClient client;
+        private IServicesConfig _config;
 
-        public AppConfigurationHelper(string appConfigConnectionString)
+        public AppConfigurationHelper(IServicesConfig config)
         {
-            this.client = new ConfigurationClient(appConfigConnectionString);
+            this.client = new ConfigurationClient(config.ApplicationConfigurationConnectionString);
         }
 
         /// <summary>

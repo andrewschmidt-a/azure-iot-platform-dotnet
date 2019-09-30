@@ -45,6 +45,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly IServicesConfig _config;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private IAppConfigurationHelper _appConfigurationHelper;
 
         private readonly bool timeSeriesEnabled;
         private readonly DocumentClient documentClient;
@@ -54,8 +55,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
         {
             get
             {
-                var appConfigHelper = new AppConfigurationHelper(_config.ApplicationConfigurationConnectionString);
-                return appConfigHelper.GetValue(
+                return this._appConfigurationHelper.GetValue(
                     $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
             }
         }
@@ -65,7 +65,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             IStorageClient storageClient,
             ITimeSeriesClient timeSeriesClient,
             ILogger logger,
-            IHttpContextAccessor contextAccessor)
+            IHttpContextAccessor contextAccessor,
+            IAppConfigurationHelper appConfigurationHelper)
         {
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
@@ -76,6 +77,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             this.log = logger;
             this._config = config;
             this._httpContextAccessor = contextAccessor;
+            this._appConfigurationHelper = appConfigurationHelper;
         }
 
         public async Task<MessageList> ListAsync(
