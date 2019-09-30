@@ -10,8 +10,6 @@ trigger:
     exclude:
     - '*' 
 
-#Test
-
 resources:
 - repo: self
 
