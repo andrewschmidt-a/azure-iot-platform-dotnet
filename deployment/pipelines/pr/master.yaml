@@ -1,3 +1,5 @@
+trigger: []
+
 pr:
   branches:
     include:
