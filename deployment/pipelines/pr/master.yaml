@@ -10,7 +10,7 @@ trigger:
     exclude:
     - '*' 
 
-blah abasdjaf;lkja l
+blah abasdjaf;lkja lxzv
 
 resources:
 - repo: self
