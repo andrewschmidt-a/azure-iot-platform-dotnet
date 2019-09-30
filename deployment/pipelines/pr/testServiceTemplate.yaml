@@ -10,11 +10,7 @@ jobs:
 
   # Check if this service has been edited in the PR
   - script: |
-      echo `git diff origin/master... --name-only`
-      echo `git diff origin/master... --name-only | cut -d / -f 1`
       continue=`git diff origin/master... --name-only | cut -d / -f 1 | grep ${{parameters.service}} -cim1`
-      echo `${{parameters.service}}`
-      echo $continue
       echo "##vso[task.setvariable variable=continue]$continue"
     
   # This service has been edited so let's test it
