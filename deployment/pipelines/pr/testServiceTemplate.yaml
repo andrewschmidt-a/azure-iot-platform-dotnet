@@ -10,7 +10,10 @@ jobs:
 
   # Check if this service has been edited in the PR
   - script: |
-      echo "##vso[task.setvariable variable=continue]`git diff origin/master... --name-only | cut -d / -f 1 | grep parameters.service -cim1`"
+      echo `git diff origin/master... --name-only`
+      continue=`git diff origin/master... --name-only | cut -d / -f 1 | grep parameters.service -cim1`
+      echo $continue
+      echo "##vso[task.setvariable variable=continue]$continue"
     
   # This service has been edited so let's test it
   - task: DotNetCoreCLI@2
