@@ -1,8 +1,9 @@
 parameters:
   service: ''
-
-variables:
-- template: master.yaml
+  azureSubscription: ''
+  resourceGroup: ''
+  aksCluster: ''
+  devSpace: ''
 
 jobs:
 - job:
@@ -20,11 +21,11 @@ jobs:
     displayName: Azds Up
     condition: eq(variables['continue'], '1')
     inputs:
-      azureSubscription: ${{variables.azureSubscription}}
+      azureSubscription: ${{parameters.azureSubscription}}
       scriptLocation: 'inlineScript'
       inlineScript: |
-        az aks use-dev-spaces -g ${{variables.resourceGroup}} -n ${{variables.aksCluster}} -s default/${{variables.devSpace}} -y
-        az aks get-credentials -g ${{variables.resourceGroup}} -n ${{variables.aksCluster}}
+        az aks use-dev-spaces -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}} -s default/${{parameters.devSpace}} -y
+        az aks get-credentials -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}}
         cd $(System.DefaultWorkingDirectory)/${{parameters.service}}/WebService
         azds up -d
       # azds list-uris -o json

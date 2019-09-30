@@ -23,7 +23,7 @@ jobs:
 
   - task: Bash@3
     displayName: Install Newman
-    condition: and(always(), eq(variables['continue'], '1'))
+    condition: eq(variables['continue'], '1')
     inputs:
       targetType: 'inline'
       script: |
@@ -31,7 +31,7 @@ jobs:
 
   - task: NewmanPostman@4
     displayName: Run Postman Integration Tests
-    condition: and(always(), eq(variables['continue'], '1'))
+    condition: eq(variables['continue'], '1')
     inputs:
       collectionSourceType: 'file'
       Contents: '${{parameters.service}}/**/WebService.Test/testCollection.json'
@@ -40,7 +40,7 @@ jobs:
       reporterJUnitExport: $(System.DefaultWorkingDirectory)/${{parameters.service}}-integration-test-report.xml
 
   - task: PublishTestResults@2
-    condition: and(always(), eq(variables['continue'], '1'))
+    condition: eq(variables['continue'], '1')
     inputs:
       testResultsFormat: 'JUnit'
       testResultsFiles: '**/${{parameters.service}}-integration-test-report.xml'

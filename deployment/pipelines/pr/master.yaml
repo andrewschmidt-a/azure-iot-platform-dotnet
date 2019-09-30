@@ -56,36 +56,57 @@ stages:
     parameters:
       service: config
       azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
       service: device-simulation
       azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
       service: device-telemetry
       azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
       service: identity-gateway
       azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
       service: iothub-manager
       azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
       service: storage-adapter
       azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
       service: tenant-manager
       azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
 - stage: Test_Services_that_Changed
   jobs:
