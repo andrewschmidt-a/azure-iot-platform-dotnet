@@ -18,6 +18,8 @@ stages:
 - stage: Create_Dev_Space_for_PR
   jobs:
   - job: Create_Dev_Space
+    pool:
+      vmImage: 'ubuntu-latest'
     steps:
     - task: AzureCLI@1
       displayName: Create New Dev Space
@@ -110,6 +112,8 @@ stages:
 - stage: Delete_Dev_Space
   jobs:
   - job: Delete_Dev_Space
+    pool:
+      vmImage: 'ubuntu-latest'
     steps:
     - task: AzureCLI@1
       condition: always()
