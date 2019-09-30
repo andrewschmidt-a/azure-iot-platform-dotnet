@@ -17,7 +17,7 @@ variables:
 stages:
 - stage: Create_Dev_Space_for_PR
   jobs:
-  - job: Create Dev Space
+  - job: Create_Dev_Space
     steps:
     - task: AzureCLI@1
       displayName: Create New Dev Space
@@ -109,7 +109,7 @@ stages:
 
 - stage: Delete_Dev_Space
   jobs:
-  - job: Delete Dev Space
+  - job: Delete_Dev_Space
     steps:
     - task: AzureCLI@1
       condition: always()
