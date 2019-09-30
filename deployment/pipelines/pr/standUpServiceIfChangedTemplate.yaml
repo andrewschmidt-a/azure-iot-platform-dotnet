@@ -1,5 +1,6 @@
 parameters:
   service: ''
+  azureSubscription: ''
 
 jobs:
 - job:
@@ -10,7 +11,7 @@ jobs:
   - task: AzureCLI@1
     displayName: Azds Up
     inputs:
-      azureSubscription: ${{azureSubscription}}
+      azureSubscription: ${{parameters.azureSubscription}}
       scriptLocation: 'inlineScript'
       inlineScript: |
         cd $(System.DefaultWorkingDirectory)/${{parameters.service}}/WebService
