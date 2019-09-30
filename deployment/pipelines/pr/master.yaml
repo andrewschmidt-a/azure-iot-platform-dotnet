@@ -1,5 +1,3 @@
-blah abasdjaf;lkja l
-
 # Trigger on PRs into master
 pr:
   branches:
@@ -11,6 +9,8 @@ trigger:
   branches:
     exclude:
     - '*' 
+
+blah abasdjaf;lkja l
 
 resources:
 - repo: self
