@@ -16,7 +16,7 @@ jobs:
   # This service has been edited so let's test it
   - task: DotNetCoreCLI@2
     displayName: Unit Test
-    condition: and(succeeded(), eq(variables['continue'], '1'))
+    condition: eq(variables['continue'], '1')
     inputs:
       command: test
       projects: '${{parameters.service}}/**/*Test.csproj'
