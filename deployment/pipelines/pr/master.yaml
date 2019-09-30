@@ -1,12 +1,17 @@
-trigger: []
-
+# Trigger on PRs into master
 pr:
   branches:
     include:
     - master
 
-#resources:
-#- repo: self
+# Don't trigger any CI 
+trigger:
+  branches:
+    exclude:
+    - '*' 
+
+resources:
+- repo: self
 
 variables:
   tag: '$(Build.BuildId)'
