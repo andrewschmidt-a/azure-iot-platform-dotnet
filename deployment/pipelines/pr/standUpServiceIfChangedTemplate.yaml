@@ -2,7 +2,7 @@ parameters:
   service: ''
 
 variables:
-  - template: master.yaml
+- template: master.yaml
 
 jobs:
 - job:
