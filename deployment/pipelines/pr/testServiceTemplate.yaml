@@ -12,10 +12,8 @@ jobs:
   - script: |
       echo `git diff origin/master... --name-only`
       echo `git diff origin/master... --name-only | cut -d / -f 1`
-      continue=`git diff origin/master... --name-only | cut -d / -f 1 | grep $service -cim1`
-      echo `parameters.service`
-      echo `$service`
-      echo `$(service)`
+      continue=`git diff origin/master... --name-only | cut -d / -f 1 | grep ${{parameters.service}} -cim1`
+      echo `${{parameters.service}}`
       echo $continue
       echo "##vso[task.setvariable variable=continue]$continue"
     
