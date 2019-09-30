@@ -4,7 +4,7 @@ pr:
   branches:
     include:
     - master
-#test
+
 #resources:
 #- repo: self
 
