@@ -14,31 +14,102 @@ variables:
   devSpace: pr-$(System.PullRequest.PullRequestNumber)-$(Build.SourceVersion)
   pcsAppConfig: "https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0="
 
-jobs:
-- template: testServiceTemplate.yaml
-  parameters:
-    service: config
+stages:
+- stage: Create Dev Space for PR
+  jobs:
+  - job: Create Dev Space
+    steps:
+    - task: AzureCLI@1
+      displayName: Create New Dev Space
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
+          az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
 
-- template: testServiceTemplate.yaml
-  parameters:
-    service: device-simulation
+    - task: KubectlInstaller@0
+      displayName: Install kubectl
+      inputs:
+        kubectlVersion: 'latest'
+        
+    - task: Bash@3
+      displayName: Add Secrets to New Dev Space
+      inputs:
+        targetType: 'inline'
+        script:  |
+          kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=$(pcsAppConfig)
 
-- template: testServiceTemplate.yaml
-  parameters:
-    service: device-telemetry
+- stage: Stand Up Services that Changed in Dev Spaces
+  jobs:
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: config
 
-- template: testServiceTemplate.yaml
-  parameters:
-    service: identity-gateway
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: device-simulation
 
-- template: testServiceTemplate.yaml
-  parameters:
-    service: iothub-manager
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: device-telemetry
 
-- template: testServiceTemplate.yaml
-  parameters:
-    service: storage-adapter
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: identity-gateway
 
-- template: testServiceTemplate.yaml
-  parameters:
-    service: tenant-manager
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: iothub-manager
+
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: storage-adapter
+
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: tenant-manager
+
+- stage: Test Services that Changed
+  jobs:
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: config
+
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: device-simulation
+
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: device-telemetry
+
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: identity-gateway
+
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: iothub-manager
+
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: storage-adapter
+
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: tenant-manager
+
+- stage: Delete Dev Space
+  jobs:
+  - job: Delete Dev Space
+    steps:
+    - task: AzureCLI@1
+      condition: always()
+      displayName: Delete Dev Space
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace)
+          azds space remove -n $(devSpace) -y

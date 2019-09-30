@@ -1,0 +1,18 @@
+parameters:
+  service: ''
+
+jobs:
+- job:
+  displayName: Start ${{parameters.service}} Service in Dev Spaces
+  pool:
+      vmImage: 'ubuntu-latest'
+  steps:
+  - task: AzureCLI@1
+    displayName: Azds Up
+    inputs:
+      azureSubscription: ${{azureSubscription}}
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        cd $(System.DefaultWorkingDirectory)/${{parameters.service}}/WebService
+        azds up -d
+      # azds list-uris -o json
