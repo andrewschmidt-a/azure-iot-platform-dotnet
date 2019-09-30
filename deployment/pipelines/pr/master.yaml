@@ -11,7 +11,7 @@ variables:
   azureSubscription: 3M-CRSLAD16-BBIoTP-Dev
   resourceGroup: rg-crslbbiot-odin-dev
   aksCluster: aks-dev-spaces-odin
-  devSpace: pr-$(System.PullRequest.PullRequestNumber)-$(Build.SourceVersion)
+  devSpace: pr-$(System.PullRequest.PullRequestNumber)-commit-$(Build.SourceVersion)
   pcsAppConfig: "https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0="
 
 stages:
@@ -43,6 +43,7 @@ stages:
           kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint=$(pcsAppConfig)
 
 - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
+  condition: always()
   jobs:
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
@@ -110,6 +111,7 @@ stages:
       service: tenant-manager
 
 - stage: Delete_Dev_Space
+  condition: always()
   jobs:
   - job: Delete_Dev_Space
     pool:
