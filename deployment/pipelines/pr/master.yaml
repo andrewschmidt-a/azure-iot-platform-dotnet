@@ -1,10 +1,12 @@
+trigger: []
+
 pr:
   branches:
     include:
     - master
 
-resources:
-- repo: self
+#resources:
+#- repo: self
 
 variables:
   tag: '$(Build.BuildId)'
