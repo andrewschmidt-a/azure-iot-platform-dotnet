@@ -9,3 +9,4 @@ var DeploymentConfig = {
   issuer: "https://aks-dev-spaces-odin.centralus.cloudapp.azure.com/auth/",
   developmentMode: false,
 }
+

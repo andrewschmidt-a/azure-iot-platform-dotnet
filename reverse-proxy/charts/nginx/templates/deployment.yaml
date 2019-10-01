@@ -34,6 +34,11 @@ spec:
           volumeMounts:
           # - name: certs-volume
           #   mountPath: /app/certs
+          resources:
+            limits:
+              cpu: "800m"
+            requests:
+              cpu: "500m"
           ports:
             - name: http
               containerPort: 10080
