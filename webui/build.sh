@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 export NODE_PATH=src/  # fixes the "cannot find module app.config" issue
 
-echo "Installing node packages ..." && npm --add-python-to-path='true' install
 echo "Building app..."              && npm run build
 #echo "Removing temp files..."       && rm -rf node_modules src public package.json Dockerfile .dockerignore
 
