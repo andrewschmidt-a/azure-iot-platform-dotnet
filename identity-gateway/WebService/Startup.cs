@@ -25,6 +25,7 @@ namespace IdentityGateway.WebService
             "Global",
             "Global:KeyVault",
             "Global:AzureActiveDirectory",
+            "Global:ClientAuth"
         };
 
         // Initialized in `Startup`
@@ -52,19 +53,19 @@ namespace IdentityGateway.WebService
             // Add CORS if available
             if (!String.IsNullOrEmpty(Configuration[CORS_CONFIG_KEY]))
             {
-                services.AddCors(options =>
-                {
-                    options.AddPolicy(CORS_POLICY_NAME,
-                        builder =>
-                        {
-                            builder.WithOrigins(Configuration[CORS_CONFIG_KEY]);
-                            //builder.AllowAnyOrigin();
-                            builder.AllowCredentials();
-                            builder.AllowAnyMethod();
-                            builder.AllowAnyHeader();
+                // services.AddCors(options =>
+                // {
+                //     options.AddPolicy(CORS_POLICY_NAME,
+                //         builder =>
+                //         {
+                //             builder.WithOrigins(Configuration[CORS_CONFIG_KEY]);
+                //             //builder.AllowAnyOrigin();
+                //             builder.AllowCredentials();
+                //             builder.AllowAnyMethod();
+                //             builder.AllowAnyHeader();
 
-                        });
-                });
+                //         });
+                // });
             }
             
             services.AddMvc().AddControllersAsServices();
@@ -82,10 +83,10 @@ namespace IdentityGateway.WebService
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             // Add CORS if available
-            if (!String.IsNullOrEmpty(Configuration[CORS_CONFIG_KEY]))
-            {
-                app.UseCors(CORS_POLICY_NAME); 
-            }
+            // if (!String.IsNullOrEmpty(Configuration[CORS_CONFIG_KEY]))
+            // {
+            //     app.UseCors(CORS_POLICY_NAME); 
+            // }
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();
         }

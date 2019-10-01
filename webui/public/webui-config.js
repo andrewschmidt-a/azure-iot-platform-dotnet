@@ -6,6 +6,6 @@
 
 var DeploymentConfig = {
   authEnabled: true,
-  issuer: "https://crsliotkubedev.centralus.cloudapp.azure.com/auth/",
+  issuer: "https://aks-dev-spaces-odin.centralus.cloudapp.azure.com/auth/",
   developmentMode: false,
 }
