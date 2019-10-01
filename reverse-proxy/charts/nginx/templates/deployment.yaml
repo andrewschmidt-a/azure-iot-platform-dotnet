@@ -36,9 +36,11 @@ spec:
           #   mountPath: /app/certs
           resources:
             limits:
-              cpu: "800m"
+              cpu: "0.5"
+              memory: 500M
             requests:
-              cpu: "500m"
+              cpu: "0.25"
+              memory: 300M
           ports:
             - name: http
               containerPort: 10080
