@@ -28,4 +28,3 @@ jobs:
         az aks get-credentials -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}}
         cd $(System.DefaultWorkingDirectory)/${{parameters.service}}/WebService
         azds up -d
-      # azds list-uris -o json
