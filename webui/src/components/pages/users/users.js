@@ -26,7 +26,7 @@ import './users.scss';
 
 const closedFlyoutState = { openFlyoutName: undefined };
 
-export class Devices extends Component {
+export class Users extends Component {
 
   constructor(props) {
     super(props);
@@ -35,7 +35,7 @@ export class Devices extends Component {
       contextBtns: null
     };
 
-    this.props.updateCurrentWindow('Devices');
+    this.props.updateCurrentWindow('Users');
   }
 
   componentWillReceiveProps(nextProps) {
@@ -88,7 +88,7 @@ export class Devices extends Component {
             <SearchInput
             onChange={this.searchOnChange}
             onClick={this.onSearchClick}
-            aria-label={t('users.ariaLabel')}
+            aria-label={t('devices.ariaLabel')}
             placeholder={t('users.searchPlaceholder')} />
             {this.state.contextBtns}
             <Protected permission={permissions.createDevices}>

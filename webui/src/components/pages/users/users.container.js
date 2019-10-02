@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
-import { Devices } from './users';
+import { Users } from './users';
 import {
   epics as devicesEpics,
   getDevices,
@@ -34,4 +34,4 @@ const mapDispatchToProps = dispatch => ({
   logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel))
 });
 
-export const UsersContainer = withNamespaces()(connect(mapStateToProps, mapDispatchToProps)(Devices));
+export const UsersContainer = withNamespaces()(connect(mapStateToProps, mapDispatchToProps)(Users));
