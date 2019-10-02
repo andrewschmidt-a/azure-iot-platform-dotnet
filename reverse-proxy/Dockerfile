@@ -1,4 +1,41 @@
-FROM nginx
-RUN mkdir /app && mkdir /app/logs && touch /app/logs/error.log
-COPY ./content/nginx.conf /etc/nginx/nginx.conf
+FROM node:11-alpine as codebuilder
+WORKDIR /app
+RUN echo "Install Bash for scripts"     && apk add --no-cache --virtual bash
+RUN echo "Installing the python2 (reqd for node pckgs)" && apk --update add python3
+RUN echo "Install GCC for make command" && apk add --no-cache --virtual build-base
+RUN echo "Install Curl for scripts"     && apk add --no-cache --virtual curl
+RUN echo "Install JSON parser for app config" && apk add --no-cache --virtual jq
+
+RUN \
+  echo "Installing Azure cli" \
+  apk update && \
+  apk add bash py-pip && \
+  apk add --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev make && \
+  pip --no-cache-dir install -U pip && \
+  pip --no-cache-dir install azure-cli && \
+  apk del --purge build
+
+# RUN echo "Install App Configuration"     && RUN /bin/sh -c  "az extension add -n appconfig"
+
+
+MAINTAINER Andrew Schmidt (https://github.com/andrewschmidt-a)
+
+LABEL Tags="Azure,IoT,Solutions,React,SPA"
+
+RUN echo "Installing web server..." \
+ && apk add --no-cache nginx \
+ && mkdir /app/logs \
+ && mkdir -p /var/lib/nginx /var/cache/nginx /var/tmp/nginx /var/log/nginx \
+ && echo "Removing unused files..."x \
+ && apk del --force --purge alpine-keys apk-tools \
+ && rm -rf /var/cache/apk /etc/apk /lib/apk
+
 EXPOSE 10080
+RUN touch /app/logs/error.log
+WORKDIR /app
+COPY ./set_env.sh .
+RUN chmod +x ./set_env.sh
+COPY ./run.sh .
+RUN chmod +x ./run.sh
+COPY ./content/nginx.conf /app/nginx.conf
+ENTRYPOINT [ "/app/run.sh" ]
