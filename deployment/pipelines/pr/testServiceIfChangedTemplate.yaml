@@ -29,8 +29,11 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks use-dev-spaces -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}} -s default/${{parameters.devSpace}} -y
+        az aks get-credentials -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}}
         serviceUri=`azds list-uris -o json | jq -r '.[] | select(.workloadName=="${{parameters.service}}") | .uri'`
+        echo $serviceUri
         jq -r --arg uri "$uri" '.values[0].value = $uri' ${{parameters.service}}/WebService.Test/newmanEnvironment.json > tempEnv
+        cat tempEnv
         mv tempEnv ${{parameters.service}}/WebService.Test/newmanEnvironment.json
 
   - task: Bash@3
