@@ -12,6 +12,7 @@ using Microsoft.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.TenantManager.WebService.Runtime;
 using Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Azure.IoTSolutions.TenantManager.Services.Http;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
@@ -45,6 +46,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             services.AddSingleton<IConfig>(config);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddSingleton<IHttpClient, HttpClient>();
 
             services.AddSingleton<IIdentityGatewayClient, IdentityGatewayClient>();
 

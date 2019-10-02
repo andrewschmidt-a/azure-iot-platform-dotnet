@@ -14,7 +14,8 @@ using Microsoft.Azure.Documents;
 using Azure.ApplicationModel.Configuration;
 using Microsoft.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 using ILogger = Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
-
+using Microsoft.Azure.IoTSolutions.TenantManager.Services.External;
+using Microsoft.Azure.IoTSolutions.TenantManager.Services.Models;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {
@@ -40,10 +41,17 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         private const string USER_TABLE_ID = "user";
         private const string USER_SETTINGS_TABLE_ID = "userSettings";
 
+        //Identity Gateway values
+        private const string role = "[\"admin\"]";
+        private const string settingKey = "LastUsedTenant";
+
         // injected and created attribute
         private IConfiguration _config;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private ILogger _log;
+        private IIdentityGatewayClient _identityClient;
+
+        //Helpers 
 
         private KeyVaultHelper keyVaultHelper;
         private TenantRunbookHelper tenantRunbookHelper;
@@ -54,7 +62,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         private string appConfigCollectionKeyFormat = "tenant:{0}:{1}-collection";  // format with a guid and collection name
         private List<string> tenantCollections = new List<string>{"telemetry", "twin-change", "lifecycle", "pcs"};
 
-        public TenantController(IConfiguration config, IHttpContextAccessor httpContextAccessor, ILogger log)
+        public TenantController(IConfiguration config, IHttpContextAccessor httpContextAccessor, ILogger log, IIdentityGatewayClient identityGatewayClient)
         {
             this._config = config;
             this._httpContextAccessor = httpContextAccessor;
@@ -66,6 +74,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             string cosmosDb = this._config[COSMOS_DB_KEY];
             string cosmosDbToken = this._config[COSMOS_KEY];
             this.cosmosHelper = new CosmosHelper(cosmosDb, cosmosDbToken);
+            this._identityClient = identityGatewayClient;
         }
 
         // POST api/tenant
@@ -107,21 +116,43 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             }
             catch (Exception e)
             {
-                throw new Exception("Unable to retrieve the userId from the httpContextAccessor", e);
+                throw new Exception("Unable to retrieve the userId from the httpContextAccessor.", e);
             }
 
-            // Update the user table in table storage to the requesting user an admin role to the new tenant
-            var role = @"[""admin""]";
-            var userTenant = new UserTenantModel(userId, tenantGuid, role);
-            await tableStorageHelper.WriteToTableAsync<UserTenantModel>(USER_TABLE_ID, userTenant);
+            // Give the requesting user an admin role to the new tenant        
+
+            try
+            {
+                await _identityClient.addUserToTenantAsync(userId, tenantGuid, role);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to add user to tenant.", e);
+            }
 
             // Update the userSettings table with the lastUsedTenant if there isn't already a lastUsedTenant
-            var lastUsedTenant = await tableStorageHelper.ReadFromTableAsync<UserSettingsModel>(USER_SETTINGS_TABLE_ID, userId, "LastUsedTenant");
-            if (lastUsedTenant == null)
+            
+            IdentityGatewayApiSettingModel userSettings = null;
+
+            try
+            {
+                userSettings = await _identityClient.getSettingsForUserAsync(userId, settingKey);
+            }
+            catch(Exception e)
+            {
+                throw new Exception("Could not access user settings for LastUsedTenant.", e);
+            }
+            if (userSettings == null)
             {
                 // Set the last used tenant to be this new tenant
-                var userSettings = new UserSettingsModel(userId, "LastUsedTenant", tenantGuid);
-                await tableStorageHelper.WriteToTableAsync<UserSettingsModel>(USER_SETTINGS_TABLE_ID, userSettings);
+                try
+                {
+                    await _identityClient.addSettingsForUserAsync(userId, settingKey, tenantGuid);
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Could not set user settings for LastUsedTenant.", e);
+                }
             }
 
             // Write tenant info cosmos db collection name to app config
@@ -167,12 +198,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             var storageAccountConnectionString = await this.keyVaultHelper.GetSecretAsync(STORAGE_ACCOUNT_CONNECTION_STRING_KEY);
 
             var userId = "";
+            TenantModel tenant = null;
+            bool accessToTenant = false;
             try
             {
                 userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
                 if (String.IsNullOrEmpty(userId))
                 {
-                    throw new NullReferenceException("The UserId retrieved from Http Context was null or empty.");
+                    throw new NullReferenceException($"The tenant {tenantId} does not exist in Table Storage.");
                 }
             }
             catch (Exception e)
@@ -181,22 +214,32 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             }
            
             // Create a table storage helper now that we have the storage account conn string
-            var tableStorageHelper = new TableStorageHelper(storageAccountConnectionString); 
+            var tableStorageHelper = new TableStorageHelper(storageAccountConnectionString);
 
             // Verify that the user has access to the specified tenant
-            var userTenant = await tableStorageHelper.ReadFromTableAsync<UserTenantModel>(USER_TABLE_ID, userId, tenantId);
-            if (userTenant == null) {
-                // User does not have access
+            try
+            {
+                accessToTenant = await _identityClient.isUserAuthenticated(userId, tenantId);
+            }
+            catch (Exception e)
+            {
                 throw new NoAuthorizationException($"Unable to retrieve the user's tenant for User Id {userId}. The user may not be authorized.");
             }
 
-            // Load the tenant from table storage
-            string partitionKey = tenantId.Substring(0, 1);
-            TenantModel tenant = await tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId); 
-            if (tenant == null)
+            if (!accessToTenant)
             {
-                throw new NullReferenceException($"The tenant {tenantId} does not exist in Table Storage.");
+                throw new NoAuthorizationException($"Incorrect role for User Id {userId} associated with this tenant. The user may not be authorized.");
             }
+            try
+            {
+                // Load the tenant from table storage
+                tenant = await tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, tenantId.Substring(0, 1), tenantId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to retrieve the tenant from table storage", e);
+            }
+
             return tenant;
         }
 
@@ -231,13 +274,22 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             Dictionary<string, bool> deletionRecord = new Dictionary<string, bool>{};
            
             // Create a table storage helper now that we have the storage account conn string
-            var tableStorageHelper = new TableStorageHelper(storageAccountConnectionString); 
+            var tableStorageHelper = new TableStorageHelper(storageAccountConnectionString);
 
             // Verify that the user has access to the specified tenant
-            var userTenant = await tableStorageHelper.ReadFromTableAsync<UserTenantModel>(USER_TABLE_ID, userId, tenantId);
-            if (userTenant == null) {
-                // User does not have access
+            bool accessToTenant = false;
+            try
+            {
+                accessToTenant = await _identityClient.isUserAuthenticated(userId, tenantId);
+            }
+            catch (Exception e)
+            {
                 throw new NoAuthorizationException($"Unable to retrieve the user's tenant for User Id {userId}. The user may not be authorized.");
+            }
+
+            if (!accessToTenant)
+            {
+                throw new NoAuthorizationException($"Incorrect role for User Id {userId} associated with this tenant. The user may not be authorized.");
             }
 
             // Load the tenant from table storage
@@ -345,7 +397,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             var response = new
             {
                 tenantId = tenantGuid,
-                fullyDeleted = deletionRecord.All((item) => { return item.Value; }),
+                fullyDeleted = deletionRecord.All(item => item.Value),
                 deletionRecord = deletionRecord
             };
             return JsonConvert.SerializeObject(response);
