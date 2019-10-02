@@ -47,7 +47,6 @@ jobs:
     inputs:
       collectionSourceType: 'file'
       Contents: '${{parameters.service}}/WebService.Test/testCollection.json'
-      collectionSourceType: 'file'
       environment: '${{parameters.service}}/WebService.Test/newmanEnvironment.json'
       reporters: 'cli,junit'
       reporterJUnitExport: $(System.DefaultWorkingDirectory)/${{parameters.service}}-integration-test-report.xml
