@@ -149,5 +149,5 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -n
-          az aks get-credentials -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}}
+          az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
           azds space remove -n $(devSpace) -y
