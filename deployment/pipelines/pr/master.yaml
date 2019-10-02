@@ -1,14 +1,9 @@
 # Trigger on PRs into master
 pr:
-  branches:
-    include:
-    - master
+- master
 
 # Don't trigger any CI 
-trigger:
-  branches:
-    exclude:
-    - '*' 
+trigger: none
 
 resources:
 - repo: self
