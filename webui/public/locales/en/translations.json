@@ -24,6 +24,7 @@
   "tabs": {
     "dashboard": "Dashboard",
     "devices": "Device Explorer",
+    "users": "User Management",
     "rules": "Rules",
     "maintenance": "Maintenance",
     "packages": "Packages",
@@ -207,6 +208,30 @@
     "refreshing": "Refreshing",
     "lastRefreshed": "Last refreshed",
     "ariaLabel": "Refresh page"
+  },
+  "users":{
+    "title": "User Management",
+    "ariaLabel": "Search users",
+    "searchPlaceholder": "Search users...",
+    "flyouts":{
+      "new":{
+        "contextMenuName": "New user"
+      },
+      "delete": {
+        "title": "Delete",
+        "header": "Delete users",
+        "description": "This action will remove the selected user from this tenant.",
+        "confirmNo": "No, do not remove selected users from this tenant.",
+        "confirmYes": "Yes, please remove selected users from this tenant.",
+        "summaryHeader": "Summary",
+        "affected": "Affected users",
+        "cancel": "Cancel",
+        "apply": "Delete",
+        "pending": "Deleting users... ",
+        "applySuccess": "Users deleted successfully!",
+        "close": "Close"
+      }
+    }
   },
   "devices": {
     "title": "Device Explorer",
