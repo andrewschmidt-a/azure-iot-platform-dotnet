@@ -31,7 +31,7 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
-          az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
+          # az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
 
     - task: KubectlInstaller@0
       displayName: Install kubectl
@@ -149,4 +149,5 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -n
+          az aks get-credentials -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}}
           azds space remove -n $(devSpace) -y
