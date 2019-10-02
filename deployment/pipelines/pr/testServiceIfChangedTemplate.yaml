@@ -21,6 +21,18 @@ jobs:
       command: test
       projects: '${{parameters.service}}/**/*Test.csproj'
 
+  - task: AzureCLI@1
+    displayName: Get Service Dev Space URL and Update Env File
+    condition: eq(variables['continue'], '1')
+    inputs:
+      azureSubscription: ${{parameters.azureSubscription}}
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+        az aks use-dev-spaces -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}} -s default/${{parameters.devSpace}} -y
+        serviceUri=`azds list-uris -o json | jq -r '.[] | select(.workloadName=="${{parameters.service}}") | .uri'`
+        jq -r --arg uri "$uri" '.values[0].value = $uri' ${{parameters.service}}/WebService.Test/newmanEnvironment.json > tempEnv
+        mv tempEnv ${{parameters.service}}/WebService.Test/newmanEnvironment.json
+
   - task: Bash@3
     displayName: Install Newman
     condition: eq(variables['continue'], '1')
@@ -34,8 +46,9 @@ jobs:
     condition: eq(variables['continue'], '1')
     inputs:
       collectionSourceType: 'file'
-      Contents: '${{parameters.service}}/**/WebService.Test/testCollection.json'
-      environmentSourceType: 'none'
+      Contents: '${{parameters.service}}/WebService.Test/testCollection.json'
+      collectionSourceType: 'file'
+      environment: '${{parameters.service}}/WebService.Test/newmanEnvironment.json'
       reporters: 'cli,junit'
       reporterJUnitExport: $(System.DefaultWorkingDirectory)/${{parameters.service}}-integration-test-report.xml
 

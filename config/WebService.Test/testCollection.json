@@ -1,12 +1,12 @@
 {
 	"info": {
 		"_postman_id": "fab9adea-c786-45fd-a4ca-2fd29544154d",
-		"name": "Test Config",
+		"name": "Test Service",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "Get config service status",
+			"name": "Get service status",
 			"event": [
 				{
 					"listen": "test",
@@ -30,20 +30,11 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://config-ci-build.s.default.config.9wf5lfcpqz.cus.azds.io/v1/status",
-					"protocol": "http",
+					"raw": "{{base_url}}v1/status",
 					"host": [
-						"config-ci-build",
-						"s",
-						"default",
-						"config",
-						"9wf5lfcpqz",
-						"cus",
-						"azds",
-						"io"
+						"{{base_url}}v1"
 					],
 					"path": [
-						"v1",
 						"status"
 					]
 				}
