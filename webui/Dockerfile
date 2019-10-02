@@ -1,5 +1,4 @@
 FROM node:11-alpine as codebuilder
-COPY ./ /app/
 WORKDIR /app
 RUN echo "Install Bash for scripts"     && apk add --no-cache --virtual bash
 RUN echo "Installing the python2 (reqd for node pckgs)" && apk --update add python3
@@ -23,9 +22,6 @@ MAINTAINER Andrew Schmidt (https://github.com/andrewschmidt-a)
 
 LABEL Tags="Azure,IoT,Solutions,React,SPA"
 
-COPY ./ /app
-WORKDIR /app
-
 RUN echo "Installing web server..." \
  && apk add --no-cache nginx \
  && mkdir /app/logs \
@@ -37,6 +33,9 @@ RUN echo "Installing web server..." \
 EXPOSE 10080
 VOLUME /app/logs
 
+COPY package.json .
+RUN echo "Installing node packages ..." && npm --add-python-to-path='true' install
+COPY ./ /app
 RUN ["chmod", "+x", "/app/run.sh"]
 RUN ["chmod", "+x", "/app/build.sh"]
 RUN ["chmod", "+x", "/app/set_env.sh"]

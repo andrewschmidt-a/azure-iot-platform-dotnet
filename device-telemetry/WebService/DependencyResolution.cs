@@ -8,6 +8,7 @@ using Microsoft.Azure.EventHubs.Processor;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.EventHub;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External;
+using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
@@ -102,6 +103,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             builder.RegisterInstance(eventProcessorFactory).As<IEventProcessorFactory>().SingleInstance();
             
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
+
+            builder.RegisterType<AppConfigurationHelper>().As<IAppConfigurationHelper>().SingleInstance();
         }
 
         private static void RegisterFactory(IContainer container)
