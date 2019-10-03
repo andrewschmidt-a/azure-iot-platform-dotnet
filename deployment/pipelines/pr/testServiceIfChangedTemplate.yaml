@@ -1,5 +1,9 @@
 parameters:
   service: ''
+  azureSubscription: ''
+  resourceGroup: ''
+  aksCluster: ''
+  devSpace: ''
 
 jobs:
 - job:

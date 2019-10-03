@@ -109,18 +109,34 @@ stages:
   - template: testServiceIfChangedTemplate.yaml
     parameters:
       service: config
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: testServiceIfChangedTemplate.yaml
     parameters:
       service: device-simulation
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: testServiceIfChangedTemplate.yaml
     parameters:
       service: device-telemetry
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: testServiceIfChangedTemplate.yaml
     parameters:
       service: identity-gateway
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: testServiceIfChangedTemplate.yaml
     parameters:
@@ -129,10 +145,18 @@ stages:
   - template: testServiceIfChangedTemplate.yaml
     parameters:
       service: storage-adapter
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
   - template: testServiceIfChangedTemplate.yaml
     parameters:
       service: tenant-manager
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
 - stage: Delete_Dev_Space
   condition: always()
