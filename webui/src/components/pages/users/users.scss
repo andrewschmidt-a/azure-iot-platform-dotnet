@@ -4,7 +4,7 @@
 @import 'src/styles/mixins';
 @import 'src/styles/themes';
 
-.devices-container {
+.users-container {
   padding: $baseContentPadding;
   overflow: hidden;
   @include themify($themes) {

@@ -10,11 +10,11 @@ describe('Devices Component', () => {
   it('Renders without crashing', () => {
 
     const fakeProps = {
-      devices: {},
+      users: {},
       entities: {},
       error: undefined,
       isPending: false,
-      deviceGroups: [],
+      userGroups: [],
       lastUpdated: undefined,
       fetchDevices: () => {},
       changeDeviceGroup: (id) => {},

@@ -4,32 +4,28 @@ import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
 import { Users } from './users';
 import {
-  epics as devicesEpics,
-  getDevices,
-  getDevicesError,
-  getDevicesLastUpdated,
-  getDevicesPendingStatus
-} from 'store/reducers/devicesReducer';
+  epics as usersEpics,
+  getUsers,
+  getUsersError,
+  getUsersLastUpdated,
+  getUsersPendingStatus
+} from 'store/reducers/usersReducer';
 import {
   redux as appRedux,
-  epics as appEpics,
-  getDeviceGroups,
-  getDeviceGroupError
+  epics as appEpics
 } from 'store/reducers/appReducer';
 
 // Pass the devices status
 const mapStateToProps = state => ({
-  devices: getDevices(state),
-  deviceError: getDevicesError(state),
-  isPending: getDevicesPendingStatus(state),
-  deviceGroups: getDeviceGroups(state),
-  deviceGroupError: getDeviceGroupError(state),
-  lastUpdated: getDevicesLastUpdated(state)
+  users: getUsers(state),
+  userError: getUsersError(state),
+  isPending: getUsersPendingStatus(state),
+  lastUpdated: getUsersLastUpdated(state)
 });
 
 // Wrap the dispatch method
 const mapDispatchToProps = dispatch => ({
-  fetchDevices: () => dispatch(devicesEpics.actions.fetchDevices()),
+  fetchUsers: () => dispatch(usersEpics.actions.fetchUsers()),
   updateCurrentWindow: (currentWindow) => dispatch(appRedux.actions.updateCurrentWindow(currentWindow)),
   logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel))
 });

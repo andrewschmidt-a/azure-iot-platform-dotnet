@@ -67,7 +67,9 @@
     "DeletePackages": "Delete packages",
     "CreatePackages": "Create packages",
     "CreateDeployments": "Create deployments",
-    "DeleteDeployments": "Delete deployments"
+    "DeleteDeployments": "Delete deployments",
+    "InviteUsers": "Invite users",
+    "DeleteUsers": "Delete users"
   },
   "protected": {
     "permissionDenied": "Permission {{permission}} is denied."
@@ -213,9 +215,20 @@
     "title": "User Management",
     "ariaLabel": "Search users",
     "searchPlaceholder": "Search users...",
+    "grid": {
+      "userName": "User name",
+      "userType": "User type",
+      "userId": "User guid"
+    },
     "flyouts":{
-      "new":{
-        "contextMenuName": "New user"
+      "new": {
+        "contextMenuName": "New user",
+        "title": "Invite users",
+        "user": {
+          "label":"Email Address"
+        },
+        "apply": "Send invite",
+        "cancel": "Cancel"
       },
       "delete": {
         "title": "Delete",

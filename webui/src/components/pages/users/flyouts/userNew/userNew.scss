@@ -3,17 +3,22 @@
 @import 'src/styles/mixins';
 @import 'src/styles/themes';
 
-.devices-new-container {
+.users-new-container {
   @include rem-font-size(14px);
   @include rem-fallback(padding, 12px, 0px);
 
-  .devices-new-content { @include rem-fallback(padding-bottom, 32px); }
+  .users-new-content {
+     @include rem-fallback(padding-bottom, 32px);
+     input {
+       width: 100%
+     }
+  }
 
   .form-group-label { @include rem-fallback(font-size, 16px); }
 
-  .device-count { @include rem-fallback(margin-left, 20px); }
+  .user-count { @include rem-fallback(margin-left, 20px); }
 
-  .device-id.form-control { @include rem-fallback(margin, -4px, 0px, 8px, 0px); }
+  .user-id.form-control { @include rem-fallback(margin, -4px, 0px, 8px, 0px); }
 
   .radio-container {
     margin-top: 0px;
@@ -32,7 +37,7 @@
     input { width: 100%; }
   }
 
-  .devices-new-error {
+  .users-new-error {
     border: 1px transparent solid;
     @include rem-fallback(margin, 12px, 0px);
     @include rem-fallback(padding, 16px);
@@ -45,18 +50,18 @@
     @include rem-fallback(margin-left, 8px);
   }
 
-  .device-detail {
+  .user-detail {
     width: 100%;
 
     .section-header { font-size: inherit; }
 
-    .device-detail-contents {
+    .user-detail-contents {
       display: flex;
       align-items: flex-start;
       word-wrap: break-word;
       flex-grow: 0;
 
-      .device-detail-value { flex-basis: 90%; }
+      .user-detail-value { flex-basis: 90%; }
 
       .copy-icon {
         flex-basis: 10%;
@@ -69,7 +74,7 @@
     }
   }
 
-  .devices-new-error {
+  .users-new-error {
     border: 1px transparent solid;
     @include rem-fallback(margin, 12px, 0px);
     @include rem-fallback(padding, 16px);
@@ -81,13 +86,13 @@
     .radio-container .form-group-label,
     .sub-settings .form-group-label { color: themed('colorContentTextDim'); }
 
-    .devices-new-error { border-color: themed('colorAlert'); }
+    .users-new-error { border-color: themed('colorAlert'); }
 
     .summary-icon svg { fill: themed('colorContentText'); }
 
-    .device-detail {
+    .user-detail {
       .section-header { color: themed('colorContentText'); }
-      .device-detail-value { color: themed('colorContentTextDim'); }
+      .user-detail-value { color: themed('colorContentTextDim'); }
       .copy-icon svg { fill: themed('colorContentTextDim'); }
     }
   }

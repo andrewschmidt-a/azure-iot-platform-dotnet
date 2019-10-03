@@ -3,20 +3,19 @@
 import React, { Component } from 'react';
 import { permissions, toDiagnosticsModel } from 'services/models';
 import { Btn, ComponentArray, PcsGrid, Protected } from 'components/shared';
-import { deviceColumnDefs, defaultDeviceGridProps } from './usersGridConfig';
+import { userColumnDefs, defaultUserGridProps } from './usersGridConfig';
 import { UserDeleteContainer } from '../flyouts/userDelete';
-import { DeviceJobsContainer } from '../flyouts/deviceJobs';
-import { DeviceDetailsContainer } from '../flyouts/deviceDetails';
+import { UserDetailsContainer } from '../flyouts/userDetails';
 import { isFunc, svgs, translateColumnDefs } from 'utilities';
 import { checkboxColumn } from 'components/shared/pcsGrid/pcsGridConfig';
 
 const closedFlyoutState = {
   openFlyoutName: undefined,
-  softSelectedDeviceId: undefined
+  softSelectedUserId: undefined
 };
 
 /**
- * A grid for displaying devices
+ * A grid for displaying users
  *
  * Encapsulates the PcsGrid props
  */
@@ -27,21 +26,17 @@ export class UsersGrid extends Component {
     // Set the initial state
     this.state = closedFlyoutState;
 
-    // Default device grid columns
+    // Default user grid columns
     this.columnDefs = [
       checkboxColumn,
-      deviceColumnDefs.id,
-      deviceColumnDefs.isSimulated,
-      deviceColumnDefs.deviceType,
-      deviceColumnDefs.firmware,
-      deviceColumnDefs.telemetry,
-      deviceColumnDefs.status,
-      deviceColumnDefs.lastConnection
+      userColumnDefs.name,
+      userColumnDefs.id,
+      userColumnDefs.type
     ];
 
     this.contextBtns =
       <ComponentArray>
-        <Protected permission={permissions.deleteDevices}>
+        <Protected permission={permissions.deleteUsers}>
           <Btn svg={svgs.trash} onClick={this.openFlyout('delete')}>{props.t('users.flyouts.delete.title')}</Btn>
         </Protected>
       </ComponentArray>;
@@ -53,7 +48,7 @@ export class UsersGrid extends Component {
    * @param {Object} gridReadyEvent An object containing access to the grid APIs
   */
   onGridReady = gridReadyEvent => {
-    this.deviceGridApi = gridReadyEvent.api;
+    this.userGridApi = gridReadyEvent.api;
     // Call the onReady props if it exists
     if (isFunc(this.props.onGridReady)) {
       this.props.onGridReady(gridReadyEvent);
@@ -62,17 +57,15 @@ export class UsersGrid extends Component {
 
   openFlyout = (flyoutName) => () => this.setState({
     openFlyoutName: flyoutName,
-    softSelectedDeviceId: undefined
+    softSelectedUserId: undefined
   });
 
   getOpenFlyout = () => {
     switch (this.state.openFlyoutName) {
       case 'delete':
-        return <UserDeleteContainer key="delete-device-key" onClose={this.closeFlyout} devices={this.deviceGridApi.getSelectedRows()} />
-      case 'jobs':
-        return <DeviceJobsContainer key="jobs-device-key" onClose={this.closeFlyout} devices={this.deviceGridApi.getSelectedRows()} />
+        return <UserDeleteContainer key="delete-user-key" onClose={this.closeFlyout} users={this.userGridApi.getSelectedRows()} />
       case 'details':
-        return <DeviceDetailsContainer key="details-device-key" onClose={this.closeFlyout} deviceId={this.state.softSelectedDeviceId} />
+        return <UserDetailsContainer key="details-user-key" onClose={this.closeFlyout} userId={this.state.softSelectedUserId} />
       default:
         return null;
     }
@@ -83,44 +76,44 @@ export class UsersGrid extends Component {
   /**
    * Handles soft select props method
    *
-   * @param deviceId The ID of the currently soft selected device
+   * @param userId The ID of the currently soft selected user
    */
-  onSoftSelectChange = (deviceId) => {
+  onSoftSelectChange = (userId) => {
     const { onSoftSelectChange } = this.props;
-    if (deviceId) {
+    if (userId) {
       this.setState({
         openFlyoutName: 'details',
-        softSelectedDeviceId: deviceId
+        softSelectedUserId: userId
       });
     } else {
       this.closeFlyout();
     }
     if (isFunc(onSoftSelectChange)) {
-      onSoftSelectChange(deviceId);
+      onSoftSelectChange(userId);
     }
   }
 
   /**
    * Handles context filter changes and calls any hard select props method
    *
-   * @param {Array} selectedDevices A list of currently selected devices
+   * @param {Array} selectedUsers A list of currently selected users
    */
-  onHardSelectChange = (selectedDevices) => {
+  onHardSelectChange = (selectedUsers) => {
     const { onContextMenuChange, onHardSelectChange } = this.props;
     if (isFunc(onContextMenuChange)) {
-      onContextMenuChange(selectedDevices.length > 0 ? this.contextBtns : null);
+      onContextMenuChange(selectedUsers.length > 0 ? this.contextBtns : null);
     }
     if (isFunc(onHardSelectChange)) {
-      onHardSelectChange(selectedDevices);
+      onHardSelectChange(selectedUsers);
     }
   }
 
   onColumnMoved = () => {
-    this.props.logEvent(toDiagnosticsModel('Devices_ColumnArranged', {}));
+    this.props.logEvent(toDiagnosticsModel('Users_ColumnArranged', {}));
   }
 
   onSortChanged = () => {
-    this.props.logEvent(toDiagnosticsModel('Devices_Sort_Click', {}));
+    this.props.logEvent(toDiagnosticsModel('Users_Sort_Click', {}));
   }
 
   getSoftSelectId = ({ id } = '') => id;
@@ -128,11 +121,11 @@ export class UsersGrid extends Component {
   render() {
     const gridProps = {
       /* Grid Properties */
-      ...defaultDeviceGridProps,
+      ...defaultUserGridProps,
       columnDefs: translateColumnDefs(this.props.t, this.columnDefs),
       sizeColumnsToFit: true,
       getSoftSelectId: this.getSoftSelectId,
-      softSelectId: this.state.softSelectedDeviceId || {},
+      softSelectId: this.state.softSelectedUserId || {},
       ...this.props, // Allow default property overrides
       deltaRowDataMode: true,
       enableSorting: true,
@@ -151,7 +144,7 @@ export class UsersGrid extends Component {
     };
 
     return ([
-      <PcsGrid key="device-grid-key" {...gridProps} />,
+      <PcsGrid key="user-grid-key" {...gridProps} />,
       this.getOpenFlyout()
     ]);
   }

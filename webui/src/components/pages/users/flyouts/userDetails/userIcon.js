@@ -5,6 +5,6 @@ import React from 'react';
 import { Svg } from 'components/shared';
 import { svgs } from 'utilities';
 
-export const DeviceIcon = ({ type }) => (
+export const UserIcon = ({ type }) => (
   <Svg path={svgs.devices[(type || "generic").toLowerCase()]} className="device-icon" />
 );

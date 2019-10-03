@@ -6,51 +6,31 @@ import { EMPTY_FIELD_VAL, gridValueFormatters } from 'components/shared/pcsGrid/
 
 const { checkForEmpty } = gridValueFormatters;
 
-/** A collection of column definitions for the devices grid */
-export const deviceColumnDefs = {
+/** A collection of column definitions for the users grid */
+export const userColumnDefs = {
   id: {
-    headerName: 'devices.grid.deviceName',
+    headerName: 'users.grid.userId',
     field: 'id',
-    sort: 'asc',
     cellRendererFramework: SoftSelectLinkRenderer
   },
-  isSimulated: {
-    headerName: 'devices.grid.simulated',
-    field: 'isSimulated',
-    cellRendererFramework: IsSimulatedRenderer
+  name: {
+    headerName: 'users.grid.userName',
+    field: 'name',
+    sort: 'asc',
+    valueFormatter: ({ value }) => checkForEmpty(value)
   },
-  deviceType: {
-    headerName: 'devices.grid.deviceType',
+  type: {
+    headerName: 'users.grid.userType',
     field: 'type',
     valueFormatter: ({ value }) => checkForEmpty(value)
   },
-  firmware: {
-    headerName: 'devices.grid.firmware',
-    field: 'firmware',
-    valueFormatter: ({ value }) => checkForEmpty(value)
-  },
-  telemetry: {
-    headerName: 'devices.grid.telemetry',
-    field: 'telemetry',
-    valueFormatter: ({ value }) => Object.keys(value || {}).join('; ') || EMPTY_FIELD_VAL
-  },
-  status: {
-    headerName: 'devices.grid.status',
-    field: 'connected',
-    cellRendererFramework: ConnectionStatusRenderer
-  },
-  lastConnection: {
-    headerName: 'devices.grid.lastConnection',
-    field: 'lastActivity',
-    cellRendererFramework: TimeRenderer
-  }
 };
 
-/** Given a device object, extract and return the device Id */
+/** Given a user object, extract and return the user Id */
 export const getSoftSelectId = ({ Id }) => Id;
 
-/** Shared device grid AgGrid properties */
-export const defaultDeviceGridProps = {
+/** Shared user grid AgGrid properties */
+export const defaultUserGridProps = {
   enableColResize: true,
   multiSelect: true,
   pagination: true,

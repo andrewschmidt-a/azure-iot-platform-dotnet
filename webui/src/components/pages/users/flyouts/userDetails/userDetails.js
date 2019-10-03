@@ -7,7 +7,7 @@ import moment from 'moment';
 
 import Config from 'app.config';
 import { TelemetryService } from 'services';
-import { DeviceIcon } from './deviceIcon';
+import { UserIcon } from './userIcon';
 import { RulesGrid, rulesColumnDefs } from 'components/pages/rules/rulesGrid';
 import {
   copyToClipboard,
@@ -34,11 +34,11 @@ import { TelemetryChartContainer as TelemetryChart, chartColorObjects } from 'co
 import { transformTelemetryResponse } from 'components/pages/dashboard/panels';
 import { getEdgeAgentStatusCode } from 'utilities';
 
-import './deviceDetails.scss';
+import './userDetails.scss';
 
 const Section = Flyout.Section;
 
-export class DeviceDetails extends Component {
+export class UserDetails extends Component {
   constructor(props) {
     super(props);
 
@@ -73,7 +73,7 @@ export class DeviceDetails extends Component {
         currentModuleStatus: this.props.moduleStatus
       };
     } else {
-      this.props.fetchModules(this.props.device.id);
+      this.props.fetchModules(this.props.user.id);
     }
   }
 
@@ -81,16 +81,16 @@ export class DeviceDetails extends Component {
     if (!this.props.rulesLastUpdated) this.props.fetchRules();
 
     const {
-      device = {},
-      device: {
+      user = {},
+      user: {
         telemetry: {
           interval = '0'
         } = {}
       } = {}
     } = this.props;
 
-    const deviceId = device.id;
-    this.fetchAlerts(deviceId);
+    const userId = user.id;
+    this.fetchAlerts(userId);
 
     const [hours = 0, minutes = 0, seconds = 0] = interval.split(':').map(int);
     const refreshInterval = ((((hours * 60) + minutes) * 60) + seconds) * 1000;
@@ -101,13 +101,13 @@ export class DeviceDetails extends Component {
     const telemetry$ =
       this.resetTelemetry$
         .do(_ => this.setState({ telemetry: {} }))
-        .switchMap(deviceId =>
-          TelemetryService.getTelemetryByDeviceIdP15M([deviceId])
+        .switchMap(userId =>
+          TelemetryService.getTelemetryByUserIdP15M([userId])
             .merge(
               this.telemetryRefresh$ // Previous request complete
                 .delay(refreshInterval || Config.dashboardRefreshInterval) // Wait to refresh
                 .do(onPendingStart)
-                .flatMap(_ => TelemetryService.getTelemetryByDeviceIdP1M([deviceId]))
+                .flatMap(_ => TelemetryService.getTelemetryByUserIdP1M([userId]))
             )
             .flatMap(messages =>
               transformTelemetryResponse(() => this.state.telemetry)(messages)
@@ -125,30 +125,30 @@ export class DeviceDetails extends Component {
       telemetryError => this.setState({ telemetryError, telemetryIsPending: false })
     );
 
-    this.resetTelemetry$.next(deviceId);
+    this.resetTelemetry$.next(userId);
   }
 
   componentWillReceiveProps(nextProps) {
     const {
-      deviceModuleStatus,
-      isDeviceModuleStatusPending,
-      deviceModuleStatusError,
+      userModuleStatus,
+      isUserModuleStatusPending,
+      userModuleStatusError,
       moduleStatus,
       resetPendingAndError,
-      device,
+      user,
       fetchModules
     } = nextProps;
     let tempState = {};
     /*
-      deviceModuleStatus is a prop fetched by making fetchModules() API call through deviceDetails.container on demand.
+      userModuleStatus is a prop fetched by making fetchModules() API call through userDetails.container on demand.
       moduleStatus is a prop sent from deploymentDetailsGrid which it already has in rowData.
-      Both deviceModuleStatus and moduleStatus have the same content,
+      Both userModuleStatus and moduleStatus have the same content,
         but come from different sources based on the page that opens this flyout.
       Depending on which one is available, currentModuleStatus is set in component state.
     */
 
-    if ((this.props.device || {}).id !== device.id) {
-      // Reset state if the device changes.
+    if ((this.props.user || {}).id !== user.id) {
+      // Reset state if the user changes.
       resetPendingAndError();
       tempState = { ...this.baseState };
 
@@ -159,16 +159,16 @@ export class DeviceDetails extends Component {
           currentModuleStatus: moduleStatus
         };
       } else {
-        // Otherwise make an API call to get deviceModuleStatus.
-        fetchModules(device.id);
+        // Otherwise make an API call to get userModuleStatus.
+        fetchModules(user.id);
       }
 
-      const deviceId = (device || {}).id;
-      this.resetTelemetry$.next(deviceId);
-      this.fetchAlerts(deviceId);
-    } else if (!moduleStatus && !isDeviceModuleStatusPending && !deviceModuleStatusError) {
-      // set deviceModuleStatus in state, if moduleStatus doesn't exist and devicesReducer successfully received the API response.
-      tempState = { currentModuleStatus: deviceModuleStatus };
+      const userId = (user || {}).id;
+      this.resetTelemetry$.next(userId);
+      this.fetchAlerts(userId);
+    } else if (!moduleStatus && !isUserModuleStatusPending && !userModuleStatusError) {
+      // set userModuleStatus in state, if moduleStatus doesn't exist and usersReducer successfully received the API response.
+      tempState = { currentModuleStatus: userModuleStatus };
     }
 
     if (Object.keys(tempState).length) this.setState(tempState);
@@ -179,9 +179,9 @@ export class DeviceDetails extends Component {
     this.telemetrySubscription.unsubscribe();
   }
 
-  copyDevicePropertiesToClipboard = () => {
-    if (this.props.device) {
-      copyToClipboard(JSON.stringify(this.props.device.properties || {}));
+  copyUserPropertiesToClipboard = () => {
+    if (this.props.user) {
+      copyToClipboard(JSON.stringify(this.props.user.properties || {}));
     }
   }
 
@@ -195,13 +195,13 @@ export class DeviceDetails extends Component {
       name: (rules[alert.ruleId] || {}).name
     }));
 
-  fetchAlerts = (deviceId) => {
+  fetchAlerts = (userId) => {
     this.setState({ isAlertsPending: true });
 
     this.alertSubscription = TelemetryService.getAlerts({
       limit: 5,
       order: "desc",
-      devices: deviceId
+      users: userId
     })
       .subscribe(
         alerts => this.setState({ alerts, isAlertsPending: false, alertsError: undefined }),
@@ -213,11 +213,11 @@ export class DeviceDetails extends Component {
     const {
       t,
       onClose,
-      device,
+      user,
       theme,
       timeSeriesExplorerUrl,
-      isDeviceModuleStatusPending,
-      deviceModuleStatusError
+      isUserModuleStatusPending,
+      userModuleStatusError
     } = this.props;
     const { telemetry, lastMessage, currentModuleStatus } = this.state;
     const lastMessageTime = (lastMessage || {}).time;
@@ -225,45 +225,45 @@ export class DeviceDetails extends Component {
     const rulesGridProps = {
       rowData: isPending ? undefined : this.applyRuleNames(this.state.alerts || [], this.props.rules || []),
       t: this.props.t,
-      deviceGroups: this.props.deviceGroups,
+      userGroups: this.props.userGroups,
       domLayout: 'autoHeight',
       columnDefs: translateColumnDefs(this.props.t, this.columnDefs),
       suppressFlyouts: true
     };
-    const tags = Object.entries(device.tags || {});
-    const properties = Object.entries(device.properties || {});
+    const tags = Object.entries(user.tags || {});
+    const properties = Object.entries(user.properties || {});
     const moduleQuerySuccessful = currentModuleStatus &&
       currentModuleStatus !== {} &&
-      !isDeviceModuleStatusPending &&
-      !deviceModuleStatusError;
+      !isUserModuleStatusPending &&
+      !userModuleStatusError;
     // Add parameters to Time Series Insights Url
 
     const timeSeriesParamUrl =
       timeSeriesExplorerUrl
         ? timeSeriesExplorerUrl +
-        `&relativeMillis=1800000&timeSeriesDefinitions=[{"name":"${device.id}","measureName":"${Object.keys(telemetry).sort()[0]}","predicate":"'${device.id}'"}]`
+        `&relativeMillis=1800000&timeSeriesDefinitions=[{"name":"${user.id}","measureName":"${Object.keys(telemetry).sort()[0]}","predicate":"'${user.id}'"}]`
         : undefined;
 
     return (
-      <Flyout.Container header={t('devices.flyouts.details.title')} t={t} onClose={onClose}>
-        <div className="device-details-container">
+      <Flyout.Container header={t('users.flyouts.details.title')} t={t} onClose={onClose}>
+        <div className="user-details-container">
           {
-            !device &&
-            <div className="device-details-container">
-              <ErrorMsg>{t("devices.flyouts.details.noDevice")}</ErrorMsg>
+            !user &&
+            <div className="user-details-container">
+              <ErrorMsg>{t("users.flyouts.details.noUser")}</ErrorMsg>
             </div>
           }
           {
-            !!device &&
-            <div className="device-details-container">
+            !!user &&
+            <div className="user-details-container">
 
-              <Grid className="device-details-header">
+              <Grid className="user-details-header">
                 <Row>
-                  <Cell className="col-3"><DeviceIcon type={device.type} /></Cell>
+                  <Cell className="col-3"><UserIcon type={user.type} /></Cell>
                   <Cell className="col-7">
-                    <div className="device-name">{device.id}</div>
-                    <div className="device-simulated">{device.isSimulated ? t('devices.flyouts.details.simulated') : t('devices.flyouts.details.notSimulated')}</div>
-                    <div className="device-connected">{device.connected ? t('devices.flyouts.details.connected') : t('devices.flyouts.details.notConnected')}</div>
+                    <div className="user-name">{user.id}</div>
+                    <div className="user-simulated">{user.isSimulated ? t('users.flyouts.details.simulated') : t('users.flyouts.details.notSimulated')}</div>
+                    <div className="user-connected">{user.connected ? t('users.flyouts.details.connected') : t('users.flyouts.details.notConnected')}</div>
                   </Cell>
                 </Row>
               </Grid>
@@ -274,7 +274,7 @@ export class DeviceDetails extends Component {
               }
 
               <Section.Container>
-                <Section.Header>{t('devices.flyouts.details.telemetry.title')}</Section.Header>
+                <Section.Header>{t('users.flyouts.details.telemetry.title')}</Section.Header>
                 <Section.Content>
                   {
                     timeSeriesExplorerUrl &&
@@ -285,27 +285,27 @@ export class DeviceDetails extends Component {
               </Section.Container>
 
               <Section.Container>
-                <Section.Header>{t('devices.flyouts.details.tags.title')}</Section.Header>
+                <Section.Header>{t('users.flyouts.details.tags.title')}</Section.Header>
                 <Section.Content>
                   <SectionDesc>
-                    <Trans i18nKey={"devices.flyouts.details.tags.description"}>
+                    <Trans i18nKey={"users.flyouts.details.tags.description"}>
                       To edit, close this panel, click on
-                      <strong>{{ jobs: t('devices.flyouts.jobs.title') }}</strong>
+                      <strong>{{ jobs: t('users.flyouts.jobs.title') }}</strong>
                       then select
-                      <strong>{{ tags: t('devices.flyouts.jobs.tags.radioLabel') }}</strong>.
+                      <strong>{{ tags: t('users.flyouts.jobs.tags.radioLabel') }}</strong>.
                     </Trans>
                   </SectionDesc>
                   {
                     (tags.length === 0) &&
-                    t('devices.flyouts.details.tags.noneExist')
+                    t('users.flyouts.details.tags.noneExist')
                   }
                   {
                     (tags.length > 0) &&
                     <Grid>
                       <GridHeader>
                         <Row>
-                          <Cell className="col-3">{t('devices.flyouts.details.tags.keyHeader')}</Cell>
-                          <Cell className="col-7">{t('devices.flyouts.details.tags.valueHeader')}</Cell>
+                          <Cell className="col-3">{t('users.flyouts.details.tags.keyHeader')}</Cell>
+                          <Cell className="col-7">{t('users.flyouts.details.tags.valueHeader')}</Cell>
                         </Row>
                       </GridHeader>
                       <GridBody>
@@ -324,23 +324,23 @@ export class DeviceDetails extends Component {
               </Section.Container>
 
               <Section.Container>
-                <Section.Header>{t('devices.flyouts.details.methods.title')}</Section.Header>
+                <Section.Header>{t('users.flyouts.details.methods.title')}</Section.Header>
                 <Section.Content>
                   <SectionDesc>
-                    <Trans i18nKey={"devices.flyouts.details.methods.description"}>
+                    <Trans i18nKey={"users.flyouts.details.methods.description"}>
                       To edit, close this panel, click on
-                      <strong>{{ jobs: t('devices.flyouts.jobs.title') }}</strong>
+                      <strong>{{ jobs: t('users.flyouts.jobs.title') }}</strong>
                       then select
-                      <strong>{{ methods: t('devices.flyouts.jobs.methods.radioLabel') }}</strong>.
+                      <strong>{{ methods: t('users.flyouts.jobs.methods.radioLabel') }}</strong>.
                     </Trans>
                   </SectionDesc>
                   {
-                    (device.methods.length === 0)
-                      ? t('devices.flyouts.details.methods.noneExist')
+                    (user.methods.length === 0)
+                      ? t('users.flyouts.details.methods.noneExist')
                       :
                       <Grid>
                         {
-                          device.methods.map((methodName, idx) =>
+                          user.methods.map((methodName, idx) =>
                             <Row key={idx}>
                               <Cell>{methodName}</Cell>
                             </Row>
@@ -352,19 +352,19 @@ export class DeviceDetails extends Component {
               </Section.Container>
 
               <Section.Container>
-                <Section.Header>{t('devices.flyouts.details.properties.title')}</Section.Header>
+                <Section.Header>{t('users.flyouts.details.properties.title')}</Section.Header>
                 <Section.Content>
                   <SectionDesc>
-                    <Trans i18nKey={"devices.flyouts.details.properties.description"}>
+                    <Trans i18nKey={"users.flyouts.details.properties.description"}>
                       To edit, close this panel, click on
-                      <strong>{{ jobs: t('devices.flyouts.jobs.title') }}</strong>
+                      <strong>{{ jobs: t('users.flyouts.jobs.title') }}</strong>
                       then select
-                      <strong>{{ properties: t('devices.flyouts.jobs.properties.radioLabel') }}</strong>.
+                      <strong>{{ properties: t('users.flyouts.jobs.properties.radioLabel') }}</strong>.
                     </Trans>
                   </SectionDesc>
                   {
                     (properties.length === 0) &&
-                    t('devices.flyouts.details.properties.noneExist')
+                    t('users.flyouts.details.properties.noneExist')
                   }
                   {
                     (properties.length > 0) &&
@@ -372,17 +372,17 @@ export class DeviceDetails extends Component {
                       <Grid>
                         <GridHeader>
                           <Row>
-                            <Cell className="col-3">{t('devices.flyouts.details.properties.keyHeader')}</Cell>
-                            <Cell className="col-7">{t('devices.flyouts.details.properties.valueHeader')}</Cell>
+                            <Cell className="col-3">{t('users.flyouts.details.properties.keyHeader')}</Cell>
+                            <Cell className="col-7">{t('users.flyouts.details.properties.valueHeader')}</Cell>
                           </Row>
                         </GridHeader>
                         <GridBody>
                           {
                             properties.map(([propertyName, propertyValue], idx) => {
-                              const desiredPropertyValue = device.desiredProperties[propertyName];
+                              const desiredPropertyValue = user.desiredProperties[propertyName];
                               const displayValue = !desiredPropertyValue || propertyValue === desiredPropertyValue
                                 ? propertyValue.toString()
-                                : t('devices.flyouts.details.properties.syncing', { reportedPropertyValue: propertyValue.toString(), desiredPropertyValue: desiredPropertyValue.toString() });
+                                : t('users.flyouts.details.properties.syncing', { reportedPropertyValue: propertyValue.toString(), desiredPropertyValue: desiredPropertyValue.toString() });
                               return (
                                 <Row key={idx}>
                                   <Cell className="col-3">{propertyName}</Cell>
@@ -393,10 +393,10 @@ export class DeviceDetails extends Component {
                           }
                         </GridBody>
                       </Grid>
-                      <Grid className="device-properties-actions">
+                      <Grid className="user-properties-actions">
                         <Row>
-                          <Cell className="col-8">{t('devices.flyouts.details.properties.copyAllProperties')}</Cell>
-                          <Cell className="col-2"><Btn svg={svgs.copy} onClick={this.copyDevicePropertiesToClipboard} >{t('devices.flyouts.details.properties.copy')}</Btn></Cell>
+                          <Cell className="col-8">{t('users.flyouts.details.properties.copyAllProperties')}</Cell>
+                          <Cell className="col-2"><Btn svg={svgs.copy} onClick={this.copyUserPropertiesToClipboard} >{t('users.flyouts.details.properties.copy')}</Btn></Cell>
                         </Row>
                       </Grid>
                     </ComponentArray>
@@ -405,33 +405,33 @@ export class DeviceDetails extends Component {
               </Section.Container>
 
               <Section.Container>
-                <Section.Header>{t('devices.flyouts.details.diagnostics.title')}</Section.Header>
+                <Section.Header>{t('users.flyouts.details.diagnostics.title')}</Section.Header>
                 <Section.Content>
-                  <SectionDesc>{t('devices.flyouts.details.diagnostics.description')}</SectionDesc>
+                  <SectionDesc>{t('users.flyouts.details.diagnostics.description')}</SectionDesc>
 
-                  <Grid className="device-details-diagnostics">
+                  <Grid className="user-details-diagnostics">
                     <GridHeader>
                       <Row>
-                        <Cell className="col-3">{t('devices.flyouts.details.diagnostics.keyHeader')}</Cell>
-                        <Cell className="col-7">{t('devices.flyouts.details.diagnostics.valueHeader')}</Cell>
+                        <Cell className="col-3">{t('users.flyouts.details.diagnostics.keyHeader')}</Cell>
+                        <Cell className="col-7">{t('users.flyouts.details.diagnostics.valueHeader')}</Cell>
                       </Row>
                     </GridHeader>
                     <GridBody>
                       <Row>
-                        <Cell className="col-3">{t('devices.flyouts.details.diagnostics.status')}</Cell>
-                        <Cell className="col-7">{device.connected ? t('devices.flyouts.details.connected') : t('devices.flyouts.details.notConnected')}</Cell>
+                        <Cell className="col-3">{t('users.flyouts.details.diagnostics.status')}</Cell>
+                        <Cell className="col-7">{user.connected ? t('users.flyouts.details.connected') : t('users.flyouts.details.notConnected')}</Cell>
                       </Row>
                       {
-                        device.connected &&
+                        user.connected &&
                         <ComponentArray>
                           <Row>
-                            <Cell className="col-3">{t('devices.flyouts.details.diagnostics.lastMessage')}</Cell>
+                            <Cell className="col-3">{t('users.flyouts.details.diagnostics.lastMessage')}</Cell>
                             <Cell className="col-7">{lastMessageTime ? moment(lastMessageTime).format(DEFAULT_TIME_FORMAT) : '---'}</Cell>
                           </Row>
                           <Row>
-                            <Cell className="col-3">{t('devices.flyouts.details.diagnostics.message')}</Cell>
+                            <Cell className="col-3">{t('users.flyouts.details.diagnostics.message')}</Cell>
                             <Cell className="col-7">
-                              <Btn className="raw-message-button" onClick={this.toggleRawDiagnosticsMessage}>{t('devices.flyouts.details.diagnostics.showMessage')}</Btn>
+                              <Btn className="raw-message-button" onClick={this.toggleRawDiagnosticsMessage}>{t('users.flyouts.details.diagnostics.showMessage')}</Btn>
                             </Cell>
                           </Row>
                         </ComponentArray>
@@ -449,15 +449,15 @@ export class DeviceDetails extends Component {
               </Section.Container>
 
               <Section.Container>
-                <Section.Header>{t('devices.flyouts.details.modules.title')}</Section.Header>
+                <Section.Header>{t('users.flyouts.details.modules.title')}</Section.Header>
                 <Section.Content>
                   <SectionDesc>
-                    {t("devices.flyouts.details.modules.description")}
+                    {t("users.flyouts.details.modules.description")}
                   </SectionDesc>
-                  <div className="device-details-deployment-contentbox">
+                  <div className="user-details-deployment-contentbox">
                     {
                       !moduleQuerySuccessful &&
-                      t('devices.flyouts.details.modules.noneExist')
+                      t('users.flyouts.details.modules.noneExist')
                     }
                     {
                       moduleQuerySuccessful &&
@@ -472,7 +472,7 @@ export class DeviceDetails extends Component {
             </div>
           }
           <BtnToolbar>
-            <Btn svg={svgs.cancelX} onClick={onClose}>{t('devices.flyouts.details.close')}</Btn>
+            <Btn svg={svgs.cancelX} onClick={onClose}>{t('users.flyouts.details.close')}</Btn>
           </BtnToolbar>
         </div>
       </Flyout.Container>
