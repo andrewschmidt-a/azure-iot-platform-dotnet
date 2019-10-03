@@ -53,9 +53,7 @@ stages:
     steps:
     - script: |
         changedServices=`git diff origin/master... --name-only | cut -d / -f 1`
-        configChanged=`$changedServices | grep config -cim1`
-        echo $configChanged
-        echo "##vso[task.setvariable variable=configChanged]$configChanged"
+        echo "##vso[task.setvariable variable=configChanged]`echo $changedServices | grep config -cim1`"
 
 
 # - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
