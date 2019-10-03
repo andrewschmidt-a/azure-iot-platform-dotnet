@@ -45,26 +45,9 @@ stages:
 #         script:  |
 #           kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint="$(pcsAppConfig)"
 
-- stage: Determine_Which_Services_Changed
-  jobs:
-  - job: Determine_Which_Services_Changed
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - script: |
-        changedServices=`git diff origin/master... --name-only | cut -d / -f 1`
-        echo "##vso[task.setvariable variable=configChanged]`echo $changedServices | grep config -cim1`"
-        echo "##vso[task.setvariable variable=deviceSimulationChanged]`echo $changedServices | grep device-simulation -cim1`"
-        echo "##vso[task.setvariable variable=deviceTelemetryChanged]`echo $changedServices | grep device-telemetry -cim1`"
-        echo "##vso[task.setvariable variable=identityGatewayChanged]`echo $changedServices | grep identity-gateway -cim1`"
-        echo "##vso[task.setvariable variable=iothubManagerChanged]`echo $changedServices | grep iothub-manager -cim1`"
-        echo "##vso[task.setvariable variable=storageAdapterChanged]`echo $changedServices | grep storage-adapter -cim1`"
-        echo "##vso[task.setvariable variable=tenantManagerChanged]`echo $changedServices | grep tenant-manager -cim1`"
-
 - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
   jobs:
   - template: standUpServiceIfChangedTemplate.yaml
-    condition: eq(variables['configChanged'], '1')
     parameters:
       service: config
       azureSubscription: ${{variables.azureSubscription}}
@@ -73,7 +56,6 @@ stages:
       devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
-    condition: eq(variables['deviceSimulationChanged'], '1')
     parameters:
       service: device-simulation
       azureSubscription: ${{variables.azureSubscription}}
@@ -82,7 +64,6 @@ stages:
       devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
-    condition: eq(variables['deviceTelemetryChanged'], '1')
     parameters:
       service: device-telemetry
       azureSubscription: ${{variables.azureSubscription}}
@@ -91,7 +72,6 @@ stages:
       devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
-    condition: eq(variables['identityGatewayChanged'], '1')
     parameters:
       service: identity-gateway
       azureSubscription: ${{variables.azureSubscription}}
@@ -100,7 +80,6 @@ stages:
       devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
-    condition: eq(variables['iothubManagerChanged'], '1')
     parameters:
       service: iothub-manager
       azureSubscription: ${{variables.azureSubscription}}
@@ -109,7 +88,6 @@ stages:
       devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
-    condition: eq(variables['storageAdapterChanged'], '1')
     parameters:
       service: storage-adapter
       azureSubscription: ${{variables.azureSubscription}}
@@ -118,7 +96,6 @@ stages:
       devSpace: ${{variables.devSpace}}
 
   - template: standUpServiceIfChangedTemplate.yaml
-    condition: eq(variables['tenantManagerChanged'], '1')
     parameters:
       service: tenant-manager
       azureSubscription: ${{variables.azureSubscription}}
@@ -126,63 +103,59 @@ stages:
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
 
-# - stage: Test_Services_that_Changed
-#   jobs:
-#   - template: testServiceIfChangedTemplate.yaml
-#     parameters:
-#       service: config
-#       azureSubscription: ${{variables.azureSubscription}}
-#       resourceGroup: ${{variables.resourceGroup}}
-#       aksCluster: ${{variables.aksCluster}}
-#       devSpace: ${{variables.devSpace}}
+- stage: Test_Services_that_Changed
+  jobs:
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: config
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
-#   - template: testServiceIfChangedTemplate.yaml
-#     parameters:
-#       service: device-simulation
-#       azureSubscription: ${{variables.azureSubscription}}
-#       resourceGroup: ${{variables.resourceGroup}}
-#       aksCluster: ${{variables.aksCluster}}
-#       devSpace: ${{variables.devSpace}}
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: device-simulation
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
-#   - template: testServiceIfChangedTemplate.yaml
-#     parameters:
-#       service: device-telemetry
-#       azureSubscription: ${{variables.azureSubscription}}
-#       resourceGroup: ${{variables.resourceGroup}}
-#       aksCluster: ${{variables.aksCluster}}
-#       devSpace: ${{variables.devSpace}}
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: device-telemetry
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
-#   - template: testServiceIfChangedTemplate.yaml
-#     parameters:
-#       service: identity-gateway
-#       azureSubscription: ${{variables.azureSubscription}}
-#       resourceGroup: ${{variables.resourceGroup}}
-#       aksCluster: ${{variables.aksCluster}}
-#       devSpace: ${{variables.devSpace}}
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: identity-gateway
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
-#   - template: testServiceIfChangedTemplate.yaml
-#     parameters:
-#       service: iothub-manager
-#       azureSubscription: ${{variables.azureSubscription}}
-#       resourceGroup: ${{variables.resourceGroup}}
-#       aksCluster: ${{variables.aksCluster}}
-#       devSpace: ${{variables.devSpace}}
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: iothub-manager
 
-#   - template: testServiceIfChangedTemplate.yaml
-#     parameters:
-#       service: storage-adapter
-#       azureSubscription: ${{variables.azureSubscription}}
-#       resourceGroup: ${{variables.resourceGroup}}
-#       aksCluster: ${{variables.aksCluster}}
-#       devSpace: ${{variables.devSpace}}
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: storage-adapter
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
-#   - template: testServiceIfChangedTemplate.yaml
-#     parameters:
-#       service: tenant-manager
-#       azureSubscription: ${{variables.azureSubscription}}
-#       resourceGroup: ${{variables.resourceGroup}}
-#       aksCluster: ${{variables.aksCluster}}
-#       devSpace: ${{variables.devSpace}}
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: tenant-manager
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
 
 - stage: Delete_Dev_Space
   condition: always()
