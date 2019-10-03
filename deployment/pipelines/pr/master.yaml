@@ -46,7 +46,6 @@ stages:
           kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint="$(pcsAppConfig)"
 
 - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
-  condition: always()
   jobs:
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
@@ -158,20 +157,20 @@ stages:
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
 
-# - stage: Delete_Dev_Space
-#   condition: always()
-#   jobs:
-#   - job: Delete_Dev_Space
-#     pool:
-#       vmImage: 'ubuntu-latest'
-#     steps:
-#     - task: AzureCLI@1
-#       condition: always()
-#       displayName: Delete Dev Space
-#       inputs:
-#         azureSubscription: $(azureSubscription)
-#         scriptLocation: 'inlineScript'
-#         inlineScript: |
-#           az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
-#           az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
-#           azds space remove -n $(devSpace) -y
+- stage: Delete_Dev_Space
+  condition: always()
+  jobs:
+  - job: Delete_Dev_Space
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@1
+      condition: always()
+      displayName: Delete Dev Space
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
+          az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
+          azds space remove -n $(devSpace) -y
