@@ -1,0 +1,11 @@
+{
+	"id": "57b9f160-d71d-4f82-b245-607949a0df26",
+	"name": "vars",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "",
+			"enabled": true
+		}
+	]
+}
