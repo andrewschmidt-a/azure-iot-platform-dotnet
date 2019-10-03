@@ -36,9 +36,9 @@ jobs:
         az aks get-credentials -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}}
         serviceUri=`azds list-uris -o json | jq -r '.[] | select(.workloadName=="${{parameters.service}}") | .uri'`
         echo $serviceUri
-        jq -r --arg uri "$uri" '.values[0].value = $uri' ${{parameters.service}}/WebService.Test/newmanEnvironment.json > tempEnv
-        cat tempEnv
+        jq -r --arg serviceUri "$serviceUri" '.values[0].value = $serviceUri' ${{parameters.service}}/WebService.Test/newmanEnvironment.json > tempEnv
         mv tempEnv ${{parameters.service}}/WebService.Test/newmanEnvironment.json
+        cat ${{parameters.service}}/WebService.Test/newmanEnvironment.json
 
   - task: Bash@3
     displayName: Install Newman
