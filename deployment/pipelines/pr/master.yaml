@@ -45,6 +45,7 @@ stages:
           kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint="$(pcsAppConfig)"
 
 - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
+  condition: always()
   jobs:
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
@@ -79,6 +80,7 @@ stages:
       devSpace: ${{variables.devSpace}}
 
 - stage: Test_Services_that_Changed
+  condition: always()
   jobs:
   - template: testServiceIfChangedTemplate.yaml
     parameters:
