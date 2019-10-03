@@ -1,14 +1,15 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
 using System.Collections.ObjectModel;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Exceptions;
-using ILogger = Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
+using MMM.Azure.IoTSolutions.TenantManager.Services;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 {
-    public class CosmosHelper
+    public class CosmosHelper : IStatusOperation
     {
         private DocumentClient client;
 
@@ -22,6 +23,30 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
             {
                 throw new InvalidConfigurationException("Unable to create CosmosDb DocumentClient with the given Cosmos Key & Token. Check to ensure they are configured correctly.", e);
             }
+        }
+
+        public async Task<StatusResultServiceModel> StatusAsync()
+        {
+            if (this.client != null)
+            {
+                // make generic call to see if storage client can be reached
+                try
+                {
+                    // ping the client for a db account
+                    await this.client.GetDatabaseAccountAsync();
+                }
+                catch (Exception e)
+                {
+                    return new StatusResultServiceModel(false, $"Storage check failed: {e.Message}");
+                }
+            }
+            else
+            {
+                return new StatusResultServiceModel(false, "Storage check failed.");
+            }
+
+            // The ping was successful - the service is running as intended
+            return new StatusResultServiceModel(true, "Alive and Well!");
         }
 
         public async Task DeleteCosmosDbCollection(string database, string collectionId)

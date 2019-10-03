@@ -1,21 +1,9 @@
 using System;
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Threading;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Exceptions;
-using ILogger = Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 {
     public class TokenHelper
     {

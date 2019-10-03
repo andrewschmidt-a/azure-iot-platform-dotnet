@@ -1,12 +1,15 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
-using ILogger = Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
+using MMM.Azure.IoTSolutions.TenantManager.Services;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 {
-    public class TableStorageHelper
+    public class TableStorageHelper : IStatusOperation
     {
+        private const string STATUS_TABLE_NAME = "tenant";
+
         private readonly CloudStorageAccount storageAccount;
         private CloudTableClient client;
 
@@ -14,6 +17,26 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
         {
             this.storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
             this.client = this.storageAccount.CreateCloudTableClient();
+        }
+
+        public async Task<StatusResultServiceModel> StatusAsync()
+        {
+            try
+            {
+                CloudTable table = await this.GetTableAsync(STATUS_TABLE_NAME);
+                if (table != null)
+                {
+                    return new StatusResultServiceModel(true, "Alive and well!");
+                }
+                else
+                {
+                    return new StatusResultServiceModel(false, $"Could not get the {STATUS_TABLE_NAME} table from table storage. Storage check failed.");
+                }
+            }
+            catch (Exception e)
+            {
+                return new StatusResultServiceModel(false, $"Table Storage check failed: {e.Message}");
+            }
         }
 
         private async Task<CloudTable> GetTableAsync(string tableName)

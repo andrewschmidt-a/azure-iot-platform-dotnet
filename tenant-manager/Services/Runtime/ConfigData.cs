@@ -5,12 +5,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Exceptions;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.Runtime
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
 {
     public interface IConfigData
     {

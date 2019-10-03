@@ -4,10 +4,10 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.WebService
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
     public interface ICorsSetup
     {

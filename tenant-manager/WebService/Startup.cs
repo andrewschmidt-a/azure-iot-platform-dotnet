@@ -5,14 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Azure.IoTSolutions.TenantManager.WebService;
-using ILogger = Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.External;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.TenantManager.WebService.Runtime;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
+using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
+using MMM.Azure.IoTSolutions.TenantManager.Services.External;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
+using MMM.Azure.IoTSolutions.TenantManager.Services;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Http;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Http;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
@@ -39,19 +39,21 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSingleton<IConfiguration>(Configuration);
 
-            ILogger logger = new Logger(Uptime.ProcessId, Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.LogLevel.Info);
+            ILogger logger = new Logger(Uptime.ProcessId, MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.LogLevel.Info);
             services.AddSingleton<ILogger>(logger);
 
             IConfig config = new Config(new ConfigData(logger));
             services.AddSingleton<IConfig>(config);
 
+            services.AddSingleton<IIdentityGatewayClient, IdentityGatewayClient>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddSingleton<IHttpClient, HttpClient>();
 
-            services.AddSingleton<IIdentityGatewayClient, IdentityGatewayClient>();
+            services.AddSingleton<IStatusService, StatusService>();
 
-            Microsoft.Azure.IoTSolutions.TenantManager.WebService.Auth.Startup.SetupDependencies(services, config);
+            MMM.Azure.IoTSolutions.TenantManager.WebService.Auth.Startup.SetupDependencies(services, config);
 
         }
 

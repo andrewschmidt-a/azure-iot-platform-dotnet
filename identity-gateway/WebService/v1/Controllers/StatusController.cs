@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace IdentityGateway.WebService.v1.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     public sealed class StatusController : Controller
     {
         private readonly IConfiguration config;

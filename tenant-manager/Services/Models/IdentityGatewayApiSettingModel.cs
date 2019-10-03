@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.Models
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
 {
     public class IdentityGatewayApiSettingModel
     {

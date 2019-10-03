@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Models;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.External
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
 {
     public interface IIdentityGatewayClient
     {
+        Task<StatusResultServiceModel> StatusAsync();
+
         Task<IdentityGatewayApiModel> addUserToTenantAsync(string userId, string tenantId, string roles);
 
         Task<IdentityGatewayApiModel> getTenantForUserAsync(string userId, string tenantId);

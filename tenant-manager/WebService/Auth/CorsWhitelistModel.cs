@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.WebService
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
     class CorsWhitelistModel
     {

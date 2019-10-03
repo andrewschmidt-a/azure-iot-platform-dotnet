@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Filters;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.Auth;
-using ILogger = Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
+using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {

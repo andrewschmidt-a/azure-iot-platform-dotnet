@@ -2,14 +2,14 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Http;
-using HttpRequest = Microsoft.Azure.IoTSolutions.TenantManager.Services.Http.HttpRequest;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Models;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Http;
+using HttpRequest = MMM.Azure.IoTSolutions.TenantManager.Services.Http.HttpRequest;
+using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.External
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
 {
     public class IdentityGatewayClient : IIdentityGatewayClient
     {
@@ -27,6 +27,27 @@ namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.External
             this._httpClient = httpClient;
             this.serviceUri = config[URI_KEY];
             this._httpContextAccessor = httpContextAccessor;
+        }
+
+        public async Task<StatusResultServiceModel> StatusAsync()
+        {
+            HttpRequest request = CreateRequest("status/", new IdentityGatewayApiModel() { });
+            try
+            {
+                StatusServiceModel result = await this.processApiModelRequest<StatusServiceModel>(this._httpClient.GetAsync, request);
+                if (result.Status.IsHealthy)
+                {
+                    return new StatusResultServiceModel(true, "Alive and well!");
+                }
+                else
+                {
+                    return new StatusResultServiceModel(false, result.Status.Message);
+                }
+            }
+            catch (Exception e)
+            {
+                return new StatusResultServiceModel(false, $"Unable to get IdentityGateway Status: {e.Message}");
+            }
         }
 
         public async Task<IdentityGatewayApiModel> addUserToTenantAsync(string userId, string tenantId, string Roles)

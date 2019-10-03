@@ -1,11 +1,11 @@
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
 using Microsoft.Azure.KeyVault;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.Runtime
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
 {
     public class KeyVault
     {

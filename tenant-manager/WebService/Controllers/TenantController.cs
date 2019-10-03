@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
+using MMM.Azure.IoTSolutions.TenantManager.Services.External;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Filters;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.Auth;
-using Microsoft.Azure.Documents;
 using Azure.ApplicationModel.Configuration;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Exceptions;
-using ILogger = Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.External;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Models;
+using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {
@@ -33,8 +32,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
         // config keys specific to GetSecretAsync from keyvault
         private const string STORAGE_ACCOUNT_CONNECTION_STRING_KEY = "storageAccountConnectionString";
-        private const string DELETE_IOTHUB_URL_KEY = "deleteIotHubWebHookUrl";
-        private const string CREATE_IOTHUB_URL_KEY = "createIotHubWebHookUrl";
 
         // table storage table ids
         private const string TENANT_TABLE_ID = "tenant";
@@ -69,7 +66,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             this._log = log;
 
             this.keyVaultHelper = new KeyVaultHelper(this._config);
-            this.tenantRunbookHelper = new TenantRunbookHelper(this._config);
+            this.tenantRunbookHelper = new TenantRunbookHelper(this._config, this.keyVaultHelper);
 
             string cosmosDb = this._config[COSMOS_DB_KEY];
             string cosmosDbToken = this._config[COSMOS_KEY];
@@ -83,13 +80,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         {
             /* Creates a new tenant */
             // Load secrets from key vault
-            var secretTasks = new Task<string>[] {
-                this.keyVaultHelper.GetSecretAsync(STORAGE_ACCOUNT_CONNECTION_STRING_KEY),
-                this.keyVaultHelper.GetSecretAsync(CREATE_IOTHUB_URL_KEY),
-            };
-            Task.WaitAll(secretTasks);
-            string storageAccountConnectionString = secretTasks[0].Result;
-            string createIotHubWebHookUrl = secretTasks[1].Result;
+            string storageAccountConnectionString = await this.keyVaultHelper.GetSecretAsync(STORAGE_ACCOUNT_CONNECTION_STRING_KEY);
 
             // Generate new tenant information
             string tenantGuid = Guid.NewGuid().ToString();
@@ -103,7 +94,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             await tableStorageHelper.WriteToTableAsync<TenantModel>(TENANT_TABLE_ID, tenant);
 
             // Trigger run book to create a new IoT Hub
-            await this.tenantRunbookHelper.TriggerTenantRunbook(createIotHubWebHookUrl, tenantGuid, iotHubName);
+            await this.tenantRunbookHelper.CreateIotHub(tenantGuid, iotHubName);
 
             var userId = "";
             try
@@ -248,14 +239,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         public async Task<string> DeleteAsync(string tenantId)
         {
             // Load secrets from key vault
-            var secretTasks = new Task<string>[] {
-                this.keyVaultHelper.GetSecretAsync(STORAGE_ACCOUNT_CONNECTION_STRING_KEY),
-                this.keyVaultHelper.GetSecretAsync(DELETE_IOTHUB_URL_KEY)
-            };
-            Task.WaitAll(secretTasks);
-
-            string storageAccountConnectionString = secretTasks[0].Result;
-            string deleteIotHubWebHookUrl = secretTasks[1].Result;
+            string storageAccountConnectionString = await this.keyVaultHelper.GetSecretAsync(STORAGE_ACCOUNT_CONNECTION_STRING_KEY);
 
             var userId = "";
             try
@@ -322,7 +306,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             try
             {
                 //trigger delete iothub runbook
-                await this.tenantRunbookHelper.TriggerTenantRunbook(deleteIotHubWebHookUrl, tenantGuid, iotHubName);
+                await this.tenantRunbookHelper.DeleteIotHub(tenantGuid, iotHubName);
                 deletionRecord["iotHub"] = true;
             }
             catch (Exception e)

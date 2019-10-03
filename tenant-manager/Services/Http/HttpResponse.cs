@@ -5,7 +5,7 @@ using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Services.Test")]
-namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.Http
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Http
 {
     public interface IHttpResponse
     {

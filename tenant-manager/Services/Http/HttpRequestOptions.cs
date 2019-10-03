@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.Http
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Http
 {
     public class HttpRequestOptions
     {
