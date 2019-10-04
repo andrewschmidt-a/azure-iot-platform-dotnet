@@ -13,7 +13,7 @@ using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Test
+namespace DeviceTelemetry.ActionsAgent.Test
 {
     public class ActionManagerTest
     {

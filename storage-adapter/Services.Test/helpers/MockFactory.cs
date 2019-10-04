@@ -3,7 +3,7 @@
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
 using Moq;
 
-namespace Services.Test.helpers
+namespace StorageAdapter.Services.Test.helpers
 {
     public class MockFactory<T> : IFactory<T> where T : class
     {

@@ -3,7 +3,7 @@
 using System;
 using System.Text;
 
-namespace Services.Test.helpers
+namespace Config.Services.Test.helpers
 {
     public static class RandomExtension
     {

@@ -4,7 +4,7 @@ using System;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Http;
 using Newtonsoft.Json;
 
-namespace Services.Test.helpers
+namespace IoTHubManager.Services.Test.helpers
 {
     /* <summary>
      * This class is a Extension of HttpRequest class which is used by StorageAdapterClientTest

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace WebService.Test.helpers
+namespace StorageAdapter.WebService.Test.helpers
 {
     public class WebServiceHost
     {

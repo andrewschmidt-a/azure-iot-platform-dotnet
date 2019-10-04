@@ -13,10 +13,10 @@ using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.TimeSeries;
 using Moq;
 using Newtonsoft.Json.Linq;
-using Services.Test.helpers;
+using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
 
-namespace Services.Test
+namespace DeviceTelemetry.Services.Test
 {
     public class MessagesTest
     {

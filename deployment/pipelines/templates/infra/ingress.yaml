@@ -1,0 +1,124 @@
+
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  aksName: ''
+
+steps:
+- task: HelmInstaller@1
+  inputs:
+    helmVersionToInstall: 'latest'
+- task: HelmDeploy@0
+  displayName: Helm init (set up tiller)
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: ${{ parameters.serviceConnection }}
+    azureResourceGroup: ${{ parameters.resourceGroup }}
+    kubernetesCluster: ${{ parameters.aksName }}
+    namespace: 'default'
+    command: 'init'
+    
+- task: AzureCLI@1
+  displayName: "CLI: install ingress-controller"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }}
+      # Use Helm to deploy an NGINX ingress controller
+      helm upgrade ingress-controller stable/nginx-ingress \
+          --install \
+          --force \
+          --namespace ingress-basic \
+          --set controller.replicaCount=2 \
+          --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+          --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux
+# - task: HelmDeploy@0
+#   displayName: Deploy ingress controller
+#   inputs:
+#     connectionType: 'Azure Resource Manager'
+#     azureSubscription: ${{ parameters.serviceConnection }}
+#     azureResourceGroup: ${{ parameters.resourceGroup }}
+#     kubernetesCluster: ${{ parameters.aksName }}
+#     namespace: 'ingress-basic'
+#     command: 'upgrade'
+#     chartType: 'Name'
+#     chartName: 'stable/nginx-ingress'
+#     releaseName: 'ingress-controller'
+#     arguments: '--force --set controller.replicaCount=2,controller.nodeSelector."beta\.kubernetes\.io/os"=linux,defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux'
+- task: AzureCLI@1
+  displayName: Add DNS Record
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'scriptPath'
+    scriptPath: '$(System.DefaultWorkingDirectory)/deployment/charts/ingress/ip.sh'
+    arguments: ${{ parameters.aksName }} ${{ parameters.resourceGroup }}
+
+- task: Bash@3
+  displayName: "Install jet stack repo"
+  inputs:
+    targetType: 'inline'
+    script: |-
+      # Add the Jetstack Helm repository
+      helm repo add jetstack https://charts.jetstack.io
+      # Update your local Helm chart repository cache
+      helm repo update
+
+- task: HelmDeploy@0
+  displayName: Deploy cert-manager
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: ${{ parameters.serviceConnection }}
+    azureResourceGroup: ${{ parameters.resourceGroup }}
+    kubernetesCluster: ${{ parameters.aksName }}
+    namespace: 'cert-manager'
+    command: 'upgrade'
+    chartType: 'Name'
+    releaseName: 'cert-manager'
+    chartName: 'jetstack/cert-manager'
+    arguments: '--version v0.8.0 --install --force'
+
+- task: Kubernetes@1
+  displayName: Create Cluster Issuer
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: ${{ parameters.serviceConnection }}
+    azureResourceGroup: ${{ parameters.resourceGroup }}
+    kubernetesCluster: ${{ parameters.aksName }}
+    command: 'apply'
+    useConfigurationFile: true
+    configuration: '$(System.DefaultWorkingDirectory)/deployment/charts/ingress/cluster-issuer-prod.yaml'
+
+- task: Kubernetes@1
+  displayName: Create Ingress
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: ${{ parameters.serviceConnection }}
+    azureResourceGroup: ${{ parameters.resourceGroup }}
+    kubernetesCluster: ${{ parameters.aksName }}
+    command: 'apply'
+    useConfigurationFile: true
+    configurationType: 'inline'
+    inline: |
+      apiVersion: extensions/v1beta1
+      kind: Ingress
+      metadata:
+        name: ${{ parameters.aksName }}
+        namespace: default
+        annotations:
+          kubernetes.io/ingress.class: nginx
+          certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+          nginx.ingress.kubernetes.io/rewrite-target: /$1
+      spec:
+        tls:
+        - hosts:
+          - ${{ parameters.aksName }}.centralus.cloudapp.azure.com
+          secretName: tls-prod
+        rules:
+        - host: ${{ parameters.aksName }}.centralus.cloudapp.azure.com
+          http:
+            paths:
+            - backend:
+                serviceName: reverse-proxy
+                servicePort: 10080
+              path: /(.*)

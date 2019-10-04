@@ -7,10 +7,10 @@ using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.TimeSeries;
 using Moq;
-using Services.Test.helpers;
+using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
 
-namespace Services.Test.TimeSeries
+namespace DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesClientTest
     {

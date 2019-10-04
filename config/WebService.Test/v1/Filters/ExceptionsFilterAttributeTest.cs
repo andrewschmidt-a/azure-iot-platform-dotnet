@@ -12,10 +12,10 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Filters;
 using Moq;
-using WebService.Test.helpers;
+using Config.WebService.Test.helpers;
 using Xunit;
 
-namespace WebService.Test.v1.Filters
+namespace Config.WebService.Test.v1.Filters
 {
     public class ExceptionsFilterAttributeTest
     {

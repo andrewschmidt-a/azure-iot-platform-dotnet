@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 
-namespace Services.Test.helpers
+namespace IoTHubManager.Services.Test.helpers
 {
     public class ResultQuery : IQuery
     {

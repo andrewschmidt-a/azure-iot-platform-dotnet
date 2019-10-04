@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-namespace WebService.Test.helpers.Http
+namespace StorageAdapter.WebService.Test.helpers.Http
 {
     public class HttpRequestOptions
     {

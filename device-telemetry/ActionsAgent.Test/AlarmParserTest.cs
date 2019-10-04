@@ -9,7 +9,7 @@ using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Actions;
 using Moq;
 using Xunit;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Test
+namespace DeviceTelemetry.ActionsAgent.Test
 {
     public class AlarmParserTest
     {

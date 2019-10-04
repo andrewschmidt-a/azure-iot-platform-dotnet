@@ -2,13 +2,13 @@
 
 using System;
 using Autofac;
-using Microsoft.Azure.IoTSolutions.TenantManager.WebService;
-using Microsoft.Azure.IoTSolutions.TenantManager.WebService.Runtime;
+using MMM.Azure.IoTSolutions.TenantManager.WebService;
+using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.WebService.Auth
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Auth
 {
     public class Startup
     {

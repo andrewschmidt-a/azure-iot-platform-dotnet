@@ -1,0 +1,63 @@
+
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  aksName: ''
+
+steps:
+- task: AzureResourceGroupDeployment@2
+  displayName: "Deploy Azure Kubernetes Service"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: 'Central US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/aks.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/aks.json'
+    overrideParameters: '-resourceName ${{ parameters.aksName }} -dnsPrefix ${{ parameters.aksName }}-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true
+
+- task: Kubernetes@1
+  displayName: Create ingress namespace
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: ${{ parameters.serviceConnection }}
+    azureResourceGroup: ${{ parameters.resourceGroup }}
+    kubernetesCluster: ${{ parameters.aksName }}
+    command: 'apply'
+    useConfigurationFile: true
+    configurationType: 'inline'
+    inline: |
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: ingress-basic
+- task: Kubernetes@1
+  displayName: Create cert-manager namespace
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: ${{ parameters.serviceConnection }}
+    azureResourceGroup: ${{ parameters.resourceGroup }}
+    kubernetesCluster: ${{ parameters.aksName }}
+    command: 'apply'
+    useConfigurationFile: true
+    configurationType: 'inline'
+    inline: |
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: cert-manager
+        labels:
+          certmanager.k8s.io/disable-validation: "true"
+- task: Kubernetes@1
+  displayName: Install the CustomResourceDefinition
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: ${{ parameters.serviceConnection }}
+    azureResourceGroup: ${{ parameters.resourceGroup }}
+    kubernetesCluster: ${{ parameters.aksName }}
+    command: 'apply'
+    useConfigurationFile: true
+    configuration: '$(System.DefaultWorkingDirectory)/deployment/charts/ingress/00-crds.yaml'

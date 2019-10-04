@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading;
 
-namespace Services.Test.helpers
+namespace IoTHubManager.Services.Test.helpers
 {
     public static class MockIdentity
     {

@@ -58,6 +58,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
         private readonly IStorageClient storageClient;
         private readonly IServicesConfig _config;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private IAppConfigurationHelper _appConfigurationHelper;
 
         private readonly string databaseName;
         private readonly int maxDeleteRetryCount;
@@ -82,8 +83,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
         {
             get
             {
-                var appConfigHelper = new AppConfigurationHelper(_config.ApplicationConfigurationConnectionString);
-                return appConfigHelper.GetValue(
+                return this._appConfigurationHelper.GetValue(
                     $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
             }
         }
@@ -92,7 +92,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             IServicesConfig config,
             IStorageClient storageClient,
             ILogger logger,
-            IHttpContextAccessor contextAccessor)
+            IHttpContextAccessor contextAccessor,
+            IAppConfigurationHelper appConfigurationHelper)
         {
             this.storageClient = storageClient;
             this.databaseName = config.AlarmsConfig.StorageConfig.CosmosDbDatabase;
@@ -100,6 +101,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             this.maxDeleteRetryCount = config.AlarmsConfig.MaxDeleteRetries;
             this._config = config;
             this._httpContextAccessor = contextAccessor;
+            this._appConfigurationHelper = appConfigurationHelper;
+
         }
 
         public Alarm Get(string id)

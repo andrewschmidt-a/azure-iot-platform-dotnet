@@ -3,7 +3,7 @@
 using System;
 using System.Text;
 
-namespace Services.Test.helpers
+namespace DeviceTelemetry.Services.Test.helpers
 {
     /* <summary>
      * This class is a Extension of Random class which is used by Test Classes

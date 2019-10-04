@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-namespace WebService.Test.helpers
+namespace Config.WebService.Test.helpers
 {
     /// <summary>
     /// Use these flags to allow running a subset of tests from the test

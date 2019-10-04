@@ -1,0 +1,177 @@
+{
+    "Actions": {
+        "actionseventhubconnectionstring": "",
+        "actionseventhubname": "actions-eventhub",
+        "logicappendpointurl": "https://prod-26.centralus.logic.azure.com:443/workflows/c0809c2788d14464bf7105f8f4145991/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PmdxV0RSmEFj7TJRqQJQytGYWX1xF3Gc1P4u2wLf8YM",
+        "solutionwebsiteurl": "https://remotemonitering3m.azurewebsites.net",
+        "storagecontainer": "actions-eventhub-container",
+        "templatefolder": "./data/"
+    },
+    "ConfigService": {
+        "Actions": {
+            "armendpointurl": "https://management.azure.com/",
+            "managementapiversion": "\"2016-06-01\"",
+            "office365connectionurl": "https://portal.azure.com/#@facac3c4-e2a5-4257-af76-205c8a821ddb/resource/subscriptions/c36fb2f8-f98d-40d0-90a9-d65e93acb428/resourceGroups/remotemonitering3m/providers/Microsoft.Web/connections/office365-connector/edit",
+            "solutionname": "remotemonitering3m",
+            "subscriptionid": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
+        },
+        "azureMapsKey": "",
+        "seedtemplate": "default",
+        "solutiontype": "remotemonitoring",
+        "webserviceport": "80"
+    },
+    "ExternalDependencies": {
+        "authWebServiceUrl": "http://identity-gateway:80/api",
+        "devicesimulationwebserviceurl": "http://device-simulation:80/v1",
+        "diagnosticsmaxlogretries": "3",
+        "diagnosticswebserviceurl": "http://diagnostics:80/v1",
+        "identitygatewaywebserviceurl": "http://identity-gateway:80/v1",
+        "storageadapterwebservicetimeout": "10000",
+        "storageadapterwebserviceurl": "http://storage-adapter:80/v1",
+        "telemetryWebServiceUrl": "http://device-telemetry:80/v1"
+    },
+    "Global": {
+        "AuthRequired": "false",
+        "AzureActiveDirectory": {
+            "aadappid": "",
+            "aadappsecret": "",
+            "aadtenantid": "facac3c4-e2a5-4257-af76-205c8a821ddb"
+        },
+        "AzureB2CBaseUri": "https://login.microsoftonline.com/crsltestab2c.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_testpolicy&client_id=6e2a6569-f0b9-4a2b-a75c-5ec6c80869eb&nonce=defaultNonce&redirect_uri=https%3A%2F%2Flocalhost%3A44367%2Fconnect%2Fcallback&scope=openid&response_type=id_token&prompt=login&response_mode=form_post",
+        "ClientAuth": {
+            "CORSWhiteList": "*",
+            "JWT": {
+                "aadappid": "",
+                "allowedalgorithms": "RS256",
+                "audience": "IoTPlatform",
+                "authissuer": "https://crsliotkubedev.centralus.cloudapp.azure.com/auth",
+                "clockskewseconds": "300"
+            },
+            "authrequired": "true",
+            "authtype": "JWT"
+        },
+        "CosmosDb": {
+            "documentDbConnectionString": "",
+            "documentdbconnectionstring": "",
+            "rus": "400"
+        },
+        "KeyVault": {
+            "name": "key-vault-odin"
+        },
+        "Permissions": {
+            "admin": {
+                "AcquireToken": "",
+                "CreateDeployments": "",
+                "CreateDeviceGroups": "",
+                "CreateDevices": "",
+                "CreateJobs": "",
+                "CreatePackages": "",
+                "CreateRules": "",
+                "DeleteAlarms": "",
+                "DeleteDeployments": "",
+                "DeleteDeviceGroups": "",
+                "DeleteDevices": "",
+                "DeletePackages": "",
+                "DeleteRules": "",
+                "ReadAll": "",
+                "UpdateAlarms": "",
+                "UpdateDeviceGroups": "",
+                "UpdateDevices": "",
+                "UpdateRules": "",
+                "UpdateSIMManagement": ""
+            },
+            "readOnly": {
+                "ReadAll": ""
+            }
+        },
+        "StorageAccountConnectionStringKeyVaultSecret": "storageAccountConnectionString",
+        "developmentMode": "true",
+        "location": "centralus",
+        "resourceGroup": "rg-crslbbiot-odin-dev",
+        "subscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
+    },
+    "IothubManagerService": {
+        "DevicePropertiesCache": {
+            "rebuildtimeout": "20",
+            "ttl": "3600",
+            "whitelist": "tags.*,reported.Protocol,reported.SupportedMethods,reported.FirmwareUpdateStatus"
+        },
+        "webserviceport": "80"
+    },
+    "KeyVault": {
+        "aadappid": "",
+        "aadappsecret": "",
+        "name": "key-vault-odin",
+        "newName": "key-vault-odin"
+    },
+    "Logging": {
+        "includescopes": "true",
+        "loglevel": [
+            "Microsoft",
+            "=",
+            "\"Warning\""
+        ]
+    },
+    "StorageAccount": {
+        "name": "functiondefinition"
+    },
+    "StorageAdapter": {
+        "cosmosconnectionstring": "",
+        "documentDb": "pcs-storage",
+        "documentdbrus": "400",
+        "messages": "iot",
+        "pcs": "pcs-storage",
+        "storagetype": "documentDb",
+        "webserviceport": "80"
+    },
+    "TelemetryService": {
+        "Alarms": {
+            "collection": "\"alarms\"",
+            "database": "iot",
+            "maxdeleteretries": "3",
+            "storage_type": "\"cosmosdb\""
+        },
+        "Messages": {
+            "collection": "\"messages\"",
+            "database": "iot",
+            "telemetrystoragetype": "cosmosdb"
+        },
+        "TimeSeries": {
+            "apiversion": "\"2016-12-12\"",
+            "audience": "\"https://api.timeseries.azure.com/\"",
+            "authority": "\"https://login.windows.net/\"",
+            "explorerurl": "\"https://insights.timeseries.azure.com/\"",
+            "timeout": "\"PT20S\"",
+            "tsidataaccessfqdn": "Undefined"
+        },
+        "rulestemplatesfolder": "./data/Rules/",
+        "webserviceport": "80"
+    },
+    "Tenant": {
+        "f12b0b58-8089-422c-a3b1-e1dacb99883b": {
+            "PcsCollection": "f12b0b58-8089-422c-a3b1-e1dacb99883b-pcsCollection",
+            "TwinMirrorCollection": "f12b0b58-8089-422c-a3b1-e1dacb99883b-twin-mirror"
+        }
+    },
+    "TenantManagerService": {
+        "CosmosDb": "https://cosmos-odin-mt-poc.documents.azure.com:443/",
+        "StorageAdaptorDb": "pcs-storage",
+        "automationAccountName": "automation-odin",
+        "cosmosAccount": "cosmos-odin-mt-poc",
+        "cosmosConnectionSetting": "cosmos-odin-mt-poc_DOCUMENTDB",
+        "cosmoskey": "",
+        "databaseName": "iot",
+        "lifecycleEventHubConnString": "",
+        "lifecycleFunctionName": "lifecycle-processor",
+        "lifecycleFunctionUri": "https://lifecycle-processor-odin-mt-poc.scm.azurewebsites.net",
+        "setAppConfigEndpoint": "https://appconfigcontrollerpoc.azurewebsites.net/api/SetAppConfigKey",
+        "setAppConfigFunction": "https://appconfigcontrollerpoc.azurewebsites.net/api/SetAppConfigKey",
+        "tableName": "tenant",
+        "telemetryEventHubConnString": "",
+        "telemetryFunctionName": "telemetry-processor",
+        "telemetryFunctionUri": "https://telemetry-processor-odin-mt-poc.scm.azurewebsites.net",
+        "twinChangeEventHubConnString": "",
+        "twinChangeFunctionName": "twin-change-processor",
+        "twinChangeFunctionUri": "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net"
+    }
+}

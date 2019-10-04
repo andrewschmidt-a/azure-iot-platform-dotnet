@@ -13,15 +13,16 @@ using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
 using Moq;
 using Newtonsoft.Json;
-using Services.Test.helpers;
+using Config.Services.Test.helpers;
 using Xunit;
 using HttpResponse = Microsoft.Azure.IoTSolutions.UIConfig.Services.Http.HttpResponse;
 
-namespace Services.Test
+namespace Config.Services.Test
 {
     public class StorageAdapterClientTest
     {
         private const string MOCK_SERVICE_URI = @"http://mockstorageadapter";
+        private const string AZDS_ROUTE_KEY = "azds-route-as";
 
         private readonly Mock<IHttpClient> mockHttpClient;
         private readonly Mock<IHttpContextAccessor> mockHTTPContext;
@@ -35,8 +36,9 @@ namespace Services.Test
             
             this.mockHTTPContext.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
                 {{"TenantID", "test_tenant"}});
-            
-            
+            this.mockHTTPContext.Setup(t => t.HttpContext.Request.Headers).Returns(new HeaderDictionary() { { AZDS_ROUTE_KEY, "mockDevSpace" } });
+
+
             this.client = new StorageAdapterClient(
                 this.mockHttpClient.Object,
                 new ServicesConfig

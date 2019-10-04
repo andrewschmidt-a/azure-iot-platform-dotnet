@@ -9,10 +9,10 @@ using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models;
 using Moq;
-using WebService.Test.helpers;
+using Config.WebService.Test.helpers;
 using Xunit;
 
-namespace WebService.Test.Controllers
+namespace Config.WebService.Test.Controllers
 {
     public class DeviceGroupControllerTest
     {

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.Exceptions
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions
 {
     public class InvalidInputException : Exception
     {

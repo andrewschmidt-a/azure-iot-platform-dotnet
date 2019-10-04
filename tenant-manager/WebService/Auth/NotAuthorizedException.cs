@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.WebService
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
     /// <summary>
     /// This exception is thrown when the user is not authorized to perform the action.

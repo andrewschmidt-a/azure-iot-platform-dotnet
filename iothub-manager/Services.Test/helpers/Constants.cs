@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-namespace Services.Test.helpers
+namespace IoTHubManager.Services.Test.helpers
 {
     /// <summary>
     /// Use these flags to allow running a subset of tests from the test

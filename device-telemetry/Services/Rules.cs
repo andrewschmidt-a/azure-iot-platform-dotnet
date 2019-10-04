@@ -86,7 +86,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 }
             }
         }
-
+        
         public async Task DeleteAsync(string id)
         {
             InputValidator.Validate(id);

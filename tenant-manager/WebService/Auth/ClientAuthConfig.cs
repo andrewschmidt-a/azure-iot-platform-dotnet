@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.WebService
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
     public interface IClientAuthConfig
     {

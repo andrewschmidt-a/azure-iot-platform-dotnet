@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers;
 using Moq;
-using WebService.Test.helpers;
+using Config.WebService.Test.helpers;
 using Xunit;
 
-namespace WebService.Test.Controllers
+namespace Config.WebService.Test.Controllers
 {
     public class UserSettingsControllerTest
     {

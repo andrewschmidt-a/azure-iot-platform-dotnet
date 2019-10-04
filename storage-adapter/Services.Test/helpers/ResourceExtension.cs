@@ -3,7 +3,7 @@
 using System;
 using Microsoft.Azure.Documents;
 
-namespace Services.Test.helpers
+namespace StorageAdapter.Services.Test.helpers
 {
     internal static class ResourceExtension
     {

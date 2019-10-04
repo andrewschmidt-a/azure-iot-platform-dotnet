@@ -12,10 +12,10 @@ using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Exceptions;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers;
 using Moq;
 using Newtonsoft.Json.Linq;
-using WebService.Test.helpers;
+using StorageAdapter.WebService.Test.helpers;
 using Xunit;
 
-namespace WebService.Test.v1.Controllers
+namespace StorageAdapter.WebService.Test.v1.Controllers
 {
     public class ValuesControllerTest
     {

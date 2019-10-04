@@ -37,7 +37,9 @@ stages:
     - task: Docker@2
       displayName: Build an image
       inputs:
-        command: build
+        containerRegistry: 'OdinDockerHub'
+        repository: 'azureiot3m/config'
+        command: 'buildAndPush'
         dockerfile: '$(Build.SourcesDirectory)/config/WebService/Dockerfile'
         buildContext: '$(Build.SourcesDirectory)/config'
         tags: |

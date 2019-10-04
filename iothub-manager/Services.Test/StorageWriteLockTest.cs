@@ -7,10 +7,10 @@ using Microsoft.Azure.IoTSolutions.IotHubManager.Services.External;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
 using Moq;
 using Newtonsoft.Json;
-using Services.Test.helpers;
+using IoTHubManager.Services.Test.helpers;
 using Xunit;
 
-namespace Services.Test
+namespace IoTHubManager.Services.Test
 {
     public class StorageWriteLockTest
     {

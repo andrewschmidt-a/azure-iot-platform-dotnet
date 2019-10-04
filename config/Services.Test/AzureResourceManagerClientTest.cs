@@ -7,11 +7,11 @@ using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
 using Moq;
-using Services.Test.helpers;
+using Config.Services.Test.helpers;
 using Xunit;
 using IUserManagementClient = Microsoft.Azure.IoTSolutions.UIConfig.Services.External.IUserManagementClient;
 
-namespace Services.Test
+namespace Config.Services.Test
 {
     public class AzureResourceManagerClientTest
     {
