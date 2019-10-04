@@ -13,7 +13,7 @@ variables:
   azureSubscription: 3M-CRSLAD16-BBIoTP-Dev
   resourceGroup: rg-crslbbiot-odin-dev
   aksCluster: aks-dev-spaces-odin
-  devSpace: pr-$(System.PullRequest.PullRequestNumber)-commit-$(Build.SourceVersion)-build-$(Build.BuildId)
+  devSpace: pr-$(System.PullRequest.PullRequestNumber)-build-$(Build.BuildId)
   pcsAppConfig: "https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0="
 
 stages:
