@@ -13,7 +13,7 @@ variables:
   azureSubscription: 3M-CRSLAD16-BBIoTP-Dev
   resourceGroup: rg-crslbbiot-odin-dev
   aksCluster: aks-dev-spaces-odin
-  devSpace: pr-$(System.PullRequest.PullRequestNumber)-commit-$(Build.SourceVersion)-build-$(Build.BuildNumber)
+  devSpace: pr-$(System.PullRequest.PullRequestNumber)-commit-$(Build.SourceVersion)-build-$(Build.BuildId)
   pcsAppConfig: "https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0="
 
 stages:
@@ -32,6 +32,10 @@ stages:
           az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
           az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
 
+    # Create a variable indicating whether the dev space was successfully created or not
+    - script: |
+        echo "##vso[task.setvariable variable=devSpaceCreated]1"
+
     - task: KubectlInstaller@0
       displayName: Install kubectl
       inputs:
@@ -45,7 +49,6 @@ stages:
           kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint="$(pcsAppConfig)"
 
 - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
-  condition: always()
   jobs:
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
@@ -80,7 +83,6 @@ stages:
       devSpace: ${{variables.devSpace}}
 
 - stage: Test_Services_that_Changed
-  condition: always()
   jobs:
   - template: testServiceIfChangedTemplate.yaml
     parameters:
@@ -115,7 +117,7 @@ stages:
       devSpace: ${{variables.devSpace}}
 
 - stage: Delete_Dev_Space
-  condition: always()
+  condition: eq(variables['devSpaceCreated'], '1')
   jobs:
   - job: Delete_Dev_Space
     pool:
