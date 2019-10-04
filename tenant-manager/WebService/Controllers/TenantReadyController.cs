@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Filters;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.Auth;

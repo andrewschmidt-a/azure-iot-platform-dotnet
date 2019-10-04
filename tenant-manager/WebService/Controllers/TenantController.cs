@@ -8,7 +8,6 @@ using MMM.Azure.IoTSolutions.TenantManager.Services.External;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Filters;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
