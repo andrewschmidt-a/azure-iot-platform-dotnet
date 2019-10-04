@@ -35,13 +35,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
             try
             {
                 StatusServiceModel result = await this.processApiModelRequest<StatusServiceModel>(this._httpClient.GetAsync, request);
-                if (result.Status.IsHealthy)
+                if (result == null || result.Status == null || !result.Status.IsHealthy)
                 {
-                    return new StatusResultServiceModel(true, "Alive and well!");
+                    // bad status
+                    return new StatusResultServiceModel(false, result.Status.Message);
                 }
                 else
                 {
-                    return new StatusResultServiceModel(false, result.Status.Message);
+                    return new StatusResultServiceModel(true, "Alive and well!");
                 }
             }
             catch (Exception e)
