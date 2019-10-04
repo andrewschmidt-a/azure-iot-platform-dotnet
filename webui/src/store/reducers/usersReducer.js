@@ -31,7 +31,7 @@ export const epics = createEpicScenario({
     type: 'USERS_FETCH',
     epic: (fromAction, store) => {
       // const conditions = getActiveUserGroupConditions(store.getState());
-      return []
+      return [{'id':'test', 'name':'Andrew Schmidt', 'type':'Registered'}]
       // return IoTHubManagerService.getusers(conditions)
       //   .map(toActionCreator(redux.actions.updateusers, fromAction))
       //   .catch(handleError(fromAction))

@@ -141,6 +141,23 @@ export class AuthService {
     });
   }
 
+  static getUsersInTenant(tenant) {
+    if (AuthService.isDisabled()) return;
+
+    AuthService._userManager.getUser().then(user => {
+      if (user) {
+        HttpClient.post(`${global.DeploymentConfig.issuer}/v1/tenants`).subscribe(response =>{
+          user.id_token = new_token;
+          user.profile.tenant = tenant;
+          AuthService._userManager.storeUser(user)
+          window.location = window.location.origin;
+        })
+      } else {
+        console.log("Must be logged in to switch tenants")
+      }
+    });
+  }
+
   /** Returns a the current user */
   static getCurrentUser() {
     if (AuthService.isDisabled()) {
