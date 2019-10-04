@@ -1,0 +1,34 @@
+
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  eventHubName: ''
+
+steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'echo "eventhubs-odin-mt-poc"' ## <-- follow this example
+
+
+
+
+## TODO -- Deploy ARM Resource
+# - task: AzureResourceGroupDeployment@2
+#   displayName: "Deploy Azure Kubernetes Service"
+#   inputs:
+#     azureSubscription: ${{ parameters.serviceConnection }}
+#     action: 'Create Or Update Resource Group'
+#     resourceGroupName: ${{ parameters.resourceGroup }}
+#     location: 'Central US'
+#     templateLocation: 'Linked artifact'
+#     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/aks.json'
+#     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/aks.json'
+#     overrideParameters: '-resourceName ${{ parameters.aksName }} -dnsPrefix ${{ parameters.aksName }}-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey'
+#     deploymentMode: 'Incremental'
+#     addSpnToEnvironment: true
+
+## TODO -- Store the SharedAccessKeys in both Appconfig and keyvault (later we are to move to keyvault)
+# TenantManagerService:lifecycleEventHubConnString && lifecycleEventHubConnString
+# TenantManagerService:telemetryEventHubConnString && telemetryEventHubConnString
+# TenantManagerService:twinChangeEventHubConnString && twinChangeEventHubConnString

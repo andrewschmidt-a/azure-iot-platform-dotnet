@@ -1,8 +1,14 @@
 parameters:
+  environment: ''
   serviceConnection: ''
   resourceGroup: ''
   cosmosDBName: ''
   aksName: ''
+  keyVaultName: ''
+  functionAppName: ''
+  storageAccountName: ''
+  mapsName: ''
+  
 jobs:
 - job: aks
   displayName: Deploy AKS
@@ -11,6 +17,8 @@ jobs:
   steps:
 ## Tags resources by injecting tags into ARM Templates
   - template: infra/tagARM.yaml
+    parameters:
+      environment: ${{ parameters.environment }}
 ## Deploys AKS
   - template: infra/aks.yaml
     parameters:
@@ -48,6 +56,55 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       cosmosDBName: ${{ parameters.cosmosDBName }}
       keyVaultName: ${{parameters.keyVaultName}}
+
+## Deploys EventHubs -- TODO
+  - template: infra/eventhubs.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      functionAppName: ${{ parameters.functionAppName }}
+      keyVaultName: ${{parameters.keyVaultName}}
+
+## Deploys Functions -- TODO
+  - template: infra/functions.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      functionAppName: ${{ parameters.functionAppName }}
+      keyVaultName: ${{parameters.keyVaultName}}
+
+
+## Deploys Storage Account -- TODO
+  - template: infra/storageaccount.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      storageAccountName: ${{ parameters.storageAccountName }}
+      keyVaultName: ${{parameters.keyVaultName}}
+
+## Deploys Azure Maps -- TODO
+  - template: infra/maps.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      keyVaultName: ${{ parameters.keyVaultName }}
+      mapsName: ${{parameters.mapsName}}
+
+## Deploys Automation Account -- TODO
+  - template: infra/automation.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      keyVaultName: ${{ parameters.keyVaultName }}
+      automationName: ${{parameters.automationName}}
+
+## Create Private/Public Key Pair for Identity Gateway -- TODO
+# ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+# https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+# store in Key Vault :
+# identityGatewayPrivateKey
+# identityGatewayPublicKey
+
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform
 - job: ingress
   displayName: Deploy Ingress
@@ -60,7 +117,7 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       aksName: ${{ parameters.aksName }}
-  
+
 
 
         

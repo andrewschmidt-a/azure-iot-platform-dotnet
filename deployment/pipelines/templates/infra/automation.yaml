@@ -1,0 +1,35 @@
+
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  automationName: ''
+
+steps:
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: 'echo "automation-odin"' ## <-- follow this example
+
+
+## Nate Oelke --SME 
+
+# Run book code will be update outside of this pipeline
+
+## TODO -- Deploy ARM Resource
+# - task: AzureResourceGroupDeployment@2
+#   displayName: "Deploy Azure Kubernetes Service"
+#   inputs:
+#     azureSubscription: ${{ parameters.serviceConnection }}
+#     action: 'Create Or Update Resource Group'
+#     resourceGroupName: ${{ parameters.resourceGroup }}
+#     location: 'Central US'
+#     templateLocation: 'Linked artifact'
+#     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/aks.json'
+#     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/aks.json'
+#     overrideParameters: '-resourceName ${{ parameters.aksName }} -dnsPrefix ${{ parameters.aksName }}-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey'
+#     deploymentMode: 'Incremental'
+#     addSpnToEnvironment: true
+
+## TODO -- Store WebHook information in KeyVault
+# createIotHubWebHookUrl
+# deleteIotHubWebHookUrl
