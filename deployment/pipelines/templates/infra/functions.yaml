@@ -27,11 +27,6 @@ steps:
 #     deploymentMode: 'Incremental'
 #     addSpnToEnvironment: true
 
-## TODO -- Update App config  for Function uris
-# TenantManagerService:twinChangeFunctionUri
-# TenantManagerService:telemetryFunctionUri
-# TenantManagerService:lifecycleFunctionUri
-
 ## TODO -- Deploy ARM Resource -- Deploy Device Properties Function App (talk to Swami)
 # - task: AzureResourceGroupDeployment@2
 #   displayName: "Deploy Azure Kubernetes Service"
