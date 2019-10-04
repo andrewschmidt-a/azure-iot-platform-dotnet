@@ -32,10 +32,6 @@ stages:
           az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
           az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
 
-    # Create a variable indicating whether the dev space was successfully created or not
-    - script: |
-        echo "##vso[task.setvariable variable=devSpaceCreated]1"
-
     - task: KubectlInstaller@0
       displayName: Install kubectl
       inputs:
@@ -117,7 +113,7 @@ stages:
 #       devSpace: ${{variables.devSpace}}
 
 - stage: Delete_Dev_Space
-  condition: and(always(), eq(variables['devSpaceCreated'], '1'))
+  condition: always()
   jobs:
   - job: Delete_Dev_Space
     pool:
