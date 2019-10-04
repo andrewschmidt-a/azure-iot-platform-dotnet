@@ -7,7 +7,7 @@ import { schema, normalize } from 'normalizr';
 import update from 'immutability-helper';
 import { createSelector } from 'reselect';
 import { redux as appRedux } from './appReducer';
-import { IoTHubManagerService } from 'services';
+import { IdentityGatewayService } from 'services';
 import {
   createReducerScenario,
   createEpicScenario,
@@ -31,10 +31,10 @@ export const epics = createEpicScenario({
     type: 'USERS_FETCH',
     epic: (fromAction, store) => {
       // const conditions = getActiveUserGroupConditions(store.getState());
-      return [{'id':'test', 'name':'Andrew Schmidt', 'type':'Registered'}]
-      // return IoTHubManagerService.getusers(conditions)
-      //   .map(toActionCreator(redux.actions.updateusers, fromAction))
-      //   .catch(handleError(fromAction))
+      //return [{'id':'test', 'name':'Andrew Schmidt', 'type':'Registered'}]
+       return IdentityGatewayService.getUsers()
+         .map(toActionCreator(redux.actions.updateUsers, fromAction))
+         .catch(handleError(fromAction))
     }
   },
 
@@ -59,6 +59,15 @@ const userListSchema = new schema.Array(userSchema);
 const initialState = { ...errorPendingInitialState, entities: {}, items: [], lastUpdated: '' };
 
 
+const updateUsersReducer = (state, { payload, fromAction }) => {
+  const { entities: { users }, result } = normalize(payload, userListSchema);
+  return update(state, {
+    entities: { $set: users },
+    items: { $set: result },
+    lastUpdated: { $set: moment() },
+    ...setPending(fromAction.type, false)
+  });
+};
 const deleteUsersReducer = (state, { payload }) => {
   const spliceArr = payload.reduce((idxAcc, payloadItem) => {
     const idx = state.items.indexOf(payloadItem);
@@ -94,6 +103,7 @@ const fetchableTypes = [
 ];
 
 export const redux = createReducerScenario({
+  updateUsers: { type: 'USERS_UPDATE', reducer: updateUsersReducer },
   registerError: { type: 'USERS_REDUCER_ERROR', reducer: errorReducer },
   isFetching: { multiType: fetchableTypes, reducer: pendingReducer },
   deleteUsers: { type: 'USERS_DELETE', reducer: deleteUsersReducer },

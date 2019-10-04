@@ -6,18 +6,18 @@ import Config from 'app.config';
 import { stringify } from 'query-string';
 import { HttpClient } from 'utilities/httpClient';
 import {
-  toUserTenantModel
+  toUserModel
 } from './models';
 
-const ENDPOINT = Config.serviceUrls.iotHubManager;
+const ENDPOINT = Config.serviceUrls.auth;
 
 /** Contains methods for calling the Device service */
-export class IoTHubManagerService {
+export class IdentityGatewayService {
 
   /** Returns a list of devices */
   static getUsers() {
-    return HttpClient.get(`${ENDPOINT}tenant?query=${query}`)
-      .map(toDevicesModel);
+    return [{'id':'guid', 'type':'invited', 'name':'Andrew Schmidt'}]//HttpClient.get(`${ENDPOINT}tenant/users`)
+      .map(toUserModel);
   }
 
 }

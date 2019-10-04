@@ -9,7 +9,6 @@ import {
   permissions,
   toNewUserRequestModel,
   toSinglePropertyDiagnosticsModel,
-  toUserDiagnosticsModel,
   toDiagnosticsModel
 } from 'services/models';
 import {
@@ -199,11 +198,11 @@ export class UserNew extends LinkedComponent {
   }
 
   onFlyoutClose = (eventName) => {
-    //this.props.logEvent(toUserDiagnosticsModel(eventName, this.state.formData));
+    //this.props.logEvent(toDiagnosticsModel(eventName, this.state.formData));
     this.props.onClose();
   }
 
-  apply = (event) => {
+  invite = (event) => {
     event.preventDefault();
     const { formData } = this.state;
 
@@ -212,7 +211,7 @@ export class UserNew extends LinkedComponent {
 
       if (this.provisionSubscription) this.provisionSubscription.unsubscribe();
 
-      //this.props.logEvent(toUserDiagnosticsModel('Users_ApplyClick', formData));
+      this.props.logEvent(toDiagnosticsModel('Users_InviteClick', formData));
 
     }
   }
@@ -249,7 +248,7 @@ export class UserNew extends LinkedComponent {
     return (
       <Flyout header={t('users.flyouts.new.title')} t={t} onClose={() => this.onFlyoutClose('Users_TopXCloseClick')}>
         <Protected permission={permissions.inviteUsers}>
-          <form className="users-new-container" onSubmit={this.apply}>
+          <form className="users-new-container" onSubmit={this.invite}>
             <div className="users-new-content">
               <FormGroup>
                 <FormLabel>{t(userOptions.labelName)}</FormLabel>
