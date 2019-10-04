@@ -14,7 +14,6 @@ variables:
   resourceGroup: rg-crslbbiot-odin-dev
   aksCluster: aks-dev-spaces-odin
   devSpace: pr-$(System.PullRequest.PullRequestNumber)-build-$(Build.BuildId)
-  pcsAppConfig: "https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0="
 
 stages:
 - stage: Create_Dev_Space_for_PR
@@ -36,6 +35,11 @@ stages:
       displayName: Install kubectl
       inputs:
         kubectlVersion: 'latest'
+
+    # Load app config connection string
+    - script: |
+      pcsAppConfig=`az appconfig credential list -o json -n app-config-odin -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString`
+      echo "##vso[task.setvariable variable=pcsAppConfig]$pcsAppConfig"
         
     - task: Bash@3
       displayName: Add Secrets to New Dev Space
