@@ -117,7 +117,7 @@ stages:
       devSpace: ${{variables.devSpace}}
 
 - stage: Delete_Dev_Space
-  condition: eq(variables['devSpaceCreated'], '1')
+  condition: and(always(), eq(variables['devSpaceCreated'], '1'))
   jobs:
   - job: Delete_Dev_Space
     pool:
