@@ -11,7 +11,7 @@ export const userColumnDefs = {
   id: {
     headerName: 'users.grid.userId',
     field: 'id',
-    cellRendererFramework: SoftSelectLinkRenderer
+    valueFormatter: ({ value }) => checkForEmpty(value)
   },
   name: {
     headerName: 'users.grid.userName',

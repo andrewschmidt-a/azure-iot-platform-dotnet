@@ -16,8 +16,11 @@ export class IdentityGatewayService {
 
   /** Returns a list of devices */
   static getUsers() {
-    return [{'id':'guid', 'type':'invited', 'name':'Andrew Schmidt'}]//HttpClient.get(`${ENDPOINT}tenant/users`)
+    console.log("GET USERS")
+    const data = [{'id':'guid', 'type':'invited', 'name':'Andrew Schmidt'}]//HttpClient.get(`${ENDPOINT}tenant/users`)
       .map(toUserModel);
+    console.log(data);
+    return Observable.of(data);
   }
 
 }

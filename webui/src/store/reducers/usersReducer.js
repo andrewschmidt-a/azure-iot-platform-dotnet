@@ -6,7 +6,7 @@ import moment from 'moment';
 import { schema, normalize } from 'normalizr';
 import update from 'immutability-helper';
 import { createSelector } from 'reselect';
-import { redux as appRedux } from './appReducer';
+import { redux as appRedux, getActiveDeviceGroupConditions } from './appReducer';
 import { IdentityGatewayService } from 'services';
 import {
   createReducerScenario,
@@ -30,22 +30,11 @@ export const epics = createEpicScenario({
   fetchUsers: {
     type: 'USERS_FETCH',
     epic: (fromAction, store) => {
-      // const conditions = getActiveUserGroupConditions(store.getState());
-      //return [{'id':'test', 'name':'Andrew Schmidt', 'type':'Registered'}]
-       return IdentityGatewayService.getUsers()
-         .map(toActionCreator(redux.actions.updateUsers, fromAction))
-         .catch(handleError(fromAction))
+      console.log("USER FETCH")
+      return IdentityGatewayService.getUsers()
+        .map(toActionCreator(redux.actions.updateUsers, fromAction))
+        .catch(handleError(fromAction))
     }
-  },
-
-  /* Update the users*/
-  refreshUsers: {
-    type: 'USERS_REFRESH',
-    rawEpic: ($actions) =>
-      $actions.ofType(appRedux.actionTypes.updateActiveUserGroup)
-        .map(({ payload }) => payload)
-        .distinctUntilChanged()
-        .map(_ => epics.actions.fetchUsers())
   }
 });
 // ========================= Epics - END
@@ -58,8 +47,8 @@ const userListSchema = new schema.Array(userSchema);
 // ========================= Reducers - START
 const initialState = { ...errorPendingInitialState, entities: {}, items: [], lastUpdated: '' };
 
-
 const updateUsersReducer = (state, { payload, fromAction }) => {
+  console.log("Update Users Reducers")
   const { entities: { users }, result } = normalize(payload, userListSchema);
   return update(state, {
     entities: { $set: users },
@@ -68,6 +57,8 @@ const updateUsersReducer = (state, { payload, fromAction }) => {
     ...setPending(fromAction.type, false)
   });
 };
+
+
 const deleteUsersReducer = (state, { payload }) => {
   const spliceArr = payload.reduce((idxAcc, payloadItem) => {
     const idx = state.items.indexOf(payloadItem);
@@ -97,6 +88,8 @@ const insertUsersReducer = (state, { payload }) => {
   });
 };
 
+
+
 /* Action types that cause a pending flag */
 const fetchableTypes = [
   epics.actionTypes.fetchUsers
@@ -106,16 +99,16 @@ export const redux = createReducerScenario({
   updateUsers: { type: 'USERS_UPDATE', reducer: updateUsersReducer },
   registerError: { type: 'USERS_REDUCER_ERROR', reducer: errorReducer },
   isFetching: { multiType: fetchableTypes, reducer: pendingReducer },
-  deleteUsers: { type: 'USERS_DELETE', reducer: deleteUsersReducer },
-  insertUsers: { type: 'USERS_INSERT', reducer: insertUsersReducer },
-  resetPendingAndError: { type: 'USERS_REDUCER_RESET_ERROR_PENDING', reducer: resetPendingAndErrorReducer }
+  deleteUsers: { type: 'USER_DELETE', reducer: deleteUsersReducer },
+  insertUsers: { type: 'USER_INSERT', reducer: insertUsersReducer },
+  resetPendingAndError: { type: 'USER_REDUCER_RESET_ERROR_PENDING', reducer: resetPendingAndErrorReducer }
 });
 
 export const reducer = { users: redux.getReducer(initialState) };
 // ========================= Reducers - END
 
 // ========================= Selectors - START
-export const getUsersReducer = state => {console.log(state); return state.users};
+export const getUsersReducer = state => state.users;
 export const getEntities = state => getUsersReducer(state).entities || {};
 export const getItems = state => getUsersReducer(state).items || [];
 export const getUsersLastUpdated = state => getUsersReducer(state).lastUpdated;

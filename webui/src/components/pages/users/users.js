@@ -44,7 +44,6 @@ export class Users extends Component {
 
   closeFlyout = () => this.setState(closedFlyoutState);
 
-  openSIMManagement = () => this.setState({ openFlyoutName: 'sim-management' });
   openNewUserFlyout = () => {
     this.setState({ openFlyoutName: 'new-user' });
     this.props.logEvent(toDiagnosticsModel('Users_NewClick', {}));
@@ -55,7 +54,13 @@ export class Users extends Component {
     openFlyoutName: undefined
   });
 
-  onGridReady = gridReadyEvent => this.userGridApi = gridReadyEvent.api;
+  onGridReady = gridReadyEvent => {
+    this.userGridApi = gridReadyEvent.api
+    if(!this.props.users || this.props.users.length == 0){
+      this.props.fetchUsers() // Load Users for the first time
+    }
+
+  };
 
   searchOnChange = ({ target: { value } }) => {
     if (this.userGridApi) this.userGridApi.setQuickFilter(value);
@@ -67,6 +72,7 @@ export class Users extends Component {
 
   render() {
     const { t, users, userGroupError, userError, isPending, lastUpdated, fetchUsers } = this.props;
+
     const gridProps = {
       onGridReady: this.onGridReady,
       rowData: isPending ? undefined : users || [],
