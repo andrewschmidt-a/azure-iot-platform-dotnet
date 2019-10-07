@@ -45,6 +45,10 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
                     return new StatusResultServiceModel(true, "Alive and well!");
                 }
             }
+            catch (JsonReaderException)
+            {
+                return new StatusResultServiceModel(false, $"Unable to read the response from the IdentityGateway Status. The service may be down.");
+            }
             catch (Exception e)
             {
                 return new StatusResultServiceModel(false, $"Unable to get IdentityGateway Status: {e.Message}");
@@ -109,7 +113,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
             }
             catch (Exception e)
             {
-                throw new Exception("Unable to deserialize response content to the proper API model.", e);
+                throw new JsonReaderException("Unable to deserialize response content to the proper API model.", e);
             }
         }
 

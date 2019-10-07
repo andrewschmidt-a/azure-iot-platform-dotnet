@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
+using MMM.Azure.IoTSolutions.TenantManager.AppConfiguration;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
 {
@@ -33,6 +33,18 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         private const string KEY_VAULT_NAME = "Global:KeyVault:name";
         private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
 
+        private List<string> appConfigKeys = new List<string>
+        {
+            "Global",
+            "Global:AzureActiveDirectory",
+            "Global:ClientAuth",
+            "Global:ClientAuth:JWT",
+            "Global:KeyVault",
+            "ExternalDependencies",
+            "TenantManagerService",
+            "StorageAdapter",
+        };
+
         public ConfigData(ILogger logger)
         {
             this.log = logger;
@@ -44,11 +56,11 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
             configurationBuilder.AddIniFile("appsettings.ini", optional: true, reloadOnChange: true);
 #endif
             configurationBuilder.AddEnvironmentVariables();
-
+            // build configuration with environment variables
+            var preConfig = configurationBuilder.Build();
+            // Add app config settings to the configuration builder
+            configurationBuilder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
             this.configuration = configurationBuilder.Build();
-            configurationBuilder.AddAzureAppConfiguration(this.configuration[APP_CONFIGURATION]);
-            this.configuration = configurationBuilder.Build();
-
             // Set up Key Vault
             this.SetUpKeyVault();
         }

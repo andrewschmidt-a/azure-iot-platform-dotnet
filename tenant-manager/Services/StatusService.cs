@@ -10,7 +10,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
 {
     public class StatusService : IStatusService
     {
-        const string AzureB2CBaseUri = "Global:AzureB2CBaseUri";
         private const string TENANT_MANAGEMENT_KEY = "TenantManagerService:";
         private const string COSMOS_DB_KEY = TENANT_MANAGEMENT_KEY + "CosmosDb";
         private const string COSMOS_KEY = TENANT_MANAGEMENT_KEY + "cosmoskey";
