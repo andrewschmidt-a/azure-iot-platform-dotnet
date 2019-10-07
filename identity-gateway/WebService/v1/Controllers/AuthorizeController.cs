@@ -16,7 +16,7 @@ using Microsoft.Azure.KeyVault.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using System.Net;
-using IdentityGateway.Services.Helpers;
+using IdentityGateway.Services.Exceptions;
 using IdentityModel;
 using RSA = IdentityGateway.Services.Helpers.RSA;
 
@@ -53,37 +53,28 @@ namespace IdentityGateway.Controllers
         public IActionResult Get([FromQuery] string redirect_uri, [FromQuery] string state,
             [FromQuery(Name = "client_id")] string clientId, [FromQuery] string nonce, [FromQuery] string tenant)
         {
-            try
+            // Validate Input
+            if (!Uri.IsWellFormedUriString(redirect_uri, UriKind.Absolute))
             {
-                // Validate Input
-                if (!Uri.IsWellFormedUriString(redirect_uri, UriKind.Absolute))
-                {
-                    throw new Exception("Redirect Uri is not valid!");
-                }
-
-                Guid validatedGuid = Guid.Empty;
-                if (!tenant.IsNullOrEmpty() && !Guid.TryParse(tenant, out validatedGuid))
-                {
-                    throw new Exception("Tenant is not valid!");
-                }
-
-                var config = new Configuration(HttpContext);
-                var uri = new UriBuilder(this._config[AzureB2CBaseUri]);
-
-                // Need to build Query carefully to not clobber other query items -- just injecting state
-                var query = HttpUtility.ParseQueryString(uri.Query);
-                query["state"] = JsonConvert.SerializeObject(new AuthState
-                    {returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce, client_id = clientId});
-                query["redirect_uri"] = config.issuer + "/connect/callback"; // must be https for B2C
-                uri.Query = query.ToString();
-                return Redirect(
-                    uri.Uri.ToString()
-                );
+                throw new Exception("Redirect Uri is not valid!");
             }
-            catch (Exception e)
+
+            Guid validatedGuid = Guid.Empty;
+            if (!tenant.IsNullOrEmpty() && !Guid.TryParse(tenant, out validatedGuid))
             {
-                return StatusCode(500, new ErrorModel {ErrorMessage = e.Message});
+                throw new Exception("Tenant is not valid!");
             }
+
+            var config = new Configuration(HttpContext);
+            var uri = new UriBuilder(this._config[AzureB2CBaseUri]);
+
+            // Need to build Query carefully to not clobber other query items -- just injecting state
+            var query = HttpUtility.ParseQueryString(uri.Query);
+            query["state"] = JsonConvert.SerializeObject(new AuthState
+                {returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce, client_id = clientId});
+            query["redirect_uri"] = config.issuer + "/connect/callback"; // must be https for B2C
+            uri.Query = query.ToString();
+            return Redirect(uri.Uri.ToString());
         }
 
         // GET: connect/authorize
@@ -98,24 +89,17 @@ namespace IdentityGateway.Controllers
         [Route("connect/logout")]
         public IActionResult Get([FromQuery] string post_logout_redirect_uri)
         {
-            try
+            // Validate Input
+            if (!Uri.IsWellFormedUriString(post_logout_redirect_uri, UriKind.Absolute))
             {
-                // Validate Input
-                if (!Uri.IsWellFormedUriString(post_logout_redirect_uri, UriKind.Absolute))
-                {
-                    throw new Exception("Redirect Uri is not valid!");
-                }
-
-                var uri = new UriBuilder(post_logout_redirect_uri);
-
-                return Redirect(
-                    uri.Uri.ToString()
-                );
+                throw new Exception("Redirect Uri is not valid!");
             }
-            catch (Exception e)
-            {
-                return StatusCode(500, new ErrorModel {ErrorMessage = e.Message});
-            }
+
+            var uri = new UriBuilder(post_logout_redirect_uri);
+
+            return Redirect(
+                uri.Uri.ToString()
+            );
         }
 
         // GET connect/callback
@@ -123,75 +107,59 @@ namespace IdentityGateway.Controllers
         public async Task<ActionResult> PostAsync([FromHeader(Name = "Authorization")] string authHeader,
             [FromRoute] string tenant)
         {
-            try
+            if (authHeader == null || !authHeader.StartsWith("Bearer"))
             {
-                if (authHeader != null && authHeader.StartsWith("Bearer"))
-                {
-                    //Extract Bearer token
-                    string encodedToken = authHeader.Substring("Bearer ".Length).Trim();
-
-                    var jwtHandler = new JwtSecurityTokenHandler();
-                    if (jwtHandler.CanReadToken(encodedToken))
-                    {
-                        var jwt = jwtHandler.ReadJwtToken(encodedToken);
-                        var config = new Configuration(HttpContext);
-
-                        var tokenValidationParams = new TokenValidationParameters
-                        {
-                            // Validate the token signature
-                            RequireSignedTokens = true,
-                            ValidateIssuerSigningKey = true,
-                            IssuerSigningKeys = RSA.GetJsonWebKey(this._config).Result.Keys,
-
-                            // Validate the token issuer
-                            ValidateIssuer = false,
-                            ValidIssuer = config.issuer,
-
-                            // Validate the token audience
-                            ValidateAudience = false,
-                            ValidAudience = "IoTPlatform",
-
-                            // Validate token lifetime
-                            ValidateLifetime = true,
-                            ClockSkew = new TimeSpan(0) // shouldnt be skewed as this is the same server that issued it.
-                        };
-                        SecurityToken validated_token = null;
-                        jwtHandler.ValidateToken(encodedToken, tokenValidationParams, out validated_token);
-                        if (validated_token != null)
-                        {
-                            if (jwt.Claims.Count(c => c.Type == "available_tenants" && c.Value == tenant) > 0)
-                            {
-                                // Everything checks out so you can mint a new token
-                                var tokenString = jwtHandler.WriteToken(await GetToken(jwt.Claims.Where(c => new List<string>(){"sub", "name", "email"}.Contains(c.Type)).ToList(), tenant,jwt.Audiences.First(), jwt.ValidTo));
-                                return StatusCode(200,
-                                    tokenString);
-                            }
-                            else
-                            {
-                                return StatusCode(403,
-                                    new ErrorModel {ErrorMessage = "Not allowed access to that tenant"});
-                            }
-
-                        }
-                        else
-                        {
-                            throw new Exception("Invalid Token!");
-                        }
-                    }
-                    else
-                    {
-                        throw new Exception("Invalid token!");
-                    }
-                }
-                else
-                {
-                    //Handle what happens if that isn't the case
-                    throw new Exception("The authorization header is either empty or isn't Basic.");
-                }
+                throw new NoAuthorizationException("No Bearer Token Authorization Header was passed.");
             }
-            catch (Exception e)
+
+            //Extract Bearer token
+            string encodedToken = authHeader.Substring("Bearer ".Length).Trim();
+
+            var jwtHandler = new JwtSecurityTokenHandler();
+            if (!jwtHandler.CanReadToken(encodedToken))
             {
-                return StatusCode(500, new ErrorModel {ErrorMessage = e.Message});
+                throw new NoAuthorizationException("The given token could not be read.");
+            }
+
+            var jwt = jwtHandler.ReadJwtToken(encodedToken);
+            var config = new Configuration(HttpContext);
+
+            var tokenValidationParams = new TokenValidationParameters
+            {
+                // Validate the token signature
+                RequireSignedTokens = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKeys = RSA.GetJsonWebKey(this._config).Result.Keys,
+
+                // Validate the token issuer
+                ValidateIssuer = false,
+                ValidIssuer = config.issuer,
+
+                // Validate the token audience
+                ValidateAudience = false,
+                ValidAudience = "IoTPlatform",
+
+                // Validate token lifetime
+                ValidateLifetime = true,
+                ClockSkew = new TimeSpan(0) // shouldnt be skewed as this is the same server that issued it.
+            };
+
+            SecurityToken validated_token = null;
+            jwtHandler.ValidateToken(encodedToken, tokenValidationParams, out validated_token);
+            if (validated_token == null)
+            {
+                throw new NoAuthorizationException("The given token could not be validated.");
+            }
+
+            if (jwt.Claims.Count(c => c.Type == "available_tenants" && c.Value == tenant) > 0)
+            {
+                // Everything checks out so you can mint a new token
+                var tokenString = jwtHandler.WriteToken(await GetToken(jwt.Claims.Where(c => new List<string>(){"sub", "name", "email"}.Contains(c.Type)).ToList(), tenant,jwt.Audiences.First(), jwt.ValidTo));
+                return StatusCode(200, tokenString);
+            }
+            else
+            {
+                throw new NoAuthorizationException("Not allowed access to this tenant.");
             }
         }
 
@@ -200,70 +168,56 @@ namespace IdentityGateway.Controllers
         public async Task<IActionResult> PostAsync([FromForm] string state, [FromForm] string id_token,
             [FromForm] string error, [FromForm] string error_description)
         {
+            if (!String.IsNullOrEmpty(error))
+            {
+                // If there was an error returned from B2C, throw it as an expcetion
+                throw new Exception($"Azure B2C returned an error: {{{error}: {error_description}}}");
+            }
+
+            AuthState authState = null;
             try
             {
-                // Error from B2C - throw the error so it gets returned
-                if (!String.IsNullOrEmpty(error))
-                {
-                    throw new Exception($"{error}: {error_description}");
-                }
-
-                var jwtHandler = new JwtSecurityTokenHandler();
-                if (jwtHandler.CanReadToken(id_token))
-                {
-                    var jwt = jwtHandler.ReadJwtToken(id_token);
-                    AuthState authState = null;
-                    try
-                    {
-                        authState = JsonConvert.DeserializeObject<AuthState>(state);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new Exception("Invlid state from auth redirect!");
-                    }
-
-                    var originalAudience = authState.client_id;
-
-                    // Bring over Subject and Name
-                    var claims = jwt.Claims.Where(t => new List<string> {"sub", "name"}.Contains(t.Type)).ToList();
-
-                    //Extract first email
-                    var emailClaim = jwt.Claims.Where(t => t.Type == "emails").FirstOrDefault();
-                    if (emailClaim != null)
-                    {
-                        claims.Add(new Claim("email", emailClaim.Value));
-                    }
-                  
-                    if (!String.IsNullOrEmpty(authState.nonce))
-                    {
-                        claims.Add(new Claim("nonce", authState.nonce));
-                    }
-
-                    string tokenString = jwtHandler.WriteToken( await GetToken(claims,authState.tenant, originalAudience, null));
-
-                    //Build Return Uri
-                    var returnUri = new UriBuilder(authState.returnUrl);
-
-                    // Need to build Query carefully to not clobber other query items -- just injecting state
-                    //var query = HttpUtility.ParseQueryString(returnUri.Query);
-                    //query["state"] = HttpUtility.UrlEncode(authState.state);
-                    //returnUri.Query = query.ToString();
-
-                    returnUri.Fragment =
-                        "id_token=" + tokenString + "&state=" +
-                        HttpUtility.UrlEncode(authState
-                            .state); // pass token in Fragment for more security (Browser wont forward...)
-                    return Redirect(returnUri.Uri.ToString());
-                }
-                else
-                {
-                    throw new Exception("Invalid Token!");
-                }
+                authState = JsonConvert.DeserializeObject<AuthState>(state);
             }
             catch (Exception e)
             {
-                return StatusCode(500, new ErrorModel {ErrorMessage = e.Message});
+                throw new Exception("Invlid state from authentication redirect", e);
             }
+
+            var originalAudience = authState.client_id;
+
+            // Bring over Subject and Name
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwt = jwtHandler.ReadJwtToken(id_token);
+            var claims = jwt.Claims.Where(t => new List<string> {"sub", "name"}.Contains(t.Type)).ToList();
+
+            //Extract first email
+            var emailClaim = jwt.Claims.Where(t => t.Type == "emails").FirstOrDefault();
+            if (emailClaim != null)
+            {
+                claims.Add(new Claim("email", emailClaim.Value));
+            }
+            
+            if (!String.IsNullOrEmpty(authState.nonce))
+            {
+                claims.Add(new Claim("nonce", authState.nonce));
+            }
+
+            string tokenString = jwtHandler.WriteToken( await GetToken(claims,authState.tenant, originalAudience, null));
+
+            //Build Return Uri
+            var returnUri = new UriBuilder(authState.returnUrl);
+
+            // Need to build Query carefully to not clobber other query items -- just injecting state
+            //var query = HttpUtility.ParseQueryString(returnUri.Query);
+            //query["state"] = HttpUtility.UrlEncode(authState.state);
+            //returnUri.Query = query.ToString();
+
+            returnUri.Fragment =
+                "id_token=" + tokenString + "&state=" +
+                HttpUtility.UrlEncode(authState
+                    .state); // pass token in Fragment for more security (Browser wont forward...)
+            return Redirect(returnUri.Uri.ToString());
         }
 
         private async Task<JwtSecurityToken> GetToken(List<Claim> claims, string tenant, string audience, DateTime? expiration)
@@ -273,7 +227,6 @@ namespace IdentityGateway.Controllers
 
             try
             {
-                
                 // Get Secrets From KeyVault
                 var listOfTasks = new Task<string>[]
                 {
