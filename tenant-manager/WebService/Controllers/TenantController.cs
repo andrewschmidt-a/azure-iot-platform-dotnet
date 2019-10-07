@@ -113,7 +113,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             try
             {
-                await _identityClient.addUserToTenantAsync(userId, tenantGuid, role);
+                await _identityClient.addTenantForUserAsync(userId, tenantGuid, role);
             }
             catch (Exception e)
             {
@@ -121,7 +121,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             }
 
             // Update the userSettings table with the lastUsedTenant if there isn't already a lastUsedTenant
-            
             IdentityGatewayApiSettingModel userSettings = null;
 
             try
@@ -210,15 +209,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             try
             {
                 accessToTenant = await _identityClient.isUserAuthenticated(userId, tenantId);
+                if (!accessToTenant)
+                {
+                    throw new NoAuthorizationException($"The User {userId} is not authorized for operations on this tenant. The user may not have the proper role for this operation.");
+                }
             }
             catch (Exception e)
             {
-                throw new NoAuthorizationException($"Unable to retrieve the user's tenant for User Id {userId}. The user may not be authorized.");
-            }
-
-            if (!accessToTenant)
-            {
-                throw new NoAuthorizationException($"Incorrect role for User Id {userId} associated with this tenant. The user may not be authorized.");
+                throw new NoAuthorizationException($"The User {userId} is not authorized for operations on this tenant.", e);
             }
             try
             {
@@ -260,35 +258,40 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             var tableStorageHelper = new TableStorageHelper(storageAccountConnectionString);
 
             // Verify that the user has access to the specified tenant
-            bool accessToTenant = false;
             try
             {
-                accessToTenant = await _identityClient.isUserAuthenticated(userId, tenantId);
+                bool accessToTenant = await _identityClient.isUserAuthenticated(userId, tenantId);
+                if (!accessToTenant)
+                {
+                    throw new NoAuthorizationException($"Incorrect role for User Id {userId} associated with this tenant. The user may not be authorized. The user may not have the proper role for this operation.");
+                }
             }
             catch (Exception e)
             {
-                throw new NoAuthorizationException($"Unable to retrieve the user's tenant for User Id {userId}. The user may not be authorized.");
-            }
-
-            if (!accessToTenant)
-            {
-                throw new NoAuthorizationException($"Incorrect role for User Id {userId} associated with this tenant. The user may not be authorized.");
+                throw new NoAuthorizationException($"The User {userId} is not authorized for operations on this tenant.", e);
             }
 
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
             TenantModel tenant = await tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
-            if (tenant == null)
+            if (tenant != null && !tenant.IsIotHubDeployed)
+            {
+                // If the tenant iothub is not deployed, we should not be able to start the delete process
+                // this will mean the tenant is not fully deployed, so some resources could be deployed after
+                // the delete process has begun
+                throw new Exception("The tenant exists but it has not been fully deployed. Please wait for the tenant to fully deploy before trying to delete.");
+            }
+            else if (tenant == null)
             {
                 this._log.Info($"The tenant {tenantId} could not be deleted from Table Storage because it does not exist.", () => new { tenantId });
-                deletionRecord["tableStorage"] = true;
+                deletionRecord["tenantTableStorage"] = true;
             }
             else
             {
                 try
                 {
                     await tableStorageHelper.DeleteEntityAsync<TenantModel>(TENANT_TABLE_ID, tenant);
-                    deletionRecord["tableStorage"] = true;
+                    deletionRecord["tenantTableStorage"] = true;
                 }
                 catch (Exception e)
                 {
@@ -298,14 +301,39 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 }
             }
 
-            // Gather tenant information
-            string tenantGuid = tenantId;
-            string iotHubName = String.Format(this.iotHubNameFormat, tenantGuid.Substring(0, 8));
-
+            // delete the tenant from the user
             try
             {
+                await this._identityClient.deleteTenantForAllUsersAsync(tenantId);
+                deletionRecord["userTableStorage"] = true;
+            }
+            catch (Exception e)
+            {
+                this._log.Info($"Unable to delete user-tenant relationships for tenant {tenantId} in the user table.", () => new { tenantId, e.Message });
+                deletionRecord["userTableStorage"] = false;
+            }
+
+            // update userSettings table LastUsedTenant if necessary
+            try
+            {
+                IdentityGatewayApiSettingModel lastUsedTenant = await this._identityClient.getSettingsForUserAsync(userId, "LastUsedTenant");
+                if (lastUsedTenant.Value == tenantId)  // Value is the tenantId in the model
+                {
+                    // update the LastUsedTenant to some null
+                    await this._identityClient.updateSettingsForUserAsync(userId, "LastUsedTenant", "");
+                }
+            }
+            catch (Exception e)
+            {
+                this._log.Info($"Unable to get the user {userId} LastUsedTenant setting, the setting will not be updated.", () => new { userId, e.Message });
+            }
+
+            // Gather tenant information
+            try
+            {
+                string iotHubName = String.Format(this.iotHubNameFormat, tenantId.Substring(0, 8));
                 //trigger delete iothub runbook
-                await this.tenantRunbookHelper.DeleteIotHub(tenantGuid, iotHubName);
+                await this.tenantRunbookHelper.DeleteIotHub(tenantId, iotHubName);
                 deletionRecord["iotHub"] = true;
             }
             catch (Exception e)
@@ -323,7 +351,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             {
                 // pcs colleciton uses a different database than the other collections
                 string databaseId = collection == "pcs" ? dbIdStorage : dbIdTms;
-                string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantGuid, collection);
+                string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
                 string collectionId = "";
                 try
                 {
@@ -331,14 +359,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 }
                 catch (Exception e)
                 {
-                    string message = $"Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantGuid}";
-                    this._log.Info(message, () => new { collectionKey, tenantGuid, e.Message });
+                    string message = $"Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantId}";
+                    this._log.Info(message, () => new { collectionKey, tenantId, e.Message });
                 }
 
                 if (String.IsNullOrEmpty(collectionId))
                 {
-                    string message = $"The collectionId was not set properly for tenant {tenantGuid} while attempting to delete the {collection} collection";
-                    this._log.Info(message, () => new { collectionKey, tenantGuid });
+                    string message = $"The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection";
+                    this._log.Info(message, () => new { collectionKey, tenantId });
                     // Currently, the assumption for an unknown collection id is that it has been deleted.
                     // We can come to this conclusion by assuming that the app config key containing the collection id was already deleted.
                     // TODO: Determine a more explicit outcome for this scenario - jrb
@@ -354,15 +382,15 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 }
                 catch (ResourceNotFoundException e)
                 {
-                    string message = $"The {collection} collection for tenant {tenantGuid} does exist and cannot be deleted.";
-                    this._log.Info(message, () => new { collectionId, tenantGuid, e.Message });
+                    string message = $"The {collection} collection for tenant {tenantId} does exist and cannot be deleted.";
+                    this._log.Info(message, () => new { collectionId, tenantId, e.Message });
                     deletionRecord[$"{collection}Collection"] = true;
                 }
                 catch (Exception e)
                 {
-                    string message = $"An error occurred while deleting the {collection} collection for tenant {tenantGuid}";
+                    string message = $"An error occurred while deleting the {collection} collection for tenant {tenantId}";
                     deletionRecord[$"{collection}Collection"] = false;
-                    this._log.Info(message, () => new { collectionId, tenantGuid, e.Message });
+                    this._log.Info(message, () => new { collectionId, tenantId, e.Message });
                 }
 
                 try
@@ -373,13 +401,13 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 catch (Exception e)
                 {
                     string message = $"Unable to delete {collectionKey} from App Config";
-                    this._log.Info(message, () => new { collectionKey, tenantGuid, e.Message });
+                    this._log.Info(message, () => new { collectionKey, tenantId, e.Message });
                 }
             }
 
             var response = new
             {
-                tenantId = tenantGuid,
+                tenantId = tenantId,
                 fullyDeleted = deletionRecord.All(item => item.Value),
                 deletionRecord = deletionRecord
             };

@@ -7,7 +7,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
     {
         Task<StatusResultServiceModel> StatusAsync();
 
-        Task<IdentityGatewayApiModel> addUserToTenantAsync(string userId, string tenantId, string roles);
+        Task<IdentityGatewayApiModel> addTenantForUserAsync(string userId, string tenantId, string roles);
 
         Task<IdentityGatewayApiModel> getTenantForUserAsync(string userId, string tenantId);
 
@@ -16,5 +16,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
         Task<IdentityGatewayApiSettingModel> addSettingsForUserAsync(string userId, string settingKey, string settingValue);
 
         Task<IdentityGatewayApiSettingModel> getSettingsForUserAsync(string userId, string settingKey);
+
+        Task<IdentityGatewayApiSettingModel> updateSettingsForUserAsync(string userId, string settingKey, string settingValue);
+
+        Task<IdentityGatewayApiModel> deleteTenantForAllUsersAsync(string tenantId);
     }
 }
