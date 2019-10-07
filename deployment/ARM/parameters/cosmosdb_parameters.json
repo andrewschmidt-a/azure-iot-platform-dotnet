@@ -1,0 +1,17 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "accountName": { "value": "odin-test-deploy-cosmos" },
+        "location": { "value": "" },
+        "primaryRegion": { "value": "" },
+        "defaultConsistencyLevel": { "value": "Strong" },
+        "maxStalenessPrefix": { "value": 10 },
+        "maxIntervalInSeconds": { "value": 5 },
+        "multipleWriteLocations": { "value": "" },
+        "automaticFailover": { "value": "" },
+        "databaseName": { "value": "" },
+        "throughput": { "value": "" },
+        "container1Name": { "value": "" }
+    }
+}
