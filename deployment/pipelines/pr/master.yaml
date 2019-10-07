@@ -38,8 +38,8 @@ stages:
 
     # Load app config connection string
     - script: |
-      pcsAppConfig=`az appconfig credential list -o json -n app-config-odin -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString`
-      echo "##vso[task.setvariable variable=pcsAppConfig]$pcsAppConfig"
+        pcsAppConfig=`az appconfig credential list -o json -n app-config-odin -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString`
+        echo "##vso[task.setvariable variable=pcsAppConfig]$pcsAppConfig"
         
     - task: Bash@3
       displayName: Add Secrets to New Dev Space
