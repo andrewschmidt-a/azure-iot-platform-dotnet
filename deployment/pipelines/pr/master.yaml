@@ -46,7 +46,7 @@ stages:
       inputs:
         targetType: 'inline'
         script:  |
-          kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=Endpoint="$(pcsAppConfig)"
+          kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION="Endpoint=$(pcsAppConfig)"
 
 - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
   jobs:
