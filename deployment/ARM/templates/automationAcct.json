@@ -23,7 +23,11 @@
             "name": "[parameters('automationAccountName')]",
             "type": "Microsoft.Automation/automationAccounts",
             "apiVersion": "2015-10-31",
-            "properties": {},
+            "properties": {
+                "sku": {
+                    "name": "Basic"
+                  }
+            },
             "location": "[parameters('location')]",
             "tags": {}
         },
