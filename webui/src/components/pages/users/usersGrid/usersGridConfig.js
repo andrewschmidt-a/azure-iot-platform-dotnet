@@ -19,6 +19,11 @@ export const userColumnDefs = {
     sort: 'asc',
     valueFormatter: ({ value }) => checkForEmpty(value)
   },
+  role: {
+    headerName: 'users.grid.userRole',
+    field: 'role',
+    valueFormatter: ({ value }) => checkForEmpty(value)
+  },
   type: {
     headerName: 'users.grid.userType',
     field: 'type',
@@ -27,7 +32,7 @@ export const userColumnDefs = {
 };
 
 /** Given a user object, extract and return the user Id */
-export const getSoftSelectId = ({ Id }) => Id;
+export const getSoftSelectId = ({ Id, name }) => Id+name;
 
 /** Shared user grid AgGrid properties */
 export const defaultUserGridProps = {

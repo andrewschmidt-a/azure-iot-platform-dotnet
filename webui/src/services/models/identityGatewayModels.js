@@ -4,8 +4,8 @@ export const toUserTenantModel = (response = []) => response.map(user => {
   user = camelCaseReshape(user, {
     'id': 'id',
     'name': 'name',
-    'type': 'type'
+    'type': 'type',
+    'role': 'role'
   })
-  user.type = (user.id == null || user.id == "") ? "Invited": "Member";
-
+  return user;
 });

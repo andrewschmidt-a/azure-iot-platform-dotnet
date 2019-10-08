@@ -3,20 +3,15 @@
 import React from 'react';
 import update from 'immutability-helper';
 
-import { IoTHubManagerService } from 'services';
+import { IdentityGatewayService } from 'services';
 import {
-  authenticationTypeOptions,
   permissions,
-  toNewUserRequestModel,
-  toSinglePropertyDiagnosticsModel,
   toDiagnosticsModel
 } from 'services/models';
 import {
   copyToClipboard,
   int,
-  isEmptyObject,
   LinkedComponent,
-  stringToBoolean,
   svgs,
   Validator
 } from 'utilities';
@@ -43,8 +38,8 @@ import {
 import './userNew.scss';
 import Config from 'app.config';
 
-const isEmailRegex = /^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/;
-const emailAddress = x => !x.match(isEmailRegex);
+const isEmailRegex = /^(?:[a-z0-9A-Z!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9A-Z!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/;
+const emailAddress = x => x.match(isEmailRegex);
 const stringToInt = x => x === '' || x === '-' ? x : int(x);
 
 const userOptions = {
@@ -59,89 +54,17 @@ const userOptions = {
   }
 };
 
-const userTypeOptions = {
-  labelName: 'users.flyouts.new.userType.label',
-  simulated: {
-    labelName: 'users.flyouts.new.userType.simulated',
-    value: true
+const userRolesOptions = [
+  {
+    label:"Admin",
+    value: "admin"
   },
-  physical: {
-    labelName: 'users.flyouts.new.userType.physical',
-    value: false
+  {
+    label:"Read Only",
+    value: "readonly"
   }
-};
+];
 
-const userIdTypeOptions = {
-  labelName: 'users.flyouts.new.userId.label',
-  manual: {
-    hintName: 'users.flyouts.new.userId.hint',
-    value: false
-  },
-  generate: {
-    labelName: 'users.flyouts.new.userId.sysGenerated',
-    value: true
-  }
-};
-
-const authTypeOptions = {
-  labelName: 'users.flyouts.new.authenticationType.label',
-  symmetric: {
-    labelName: 'users.flyouts.new.authenticationType.symmetric',
-    value: authenticationTypeOptions.symmetric
-  },
-  x509: {
-    labelName: 'users.flyouts.new.authenticationType.x509',
-    value: authenticationTypeOptions.x509
-  }
-};
-
-const authKeyTypeOptions = {
-  labelName: 'users.flyouts.new.authenticationKey.label',
-  generate: {
-    labelName: 'users.flyouts.new.authenticationKey.generateKeys',
-    value: true
-  },
-  manual: {
-    labelName: 'users.flyouts.new.authenticationKey.manualKeys',
-    value: false
-  }
-};
-
-const UserDetail = ({ label, value }) => (
-  <FormSection className="user-detail">
-    <SectionHeader>{label}</SectionHeader>
-    <div className="user-detail-contents">
-      <div className="user-detail-value">{value}</div>
-      <Svg className="copy-icon" path={svgs.copy} onClick={() => copyToClipboard(value)} />
-    </div>
-  </FormSection>
-);
-
-const UserConnectionString = ({ label, userId, hostName, sharedAccessKey }) => (
-  <UserDetail label={label} value={`HostName=${hostName};UserId=${userId};SharedAccessKey=${sharedAccessKey}`} />
-);
-
-const ProvisionedUser = ({ user, t }) => {
-  // When an error occurs, the user has no data... and so there is nothing to display here.
-  if (isEmptyObject(user)) return null;
-
-  const {
-    id,
-    iotHubHostName: hostName,
-    authentication: { primaryKey },
-    authentication: { secondaryKey }
-  } = user;
-
-  return (
-    <div>
-      <UserDetail label={t('users.flyouts.new.userId.label')} value={id} />
-      <UserDetail label={t('users.flyouts.new.authenticationKey.primaryKey')} value={primaryKey} />
-      <UserDetail label={t('users.flyouts.new.authenticationKey.secondaryKey')} value={secondaryKey} />
-      <UserConnectionString label={t('users.flyouts.new.authenticationKey.primaryKeyConnection')} userId={id} hostName={hostName} sharedAccessKey={primaryKey} />
-      <UserConnectionString label={t('users.flyouts.new.authenticationKey.secondaryKeyConnection')} userId={id} hostName={hostName} sharedAccessKey={secondaryKey} />
-    </div>
-  );
-};
 
 export class UserNew extends LinkedComponent {
   constructor(props) {
@@ -153,7 +76,8 @@ export class UserNew extends LinkedComponent {
       successCount: 0,
       changesApplied: false,
       formData: {
-        email: ""
+        email: "",
+        role: ""
       },
       provisionedUser: {}
     };
@@ -161,11 +85,14 @@ export class UserNew extends LinkedComponent {
     // Linked components
     this.formDataLink = this.linkTo('formData');
 
-
-
     this.emailLink = this.formDataLink.forkTo('email')
-      //.reject(emailAddress)
       .check(Validator.notEmpty, () => this.props.t('users.flyouts.new.validation.required'))
+      .check(emailAddress, () => this.props.t('users.flyouts.new.validation.invalid'))
+
+
+    this.roleLink = this.formDataLink.forkTo('role')
+    .map(({ value }) => value)
+    .check(Validator.notEmpty, () => this.props.t('users.flyouts.new.validation.required'))
   }
 
   componentWillUnmount() {
@@ -182,7 +109,8 @@ export class UserNew extends LinkedComponent {
 
   formIsValid() {
     return [
-      this.emailLink
+      this.emailLink,
+      this.roleLink
     ].every(link => !link.error);
   }
 
@@ -195,6 +123,9 @@ export class UserNew extends LinkedComponent {
     //     provisionedUser: {}
     //   });
     // }
+  }
+  roleChange = (selectedObject) => {
+    console.log(this.state.formData)
   }
 
   onFlyoutClose = (eventName) => {
@@ -209,7 +140,15 @@ export class UserNew extends LinkedComponent {
     if (this.formIsValid()) {
       this.setState({ isPending: true, error: null });
 
-      if (this.provisionSubscription) this.provisionSubscription.unsubscribe();
+      IdentityGatewayService.invite(this.state.formData.email, this.state.formData.role)
+      .subscribe(
+        function(user){
+          this.setState({ successCount: this.state.successCount + 1 })
+          this.props.insertUsers(user);
+        }.bind(this),
+        error => this.setState({ error, isPending: false, changesApplied: true }), // On Error
+        () => this.setState({ isPending: false, changesApplied: true, confirmStatus: false }) // On Completed
+      );
 
       this.props.logEvent(toDiagnosticsModel('Users_InviteClick', formData));
 
@@ -252,9 +191,21 @@ export class UserNew extends LinkedComponent {
             <div className="users-new-content">
               <FormGroup>
                 <FormLabel>{t(userOptions.labelName)}</FormLabel>
-                  <FormControl link={this.emailLink} type="text" onChange={this.formControlChange} />
-                </FormGroup>
-                          </div>
+                <FormControl link={this.emailLink} type="text" onChange={this.formControlChange} />
+              </FormGroup>
+
+              <FormGroup>
+                    <FormLabel>{t('users.flyouts.new.roles.label')}</FormLabel>
+                    <FormControl
+                      name="roleSelect"
+                      link={this.roleLink}
+                      ariaLabel={t('users.flyouts.new.roles.label')}
+                      type="select"
+                      options={userRolesOptions}
+                      placeholder={t('users.flyouts.new.roles.hint')}
+                      onChange={this.roleChange} />
+              </FormGroup>
+            </div>
 
             {error && <AjaxError className="users-new-error" t={t} error={error} />}
             {
@@ -267,7 +218,15 @@ export class UserNew extends LinkedComponent {
             {
               !!changesApplied &&
               <>
-                <ProvisionedUser user={provisionedUser} t={t} />
+
+              <SummarySection>
+                <SectionHeader>{t('users.flyouts.new.summaryHeader')}</SectionHeader>
+                <SummaryBody>
+                  <SectionDesc>{summaryMessage}</SectionDesc>
+                  {this.state.isPending && <Indicator />}
+                  {completedSuccessfully && <Svg className="summary-icon" path={svgs.apply} />}
+                </SummaryBody>
+              </SummarySection>
                 <BtnToolbar>
                   <Btn svg={svgs.cancelX} onClick={() => this.onFlyoutClose('Users_CloseClick')}>{t('users.flyouts.new.close')}</Btn>
                 </BtnToolbar>

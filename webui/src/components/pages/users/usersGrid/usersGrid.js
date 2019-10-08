@@ -5,7 +5,6 @@ import { permissions, toDiagnosticsModel } from 'services/models';
 import { Btn, ComponentArray, PcsGrid, Protected } from 'components/shared';
 import { userColumnDefs, defaultUserGridProps } from './usersGridConfig';
 import { UserDeleteContainer } from '../flyouts/userDelete';
-import { UserDetailsContainer } from '../flyouts/userDetails';
 import { isFunc, svgs, translateColumnDefs } from 'utilities';
 import { checkboxColumn } from 'components/shared/pcsGrid/pcsGridConfig';
 
@@ -30,6 +29,7 @@ export class UsersGrid extends Component {
     this.columnDefs = [
       checkboxColumn,
       userColumnDefs.name,
+      userColumnDefs.role,
       userColumnDefs.type
     ];
 
@@ -63,8 +63,6 @@ export class UsersGrid extends Component {
     switch (this.state.openFlyoutName) {
       case 'delete':
         return <UserDeleteContainer key="delete-user-key" onClose={this.closeFlyout} users={this.userGridApi.getSelectedRows()} />
-      case 'details':
-        return <UserDetailsContainer key="details-user-key" onClose={this.closeFlyout} userId={this.state.softSelectedUserId} />
       default:
         return null;
     }

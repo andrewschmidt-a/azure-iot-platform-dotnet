@@ -75,12 +75,12 @@ export class UserDelete extends Component {
           .map(() => id) // On success return id
       )
       .subscribe(
-        deletedUserId => {
-          this.setState({ successCount: this.state.successCount + 1 });
+        function(deletedUserId){
+          this.setState({ successCount: this.state.successCount + 1 })
           this.props.deleteUsers([deletedUserId]);
-        },
-        error => this.setState({ error, isPending: false, changesApplied: true }),
-        () => this.setState({ isPending: false, changesApplied: true, confirmStatus: false })
+        }.bind(this),
+        error => this.setState({ error, isPending: false, changesApplied: true }), // On Error
+        () => this.setState({ isPending: false, changesApplied: true, confirmStatus: false }) // On Completed
       );
   }
 

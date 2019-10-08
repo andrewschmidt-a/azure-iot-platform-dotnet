@@ -218,7 +218,8 @@
     "grid": {
       "userName": "Name",
       "userType": "Type",
-      "userId": "Guid"
+      "userId": "Guid",
+      "userRole": "Role"
     },
     "flyouts":{
       "new": {
@@ -227,11 +228,20 @@
         "user": {
           "label":"Email Address"
         },
+        "roles": {
+          "hint": "Select user role",
+          "label": "User Role"
+        },
         "apply": "Send invite",
         "cancel": "Cancel",
         "validation": {
-          "required": "Is required"
-        }
+          "required": "Is required",
+          "invalidEmail": "Invalid email provided"
+        },
+        "summaryHeader": "Summary",
+        "pending": "Deleting devices... ",
+        "applySuccess": "user successfully invited!",
+        "close": "Close"
       },
       "delete": {
         "title": "Delete",
