@@ -216,9 +216,9 @@
     "ariaLabel": "Search users",
     "searchPlaceholder": "Search users...",
     "grid": {
-      "userName": "User name",
-      "userType": "User type",
-      "userId": "User guid"
+      "userName": "Name",
+      "userType": "Type",
+      "userId": "Guid"
     },
     "flyouts":{
       "new": {
@@ -228,7 +228,10 @@
           "label":"Email Address"
         },
         "apply": "Send invite",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "validation": {
+          "required": "Is required"
+        }
       },
       "delete": {
         "title": "Delete",

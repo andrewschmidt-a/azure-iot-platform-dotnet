@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { Observable } from 'rxjs';
 import { Toggle } from '@microsoft/azure-iot-ux-fluent-controls/lib/components/Toggle';
 
-import { IoTHubManagerService } from 'services';
+import { IdentityGatewayService } from 'services';
 import { svgs } from 'utilities';
 import { permissions } from 'services/models';
 import {
@@ -28,8 +28,7 @@ export class UserDelete extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      physicalDevices: [],
-      containsSimulatedDevices: false,
+      users: [],
       confirmStatus: false,
       isPending: false,
       error: undefined,
@@ -39,14 +38,14 @@ export class UserDelete extends Component {
   }
 
   componentDidMount() {
-    if (this.props.devices) {
-      this.populateDevicesState(this.props.devices);
+    if (this.props.users) {
+      this.populateUsersState(this.props.users);
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.devices && (this.props.devices || []).length !== nextProps.devices.length) {
-      this.populateDevicesState(nextProps.devices);
+    if (nextProps.users && (this.props.users || []).length !== nextProps.users.length) {
+      this.populateUsersState(nextProps.users);
     }
   }
 
@@ -54,9 +53,8 @@ export class UserDelete extends Component {
     if (this.subscription) this.subscription.unsubscribe();
   }
 
-  populateDevicesState = (devices = []) => {
-    const physicalDevices = devices.filter(({ isSimulated }) => !isSimulated);
-    this.setState({ physicalDevices, containsSimulatedDevices: (physicalDevices.length !== devices.length) });
+  populateUsersState = (users = []) => {
+    this.setState({ users });
   }
 
   toggleConfirm = (value) => {
@@ -67,19 +65,19 @@ export class UserDelete extends Component {
     }
   }
 
-  deleteDevices = (event) => {
+  deleteUsers = (event) => {
     event.preventDefault();
     this.setState({ isPending: true, error: null });
 
-    this.subscription = Observable.from(this.state.physicalDevices)
+    this.subscription = Observable.from(this.state.users)
       .flatMap(({ id }) =>
-        IoTHubManagerService.deleteDevice(id)
-          .map(() => id)
+        IdentityGatewayService.deleteUser(id)
+          .map(() => id) // On success return id
       )
       .subscribe(
-        deletedDeviceId => {
+        deletedUserId => {
           this.setState({ successCount: this.state.successCount + 1 });
-          this.props.deleteDevices([deletedDeviceId]);
+          this.props.deleteUsers([deletedUserId]);
         },
         error => this.setState({ error, isPending: false, changesApplied: true }),
         () => this.setState({ isPending: false, changesApplied: true, confirmStatus: false })
@@ -102,8 +100,7 @@ export class UserDelete extends Component {
   render() {
     const { t, onClose } = this.props;
     const {
-      physicalDevices,
-      containsSimulatedDevices,
+      users,
       confirmStatus,
       isPending,
       error,
@@ -111,14 +108,14 @@ export class UserDelete extends Component {
       changesApplied
     } = this.state;
 
-    const summaryCount = changesApplied ? successCount : physicalDevices.length;
+    const summaryCount = changesApplied ? successCount : users.length;
     const completedSuccessfully = changesApplied && !error;
     const summaryMessage = this.getSummaryMessage();
 
     return (
       <Flyout header={t('users.flyouts.delete.title')} t={t} onClose={onClose}>
           <Protected permission={permissions.deleteDevices}>
-            <form className="device-delete-container" onSubmit={this.deleteDevices}>
+            <form className="device-delete-container" onSubmit={this.deleteUsers}>
               <div className="device-delete-header">{t('users.flyouts.delete.header')}</div>
               <div className="device-delete-descr">{t('users.flyouts.delete.description')}</div>
               <Toggle
@@ -130,14 +127,6 @@ export class UserDelete extends Component {
                 onChange={this.toggleConfirm}
                 onLabel={t('users.flyouts.delete.confirmYes')}
                 offLabel={t('users.flyouts.delete.confirmNo')} />
-              {
-                containsSimulatedDevices &&
-                <div className="simulated-device-selected">
-                  <Svg path={svgs.infoBubble} className="info-icon" />
-                  {t('users.flyouts.delete.simulatedNotSupported')}
-                </div>
-              }
-
               <SummarySection>
                 <SectionHeader>{t('devices.flyouts.delete.summaryHeader')}</SectionHeader>
                 <SummaryBody>
@@ -152,7 +141,7 @@ export class UserDelete extends Component {
               {
                 !changesApplied &&
                 <BtnToolbar>
-                  <Btn svg={svgs.trash} primary={true} disabled={isPending || physicalDevices.length === 0 || !confirmStatus} type="submit">{t('devices.flyouts.delete.apply')}</Btn>
+                  <Btn svg={svgs.trash} primary={true} disabled={isPending || users.length === 0 || !confirmStatus} type="submit">{t('devices.flyouts.delete.apply')}</Btn>
                   <Btn svg={svgs.cancelX} onClick={onClose}>{t('users.flyouts.delete.cancel')}</Btn>
                 </BtnToolbar>
               }

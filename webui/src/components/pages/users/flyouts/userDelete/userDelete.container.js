@@ -3,11 +3,11 @@
 import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
 import { UserDelete } from './userDelete';
-import { redux as deviceRedux } from 'store/reducers/devicesReducer';
+import { redux as userRedux } from 'store/reducers/usersReducer';
 
 // Wrap the dispatch method
 const mapDispatchToProps = dispatch => ({
-  deleteDevices: deviceIds => dispatch(deviceRedux.actions.deleteDevices(deviceIds))
+  deleteUsers: userIds => dispatch(userRedux.actions.deleteUsers(userIds))
 });
 
 export const UserDeleteContainer = withNamespaces()(connect(null, mapDispatchToProps)(UserDelete));

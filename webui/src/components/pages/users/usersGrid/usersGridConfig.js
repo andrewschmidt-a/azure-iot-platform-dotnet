@@ -8,11 +8,11 @@ const { checkForEmpty } = gridValueFormatters;
 
 /** A collection of column definitions for the users grid */
 export const userColumnDefs = {
-  id: {
-    headerName: 'users.grid.userId',
-    field: 'id',
-    valueFormatter: ({ value }) => checkForEmpty(value)
-  },
+  // id: {
+  //   headerName: 'users.grid.userId',
+  //   field: 'id',
+  //   valueFormatter: ({ value }) => checkForEmpty(value)
+  // },
   name: {
     headerName: 'users.grid.userName',
     field: 'name',

@@ -6,7 +6,7 @@ import Config from 'app.config';
 import { stringify } from 'query-string';
 import { HttpClient } from 'utilities/httpClient';
 import {
-  toUserModel
+  toUserTenantModel
 } from './models';
 
 const ENDPOINT = Config.serviceUrls.auth;
@@ -16,11 +16,15 @@ export class IdentityGatewayService {
 
   /** Returns a list of devices */
   static getUsers() {
-    console.log("GET USERS")
-    const data = [{'id':'guid', 'type':'invited', 'name':'Andrew Schmidt'}]//HttpClient.get(`${ENDPOINT}tenant/users`)
-      .map(toUserModel);
+    const data = [{'id':'guid', 'name':'Andrew Schmidt'}, {'id':'', 'name':'Kyle Estes'}]//HttpClient.get(`${ENDPOINT}tenant/users`)
+      .map(toUserTenantModel);
     console.log(data);
     return Observable.of(data);
   }
 
+  /** Delete a User */
+  static deleteUser(id) {
+    // Placeholder to call backend
+    return Observable.of(id);
+  }
 }

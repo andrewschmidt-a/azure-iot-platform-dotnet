@@ -30,7 +30,6 @@ export class UsersGrid extends Component {
     this.columnDefs = [
       checkboxColumn,
       userColumnDefs.name,
-      userColumnDefs.id,
       userColumnDefs.type
     ];
 
