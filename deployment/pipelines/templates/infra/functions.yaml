@@ -11,7 +11,7 @@ steps:
     script: 'echo "messaging-functions-odin-mt-poc"' ## <-- follow this example
 
 ## TODO -- Get Trigger binding information CLI probally. Event Hub based
-
+#test
 ## TODO -- Deploy ARM Resource
 # - task: AzureResourceGroupDeployment@2
 #   displayName: "Deploy Azure Kubernetes Service"
