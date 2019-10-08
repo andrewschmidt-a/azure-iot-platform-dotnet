@@ -1,23 +1,22 @@
-﻿using Newtonsoft.Json;
+// Copyright (c) Microsoft. All rights reserved.
+
 using System;
 using System.Collections.Generic;
-using IdentityGateway.Services.Runtime;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using Newtonsoft.Json;
 
-namespace IdentityGateway.Services.Models
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Models 
 {
-
-    /// <summary>
-    /// Model for retrieving the status of API    
-    /// /// </summary>
-    public sealed class StatusApiModel
+    public sealed class StatusModel
     {
         private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
 
         [JsonProperty(PropertyName = "Name", Order = 10)]
-        public string Name => "IdentityGateway";
+        public string Name => "TenantManager";
 
         [JsonProperty(PropertyName = "Status", Order = 20)]
-        public StatusResultApiModel Status { get; set; }
+        public StatusResultModel Status { get; set; }
 
         [JsonProperty(PropertyName = "CurrentTime", Order = 30)]
         public string CurrentTime => DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
@@ -42,22 +41,22 @@ namespace IdentityGateway.Services.Models
 
         /// <summary>A property bag with details about the internal dependencies</summary>
         [JsonProperty(PropertyName = "Dependencies", Order = 80)]
-        public Dictionary<string, StatusResultApiModel> Dependencies { get; set; }
+        public Dictionary<string, StatusResultModel> Dependencies { get; set; }
 
         [JsonProperty(PropertyName = "$metadata", Order = 1000)]
         public Dictionary<string, string> Metadata => new Dictionary<string, string>
         {
-            { "$type", "Status;" + "0" },
-            { "$uri", "/status" }
+            { "$type", "Status;api" },
+            { "$uri", "/api/status" }
         };
 
-        public StatusApiModel(StatusServiceModel model)
+        public StatusModel(StatusServiceModel model)
         {
-            this.Status = new StatusResultApiModel(model.Status);
-            this.Dependencies = new Dictionary<string, StatusResultApiModel>();
+            this.Status = new StatusResultModel(model.Status);
+            this.Dependencies = new Dictionary<string, StatusResultModel>();
             foreach (KeyValuePair<string, StatusResultServiceModel> pair in model.Dependencies)
             {
-                this.Dependencies.Add(pair.Key, new StatusResultApiModel(pair.Value));
+                this.Dependencies.Add(pair.Key, new StatusResultModel(pair.Value));
             }
             this.Properties = model.Properties;
         }

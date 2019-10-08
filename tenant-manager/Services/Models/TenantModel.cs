@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Models
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
 {
     public class TenantModel : TableEntity
     {

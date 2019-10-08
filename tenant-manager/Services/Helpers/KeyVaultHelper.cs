@@ -1,22 +1,22 @@
 using Microsoft.Azure.KeyVault;
-using Microsoft.Azure;
 using Microsoft.Azure.Services.AppAuthentication;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Azure.KeyVault.Models;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Exceptions;
-using ILogger = Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
+using MMM.Azure.IoTSolutions.TenantManager.Services;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 {
-    public class KeyVaultHelper : IDisposable
+    public class KeyVaultHelper : IDisposable, IStatusOperation
     {
         private const string GLOBAL_KEY = "Global:";
         private const string GLOBAL_AAD_KEY = GLOBAL_KEY + "AzureActiveDirectory:";
         private const string GLOBAL_KEYVAULT_KEY = GLOBAL_KEY + "KeyVault:";
+        private const string KEYVAULT_NAME_KEY = GLOBAL_KEYVAULT_KEY + "name";
+
+        private const string STORAGE_ACCOUNT_CONNECTION_STRING_KEY = "storageAccountConnectionString";
 
         private IKeyVaultClient client;
 
@@ -32,13 +32,37 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Helpers
 
             AzureServiceTokenProvider azureServiceTokenProvider = new AzureServiceTokenProvider(AzureServicesAuthConnectionString);
 
-            client = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+            this.client = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
             this._config = _config;
+        }
+
+        public async Task<StatusResultServiceModel> StatusAsync()
+        {
+            var value = "";
+            try
+            {
+                value = await this.GetSecretAsync(STORAGE_ACCOUNT_CONNECTION_STRING_KEY);
+            }
+            catch (Exception e)
+            {
+                return new StatusResultServiceModel(false, e.Message);
+            }
+
+            if (String.IsNullOrEmpty(value))
+            {
+                // a null value was returned where a value was expected
+                return new StatusResultServiceModel(false, "Could not get value from KeyVault");
+            }
+            else
+            {
+                // the ping was successful and a value retrieved as expected
+                return new StatusResultServiceModel(true, "Alive and well!");
+            }
         }
 
         public string GetKeyVaultSecretIdentifier(string secret)
         {
-            var keyVaultName = this._config[$"{GLOBAL_KEYVAULT_KEY}name"]; // TODO: remove new once app config gets fixed
+            var keyVaultName = this._config[KEYVAULT_NAME_KEY]; // TODO: remove new once app config gets fixed
             return $"https://{keyVaultName}.vault.azure.net/secrets/{secret}";
         }
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 using Newtonsoft.Json;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Filters
@@ -25,7 +26,19 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Filters
 
         public override void OnException(ExceptionContext context)
         {
-            context.Result = this.GetResponse(new HttpStatusCode(), context.Exception, false);
+            if (context.Exception == null)
+            {
+                context.Exception = new Exception("Unknown Exception occurred and could not be filtered.");
+            }
+
+            if (context.Exception is NoAuthorizationException)
+            {
+                context.Result = this.GetResponse(HttpStatusCode.Unauthorized, context.Exception);
+            }
+            else
+            {
+                context.Result = this.GetResponse(HttpStatusCode.InternalServerError, context.Exception, true);
+            }
             base.OnException(context);
         }
 

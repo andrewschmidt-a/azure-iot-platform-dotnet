@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.WebService
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
     public class IdentityGatewayKeys
     {

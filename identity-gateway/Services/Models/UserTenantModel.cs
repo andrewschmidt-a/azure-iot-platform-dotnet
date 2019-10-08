@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Microsoft.WindowsAzure.Storage.Table;
 using Newtonsoft.Json;
@@ -31,6 +30,7 @@ namespace IdentityGateway.Services.Models
             this.RowKey = input.tenant;
             this.Roles = input.roles;
         }
+
         public UserTenantModel(DynamicTableEntity tableEntity)
         {
             this.PartitionKey = tableEntity.PartitionKey;

@@ -19,7 +19,7 @@ namespace IdentityGateway.Services
         }
 
         /// <summary>
-        /// GetAll methods return all rows of the given user input userid
+        /// get all tenants for a user
         /// </summary>
         /// <param name="input">UserTenantInput with the userId param</param>
         /// <returns></returns>
@@ -31,7 +31,7 @@ namespace IdentityGateway.Services
         }
 
         /// <summary>
-        /// Get methods return a specific UserTenantModel from the required info
+        /// Get a single tenant for the user
         /// </summary>
         /// <param name="input">UserTenantInput with a userid</param>
         /// <returns></returns>
@@ -68,7 +68,7 @@ namespace IdentityGateway.Services
         }
 
         /// <summary>
-        /// Update a record
+        /// Update a user record
         /// </summary>
         /// <param name="input">UserTenantInput with a userId, tenant, and rolelist</param>
         /// <returns></returns>
@@ -100,6 +100,31 @@ namespace IdentityGateway.Services
             // delete the record and return the deleted user model
             TableResult deleteUser = await this._tableHelper.ExecuteOperationAsync(this.tableName, deleteOperation);
             return deleteUser.Result as UserTenantModel;
+        }
+
+        /// <summary>
+        /// Delete the tenant from all users
+        /// </summary>
+        /// <returns></returns>
+        public async Task<UserTenantListModel> DeleteAllAsync()
+        {
+            // get all rows where the tenant exists
+            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, this.tenant));
+            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
+            List<UserTenantModel> tenantRows = resultSegment.Results.Select(t => (UserTenantModel)t).ToList();  // cast to a UserTenantModel list to easily parse result
+
+            // delete the rows
+            var deleteTasks = tenantRows.Select(row =>
+            {
+                UserTenantInput input = new UserTenantInput
+                {
+                    userId = row.PartitionKey,
+                    tenant = this.tenant
+                };
+                return this.DeleteAsync(input);
+            });
+            var deletionResult = await Task.WhenAll(deleteTasks);
+            return new UserTenantListModel("Delete", deletionResult.ToList());
         }
     }
 }

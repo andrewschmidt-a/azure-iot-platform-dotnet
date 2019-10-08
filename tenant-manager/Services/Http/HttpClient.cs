@@ -3,9 +3,9 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.Services.Http
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Http
 {
     public interface IHttpClient
     {

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.WebService.Runtime
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
 {
     /// <summary>Simple helper capturing uptime information</summary>
     public static class Uptime

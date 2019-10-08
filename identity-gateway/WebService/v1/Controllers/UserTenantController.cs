@@ -75,12 +75,12 @@ namespace IdentityGateway.WebService.v1.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Delete the tenant from a user
         /// </summary>
         /// <param name="id"></param>
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{userId}")]
-        public async Task<string> Delete(string userId)
+        public async Task<string> DeleteAsync(string userId)
         {
             UserTenantInput input = new UserTenantInput
             {
@@ -88,6 +88,16 @@ namespace IdentityGateway.WebService.v1.Controllers
                 tenant = this._container.tenant
             };
             var result = await this._container.DeleteAsync(input);
+            return JsonConvert.SerializeObject(result);
+        }
+
+        /// <summary>
+        /// Delete the tenant from all users
+        /// </summary>
+        [HttpDelete("")]
+        public async Task<string> DeleteAllAsync()
+        {
+            var result = await this._container.DeleteAllAsync();
             return JsonConvert.SerializeObject(result);
         }
     }

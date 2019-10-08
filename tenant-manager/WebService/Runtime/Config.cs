@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Microsoft.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.TenantManager.WebService.Auth;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using MMM.Azure.IoTSolutions.TenantManager.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.TenantManager.WebService.Runtime
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
 {
     public interface IConfig
     {
