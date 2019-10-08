@@ -36,20 +36,23 @@ stages:
       inputs:
         kubectlVersion: 'latest'
 
-#     # Load app config connection string
-#     - script: |
-        
-#         echo $pcsAppConfig
-#         echo "##vso[task.setvariable variable=pcsAppConfig]$pcsAppConfig"
-        
-    - task: Bash@3
-      displayName: Add Secrets to New Dev Space
+    - task: AzureCLI@1
+      displayName: Load app config connection string and add it as a Kubernetes secret
       inputs:
-        targetType: 'inline'
-        script:  |
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
           pcsAppConfig=`az appconfig credential list -o json -n app-config-odin -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString`
-          echo $pcsAppConfig
           kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION="Endpoint=$pcsAppConfig"
+        
+#     - task: Bash@3
+#       displayName: Add Secrets to New Dev Space
+#       inputs:
+#         targetType: 'inline'
+#         script:  |
+#           pcsAppConfig=`az appconfig credential list -o json -n app-config-odin -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString`
+#           echo $pcsAppConfig
+#           kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION="Endpoint=$pcsAppConfig"
 
 - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
   jobs:
