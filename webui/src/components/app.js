@@ -163,6 +163,7 @@ class App extends Component {
       openFlyout: this.state.openFlyout,
       ...this.props
     };
+    
     // Allow certain pages to have limited access (no nav bar, settings)
     var limitedAccess = Config.limitedAccessUrls.includes(window.location.pathname);
     console.log(limitedAccess)
