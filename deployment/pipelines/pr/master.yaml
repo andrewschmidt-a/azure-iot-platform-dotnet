@@ -43,16 +43,7 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           pcsAppConfig=`az appconfig credential list -o json -n app-config-odin -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString`
-          kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION="Endpoint=$pcsAppConfig"
-        
-#     - task: Bash@3
-#       displayName: Add Secrets to New Dev Space
-#       inputs:
-#         targetType: 'inline'
-#         script:  |
-#           pcsAppConfig=`az appconfig credential list -o json -n app-config-odin -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString`
-#           echo $pcsAppConfig
-#           kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION="Endpoint=$pcsAppConfig"
+          kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION="$pcsAppConfig"
 
 - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
   jobs:
@@ -122,20 +113,20 @@ stages:
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
 
-# - stage: Delete_Dev_Space
-#   condition: always()
-#   jobs:
-#   - job: Delete_Dev_Space
-#     pool:
-#       vmImage: 'ubuntu-latest'
-#     steps:
-#     - task: AzureCLI@1
-#       condition: always()
-#       displayName: Delete Dev Space
-#       inputs:
-#         azureSubscription: $(azureSubscription)
-#         scriptLocation: 'inlineScript'
-#         inlineScript: |
-#           az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
-#           az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
-#           azds space remove -n $(devSpace) -y
+- stage: Delete_Dev_Space
+  condition: always()
+  jobs:
+  - job: Delete_Dev_Space
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@1
+      condition: always()
+      displayName: Delete Dev Space
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
+          az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
+          azds space remove -n $(devSpace) -y
