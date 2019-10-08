@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using System.Collections.ObjectModel;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 

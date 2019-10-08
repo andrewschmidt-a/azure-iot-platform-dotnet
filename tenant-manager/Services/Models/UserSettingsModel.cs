@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using Microsoft.Azure.Cosmos.Table;
-using Newtonsoft.Json;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Models
+namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
 {
     public class UserSettingsModel : TableEntity
     {

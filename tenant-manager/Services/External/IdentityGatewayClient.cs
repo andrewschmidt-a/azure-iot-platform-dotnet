@@ -45,13 +45,17 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
                     return new StatusResultServiceModel(true, "Alive and well!");
                 }
             }
+            catch (JsonReaderException)
+            {
+                return new StatusResultServiceModel(false, $"Unable to read the response from the IdentityGateway Status. The service may be down.");
+            }
             catch (Exception e)
             {
                 return new StatusResultServiceModel(false, $"Unable to get IdentityGateway Status: {e.Message}");
             }
         }
 
-        public async Task<IdentityGatewayApiModel> addUserToTenantAsync(string userId, string tenantId, string Roles)
+        public async Task<IdentityGatewayApiModel> addTenantForUserAsync(string userId, string tenantId, string Roles)
         {
             HttpRequest request = CreateRequest($"tenants/{userId}", new IdentityGatewayApiModel(Roles) { });
             request.Headers.Add(TENANT_HEADER, tenantId);
@@ -73,6 +77,13 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
             // return true if any roles are authenticated for - otherwise false
             return identityModel.RoleList.Any(role => authenticatedRoles.Contains(role));
         }
+        
+        public async Task<IdentityGatewayApiModel> deleteTenantForAllUsersAsync(string tenantId)
+        {
+            HttpRequest request = CreateRequest($"tenants/", new IdentityGatewayApiModel { });
+            request.Headers.Add(TENANT_HEADER, tenantId);
+            return await this.processApiModelRequest<IdentityGatewayApiModel>(this._httpClient.DeleteAsync, request);
+        }
 
         public async Task<IdentityGatewayApiSettingModel> getSettingsForUserAsync(string userId, string settingKey)
         {
@@ -84,6 +95,12 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
         {
             HttpRequest request = CreateRequest($"settings/{userId}/{settingKey}/{settingValue}", new IdentityGatewayApiModel { });
             return await this.processApiModelRequest<IdentityGatewayApiSettingModel>(this._httpClient.GetAsync, request);
+        }
+
+        public async Task<IdentityGatewayApiSettingModel> updateSettingsForUserAsync(string userId, string settingKey, string settingValue)
+        {
+            HttpRequest request = CreateRequest($"settings/{userId}/{settingKey}/{settingValue}", new IdentityGatewayApiModel { });
+            return await this.processApiModelRequest<IdentityGatewayApiSettingModel>(this._httpClient.PutAsync, request);
         }
 
         private async Task<T> processApiModelRequest<T>(requestMethod method, HttpRequest request)
@@ -109,7 +126,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
             }
             catch (Exception e)
             {
-                throw new Exception("Unable to deserialize response content to the proper API model.", e);
+                throw new JsonReaderException("Unable to deserialize response content to the proper API model.", e);
             }
         }
 
@@ -130,7 +147,15 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
 
             if (this._httpContextAccessor.HttpContext.Request.Headers.ContainsKey(AZDS_ROUTE_KEY))
             {
-                request.Headers.Add(AZDS_ROUTE_KEY, this._httpContextAccessor.HttpContext.Request.Headers.First(p => p.Key == AZDS_ROUTE_KEY).Value.First());
+                try
+                {
+                    var azdsRouteAs = this._httpContextAccessor.HttpContext.Request.Headers.First(p => String.Equals(p.Key, AZDS_ROUTE_KEY, StringComparison.OrdinalIgnoreCase));
+                    request.Headers.Add(AZDS_ROUTE_KEY, azdsRouteAs.Value.First());  // azdsRouteAs.Value returns an iterable of strings, take the first
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Unable to attach the {AZDS_ROUTE_KEY} header to the IdentityGatewayClient Request.", e);
+                }
             }
 
             return request;
