@@ -35,40 +35,40 @@ namespace DeviceTelemetry.ActionsAgent.Test
         }
 
 
-        // [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        // public async Task EmailAction_CausesPostToLogicApp()
-        // {
-        //     // Arrange
-        //     JArray emailArray = new JArray(new object[] { "sampleEmail@gmail.com" });
-        //     Dictionary<string, object> actionParameters = new Dictionary<string, object>
-        //     {
-        //         { "Recipients", emailArray },
-        //         { "Notes", "Test Note" },
-        //         { "Subject", "Test Subject" }
-        //     };
-        //     EmailAction testAction = new EmailAction(actionParameters);
-        //     AsaAlarmApiModel alarm = new AsaAlarmApiModel
-        //     {
-        //         DateCreated = 1539035437937,
-        //         DateModified = 1539035437937,
-        //         DeviceId = "Test Device Id",
-        //         MessageReceived = 1539035437937,
-        //         RuleDescription = "Test Rule description",
-        //         RuleId = "TestRuleId",
-        //         RuleSeverity = "Warning",
-        //         Actions = new List<IAction> { testAction }
-        //     };
+        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        public async Task EmailAction_CausesPostToLogicApp()
+        {
+            // Arrange
+            JArray emailArray = new JArray(new object[] { "sampleEmail@gmail.com" });
+            Dictionary<string, object> actionParameters = new Dictionary<string, object>
+            {
+                { "Recipients", emailArray },
+                { "Notes", "Test Note" },
+                { "Subject", "Test Subject" }
+            };
+            EmailAction testAction = new EmailAction(actionParameters);
+            AsaAlarmApiModel alarm = new AsaAlarmApiModel
+            {
+                DateCreated = 1539035437937,
+                DateModified = 1539035437937,
+                DeviceId = "Test Device Id",
+                MessageReceived = 1539035437937,
+                RuleDescription = "Test Rule description",
+                RuleId = "TestRuleId",
+                RuleSeverity = "Warning",
+                Actions = new List<IAction> { testAction }
+            };
 
-        //     var response = new HttpResponse(HttpStatusCode.OK, "", null);
+            var response = new HttpResponse(HttpStatusCode.OK, "", null);
 
-        //     this.httpClientMock.Setup(x => x.PostAsync(It.IsAny<IHttpRequest>())).ReturnsAsync(response);
-        //     List<AsaAlarmApiModel> alarmList = new List<AsaAlarmApiModel> { alarm };
+            this.httpClientMock.Setup(x => x.PostAsync(It.IsAny<IHttpRequest>())).ReturnsAsync(response);
+            List<AsaAlarmApiModel> alarmList = new List<AsaAlarmApiModel> { alarm };
 
-        //     // Act
-        //     await this.actionManager.ExecuteAlarmActions(alarmList);
+            // Act
+            await this.actionManager.ExecuteAlarmActions(alarmList);
 
-        //     // Assert
-        //     this.httpClientMock.Verify(x => x.PostAsync(It.IsAny<IHttpRequest>()));
-        // }
+            // Assert
+            this.httpClientMock.Verify(x => x.PostAsync(It.IsAny<IHttpRequest>()));
+        }
     }
 }
