@@ -16,8 +16,8 @@
                 "description": "Location for the Cosmos DB account."
             }
         },
-        "primaryRegion": {
-            "type": "string",
+        "primaryRegion":{
+            "type":"string",
             "metadata": {
                 "description": "The primary replica region for the Cosmos DB account."
             }
@@ -31,13 +31,7 @@
         "defaultConsistencyLevel": {
             "type": "string",
             "defaultValue": "Session",
-            "allowedValues": [
-                "Eventual",
-                "ConsistentPrefix",
-                "Session",
-                "BoundedStaleness",
-                "Strong"
-            ],
+            "allowedValues": [ "Eventual", "ConsistentPrefix", "Session", "BoundedStaleness", "Strong" ],
             "metadata": {
                 "description": "The default consistency level of the Cosmos DB account."
             }
@@ -59,14 +53,11 @@
             "metadata": {
                 "description": "Max lag time (seconds). Required for BoundedStaleness. Valid ranges, Single Region: 5 to 84600. Multi Region: 300 to 86400."
             }
-        },
+        },	
         "multipleWriteLocations": {
             "type": "bool",
-            "defaultValue": true,
-            "allowedValues": [
-                true,
-                false
-            ],
+            "defaultValue": false,
+            "allowedValues": [ true, false ],
             "metadata": {
                 "description": "Enable multi-master to make all regions writable."
             }
@@ -74,10 +65,7 @@
         "automaticFailover": {
             "type": "bool",
             "defaultValue": false,
-            "allowedValues": [
-                true,
-                false
-            ],
+            "allowedValues": [ true, false ],
             "metadata": {
                 "description": "Enable automatic failover for regions. Ignored when Multi-Master is enabled"
             }
@@ -85,17 +73,17 @@
         "databaseName": {
             "type": "string",
             "metadata": {
-                "description": "The name for the SQL database"
+                "description": "The name for the cosmos database"
             }
         },
         "throughput": {
             "type": "int",
             "defaultValue": 400,
             "minValue": 400,
-            "maxValue": 100000,
+            "maxValue": 25000,
             "metadata": {
-                "description": "The throughput for the database"
-            }
+                "description": "The throughput for the collection"
+            }			
         },
         "container1Name": {
             "type": "string",
@@ -126,18 +114,20 @@
                 "defaultConsistencyLevel": "Strong"
             }
         },
-        "locations": [
+        "locations": 
+        [ 
             {
                 "locationName": "[parameters('primaryRegion')]",
                 "failoverPriority": 0
-            }
+            } 
             // {
             //     "locationName": "[parameters('secondaryRegion')]",
             //     "failoverPriority": 1
             // }
         ]
     },
-    "resources": [
+    "resources": 
+    [
         {
             "type": "Microsoft.DocumentDB/databaseAccounts",
             "name": "[variables('accountName')]",
@@ -156,11 +146,9 @@
             "type": "Microsoft.DocumentDB/databaseAccounts/apis/databases",
             "name": "[concat(variables('accountName'), '/sql/', parameters('databaseName'))]",
             "apiVersion": "2016-03-31",
-            "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/', variables('accountName'))]"
-            ],
-            "properties": {
-                "resource": {
+            "dependsOn": [ "[resourceId('Microsoft.DocumentDB/databaseAccounts/', variables('accountName'))]" ],
+            "properties":{
+                "resource":{
                     "id": "[parameters('databaseName')]"
                 }
             }
@@ -169,27 +157,24 @@
             "type": "Microsoft.DocumentDb/databaseAccounts/apis/databases/containers",
             "name": "[concat(variables('accountName'), '/sql/', parameters('databaseName'), '/', parameters('container1Name'))]",
             "apiVersion": "2016-03-31",
-            "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/apis/databases', variables('accountName'), 'sql', parameters('databaseName'))]"
-            ],
-            "properties": {
-                "resource": {
-                    "id": "[parameters('container1Name')]",
+            "dependsOn": [ "[resourceId('Microsoft.DocumentDB/databaseAccounts/apis/databases', variables('accountName'), 'sql', parameters('databaseName'))]" ],
+            "properties":
+            {
+                "resource":{
+                    "id":  "[parameters('container1Name')]",
                     "partitionKey": {
                         "paths": [
-                            "/partitionkey"
+                        "/partitionkey"
                         ],
                         "kind": "Hash"
                     },
                     "indexingPolicy": {
                         "indexingMode": "consistent",
-                        "includedPaths": [
-                            {
+                        "includedPaths": [{
                                 "path": "/*"
                             }
                         ],
-                        "excludedPaths": [
-                            {
+                        "excludedPaths": [{
                                 "path": "/\"_etag\"/?"
                             }
                         ]
@@ -201,12 +186,10 @@
             "type": "Microsoft.DocumentDb/databaseAccounts/apis/databases/containers/settings",
             "name": "[concat(variables('accountName'), '/sql/', parameters('databaseName'), '/', parameters('container1Name'), '/throughput')]",
             "apiVersion": "2016-03-31",
-            "dependsOn": [
-                "[resourceId('Microsoft.DocumentDB/databaseAccounts/apis/databases', variables('accountName'), 'sql', parameters('databaseName'))]"
-            ],
+            "dependsOn": [ "[resourceId('Microsoft.DocumentDB/databaseAccounts/apis/databases', variables('accountName'), 'sql', parameters('databaseName'))]" ],
             "properties": {
                 "resource": {
-                    "throughput": "[parameters('throughput')]"
+                  "throughput": "[parameters('throughput')]"
                 }
             }
         }
