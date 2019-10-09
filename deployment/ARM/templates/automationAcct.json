@@ -2,56 +2,69 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "automationAccountName": {
-            "type": "string",
-            "defaultValue": "crsl-automationAccount",
-            "metadata": {
-                "description": "Azure Automation Account"
-            }
-        },
-        "location": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]",
-            "metadata": {
-                "description": "Location for the Automation Account"
-            }
+      "automationAccountName": {
+        "type": "string",
+        "defaultValue": "crsl-automationAccount",
+        "metadata": {
+          "description": "Azure Automation Account"
         }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for the Automation Account"
+        }
+      },
+      "artifactsLocation": {
+        "type": "string",
+        "metadata": {
+          "description": "Location for the runbook Script"
+        }
+      }
     },
-    "variables": {},
+    "variables": {
+      //"CreateIoThubscriptUri": "[concat(parameters('artifactsLocation'),'/CreateIoThubRunbook.ps1')]",
+      "CreateIoThubscriptUri": "[parameters('artifactsLocation')]",
+      "DeleteIoThubscriptUri": "[concat(parameters('artifactsLocation'),'/DeleteIoThubRunbook.ps1')]"
+    },
     "resources": [
-        {
-            "name": "[parameters('automationAccountName')]",
-            "type": "Microsoft.Automation/automationAccounts",
-            "apiVersion": "2015-10-31",
-            "properties": {
-                "sku": { "name": "Basic" }
-            },
-            "location": "[parameters('location')]",
-            "tags": {}
+      {
+        "name": "[parameters('automationAccountName')]",
+        "type": "Microsoft.Automation/automationAccounts",
+        "apiVersion": "2015-10-31",
+        "location": "[parameters('location')]",
+        "tags": {
+          "[concat('hidden-related:', resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName')))]": "Resource",
+          "displayName": "automationaccount"
         },
-        {
-            "name": "[concat(parameters('automationAccountName'), '/connectionTypes/', 'AzureServicePrincipal')]",
-            "type": "Microsoft.Automation/automationAccounts/connectionTypes",
+        "properties": {
+          "sku": { "name": "Basic" }
+        },
+        "resources": [
+          //{
+          //  "name": "AzureServicePrincipal",
+          //  "type": "connectionTypes",
+          //  "apiVersion": "2015-10-31",
+          //  "dependsOn": [
+          //    "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+          //  ],
+          //  "properties": {
+          //    "isGlobal": false,
+          //    "fieldDefinitions": {
+          //      "ApplicationId": { "type": "System.String" },
+          //      "TenantId": { "type": "System.String" },
+          //      "CertificateThumbprint": { "type": "System.String" },
+          //      "SubscriptionId": { "type": "System.String" }
+          //    }
+          //  }
+          //},
+          {
+            "name": "AzureRunAsConnection",
+            "type": "connections",
             "apiVersion": "2015-10-31",
             "dependsOn": [
-                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
-            ],
-            "properties": {
-               "isGlobal": true,
-               "fieldDefinitions": {
-                   "ApplicationId": { "type": "System.String" },
-                   "TenantId": { "type": "System.String" },
-                   "CertificateThumbprint": { "type": "System.String" },
-                   "SubscriptionId": { "type": "System.String" }
-               }
-            }
-        },
-        {
-            "name": "[concat(parameters('automationAccountName'), '/connections/', 'AzureRunAsConnection')]",
-            "type": "Microsoft.Automation/automationAccounts/connections",
-            "apiVersion": "2015-10-31",
-            "dependsOn": [
-                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
             ],
             "properties": {
               "description": "service principal that was automatically created for this automation account.",
@@ -65,105 +78,39 @@
                 "SubscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
               }
             }
-        },
-        {
-            "type": "Microsoft.Automation/automationAccounts/runbooks",
+          },
+          {
+            "type": "runbooks",
             "apiVersion": "2015-10-31",
-            "name": "[concat(parameters('automationAccountName'), '/runbooks/', 'CreateIoTHubTenant')]",
+            "name": "CreateIoTHubTenant",
             "location": "[parameters('location')]",
+            //"tags": {
+            //  "[concat('hidden-related:', resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'),'CreateIoTHubTenant'))]": "Resource",
+            //  "displayName": "runbooks"
+            //},
             "dependsOn": [
-                "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
             ],
             "properties": {
-                "description": "Creates a new IoT Hub for a new tenant and writes to table storage when the deployment is completed.",
-                "runbookType": "PowerShell",
-                "logVerbose": false,
-                "logProgress": false,
-                "logActivityTrace": 0
-                // "parameters": {
-                //     "WebhookData": {
-                //       "type": "System.Object",
-                //       "isMandatory": false,
-                //       "position": 0,
-                //       "defaultValue": null
-                //     }
-                // }
+              "description": "Creates a new IoT Hub for a new tenant and writes to table storage when the deployment is completed.",
+              "runbookType": "PowerShell",
+              "logVerbose": false,
+              "logProgress": false,
+              "publishContentLink": {
+                "uri": "[variables('CreateIoThubscriptUri')]",
+                "version": "1.0.0"
+              }
+              // "parameters": {
+              //     "WebhookData": {
+              //       "type": "System.Object",
+              //       "isMandatory": false,
+              //       "position": 0,
+              //       "defaultValue": null
+              //     }
+              // }
             }
-        }
-        // {
-        //     "type": "Microsoft.Automation/automationAccounts/runbooks",
-        //     "apiVersion": "2018-06-30",
-        //     "name": "[concat(parameters('automationAccountName'), '/DeleteIoTHubTenant')]",
-        //     "location": "[parameters('location')]",
-        //     "dependsOn": [
-        //         "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
-        //     ],
-        //     "properties": {
-        //         "runbookType": "PowerShell",
-        //         "logVerbose": false,
-        //         "logProgress": false,
-        //         "logActivityTrace": 0
-        //     }
-        // },
-        // {
-        //     "type": "Microsoft.Automation/automationAccounts/runbooks",
-        //     "apiVersion": "2018-06-30",
-        //     "name": "[concat(parameters('automationAccountName'), '/UpdateAzureFunctions')]",
-        //     "location": "[parameters('location')]",
-        //     "dependsOn": [
-        //         "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
-        //     ],
-        //     "properties": {
-        //         "runbookType": "PowerShell",
-        //         "logVerbose": false,
-        //         "logProgress": false,
-        //         "logActivityTrace": 0
-        //     }
-        // }
-        // {
-        //     "type": "Microsoft.Automation/automationAccounts/webhooks",
-        //     "apiVersion": "2015-10-31",
-        //     "name": "[concat(parameters('automationAccountName'), '/CreateIotHub')]",
-        //     "dependsOn": [
-        //         "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
-        //     ],
-        //     "properties": {
-        //         "isEnabled": true,
-        //         "expiryTime": "2020-07-18T18:54:49.31+00:00",
-        //         "runbook": {
-        //             "name": "CreateIoTHubTenant"
-        //         }
-        //     }
-        // },
-        // {
-        //     "type": "Microsoft.Automation/automationAccounts/webhooks",
-        //     "apiVersion": "2015-10-31",
-        //     "name": "[concat(parameters('automationAccountName'), '/deleteiothub')]",
-        //     "dependsOn": [
-        //         "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
-        //     ],
-        //     "properties": {
-        //         "isEnabled": true,
-        //         "expiryTime": "2020-09-06T18:19:13.516+00:00",
-        //         "runbook": {
-        //             "name": "DeleteIoTHubTenant"
-        //         }
-        //     }
-        // },
-        // {
-        //     "type": "Microsoft.Automation/automationAccounts/webhooks",
-        //     "apiVersion": "2015-10-31",
-        //     "name": "[concat(parameters('automationAccountName'), '/UpdateAzureFunctions')]",
-        //     "dependsOn": [
-        //         "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
-        //     ],
-        //     "properties": {
-        //         "isEnabled": true,
-        //         "expiryTime": "2020-07-18T19:34:28.32+00:00",
-        //         "runbook": {
-        //             "name": "UpdateAzureFunctions"
-        //         }
-        //     }
-        // }
+          }
+        ]
+      }
     ]
-}
+  }
