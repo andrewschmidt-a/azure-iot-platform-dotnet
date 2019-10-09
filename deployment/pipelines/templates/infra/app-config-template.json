@@ -21,7 +21,7 @@
         "webserviceport": "80"
     },
     "ExternalDependencies": {
-        "authWebServiceUrl": "http://identity-gateway:80/api",
+        "authWebServiceUrl": "http://identity-gateway:80/v1",
         "devicesimulationwebserviceurl": "http://device-simulation:80/v1",
         "diagnosticsmaxlogretries": "3",
         "diagnosticswebserviceurl": "http://diagnostics:80/v1",
