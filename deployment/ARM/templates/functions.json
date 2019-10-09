@@ -1,0 +1,255 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "applicationCode": {
+            "type": "string",
+            "minLength": 3
+        },
+        "deployEnvironment": {
+            "type": "string",
+            "minLength": 2
+        },
+        "deployNumber": {
+            "type": "string",
+            "minLength": 1
+        },
+        "baseRegion": {
+            "type": "string",
+            "minLength": 2
+        },
+        "databaseRegion": {
+            "minLength": 2,
+            "type": "string"
+        },
+        "skuName": {
+            "type": "string",
+            "defaultValue": "Y1",
+            "allowedValues": [
+                "D1",
+                "B1",
+                "B2",
+                "B3",
+                "S1",
+                "S2",
+                "S3",
+                "P1",
+                "P2",
+                "P3",
+                "P4",
+                "P1v2",
+                "P2v2",
+                "p3v2",
+                "Y1"
+            ],
+            "metadata": {
+                "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
+            }
+        },
+        "skuCapacity": {
+            "type": "int",
+            "defaultValue": 1,
+            "minValue": 1,
+            "metadata": {
+                "description": "Describes plan's instance count"
+            }
+        },
+        "skuTier": {
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [
+                "Free",
+                "Shared",
+                "Basic",
+                "Standard",
+                "Premium"
+            ],
+            "metadata": {
+                "description": "the pricing tier"
+            }
+        },
+        "appInsightsLocation": {
+        "minLength": 2,
+        "type": "string"
+      }
+    },
+    "variables": {
+        "apiVersion": "2016-02-03",
+        "location": "[resourceGroup().location]",
+        "functionAppName": "[concat(parameters('applicationCode'), '-', parameters('baseRegion'), '-fn-',   parameters('deployEnvironment'), '-', parameters('deployNumber'))]",
+        "applicationInsightName": "[concat(parameters('applicationCode'), '-', parameters('baseRegion'), '-fn-',   parameters('deployEnvironment'), '-', parameters('deployNumber'))]",
+        "iotsqlserverName": "[concat(parameters('applicationCode'), '-', parameters('databaseRegion'), '-sql-', parameters('deployEnvironment'), '-', parameters('deployNumber'))]",
+        "storageName": "[concat(parameters('applicationCode'),parameters('baseRegion'), 'storage',parameters('deployEnvironment'),parameters('deployNumber'))]",
+        "storageVersion": "2016-01-01"
+    },
+    "resources":[
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "name": "[variables('functionAppName')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2016-09-01",
+            "sku": {
+              "name": "[parameters('skuName')]",
+              "tier": "[parameters('skuTier')]",
+              "capacity": "[parameters('skuCapacity')]"
+            },
+            "dependsOn": [],
+            "tags": {
+              "displayName": "Consumption Plan"
+            },
+            "properties": {
+              "name": "[variables('functionAppName')]",
+              "numberOfWorkers": 1
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "kind": "functionapp",
+            "name": "[variables('functionAppName')]",
+            "apiVersion": "2016-08-01",
+            "location": "[variables('location')]",
+            "scale": null,
+            "properties": {
+                "enabled": true,
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('functionAppName'))]",
+                "reserved": false,
+                "scmSiteAlsoStopped": false,
+                "hostingEnvironmentProfile": null,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "hostNamesDisabled": false,
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "cloningInfo": null,
+                "phpVersion": "",
+                "use32BitWorkerProcess": true,
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "EventHubConnection",
+                            "value": "Endpoint=sb://iot-e1-ehub-dev-deviceevents-01.servicebus.windows.net/;SharedAccessKeyName=iothubroutes_iot-e1-iot-dev-01;SharedAccessKey=5hAU2x4aoOBMEEYzRfhZXIEPS9NfbKsoFT/dQml56Hg=;EntityPath=deviceevents"
+                        },
+                        {
+                            "name": "iot-e1-ehub-dev-deviceevents-01_RootManageSharedAcces",
+                            "value": "Endpoint=sb://iot-e1-ehub-dev-deviceevents-01.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=Wl6I1lSexlAHJs7YUZe5c477qUY1A5ZoMlDoiw7bDeM=;EntityPath=deviceevents"
+                        }
+                    ]
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('functionAppName'))]"
+            ],
+            "resources": [
+                {
+                    "apiVersion": "2016-08-01",
+                    "name": "appsettings",
+                    "type": "config",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
+                    ],
+                    "properties": {
+                        "AzureWebJobsStorage": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2015-05-01-preview').key1,';')]",
+                        "AzureWebJobsDashboard": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2015-05-01-preview').key1,';')]",
+                        "AzureWebJobsDashboard2": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('storageName')), '2015-05-01-preview').key1,';')]",
+                        "FUNCTIONS_EXTENSION_VERSION": "latest"
+                    }
+                }         
+            ]
+        },
+        {
+            "apiVersion": "2015-08-01",
+            "name": "Lifecycle",
+            "type": "functions",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
+            ],
+            "properties": {
+                "config": {
+                    "bindings": 
+                        {
+                            "authLevel": "anonymous",
+                            "name": "eventHubMessages",
+                            "direction": "in",
+                            "eventHubName": "lifecycle",
+                            "connection": "EventHubLifecycle",
+                            "cardinality": "many",
+                            "consumerGroup": "messagingfunctions"
+                        }
+                },
+                "files": {
+                    "run.csx": ""
+                }
+            }
+        },
+        {
+            "apiVersion": "2015-08-01",
+            "name": "Telemetry",
+            "type": "functions",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
+            ],
+            "properties": {
+                "config": {
+                    "bindings":
+                        {
+                            "type": "eventHubTrigger",
+                            "name": "eventHubMessages",
+                            "direction": "in",
+                            "eventHubName": "lifecycle",
+                            "connection": "EventHubLifecycle",
+                            "cardinality": "many",
+                            "consumerGroup": "messagingfunctions"
+                        }
+                },
+                "files": {
+                    "run.csx": ""
+                }
+            }
+        },
+        {
+            "apiVersion": "2015-08-01",
+            "name": "Twinchange",
+            "type": "functions",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', variables('functionAppName'))]"
+            ],
+            "properties": {
+                "config": {
+                    "bindings":
+                        {
+                            "type": "eventHubTrigger",
+                            "name": "eventHubMessages",
+                            "direction": "in",
+                            "eventHubName": "twin-change",
+                            "connection": "EventHubTwinChange",
+                            "cardinality": "many",
+                            "consumerGroup": "messagingfunctions"
+                        }
+                },
+                "files": {
+                    "run.csx": ""
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Insights/components",
+            "name": "[concat(variables('functionAppName'))]",
+            "location": "[parameters('appInsightsLocation')]",
+            "apiVersion": "2014-04-01",
+            "dependsOn": [
+              "[concat('Microsoft.Web/sites/', variables('functionAppName'))]"
+            ],
+            "tags": {
+              "displayName": "[variables('functionAppName')]"
+            },
+            "properties": {
+              "applicationId": "[variables('functionAppName')]"
+            }
+          }
+   ],
+   "outputs": {
+      "CloudResourceName" : {"value": "[variables('functionAppName')]","type":"string" },
+      "CloudResourceUri" : {"value": "","type":"string" },
+      "CloudResourceType" : {"value": "Azure function","type":"string" }
+    }
+}
