@@ -114,22 +114,21 @@ export class UserNew extends LinkedComponent {
     ].every(link => !link.error);
   }
 
-
   formControlChange = () => {
-    // if (this.state.changesApplied) {
-    //   this.setState({
-    //     successCount: 0,
-    //     changesApplied: false,
-    //     provisionedUser: {}
-    //   });
-    // }
+    if (this.state.changesApplied) {
+      this.setState({
+        successCount: 0,
+        changesApplied: false,
+        provisionedUser: {}
+      });
+    }
   }
   roleChange = (selectedObject) => {
     console.log(this.state.formData)
   }
 
   onFlyoutClose = (eventName) => {
-    //this.props.logEvent(toDiagnosticsModel(eventName, this.state.formData));
+    this.props.logEvent(toDiagnosticsModel(eventName, this.state.formData));
     this.props.onClose();
   }
 
