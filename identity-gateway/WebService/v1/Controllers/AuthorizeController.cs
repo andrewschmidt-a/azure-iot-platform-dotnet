@@ -155,6 +155,15 @@ namespace IdentityGateway.Controllers
             {
                 // Everything checks out so you can mint a new token
                 var tokenString = jwtHandler.WriteToken(await GetToken(jwt.Claims.Where(c => new List<string>(){"sub", "name", "email"}.Contains(c.Type)).ToList(), tenant,jwt.Audiences.First(), jwt.ValidTo));
+
+                // Settings Update LastUsedTenant
+                UserSettingsInput settingsInput = new UserSettingsInput
+                {
+                    userId = jwt.Claims.Where(c=> c.Type == "sub").First().Value,
+                    settingKey = "LastUsedTenant",
+                    value = tenant
+                };
+                await this._userSettingsContainer.UpdateAsync(settingsInput);
                 return StatusCode(200, tokenString);
             }
             else
@@ -291,11 +300,13 @@ namespace IdentityGateway.Controllers
                     tenant = lastUsedSetting.Value;
                 }
 
-                if (String.IsNullOrEmpty(tenant) && tenantList.Count > 0)
+                if ((String.IsNullOrEmpty(tenant) || tenantList.Where(t => t.TenantId == tenant).Count() > 0) && tenantList.Count > 0)
                 {
                     tenant =
                         tenantList.First()
                             .TenantId; // Set the tenant to the first tenant in the list of tenants for this user
+                }else{
+                    tenant = null;
                 }
             }
 
@@ -308,8 +319,19 @@ namespace IdentityGateway.Controllers
                     tenant = tenant
                 };
                 UserTenantModel tenantModel = await this._userTenantContainer.GetAsync(input);
+
+                
                 // Add Tenant
                 claims.Add(new Claim("tenant", tenantModel.TenantId));
+
+                // Settings Update LastUsedTenant
+                UserSettingsInput settingsInput = new UserSettingsInput
+                {
+                    userId = userId,
+                    settingKey = "LastUsedTenant",
+                    value = tenantModel.TenantId
+                };
+                await this._userSettingsContainer.UpdateAsync(settingsInput);
                 // Add Roles
                 tenantModel.RoleList.ForEach(role => claims.Add(new Claim("role", role)));
             }
