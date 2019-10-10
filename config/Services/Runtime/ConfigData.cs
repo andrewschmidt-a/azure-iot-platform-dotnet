@@ -44,10 +44,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
             "Global:ClientAuth:JWT",
             "Global:Permissions",
             "Global:Permissions:admin",
-            "Global:Permissions:readonly",
-            "ConfigService",
-            "ConfigService:Actions",
-            "ExternalDependencies",
+            "Global:Permissions:readonly"
         };
 
         public ConfigData(ILogger logger)
