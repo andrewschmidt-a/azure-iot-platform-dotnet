@@ -1,6 +1,9 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -132,7 +135,29 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics
             methodname = methodname.Split(new[] { '<' }, 2).Last();
 
             var time = DateTimeOffset.UtcNow.ToString("u");
-            Console.WriteLine($"[{this.processId}][{time}][{level}][{classname}:{methodname}] {text}");
+
+            Console.WriteLine($"[Class Error {this.processId}][{time}][{level}][{classname}:{methodname}] {text}");
+            Dictionary<string, string> logDict = new Dictionary<string, string>();
+            logDict.Add("ProcessId", this.processId);
+            logDict.Add("Time", time);
+            logDict.Add("ClassName:MethodName", $"{classname}:{methodname}");
+            logDict.Add("Level", level);
+            switch (level.ToLower())
+            {
+                case "debug":
+                case "info":
+                case "warn":
+                    {
+                        AppInsightsExceptionHelper.LogTrace(text, (int)SeverityLevel.Information, logDict);
+                        break;
+                    }
+                case "error":
+                    {
+                        AppInsightsExceptionHelper.LogException(new System.Exception(text), logDict);
+                        break;
+                    }
+            }
+            
         }
     }
 }
