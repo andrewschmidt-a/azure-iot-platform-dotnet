@@ -18,6 +18,7 @@ stages:
       aksName: crsliotakstestodinpn
       appConfigName: crsliotappconfigtestodinpn
       keyVaultName: crsliotkeyvaulttestodinpn
+      environment: IoT_CRSL_Environment
       
 
 ## PSD
