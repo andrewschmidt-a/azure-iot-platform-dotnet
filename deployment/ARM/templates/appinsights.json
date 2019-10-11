@@ -35,7 +35,8 @@
 
   ],
   "outputs": {
-	"CloudResourceName" : {"value": "[variables('applicationInsightName')]","type":"string" },
+	  "CloudResourceName" : {"value": "[variables('applicationInsightName')]","type":"string" },
     "CloudResourceUri" : {"value": "","type":"string" },
     "CloudResourceType" : {"value": "Application Insights","type":"string" }
+    }
 }
