@@ -51,7 +51,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 userId = userId,
-                tenant = model.TenantId,
+                tenant = this._container.tenant,
                 roles = model.Roles,
             };
             var result = await this._container.CreateAsync(input);
