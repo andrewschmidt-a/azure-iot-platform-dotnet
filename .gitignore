@@ -11,6 +11,7 @@
 /.vs/remote-monitoring/v15
 **/launchSettings.json
 ./.vs
+.vs/
 **/.DS_Store
 **/.vscode/
 .idea/
