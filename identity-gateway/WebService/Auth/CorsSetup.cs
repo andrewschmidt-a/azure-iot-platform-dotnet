@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
+using IdentityGateway.Services.Diagnostics;
 using Newtonsoft.Json;
 
 namespace IdentityGateway.WebService

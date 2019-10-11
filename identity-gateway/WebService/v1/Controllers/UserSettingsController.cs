@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 namespace IdentityGateway.WebService.v1.Controllers
 {
     [Route("v1/settings"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+
+    [Authorize("ReadAll")]
     public class UserSettingsController : ControllerBase
     {
 
@@ -50,6 +52,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         }
 
         [HttpPost("{userId}/{setting}/{value}")]
+        [Authorize("UserManage")]
         public async Task<string> PostAsync(string userId, string setting, string value)
         {
             UserSettingsInput input = new UserSettingsInput
@@ -63,6 +66,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         }
 
         [HttpPut("{userId}/{setting}/{value}")]
+        [Authorize("UserManage")]
         public async Task<string> PutAsync(string userId, string setting, string value)
         {
             UserSettingsInput input = new UserSettingsInput
@@ -76,6 +80,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         }
 
         [HttpDelete("{userId}/{setting}")]
+        [Authorize("UserManage")]
         public async Task<string> DeleteAsync(string userId, string setting)
         {
             UserSettingsInput input = new UserSettingsInput

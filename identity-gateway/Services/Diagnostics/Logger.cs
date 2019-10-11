@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics
+namespace IdentityGateway.Services.Diagnostics
 {
     public enum LogLevel
     {

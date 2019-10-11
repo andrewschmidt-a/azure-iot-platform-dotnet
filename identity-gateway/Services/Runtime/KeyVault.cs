@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
+using IdentityGateway.Services.Diagnostics;
 using Microsoft.Azure.KeyVault;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
+namespace IdentityGateway.Services.Runtime
 {
     public class KeyVault
     {

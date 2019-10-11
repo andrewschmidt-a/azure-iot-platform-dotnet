@@ -5,12 +5,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
+using IdentityGateway.Services.Diagnostics;
+using IdentityGateway.Services.Exceptions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Azure.IoTSolutions.UIConfig.AppConfiguration;
+using IdentityGateway.AppConfiguration;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
+namespace IdentityGateway.Services.Runtime
 {
     public interface IConfigData
     {

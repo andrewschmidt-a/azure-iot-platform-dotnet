@@ -7,6 +7,9 @@
         "storagecontainer": "actions-eventhub-container",
         "templatefolder": "./data/"
     },
+    "IdentityGatewayService":{
+        "webservicePort": 80
+    },
     "ConfigService": {
         "Actions": {
             "armendpointurl": "https://management.azure.com/",
@@ -78,7 +81,8 @@
                 "UpdateDeviceGroups": "",
                 "UpdateDevices": "",
                 "UpdateRules": "",
-                "UpdateSIMManagement": ""
+                "UpdateSIMManagement": "",
+                "UserManage": ""
             },
             "readOnly": {
                 "ReadAll": ""

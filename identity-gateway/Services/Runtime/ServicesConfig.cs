@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
+namespace IdentityGateway.Services.Runtime
 {
     public interface IServicesConfig
     {

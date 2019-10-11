@@ -7,6 +7,8 @@
     <Compile Remove="Controllers\testController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.6.2" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="BouncyCastle" Version="1.8.5" />
     <PackageReference Include="DependencyResolver" Version="1.0.0.3" />
     <PackageReference Include="IdentityServer4" Version="2.4.0" />

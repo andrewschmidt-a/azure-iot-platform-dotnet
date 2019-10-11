@@ -12,11 +12,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
+using IdentityGateway.Services.Exceptions;
 using Newtonsoft.Json;
-using Microsoft.Azure.IoTSolutions.Auth;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using IdentityGateway.AuthUtils;
+using IdentityGateway.Services.Diagnostics;
+using IdentityGateway.Services.Runtime;
 
 namespace IdentityGateway.WebService
 {
@@ -59,15 +59,14 @@ namespace IdentityGateway.WebService
         private TokenValidationParameters tokenValidationParams;
         private readonly bool authRequired;     
         private bool tokenValidationInitialized;
-        private readonly IUserManagementClient userManagementClient;
         private readonly IServicesConfig servicesConfig;
+        private readonly List<string> allowedUrls = new List<string>() { "/connect", "/.well-known", "/v1/status" };
 
         public AuthMiddleware(
             // ReSharper disable once UnusedParameter.Local
             RequestDelegate requestDelegate, // Required by ASP.NET
             IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan,
             IClientAuthConfig config,
-            IUserManagementClient userManagementClient,
             ILogger log,
             IServicesConfig servicesConfig)
         {
@@ -77,7 +76,6 @@ namespace IdentityGateway.WebService
             this.log = log;
             this.authRequired = config.AuthRequired;
             this.tokenValidationInitialized = false;
-            this.userManagementClient = userManagementClient;
             this.servicesConfig = servicesConfig;
 
             // This will show in development mode, or in case auth is turned off
@@ -138,6 +136,12 @@ namespace IdentityGateway.WebService
             {
                 // Call the next delegate/middleware in the pipeline
                 this.log.Debug("Skipping auth (auth disabled)", () => { });
+                return this.requestDelegate(context);
+            }
+
+            // Skip Authentication on certain URLS
+            if (allowedUrls.Where(s=> context.Request.Path.StartsWithSegments(s)).Count() > 0)
+            {
                 return this.requestDelegate(context);
             }
 

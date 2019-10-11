@@ -1,4 +1,4 @@
-// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
 using System.Buffers;
@@ -8,7 +8,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using IdentityGateway.Services.Diagnostics;
 using IdentityGateway.Services.Exceptions;
+using IdentityGateway.WebService.v1.Exceptions;
+
+using IdentityGateway.AuthUtils;
 using Newtonsoft.Json;
 
 namespace IdentityGateway.WebService.v1.Filters
@@ -22,24 +26,51 @@ namespace IdentityGateway.WebService.v1.Filters
     /// </summary>
     public class ExceptionsFilterAttribute : ExceptionFilterAttribute
     {
-        public ExceptionsFilterAttribute() { }
+        private readonly ILogger log;
+
+        public ExceptionsFilterAttribute(ILogger logger)
+        {
+            this.log = logger;
+        }
 
         public override void OnException(ExceptionContext context)
         {
-            if (context.Exception == null)
+            if (context.Exception is ResourceNotFoundException)
             {
-                context.Exception = new Exception("Unknown Exception occurred and could not be filtered.");
+                context.Result = this.GetResponse(HttpStatusCode.NotFound, context.Exception);
             }
-
-            if (context.Exception is NoAuthorizationException)
+            else if (context.Exception is ConflictingResourceException
+                     || context.Exception is ResourceOutOfDateException)
             {
-                context.Result = this.GetResponse(HttpStatusCode.Unauthorized, context.Exception);
+                context.Result = this.GetResponse(HttpStatusCode.Conflict, context.Exception);
             }
-            else
+            else if (context.Exception is BadRequestException
+                     || context.Exception is InvalidInputException)
+            {
+                context.Result = this.GetResponse(HttpStatusCode.BadRequest, context.Exception);
+            }
+            else if (context.Exception is InvalidConfigurationException)
+            {
+                context.Result = this.GetResponse(HttpStatusCode.InternalServerError, context.Exception);
+            }
+            else if (context.Exception is NotAuthorizedException ||
+                     context.Exception is Services.Exceptions.NotAuthorizedException)
+            {
+                context.Result = this.GetResponse(HttpStatusCode.Forbidden, context.Exception);
+            }
+            else if (context.Exception != null)
             {
                 context.Result = this.GetResponse(HttpStatusCode.InternalServerError, context.Exception, true);
             }
-            base.OnException(context);
+            else
+            {
+                this.log.Error("Unknown exception", () => new
+                {
+                    ExceptionType = context.Exception.GetType().FullName,
+                    context.Exception.Message
+                });
+                base.OnException(context);
+            }
         }
 
         public override Task OnExceptionAsync(ExceptionContext context)
@@ -82,8 +113,10 @@ namespace IdentityGateway.WebService.v1.Filters
             }
 
             var result = new ObjectResult(error);
-            result.StatusCode = (int) code;
+            result.StatusCode = (int)code;
             result.Formatters.Add(new JsonOutputFormatter(new JsonSerializerSettings(), ArrayPool<char>.Shared));
+
+            this.log.Error(e.Message, () => new { result.StatusCode });
 
             return result;
         }

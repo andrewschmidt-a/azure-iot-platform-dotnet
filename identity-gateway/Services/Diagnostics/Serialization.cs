@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics
+namespace IdentityGateway.Services.Diagnostics
 {
     public class Serialization
     {
