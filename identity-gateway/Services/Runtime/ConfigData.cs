@@ -45,8 +45,7 @@ namespace IdentityGateway.Services.Runtime
             "Global:Permissions",
             "Global:Permissions:admin",
             "Global:Permissions:readonly",
-            "ConfigService",
-            "ConfigService:Actions",
+            "IdentityGatewayService",
             "ExternalDependencies",
         };
 
