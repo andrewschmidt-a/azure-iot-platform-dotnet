@@ -12,8 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
-using Newtonsoft.Json;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.Auth;
@@ -247,18 +245,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             {
                 this.log.Info("Initializing OpenID configuration", () => { });
                 var openIdConfig = await this.openIdCfgMan.GetConfigurationAsync(token);
-
-                //Attempted to do it myself still issue with SSL
-                //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.config.JwtIssuer+ "/.well-known/openid-configuration/jwks");
-                //request.AutomaticDecompression = DecompressionMethods.GZip;
-                //IdentityKeys
-
-                //using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                //using (Stream stream = response.GetResponseStream())
-                //using (StreamReader reader = new StreamReader(stream))
-                //{
-                //    keys = JsonConvert.DeserializeObject<IdentityGatewayKeys>(reader.ReadToEnd());
-                //}
 
                 this.tokenValidationParams = new TokenValidationParameters
                 {

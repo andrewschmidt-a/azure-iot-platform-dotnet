@@ -49,7 +49,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
         private const string APPLICATION_KEY = "TenantManagerService:";
         private const string AUTOMATION_ACCOUNT_KEY = APPLICATION_KEY + "automationAccountName";
         private const string TELEMETRY_CONNECTION_STRING_KEY = APPLICATION_KEY + "telemetryEventHubConnString";
-        private const string LIFECYCLE_CONNECTION_STRING_KEY = APPLICATION_KEY + "lifecycleventHubConnString";
+        private const string LIFECYCLE_CONNECTION_STRING_KEY = APPLICATION_KEY + "lifecyclEventHubConnString";
         private const string TWIN_CHANGE_CONNECTION_STRING_KEY = APPLICATION_KEY + "twinChangeEventHubConnString";
         private const string COSMOS_DB_ENDPOINT_KEY = APPLICATION_KEY + "cosmosDbEndpoint";
         private const string COSMOS_DB_TOKEN_KEY = APPLICATION_KEY + "cosmosDbToken";
