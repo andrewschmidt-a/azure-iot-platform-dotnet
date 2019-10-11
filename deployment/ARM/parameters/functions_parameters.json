@@ -10,6 +10,7 @@
       "appInsightsLocation": { "value": "eastus" },
       "storageAccountName": { "value": "automationtestradha" },
       "runtime": { "value": "node" },
-      "funcVersion": { "value": "~2" }
+      "funcVersion": { "value": "~2" },
+      "codedeployPackageUrl": { "value": "" }
     }
   }
