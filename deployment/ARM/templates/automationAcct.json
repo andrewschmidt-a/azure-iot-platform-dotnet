@@ -21,11 +21,31 @@
         "metadata": {
           "description": "Location for the runbook Script"
         }
+      },
+      "ApplicationId": {
+        "type": "string",
+        "defaultValue": "d8beeda6-8896-4c7b-b504-7e27ee734768",
+        "metadata": {
+          "description": "Azure AD application Id that Automation account will use to authenticate with Azure"
+        }
+      },
+      "SubscriptionId": {
+        "type": "string",
+        "defaultValue": "c36fb2f8-f98d-40d0-90a9-d65e93acb428",
+        "metadata": {
+          "description": "Azure Subscription Id Automation account will use to authenticate with Azure"
+        }
+      },
+      "CertThumbprint": {
+        "type": "string",
+        "defaultValue": "D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD",
+        "metadata": {
+          "description": "Certificate Thumbprint that Automation account will use to authenticate with Azure"
+        }
       }
     },
     "variables": {
-      //"CreateIoThubscriptUri": "[concat(parameters('artifactsLocation'),'/CreateIoThubRunbook.ps1')]",
-      "CreateIoThubscriptUri": "[parameters('artifactsLocation')]",
+      "CreateIoThubscriptUri": "[concat(parameters('artifactsLocation'),'/CreateIoThubRunbook.ps1')]",
       "DeleteIoThubscriptUri": "[concat(parameters('artifactsLocation'),'/DeleteIoThubRunbook.ps1')]"
     },
     "resources": [
@@ -72,10 +92,10 @@
                 "name": "AzureServicePrincipal"
               },
               "fieldDefinitionValues": {
-                "ApplicationId": "d8beeda6-8896-4c7b-b504-7e27ee734768",
+                "ApplicationId": "[parameters('ApplicationId')]",
                 "TenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb",
-                "CertificateThumbprint": "D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD",
-                "SubscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
+                "CertificateThumbprint": "[parameters('CertThumbprint')]",
+                "SubscriptionId": "[parameters('SubscriptionId')]"
               }
             }
           },
@@ -85,7 +105,7 @@
             "name": "CreateIoTHubTenant",
             "location": "[parameters('location')]",
             //"tags": {
-            //  "[concat('hidden-related:', resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'),'CreateIoTHubTenant'))]": "Resource",
+            //  "[concat('hidden-related:', resourceId('Microsoft.Automation/automationAccounts/runbooks'),'CreateIoTHubTenant'))]": "Resource",
             //  "displayName": "runbooks"
             //},
             "dependsOn": [
@@ -109,8 +129,42 @@
               //     }
               // }
             }
+          },
+          {
+            "type": "runbooks",
+            "apiVersion": "2015-10-31",
+            "name": "DeleteIoTHubTenant",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+              "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+            ],
+            "properties": {
+              "runbookType": "PowerShell",
+              "logVerbose": false,
+              "logProgress": false,
+              "publishContentLink": {
+                "uri": "[variables('CreateIoThubscriptUri')]",
+                "version": "1.0.0"
+              }
+            }
           }
+           //{
+           //    "type": "webhooks",
+           //    "apiVersion": "2015-10-31",
+           //    "name": "CreateIotHub",
+           //    "dependsOn": [
+           //       "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+           //   //    "[resourceId('Microsoft.Automation/automationAccounts/runbooks', parameters('automationAccountName'), 'CreateIoTHubTenant')]"
+           //    ],
+           //    "properties": {
+           //        "isEnabled": true,
+           //        "expiryTime": "2020-07-18T18:54:49.31+00:00",
+           //        "runbook": {
+           //            "name": "CreateIoTHubTenant"
+           //        }
+           //    }
+           //}
         ]
       }
-    ]
+     ]
   }
