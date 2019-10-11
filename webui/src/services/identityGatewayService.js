@@ -10,15 +10,16 @@ import {
   toUserTenantModel
 } from './models';
 
-const ENDPOINT = Config.serviceUrls.auth;
+const ENDPOINT = Config.serviceUrls.identityGateway;
 
 /** Contains methods for calling the Device service */
 export class IdentityGatewayService {
 
   /** Returns a list of devices */
   static getUsers() {
-    const data = [{'id':'guid', 'name':'Andrew Schmidt', 'role': 'admin', 'type': 'Member'}, {'id':'', 'name':'Kyle Estes', 'role': 'admin', 'type': 'Invited'}];//HttpClient.get(`${ENDPOINT}tenant/users`)
-    console.log(data);
+    
+    return HttpClient.get(`${ENDPOINT}tenants`)
+      .map(toUsersModel);
     return Observable.of(data).map(toUserTenantModel);
   }
 
