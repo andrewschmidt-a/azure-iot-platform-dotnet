@@ -81,7 +81,7 @@ namespace IdentityGateway.Services
                 throw new ArgumentException("The UserTenant update model must contain a serialized role array.");
             }
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
-            TableOperation replaceOperation = TableOperation.Replace(model);
+            TableOperation replaceOperation = TableOperation.InsertOrReplace(model);
             TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
             return replace.Result as UserTenantModel;
         }

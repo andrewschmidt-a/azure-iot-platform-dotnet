@@ -16,14 +16,15 @@ using JsonWebKey = IdentityModel.Jwk.JsonWebKey;
 using JsonWebKeySet = IdentityModel.Jwk.JsonWebKeySet;
 using IdentityGateway.Services.Helpers;
 using RSA = IdentityGateway.Services.Helpers.RSA;
+using IdentityGateway.Services.Runtime;
 
 namespace IdentityGateway.WebService.v1.Controllers
 {
     [Route("")]
     public class ConfiguratonController : ControllerBase
     {
-        private IConfiguration _config;
-        public ConfiguratonController(IConfiguration config)
+        private IServicesConfig _config;
+        public ConfiguratonController(IServicesConfig config)
         {
             this._config = config;
         }
@@ -41,7 +42,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.ContractResolver = new LowercaseContractResolver();
             
-            return new ContentResult() {Content = JsonConvert.SerializeObject(RSA.GetJsonWebKey(this._config).Result, serializerSettings), ContentType = "application/json"};
+            return new ContentResult() {Content = JsonConvert.SerializeObject(RSA.GetJsonWebKey(this._config.PublicKey), serializerSettings), ContentType = "application/json"};
         }
     }
 }
