@@ -114,7 +114,6 @@ namespace IdentityGateway.WebService.Auth
                 return null;
             }
             return request.HttpContext.Items[CONTEXT_KEY_TENANT_ID] as string;
-            
         }
         // Set the user's Tenant  based off request
         public static void SetTenant(this HttpRequest request)
@@ -141,14 +140,12 @@ namespace IdentityGateway.WebService.Auth
 
             SetTenant(request, tenantId);
 
-
             return; 
         }
         // Set the user's Tenant  from string
         public static void SetTenant(this HttpRequest request, string tenantId)
         {
             request.HttpContext.Items.Add(new KeyValuePair<object, object>(CONTEXT_KEY_TENANT_ID, tenantId));
-
 
             return; 
         }

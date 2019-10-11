@@ -5,6 +5,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using IdentityGateway.Services;
+using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Diagnostics;
 using IdentityGateway.Services.Runtime;
 using IdentityGateway.WebService.Runtime;
@@ -70,8 +71,9 @@ namespace IdentityGateway.WebService
             // Auth and CORS setup
             Auth.Startup.SetupDependencies(builder, config);
 
-
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
+
+            builder.RegisterType<JWTHelper>().As<IJWTHelper>().InstancePerDependency();
 
         }
 
