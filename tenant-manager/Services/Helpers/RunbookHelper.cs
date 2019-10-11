@@ -29,7 +29,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 
         // webhooks object
         // Keys refer to the actual webhook name for the particular web hook
-        // Values refer to the accessor key in keyvault for that webhook's url
+        // Values refer to the accessor key in config for that webhook's url
         public Dictionary<string, string> webHooks; 
 
         public TenantRunbookHelper(IServicesConfig config, TokenHelper tokenHelper)
@@ -115,7 +115,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
         /// This method builds a very specific request body using configuration and the given parameters
         /// In general, the webhooks passed to this method will create or delete iot hubs
         /// </summary>
-        /// <param name="webHookUrlKey" type="string">The keyvault key for the url for the runbook to trigger</param>
+        /// <param name="webHookUrlKey" type="string">The config key for the url for the runbook to trigger</param>
         /// <param name="tenantId" type="string">Tenant Guid</param>
         /// <param name="iotHubName" type="string">Iot Hub Name for deletion or creation</param>
         /// <returns></returns>
@@ -139,17 +139,10 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
             try
             {
                 string webHookUrl = "";
-                try
+                webHookUrl = this.webHooks[webHookUrlKey];
+                if (String.IsNullOrEmpty(webHookUrlKey))
                 {
-                    webHookUrl = this.webHooks[webHookUrlKey];
-                    if (String.IsNullOrEmpty(webHookUrlKey))
-                    {
-                        throw new Exception($"KeyVault returned a null value for the web hook url at key: {webHookUrlKey}");
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Unable to get secret from KeyVault for {webHookUrlKey}", e);
+                    throw new Exception($"The requested webhook url {webHookUrlKey} was null. It may not be configured correctly.");
                 }
                 var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
                 return await this.httpClient.PostAsync(webHookUrl, bodyContent);
