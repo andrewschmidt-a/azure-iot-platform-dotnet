@@ -5,6 +5,7 @@
 export * from './authService';
 export * from './deviceSimulationService';
 export * from './iotHubManagerService';
+export * from './identityGatewayService';
 export * from './telemetryService';
 export * from './configService';
 export * from './gitHubService';

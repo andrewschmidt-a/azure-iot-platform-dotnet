@@ -9,11 +9,13 @@ import { reducer as devicesReducer } from './reducers/devicesReducer';
 import { reducer as packagesReducer } from './reducers/packagesReducer';
 import { reducer as rulesReducer } from './reducers/rulesReducer';
 import { reducer as simulationReducer } from './reducers/deviceSimulationReducer';
+import { reducer as usersReducer } from './reducers/usersReducer';
 
 const rootReducer = combineReducers({
   ...appReducer,
   ...deploymentsReducer,
   ...devicesReducer,
+  ...usersReducer,
   ...packagesReducer,
   ...rulesReducer,
   ...simulationReducer

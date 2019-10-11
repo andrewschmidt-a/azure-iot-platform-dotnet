@@ -1,0 +1,132 @@
+# Trigger on PRs into master
+pr:
+- master
+
+# Don't trigger any CI 
+trigger: none
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+  azureSubscription: 3M-CRSLAD16-BBIoTP-Dev
+  resourceGroup: rg-crslbbiot-odin-dev
+  aksCluster: aks-dev-spaces-odin
+  devSpace: pr-$(System.PullRequest.PullRequestNumber)-build-$(Build.BuildId)
+
+stages:
+- stage: Create_Dev_Space_for_PR
+  jobs:
+  - job: Create_Dev_Space
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@1
+      displayName: Create New Dev Space
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
+          az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
+
+    - task: KubectlInstaller@0
+      displayName: Install kubectl
+      inputs:
+        kubectlVersion: 'latest'
+
+    - task: AzureCLI@1
+      displayName: Load app config connection string and add it as a Kubernetes secret
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          pcsAppConfig=`az appconfig credential list -o json -n app-config-odin -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString`
+          kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION="$pcsAppConfig"
+
+- stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
+  jobs:
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: config
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: device-telemetry
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: iothub-manager
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: storage-adapter
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
+- stage: Test_Services_that_Changed
+  jobs:
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: config
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: device-telemetry
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: iothub-manager
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: storage-adapter
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
+- stage: Delete_Dev_Space
+  condition: always()
+  jobs:
+  - job: Delete_Dev_Space
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@1
+      condition: always()
+      displayName: Delete Dev Space
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
+          az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
+          azds space remove -n $(devSpace) -y

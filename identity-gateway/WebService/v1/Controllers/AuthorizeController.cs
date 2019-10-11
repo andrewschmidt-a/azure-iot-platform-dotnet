@@ -117,7 +117,16 @@ namespace IdentityGateway.Controllers
             if (jwt.Claims.Count(c => c.Type == "available_tenants" && c.Value == tenant) > 0)
             {
                 // Everything checks out so you can mint a new token
-                var tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(jwt.Claims.Where(c => new List<string>() { "sub", "name", "email" }.Contains(c.Type)).ToList(), tenant, jwt.Audiences.First(), jwt.ValidTo));
+                var tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(jwt.Claims.Where(c => new List<string>(){"sub", "name", "email"}.Contains(c.Type)).ToList(), tenant,jwt.Audiences.First(), jwt.ValidTo));
+
+                // Settings Update LastUsedTenant
+                UserSettingsInput settingsInput = new UserSettingsInput
+                {
+                    userId = jwt.Claims.Where(c=> c.Type == "sub").First().Value,
+                    settingKey = "LastUsedTenant",
+                    value = tenant
+                };
+                await this._userSettingsContainer.UpdateAsync(settingsInput);
                 return StatusCode(200, tokenString);
             }
             else

@@ -8,6 +8,7 @@ using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
+using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.TimeSeries;
@@ -27,6 +28,7 @@ namespace DeviceTelemetry.Services.Test
         private readonly Mock<ITimeSeriesClient> timeSeriesClient;
         private readonly Mock<ILogger> logger;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
+        private readonly Mock<IAppConfigurationHelper> appConfigHelper;
         private readonly IMessages messages;
 
         public MessagesTest()
@@ -39,8 +41,15 @@ namespace DeviceTelemetry.Services.Test
             this.storageClient = new Mock<IStorageClient>();
             this.timeSeriesClient = new Mock<ITimeSeriesClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
+            this.appConfigHelper = new Mock<IAppConfigurationHelper>();
             this.logger = new Mock<ILogger>();
-            this.messages = new Messages(servicesConfig, this.storageClient.Object, this.timeSeriesClient.Object, this.logger.Object,this.httpContextAccessor.Object);
+            this.messages = new Messages(
+                servicesConfig,
+                this.storageClient.Object,
+                this.timeSeriesClient.Object,
+                this.logger.Object,
+                this.httpContextAccessor.Object,
+                this.appConfigHelper.Object);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

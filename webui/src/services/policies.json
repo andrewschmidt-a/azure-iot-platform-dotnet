@@ -22,7 +22,9 @@
                 "DeleteDeployments",
                 "CreatePackages",
                 "DeletePackages",
-                "ReadAll"
+                "ReadAll",
+                "InviteUsers",
+                "DeleteUsers"
             ]
         },
         {

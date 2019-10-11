@@ -34,6 +34,7 @@ It is also possible to [deploy the solution locally](https://docs.microsoft.com/
 In order to run the Web UI, the following environment variables need to be created at least once. More information on configuring environment variables [here][envvars-howto-url].
 
 * `REACT_APP_BASE_SERVICE_URL` = {your-remote-monitoring-endpoint}
+* `NODE_PATH` = src/
 
 The endpoint given above is the base url you navigate to in order to see your deployed solution.
 
