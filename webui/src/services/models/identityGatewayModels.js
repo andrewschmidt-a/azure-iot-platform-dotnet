@@ -2,10 +2,12 @@
 import { camelCaseReshape } from 'utilities';
 export const toUserTenantModel = (response = []) => response.map(user => {
   user = camelCaseReshape(user, {
-    'id': 'id',
-    'name': 'name',
+    'id': 'PartitionKey',
+    'name': 'PartitionKey',
     'type': 'type',
-    'role': 'role'
+    'role': 'roleList'
   })
+  user.role = user.role.join(",")
+  user.type = "Member"
   return user;
 });

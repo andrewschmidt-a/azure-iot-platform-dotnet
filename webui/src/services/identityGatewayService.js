@@ -18,9 +18,8 @@ export class IdentityGatewayService {
   /** Returns a list of devices */
   static getUsers() {
     
-    return HttpClient.get(`${ENDPOINT}tenants`)
-      .map(toUsersModel);
-    return Observable.of(data).map(toUserTenantModel);
+    return HttpClient.get(`${ENDPOINT}tenants/users`)
+      .map(toUserTenantModel);
   }
 
   /** Delete a User */
