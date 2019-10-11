@@ -111,7 +111,8 @@ namespace IdentityGateway.Controllers
             //Extract Bearer token
             string encodedToken = authHeader.Substring("Bearer ".Length).Trim();
 
-            
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var jwt = ReadToken("IoTPlatform", encodedToken);
 
             if (jwt.Claims.Count(c => c.Type == "available_tenants" && c.Value == tenant) > 0)
             {
@@ -194,7 +195,7 @@ namespace IdentityGateway.Controllers
                     .state); // pass token in Fragment for more security (Browser wont forward...)
             return Redirect(returnUri.Uri.ToString());
         }
-        private bool ValidateToken(string audience, string encodedToken)
+        private JwtSecurityToken ReadToken(string audience, string encodedToken)
         {
             var jwtHandler = new JwtSecurityTokenHandler();
             if (!jwtHandler.CanReadToken(encodedToken))
@@ -231,7 +232,7 @@ namespace IdentityGateway.Controllers
             {
                 throw new NoAuthorizationException("The given token could not be validated.");
             }
-            return true
+            return jwt;
         }
     }
 }
