@@ -26,7 +26,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
         }
 
         [HttpGet]
-        [Authorize("ReadAll")]
         public async Task<StatusApiModel> GetAsync()
         {
             var result = new StatusApiModel(await this.statusService.GetStatusAsync());
