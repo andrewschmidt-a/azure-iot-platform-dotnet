@@ -38,7 +38,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers
         {
             try
             {
-                //Initialize();
                 ExceptionTelemetry telemetry = new ExceptionTelemetry(exception);
 
                 Type exceptionType = exception.GetType();
@@ -68,7 +67,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers
         {
             try
             {
-                //Initialize();
                 client.TrackTrace(message, (SeverityLevel)severity, traceDetails);
                 client.Flush();
             }
@@ -81,7 +79,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers
         {
             try
             {
-                //Initialize();
                 client.TrackEvent(message, traceDetails);
                 client.Flush();
             }
