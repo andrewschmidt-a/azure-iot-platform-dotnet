@@ -62,6 +62,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
         private bool tokenValidationInitialized;
         private readonly IUserManagementClient userManagementClient;
         private readonly IServicesConfig servicesConfig;
+        private readonly List<string> allowedUrls = new List<string>() { "/v1/status" };
 
         public AuthMiddleware(
             // ReSharper disable once UnusedParameter.Local
@@ -139,6 +140,12 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
             {
                 // Call the next delegate/middleware in the pipeline
                 this.log.Debug("Skipping auth (auth disabled)", () => { });
+                return this.requestDelegate(context);
+            }
+
+            // Skip Authentication on certain URLS
+            if (allowedUrls.Where(s=> context.Request.Path.StartsWithSegments(s)).Count() > 0)
+            {
                 return this.requestDelegate(context);
             }
 
