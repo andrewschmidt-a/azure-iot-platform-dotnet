@@ -24,6 +24,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         string CosmosDbToken { get; set; }
         string TenantManagerDatabaseId { get; set; }
         string StorageAdapterDatabseId { get; set; }
+        string StorageAccountConnectionString { get; set; }
+        string CreateIotHubRunbookUrl { get; set; }
+        string DeleteIotHubRunbookUrl { get; set; }
 
         Dictionary<string, List<string>> UserPermissions { get; set; }
     }
@@ -49,6 +52,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         public string CosmosDbToken { get; set; }
         public string TenantManagerDatabaseId { get; set; }
         public string StorageAdapterDatabseId { get; set; }
+        public string StorageAccountConnectionString { get; set; }
+        public string CreateIotHubRunbookUrl { get; set; }
+        public string DeleteIotHubRunbookUrl { get; set; }
     
         public Dictionary<string, List<string>> UserPermissions { get; set; }
     }

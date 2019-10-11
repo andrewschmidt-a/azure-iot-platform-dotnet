@@ -13,13 +13,20 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
 
         // Client authentication and authorization configuration
         IClientAuthConfig ClientAuthConfig { get; }
+
+        // Configuration variables for services
+        IServicesConfig ServicesConfig { get; }
     }
 
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
-        private const string APPLICATION_KEY = "TenantManagerService:";
+        // AppConfig
         private const string GLOBAL_KEY = "Global:";
+
+        private const string SUBSCRIPTION_ID_KEY = GLOBAL_KEY + "subscriptionId";
+        private const string LOCATION_KEY = GLOBAL_KEY + "location";
+        private const string RESOURCE_GROUP_KEY = GLOBAL_KEY + "resourceGroup";
 
         private const string KEYVAULT_NAME_KEY = GLOBAL_KEY + "KeyVault:name";
         
@@ -39,8 +46,25 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
         private const string JWT_AUDIENCE_KEY = JWT_KEY + "audience";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
-        //test
+        private const string APPLICATION_KEY = "TenantManagerService:";
+        private const string AUTOMATION_ACCOUNT_KEY = APPLICATION_KEY + "automationAccountName";
+        private const string TELEMETRY_CONNECTION_STRING_KEY = APPLICATION_KEY + "telemetryEventHubConnString";
+        private const string LIFECYCLE_CONNECTION_STRING_KEY = APPLICATION_KEY + "lifecycleventHubConnString";
+        private const string TWIN_CHANGE_CONNECTION_STRING_KEY = APPLICATION_KEY + "twinChangeEventHubConnString";
+        private const string COSMOS_DB_ENDPOINT_KEY = APPLICATION_KEY + "cosmosDbEndpoint";
+        private const string COSMOS_DB_TOKEN_KEY = APPLICATION_KEY + "cosmosDbToken";
+        private const string APP_CONFIG_ENDPOINT_KEY = APPLICATION_KEY + "setAppConfigEndpoint";
+        private const string TENANT_MANAGER_DB_ID_KEY = APPLICATION_KEY + "databaseName";
+
+        private const string STORAGE_ADAPTER_DB_ID_KEY = "StorageAdapter:documentDb";
+
+        // env/globalsecrets
         private const string APPCONFIG_CONNSTRING_KEY = "PCS_APPLICATION_CONFIGURATION";
+
+        // KeyVault
+        private const string STORAGE_ACCOUNT_CONNECTIN_STRING_KEY = "storageAccountConnectionString";
+        private const string CREATE_IOT_HUB_WEBHOOK_KEY = "CreateIotHubWebHookUrl";
+        private const string DELETE_IOT_HUB_WEBHOOK_KEY = "DeleteIotHubWebHookUrl";
 
         public int Port { get; }
         public IServicesConfig ServicesConfig { get; }
@@ -57,17 +81,19 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
                 AzureActiveDirectoryTenant = configData.GetString(AAD_TENANT_KEY),
                 SubscriptionId = configData.GetString(SUBSCRIPTION_ID_KEY),
                 Location = configData.GetString(LOCATION_KEY),
+                ResourceGroup = configData.GetString(RESOURCE_GROUP_KEY),
                 AutomationAccountName = configData.GetString(AUTOMATION_ACCOUNT_KEY),
                 TelemetryEventHubConnectionString = configData.GetString(TELEMETRY_CONNECTION_STRING_KEY),
                 TwinChangeEventHubConnectionString = configData.GetString(TWIN_CHANGE_CONNECTION_STRING_KEY),
                 LifecycleEventHubConnectionString = configData.GetString(LIFECYCLE_CONNECTION_STRING_KEY),
-                AppConfigConnectionString = configData.GetString(APP_CONFIG_CONNECTION_STRING_KEY),
+                AppConfigConnectionString = configData.GetString(APPCONFIG_CONNSTRING_KEY),
                 AppConfigEndpoint = configData.GetString(APP_CONFIG_ENDPOINT_KEY),
                 CosmosDbEndpoint = configData.GetString(COSMOS_DB_ENDPOINT_KEY),
                 CosmosDbToken = configData.GetString(COSMOS_DB_TOKEN_KEY),
                 TenantManagerDatabaseId = configData.GetString(TENANT_MANAGER_DB_ID_KEY),
                 StorageAdapterDatabseId = configData.GetString(STORAGE_ADAPTER_DB_ID_KEY),
-                UserPermissions = configData.GetUserPermissions()
+                UserPermissions = configData.GetUserPermissions(),
+                StorageAccountConnectionString = configData.GetString(STORAGE_ACCOUNT_CONNECTIN_STRING_KEY)
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

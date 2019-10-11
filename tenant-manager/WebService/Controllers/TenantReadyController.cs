@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Filters;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.Auth;
@@ -14,20 +15,21 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
     [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class TenantReadyController : ControllerBase
     {
-        private const string STORAGE_ACCOUNT_CONN_STRING_KEY = "storageAccountConnectionString";
         private const string TENANT_TABLE_ID = "tenant";
         private const string USER_TABLE_ID = "user";
 
-        private IConfiguration _config;
+        private readonly IServicesConfig _config;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly TableStorageHelper _tableStorageHelper;
 
-        private KeyVaultHelper keyVaultHelper;
-
-        public TenantReadyController(IConfiguration config, IHttpContextAccessor httpContextAccessor)
+        public TenantReadyController(
+            IServicesConfig config,
+            IHttpContextAccessor httpContextAccessor,
+            TableStorageHelper tableStorageHelper)
         {
             this._config = config;
             this._httpContextAccessor = httpContextAccessor;
-            this.keyVaultHelper = new KeyVaultHelper(this._config);
+            this._tableStorageHelper = tableStorageHelper;
         }
         
         // GET api/tenantready/<tenantId>
@@ -36,10 +38,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         {
             /* Checks whether a tenant currently exists or not */
 
-            // Load variables from key vault
-            var storageAccountConnectionString = await this.keyVaultHelper.GetSecretAsync(STORAGE_ACCOUNT_CONN_STRING_KEY);
             // Create a table storage helper now that we have the storage account conn string
-            var tableStorageHelper = new TableStorageHelper(storageAccountConnectionString); 
 
             var userId = "";
             try
@@ -56,7 +55,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             }
 
             // Verify that the user has access to the specified tenantx
-            var userTenant = await tableStorageHelper.ReadFromTableAsync<UserTenantModel>(USER_TABLE_ID, userId, tenantId);
+            var userTenant = await this._tableStorageHelper.ReadFromTableAsync<UserTenantModel>(USER_TABLE_ID, userId, tenantId);
             if (userTenant == null) {
                 // User does not have access
                 return Unauthorized();
@@ -64,7 +63,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
-            TenantModel tenant = await tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
+            TenantModel tenant = await this._tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
 
             // Check whether the tenant is done deploying or not
             if (tenant != null && tenant.IsIotHubDeployed) {

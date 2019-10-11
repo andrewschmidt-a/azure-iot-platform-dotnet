@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
@@ -13,9 +13,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
         private readonly CloudStorageAccount storageAccount;
         private CloudTableClient client;
 
-        public TableStorageHelper(string storageAccountConnectionString)
+        public TableStorageHelper(IServicesConfig config)
         {
-            this.storageAccount = CloudStorageAccount.Parse(storageAccountConnectionString);
+            this.storageAccount = CloudStorageAccount.Parse(config.StorageAccountConnectionString);
             this.client = this.storageAccount.CreateCloudTableClient();
         }
 

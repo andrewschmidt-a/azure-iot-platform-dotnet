@@ -7,6 +7,7 @@ using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
 using MMM.Azure.IoTSolutions.TenantManager.Services.External;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Filters;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -20,18 +21,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
     [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class TenantController : ControllerBase
     {
-        // _config keys
-        private const string APP_CONFIGURATION_KEY = "PCS_APPLICATION_CONFIGURATION";
-        private const string GLOBAL_KEY = "Global";
-        private const string STORAGE_ADAPTER_DOCUMENT_DB_KEY = "StorageAdapter:documentDb";
-        private const string TENANT_MANAGEMENT_KEY = "TenantManagerService:";
-        private const string COSMOS_DB_KEY = TENANT_MANAGEMENT_KEY + "CosmosDb";
-        private const string COSMOS_KEY = TENANT_MANAGEMENT_KEY + "cosmoskey";
-        private const string DATABASE_KEY = TENANT_MANAGEMENT_KEY + "databaseName";
-
-        // config keys specific to GetSecretAsync from keyvault
-        private const string STORAGE_ACCOUNT_CONNECTION_STRING_KEY = "storageAccountConnectionString";
-
         // table storage table ids
         private const string TENANT_TABLE_ID = "tenant";
         private const string USER_TABLE_ID = "user";
@@ -42,34 +31,36 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         private const string settingKey = "LastUsedTenant";
 
         // injected and created attribute
-        private IConfiguration _config;
+        private IServicesConfig _config;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private ILogger _log;
         private IIdentityGatewayClient _identityClient;
 
         //Helpers 
-
-        private KeyVaultHelper keyVaultHelper;
-        private TenantRunbookHelper tenantRunbookHelper;
-        private CosmosHelper cosmosHelper;
+        private TenantRunbookHelper _tenantRunbookHelper;
+        private CosmosHelper _cosmosHelper;
+        private TableStorageHelper _tableStorageHelper;
 
         // collection and iothub naming 
         private string iotHubNameFormat = "iothub-{0}";  // format with a guid
         private string appConfigCollectionKeyFormat = "tenant:{0}:{1}-collection";  // format with a guid and collection name
         private List<string> tenantCollections = new List<string>{"telemetry", "twin-change", "lifecycle", "pcs"};
 
-        public TenantController(IConfiguration config, IHttpContextAccessor httpContextAccessor, ILogger log, IIdentityGatewayClient identityGatewayClient)
+        public TenantController(
+            IServicesConfig config,
+            IHttpContextAccessor httpContextAccessor,
+            ILogger log,
+            TenantRunbookHelper tenantRunbookHelper,
+            CosmosHelper cosmosHelper,
+            TableStorageHelper tableStorageHelper,
+            IIdentityGatewayClient identityGatewayClient)
         {
             this._config = config;
             this._httpContextAccessor = httpContextAccessor;
             this._log = log;
-
-            this.keyVaultHelper = new KeyVaultHelper(this._config);
-            this.tenantRunbookHelper = new TenantRunbookHelper(this._config, this.keyVaultHelper);
-
-            string cosmosDb = this._config[COSMOS_DB_KEY];
-            string cosmosDbToken = this._config[COSMOS_KEY];
-            this.cosmosHelper = new CosmosHelper(cosmosDb, cosmosDbToken);
+            this._tenantRunbookHelper = tenantRunbookHelper;
+            this._cosmosHelper = cosmosHelper;
+            this._tableStorageHelper = tableStorageHelper;
             this._identityClient = identityGatewayClient;
         }
 
@@ -78,22 +69,16 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         public async Task<string> PostAsync()
         {
             /* Creates a new tenant */
-            // Load secrets from key vault
-            string storageAccountConnectionString = await this.keyVaultHelper.GetSecretAsync(STORAGE_ACCOUNT_CONNECTION_STRING_KEY);
-
             // Generate new tenant information
             string tenantGuid = Guid.NewGuid().ToString();
             string iotHubName = String.Format(this.iotHubNameFormat, tenantGuid.Substring(0, 8));
 
-            // Create a table storage helper now that we have the storage account conn string
-            var tableStorageHelper = new TableStorageHelper(storageAccountConnectionString);
-
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantGuid, iotHubName);
-            await tableStorageHelper.WriteToTableAsync<TenantModel>(TENANT_TABLE_ID, tenant);
+            await this._tableStorageHelper.WriteToTableAsync<TenantModel>(TENANT_TABLE_ID, tenant);
 
             // Trigger run book to create a new IoT Hub
-            await this.tenantRunbookHelper.CreateIotHub(tenantGuid, iotHubName);
+            await this._tenantRunbookHelper.CreateIotHub(tenantGuid, iotHubName);
 
             var userId = "";
             try
@@ -147,7 +132,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             // Write tenant info cosmos db collection name to app config
             try
             {
-                var appConfigClient = new ConfigurationClient(this._config[APP_CONFIGURATION_KEY]);
+                var appConfigClient = new ConfigurationClient(this._config.AppConfigEndpoint);
                 foreach (string collection in this.tenantCollections)
                 {
                     string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantGuid, collection);
@@ -183,9 +168,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         {
             /* Returns information for a tenant */
 
-            // Load variables from key vault
-            var storageAccountConnectionString = await this.keyVaultHelper.GetSecretAsync(STORAGE_ACCOUNT_CONNECTION_STRING_KEY);
-
             var userId = "";
             TenantModel tenant = null;
             bool accessToTenant = false;
@@ -201,14 +183,11 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             {
                 throw new Exception("Unable to retrieve the userId from the httpContextAccessor", e);
             }
-           
-            // Create a table storage helper now that we have the storage account conn string
-            var tableStorageHelper = new TableStorageHelper(storageAccountConnectionString);
 
             // Verify that the user has access to the specified tenant
             try
             {
-                accessToTenant = await _identityClient.isUserAuthenticated(userId, tenantId);
+                accessToTenant = await this._identityClient.isUserAuthenticated(userId, tenantId);
                 if (!accessToTenant)
                 {
                     throw new NoAuthorizationException($"The User {userId} is not authorized for operations on this tenant. The user may not have the proper role for this operation.");
@@ -221,7 +200,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             try
             {
                 // Load the tenant from table storage
-                tenant = await tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, tenantId.Substring(0, 1), tenantId);
+                tenant = await this._tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, tenantId.Substring(0, 1), tenantId);
             }
             catch (Exception e)
             {
@@ -235,9 +214,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         [HttpDelete("{tenantId}")]
         public async Task<string> DeleteAsync(string tenantId)
         {
-            // Load secrets from key vault
-            string storageAccountConnectionString = await this.keyVaultHelper.GetSecretAsync(STORAGE_ACCOUNT_CONNECTION_STRING_KEY);
-
             var userId = "";
             try
             {
@@ -253,14 +229,11 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             }
 
             Dictionary<string, bool> deletionRecord = new Dictionary<string, bool>{};
-           
-            // Create a table storage helper now that we have the storage account conn string
-            var tableStorageHelper = new TableStorageHelper(storageAccountConnectionString);
 
             // Verify that the user has access to the specified tenant
             try
             {
-                bool accessToTenant = await _identityClient.isUserAuthenticated(userId, tenantId);
+                bool accessToTenant = await this._identityClient.isUserAuthenticated(userId, tenantId);
                 if (!accessToTenant)
                 {
                     throw new NoAuthorizationException($"Incorrect role for User Id {userId} associated with this tenant. The user may not be authorized. The user may not have the proper role for this operation.");
@@ -273,7 +246,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
-            TenantModel tenant = await tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
+            TenantModel tenant = await this._tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
             if (tenant != null && !tenant.IsIotHubDeployed)
             {
                 // If the tenant iothub is not deployed, we should not be able to start the delete process
@@ -290,7 +263,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             {
                 try
                 {
-                    await tableStorageHelper.DeleteEntityAsync<TenantModel>(TENANT_TABLE_ID, tenant);
+                    await this._tableStorageHelper.DeleteEntityAsync<TenantModel>(TENANT_TABLE_ID, tenant);
                     deletionRecord["tenantTableStorage"] = true;
                 }
                 catch (Exception e)
@@ -333,7 +306,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             {
                 string iotHubName = String.Format(this.iotHubNameFormat, tenantId.Substring(0, 8));
                 //trigger delete iothub runbook
-                await this.tenantRunbookHelper.DeleteIotHub(tenantId, iotHubName);
+                await this._tenantRunbookHelper.DeleteIotHub(tenantId, iotHubName);
                 deletionRecord["iotHub"] = true;
             }
             catch (Exception e)
@@ -344,9 +317,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             }
 
             // Delete collections
-            string dbIdTms = this._config[DATABASE_KEY];
-            string dbIdStorage = this._config[STORAGE_ADAPTER_DOCUMENT_DB_KEY];
-            var appConfigClient = new ConfigurationClient(this._config[APP_CONFIGURATION_KEY]);
+            string dbIdTms = this._config.TenantManagerDatabaseId;
+            string dbIdStorage = this._config.StorageAdapterDatabseId;
+            var appConfigClient = new ConfigurationClient(this._config.AppConfigConnectionString);
             foreach (string collection in this.tenantCollections)
             {
                 // pcs colleciton uses a different database than the other collections
@@ -377,7 +350,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
                 try
                 {
-                    await cosmosHelper.DeleteCosmosDbCollection(databaseId, collectionId);
+                    await this._cosmosHelper.DeleteCosmosDbCollection(databaseId, collectionId);
                     deletionRecord[$"{collection}Collection"] = true;
                 }
                 catch (ResourceNotFoundException e)

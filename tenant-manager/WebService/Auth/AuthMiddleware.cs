@@ -12,9 +12,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 using Newtonsoft.Json;
-using Microsoft.Azure.IoTSolutions.Auth;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using Microsoft.Azure.IoTSolutions.Auth;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
@@ -57,13 +59,16 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
         private TokenValidationParameters tokenValidationParams;
         private readonly bool authRequired;     
         private bool tokenValidationInitialized;
+        private readonly IServicesConfig servicesConfig;
+        private readonly List<string> allowedUrls = new List<string>() { "/connect", "/.well-known", "/v1/status" };
 
         public AuthMiddleware(
             // ReSharper disable once UnusedParameter.Local
             RequestDelegate requestDelegate, // Required by ASP.NET
             IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan,
             IClientAuthConfig config,
-            ILogger log)
+            ILogger log,
+            IServicesConfig servicesConfig)
         {
             this.requestDelegate = requestDelegate;
             this.openIdCfgMan = openIdCfgMan;
@@ -71,6 +76,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             this.log = log;
             this.authRequired = config.AuthRequired;
             this.tokenValidationInitialized = false;
+            this.servicesConfig = servicesConfig;
 
             // This will show in development mode, or in case auth is turned off
             if (!this.authRequired)
@@ -133,6 +139,12 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
                 return this.requestDelegate(context);
             }
 
+            // Skip Authentication on certain URLS
+            if (allowedUrls.Where(s=> context.Request.Path.StartsWithSegments(s)).Count() > 0)
+            {
+                return this.requestDelegate(context);
+            }
+
             if (!this.InitializeTokenValidationAsync(context.RequestAborted).Result)
             {
                 context.Response.StatusCode = (int) HttpStatusCode.ServiceUnavailable;
@@ -191,6 +203,29 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
                     // header doesn't need to be parse again later in the User controller.
                     context.Request.SetCurrentUserClaims(jwtToken.Claims);
 
+                    // Store the user allowed actions in the request context to validate
+                    // authorization later in the controller.
+                    var userObjectId = context.Request.GetCurrentUserObjectId();
+                    var roles = context.Request.GetCurrentUserRoleClaim().ToList();
+                    List<string> allowedActions = new List<string>();
+                    if (roles.Any())
+                    {
+                        foreach(string role in roles)
+                        {
+                            allowedActions.AddRange(this.servicesConfig.UserPermissions[role]);
+                        }
+                        
+                    }
+                    else
+                    {
+                        this.log.Warn("JWT token doesn't include any role claims.", () => { });
+                    }
+                    //DISBABLED RBAC -- adding all access 
+                    context.Request.SetCurrentUserAllowedActions(allowedActions);
+
+                    //Set Tenant Information
+                    context.Request.SetTenant();
+
                     return true;
                 }
 
@@ -237,7 +272,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
                     ValidIssuer = this.config.JwtIssuer,
 
                     // Validate the token audience
-                    ValidateAudience = true,
+                    ValidateAudience = false,
                     ValidAudience = this.config.JwtAudience,
 
                     // Validate token lifetime
