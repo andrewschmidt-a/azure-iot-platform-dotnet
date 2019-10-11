@@ -20,7 +20,7 @@ namespace IdentityGateway.AuthUtils
         private const string CLAIM_KEY_TENANT_ID = "tenant";
         private const string HEADER_KEY_TENANT_ID = "ApplicationTenantID";
         // Role claim type
-        private const string ROLE_CLAIM_TYPE = "roles";
+        private const string ROLE_CLAIM_TYPE = "role";
         private const string USER_OBJECT_ID_CLAIM_TYPE = "sub";
 
         // Store the current user claims in the current request

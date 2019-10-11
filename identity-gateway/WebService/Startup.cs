@@ -10,6 +10,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using IdentityGateway.AppConfiguration;
+using IdentityGateway.AuthUtils;
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
+using IdentityGateway.Services.Diagnostics;
+using IdentityGateway.Services.Runtime;
 
 namespace IdentityGateway.WebService
 {
@@ -29,6 +34,8 @@ namespace IdentityGateway.WebService
 
         // Initialized in `Startup`
         public IConfigurationRoot Configuration { get; }
+        // Initialized in `ConfigureServices`
+        public IContainer ApplicationContainer { get; private set; }
 
         // Invoked by `Program.cs`
         public Startup(IHostingEnvironment env)
@@ -47,18 +54,29 @@ namespace IdentityGateway.WebService
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            
+
+            // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
 
             services.AddScoped<TableHelper>();
-            
+
             services.AddSingleton<UserSettingsContainer>();
             services.AddSingleton<UserTenantContainer>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IStatusService, StatusService>();
+
+            // Prepare DI container
+            this.ApplicationContainer = DependencyResolution.Setup(services);
+
+            // Print some useful information at bootstrap time
+            this.PrintBootstrapInfo(this.ApplicationContainer);
+
+            // Create the IServiceProvider based on the container
+            return new AutofacServiceProvider(this.ApplicationContainer);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,6 +84,11 @@ namespace IdentityGateway.WebService
         {
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();
+        }
+        private void PrintBootstrapInfo(IContainer container)
+        {
+            var log = container.Resolve<ILogger>();
+            log.Info("Web service started", () => new { Uptime.ProcessId });
         }
     }
 }

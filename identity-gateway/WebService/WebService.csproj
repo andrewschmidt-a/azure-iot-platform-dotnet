@@ -3,31 +3,33 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Controllers\Controller.cs"/>
-    <Compile Remove="Controllers\testController.cs"/>
+    <Compile Remove="Controllers\Controller.cs" />
+    <Compile Remove="Controllers\testController.cs" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="BouncyCastle" Version="1.8.5"/>
-    <PackageReference Include="DependencyResolver" Version="1.0.0.3"/>
-    <PackageReference Include="IdentityServer4" Version="2.4.0"/>
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1"/>
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.0.1" PrivateAssets="All"/>
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1"/>
-    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.3"/>
-    <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.2.0"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1"/>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1"/>
+    <PackageReference Include="Autofac" Version="4.6.2" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
+    <PackageReference Include="BouncyCastle" Version="1.8.5" />
+    <PackageReference Include="DependencyResolver" Version="1.0.0.3" />
+    <PackageReference Include="IdentityServer4" Version="2.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.0.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.3" />
+    <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.1"/>
-    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.1"/>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3"/>
-    <PackageReference Include="Microsoft.WindowsAzure.ConfigurationManager" Version="3.2.3"/>
-    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
+    <PackageReference Include="Microsoft.WindowsAzure.ConfigurationManager" Version="3.2.3" />
+    <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.ini">
@@ -35,10 +37,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Services\Services.csproj"/>
+    <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AuthUtils\AuthUtils.csproj"/>
+    <ProjectReference Include="..\AuthUtils\AuthUtils.csproj" />
     <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
   </ItemGroup>
 </Project>
