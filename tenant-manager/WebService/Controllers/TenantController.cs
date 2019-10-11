@@ -19,6 +19,7 @@ using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogge
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {
     [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Authorize("ReadAll")]
     public class TenantController : ControllerBase
     {
         // table storage table ids
@@ -212,6 +213,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
          // DELETE api/tenantready/<tenantId>
         [HttpDelete("{tenantId}")]
+        [Authorize("DeleteTenant")]
         public async Task<string> DeleteAsync(string tenantId)
         {
             var userId = "";

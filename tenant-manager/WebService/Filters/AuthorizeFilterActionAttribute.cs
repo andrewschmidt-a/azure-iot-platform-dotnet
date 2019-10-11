@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Azure.IoTSolutions.Auth;
 
-namespace IdentityGateway.WebService.v1.Filters
+namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Filters
 {
     public class AuthorizeAttribute : TypeFilterAttribute
     {

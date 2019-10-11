@@ -5,14 +5,13 @@ using MMM.Azure.IoTSolutions.TenantManager.WebService.Filters;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.Auth;
-using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {
     [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Authorize("ReadAll")]
     public class TenantReadyController : ControllerBase
     {
         private const string TENANT_TABLE_ID = "tenant";
