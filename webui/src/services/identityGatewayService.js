@@ -33,6 +33,10 @@ export class IdentityGatewayService {
     // Placeholder to call backend
     const data = [{id:uuidv4(), name: email, role: role, type: 'Invited' }]
 
-    return Observable.of(data).map(toUserTenantModel);
+    return HttpClient.post(`${ENDPOINT}tenants/users`, {
+      "email_address": email,
+      "role": role
+    })
+    .map(t=> data);;
   }
 }
