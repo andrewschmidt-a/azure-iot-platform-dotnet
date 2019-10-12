@@ -33,7 +33,7 @@ export class IdentityGatewayService {
     // Placeholder to call backend
     const data = [{id:uuidv4(), name: email, role: role, type: 'Invited' }]
 
-    return HttpClient.post(`${ENDPOINT}tenants/users`, {
+    return HttpClient.post(`${ENDPOINT}tenants/invite`, {
       "email_address": email,
       "role": role
     })
