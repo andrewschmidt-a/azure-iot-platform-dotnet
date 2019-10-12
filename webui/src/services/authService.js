@@ -36,6 +36,11 @@ export class AuthService {
     AuthService._userManager = new UserManager(AuthService.settings);
   }
 
+  static isInvitation(hash) {
+    return (
+      hash.includes('invite')
+    );
+  }
   static isCallback(hash) {
     return (
       hash.includes('id_token') ||
@@ -60,6 +65,20 @@ export class AuthService {
       return;
     };
     console.log("Loading Auth....")
+    //Redirect if it is an invitation link
+    if(AuthService.isInvitation(window.location.hash)){
+      var parsedHash = new URLSearchParams(
+          window.location.hash.substr(1) // skip the first char (#)
+      );
+      AuthService.settings.extraQueryParams = {
+        invite: parsedHash.get("invite")
+      };
+      AuthService._userManager = new UserManager(AuthService.settings);
+      console.log('Invitation detected: redirecting for authentication');
+      AuthService._userManager.signinRedirect();
+
+    }
+
     // Attempt to sign in if the current window is not a callback
     if (!AuthService.isCallback(window.location.hash)) {
       console.log("is not a callback.. attempt to find user")
