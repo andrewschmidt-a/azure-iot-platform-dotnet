@@ -37,6 +37,6 @@ export class IdentityGatewayService {
       "email_address": email,
       "role": role
     })
-    .map(t=> data);;
+    .map(t=> toUserTenantModel([t]));
   }
 }

@@ -1,5 +1,6 @@
 
 import { camelCaseReshape } from 'utilities';
+import {Policies} from 'utilities'
 export const toUserTenantModel = (response = []) => response.map(user => {
   user = camelCaseReshape(user, {
     'userId': 'id',
@@ -7,7 +8,6 @@ export const toUserTenantModel = (response = []) => response.map(user => {
     'type': 'type',
     'roleList': 'role'
   })
-  user.role = user.role.join(",")
-  user.type = "Member"
+  user.role = user.role.map(r => Policies.filter(p=> p.Role == r)[0].DisplayName).join(",")
   return user;
 });

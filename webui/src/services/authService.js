@@ -6,7 +6,7 @@ import { UserManager, UserManagerSettings, User, WebStorageStateStore, } from 'o
 import { Observable } from 'rxjs';
 import { HttpClient } from 'utilities/httpClient';
 import { toUserModel, authDisabledUser } from './models';
-import{ Policies } from './policies.json'
+import {Policies} from 'utilities'
 
 const ENDPOINT = Config.serviceUrls.auth;
 export class AuthService {
