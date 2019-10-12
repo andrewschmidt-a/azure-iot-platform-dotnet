@@ -24,8 +24,9 @@ export class IdentityGatewayService {
 
   /** Delete a User */
   static deleteUser(id) {
-    // Placeholder to call backend
-    return Observable.of(id);
+    
+    return HttpClient.delete(`${ENDPOINT}tenants/${id}`)
+      .map(t => id);
   }
   /** Delete a User */
   static invite(email, role) {
