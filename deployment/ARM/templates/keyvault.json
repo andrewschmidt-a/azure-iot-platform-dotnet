@@ -2,100 +2,94 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-      "applicationCode": {
-        "minLength": 3,
-        "type": "string"
-      },
-      "deployEnvironment": {
+      "resourceName": {
         "minLength": 2,
-        "type": "string"
-      },
-      "KeyVaultReader-User1-ObjId": {
         "type": "string",
         "metadata": {
-          "description": "Object Id of the User"
+          "description": "Name of the the Keyvault"
         }
       },
-      "KeyVaultReader-Application1-ObjId": {
+      "userObjId": {
         "type": "string",
         "metadata": {
-          "description": "Object Id of the Application"
+          "description": "Object Id of the User to be added to Access policy"
+        }
+      },
+      "applicationObjId": {
+        "type": "string",
+        "metadata": {
+          "description": "Object Id of the Application to be added to Access policy"
         }
       }
     },
     "variables": {
-      "location": "[resourceGroup().location]",
-      "keyVaultName": "[concat(parameters('applicationCode'),'vlt',parameters('deployEnvironment'))]"
+      "location": "[resourceGroup().location]"
     },
     "resources": [
       {
         "type": "Microsoft.KeyVault/vaults",
-        "name": "[variables('keyVaultName')]",
+        "name": "[parameters('resourceName')]",
         "apiVersion": "2016-10-01",
         "location": "[variables('location')]",
         "tags": {},
         "properties": {
           "sku": {
             "family": "A",
-            "name": "Standard"
+            "name": "standard"
           },
           "tenantId": "[subscription().tenantId]",
           "accessPolicies": [
             {
-              "condition": "[not(empty(parameters('KeyVaultReader-User1-ObjId')))]",
-              "objectId": "[parameters('KeyVaultReader-User1-ObjId')]",
+              "condition": "[not(empty(parameters('userObjId')))]",
+              "objectId": "[parameters('userObjId')]",
               "tenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb",
               "permissions": {
                 "keys": [],
                 "secrets": [
-                  "Get",
-                  "List",
-                  "Set",
-                  "Delete",
-                  "Recover",
-                  "Backup",
-                  "Restore"
+                  "get",
+                  "list",
+                  "set",
+                  "delete",
+                  "recover",
+                  "backup",
+                  "restore"
                 ],
                 "certificates": [
-                  "Get",
-                  "List",
-                  "Update",
-                  "Delete",
-                  "Recover",
-                  "Backup",
-                  "Restore",
-                  "Create"
+                  "get",
+                  "list",
+                  "update",
+                  "delete",
+                  "recover",
+                  "create"
                 ]
               }
             },
             {
-              "condition": "[not(empty(parameters('KeyVaultReader-Application1-ObjId')))]",
-              "objectId": "[parameters('KeyVaultReader-Application1-ObjId')]",
+              "condition": "[not(empty(parameters('applicationObjId')))]",
+              "objectId": "[parameters('applicationObjId')]",
               "tenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb",
               "permissions": {
                 "keys": [
-                  "Get",
-                  "List"
+                  "get",
+                  "list"
                 ],
                 "secrets": [
-                  "Get",
-                  "List",
-                  "Set",
-                  "Delete",
-                  "Recover",
-                  "Backup",
-                  "Restore"
+                  "get",
+                  "list",
+                  "set",
+                  "delete",
+                  "recover",
+                  "backup",
+                  "restore"
                 ],
                 "certificates": [
-                  "Get",
-                  "List",
-                  "Update",
-                  "Delete",
-                  "Recover",
-                  "Backup",
-                  "Restore",
-                  "Create",
-                  "Import"
+                  "get",
+                  "list",
+                  "update",
+                  "delete",
+                  "recover",
+                  "create",
+                  "import"
                 ]
               }
             }
@@ -105,7 +99,7 @@
     ],
     "outputs": {
       "CloudResourceName": {
-        "value": "[variables('keyVaultName')]",
+        "value": "[parameters('resourceName')]",
         "type": "string"
       },
       "CloudResourceUri": {

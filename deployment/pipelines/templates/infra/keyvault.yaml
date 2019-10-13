@@ -1,9 +1,13 @@
 
 parameters:
+  tenant: ''
   serviceConnection: ''
   resourceGroup: ''
   appConfigName: ''
   keyVaultName: ''
+  userObjId: ''
+  applicationId: ''
+  applicationKey: ''
 
 steps:
 - task: AzureCLI@1
@@ -26,9 +30,15 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/keyvault.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/keyvault.json'
-    overrideParameters: '-resourceName ${{ parameters.keyVaultName }} -objectId $(servicePrincipalObjectId)'
+    overrideParameters: '-resourceName ${{ parameters.keyVaultName }} -applicationObjId $(servicePrincipalObjectId) -userObjId ${{ parameters.userObjId }}'
     deploymentMode: 'Incremental'
     #addSpnToEnvironment: true
+- task: Bash@3
+  displayName: "Shell Script : Loading Secrets to Keyvault"
+  inputs:
+    type: 'FilePath'
+    scriptPath: '$(System.DefaultWorkingDirectory)/deployment/scripts/keyvaultsecrets.sh'
+    args: '--azureSubscription ${{ parameters.serviceConnection }} --resourceGroup {{ parameters.resourceGroup }} --tenant {{ parameters.tenant }} --ClientSecret ${{ parameters.applicationKey }} --ApplicationId ${{ parameters.applicationId }}'
 - task: AzureCLI@1
   displayName: Add Keyvault Name to App Config
   inputs:

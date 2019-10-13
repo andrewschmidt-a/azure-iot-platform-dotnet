@@ -42,12 +42,12 @@ jobs:
       aksName: ${{ parameters.aksName }}
       appConfigName: ${{ parameters.appConfigName }}
 ## Deploys KeyVault
-  - template: infra/keyvault.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      appConfigName: ${{ parameters.appConfigName }}
-      keyVaultName: ${{parameters.keyVaultName}}
+  # - template: infra/keyvault.yaml
+  #   parameters:
+  #     serviceConnection: ${{ parameters.serviceConnection }}
+  #     resourceGroup: ${{ parameters.resourceGroup }}
+  #     appConfigName: ${{ parameters.appConfigName }}
+  #     keyVaultName: ${{parameters.keyVaultName}}
 
 ## Deploys CosmosDB
   - template: infra/cosmosdb.yaml
@@ -72,7 +72,6 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       functionAppName: ${{ parameters.functionAppName }}
       keyVaultName: ${{parameters.keyVaultName}}
-
 
 ## Deploys Storage Account -- TODO
   - template: infra/storageaccount.yaml
@@ -104,6 +103,14 @@ jobs:
 # store in Key Vault :
 # identityGatewayPrivateKey
 # identityGatewayPublicKey
+
+## Deploys KeyVault and load the secrets to keyvault
+  - template: infra/keyvault.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      appConfigName: ${{ parameters.appConfigName }}
+      keyVaultName: ${{parameters.keyVaultName}}
 
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform
 - job: ingress
