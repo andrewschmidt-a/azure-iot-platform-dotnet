@@ -191,12 +191,12 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 accessToTenant = await this._identityClient.isUserAuthenticated(userId, tenantId);
                 if (!accessToTenant)
                 {
-                    throw new NoAuthorizationException($"The User {userId} is not authorized for operations on this tenant. The user may not have the proper role for this operation.");
+                    throw new NotAuthorizedException($"The User {userId} is not authorized for operations on this tenant. The user may not have the proper role for this operation.");
                 }
             }
             catch (Exception e)
             {
-                throw new NoAuthorizationException($"The User {userId} is not authorized for operations on this tenant.", e);
+                throw new NotAuthorizedException($"The User {userId} is not authorized for operations on this tenant.", e);
             }
             try
             {
@@ -238,12 +238,12 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 bool accessToTenant = await this._identityClient.isUserAuthenticated(userId, tenantId);
                 if (!accessToTenant)
                 {
-                    throw new NoAuthorizationException($"Incorrect role for User Id {userId} associated with this tenant. The user may not be authorized. The user may not have the proper role for this operation.");
+                    throw new NotAuthorizedException($"Incorrect role for User Id {userId} associated with this tenant. The user may not be authorized. The user may not have the proper role for this operation.");
                 }
             }
             catch (Exception e)
             {
-                throw new NoAuthorizationException($"The User {userId} is not authorized for operations on this tenant.", e);
+                throw new NotAuthorizedException($"The User {userId} is not authorized for operations on this tenant.", e);
             }
 
             // Load the tenant from table storage

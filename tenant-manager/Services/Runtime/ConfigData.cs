@@ -43,6 +43,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
             "Global:ClientAuth:JWT",
             "Global:KeyVault",
             "Global:Permissions",
+            "Global:Permissions:admin",
+            "Global:Permissions:readonly",
             "ExternalDependencies",
             "TenantManagerService",
             "StorageAdapter",

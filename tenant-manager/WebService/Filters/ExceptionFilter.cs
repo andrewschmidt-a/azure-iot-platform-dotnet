@@ -31,7 +31,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Filters
                 context.Exception = new Exception("Unknown Exception occurred and could not be filtered.");
             }
 
-            if (context.Exception is NoAuthorizationException)
+            if (context.Exception is NoAuthorizationException || context.Exception is NotAuthorizedException)
             {
                 context.Result = this.GetResponse(HttpStatusCode.Unauthorized, context.Exception);
             }
