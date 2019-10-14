@@ -25,7 +25,7 @@ stages:
       environment: IoT_CRSL_Environment
       subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
       applicationCode: crsliot
-      deployEnvironment: dev
+      deployEnvironment: dev1
       certThumbprint: D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD
       applicationId: 95d3c662-23ea-4e2d-8d3d-ea2448706934
       applicationKey: tog]_*a?hXtzD6Z0TWSm6lyPHKsx7H*F
