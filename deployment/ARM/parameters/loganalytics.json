@@ -5,7 +5,7 @@
     "parameters": {
         
         "omsWorkspaceName": {
-        "value": "test-dev-automation"
+        "value": "crsl-oms-workspace"
         },
 
         "omsServiceTier": {
@@ -13,7 +13,7 @@
         },
         
         "automationAccountName": {
-        "value": "lkc-automation"
+        "value": "crsl-automationacct"
     }
   }
 }

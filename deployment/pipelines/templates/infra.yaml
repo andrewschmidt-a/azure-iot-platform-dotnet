@@ -125,6 +125,16 @@ jobs:
       ApplicationId: ${{ parameters.applicationId }}
       SubscriptionId: ${{ parameters.subscriptionId }}
       CertThumbprint: ${{ parameters.certThumbprint }}
+      keyVaultName: ${{ parameters.keyVaultName }}
+      automationName: ${{parameters.automationName}}
+	  
+## Deploys Loganalytics -- TODO
+  - template: infra/loganalytics.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
+      automationAccountName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
 
 ## Create Private/Public Key Pair for Identity Gateway -- TODO
 # ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
