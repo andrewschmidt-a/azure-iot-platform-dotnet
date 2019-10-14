@@ -16,6 +16,10 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 {
     public class TenantRunbookHelper : IStatusOperation
     {
+        // webhook keys
+        private const string CREATE_IOT_HUB_WEBHOOK_KEY = "CreateIotHub";
+        private const string DELETE_IOT_HUB_WEBHOOK_KEY = "DeleteIotHub";
+
         // injection variables
         private IServicesConfig _config;
 
@@ -42,8 +46,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 
             this.webHooks = new Dictionary<string, string>
             {
-                { "CreateIotHub", this._config.CreateIotHubRunbookUrl },
-                { "deleteiothub", this._config.DeleteIotHubRunbookUrl } // note the case for this key - there is a discrepancy in our keyvault key name convention
+                { CREATE_IOT_HUB_WEBHOOK_KEY, this._config.CreateIotHubRunbookUrl },
+                { DELETE_IOT_HUB_WEBHOOK_KEY, this._config.DeleteIotHubRunbookUrl }
             };
         }
 
@@ -88,26 +92,12 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 
         public async Task<HttpResponseMessage> CreateIotHub(string tenantId, string iotHubName)
         {
-            try
-            {
-                return await this.TriggerTenantRunbook(this.webHooks["CreateIotHub"], tenantId, iotHubName);
-            }
-            catch (Exception e)
-            {
-                throw new RunbookTriggerException("Unable to successfully Create Iot Hub from runbook", e);
-            }
+            return await this.TriggerTenantRunbook(this.webHooks[CREATE_IOT_HUB_WEBHOOK_KEY], tenantId, iotHubName);
         }
 
         public async Task<HttpResponseMessage> DeleteIotHub(string tenantId, string iotHubName)
         {
-            try
-            {
-                return await this.TriggerTenantRunbook(this.webHooks["deleteiothub"], tenantId, iotHubName);
-            }
-            catch (Exception e)
-            {
-                throw new RunbookTriggerException("Unable to successfully Delete Iot Hub from runbook", e);
-            }
+            return await this.TriggerTenantRunbook(this.webHooks[DELETE_IOT_HUB_WEBHOOK_KEY], tenantId, iotHubName);
         }
 
         /// <summary>
@@ -119,7 +109,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
         /// <param name="tenantId" type="string">Tenant Guid</param>
         /// <param name="iotHubName" type="string">Iot Hub Name for deletion or creation</param>
         /// <returns></returns>
-        private async Task<HttpResponseMessage> TriggerTenantRunbook(string webHookUrlKey, string tenantId, string iotHubName)
+        private async Task<HttpResponseMessage> TriggerTenantRunbook(string webHookUrl, string tenantId, string iotHubName)
         {
             var requestBody = new
             {
@@ -138,18 +128,16 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 
             try
             {
-                string webHookUrl = "";
-                webHookUrl = this.webHooks[webHookUrlKey];
-                if (String.IsNullOrEmpty(webHookUrlKey))
+                if (String.IsNullOrEmpty(webHookUrl))
                 {
-                    throw new Exception($"The requested webhook url {webHookUrlKey} was null. It may not be configured correctly.");
+                    throw new Exception($"The given webHookUrl string was null or empty. It may not be configured correctly.");
                 }
                 var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
                 return await this.httpClient.PostAsync(webHookUrl, bodyContent);
             }
             catch (Exception e)
             {
-                throw new RunbookTriggerException($"Unable to successfully trigger the web hook", e);
+                throw new RunbookTriggerException($"Unable to successfully trigger the requested runbook operation.", e);
             }
         }
     }

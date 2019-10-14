@@ -86,6 +86,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
                 TelemetryEventHubConnectionString = configData.GetString(TELEMETRY_CONNECTION_STRING_KEY),
                 TwinChangeEventHubConnectionString = configData.GetString(TWIN_CHANGE_CONNECTION_STRING_KEY),
                 LifecycleEventHubConnectionString = configData.GetString(LIFECYCLE_CONNECTION_STRING_KEY),
+                CreateIotHubRunbookUrl = configData.GetString(CREATE_IOT_HUB_WEBHOOK_KEY),
+                DeleteIotHubRunbookUrl = configData.GetString(DELETE_IOT_HUB_WEBHOOK_KEY),
                 AppConfigConnectionString = configData.GetString(APPCONFIG_CONNSTRING_KEY),
                 AppConfigEndpoint = configData.GetString(APP_CONFIG_ENDPOINT_KEY),
                 CosmosDbEndpoint = configData.GetString(COSMOS_DB_ENDPOINT_KEY),
