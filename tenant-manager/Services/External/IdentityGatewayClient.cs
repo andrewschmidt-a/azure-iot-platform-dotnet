@@ -14,7 +14,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
     public class IdentityGatewayClient : IIdentityGatewayClient
     {
         private const string TENANT_HEADER = "ApplicationTenantID";
-        private const string URI_KEY = "ExternalDependencies:identitygatewaywebserviceurl";
         private const string AZDS_ROUTE_KEY = "azds-route-as";
         private readonly IHttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;

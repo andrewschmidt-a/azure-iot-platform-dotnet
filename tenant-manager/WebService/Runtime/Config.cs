@@ -56,6 +56,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
         private const string APP_CONFIG_ENDPOINT_KEY = APPLICATION_KEY + "setAppConfigEndpoint";
         private const string TENANT_MANAGER_DB_ID_KEY = APPLICATION_KEY + "databaseName";
 
+        private const string IDENTITY_GATEWAY_WEBSERVICE_URL_KEY = "ExternalDependencies:identitygatewaywebserviceurl";
+
         private const string STORAGE_ADAPTER_DB_ID_KEY = "StorageAdapter:documentDb";
 
         // env/globalsecrets
@@ -95,7 +97,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
                 TenantManagerDatabaseId = configData.GetString(TENANT_MANAGER_DB_ID_KEY),
                 StorageAdapterDatabseId = configData.GetString(STORAGE_ADAPTER_DB_ID_KEY),
                 UserPermissions = configData.GetUserPermissions(),
-                StorageAccountConnectionString = configData.GetString(STORAGE_ACCOUNT_CONNECTIN_STRING_KEY)
+                StorageAccountConnectionString = configData.GetString(STORAGE_ACCOUNT_CONNECTIN_STRING_KEY),
+                IdentityGatewayWebServiceUrl = configData.GetString(IDENTITY_GATEWAY_WEBSERVICE_URL_KEY)
             };
 
             this.ClientAuthConfig = new ClientAuthConfig
