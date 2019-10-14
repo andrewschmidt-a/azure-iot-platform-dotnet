@@ -16,7 +16,7 @@ stages:
       resourceGroup: rg-pirate-ninja-pn
       location: eastus
       cosmosDBName: cosmosdb
-      aksName: crsliotakstest
+      aksName: crsliotaksnj
       appConfigName: appconfig
       keyVaultName: keyvault
       automationName: automation
