@@ -12,6 +12,7 @@
     "ag-grid-react": "19.1.2",
     "angular-oauth2-oidc": "^8.0.4",
     "azure-storage": "^2.10.3",
+    "cross-env": "^6.0.3",
     "dot-object": "1.7.0",
     "i18next": "12.1.0",
     "i18next-browser-languagedetector": "2.2.4",
@@ -47,7 +48,8 @@
     "start": "react-scripts start",
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "debug": "cross-env NODE_PATH=src/ REACT_APP_BASE_SERVICE_URL='https://aks-dev-spaces-odin.centralus.cloudapp.azure.com' react-scripts --inspect-brk start --runInBand"
   },
   "browserslist": [
     ">0.2%",

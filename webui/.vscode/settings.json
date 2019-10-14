@@ -1,12 +1,13 @@
 {
-    "files.exclude": {
-        "**/*.css": true
-    },
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true,
-    "editor.detectIndentation": false,
-    "files.trimTrailingWhitespace": true,
-    "files.insertFinalNewline": true,
-    "files.trimFinalNewlines": true,
-    "editor.renderWhitespace": "boundary"
+  "files.exclude": {
+    "**/*.css": true,
+    "": true
+  },
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "editor.renderWhitespace": "boundary"
 }

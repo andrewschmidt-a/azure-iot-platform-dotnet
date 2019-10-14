@@ -22,7 +22,6 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Controllers
         }
 
         [HttpGet]
-        [Authorize("ReadAll")]
         public async Task<StatusApiModel> GetAsync()
         {
             bool authRequired = this.config.ClientAuthConfig.AuthRequired;
