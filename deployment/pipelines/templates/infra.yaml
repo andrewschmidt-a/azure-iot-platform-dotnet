@@ -69,16 +69,16 @@ jobs:
       location: ${{ parameters.location }}
 
 ## Deploys CosmosDB updated <radha>
-  - template: infra/cosmosdb.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      cosmosDBAccount: ${{ parameters.applicationCode }}-cosmos-${{ parameters.deployEnvironment }}
-      cosmosDBName: ${{ parameters.cosmosDBName }}
-      location: ${{ parameters.location }}
-      keyVaultName: ${{ parameters.keyVaultName }}
-      cosmosDBthroughput: ${{parameters.cosmosDBthroughput}}
-      collectionName: ${{ parameters.collectionName }}
+  # - template: infra/cosmosdb.yaml
+  #   parameters:
+  #     serviceConnection: ${{ parameters.serviceConnection }}
+  #     resourceGroup: ${{ parameters.resourceGroup }}
+  #     cosmosDBAccount: ${{ parameters.applicationCode }}-cosmos-${{ parameters.deployEnvironment }}
+  #     cosmosDBName: ${{ parameters.cosmosDBName }}
+  #     location: ${{ parameters.location }}
+  #     keyVaultName: ${{ parameters.keyVaultName }}
+  #     cosmosDBthroughput: ${{parameters.cosmosDBthroughput}}
+  #     collectionName: ${{ parameters.collectionName }}
 
 ## Deploys EventHubs -- updated <radha>
   - template: infra/eventhubs.yaml
