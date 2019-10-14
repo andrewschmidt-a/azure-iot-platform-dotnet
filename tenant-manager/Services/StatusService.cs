@@ -50,6 +50,10 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
                 SetServiceStatus(dependency.Key, serviceResult, result, errors);
             }
 
+            // Check Identity Gateway as well
+            var identityGatewayResult = await this._identityGatewayClient.StatusAsync();
+            SetServiceStatus("Identity Gateway", identityGatewayResult, result, errors);
+
             if (errors.Count > 0)
             {
                 result.Status.Message = string.Join("; ", errors);
