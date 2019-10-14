@@ -2,16 +2,25 @@ parameters:
   environment: ''
   serviceConnection: ''
   resourceGroup: ''
+  location: ''
+  appInsightsLocation: 'eastus'
   cosmosDBName: ''
+  cosmosDBthroughput: ''
   aksName: ''
   keyVaultName: ''
   functionAppName: ''
   storageAccountName: ''
+  blobContainerName: ''
+  automationName: ''
+  appInsightsName: ''
+  appConfigName: ''
   mapsName: ''
   subscriptionId: ''
+  applicationId: ''
+  applicationKey: ''
   applicationCode: ''
   deployEnvironment: ''
-  certThumbprint: 
+  certThumbprint: ''
   
 jobs:
 - job: aks
@@ -44,62 +53,78 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       aksName: ${{ parameters.aksName }}
-      appConfigName: ${{ parameters.appConfigName }}
-## Deploys KeyVault
-  # - template: infra/keyvault.yaml
-  #   parameters:
-  #     serviceConnection: ${{ parameters.serviceConnection }}
-  #     resourceGroup: ${{ parameters.resourceGroup }}
-  #     appConfigName: ${{ parameters.appConfigName }}
-  #     keyVaultName: ${{parameters.keyVaultName}}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
+## Deploys Application Insights
+  - template: infra/appinsights.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
+      appInsightsLocation: ${{ parameters.appInsightsLocation }}
 
-## Deploys CosmosDB
+## Deploys CosmosDB updated <radha>
   - template: infra/cosmosdb.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
+      cosmosDBAccount: ${{ parameters.applicationCode }}-cosmos-${{ parameters.deployEnvironment }}
       cosmosDBName: ${{ parameters.cosmosDBName }}
-      keyVaultName: ${{parameters.keyVaultName}}
+      location: ${{ parameters.location }}
+      keyVaultName: ${{ parameters.keyVaultName }}
+      cosmosDBthroughput: ${{parameters.cosmosDBthroughput}}
+      collectionName: ${{ parameters.collectionName }}
 
-## Deploys EventHubs -- TODO
+## Deploys EventHubs -- updated <radha>
   - template: infra/eventhubs.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      functionAppName: ${{ parameters.functionAppName }}
-      keyVaultName: ${{parameters.keyVaultName}}
+      #functionAppName: ${{ parameters.functionAppName }}
+      #keyVaultName: ${{parameters.keyVaultName}}
+      eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
+      subscriptionId: ${{ parameters.subscriptionId }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      location: ${{ parameters.location }}
 
-## Deploys Functions -- TODO
+## Deploys Functions -- updated <radha>
   - template: infra/functions.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      functionAppName: ${{ parameters.functionAppName }}
-      keyVaultName: ${{parameters.keyVaultName}}
+      functionApp1Name: ${{ parameters.applicationCode }}-deviceproperties-${{ parameters.deployEnvironment }}
+      functionApp1Name: ${{ parameters.applicationCode }}-messaging-function-${{ parameters.deployEnvironment }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
 
-## Deploys Storage Account -- TODO
+## Deploys Storage Account -- updated <radha>
   - template: infra/storageaccount.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      storageAccountName: ${{ parameters.storageAccountName }}
-      keyVaultName: ${{parameters.keyVaultName}}
+      location: ${{ parameters.location }}
+      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
+      #keyVaultName: ${{parameters.keyVaultName}}
+      blobContainerName: 'telemetry'
 
-## Deploys Azure Maps -- TODO
+## Deploys Azure Maps -- updated <radha>
   - template: infra/maps.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      keyVaultName: ${{ parameters.keyVaultName }}
-      mapsName: ${{parameters.mapsName}}
+      #keyVaultName: ${{ parameters.keyVaultName }}
+      mapsName: ${{ parameters.applicationCode }}-${{parameters.mapsName}}-${{ parameters.deployEnvironment }}
 
-## Deploys Automation Account -- TODO
+## Deploys Automation Account -- updated <radha>
   - template: infra/automation.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      keyVaultName: ${{ parameters.keyVaultName }}
-      automationName: ${{parameters.automationName}}
+      keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
+      automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
+      ApplicationId: ${{ parameters.applicationId }}
+      SubscriptionId: ${{ parameters.subscriptionId }}
+      CertThumbprint: ${{ parameters.certThumbprint }}
 
 ## Create Private/Public Key Pair for Identity Gateway -- TODO
 # ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
@@ -113,8 +138,12 @@ jobs:
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      appConfigName: ${{ parameters.appConfigName }}
-      keyVaultName: ${{parameters.keyVaultName}}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
+      userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
+      applicationId: '${{ parameters.applicationId }}'
+      applicationKey: '${{ parameters.applicationKey }}'
+      tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
 
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform
 - job: ingress

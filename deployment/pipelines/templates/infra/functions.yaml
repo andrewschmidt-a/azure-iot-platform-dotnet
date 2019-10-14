@@ -2,7 +2,8 @@
 parameters:
   serviceConnection: ''
   resourceGroup: ''
-  functionAppName: ''
+  functionApp1Name: ''
+  functionApp2Name: ''
   storageAccountName: ''
   location: ''
   
@@ -14,7 +15,7 @@ steps:
 #     script: 'echo "messaging-functions-odin-mt-poc"' ## <-- follow this example
 
 ## TODO -- Get Trigger binding information CLI probally. Event Hub based
-## TODO -- Deploy ARM Resource
+## TODO -- Deploy ARM Resource <updated by Radha>
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Azure function App"
   inputs:
@@ -25,7 +26,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionAppName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime node'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp1Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime node'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
@@ -40,6 +41,6 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-resourceName ${{ parameters.functionAppName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp1Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true

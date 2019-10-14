@@ -16,27 +16,34 @@ stages:
       resourceGroup: rg-odin-test-deploy
       cosmosDBName: odin-testing-deployment-pn
       aksName: crsliotakstestodinpn
-      appConfigName: crsliotappconfigtestodinpn
-      keyVaultName: crsliotkeyvaulttestodinpn
+      appConfigName: appconfig
+      keyVaultName: keyvault
+      automationName: automation
+      appInsightsName: appinsight
       environment: IoT_CRSL_Environment
-      
+      subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
+      applicationCode: crsliot
+      deployEnvironment: dev
+      certThumbprint: D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD
+      applicationId: 95d3c662-23ea-4e2d-8d3d-ea2448706934
+      applicationKey: tog]_*a?hXtzD6Z0TWSm6lyPHKsx7H*F
 
 ## PSD
-- stage: DeployPSD
-  dependsOn: []
-  displayName: Deploy To PSD
-  jobs:
-  - template: templates/approval.yaml
-    parameters:
-      environment: IoT_PSD_Environment
-  - template: templates/infra.yaml
-    parameters:
-      serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
-      resourceGroup: rg-odin-test-deploy-psd
-      cosmosDBName: odin-testing-deployment-psd
-      aksName: aksTestOdinPSD
-      appConfigName: psdiotappconfigtestodin
-      keyVaultName: psdiotkeyvaulttestodin
+# - stage: DeployPSD
+#   dependsOn: []
+#   displayName: Deploy To PSD
+#   jobs:
+#   - template: templates/approval.yaml
+#     parameters:
+#       environment: IoT_PSD_Environment
+#   - template: templates/infra.yaml
+#     parameters:
+#       serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+#       resourceGroup: rg-odin-test-deploy-psd
+#       cosmosDBName: odin-testing-deployment-psd
+#       aksName: aksTestOdinPSD
+#       appConfigName: psdiotappconfigtestodin
+#       keyVaultName: psdiotkeyvaulttestodin
 
 - stage: DebugEnv
   dependsOn: []
