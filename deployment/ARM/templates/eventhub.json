@@ -38,12 +38,6 @@
                 "description": "MessagingUnits for premium namespace"
             }
         },
-        // "consumerGroupName": {
-        //     "type": "string",
-        //     "metadata": {
-        //         "description": "Name of the Consumer Group"
-        //     }
-        // },
         "throughputUnits": {
             "type": "int",
             "defaultValue": 3,
@@ -59,6 +53,7 @@
         },
         "blobContainerName": {
             "type": "string",
+            "defaultValue": "telemetry",
             "metadata": {
                 "description": "Name of the existing storage container that you want the blobs archived in"
             }

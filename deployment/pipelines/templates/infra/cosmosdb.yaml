@@ -1,7 +1,12 @@
 parameters:
   serviceConnection: ''
   resourceGroup: ''
+  location: ''
   cosmosDBName: ''
+  cosmosDBthroughput: ''
+  collectionName: ''
+  applicationCode: ''
+  deployEnvironment: ''
 
 steps:
 - task: AzureResourceGroupDeployment@2
@@ -14,18 +19,14 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/cosmosdb.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/cosmosdb.json'
-    overrideParameters: -|
-      -accountName ${{ parameters.cosmosDBAccount }} 
-      -location ${{ parameters.resourceGroupLocation }} 
-      -databaseName ${{ parameters.cosmosDBName }}
-      -throughput ${{ parameters.cosmosDBthroughput }}
-      -container1Name ${{ parameters.collectionName }}
+    overrideParameters: '-accountName ${{ parameters.applicationCode }}-cosmos-${{ parameters.deployEnvironment }} -location ${{ parameters.location }} -primaryRegion ${{ parameters.location }} -databaseName ${{ parameters.cosmosDBName }} -throughput ${{ parameters.cosmosDBthroughput }} -container1Name ${{ parameters.collectionName }}'
     deploymentMode: 'Incremental'
-- task: AzureCLI@1
-  displayName: Add Connection string to Key Vault
-  inputs:
-    azureSubscription: ${{ parameters.serviceConnection }}
-    scriptLocation: 'inlineScript'
-    inlineScript: |-
-      connString=$(az cosmosdb list-connection-strings --name ${{ parameters.cosmosDBName }} --resource-group ${{ parameters.resourceGroup }} | jq -r .connectionStrings[0].connectionString)
-      az keyvault secret set --name documentDBConnectionString --vault-name ${{ parameters.keyVaultName }} --value $connString
+## handled using a keyvault script to load all secrets once all resources are created
+# - task: AzureCLI@1
+#   displayName: Add Connection string to Key Vault
+#   inputs:
+#     azureSubscription: ${{ parameters.serviceConnection }}
+#     scriptLocation: 'inlineScript'
+#     inlineScript: |-
+#       connString=$(az cosmosdb list-connection-strings --name ${{ parameters.cosmosDBName }} --resource-group ${{ parameters.resourceGroup }} | jq -r .connectionStrings[0].connectionString)
+#       az keyvault secret set --name documentDBConnectionString --vault-name ${{ parameters.keyVaultName }} --value $connString
