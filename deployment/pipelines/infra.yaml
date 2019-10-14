@@ -13,7 +13,8 @@ stages:
   - template: templates/infra.yaml
     parameters:
       serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
-      resourceGroup: rg-pirate-ninja-test
+      resourceGroup: rg-pirate-ninja-pn
+      location: eastus
       cosmosDBName: cosmosdb
       aksName: crsliotakstest
       appConfigName: appconfig

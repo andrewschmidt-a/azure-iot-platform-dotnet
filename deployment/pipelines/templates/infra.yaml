@@ -39,6 +39,7 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       aksName: ${{ parameters.aksName }}
+      location: ${{ parameters.location }}
 
 - job: resources
   displayName: Deploy Resources
