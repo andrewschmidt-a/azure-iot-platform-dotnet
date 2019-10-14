@@ -2,15 +2,14 @@ parameters:
   serviceConnection: ''
   resourceGroup: ''
   location: ''
-  cosmosDBName: ''
-  cosmosDBthroughput: ''
-  collectionName: ''
-  applicationCode: ''
-  deployEnvironment: ''
-
+  cosmosDBAccount: ''
+  cosmosDBName: 'iot'
+  cosmosDBthroughput: '1000'
+  collectionName: 'telemetry'
+  
 steps:
 - task: AzureResourceGroupDeployment@2
-  displayName: "Deploy Cosmos DB"
+  displayName: "Create Cosmos DB"
   inputs:
     azureSubscription: ${{ parameters.serviceConnection }}
     action: 'Create Or Update Resource Group'
@@ -19,7 +18,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/cosmosdb.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/cosmosdb.json'
-    overrideParameters: '-accountName ${{ parameters.applicationCode }}-cosmos-${{ parameters.deployEnvironment }} -location ${{ parameters.location }} -primaryRegion ${{ parameters.location }} -databaseName ${{ parameters.cosmosDBName }} -throughput ${{ parameters.cosmosDBthroughput }} -container1Name ${{ parameters.collectionName }}'
+    overrideParameters: '-accountName ${{ parameters.cosmosDBAccount }} -location ${{ parameters.location }} -primaryRegion ${{ parameters.location }} -databaseName ${{ parameters.cosmosDBName }} -throughput ${{ parameters.cosmosDBthroughput }} -container1Name ${{ parameters.collectionName }}'
     deploymentMode: 'Incremental'
 ## handled using a keyvault script to load all secrets once all resources are created
 # - task: AzureCLI@1
