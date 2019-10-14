@@ -132,7 +132,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             // Write tenant info cosmos db collection name to app config
             try
             {
-                var appConfigClient = new ConfigurationClient(this._config.AppConfigEndpoint);
+                var appConfigClient = new ConfigurationClient(this._config.AppConfigConnectionString);
                 foreach (string collection in this.tenantCollections)
                 {
                     string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantGuid, collection);
