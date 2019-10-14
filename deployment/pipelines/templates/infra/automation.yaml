@@ -4,12 +4,16 @@ parameters:
   resourceGroup: ''
   automationName: ''
   location: ''
+  applicationId: ''
+  subscriptionId: ''
+  certThumbprint: ''
+  keyVaultName: 
 
 steps:
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'echo "automation-odin"' ## <-- follow this example
+# - task: Bash@3
+#   inputs:
+#     targetType: 'inline'
+#     script: 'echo "automation-odin"' ## <-- follow this example
 
 ## Nate Oelke --SME 
 # Run book code will be update outside of this pipeline
@@ -25,9 +29,19 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/automationacct.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/automationacct.json'
-    overrideParameters: '-automationAccountName ${{ parameters.automationName }} -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey'
+    overrideParameters: '-automationAccountName ${{ parameters.automationName }} -location ${{ parameters.location }} -ApplicationId ${{ parameters.applicationId }} -SubscriptionId ${{ parameters.subscriptionId }} -CertThumbprint ${{ parameters.certThumbprint }}'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
+
+##  need to run after the  keyvault step and needs windows agent
+# - task: AzurePowerShell@3
+#   displayName: "import runbook code and create webhook"
+#   inputs:
+#     azureSubscription: '${{ parameters.serviceConnection }}'
+#     ScriptType: 'FilePath'
+#     ScriptPath: '$(System.DefaultWorkingDirectory)/deployment/scripts/automationAcct.ps1'
+#     ScriptArguments: '-accountName ${{ parameters.automationName }} -resourceGroup ${{ parameters.resourceGroup }} -scriptFolder $(System.DefaultWorkingDirectory)/deployment/scripts -keyvaultName ${{ parameters.keyVaultName }}'
+#     azurePowerShellVersion: 'LatestVersion'
 
 ## TODO -- Store WebHook information in KeyVault
 # createIotHubWebHookUrl

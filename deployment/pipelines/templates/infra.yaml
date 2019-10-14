@@ -8,6 +8,10 @@ parameters:
   functionAppName: ''
   storageAccountName: ''
   mapsName: ''
+  subscriptionId: ''
+  applicationCode: ''
+  deployEnvironment: ''
+  certThumbprint: 
   
 jobs:
 - job: aks
