@@ -85,7 +85,6 @@ jobs:
       eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
       subscriptionId: ${{ parameters.subscriptionId }}
-      resourceGroup: ${{ parameters.resourceGroup }}
       location: ${{ parameters.location }}
 
 ## Deploys Functions -- updated <radha>
@@ -94,7 +93,7 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       functionApp1Name: ${{ parameters.applicationCode }}-deviceproperties-${{ parameters.deployEnvironment }}
-      functionApp1Name: ${{ parameters.applicationCode }}-messaging-function-${{ parameters.deployEnvironment }}
+      functionApp2Name: ${{ parameters.applicationCode }}-messaging-function-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
 
@@ -126,8 +125,6 @@ jobs:
       ApplicationId: ${{ parameters.applicationId }}
       SubscriptionId: ${{ parameters.subscriptionId }}
       CertThumbprint: ${{ parameters.certThumbprint }}
-      keyVaultName: ${{ parameters.keyVaultName }}
-      automationName: ${{parameters.automationName}}
 	  
 ## Deploys Loganalytics -- TODO
   - template: infra/loganalytics.yaml
