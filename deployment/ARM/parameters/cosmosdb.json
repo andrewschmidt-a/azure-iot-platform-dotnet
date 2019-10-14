@@ -8,10 +8,10 @@
         "defaultConsistencyLevel": { "value": "Strong" },
         "maxStalenessPrefix": { "value": 10 },
         "maxIntervalInSeconds": { "value": 5 },
-        "multipleWriteLocations": { "value": "false" },
-        "automaticFailover": { "value": "false" },
+        "multipleWriteLocations": { "value": false },
+        "automaticFailover": { "value": false },
         "databaseName": { "value": "" },
-        "throughput": { "value": "" },
+        "throughput": { "value": 400 },
         "container1Name": { "value": "" }
     }
 }

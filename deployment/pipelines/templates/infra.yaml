@@ -5,7 +5,7 @@ parameters:
   location: ''
   appInsightsLocation: 'eastus'
   cosmosDBName: ''
-  cosmosDBthroughput: ''
+  cosmosDBthroughput: 1000
   aksName: ''
   keyVaultName: ''
   functionAppName: ''

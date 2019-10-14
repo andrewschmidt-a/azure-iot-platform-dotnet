@@ -49,6 +49,6 @@ steps:
       az appconfig kv set --key KeyVault:aadappsecret --value $servicePrincipalKey --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:AzureActiveDirectory:aadappsecret --value $servicePrincipalKey --name ${{ parameters.appConfigName }} --yes
       # Set Environment Info
-      az appconfig kv set --key Global:resourceGroup --value ${{ parameters.appConfigName }} --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:resourceGroup --value ${{ parameters.resourceGroup }} --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:subscriptionId --value $(az account show | jq -r .id) --name ${{ parameters.appConfigName }} --yes
     addSpnToEnvironment: true
