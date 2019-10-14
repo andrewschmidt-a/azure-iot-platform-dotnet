@@ -27,6 +27,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         string StorageAccountConnectionString { get; set; }
         string CreateIotHubRunbookUrl { get; set; }
         string DeleteIotHubRunbookUrl { get; set; }
+        string IdentityGatewayWebServiceUrl { get; set; }
 
         Dictionary<string, List<string>> UserPermissions { get; set; }
     }
@@ -55,6 +56,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         public string StorageAccountConnectionString { get; set; }
         public string CreateIotHubRunbookUrl { get; set; }
         public string DeleteIotHubRunbookUrl { get; set; }
+        public string IdentityGatewayWebServiceUrl { get; set; }
     
         public Dictionary<string, List<string>> UserPermissions { get; set; }
     }

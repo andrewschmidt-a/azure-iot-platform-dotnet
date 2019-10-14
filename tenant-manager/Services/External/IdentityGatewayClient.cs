@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Http;
 using HttpRequest = MMM.Azure.IoTSolutions.TenantManager.Services.Http.HttpRequest;
 using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -22,10 +22,10 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
         private readonly string[] authenticatedRoles = { "admin" };
         private delegate Task<IHttpResponse> requestMethod(HttpRequest request);
 
-        public IdentityGatewayClient(IConfiguration config, IHttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger logger)
+        public IdentityGatewayClient(IServicesConfig config, IHttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger logger)
         {
+            this.serviceUri = config.IdentityGatewayWebServiceUrl;
             this._httpClient = httpClient;
-            this.serviceUri = config[URI_KEY];
             this._httpContextAccessor = httpContextAccessor;
         }
 
