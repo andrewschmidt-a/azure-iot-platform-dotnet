@@ -25,7 +25,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
         // created in constructor
         public TokenHelper _tokenHelper;
         public HttpClient httpClient;
-        public AutomationManagementClient automationClient;
 
         // webhooks object
         // Keys refer to the actual webhook name for the particular web hook
@@ -39,15 +38,27 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
             
             this.resourceGroup = this._config.ResourceGroup;
             this.automationAccountName = this._config.AutomationAccountName;
-
             this.httpClient = new HttpClient();
-            this.automationClient = this.GetAutomationManagementClient();
 
             this.webHooks = new Dictionary<string, string>
             {
                 { "CreateIotHub", this._config.CreateIotHubRunbookUrl },
                 { "deleteiothub", this._config.DeleteIotHubRunbookUrl } // note the case for this key - there is a discrepancy in our keyvault key name convention
             };
+        }
+
+        /// <summary>
+        /// Create the automation client using the tokenHelper and config variables to authenticate
+        /// </summary>
+        /// <returns>AutomationManagementClient</returns>
+        private AutomationManagementClient automationClient
+        {
+            get
+            {
+                string authToken = this._tokenHelper.GetServicePrincipleToken();
+                TokenCloudCredentials credentials = new TokenCloudCredentials(this._config.SubscriptionId, authToken);
+                return new AutomationManagementClient(credentials);
+            }
         }
 
         /// <summary>
@@ -97,17 +108,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
             {
                 throw new RunbookTriggerException("Unable to successfully Delete Iot Hub from runbook", e);
             }
-        }
-
-        /// <summary>
-        /// Create the automation client using the tokenHelper and config variables to authenticate
-        /// </summary>
-        /// <returns>AutomationManagementClient</returns>
-        private AutomationManagementClient GetAutomationManagementClient()
-        {
-            string authToken = this._tokenHelper.GetServicePrincipleToken();
-            TokenCloudCredentials credentials = new TokenCloudCredentials(this._config.SubscriptionId, authToken);
-            return new AutomationManagementClient(credentials);
         }
 
         /// <summary>

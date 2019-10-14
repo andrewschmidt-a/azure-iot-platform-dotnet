@@ -19,7 +19,6 @@ using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogge
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {
     [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
-    [Authorize("ReadAll")]
     public class TenantController : ControllerBase
     {
         // table storage table ids
@@ -165,6 +164,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
         // GET api/tenant/<tenantId>
         [HttpGet("{tenantId}")]
+        [Authorize("ReadAll")]
         public async Task<TenantModel> GetAsync(string tenantId)
         {
             /* Returns information for a tenant */

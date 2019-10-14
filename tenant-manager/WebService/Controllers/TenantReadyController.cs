@@ -11,7 +11,6 @@ using Microsoft.Azure.IoTSolutions.Auth;
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {
     [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
-    [Authorize("ReadAll")]
     public class TenantReadyController : ControllerBase
     {
         private const string TENANT_TABLE_ID = "tenant";
@@ -33,6 +32,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         
         // GET api/tenantready/<tenantId>
         [HttpGet("{tenantId}", Name = "Get")]
+        [Authorize("ReadAll")]
         public async Task<IActionResult> GetAsync(string tenantId)
         {
             /* Checks whether a tenant currently exists or not */
