@@ -14,8 +14,8 @@ stages:
     parameters:
       serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
       resourceGroup: rg-odin-test-deploy
-      cosmosDBName: odin-testing-deployment-pn
-      aksName: crsliotakstestodinpn
+      cosmosDBName: cosmosdb
+      aksName: crsliotakstest
       appConfigName: appconfig
       keyVaultName: keyvault
       automationName: automation
