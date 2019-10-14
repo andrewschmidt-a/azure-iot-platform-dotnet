@@ -2,13 +2,12 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "applicationCode": {
+        "functionAppName": {
             "type": "string",
-            "minLength": 3
-        },
-        "deployEnvironment": {
-            "type": "string",
-            "minLength": 2
+            "minLength": 3,
+            "metadata": {
+                "description": "Name of the function app"
+            }
         },
         "skuName": {
             "type": "string",
@@ -93,19 +92,25 @@
             "metadata": {
                 "description": "link to the zip file uploaded to blob, url needs to contain SAS url"
             }
+        },
+        "nodeVersion": {
+            "type": "string",
+            "defaultValue": "10.14.1",
+            "metadata": {
+                "description": "Website Node Default Version e.g. 10.14.1"
+            }
         }
     },
     "variables": {
         "apiVersion": "2016-02-03",
         "location": "[resourceGroup().location]",
-        "functionAppName": "[concat(parameters('applicationCode'), '-fn-', parameters('deployEnvironment'))]",
-        "applicationInsightName": "[concat(parameters('applicationCode'), '-fn-', parameters('deployEnvironment'))]",
+        "applicationInsightName": "[parameters('functionAppName')]",
         "storageVersion": "2016-01-01"
     },
     "resources": [
         {
             "type": "Microsoft.Web/serverfarms",
-            "name": "[variables('functionAppName')]",
+            "name": "[parameters('functionAppName')]",
             "location": "[resourceGroup().location]",
             "apiVersion": "2016-09-01",
             "sku": {
@@ -118,20 +123,20 @@
                 "displayName": "Consumption Plan"
             },
             "properties": {
-                "name": "[variables('functionAppName')]",
+                "name": "[parameters('functionAppName')]",
                 "numberOfWorkers": 1
             }
         },
         {
             "type": "Microsoft.Web/sites",
             "kind": "functionapp",
-            "name": "[variables('functionAppName')]",
+            "name": "[parameters('functionAppName')]",
             "apiVersion": "2016-08-01",
             "location": "[variables('location')]",
             "scale": null,
             "properties": {
                 "enabled": true,
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('functionAppName'))]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('functionAppName'))]",
                 "reserved": false,
                 "scmSiteAlsoStopped": false,
                 "hostingEnvironmentProfile": null,
@@ -163,15 +168,15 @@
                         },
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
-                            "value": "10.14.1"
+                            "value": "[parameters('nodeVersion')]"
                         },
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference(resourceId('microsoft.insights/components/', variables('functionAppName')), '2015-05-01').InstrumentationKey]"
+                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('functionAppName')), '2015-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
-                            "value": "[variables('functionAppName')]"
+                            "value": "[parameters('functionAppName')]"
                         },
                         {
                             "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
@@ -206,30 +211,30 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('functionAppName'))]",
-                "[resourceId('Microsoft.Insights/components', variables('functionAppName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('functionAppName'))]",
+                "[resourceId('Microsoft.Insights/components', parameters('functionAppName'))]"
             ],
             "resources": []
         },
         {
             "type": "Microsoft.Insights/components",
-            "name": "[concat(variables('functionAppName'))]",
+            "name": "[parameters('functionAppName')]",
             "location": "[parameters('appInsightsLocation')]",
             "apiVersion": "2014-04-01",
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('functionAppName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('functionAppName'))]"
             ],
             "tags": {
-                "displayName": "[variables('functionAppName')]"
+                "displayName": "[parameters('functionAppName')]"
             },
             "properties": {
-                "applicationId": "[variables('functionAppName')]"
+                "applicationId": "[parameters('functionAppName')]"
             }
         }
     ],
     "outputs": {
         "CloudResourceName": {
-            "value": "[variables('functionAppName')]",
+            "value": "[parameters('functionAppName')]",
             "type": "string"
         },
         "CloudResourceUri": {

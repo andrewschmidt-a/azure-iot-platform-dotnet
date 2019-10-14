@@ -82,9 +82,9 @@ myCosmosDBConnection="AccountEndpoint=$(myCosmosDBUri);AccountKey=$(myDocDBAuthK
 
 # Adding EventHub Connection 
 myEvNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhubs| awk -F "\"" '{print $4}'| cut -d "/" -f1)
+ehQueueAuthRule='iothubs'
 
 lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $myEvNamespace| grep name |grep lifecycle| awk -F "\"" '{print $4}'| cut -d "/" -f1)
-ehQueueAuthRule='iothubs'
 lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $myEvNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
 
 telemetryEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $myEvNamespace| grep name |grep telemetry| awk -F "\"" '{print $4}'| cut -d "/" -f1)
@@ -140,3 +140,4 @@ az keyvault secret set --vault-name $kVaultName --name 'TwinChangeEventHubConnec
 az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'azureMapsKey' 2>/dev/null
 az keyvault secret set --vault-name $kVaultName --name 'azureMapsKey' --value "${mapskey}"
 
+# end

@@ -3,41 +3,44 @@ parameters:
   serviceConnection: ''
   resourceGroup: ''
   functionAppName: ''
+  location: ''
+  applicationCode: ''
+  deployEnvironment: ''
 
 steps:
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: 'echo "messaging-functions-odin-mt-poc"' ## <-- follow this example
+## override parameters will be done in code deployment task
+# - task: Bash@3
+#   inputs:
+#     targetType: 'inline'
+#     script: 'echo "messaging-functions-odin-mt-poc"' ## <-- follow this example
 
 ## TODO -- Get Trigger binding information CLI probally. Event Hub based
-#test
 ## TODO -- Deploy ARM Resource
-# - task: AzureResourceGroupDeployment@2
-#   displayName: "Deploy Azure Kubernetes Service"
-#   inputs:
-#     azureSubscription: ${{ parameters.serviceConnection }}
-#     action: 'Create Or Update Resource Group'
-#     resourceGroupName: ${{ parameters.resourceGroup }}
-#     location: 'Central US'
-#     templateLocation: 'Linked artifact'
-#     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/aks.json'
-#     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/aks.json'
-#     overrideParameters: '-resourceName ${{ parameters.aksName }} -dnsPrefix ${{ parameters.aksName }}-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey'
-#     deploymentMode: 'Incremental'
-#     addSpnToEnvironment: true
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Azure function App"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: '${{ parameters.location }}'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
+    overrideParameters: '-functionAppName ${{ parameters.applicationCode }}messagingfn-${{ parameters.deployEnvironment }} -storageAccountName ${{ parameters.applicationCode }}storage-${{ parameters.deployEnvironment }} -runtime node'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true
 
 ## TODO -- Deploy ARM Resource -- Deploy Device Properties Function App (talk to Swami)
-# - task: AzureResourceGroupDeployment@2
-#   displayName: "Deploy Azure Kubernetes Service"
-#   inputs:
-#     azureSubscription: ${{ parameters.serviceConnection }}
-#     action: 'Create Or Update Resource Group'
-#     resourceGroupName: ${{ parameters.resourceGroup }}
-#     location: 'Central US'
-#     templateLocation: 'Linked artifact'
-#     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/aks.json'
-#     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/aks.json'
-#     overrideParameters: '-resourceName ${{ parameters.aksName }} -dnsPrefix ${{ parameters.aksName }}-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey'
-#     deploymentMode: 'Incremental'
-#     addSpnToEnvironment: true
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Azure function App"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: '${{ parameters.location }}'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
+    overrideParameters: '-resourceName ${{ parameters.applicationCode }}devicepropertiesfn-${{ parameters.deployEnvironment }} -storageAccountName ${{ parameters.applicationCode }}storage-${{ parameters.deployEnvironment }} -runtime dotnet'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true
