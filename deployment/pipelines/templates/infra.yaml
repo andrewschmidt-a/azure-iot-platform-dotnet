@@ -125,7 +125,7 @@ jobs:
       ApplicationId: ${{ parameters.applicationId }}
       SubscriptionId: ${{ parameters.subscriptionId }}
       CertThumbprint: ${{ parameters.certThumbprint }}
-	  
+
 ## Deploys Loganalytics -- TODO
   - template: infra/loganalytics.yaml
     parameters:
