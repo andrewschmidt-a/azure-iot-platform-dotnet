@@ -8,7 +8,6 @@ parameters:
   userObjId: ''
   applicationId: ''
   applicationKey: ''
-  tenant: ''
 
 steps:
 - task: AzureCLI@1
