@@ -4,8 +4,8 @@ parameters:
   location: ''
   cosmosDBAccount: ''
   cosmosDBName: 'iot'
-  cosmosDBthroughput: '1000'
-  collectionName: 'telemetry'
+  cosmosDBthroughput: ''
+  collectionName: ''
   
 steps:
 - task: AzureResourceGroupDeployment@2

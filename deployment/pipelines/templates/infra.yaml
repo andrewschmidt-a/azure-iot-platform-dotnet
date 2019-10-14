@@ -5,6 +5,7 @@ parameters:
   location: ''
   appInsightsLocation: 'eastus'
   cosmosDBName: ''
+  collectionName: 'telemetry'
   cosmosDBthroughput: 1000
   aksName: ''
   keyVaultName: ''
@@ -24,22 +25,22 @@ parameters:
   certThumbprint: ''
   
 jobs:
-- job: aks
-  displayName: Deploy AKS
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-## Tags resources by injecting tags into ARM Templates
-  - template: infra/tagARM.yaml
-    parameters:
-      environment: ${{ parameters.environment }}
-## Deploys AKS
-  - template: infra/aks.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      aksName: ${{ parameters.aksName }}
-      location: ${{ parameters.location }}
+# - job: aks
+#   displayName: Deploy AKS
+#   pool:
+#     vmImage: 'ubuntu-16.04'
+#   steps:
+# ## Tags resources by injecting tags into ARM Templates
+#   - template: infra/tagARM.yaml
+#     parameters:
+#       environment: ${{ parameters.environment }}
+# ## Deploys AKS
+#   - template: infra/aks.yaml
+#     parameters:
+#       serviceConnection: ${{ parameters.serviceConnection }}
+#       resourceGroup: ${{ parameters.resourceGroup }}
+#       aksName: ${{ parameters.aksName }}
+#       location: ${{ parameters.location }}
 
 - job: resources
   displayName: Deploy Resources
