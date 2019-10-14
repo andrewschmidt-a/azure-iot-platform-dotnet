@@ -1,0 +1,27 @@
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  omsWorkspaceName: ''
+  automationAccountName: ''
+  location: ''
+
+steps:
+# - task: Bash@3
+#   inputs:
+#     targetType: 'inline'
+#     script: 'echo "hzgvu-map"' ## <-- follow this example
+
+## TODO -- Deploy ARM Resource
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Log Analyics"
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '${{ parameters.resourceGroup }}'
+    location: 'Central US'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/loganalytics.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/loganalytics.json'
+    overrideParameters: '-omsWorkspaceName ${{ parameters.omsWorkspaceName }} -automationAccountName ${{ parameters.automationAccountName }}'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true
