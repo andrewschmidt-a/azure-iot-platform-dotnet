@@ -2,6 +2,7 @@
 parameters:
   serviceConnection: ''
   resourceGroup: ''
+  location: ''
   appConfigName: ''
   aksName: ''
 
@@ -12,11 +13,11 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     action: 'Create Or Update Resource Group'
     resourceGroupName: ${{ parameters.resourceGroup }}
-    location: 'Central US'
+    location: ${{ parameters.location }}
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/appconfig.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/appconfig.json'
-    overrideParameters: '-resourceName ${{ parameters.appConfigName }}'
+    overrideParameters: '-appConfigName ${{ parameters.appConfigName }} -location ${{ parameters.location }}'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 - task: AzureCLI@1
@@ -26,7 +27,7 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |-
       az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }}
-      connString=$(az appconfig credential list --name ${{ parameters.appConfigName }} -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString)
+      connString=$(az appconfig credential list --name ${{ parameters.appConfigName }} -g ${{ parameters.resourceGroup }} | jq -r .[0].connectionString)
       kubectl create secret generic --namespace=default globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION=$connString --dry-run -o yaml | kubectl apply -f -
 
 - task: AzureCLI@1
