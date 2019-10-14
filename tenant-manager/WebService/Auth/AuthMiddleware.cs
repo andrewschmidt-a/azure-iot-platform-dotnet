@@ -57,6 +57,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
         private TokenValidationParameters tokenValidationParams;
         private readonly bool authRequired;     
         private bool tokenValidationInitialized;
+        private readonly IServicesConfig servicesConfig;
         private readonly List<string> allowedUrls = new List<string>() { "/v1/status" };
 
         public AuthMiddleware(
