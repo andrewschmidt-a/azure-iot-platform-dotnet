@@ -80,6 +80,15 @@ jobs:
   #     cosmosDBthroughput: ${{parameters.cosmosDBthroughput}}
   #     collectionName: ${{ parameters.collectionName }}
 
+## Deploys Storage Account -- updated <radha>
+  - template: infra/storageaccount.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      location: ${{ parameters.location }}
+      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
+      blobContainerName: 'telemetry'
+
 ## Deploys EventHubs -- updated <radha>
   - template: infra/eventhubs.yaml
     parameters:
@@ -102,16 +111,6 @@ jobs:
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
-
-## Deploys Storage Account -- updated <radha>
-  - template: infra/storageaccount.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      location: ${{ parameters.location }}
-      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
-      #keyVaultName: ${{parameters.keyVaultName}}
-      blobContainerName: 'telemetry'
 
 ## Deploys Azure Maps -- updated <radha>
   - template: infra/maps.yaml

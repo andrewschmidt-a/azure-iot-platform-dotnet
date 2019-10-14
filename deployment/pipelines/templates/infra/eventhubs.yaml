@@ -15,7 +15,7 @@ steps:
 
 ## TODO -- Deploy ARM Resource
 - task: AzureResourceGroupDeployment@2
-  displayName: "Deploy Azure Kubernetes Service"
+  displayName: "Create Event Hub"
   inputs:
     azureSubscription: '${{ parameters.serviceConnection }}'
     action: 'Create Or Update Resource Group'
