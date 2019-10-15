@@ -90,27 +90,27 @@ jobs:
   #     blobContainerName: 'telemetry'
 
 ## Deploys EventHubs -- updated <radha>
-  - template: infra/eventhubs.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      #functionAppName: ${{ parameters.functionAppName }}
-      #keyVaultName: ${{parameters.keyVaultName}}
-      eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
-      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
-      subscriptionId: ${{ parameters.subscriptionId }}
-      location: ${{ parameters.location }}
+  # - template: infra/eventhubs.yaml
+  #   parameters:
+  #     serviceConnection: ${{ parameters.serviceConnection }}
+  #     resourceGroup: ${{ parameters.resourceGroup }}
+  #     #functionAppName: ${{ parameters.functionAppName }}
+  #     #keyVaultName: ${{parameters.keyVaultName}}
+  #     eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
+  #     storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+  #     subscriptionId: ${{ parameters.subscriptionId }}
+  #     location: ${{ parameters.location }}
 
 ## Deploys Functions -- updated <radha>
-  - template: infra/functions.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      functionApp1Name: ${{ parameters.applicationCode }}-deviceproperties-${{ parameters.deployEnvironment }}
-      functionApp2Name: ${{ parameters.applicationCode }}-messaging-function-${{ parameters.deployEnvironment }}
-      keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
-      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
-      location: ${{ parameters.location }}
+  # - template: infra/functions.yaml
+  #   parameters:
+  #     serviceConnection: ${{ parameters.serviceConnection }}
+  #     resourceGroup: ${{ parameters.resourceGroup }}
+  #     functionApp1Name: ${{ parameters.applicationCode }}-deviceproperties-${{ parameters.deployEnvironment }}
+  #     functionApp2Name: ${{ parameters.applicationCode }}-messaging-function-${{ parameters.deployEnvironment }}
+  #     keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
+  #     storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+  #     location: ${{ parameters.location }}
 
 ## Deploys Azure Maps -- updated <radha>
   # - template: infra/maps.yaml
