@@ -99,6 +99,7 @@ jobs:
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       subscriptionId: ${{ parameters.subscriptionId }}
       location: ${{ parameters.location }}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
 
 ## Deploys Function Apps
   - template: infra/functions.yaml

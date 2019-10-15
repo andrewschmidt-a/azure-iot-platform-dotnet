@@ -5,6 +5,7 @@ parameters:
   location: ''
   eventHubName: ''
   storageAccountName: ''
+  appConfigName: ''
   subscriptionId: ''
   
 steps:
