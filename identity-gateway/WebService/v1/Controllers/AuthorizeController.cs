@@ -1,25 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Security.Claims;
-using System.Web;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web;
 using IdentityGateway.Services;
+using IdentityGateway.Services.Exceptions;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Models;
-using IdentityServer4.Extensions;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Azure.KeyVault.Models;
-using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Http;
-using System.Net;
-using IdentityGateway.Services.Exceptions;
-using IdentityModel;
-using RSA = IdentityGateway.Services.Helpers.RSA;
 using IdentityGateway.Services.Runtime;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -56,7 +48,8 @@ namespace IdentityGateway.Controllers
             }
 
             Guid validatedGuid = Guid.Empty;
-            if (!tenant.IsNullOrEmpty() && !Guid.TryParse(tenant, out validatedGuid))
+			
+            if (!Guid.TryParse(tenant, out validatedGuid))
             {
                 throw new Exception("Tenant is not valid!");
             }
@@ -110,14 +103,16 @@ namespace IdentityGateway.Controllers
 
             //Extract Bearer token
             string encodedToken = authHeader.Substring("Bearer ".Length).Trim();
-
             var jwtHandler = new JwtSecurityTokenHandler();
-            var jwt = ReadToken("IoTPlatform", encodedToken);
+            if (!_jwtHelper.TryValidateToken("IoTPlatform", encodedToken, HttpContext, out JwtSecurityToken jwt))
+            {
+                throw new NoAuthorizationException("The given token could not be read or validated.");
+            }
 
-            if (jwt.Claims.Count(c => c.Type == "available_tenants" && c.Value == tenant) > 0)
+            if (jwt?.Claims?.Count(c => c.Type == "available_tenants" && c.Value == tenant) > 0)
             {
                 // Everything checks out so you can mint a new token
-                var tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(jwt.Claims.Where(c => new List<string>(){"sub", "name", "email"}.Contains(c.Type)).ToList(), tenant,jwt.Audiences.First(), jwt.ValidTo));
+                var tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(jwt.Claims.Where(c => new List<string>() { "sub", "name", "email" }.Contains(c.Type)).ToList(), tenant, jwt.Audiences.First(), jwt.ValidTo));
 
                 return StatusCode(200, tokenString);
             }
@@ -147,7 +142,7 @@ namespace IdentityGateway.Controllers
             {
                 throw new Exception("Invlid state from authentication redirect", e);
             }
-            
+
             var originalAudience = authState.client_id;
 
             // Bring over Subject and Name
@@ -200,45 +195,6 @@ namespace IdentityGateway.Controllers
                 HttpUtility.UrlEncode(authState
                     .state); // pass token in Fragment for more security (Browser wont forward...)
             return Redirect(returnUri.Uri.ToString());
-        }
-        private JwtSecurityToken ReadToken(string audience, string encodedToken)
-        {
-            var jwtHandler = new JwtSecurityTokenHandler();
-            if (!jwtHandler.CanReadToken(encodedToken))
-            {
-                throw new NoAuthorizationException("The given token could not be read.");
-            }
-
-            var jwt = jwtHandler.ReadJwtToken(encodedToken);
-            var config = new Configuration(HttpContext);
-
-            var tokenValidationParams = new TokenValidationParameters
-            {
-                // Validate the token signature
-                RequireSignedTokens = true,
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKeys = RSA.GetJsonWebKey(this._config.PublicKey).Keys,
-
-                // Validate the token issuer
-                ValidateIssuer = false,
-                ValidIssuer = config.issuer,
-
-                // Validate the token audience
-                ValidateAudience = false,
-                ValidAudience = audience,
-
-                // Validate token lifetime
-                ValidateLifetime = true,
-                ClockSkew = new TimeSpan(0) // shouldnt be skewed as this is the same server that issued it.
-            };
-
-            SecurityToken validated_token = null;
-            jwtHandler.ValidateToken(encodedToken, tokenValidationParams, out validated_token);
-            if (validated_token == null)
-            {
-                throw new NoAuthorizationException("The given token could not be validated.");
-            }
-            return jwt;
         }
     }
 }
