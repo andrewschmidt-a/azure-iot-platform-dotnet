@@ -1,0 +1,16 @@
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  keyVaultName: ''
+  tenant: ''
+  subscriptionId: ''
+- task: AzureCLI@1
+  displayName: Identity gateway
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+     ssh-keygen -b 2048 -t rsa -C "a9my8zz@mmm.com" -f $(System.DefaultWorkingDirectory)\sshkeys -q -N ""
+     az keyvault secret set --vault-name --value ${{ parameters.keyVaultName }}  -n identityGatewayPrivateKey -f $(System.DefaultWorkingDirectory)\sshkeys
+     az keyvault secret set --vault-name --value ${{ parameters.keyVaultName }}  -n identityGatewayPublicKey -f $(System.DefaultWorkingDirectory)\sshkeys.pub
+    useGlobalConfig: true

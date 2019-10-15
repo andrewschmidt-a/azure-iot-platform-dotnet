@@ -140,12 +140,6 @@ jobs:
       omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
       automationAccountName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
 
-## Create Private/Public Key Pair for Identity Gateway -- TODO
-# ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
-# https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
-# store in Key Vault :
-# identityGatewayPrivateKey
-# identityGatewayPublicKey
 
 ## Deploys KeyVault and load the secrets to keyvault
   - template: infra/keyvault.yaml
@@ -157,6 +151,20 @@ jobs:
       userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
       applicationId: '${{ parameters.applicationId }}'
       applicationKey: '${{ parameters.applicationKey }}'
+      tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
+      subscriptionId: ${{ parameters.subscriptionId}}
+
+## Create Private/Public Key Pair for Identity Gateway 
+# ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+# https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+# store in Key Vault :
+# identityGatewayPrivateKey
+# identityGatewayPublicKey
+  - template: infra/identitygateway.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
       tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
       subscriptionId: ${{ parameters.subscriptionId}}
 
