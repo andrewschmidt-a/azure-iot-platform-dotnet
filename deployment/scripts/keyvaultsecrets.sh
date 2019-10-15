@@ -81,8 +81,8 @@ myDocDBAuthKey=$(az cosmosdb list-keys --resource-group $rg --name ${myCosmosDbA
 myCosmosDBConnection="AccountEndpoint=${myCosmosDBUri};AccountKey=${myDocDBAuthKey};"
 
 # Adding EventHub Connection 
-myEvNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhub| awk -F "\"" '{print $4}'| cut -d "/" -f1)
-ehQueueAuthRule='iothubs'
+myEvNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhub| cut -d "/" -f1| awk -F "\"" '{print $4}')
+ehQueueAuthRule='iothubroutes'
 
 lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $myEvNamespace| grep name |grep lifecycle| awk -F "\"" '{print $4}'| cut -d "/" -f1)
 lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $myEvNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')

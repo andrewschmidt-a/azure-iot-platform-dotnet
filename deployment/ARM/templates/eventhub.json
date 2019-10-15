@@ -134,7 +134,7 @@
                 },
                 {
                     "type": "eventhubs",
-                    "name": "lifecylcle",
+                    "name": "lifecycle",
                     "apiVersion": "2017-04-01",
                     "location": "[parameters('location')]",
                     "properties": {
@@ -150,7 +150,7 @@
                             "name": "[variables('ehAuthorization')]",
                             "type": "authorizationRules",
                             "dependsOn": [
-                                "lifecylcle"
+                                "lifecycle"
                             ],
                             "properties": {
                                 "Rights": [
@@ -163,7 +163,7 @@
                             "name": "messagingfunctions",
                             "type": "consumergroups",
                             "dependsOn": [
-                                "lifecylcle"
+                                "lifecycle"
                             ],
                             "properties": {}
                         },
@@ -172,7 +172,7 @@
                             "name": "lifecyclecg",
                             "type": "consumergroups",
                             "dependsOn": [
-                                "lifecylcle"
+                                "lifecycle"
                             ],
                             "properties": {}
                         }
