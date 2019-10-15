@@ -3,8 +3,10 @@ parameters:
   resourceGroup: ''
   keyVaultName: ''
   
+steps:
+## Create SSH key for IdentityGateway, store in Keyvault
 - task: AzureCLI@1
-  displayName: "create SSH key for IdentityGateway, store in Keyvault"
+  displayName: "create SSH key"
   inputs:
     azureSubscription: ${{ parameters.serviceConnection }}
     scriptLocation: 'inlineScript'
