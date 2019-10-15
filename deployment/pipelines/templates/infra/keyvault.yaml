@@ -36,9 +36,8 @@ steps:
 - task: Bash@3
   displayName: "Shell Script : Loading Secrets to Keyvault"
   inputs:
-    type: 'FilePath'
-    scriptPath: '$(System.DefaultWorkingDirectory)/deployment/scripts/keyvaultsecrets.sh'
-    args: '--azureSubscription ${{ parameters.serviceConnection }} --resourceGroup {{ parameters.resourceGroup }} --tenant {{ parameters.tenant }} --ClientSecret ${{ parameters.applicationKey }} --ApplicationId ${{ parameters.applicationId }}'
+    filePath: '$(System.DefaultWorkingDirectory)/deployment/scripts/keyvaultsecrets.sh'
+    arguments: '--azureSubscription ${{ parameters.serviceConnection }} --resourceGroup {{ parameters.resourceGroup }} --tenant {{ parameters.tenant }} --ClientSecret ${{ parameters.applicationKey }} --ApplicationId ${{ parameters.applicationId }}'
 - task: AzureCLI@1
   displayName: Add Keyvault Name to App Config
   inputs:
