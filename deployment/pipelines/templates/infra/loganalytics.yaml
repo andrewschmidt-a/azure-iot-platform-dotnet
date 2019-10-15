@@ -6,7 +6,6 @@ parameters:
   location: ''
 
 steps:
-
 ## TODO -- Deploy ARM Resource
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Log Analyics"
