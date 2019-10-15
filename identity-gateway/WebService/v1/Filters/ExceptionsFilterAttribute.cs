@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc.Formatters;
 using IdentityGateway.Services.Diagnostics;
 using IdentityGateway.Services.Exceptions;
 using IdentityGateway.WebService.v1.Exceptions;
-
 using IdentityGateway.AuthUtils;
 using Newtonsoft.Json;
 

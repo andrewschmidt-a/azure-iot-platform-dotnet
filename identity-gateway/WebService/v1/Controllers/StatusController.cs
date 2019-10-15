@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using IdentityGateway.Services;
 using IdentityGateway.Services.Models;
+using IdentityGateway.Services.Runtime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 
@@ -9,10 +10,10 @@ namespace IdentityGateway.WebService.v1.Controllers
     [Route("v1/[controller]")]
     public sealed class StatusController : Controller
     {
-        private readonly IConfiguration config;
+        private readonly IServicesConfig config;
         private readonly IStatusService statusService;
 
-        public StatusController(IConfiguration config, IStatusService statusService)
+        public StatusController(IServicesConfig config, IStatusService statusService)
         {
             this.config = config;
             this.statusService = statusService;
@@ -22,7 +23,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             var result = new StatusApiModel(await this.statusService.GetStatusAsync());
 
-            result.Properties.Add("Port", this.config["Port"].ToString());
+            result.Properties.Add("Port", this.config.Port.ToString());
             return result;
         }
     }

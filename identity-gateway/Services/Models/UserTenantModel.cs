@@ -7,6 +7,8 @@ namespace IdentityGateway.Services.Models
     public class UserTenantModel : TableEntity
     {
         public string Roles { get; set; }
+        public string Name { get; set; }
+        public string Type { get; set; }
 
         public UserTenantModel() { }
 
@@ -29,6 +31,8 @@ namespace IdentityGateway.Services.Models
             this.PartitionKey = input.userId;
             this.RowKey = input.tenant;
             this.Roles = input.roles;
+            this.Name = input.name;
+            this.Type = input.type;
         }
 
         public UserTenantModel(DynamicTableEntity tableEntity)
@@ -36,6 +40,8 @@ namespace IdentityGateway.Services.Models
             this.PartitionKey = tableEntity.PartitionKey;
             this.RowKey = tableEntity.RowKey;
             this.Roles = tableEntity.Properties["Roles"].StringValue;
+            this.Name = tableEntity.Properties.Keys.Contains("Name") ? tableEntity.Properties["Name"].StringValue : this.PartitionKey;
+            this.Type = tableEntity.Properties.Keys.Contains("Type") ? tableEntity.Properties["Type"].StringValue : "Member";
         }
 
         // Define aliases for the partition and row keys
@@ -61,7 +67,7 @@ namespace IdentityGateway.Services.Models
             {
                 try
                 {
-                    return JsonConvert.DeserializeObject<List<string>>(this.Roles);
+                    return this.Roles == null ? null : JsonConvert.DeserializeObject<List<string>>(this.Roles);
                 }
                 catch
                 {

@@ -7,6 +7,7 @@ using IdentityGateway.Services.Runtime;
 using IdentityGateway.AuthUtils;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using RSA = IdentityGateway.Services.Helpers.RSA;
 
 namespace IdentityGateway.WebService.Runtime
 {
@@ -28,7 +29,7 @@ namespace IdentityGateway.WebService.Runtime
         private const string GLOBAL_KEY = "Global:";
         private const string APPLICATION_KEY = "IdentityGatewayService:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
-        
+                
         private const string CLIENT_AUTH_KEY = GLOBAL_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";
         private const string AUTH_TYPE_KEY = CLIENT_AUTH_KEY + "authType";
@@ -40,6 +41,12 @@ namespace IdentityGateway.WebService.Runtime
         private const string JWT_AUDIENCE_KEY = JWT_KEY + "audience";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
+        private const string PUBLIC_KEY_KEY = "identityGatewayPublicKey";
+        private const string PRIVATE_KEY_KEY = "identityGatewayPrivateKey";
+
+        private const string AZURE_B2C_BASE_URI = GLOBAL_KEY + "AzureB2CBaseUri";
+        private const string STORAGE_CONNECTION_STRING_KEY = "storageAccountConnectionString";
+        private const string SEND_GRID_API_KEY = "sendGridAPIKey";
 
         public int Port { get; }
         public IServicesConfig ServicesConfig { get; }
@@ -51,7 +58,13 @@ namespace IdentityGateway.WebService.Runtime
 
             this.ServicesConfig = new ServicesConfig
             {
-                UserPermissions = configData.GetUserPermissions()
+                UserPermissions = configData.GetUserPermissions(),
+                PublicKey = configData.GetString(PUBLIC_KEY_KEY),
+                PrivateKey = configData.GetString(PRIVATE_KEY_KEY),
+                StorageAccountConnectionString = configData.GetString(STORAGE_CONNECTION_STRING_KEY),
+                AzureB2CBaseUri = configData.GetString(AZURE_B2C_BASE_URI),
+                Port = configData.GetString(PORT_KEY),
+                SendGridAPIKey = configData.GetString(SEND_GRID_API_KEY)
             };
 
             this.ClientAuthConfig = new ClientAuthConfig
