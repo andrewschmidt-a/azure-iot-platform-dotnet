@@ -161,8 +161,8 @@ jobs:
       subscriptionId: ${{ parameters.subscriptionId}}
 
 ## Deploys Automation Account -- updated <radha>
-- job: resources 
-  displayName: Deploy Resources
+- job: automationacct 
+  displayName: Create Automation Acct
   dependsOn: aks
   pool: 
     vmImage: 'windows-latest'
