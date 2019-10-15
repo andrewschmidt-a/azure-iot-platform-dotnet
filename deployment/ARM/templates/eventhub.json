@@ -53,7 +53,6 @@
         },
         "blobContainerName": {
             "type": "string",
-            "defaultValue": "telemetry",
             "metadata": {
                 "description": "Name of the existing storage container that you want the blobs archived in"
             }

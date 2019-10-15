@@ -26,12 +26,6 @@ while [[ $# -gt 0 ]] ; do
        shift
 done
 
-echo $cli_azureSubscription
-echo $cli_resourceGroup
-echo $cli_tenant
-echo $cli_ClientSecret
-echo $cli_ApplicationId
-
 # Login to Azure portal with Service Principal Credentials
 az login --service-principal -u  "${cli_ApplicationId}" -p "${cli_ClientSecret}" --tenant "${cli_tenant}"
 
@@ -84,7 +78,7 @@ blobStorageConnString="DefaultEndpointsProtocol=https;AccountName=${blobStorageA
 myCosmosDbAccountName=$(az cosmosdb list --resource-group $rg | grep name |  awk -F "\"" '{print $4}')
 myCosmosDBUri="https://${myCosmosDbAccountName}.documents.azure.com:443/"
 myDocDBAuthKey=$(az cosmosdb list-keys --resource-group $rg --name ${myCosmosDbAccountName} | grep primaryMasterKey |  awk -F "\"" '{print $4}')
-myCosmosDBConnection="AccountEndpoint=$(myCosmosDBUri);AccountKey=$(myDocDBAuthKey);"
+myCosmosDBConnection="AccountEndpoint=${myCosmosDBUri};AccountKey=${myDocDBAuthKey};"
 
 # Adding EventHub Connection 
 myEvNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhub| awk -F "\"" '{print $4}'| cut -d "/" -f1)
