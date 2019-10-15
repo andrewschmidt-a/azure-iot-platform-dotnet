@@ -79,6 +79,14 @@ stages:
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
 
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: identity-gateway
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+      
 - stage: Test_Services_that_Changed
   jobs:
   - template: testServiceIfChangedTemplate.yaml
@@ -100,6 +108,14 @@ stages:
   - template: testServiceIfChangedTemplate.yaml
     parameters:
       service: iothub-manager
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: identity-gateway
       azureSubscription: ${{variables.azureSubscription}}
       resourceGroup: ${{variables.resourceGroup}}
       aksCluster: ${{variables.aksCluster}}
