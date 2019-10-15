@@ -15,39 +15,35 @@ stages:
       serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
       resourceGroup: rg-pirate-ninja-test1
       location: centralus
-      # cosmosDBName: cosmosdb
       aksName: crsliotaksninja1
-      # appConfigName: appconfig
-      # keyVaultName: keyvault
-      # automationName: automation
-      # appInsightsName: appinsight
-      # omsWorkspaceName: loganalytics
-      # storageAccountName: storageacct
-      # eventHubName: eventhub
       environment: IoT_CRSL_Environment
       subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
       applicationCode: crsliot
-      deployEnvironment: dev1
+      deployEnvironment: test
       certThumbprint: D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD
       applicationId: 95d3c662-23ea-4e2d-8d3d-ea2448706934
       applicationKey: tog]_*a?hXtzD6Z0TWSm6lyPHKsx7H*F
 
-## PSD
-# - stage: DeployPSD
-#   dependsOn: []
-#   displayName: Deploy To PSD
-#   jobs:
-#   - template: templates/approval.yaml
-#     parameters:
-#       environment: IoT_PSD_Environment
-#   - template: templates/infra.yaml
-#     parameters:
-#       serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
-#       resourceGroup: rg-odin-test-deploy-psd
-#       cosmosDBName: odin-testing-deployment-psd
-#       aksName: aksTestOdinPSD
-#       appConfigName: psdiotappconfigtestodin
-#       keyVaultName: psdiotkeyvaulttestodin
+# PSD
+- stage: DeployPSD
+  dependsOn: []
+  displayName: Deploy To PSD
+  jobs:
+  - template: templates/approval.yaml
+    parameters:
+      environment: IoT_PSD_Environment
+  - template: templates/infra.yaml
+    parameters:
+      serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+      resourceGroup: rg-odin-test-deploy-psd
+      location: centralus
+      aksName: aksTestOdinPSD
+      subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
+      applicationCode: psdiot
+      deployEnvironment: dev
+      certThumbprint: D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD
+      applicationId: 95d3c662-23ea-4e2d-8d3d-ea2448706934
+      applicationKey: tog]_*a?hXtzD6Z0TWSm6lyPHKsx7H*F
 
 - stage: DebugEnv
   dependsOn: []

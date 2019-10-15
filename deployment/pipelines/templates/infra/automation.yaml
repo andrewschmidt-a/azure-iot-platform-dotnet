@@ -33,7 +33,3 @@ steps:
     ScriptPath: '$(System.DefaultWorkingDirectory)/deployment/scripts/automationAcct.ps1'
     ScriptArguments: '-accountName ${{ parameters.automationName }} -resourceGroup ${{ parameters.resourceGroup }} -scriptFolder $(System.DefaultWorkingDirectory)/deployment/scripts -keyvaultName ${{ parameters.keyVaultName }}'
     azurePowerShellVersion: 'LatestVersion'
-
-## TODO -- Store WebHook information in KeyVault
-# createIotHubWebHookUrl
-# deleteIotHubWebHookUrl

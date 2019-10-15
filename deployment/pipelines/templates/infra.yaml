@@ -69,7 +69,7 @@ jobs:
       appInsightsLocation: ${{ parameters.appInsightsLocation }}
       location: ${{ parameters.location }}
 
-## Deploys CosmosDB updated <radha>
+## Deploys CosmosDB
   - template: infra/cosmosdb.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
@@ -81,7 +81,7 @@ jobs:
       cosmosDBthroughput: ${{parameters.cosmosDBthroughput}}
       collectionName: ${{ parameters.collectionName }}
 
-## Deploys Storage Account -- updated <radha>
+## Deploys Storage Account
   - template: infra/storageaccount.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
@@ -90,19 +90,17 @@ jobs:
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       blobContainerName: ${{ parameters.blobContainerName }}
 
-## Deploys EventHubs -- updated <radha>
+## Deploys EventHubs
   - template: infra/eventhubs.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      #functionAppName: ${{ parameters.functionAppName }}
-      #keyVaultName: ${{parameters.keyVaultName}}
       eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       subscriptionId: ${{ parameters.subscriptionId }}
       location: ${{ parameters.location }}
 
-## Deploys Functions -- updated <radha>
+## Deploys Function Apps
   - template: infra/functions.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
@@ -113,26 +111,14 @@ jobs:
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
 
-## Deploys Azure Maps -- updated <radha>
+## Deploys Azure Maps
   - template: infra/maps.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      #keyVaultName: ${{ parameters.keyVaultName }}
       mapsName: ${{ parameters.applicationCode }}-mapsacct-${{ parameters.deployEnvironment }}
 
-## Deploys Automation Account -- updated <radha>
-  # - template: infra/automation.yaml
-  #   parameters:
-  #     serviceConnection: ${{ parameters.serviceConnection }}
-  #     resourceGroup: ${{ parameters.resourceGroup }}
-  #     keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
-  #     automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
-  #     ApplicationId: ${{ parameters.applicationId }}
-  #     SubscriptionId: ${{ parameters.subscriptionId }}
-  #     CertThumbprint: ${{ parameters.certThumbprint }}
-
-## Deploys Loganalytics -- TODO
+## Deploys Loganalytics workspace
   - template: infra/loganalytics.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
@@ -140,7 +126,7 @@ jobs:
       omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
       automationAccountName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
 
-## Create Private/Public Key Pair for Identity Gateway -- TODO
+## Create Private/Public Key Pair for Identity Gateway -- <lava>
 # ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 # https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
 # store in Key Vault :
@@ -160,7 +146,7 @@ jobs:
       tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
       subscriptionId: ${{ parameters.subscriptionId}}
 
-## Deploys Automation Account -- updated <radha>
+## Deploys Automation Account
 - job: automationacct 
   displayName: Create Automation Acct
   dependsOn: 
