@@ -12,7 +12,7 @@ import {
 
 const ENDPOINT = Config.serviceUrls.identityGateway;
 
-/** Contains methods for calling the Device service */
+/** Contains methods for calling the Identity Gateway service */
 export class IdentityGatewayService {
 
   /** Returns a list of users */
@@ -28,10 +28,8 @@ export class IdentityGatewayService {
     return HttpClient.delete(`${ENDPOINT}tenants/${id}`)
       .map(t => id);
   }
-  /** Delete a User */
+  /** Invite a new User */
   static invite(email, role) {
-    // Placeholder to call backend
-    const data = [{id:uuidv4(), name: email, role: role, type: 'Invited' }]
 
     return HttpClient.post(`${ENDPOINT}tenants/invite`, {
       "email_address": email,
