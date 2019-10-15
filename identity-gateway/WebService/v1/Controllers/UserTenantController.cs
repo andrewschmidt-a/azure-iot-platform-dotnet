@@ -177,32 +177,20 @@ namespace IdentityGateway.WebService.v1.Controllers
 
             var recipients = new List<EmailAddress>
             {
-<<<<<<< HEAD
-                new EmailAddress(email_address)
-=======
                 new EmailAddress(invitation.email_address)
->>>>>>> master
             };
             msg.AddTos(recipients);
 
             msg.SetSubject("Invitation to IoT Platform");
-<<<<<<< HEAD
-            string link = forwardedFor ?? "https://" + HttpContext.Request.Host.ToString() + "#invite=" + inviteToken;
-=======
             Uri uri = new Uri(forwardedFor ?? "https://" + HttpContext.Request.Host.ToString());
             string link = uri.Host + "#invite=" + inviteToken;
->>>>>>> master
             msg.AddContent(MimeType.Text, "Click here to join the tenant: ");
             msg.AddContent(MimeType.Html, "<a href=\""+ link + "\">"+link+"</a>");
 
             var client = new SendGridClient(this._config.SendGridAPIKey);
             var response = await client.SendEmailAsync(msg);
 
-<<<<<<< HEAD
-            return response.Body.ToString();
-=======
             return await this._container.CreateAsync(input);
->>>>>>> master
         }
     }
 }
