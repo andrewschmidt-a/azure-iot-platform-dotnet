@@ -16,6 +16,7 @@ parameters:
   appInsightsName: 'appinsight'
   appConfigName: 'appconfig'
   omsWorkspaceName: 'loganalytics'
+  eventHubName: 'eventhub'
   mapsName: 'maps'
   subscriptionId: ''
   applicationId: ''
