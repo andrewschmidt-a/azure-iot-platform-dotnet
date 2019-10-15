@@ -157,6 +157,7 @@ jobs:
       applicationId: '${{ parameters.applicationId }}'
       applicationKey: '${{ parameters.applicationKey }}'
       tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
+      subscriptionId: ${{ parameters.subscriptionId}}
 
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform
 - job: ingress
