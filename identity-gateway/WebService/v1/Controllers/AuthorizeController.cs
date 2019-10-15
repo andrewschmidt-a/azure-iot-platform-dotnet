@@ -47,7 +47,7 @@ namespace IdentityGateway.Controllers
         [HttpGet]
         [Route("connect/authorize")]
         public IActionResult Get([FromQuery] string redirect_uri, [FromQuery] string state,
-            [FromQuery(Name = "client_id")] string clientId, [FromQuery] string nonce, [FromQuery] string tenant, [FromQuery] string invitation)
+            [FromQuery(Name = "client_id")] string clientId, [FromQuery] string nonce, [FromQuery] string tenant, [FromQuery] string invite)
         {
             // Validate Input
             if (!Uri.IsWellFormedUriString(redirect_uri, UriKind.Absolute))
@@ -67,7 +67,7 @@ namespace IdentityGateway.Controllers
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
             query["state"] = JsonConvert.SerializeObject(new AuthState
-            { returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce, client_id = clientId, invitation = invitation });
+            { returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce, client_id = clientId, invitation = invite });
             query["redirect_uri"] = config.issuer + "/connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
             return Redirect(uri.Uri.ToString());
