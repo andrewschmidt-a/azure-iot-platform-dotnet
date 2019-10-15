@@ -8,6 +8,6 @@ export const toUserTenantModel = (response = []) => response.map(user => {
     'type': 'type',
     'roleList': 'role'
   })
-  user.role = user.role.map(r => Policies.filter(p=> p.Role == r)[0].DisplayName).join(",")
+  user.role = user.role.map(r => Policies.filter(p=> p.Role == r).concat({DisplayName:"No Roles"})[0].DisplayName).join(",")
   return user;
 });
