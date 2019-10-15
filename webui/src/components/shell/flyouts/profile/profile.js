@@ -14,6 +14,7 @@ import {
   PropertyCell as Cell,
 } from 'components/shared';
 import Flyout from 'components/shared/flyout';
+import {Policies} from 'utilities'
 
 import './profile.scss';
 
@@ -22,7 +23,7 @@ const jwt_decode = require('jwt-decode');
 export const Profile = (props) => {
   const { t, user, logout, switchTenant, createTenant, onClose } = props;
 
-  const roleArray = Array.from(user.roles);
+  const roleArray = Array.from(user.roles).map(r => Policies.filter(p=> p.Role == r).concat({DisplayName:"No Roles"})[0].DisplayName);
   const permissionArray = Array.from(user.permissions);
   const tenantArray = Array.from(user.availableTenants);
   const currentTenant = user.tenant;

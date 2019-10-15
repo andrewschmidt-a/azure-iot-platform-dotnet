@@ -10,28 +10,31 @@ import {
   toUserTenantModel
 } from './models';
 
-const ENDPOINT = Config.serviceUrls.auth;
+const ENDPOINT = Config.serviceUrls.identityGateway;
 
-/** Contains methods for calling the Device service */
+/** Contains methods for calling the Identity Gateway service */
 export class IdentityGatewayService {
 
-  /** Returns a list of devices */
+  /** Returns a list of users */
   static getUsers() {
-    const data = [{'id':'guid', 'name':'Andrew Schmidt', 'role': 'admin', 'type': 'Member'}, {'id':'', 'name':'Kyle Estes', 'role': 'admin', 'type': 'Invited'}];//HttpClient.get(`${ENDPOINT}tenant/users`)
-    console.log(data);
-    return Observable.of(data).map(toUserTenantModel);
+    
+    return HttpClient.get(`${ENDPOINT}tenants/users`)
+      .map(toUserTenantModel);
   }
 
   /** Delete a User */
   static deleteUser(id) {
-    // Placeholder to call backend
-    return Observable.of(id);
+    
+    return HttpClient.delete(`${ENDPOINT}tenants/${id}`)
+      .map(t => id);
   }
-  /** Delete a User */
+  /** Invite a new User */
   static invite(email, role) {
-    // Placeholder to call backend
-    const data = [{id:uuidv4(), name: email, role: role, type: 'Invited' }]
 
-    return Observable.of(data).map(toUserTenantModel);
+    return HttpClient.post(`${ENDPOINT}tenants/invite`, {
+      "email_address": email,
+      "role": role
+    })
+    .map(t=> toUserTenantModel([t]));
   }
 }
