@@ -159,10 +159,10 @@ jobs:
       applicationKey: '${{ parameters.applicationKey }}'
       tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
       subscriptionId: ${{ parameters.subscriptionId}}
-      
+
 ## Deploys Automation Account -- updated <radha>
-- job: automation account 
-  displayName: Create Azure Automation account
+- job: resources 
+  displayName: Deploy Resources
   dependsOn: aks
   pool: 
     vmImage: 'windows-latest'
