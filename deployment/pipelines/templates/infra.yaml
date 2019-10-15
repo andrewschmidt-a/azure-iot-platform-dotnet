@@ -81,13 +81,13 @@ jobs:
   #     collectionName: ${{ parameters.collectionName }}
 
 ## Deploys Storage Account -- updated <radha>
-  - template: infra/storageaccount.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      location: ${{ parameters.location }}
-      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
-      blobContainerName: 'telemetry'
+  # - template: infra/storageaccount.yaml
+  #   parameters:
+  #     serviceConnection: ${{ parameters.serviceConnection }}
+  #     resourceGroup: ${{ parameters.resourceGroup }}
+  #     location: ${{ parameters.location }}
+  #     storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
+  #     blobContainerName: 'telemetry'
 
 ## Deploys EventHubs -- updated <radha>
   - template: infra/eventhubs.yaml
