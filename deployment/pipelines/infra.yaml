@@ -22,6 +22,7 @@ stages:
       automationName: automation
       appInsightsName: appinsight
       omsWorkspaceName: loganalytics
+      storageAccountName: storageacct
       eventHubName: eventhub
       environment: IoT_CRSL_Environment
       subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
