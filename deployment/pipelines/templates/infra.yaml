@@ -159,6 +159,23 @@ jobs:
       applicationKey: '${{ parameters.applicationKey }}'
       tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
       subscriptionId: ${{ parameters.subscriptionId}}
+      
+## Deploys Automation Account -- updated <radha>
+- job: automation account 
+  displayName: Create Azure Automation account
+  dependsOn: aks
+  pool: 
+    vmImage: 'windows-latest'
+  steps:
+  - template: infra/automation.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
+      automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
+      ApplicationId: ${{ parameters.applicationId }}
+      SubscriptionId: ${{ parameters.subscriptionId }}
+      CertThumbprint: ${{ parameters.certThumbprint }}
 
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform
 - job: ingress
