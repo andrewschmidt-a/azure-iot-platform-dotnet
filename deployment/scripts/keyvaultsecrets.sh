@@ -26,6 +26,12 @@ while [[ $# -gt 0 ]] ; do
        shift
 done
 
+echo $cli_azureSubscription
+echo $cli_resourceGroup
+echo $cli_tenant
+echo $cli_ClientSecret
+echo $cli_ApplicationId
+
 # Login to Azure portal with Service Principal Credentials
 az login --service-principal -u  "${cli_ApplicationId}" -p "${cli_ClientSecret}" --tenant "${cli_tenant}"
 
