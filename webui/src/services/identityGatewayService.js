@@ -15,7 +15,7 @@ const ENDPOINT = Config.serviceUrls.identityGateway;
 /** Contains methods for calling the Device service */
 export class IdentityGatewayService {
 
-  /** Returns a list of devices */
+  /** Returns a list of users */
   static getUsers() {
     
     return HttpClient.get(`${ENDPOINT}tenants/users`)
