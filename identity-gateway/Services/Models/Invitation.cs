@@ -6,7 +6,7 @@ namespace IdentityGateway.Services.Models
 {
     public class Invitation
     {
-        public string tenant;
+        public string email_address;
         public string role;
     }
 }

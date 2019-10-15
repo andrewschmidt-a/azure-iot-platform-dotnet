@@ -86,6 +86,21 @@ namespace IdentityGateway.Services.Helpers
                 claims.Add(new Claim("tenant", tenantModel.TenantId));
                 // Add Roles
                 tenantModel.RoleList.ForEach(role => claims.Add(new Claim("role", role)));
+
+                // Settings Update LastUsedTenant
+                UserSettingsInput settingsInput = new UserSettingsInput
+                {
+                    userId = claims.Where(c => c.Type == "sub").First().Value,
+                    settingKey = "LastUsedTenant",
+                    value = tenant
+                };
+                // Update if name is not the same
+                await this._userSettingsContainer.UpdateAsync(settingsInput);
+                if (tenantModel.Name != claims.Where(c => c.Type == "name").First().Value)
+                {
+                    input.name = claims.Where(c => c.Type == "name").First().Value;
+                    await this._userTenantContainer.UpdateAsync(input);
+                }
             }
 
             DateTime expirationDateTime = expiration ?? DateTime.Now.AddDays(30);
@@ -93,7 +108,9 @@ namespace IdentityGateway.Services.Helpers
             claims.AddRange(tenantList.Select(t => new Claim("available_tenants", t.TenantId)));
             
             // Token to String so you can use it in your client
-            return this.MintToken(claims, audience, expirationDateTime);
+            var token = this.MintToken(claims, audience, expirationDateTime);
+
+            return token;
         }
         public JwtSecurityToken MintToken(List<Claim> claims, string audience, DateTime expirationDateTime)
         {

@@ -35,7 +35,23 @@ namespace IdentityGateway.WebService.v1.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Get all users in tenant
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("users")]
+        public async Task<List<UserTenantModel>> GetAllAsync()
+        {
+            UserTenantInput input = new UserTenantInput
+            {
+                userId = null,
+                tenant = this._container.tenant
+            };
+            List<UserTenantModel> models = await this._container.GetAllUsersAsync(input);
+            return models;
+        }
+
+        /// <summary>
+        /// Get User by Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -125,12 +141,23 @@ namespace IdentityGateway.WebService.v1.Controllers
         // GET: api/User/5
         [HttpPost("invite")]
         [Authorize("UserManage")]
-        public async Task<string> InviteAsync([FromForm] string email_address, [FromForm] string role)
+        public async Task<UserTenantModel> InviteAsync([FromBody] Invitation invitation)
         {
+            // Object to insert in table as placeholder
+            UserTenantInput input = new UserTenantInput
+            {
+                userId = Guid.NewGuid().ToString(),
+                tenant = this._container.tenant,
+                roles = JsonConvert.SerializeObject(new List<string>() { invitation.role }),
+                name = invitation.email_address,
+                type = "Invited"
+            };
+
             List<Claim> claims = new List<Claim>()
             {
-                new Claim("role", role),
-                new Claim("tenant", this._container.tenant)
+                new Claim("role", invitation.role),
+                new Claim("tenant", this._container.tenant),
+                new Claim("userId", input.userId)
             };
 
             string forwardedFor = null;
@@ -150,19 +177,32 @@ namespace IdentityGateway.WebService.v1.Controllers
 
             var recipients = new List<EmailAddress>
             {
+<<<<<<< HEAD
                 new EmailAddress(email_address)
+=======
+                new EmailAddress(invitation.email_address)
+>>>>>>> master
             };
             msg.AddTos(recipients);
 
             msg.SetSubject("Invitation to IoT Platform");
+<<<<<<< HEAD
             string link = forwardedFor ?? "https://" + HttpContext.Request.Host.ToString() + "#invite=" + inviteToken;
+=======
+            Uri uri = new Uri(forwardedFor ?? "https://" + HttpContext.Request.Host.ToString());
+            string link = uri.Host + "#invite=" + inviteToken;
+>>>>>>> master
             msg.AddContent(MimeType.Text, "Click here to join the tenant: ");
             msg.AddContent(MimeType.Html, "<a href=\""+ link + "\">"+link+"</a>");
 
             var client = new SendGridClient(this._config.SendGridAPIKey);
             var response = await client.SendEmailAsync(msg);
 
+<<<<<<< HEAD
             return response.Body.ToString();
+=======
+            return await this._container.CreateAsync(input);
+>>>>>>> master
         }
     }
 }

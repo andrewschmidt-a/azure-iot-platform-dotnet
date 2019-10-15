@@ -119,14 +119,6 @@ namespace IdentityGateway.Controllers
                 // Everything checks out so you can mint a new token
                 var tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(jwt.Claims.Where(c => new List<string>(){"sub", "name", "email"}.Contains(c.Type)).ToList(), tenant,jwt.Audiences.First(), jwt.ValidTo));
 
-                // Settings Update LastUsedTenant
-                UserSettingsInput settingsInput = new UserSettingsInput
-                {
-                    userId = jwt.Claims.Where(c=> c.Type == "sub").First().Value,
-                    settingKey = "LastUsedTenant",
-                    value = tenant
-                };
-                await this._userSettingsContainer.UpdateAsync(settingsInput);
                 return StatusCode(200, tokenString);
             }
             else
@@ -171,11 +163,24 @@ namespace IdentityGateway.Controllers
                 {
                     userId = claims.Where(c => c.Type == "sub").First().Value,
                     tenant = inviteJWT.Claims.Where(c => c.Type == "tenant").First().Value,
+<<<<<<< HEAD
                     roles = String.Join(",", inviteJWT.Claims.Where(c => c.Type == "role").Select(c => c.Value).ToArray())
                 };
                 await this._userTenantContainer.UpdateAsync(UserTenant);
             }
 
+=======
+                    roles = JsonConvert.SerializeObject(inviteJWT.Claims.Where(c => c.Type == "role").Select(c => c.Value).ToList()),
+                    type = "Member"
+                };
+                await this._userTenantContainer.UpdateAsync(UserTenant);
+
+                // Delete placeholder for invite
+                UserTenant.userId = inviteJWT.Claims.Where(c => c.Type == "userId").First().Value;
+                await this._userTenantContainer.DeleteAsync(UserTenant);
+            }
+
+>>>>>>> master
             // Extract first email
             var emailClaim = jwt.Claims.Where(t => t.Type == "emails").FirstOrDefault();
             if (emailClaim != null)
