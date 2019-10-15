@@ -7,12 +7,7 @@ parameters:
   location: ''
 
 steps:
-# - task: Bash@3
-#   inputs:
-#     targetType: 'inline'
-#     script: 'echo "functiondefinition"' ## <-- follow this example
-
-## TODO -- Deploy ARM Resource
+## TODO -- Deploy ARM Resource <updated by Radha>
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Azure Storage account"
   inputs:
