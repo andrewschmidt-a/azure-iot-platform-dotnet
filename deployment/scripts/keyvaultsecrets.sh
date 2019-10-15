@@ -63,7 +63,7 @@ myEmailSendGridApiKey='SG.y-_LsG67SlOxFdRiYwLNHg.3SHatJ67EGkEVEM4Ya63TfgCtwcwISr
 # tenantId=$(az account list| grep -i tenantId | cut -d "\"" -f4 | uniq)
 echo "The Tenant Id is: $cli_tenant"
 
-kVaultName=$(az keyvault list --resource-group ${rg}  | grep -i name |grep 'vlt' | awk -F "\"" '{print $4}')
+kVaultName=$(az keyvault list --resource-group ${rg}  | grep -i name |grep 'vault' | awk -F "\"" '{print $4}')
 echo "The KeyVault Name is:  ${kVaultName}"
 
 kvlocation=$(az keyvault list --resource-group  ${rg} | grep -i location | awk -F "\"" '{print $4}')
@@ -87,7 +87,7 @@ myDocDBAuthKey=$(az cosmosdb list-keys --resource-group $rg --name ${myCosmosDbA
 myCosmosDBConnection="AccountEndpoint=$(myCosmosDBUri);AccountKey=$(myDocDBAuthKey);"
 
 # Adding EventHub Connection 
-myEvNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhubs| awk -F "\"" '{print $4}'| cut -d "/" -f1)
+myEvNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhub| awk -F "\"" '{print $4}'| cut -d "/" -f1)
 ehQueueAuthRule='iothubs'
 
 lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $myEvNamespace| grep name |grep lifecycle| awk -F "\"" '{print $4}'| cut -d "/" -f1)
