@@ -10,17 +10,8 @@ parameters:
   keyVaultName: 
 
 steps:
-# - task: Bash@3
-#   inputs:
-#     targetType: 'inline'
-#     script: 'echo "automation-odin"' ## <-- follow this example
-
-## Nate Oelke --SME 
-# Run book code will be update outside of this pipeline
-
-## TODO -- Deploy ARM Resource
 - task: AzureResourceGroupDeployment@2
-  displayName: "Create the Azure Automation account"
+  displayName: "Create Azure Automation account"
   inputs:
     azureSubscription: '${{ parameters.serviceConnection }}'
     action: 'Create Or Update Resource Group'

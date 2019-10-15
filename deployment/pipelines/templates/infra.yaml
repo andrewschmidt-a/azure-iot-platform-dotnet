@@ -90,16 +90,16 @@ jobs:
   #     blobContainerName: 'telemetry'
 
 ## Deploys EventHubs -- updated <radha>
-  # - template: infra/eventhubs.yaml
-  #   parameters:
-  #     serviceConnection: ${{ parameters.serviceConnection }}
-  #     resourceGroup: ${{ parameters.resourceGroup }}
-  #     #functionAppName: ${{ parameters.functionAppName }}
-  #     #keyVaultName: ${{parameters.keyVaultName}}
-  #     eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
-  #     storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
-  #     subscriptionId: ${{ parameters.subscriptionId }}
-  #     location: ${{ parameters.location }}
+  - template: infra/eventhubs.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      #functionAppName: ${{ parameters.functionAppName }}
+      #keyVaultName: ${{parameters.keyVaultName}}
+      eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      subscriptionId: ${{ parameters.subscriptionId }}
+      location: ${{ parameters.location }}
 
 ## Deploys Functions -- updated <radha>
   - template: infra/functions.yaml
@@ -113,23 +113,23 @@ jobs:
       location: ${{ parameters.location }}
 
 ## Deploys Azure Maps -- updated <radha>
-  - template: infra/maps.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      #keyVaultName: ${{ parameters.keyVaultName }}
-      mapsName: ${{ parameters.applicationCode }}-${{parameters.mapsName}}-${{ parameters.deployEnvironment }}
+  # - template: infra/maps.yaml
+  #   parameters:
+  #     serviceConnection: ${{ parameters.serviceConnection }}
+  #     resourceGroup: ${{ parameters.resourceGroup }}
+  #     #keyVaultName: ${{ parameters.keyVaultName }}
+  #     mapsName: ${{ parameters.applicationCode }}-${{parameters.mapsName}}-${{ parameters.deployEnvironment }}
 
 ## Deploys Automation Account -- updated <radha>
-  - template: infra/automation.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
-      automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
-      ApplicationId: ${{ parameters.applicationId }}
-      SubscriptionId: ${{ parameters.subscriptionId }}
-      CertThumbprint: ${{ parameters.certThumbprint }}
+  # - template: infra/automation.yaml
+  #   parameters:
+  #     serviceConnection: ${{ parameters.serviceConnection }}
+  #     resourceGroup: ${{ parameters.resourceGroup }}
+  #     keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
+  #     automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
+  #     ApplicationId: ${{ parameters.applicationId }}
+  #     SubscriptionId: ${{ parameters.subscriptionId }}
+  #     CertThumbprint: ${{ parameters.certThumbprint }}
 
 ## Deploys Loganalytics -- TODO
   - template: infra/loganalytics.yaml
