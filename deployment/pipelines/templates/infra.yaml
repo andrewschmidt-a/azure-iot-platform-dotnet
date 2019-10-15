@@ -121,15 +121,15 @@ jobs:
   #     mapsName: ${{ parameters.applicationCode }}-${{parameters.mapsName}}-${{ parameters.deployEnvironment }}
 
 ## Deploys Automation Account -- updated <radha>
-  - template: infra/automation.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
-      automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
-      ApplicationId: ${{ parameters.applicationId }}
-      SubscriptionId: ${{ parameters.subscriptionId }}
-      CertThumbprint: ${{ parameters.certThumbprint }}
+  # - template: infra/automation.yaml
+  #   parameters:
+  #     serviceConnection: ${{ parameters.serviceConnection }}
+  #     resourceGroup: ${{ parameters.resourceGroup }}
+  #     keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
+  #     automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
+  #     ApplicationId: ${{ parameters.applicationId }}
+  #     SubscriptionId: ${{ parameters.subscriptionId }}
+  #     CertThumbprint: ${{ parameters.certThumbprint }}
 
 ## Deploys Loganalytics -- TODO
   # - template: infra/loganalytics.yaml
