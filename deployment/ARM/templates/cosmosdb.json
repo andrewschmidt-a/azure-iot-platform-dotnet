@@ -2,191 +2,180 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "accountName": {
-            "type": "string",
-            "defaultValue": "crsl-cosmos-db",
-            "metadata": {
-                "description": "Cosmos DB account name"
-            }
-        },
-        "location": {
-            "type": "string",
-            "defaultValue": "[resourceGroup().location]",
-            "metadata": {
-                "description": "Location for the Cosmos DB account."
-            }
-        },
-        "primaryRegion":{
-            "type":"string",
-            "defaultValue": "[resourceGroup().location]",
-            "metadata": {
-                "description": "The primary replica region for the Cosmos DB account."
-            }
-        },
-        "defaultConsistencyLevel": {
-            "type": "string",
-            "defaultValue": "Strong",
-            "allowedValues": [ "Eventual", "ConsistentPrefix", "Session", "BoundedStaleness", "Strong" ],
-            "metadata": {
-                "description": "The default consistency level of the Cosmos DB account."
-            }
-        },
-        "maxStalenessPrefix": {
-            "type": "int",
-            "minValue": 10,
-            "defaultValue": 10,
-            "maxValue": 1000,
-            "metadata": {
-                "description": "Max stale requests. Required for BoundedStaleness. Valid ranges, Single Region: 10 to 1000000. Multi Region: 100000 to 1000000."
-            }
-        },
-        "maxIntervalInSeconds": {
-            "type": "int",
-            "minValue": 5,
-            "defaultValue": 5,
-            "maxValue": 600,
-            "metadata": {
-                "description": "Max lag time (seconds). Required for BoundedStaleness. Valid ranges, Single Region: 5 to 84600. Multi Region: 300 to 86400."
-            }
-        },	
-        "multipleWriteLocations": {
-            "type": "bool",
-            "defaultValue": false,
-            "allowedValues": [ true, false ],
-            "metadata": {
-                "description": "Enable multi-master to make all regions writable."
-            }
-        },
-        "automaticFailover": {
-            "type": "bool",
-            "defaultValue": false,
-            "allowedValues": [ true, false ],
-            "metadata": {
-                "description": "Enable automatic failover for regions. Ignored when Multi-Master is enabled"
-            }
-        },
-        "databaseName": {
-            "type": "string",
-            "metadata": {
-                "description": "The name for the cosmos database"
-            }
-        },
-        "throughput": {
-            "type": "int",
-            "defaultValue": 400,
-            "minValue": 400,
-            "maxValue": 25000,
-            "metadata": {
-                "description": "The throughput for the collection"
-            }			
-        },
-        "container1Name": {
-            "type": "string",
-            "defaultValue": "container1",
-            "metadata": {
-                "description": "The name for the first SQL container"
-            }
+      "accountName": {
+        "type": "string",
+        "defaultValue": "crsl-cosmos-db",
+        "metadata": {
+          "description": "Cosmos DB account name"
         }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for the Cosmos DB account."
+        }
+      },
+      "primaryRegion": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "The primary replica region for the Cosmos DB account."
+        }
+      },
+      "defaultConsistencyLevel": {
+        "type": "string",
+        "defaultValue": "Strong",
+        "allowedValues": [ "Eventual", "ConsistentPrefix", "Session", "BoundedStaleness", "Strong" ],
+        "metadata": {
+          "description": "The default consistency level of the Cosmos DB account."
+        }
+      },
+      "maxStalenessPrefix": {
+        "type": "int",
+        "minValue": 10,
+        "defaultValue": 10,
+        "maxValue": 1000,
+        "metadata": {
+          "description": "Max stale requests. Required for BoundedStaleness. Valid ranges, Single Region: 10 to 1000000. Multi Region: 100000 to 1000000."
+        }
+      },
+      "maxIntervalInSeconds": {
+        "type": "int",
+        "minValue": 5,
+        "defaultValue": 5,
+        "maxValue": 600,
+        "metadata": {
+          "description": "Max lag time (seconds). Required for BoundedStaleness. Valid ranges, Single Region: 5 to 84600. Multi Region: 300 to 86400."
+        }
+      },
+      "multipleWriteLocations": {
+        "type": "bool",
+        "defaultValue": false,
+        "allowedValues": [ true, false ],
+        "metadata": {
+          "description": "Enable multi-master to make all regions writable."
+        }
+      },
+      "automaticFailover": {
+        "type": "bool",
+        "defaultValue": false,
+        "allowedValues": [ true, false ],
+        "metadata": {
+          "description": "Enable automatic failover for regions. Ignored when Multi-Master is enabled"
+        }
+      },
+      "databaseName": {
+        "type": "string",
+        "metadata": {
+          "description": "The name for the cosmos database"
+        }
+      },
+      "throughput": {
+        "type": "int",
+        "defaultValue": 400,
+        "minValue": 400,
+        "maxValue": 25000,
+        "metadata": {
+          "description": "The throughput for the collection"
+        }
+      },
+      "container1Name": {
+        "type": "string",
+        "defaultValue": "container1",
+        "metadata": {
+          "description": "The name for the first SQL container"
+        }
+      }
     },
     "variables": {
-        "accountName": "[toLower(parameters('accountName'))]",
-        "consistencyPolicy": {
-            "Eventual": {
-                "defaultConsistencyLevel": "Eventual"
-            },
-            "ConsistentPrefix": {
-                "defaultConsistencyLevel": "ConsistentPrefix"
-            },
-            "Session": {
-                "defaultConsistencyLevel": "Session"
-            },
-            "BoundedStaleness": {
-                "defaultConsistencyLevel": "BoundedStaleness",
-                "maxStalenessPrefix": "[parameters('maxStalenessPrefix')]",
-                "maxIntervalInSeconds": "[parameters('maxIntervalInSeconds')]"
-            },
-            "Strong": {
-                "defaultConsistencyLevel": "Strong"
-            }
+      "accountName": "[toLower(parameters('accountName'))]",
+      "consistencyPolicy": {
+        "Eventual": {
+          "defaultConsistencyLevel": "Eventual"
         },
-        "locations": 
-        [ 
-            {
-                "locationName": "[parameters('primaryRegion')]",
-                "failoverPriority": 0
-            } 
-            // {
-            //     "locationName": "[parameters('secondaryRegion')]",
-            //     "failoverPriority": 1
-            // }
-        ]
-    },
-    "resources": 
-    [
-        {
-            "type": "Microsoft.DocumentDB/databaseAccounts",
-            "name": "[variables('accountName')]",
-            "apiVersion": "2016-03-31",
-            "location": "[parameters('location')]",
-            "kind": "GlobalDocumentDB",
-            "properties": {
-                "consistencyPolicy": "[variables('consistencyPolicy')[parameters('defaultConsistencyLevel')]]",
-                "locations": "[variables('locations')]",
-                "databaseAccountOfferType": "Standard",
-                "enableAutomaticFailover": "[parameters('automaticFailover')]",
-                "enableMultipleWriteLocations": "[parameters('multipleWriteLocations')]"
-            }
+        "ConsistentPrefix": {
+          "defaultConsistencyLevel": "ConsistentPrefix"
         },
-        {
-            "type": "Microsoft.DocumentDB/databaseAccounts/apis/databases",
-            "name": "[concat(variables('accountName'), '/sql/', parameters('databaseName'))]",
-            "apiVersion": "2016-03-31",
-            "dependsOn": [ "[resourceId('Microsoft.DocumentDB/databaseAccounts/', variables('accountName'))]" ],
-            "properties":{
-                "resource":{
-                    "id": "[parameters('databaseName')]"
-                }
-            }
+        "Session": {
+          "defaultConsistencyLevel": "Session"
         },
-        {
-            "type": "Microsoft.DocumentDb/databaseAccounts/apis/databases/containers",
-            "name": "[concat(variables('accountName'), '/sql/', parameters('databaseName'), '/', parameters('container1Name'))]",
-            "apiVersion": "2016-03-31",
-            "dependsOn": [ "[resourceId('Microsoft.DocumentDB/databaseAccounts/apis/databases', variables('accountName'), 'sql', parameters('databaseName'))]" ],
-            "properties":
-            {
-                "resource":{
-                    "id":  "[parameters('container1Name')]",
-                    "partitionKey": {
-                        "paths": [
-                        "/partitionkey"
-                        ],
-                        "kind": "Hash"
-                    },
-                    "indexingPolicy": {
-                        "indexingMode": "consistent",
-                        "includedPaths": [{
-                                "path": "/*"
-                            }
-                        ],
-                        "excludedPaths": [{
-                                "path": "/\"_etag\"/?"
-                            }
-                        ]
-                    }
-                }
-            }
+        "BoundedStaleness": {
+          "defaultConsistencyLevel": "BoundedStaleness",
+          "maxStalenessPrefix": "[parameters('maxStalenessPrefix')]",
+          "maxIntervalInSeconds": "[parameters('maxIntervalInSeconds')]"
         },
-        {
-            "type": "Microsoft.DocumentDb/databaseAccounts/apis/databases/containers/settings",
-            "name": "[concat(variables('accountName'), '/sql/', parameters('databaseName'), '/', parameters('container1Name'), '/throughput')]",
-            "apiVersion": "2016-03-31",
-            "dependsOn": [ "[resourceId('Microsoft.DocumentDB/databaseAccounts/apis/databases', variables('accountName'), 'sql', parameters('databaseName'))]" ],
-            "properties": {
-                "resource": {
-                  "throughput": "[parameters('throughput')]"
-                }
-            }
+        "Strong": {
+          "defaultConsistencyLevel": "Strong"
         }
+      },
+      "locations": [
+        {
+          "locationName": "[parameters('primaryRegion')]",
+          "failoverPriority": 0
+        }
+        // {
+        //     "locationName": "[parameters('secondaryRegion')]",
+        //     "failoverPriority": 1
+        // }
+      ]
+    },
+    "resources": [
+      {
+        "type": "Microsoft.DocumentDB/databaseAccounts",
+        "name": "[variables('accountName')]",
+        "apiVersion": "2016-03-31",
+        "location": "[parameters('location')]",
+        "kind": "GlobalDocumentDB",
+        "properties": {
+          "consistencyPolicy": "[variables('consistencyPolicy')[parameters('defaultConsistencyLevel')]]",
+          "locations": "[variables('locations')]",
+          "databaseAccountOfferType": "Standard",
+          "enableAutomaticFailover": "[parameters('automaticFailover')]",
+          "enableMultipleWriteLocations": "[parameters('multipleWriteLocations')]"
+        }
+      },
+      {
+        "type": "Microsoft.DocumentDB/databaseAccounts/apis/databases",
+        "name": "[concat(variables('accountName'), '/sql/', parameters('databaseName'))]",
+        "apiVersion": "2016-03-31",
+        "dependsOn": [ "[resourceId('Microsoft.DocumentDB/databaseAccounts/', variables('accountName'))]" ],
+        "properties": {
+          "resource": {
+            "id": "[parameters('databaseName')]"
+          }
+        }
+      },
+      {
+        "type": "Microsoft.DocumentDb/databaseAccounts/apis/databases/containers",
+        "name": "[concat(variables('accountName'), '/sql/', parameters('databaseName'), '/', parameters('container1Name'))]",
+        "apiVersion": "2016-03-31",
+        "dependsOn": [ "[resourceId('Microsoft.DocumentDB/databaseAccounts/apis/databases', variables('accountName'), 'sql', parameters('databaseName'))]" ],
+        "properties": {
+          "resource": {
+            "id": "[parameters('container1Name')]",
+            "partitionKey": {
+              "paths": [
+                "/partitionkey"
+              ],
+              "kind": "Hash"
+            },
+            "indexingPolicy": {
+              "indexingMode": "consistent",
+              "includedPaths": [
+                {
+                  "path": "/*"
+                }
+              ],
+              "excludedPaths": [
+                {
+                  "path": "/\"_etag\"/?"
+                }
+              ]
+            },
+            "throughput": "[parameters('throughput')]"
+          }
+        }
+      }
     ]
-}
+  }
