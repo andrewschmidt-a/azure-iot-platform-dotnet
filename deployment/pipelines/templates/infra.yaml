@@ -51,22 +51,22 @@ jobs:
 ## Tags resources by injecting tags into ARM Templates
   - template: infra/tagARM.yaml
 ## Deploys App Config
-  - template: infra/appconfig.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      aksName: ${{ parameters.aksName }}
-      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
-      location: ${{ parameters.location }}
+  # - template: infra/appconfig.yaml
+  #   parameters:
+  #     serviceConnection: ${{ parameters.serviceConnection }}
+  #     resourceGroup: ${{ parameters.resourceGroup }}
+  #     aksName: ${{ parameters.aksName }}
+  #     appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
+  #     location: ${{ parameters.location }}
 
 ## Deploys Application Insights
-  - template: infra/appinsights.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
-      appInsightsLocation: ${{ parameters.appInsightsLocation }}
-      location: ${{ parameters.location }}
+  # - template: infra/appinsights.yaml
+  #   parameters:
+  #     serviceConnection: ${{ parameters.serviceConnection }}
+  #     resourceGroup: ${{ parameters.resourceGroup }}
+  #     appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
+  #     appInsightsLocation: ${{ parameters.appInsightsLocation }}
+  #     location: ${{ parameters.location }}
 
 ## Deploys CosmosDB updated <radha>
   # - template: infra/cosmosdb.yaml
