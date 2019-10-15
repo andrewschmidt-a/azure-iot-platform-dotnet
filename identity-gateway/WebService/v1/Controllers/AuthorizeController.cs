@@ -163,13 +163,6 @@ namespace IdentityGateway.Controllers
                 {
                     userId = claims.Where(c => c.Type == "sub").First().Value,
                     tenant = inviteJWT.Claims.Where(c => c.Type == "tenant").First().Value,
-<<<<<<< HEAD
-                    roles = String.Join(",", inviteJWT.Claims.Where(c => c.Type == "role").Select(c => c.Value).ToArray())
-                };
-                await this._userTenantContainer.UpdateAsync(UserTenant);
-            }
-
-=======
                     roles = JsonConvert.SerializeObject(inviteJWT.Claims.Where(c => c.Type == "role").Select(c => c.Value).ToList()),
                     type = "Member"
                 };
@@ -180,7 +173,6 @@ namespace IdentityGateway.Controllers
                 await this._userTenantContainer.DeleteAsync(UserTenant);
             }
 
->>>>>>> master
             // Extract first email
             var emailClaim = jwt.Claims.Where(t => t.Type == "emails").FirstOrDefault();
             if (emailClaim != null)
