@@ -25,14 +25,14 @@ steps:
     addSpnToEnvironment: true
 
 ##  need to run after the  keyvault step and needs windows agent
-# - task: AzurePowerShell@3
-#   displayName: "import runbook code and create webhook"
-#   inputs:
-#     azureSubscription: '${{ parameters.serviceConnection }}'
-#     ScriptType: 'FilePath'
-#     ScriptPath: '$(System.DefaultWorkingDirectory)/deployment/scripts/automationAcct.ps1'
-#     ScriptArguments: '-accountName ${{ parameters.automationName }} -resourceGroup ${{ parameters.resourceGroup }} -scriptFolder $(System.DefaultWorkingDirectory)/deployment/scripts -keyvaultName ${{ parameters.keyVaultName }}'
-#     azurePowerShellVersion: 'LatestVersion'
+- task: AzurePowerShell@3
+  displayName: "import runbook code and create webhook"
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    ScriptType: 'FilePath'
+    ScriptPath: '$(System.DefaultWorkingDirectory)/deployment/scripts/automationAcct.ps1'
+    ScriptArguments: '-accountName ${{ parameters.automationName }} -resourceGroup ${{ parameters.resourceGroup }} -scriptFolder $(System.DefaultWorkingDirectory)/deployment/scripts -keyvaultName ${{ parameters.keyVaultName }}'
+    azurePowerShellVersion: 'LatestVersion'
 
 ## TODO -- Store WebHook information in KeyVault
 # createIotHubWebHookUrl
