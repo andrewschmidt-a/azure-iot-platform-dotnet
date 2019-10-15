@@ -8,12 +8,8 @@ parameters:
   subscriptionId: ''
   
 steps:
-# - task: Bash@3
-#   inputs:
-#     targetType: 'inline'
-#     script: 'echo "eventhubs-odin-mt-poc"' ## <-- follow this example
 
-## TODO -- Deploy ARM Resource
+## Deploy ARM Resource
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Event Hub"
   inputs:
@@ -32,3 +28,22 @@ steps:
 # TenantManagerService:lifecycleEventHubConnString && lifecycleEventHubConnString
 # TenantManagerService:telemetryEventHubConnString && telemetryEventHubConnString
 # TenantManagerService:twinChangeEventHubConnString && twinChangeEventHubConnString
+
+- task: AzureCLI@1
+  displayName: Add Values to App Config
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      evNamespace=$(az eventhubs namespace list --resource-group ${{ parameters.resourceGroup }}| grep name| grep eventhub| cut -d "/" -f1| awk -F "\"" '{print $4}')
+      ehQueueAuthRule='iothubroutes'
+      lifecycleEv=$(az eventhubs eventhub list --resource-group ${{ parameters.resourceGroup }} --namespace-name $evNamespace| grep name |grep lifecycle| awk -F "\"" '{print $4}'| cut -d "/" -f1)
+      lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
+      telemetryEv=$(az eventhubs eventhub list --resource-group ${{ parameters.resourceGroup }} --namespace-name $evNamespace| grep name |grep telemetry| awk -F "\"" '{print $4}'| cut -d "/" -f1)
+      telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
+      twinchangeEv=$(az eventhubs eventhub list --resource-group ${{ parameters.resourceGroup }} --namespace-name $evNamespace| grep name |grep twin-change| awk -F "\"" '{print $4}'| cut -d "/" -f1)
+      twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
+      az appconfig kv set --key TenantManagerService:lifecycleEventHubConnString --value $lifecycleEvConn --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:telemetryEventHubConnString --value $telemetryEvConn --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:twinChangeEventHubConnString --value $twinchangeEvConn --name ${{ parameters.appConfigName }} --yes
+    addSpnToEnvironment: true

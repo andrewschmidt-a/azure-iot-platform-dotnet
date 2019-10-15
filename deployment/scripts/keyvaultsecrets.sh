@@ -41,9 +41,9 @@ ApplicationId=${cli_ApplicationId}
 #***********************************************************
 
 #--------------------------------------------------------------------
-myEmailSMTPHost='smtp.sendgrid.net'
-myEmailSMTPUserId='azure_67748810fea7a7ec9d0b8213a9779967@azure.com'
-myEmailSMTPPassword='8eorX2vsqob6p15'
+#myEmailSMTPHost='smtp.sendgrid.net'
+#myEmailSMTPUserId='azure_67748810fea7a7ec9d0b8213a9779967@azure.com'
+#myEmailSMTPPassword='8eorX2vsqob6p15'
 myEmailSendGridApiKey='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'
 
 #---------------------------------------------------------------------
@@ -107,14 +107,14 @@ az keyvault secret set --vault-name  $kVaultName --name 'documentDBEndpoint'  --
 az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'documentDBConnectionString' 2>/dev/null
 az keyvault secret set --vault-name  $kVaultName --name 'documentDBConnectionString'  --value   "${myCosmosDBConnection}"
 
-az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'EmailSMTPHost' 2>/dev/null
-az keyvault secret set --vault-name  $kVaultName --name 'EmailSMTPHost'  --value "${myEmailSMTPHost}"
+#az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'EmailSMTPHost' 2>/dev/null
+#az keyvault secret set --vault-name  $kVaultName --name 'EmailSMTPHost'  --value "${myEmailSMTPHost}"
 
-az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'EmailSMTPUserId' 2>/dev/null
-az keyvault secret set --vault-name  $kVaultName --name 'EmailSMTPUserId'  --value "${myEmailSMTPUserId}"
+#az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'EmailSMTPUserId' 2>/dev/null
+#az keyvault secret set --vault-name  $kVaultName --name 'EmailSMTPUserId'  --value "${myEmailSMTPUserId}"
 
-az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'EmailSMTPPassword' 2>/dev/null
-az keyvault secret set --vault-name  $kVaultName --name 'EmailSMTPPassword'  --value "${myEmailSMTPPassword}"
+#az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'EmailSMTPPassword' 2>/dev/null
+#az keyvault secret set --vault-name  $kVaultName --name 'EmailSMTPPassword'  --value "${myEmailSMTPPassword}"
 
 az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'sendGridAPIKey' 2>/dev/null
 az keyvault secret set --vault-name  $kVaultName --name 'sendGridAPIKey'  --value "${myEmailSendGridApiKey}"
@@ -128,14 +128,14 @@ az keyvault secret set --vault-name $kVaultName --name 'ClientSecret' --value "$
 az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'storageAccountConnectionString' 2>/dev/null
 az keyvault secret set --vault-name $kVaultName --name 'storageAccountConnectionString' --value "${blobStorageConnString}"
 
-az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'LifecycleEventHubConnection' 2>/dev/null
-az keyvault secret set --vault-name $kVaultName --name 'LifecycleEventHubConnection' --value "${lifecycleEvConn}"
+az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'lifecycleEventHubConnString' 2>/dev/null
+az keyvault secret set --vault-name $kVaultName --name 'lifecycleEventHubConnString' --value "${lifecycleEvConn}"
 
-az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'TelemetryEventHubConnection' 2>/dev/null
-az keyvault secret set --vault-name $kVaultName --name 'TelemetryEventHubConnection' --value "${telemetryEvConn}"
+az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'telemetryEventHubConnString' 2>/dev/null
+az keyvault secret set --vault-name $kVaultName --name 'telemetryEventHubConnString' --value "${telemetryEvConn}"
 
-az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'TwinChangeEventHubConnection' 2>/dev/null
-az keyvault secret set --vault-name $kVaultName --name 'TwinChangeEventHubConnection' --value "${twinchangeEvConn}"
+az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'twinChangeEventHubConnString' 2>/dev/null
+az keyvault secret set --vault-name $kVaultName --name 'twinChangeEventHubConnString' --value "${twinchangeEvConn}"
 
 az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'azureMapsKey' 2>/dev/null
 az keyvault secret set --vault-name $kVaultName --name 'azureMapsKey' --value "${mapskey}"

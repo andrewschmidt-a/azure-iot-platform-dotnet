@@ -8,14 +8,8 @@ parameters:
   location: ''
   
 steps:
-## override parameters will be done in code deployment task
-# - task: Bash@3
-#   inputs:
-#     targetType: 'inline'
-#     script: 'echo "messaging-functions-odin-mt-poc"' ## <-- follow this example
-
 ## TODO -- Get Trigger binding information CLI probally. Event Hub based
-## TODO -- Deploy ARM Resource <updated by Radha>
+## TODO -- Deploy ARM Resource
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Azure function App"
   inputs:
@@ -31,6 +25,7 @@ steps:
     addSpnToEnvironment: true
 
 ## TODO -- Deploy ARM Resource -- Deploy Device Properties Function App (talk to Swami)
+## Function has been created with ver 1.0 in Odin env, here both the functions created with ver 2.0
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Azure function App"
   inputs:

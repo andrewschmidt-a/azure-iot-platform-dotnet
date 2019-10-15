@@ -20,7 +20,7 @@ steps:
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/cosmosdb.json'
     overrideParameters: '-accountName ${{ parameters.cosmosDBAccount }} -location ${{ parameters.location }} -primaryRegion ${{ parameters.location }} -databaseName ${{ parameters.cosmosDBName }} -throughput ${{ parameters.cosmosDBthroughput }} -container1Name ${{ parameters.collectionName }}'
     deploymentMode: 'Incremental'
-## handled using a keyvault script to load all secrets once all resources are created
+## handled using a keyvault script to load all secrets once all resources are created <Radha>
 # - task: AzureCLI@1
 #   displayName: Add Connection string to Key Vault
 #   inputs:
