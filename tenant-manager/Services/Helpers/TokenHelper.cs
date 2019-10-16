@@ -2,26 +2,24 @@ using System;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 {
     public class TokenHelper
     {
-        private const string GLOBAL_KEY = "Global:";
-        private const string GLOBAL_AAD_KEY = GLOBAL_KEY + "AzureActiveDirectory:";
+        private IServicesConfig _config;
 
-        private IConfiguration _config;
-
-        public TokenHelper(IConfiguration _config)
+        public TokenHelper(IServicesConfig _config)
         {
             this._config = _config;
         }
         
         public string GetServicePrincipleToken()
         {
-            string keyVaultAppId = _config[$"{GLOBAL_AAD_KEY}aadappid"];
-            string keyVaultAppKey = _config[$"{GLOBAL_AAD_KEY}aadappsecret"];
-            string aadTenantId = _config[$"{GLOBAL_AAD_KEY}aadtenantid"];
+            string keyVaultAppId = this._config.AzureActiveDirectoryAppId;
+            string aadTenantId = this._config.AzureActiveDirectoryTenant;
+            string keyVaultAppKey = this._config.AzureActiveDirectoryAppKey;
             
             // Retrieve a token from Azure AD using the application id and password.
             try

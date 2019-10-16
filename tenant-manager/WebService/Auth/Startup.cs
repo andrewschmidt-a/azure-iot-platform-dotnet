@@ -6,19 +6,19 @@ using MMM.Azure.IoTSolutions.TenantManager.WebService;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Auth
 {
     public class Startup
     {
-        public static void SetupDependencies(IServiceCollection services, IConfig config)
+        public static void SetupDependencies(ContainerBuilder builder, IConfig config)
         {
-            services.AddSingleton<IClientAuthConfig>(config.ClientAuthConfig);
-            services.AddSingleton<CorsSetup>();
-            
+            builder.RegisterInstance(config.ClientAuthConfig).As<IClientAuthConfig>().SingleInstance();
+            builder.RegisterType<CorsSetup>().As<ICorsSetup>().SingleInstance();
+
             // OpenId Connect manager
-            services.AddSingleton<IConfigurationManager<OpenIdConnectConfiguration>>(GetOpenIdConnectManager(config));
+            builder.RegisterInstance(GetOpenIdConnectManager(config))
+                .As<IConfigurationManager<OpenIdConnectConfiguration>>().SingleInstance();
         }
 
         // Prepare the OpenId Connect configuration manager, responsibile

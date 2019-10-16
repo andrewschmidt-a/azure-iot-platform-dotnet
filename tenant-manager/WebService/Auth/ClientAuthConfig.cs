@@ -44,6 +44,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
     {
         public string CorsWhitelist { get; set; }
         public bool CorsEnabled => !string.IsNullOrEmpty(this.CorsWhitelist.Trim());
+
         public bool AuthRequired { get; set; }
         public string AuthType { get; set; }
         public IEnumerable<string> JwtAllowedAlgos { get; set; }

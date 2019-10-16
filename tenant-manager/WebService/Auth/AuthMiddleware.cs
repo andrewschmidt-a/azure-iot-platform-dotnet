@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Microsoft.Azure.IoTSolutions.Auth;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using Microsoft.Azure.IoTSolutions.Auth;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
@@ -57,14 +57,16 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
         private TokenValidationParameters tokenValidationParams;
         private readonly bool authRequired;     
         private bool tokenValidationInitialized;
-        private readonly List<string> allowedUrls = new List<string>() { "/v1/status" };
+        private readonly IServicesConfig servicesConfig;
+        private readonly List<string> allowedUrls = new List<string>() { "/api/status" };
 
         public AuthMiddleware(
             // ReSharper disable once UnusedParameter.Local
             RequestDelegate requestDelegate, // Required by ASP.NET
             IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan,
             IClientAuthConfig config,
-            ILogger log)
+            ILogger log,
+            IServicesConfig servicesConfig)
         {
             this.requestDelegate = requestDelegate;
             this.openIdCfgMan = openIdCfgMan;
@@ -72,6 +74,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             this.log = log;
             this.authRequired = config.AuthRequired;
             this.tokenValidationInitialized = false;
+            this.servicesConfig = servicesConfig;
 
             // This will show in development mode, or in case auth is turned off
             if (!this.authRequired)
@@ -198,6 +201,29 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
                     // header doesn't need to be parse again later in the User controller.
                     context.Request.SetCurrentUserClaims(jwtToken.Claims);
 
+                    // Store the user allowed actions in the request context to validate
+                    // authorization later in the controller.
+                    var userObjectId = context.Request.GetCurrentUserObjectId();
+                    var roles = context.Request.GetCurrentUserRoleClaim().ToList();
+                    List<string> allowedActions = new List<string>();
+                    if (roles.Any())
+                    {
+                        foreach(string role in roles)
+                        {
+                            allowedActions.AddRange(this.servicesConfig.UserPermissions[role]);
+                        }
+                        
+                    }
+                    else
+                    {
+                        this.log.Warn("JWT token doesn't include any role claims.", () => { });
+                    }
+                    //DISBABLED RBAC -- adding all access 
+                    context.Request.SetCurrentUserAllowedActions(allowedActions);
+
+                    //Set Tenant Information
+                    context.Request.SetTenant();
+
                     return true;
                 }
 
@@ -219,18 +245,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             {
                 this.log.Info("Initializing OpenID configuration", () => { });
                 var openIdConfig = await this.openIdCfgMan.GetConfigurationAsync(token);
-
-                //Attempted to do it myself still issue with SSL
-                //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.config.JwtIssuer+ "/.well-known/openid-configuration/jwks");
-                //request.AutomaticDecompression = DecompressionMethods.GZip;
-                //IdentityKeys
-
-                //using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                //using (Stream stream = response.GetResponseStream())
-                //using (StreamReader reader = new StreamReader(stream))
-                //{
-                //    keys = JsonConvert.DeserializeObject<IdentityGatewayKeys>(reader.ReadToEnd());
-                //}
 
                 this.tokenValidationParams = new TokenValidationParameters
                 {
