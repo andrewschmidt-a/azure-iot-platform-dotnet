@@ -40,10 +40,7 @@ jobs:
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-<<<<<<< HEAD
       location: ${{ parameters.location }}
-=======
->>>>>>> 6a5ad71f967685bf3a5ffcf0b8f0a7b82ac09ff8
       omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
 ## Deploys AKS, integrate with OMS workspace
   - template: infra/aks.yaml
