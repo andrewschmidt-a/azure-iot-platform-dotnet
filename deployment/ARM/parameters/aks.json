@@ -36,8 +36,8 @@
             "value": false
         },
         "enableOmsAgent": {
-		    "value": true
-		},
+            "value": true
+	},
         "enableHttpApplicationRouting": {
             "value": false
         }
