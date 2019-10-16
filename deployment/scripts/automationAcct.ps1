@@ -45,7 +45,7 @@ function createWebhook($webhook, $runbookName, $expDate, $secretName) {
        # add the webhook to keyvault
        $webookUri = $result.WebhookURI
        addtoKeyvault -webookUri $webookUri -secretName $secretName    
-        
+       Write-Output "webhook added to keyvault, $secretName" 
     }
     else{
         Write-Output "webhook already exists for the runbook, $runbookName"
