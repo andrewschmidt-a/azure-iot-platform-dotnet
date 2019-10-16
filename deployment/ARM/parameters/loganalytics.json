@@ -3,7 +3,15 @@
     "contentVersion": "1.0.0.0",
     
     "parameters": {
-        "omsWorkspaceName": { "value": "crsl-oms-workspace" },
-        "omsServiceTier": { "value": "Standalone" }
+        
+        "omsWorkspaceName": {
+        "value": "loganalyticsws-test1"
+        },
+        "location": {
+            "value": "centralus"
+        },
+        "omsServiceTier": {
+        "value": "Standalone"
+        }
   }
 }

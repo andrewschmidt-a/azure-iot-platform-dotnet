@@ -20,6 +20,12 @@
                 "description": "OMS log analytics service tier: Free, Standalone, or PerNode"
             }
         },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of oms resource."
+            }
+        },
         "omsDataRetention": {
             "type": "int",
             "defaultValue": 7,

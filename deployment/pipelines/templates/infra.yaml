@@ -40,6 +40,7 @@ jobs:
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
+      location: ${{ parameters.location }}
       omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
 ## Deploys AKS, integrate with OMS workspace
   - template: infra/aks.yaml
@@ -48,7 +49,8 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       aksName: ${{ parameters.aksName }}
       location: ${{ parameters.location }}
-
+      omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
+     
 - job: resources
   displayName: Deploy Resources
   dependsOn: aks

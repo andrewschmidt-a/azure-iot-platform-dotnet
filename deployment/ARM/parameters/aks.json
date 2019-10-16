@@ -18,10 +18,10 @@
             "value": "Standard_DS2_v2"
         },
         "servicePrincipalClientId": {
-            "value": null
+            "value": "34b52a26-ce11-46c7-801d-f07c4752c365"
         },
         "servicePrincipalClientSecret": {
-            "value": null
+            "value": "3+ad?rluVMS98?=pWl5L_*u81Gk6*g+w"
         },
         "kubernetesVersion": {
             "value": "1.13.10"
@@ -29,9 +29,15 @@
         "networkPlugin": {
             "value": "kubenet"
         },
+        "omsworkspaceName":{
+            "value": "loganalyticsws-test1"
+        },
         "enableRBAC": {
             "value": false
         },
+        "enableOmsAgent": {
+            "value": true
+	},
         "enableHttpApplicationRouting": {
             "value": false
         }

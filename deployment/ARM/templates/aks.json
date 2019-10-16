@@ -84,6 +84,19 @@
                 "description": "Network plugin used for building Kubernetes network."
             }
         },
+        "omsWorkspaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "OMS log analytics workspace name"
+            }
+        },
+        "enableOmsAgent": {
+		    "type": "bool",
+            "defaultValue": true,
+            "metadata": {
+                "description": "Boolean flag to turn on and off of RBAC."
+            }
+        },
         "maxPods": {
             "type": "int",
             "defaultValue": 30,
@@ -151,6 +164,12 @@
                 "addonProfiles": {
                     "httpApplicationRouting": {
                         "enabled": "[parameters('enableHttpApplicationRouting')]"
+                    },
+                    "omsagent": {
+                        "enabled": "[parameters('enableOmsAgent')]",
+                        "config": {
+                            "logAnalyticsWorkspaceResourceID": "[resourceId('microsoft.operationalinsights/workspaces', parameters('omsworkspaceName'))]"
+                        }
                     }
                 }
             },
