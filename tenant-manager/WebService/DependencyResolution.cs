@@ -4,6 +4,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
 using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -49,6 +50,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
         /// <summary>Setup Custom rules overriding autowired ones.</summary>
         private static void SetupCustomRules(ContainerBuilder builder)
         {
+
             // Make sure the configuration is read only once.
             IConfig config = new Config(new ConfigData(new Logger(Uptime.ProcessId, LogLevel.Info)));
             builder.RegisterInstance(config).As<IConfig>().SingleInstance();
@@ -61,6 +63,12 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             // TODO: read log level from configuration
             var logger = new Logger(Uptime.ProcessId, LogLevel.Debug);
             builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
+
+            // Add helpers
+            builder.RegisterInstance(config).As<CosmosHelper>().SingleInstance();
+            builder.RegisterInstance(config).As<TableStorageHelper>().SingleInstance();
+            builder.RegisterInstance(config).As<TenantRunbookHelper>().SingleInstance();
+            builder.RegisterInstance(config).As<TokenHelper>().SingleInstance();
 
             // Auth and CORS setup
             Auth.Startup.SetupDependencies(builder, config);

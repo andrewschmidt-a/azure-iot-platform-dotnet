@@ -40,11 +40,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().AddControllersAsServices();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddSingleton<CosmosHelper>();
-            services.AddSingleton<TableStorageHelper>();
-            services.AddSingleton<TenantRunbookHelper>();
-            services.AddSingleton<TokenHelper>();
 
             this.ApplicationContainer = DependencyResolution.Setup(services);
 

@@ -58,7 +58,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
         private readonly bool authRequired;     
         private bool tokenValidationInitialized;
         private readonly IServicesConfig servicesConfig;
-        private readonly List<string> allowedUrls = new List<string>() { "/v1/status" };
+        private readonly List<string> allowedUrls = new List<string>() { "/api/status" };
 
         public AuthMiddleware(
             // ReSharper disable once UnusedParameter.Local
@@ -258,7 +258,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
                     ValidIssuer = this.config.JwtIssuer,
 
                     // Validate the token audience
-                    ValidateAudience = false,
+                    ValidateAudience = true,
                     ValidAudience = this.config.JwtAudience,
 
                     // Validate token lifetime
