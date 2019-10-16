@@ -7,7 +7,7 @@ parameters:
   cosmosDBName: 'iot'
   collectionName: 'telemetry'
   cosmosDBthroughput: 1000
-  aksName: ''
+  aksName: 'aks'
   keyVaultName: 'keyvault'
   functionAppName: ''
   storageAccountName: 'storageacct'
@@ -47,7 +47,7 @@ jobs:
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      aksName: ${{ parameters.aksName }}
+      aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
       omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
      
@@ -64,7 +64,7 @@ jobs:
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      aksName: ${{ parameters.aksName }}
+      aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
 
@@ -184,4 +184,4 @@ jobs:
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      aksName: ${{ parameters.aksName }}
+      aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}

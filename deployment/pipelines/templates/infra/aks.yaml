@@ -4,6 +4,7 @@ parameters:
   resourceGroup: ''
   aksName: ''
   location: ''
+  omsworkspaceName: ''
 
 steps:
 - task: AzureResourceGroupDeployment@2
@@ -16,7 +17,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/aks.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/aks.json'
-    overrideParameters: '-resourceName ${{ parameters.aksName }} -dnsPrefix ${{ parameters.aksName }}-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey'
+    overrideParameters: '-resourceName ${{ parameters.aksName }} -location ${{ parameters.location }} -dnsPrefix ${{ parameters.aksName }}-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey -omsworkspaceName ${{ parameters.omsWorkspaceName }}'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
