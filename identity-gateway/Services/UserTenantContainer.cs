@@ -30,6 +30,18 @@ namespace IdentityGateway.Services
             return resultSegment.Results.Select(t => (UserTenantModel)t).ToList();  // cast to a UserTenantModel list to easily parse result
         }
 
+
+        /// <summary>
+        /// get all users for a tenant
+        /// </summary>
+        /// <param name="input">UserTenantInput with the tenant param</param>
+        /// <returns></returns>
+        public async Task<List<UserTenantModel>> GetAllUsersAsync(UserTenantInput input)
+        {
+            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.tenant));
+            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
+            return resultSegment.Results.Select(t => (UserTenantModel)t).ToList();  // cast to a UserTenantModel list to easily parse result
+        }
         /// <summary>
         /// Get a single tenant for the user
         /// </summary>
@@ -49,6 +61,11 @@ namespace IdentityGateway.Services
         /// <returns></returns>
         public async Task<UserTenantModel> CreateAsync(UserTenantInput input)
         {
+            // If UserId is null then make it up
+            if (input.userId == null)
+            {
+                input.userId = Guid.NewGuid().ToString();
+            }
             // Create the user and options for creating the user record in the user table
             UserTenantModel existingModel = await this.GetAsync(input);
             if (existingModel != null)
@@ -75,13 +92,13 @@ namespace IdentityGateway.Services
         public async Task<UserTenantModel> UpdateAsync(UserTenantInput input)
         {
             UserTenantModel model = new UserTenantModel(input);
-            if (!model.RoleList.Any())
+            if (model.RoleList != null && !model.RoleList.Any())
             {
                 // If the RoleList of the model is empty, throw an exception. The RoleList is the only updateable feature of the UserTenant Table
                 throw new ArgumentException("The UserTenant update model must contain a serialized role array.");
             }
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
-            TableOperation replaceOperation = TableOperation.Replace(model);
+            TableOperation replaceOperation = TableOperation.InsertOrMerge(model);
             TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
             return replace.Result as UserTenantModel;
         }

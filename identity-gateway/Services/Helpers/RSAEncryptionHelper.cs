@@ -36,14 +36,10 @@ namespace IdentityGateway.Services.Helpers
             return rsa;
         }
 
-        public static async Task<JsonWebKeySet> GetJsonWebKey(IConfiguration config)
+        public static JsonWebKeySet GetJsonWebKey(string key)
         {
-            var publicKey = "";
-            /* Get Secrets From KeyVault */
-            using (KeyVaultHelper kvh = new KeyVaultHelper(config))
-            {
-                publicKey = (await kvh.getSecretAsync("identityGatewayPublicKey")).Replace("\\n", "\n");
-            }
+            var publicKey = key.Replace("\\n", "\n");
+
             JsonWebKeySet jsonWebKeySet = new JsonWebKeySet();
             using (var textReader = new StringReader(publicKey))
             {

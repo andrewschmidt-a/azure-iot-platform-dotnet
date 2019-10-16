@@ -6,6 +6,16 @@ using IdentityGateway.WebService.v1.Filters;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 using System;
+using RSA = IdentityGateway.Services.Helpers.RSA;
+using Microsoft.IdentityModel.Tokens;
+using IdentityGateway.Services.Runtime;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
+using IdentityGateway.Services.Helpers;
+using SendGrid.Helpers.Mail;
+using SendGrid;
+using System.Linq;
 
 namespace IdentityGateway.WebService.v1.Controllers
 {
@@ -13,17 +23,35 @@ namespace IdentityGateway.WebService.v1.Controllers
     [Authorize("ReadAll")]
     public class UserTenantController : ControllerBase
     {
-        private IConfiguration _config;
+        private IServicesConfig _config;
         private UserTenantContainer _container;
+        private IJWTHelper _jwtHelper;
 
-        public UserTenantController(IConfiguration config, UserTenantContainer container)
+        public UserTenantController(IServicesConfig config, UserTenantContainer container, IJWTHelper jwtHelper)
         {
             this._config = config;
             this._container = container;
+            this._jwtHelper = jwtHelper;
         }
 
         /// <summary>
-        /// 
+        /// Get all users in tenant
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("users")]
+        public async Task<List<UserTenantModel>> GetAllAsync()
+        {
+            UserTenantInput input = new UserTenantInput
+            {
+                userId = null,
+                tenant = this._container.tenant
+            };
+            List<UserTenantModel> models = await this._container.GetAllUsersAsync(input);
+            return models;
+        }
+
+        /// <summary>
+        /// Get User by Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -111,17 +139,58 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         // GET: api/User/5
-        [HttpGet("invite")]
+        [HttpPost("invite")]
         [Authorize("UserManage")]
-        public async Task<string> InviteAsync([FromBody] string emailAddress, [FromBody] string role)
+        public async Task<UserTenantModel> InviteAsync([FromBody] Invitation invitation)
         {
+            // Object to insert in table as placeholder
             UserTenantInput input = new UserTenantInput
             {
-                userId = new Guid().ToString(),
-                tenant = this._container.tenant
+                userId = Guid.NewGuid().ToString(),
+                tenant = this._container.tenant,
+                roles = JsonConvert.SerializeObject(new List<string>() { invitation.role }),
+                name = invitation.email_address,
+                type = "Invited"
             };
-            UserTenantModel model = await this._container.GetAsync(input);
-            return JsonConvert.SerializeObject(model);
+
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim("role", invitation.role),
+                new Claim("tenant", this._container.tenant),
+                new Claim("userId", input.userId)
+            };
+
+            string forwardedFor = null;
+            // add issuer with forwarded for address if exists (added by reverse proxy)
+            if (HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
+            {
+                forwardedFor = HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value
+                    .First();
+            }
+
+            var jwtHandler = new JwtSecurityTokenHandler();
+            string inviteToken = jwtHandler.WriteToken(this._jwtHelper.MintToken(claims, "IdentityGateway", DateTime.Now.AddDays(3)));
+
+            var msg = new SendGridMessage();
+
+            msg.SetFrom(new EmailAddress("iotplatformnoreply@mmm.com", "3M IoT Platform Team"));
+
+            var recipients = new List<EmailAddress>
+            {
+                new EmailAddress(invitation.email_address)
+            };
+            msg.AddTos(recipients);
+
+            msg.SetSubject("Invitation to IoT Platform");
+            Uri uri = new Uri(forwardedFor ?? "https://" + HttpContext.Request.Host.ToString());
+            string link = uri.Host + "#invite=" + inviteToken;
+            msg.AddContent(MimeType.Text, "Click here to join the tenant: ");
+            msg.AddContent(MimeType.Html, "<a href=\""+ link + "\">"+link+"</a>");
+
+            var client = new SendGridClient(this._config.SendGridAPIKey);
+            var response = await client.SendEmailAsync(msg);
+
+            return await this._container.CreateAsync(input);
         }
     }
 }
