@@ -18,10 +18,10 @@
             "value": "Standard_DS2_v2"
         },
         "servicePrincipalClientId": {
-            "value": "34b52a26-ce11-46c7-801d-f07c4752c365"
+            "value": null
         },
         "servicePrincipalClientSecret": {
-            "value": "3+ad?rluVMS98?=pWl5L_*u81Gk6*g+w"
+            "value": null
         },
         "kubernetesVersion": {
             "value": "1.13.10"
