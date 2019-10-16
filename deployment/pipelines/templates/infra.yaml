@@ -113,7 +113,8 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       functionApp1Name: ${{ parameters.applicationCode }}-deviceproperties-${{ parameters.deployEnvironment }}
-      functionApp2Name: ${{ parameters.applicationCode }}-messaging-function-${{ parameters.deployEnvironment }}
+      functionApp2Name: ${{ parameters.applicationCode }}-hubmessaging-${{ parameters.deployEnvironment }}
+      functionApp3Name: ${{ parameters.applicationCode }}-appconfigController-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
