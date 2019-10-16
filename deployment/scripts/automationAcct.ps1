@@ -19,7 +19,7 @@ $RGName = $resourceGroup
 $vaultName = $keyvaultName
 
 function importRunbook($runbookName, $filepath) {
-
+    
     Import-AzureRMAutomationRunbook -Name $runbookName -Path $filepath `
                                     -ResourceGroupName $RGName -AutomationAccountName $automationAccountName `
                                     -Type PowerShell `
@@ -29,41 +29,40 @@ function importRunbook($runbookName, $filepath) {
                                      -ResourceGroupName $RGName
 }
 
-function createWebhook($webhook, $runbookName, $expDate) {
+function createWebhook($webhook, $runbookName, $expDate, $secretName) {
 
     $ifExists = Get-AzureRmAutomationWebhook -RunbookName $runbookName `
                                              -ResourceGroupName $RGName `
                                              -AutomationAccountName $automationAccountName
 
     if ([string]::IsNullOrEmpty($ifExists)) {
-        New-AzureRmAutomationWebhook -Name $webhook -RunbookName $runbookName `
+        $result = New-AzureRmAutomationWebhook -Name $webhook -RunbookName $runbookName `
                                      -ExpiryTime $expDate -ResourceGroup $RGName `
                                      -AutomationAccountName $automationAccountName `
                                      -IsEnabled $True `
-                                     -Force                                
+                                     -Force
+       
+       # add the webhook to keyvault
+       $webookUri = $result.WebhookURI
+       addtoKeyvault -webookUri $webookUri -secretName $secretName    
+        
     }
     else{
         Write-Output "webhook already exists for the runbook, $runbookName"
     }
 }
 
+function addtoKeyvault($webookUri, $secretName ){
+    $vaultwebookUri = ConvertTo-SecureString -String $webookUri -AsPlainText -Force
+    Set-AzureKeyVaultSecret -VaultName $vaultName -Name $secretName -SecretValue $vaultwebookUri
+}
+
 # import the runbook with code
-$result = importRunbook -runbookName "CreateIoTHubTenant" -filepath "$scriptFolder\CreateIoThubRunbook.ps1"
-Write-Output $result
-$result = importRunbook -runbookName "DeleteIoTHubTenant" -filepath "$scriptFolder\DeleteIoThubRunbook.ps1"
-Write-Output $result
+importRunbook -runbookName "CreateIoTHubTenant" -filepath "$scriptFolder\CreateIoThubRunbook.ps1" 
+importRunbook -runbookName "DeleteIoTHubTenant" -filepath "$scriptFolder\DeleteIoThubRunbook.ps1"
 
 # create the webhook and store to the Keyvault
-$result = createWebhook -webhook "Tenantcreatewebhook" -runbookName "CreateIoTHubTenant" -expDate $expDate
-$createwebookUri = $result.WebhookURI
-$vaultwebookUri = ConvertTo-SecureString -String $createwebookUri -AsPlainText -Force
-Set-AzureKeyVaultSecret -VaultName $vaultName -Name "createIotHubWebHookUrl" -SecretValue $vaultwebookUri
-
-$result = createWebhook -webhook "Tenantdeleteewebhook" -runbookName "DeleteIoTHubTenant" -expDate $expDate
-$deletewebookUri = $result.WebhookURI
-$vaultwebookUri = ConvertTo-SecureString -String $deletewebookUri -AsPlainText -Force
-Set-AzureKeyVaultSecret -VaultName $vaultName -Name "deleteIotHubWebHookUrl" -SecretValue $vaultwebookUri
+createWebhook -webhook "Tenantcreatewebhook" -runbookName "CreateIoTHubTenant" -expDate $expDate -secretName "createIotHubWebHookUrl"
+createWebhook -webhook "Tenantdeleteewebhook" -runbookName "DeleteIoTHubTenant" -expDate $expDate -secretName "deleteIotHubWebHookUrl"
 
 # end 
-
-
