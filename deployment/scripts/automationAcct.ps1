@@ -37,10 +37,10 @@ function createWebhook($webhook, $runbookName, $expDate, $secretName) {
 
     if ([string]::IsNullOrEmpty($ifExists)) {
         $result = New-AzureRmAutomationWebhook -Name $webhook -RunbookName $runbookName `
-                                     -ExpiryTime $expDate -ResourceGroup $RGName `
-                                     -AutomationAccountName $automationAccountName `
-                                     -IsEnabled $True `
-                                     -Force
+                                               -ExpiryTime $expDate -ResourceGroup $RGName `
+                                               -AutomationAccountName $automationAccountName `
+                                               -IsEnabled $True `
+                                               -Force
        
        # add the webhook to keyvault
        $webookUri = $result.WebhookURI

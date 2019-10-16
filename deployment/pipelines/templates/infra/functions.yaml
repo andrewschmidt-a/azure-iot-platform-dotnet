@@ -9,6 +9,22 @@ parameters:
   location: ''
   
 steps:
+
+## Deploy ARM Resource -- Deploy AppConfig controller Function App
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Azure function App: AppConfigController"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: '${{ parameters.location }}'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp3Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true
+
 ## TODO -- Get Trigger binding information CLI probally. Event Hub based
 ## Deploy ARM Resource
 - task: AzureResourceGroupDeployment@2
@@ -41,17 +57,3 @@ steps:
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
-## Deploy ARM Resource -- Deploy AppConfig controller Function App
-# - task: AzureResourceGroupDeployment@2
-#   displayName: "Create Azure function App: AppConfigController"
-#   inputs:
-#     azureSubscription: ${{ parameters.serviceConnection }}
-#     action: 'Create Or Update Resource Group'
-#     resourceGroupName: ${{ parameters.resourceGroup }}
-#     location: '${{ parameters.location }}'
-#     templateLocation: 'Linked artifact'
-#     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
-#     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-#     overrideParameters: '-functionAppName ${{ parameters.functionApp3Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
-#     deploymentMode: 'Incremental'
-#     addSpnToEnvironment: true
