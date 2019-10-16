@@ -127,6 +127,7 @@ namespace IdentityGateway.WebService
                 // Call the next delegate/middleware in the pipeline
                 this.log.Debug("Skipping auth for service to service request", () => { });
                 context.Request.SetExternalRequest(false);
+                context.Request.SetTenant();
                 return this.requestDelegate(context);
             }
 
