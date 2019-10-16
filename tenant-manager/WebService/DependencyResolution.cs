@@ -65,10 +65,11 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
 
             // Add helpers
-            builder.RegisterInstance(config).As<CosmosHelper>().SingleInstance();
-            builder.RegisterInstance(config).As<TableStorageHelper>().SingleInstance();
-            builder.RegisterInstance(config).As<TenantRunbookHelper>().SingleInstance();
-            builder.RegisterInstance(config).As<TokenHelper>().SingleInstance();
+            builder.RegisterInstance(new CosmosHelper(config.ServicesConfig)).As<CosmosHelper>().SingleInstance();
+            builder.RegisterInstance(new TableStorageHelper(config.ServicesConfig)).As<TableStorageHelper>().SingleInstance();
+
+            var tokenHelper = new TokenHelper(config.ServicesConfig);
+            builder.RegisterInstance(new TenantRunbookHelper(config.ServicesConfig, tokenHelper)).As<TenantRunbookHelper>().SingleInstance();
 
             // Auth and CORS setup
             Auth.Startup.SetupDependencies(builder, config);

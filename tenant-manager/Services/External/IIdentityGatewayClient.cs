@@ -11,8 +11,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
 
         Task<IdentityGatewayApiModel> getTenantForUserAsync(string userId, string tenantId);
 
-        Task<bool> isUserAuthenticated(string userId, string tenantId);
-
         Task<IdentityGatewayApiSettingModel> addSettingsForUserAsync(string userId, string settingKey, string settingValue);
 
         Task<IdentityGatewayApiSettingModel> getSettingsForUserAsync(string userId, string settingKey);

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Net;
 using Microsoft.AspNetCore.Http;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Http;
 using HttpRequest = MMM.Azure.IoTSolutions.TenantManager.Services.Http.HttpRequest;
@@ -15,10 +16,10 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
     {
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string AZDS_ROUTE_KEY = "azds-route-as";
+        
         private readonly IHttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string serviceUri;
-        private readonly string[] authenticatedRoles = { "admin" };
         private delegate Task<IHttpResponse> requestMethod(HttpRequest request);
 
         public IdentityGatewayClient(IServicesConfig config, IHttpClient httpClient, IHttpContextAccessor httpContextAccessor, ILogger logger)
@@ -67,15 +68,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
             request.Headers.Add(TENANT_HEADER, tenantId);
             return await this.processApiModelRequest<IdentityGatewayApiModel>(this._httpClient.GetAsync, request);
         }
-
-        public async Task<bool> isUserAuthenticated(string userId, string tenantId)
-        {
-            HttpRequest request = CreateRequest($"tenants/{userId}", new IdentityGatewayApiModel { });
-            request.Headers.Add(TENANT_HEADER, tenantId);
-            IdentityGatewayApiModel identityModel = await this.processApiModelRequest<IdentityGatewayApiModel>(this._httpClient.GetAsync, request);
-            // return true if any roles are authenticated for - otherwise false
-            return identityModel.RoleList.Any(role => authenticatedRoles.Contains(role));
-        }
         
         public async Task<IdentityGatewayApiModel> deleteTenantForAllUsersAsync(string tenantId)
         {
@@ -111,6 +103,10 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
                 if (response == null || response.Content == null)
                 {
                     throw new Exception("Http Request returned a null response.");
+                }
+                else if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new Exception("Http Request returned a status code other than 200.");
                 }
             }
             catch (Exception e)
