@@ -22,7 +22,7 @@ function importRunbook($runbookName, $filepath) {
 
     Import-AzureRMAutomationRunbook -Name $runbookName -Path $filepath `
                                     -ResourceGroupName $RGName -AutomationAccountName $automationAccountName `
-                                    -Type PowerShell
+                                    -Type PowerShell `
                                     -Force
 
     Publish-AzureRmAutomationRunbook -Name $runbookName -AutomationAccountName $automationAccountName `
@@ -39,7 +39,7 @@ function createWebhook($webhook, $runbookName, $expDate) {
         New-AzureRmAutomationWebhook -Name $webhook -RunbookName $runbookName `
                                      -ExpiryTime $expDate -ResourceGroup $RGName `
                                      -AutomationAccountName $automationAccountName `
-                                     -IsEnabled $True 
+                                     -IsEnabled $True `
                                      -Force                                
     }
     else{
