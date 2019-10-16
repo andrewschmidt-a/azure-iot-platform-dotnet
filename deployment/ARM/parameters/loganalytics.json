@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   
@@ -13,5 +14,13 @@
       "omsServiceTier": {
       "value": "Standalone"
       }
+=======
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    
+    "parameters": {
+        "omsWorkspaceName": { "value": "crsl-oms-workspace" },
+        "omsServiceTier": { "value": "Standalone" }
+>>>>>>> 6a5ad71f967685bf3a5ffcf0b8f0a7b82ac09ff8
   }
 }
