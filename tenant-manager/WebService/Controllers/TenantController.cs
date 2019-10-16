@@ -25,8 +25,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
         private const string GLOBAL_KEY = "Global";
         private const string STORAGE_ADAPTER_DOCUMENT_DB_KEY = "StorageAdapter:documentDb";
         private const string TENANT_MANAGEMENT_KEY = "TenantManagerService:";
-        private const string COSMOS_DB_KEY = TENANT_MANAGEMENT_KEY + "CosmosDb";
-        private const string COSMOS_KEY = TENANT_MANAGEMENT_KEY + "cosmoskey";
+        private const string COSMOS_DB_KEY = TENANT_MANAGEMENT_KEY + "cosmosDbEndpoint";
+        private const string COSMOS_KEY = TENANT_MANAGEMENT_KEY + "cosmosDbToken";
         private const string DATABASE_KEY = TENANT_MANAGEMENT_KEY + "databaseName";
 
         // config keys specific to GetSecretAsync from keyvault
