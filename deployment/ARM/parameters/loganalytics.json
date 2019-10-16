@@ -3,17 +3,7 @@
     "contentVersion": "1.0.0.0",
     
     "parameters": {
-        
-        "omsWorkspaceName": {
-        "value": "crsl-oms-workspace"
-        },
-
-        "omsServiceTier": {
-        "value": "Standalone"
-        },
-        
-        "automationAccountName": {
-        "value": "crsl-automationacct"
-    }
+        "omsWorkspaceName": { "value": "crsl-oms-workspace" },
+        "omsServiceTier": { "value": "Standalone" }
   }
 }
