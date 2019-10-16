@@ -35,14 +35,22 @@ jobs:
   - template: infra/tagARM.yaml
     parameters:
       environment: ${{ parameters.environment }}
-## Deploys AKS
+## Deploys Loganalytics/OMS workspace
+  - template: infra/loganalytics.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      location: ${{ parameters.location }}
+      omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
+## Deploys AKS, integrate with OMS workspace
   - template: infra/aks.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       aksName: ${{ parameters.aksName }}
       location: ${{ parameters.location }}
-
+      omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
+     
 - job: resources
   displayName: Deploy Resources
   dependsOn: aks
@@ -118,14 +126,6 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       mapsName: ${{ parameters.applicationCode }}-mapsacct-${{ parameters.deployEnvironment }}
-
-## Deploys Loganalytics workspace
-  - template: infra/loganalytics.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
-      automationAccountName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
 
 ## Deploys KeyVault and load the secrets to keyvault
   - template: infra/keyvault.yaml

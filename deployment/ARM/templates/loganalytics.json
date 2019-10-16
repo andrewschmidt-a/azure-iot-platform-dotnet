@@ -20,6 +20,12 @@
                 "description": "OMS log analytics service tier: Free, Standalone, or PerNode"
             }
         },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "The location of oms resource."
+            }
+        },
         "omsDataRetention": {
             "type": "int",
             "defaultValue": 7,
@@ -27,13 +33,6 @@
             "maxValue": 730,
             "metadata": {
                 "description": "OMS log analytics number of days of retention. Free plans can only have 7 days, Standalone and OMS plans include 30 days for free"
-            }
-        },
-        "automationAccountName": {
-            "defaultValue": "",
-            "type": "string",
-            "metadata": {
-                "description": "Automation account name"
             }
         }
     },
@@ -81,30 +80,6 @@
                     }
                 }
             ]
-        },
-        {
-            "apiVersion": "[variables('apiVersion').automation]",
-            "type": "Microsoft.Automation/automationAccounts",
-            "name": "[parameters('automationAccountName')]",
-            "location": "[resourceGroup().location]",
-            "properties": {
-                "sku": {
-                    "name": "Basic"
-                }
-            }
-        },
-        {
-            "apiVersion": "[variables('apiVersion').omssolutions]",
-            "type": "Microsoft.OperationalInsights/workspaces/linkedServices",
-            "name": "[concat(parameters('omsWorkspaceName'), '/' , 'Automation')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.OperationalInsights/workspaces/', parameters('omsWorkspaceName'))]",
-                "[concat('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
-            ],
-            "properties": {
-                "resourceId": "[resourceId('Microsoft.Automation/automationAccounts/', parameters('automationAccountName'))]"
-            }
         }
     ]
 }
