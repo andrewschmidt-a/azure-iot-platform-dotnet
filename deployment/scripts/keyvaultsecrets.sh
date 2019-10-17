@@ -95,7 +95,7 @@ twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource
 
 # Azure Maps Key
 mapsacct=$(az maps account list --resource-group $rg| grep name | grep map | awk -F "\"" '{print $4}')
-mapskey=$(az maps account keys list --name $mapsacct --resource-group $rg | grep primaryKey | awk -F "\"" '{print $4}')
+mapskey=$(az maps account keys list --name $mapsacct --resource-group $rg | grep primaryKey | awk -F "\"" '{print $4}'| head -1)
 
 # Adding Keys to the KeyVault
 az keyvault secret set-attributes --enable false --vault-name $kVaultName --name 'documentDBAuthKey' 2>/dev/null

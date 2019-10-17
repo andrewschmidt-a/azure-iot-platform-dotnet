@@ -61,7 +61,7 @@ steps:
       twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace| grep name |grep twin-change| awk -F "\"" '{print $4}'| cut -d "/" -f1)
       twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
       mapsacct=$(az maps account list --resource-group $rg| grep name | grep map | awk -F "\"" '{print $4}')
-      mapskey=$(az maps account keys list --name $mapsacct --resource-group $rg | grep primaryKey | awk -F "\"" '{print $4}')
+      mapskey=$(az maps account keys list --name $mapsacct --resource-group $rg | grep primaryKey | awk -F "\"" '{print $4}'| head -1)
       az keyvault secret set --vault-name $kVaultName --name 'documentDBAuthKey' --value $cosmosDBAuthKey
       az keyvault secret set --vault-name $kVaultName --name 'documentDBEndpoint' --value $cosmosDBUri
       az keyvault secret set --vault-name $kVaultName --name 'documentDBConnectionString' --value $cosmosDBConnection
