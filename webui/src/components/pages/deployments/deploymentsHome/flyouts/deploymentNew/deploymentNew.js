@@ -3,7 +3,7 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 import { Link } from "react-router-dom";
-import { Balloon, BalloonPosition, BalloonAlignment } from '@microsoft/azure-iot-ux-fluent-controls/lib/components/Balloon';
+import { Balloon, BalloonPosition, BalloonAlignment } from '@microsoft/azure-iot-ux-fluent-controls/lib/components/Balloon/Balloon';
 
 import Config from 'app.config';
 import {

@@ -10,7 +10,7 @@
 
     @include themify($themes) {
       // match the background color of the underlying panel:
-      background-color: themed('color-bg-content');
+      background-color: themed('colorContentBackground');
 
       &:not(:active),
       &:not(:hover),
