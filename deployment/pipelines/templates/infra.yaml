@@ -133,14 +133,11 @@ jobs:
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
+      location: ${{ parameters.location }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
       userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
-      #applicationId: '${{ parameters.applicationId }}'
-      #applicationKey: '${{ parameters.applicationKey }}'
-      #tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
-      #subscriptionId: ${{ parameters.subscriptionId}}
-
+      
 ## Create Private/Public Key Pair for Identity Gateway 
 # ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 # https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
@@ -169,8 +166,6 @@ jobs:
       location: ${{ parameters.location }}
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
       automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
-      #ApplicationId: ${{ parameters.applicationId }}
-      #SubscriptionId: ${{ parameters.subscriptionId }}
       CertThumbprint: ${{ parameters.certThumbprint }}
 
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform

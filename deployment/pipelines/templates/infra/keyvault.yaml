@@ -2,6 +2,7 @@
 parameters:
   serviceConnection: ''
   resourceGroup: ''
+  location: ''
   appConfigName: ''
   keyVaultName: ''
   userObjId: ''
@@ -24,7 +25,7 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     action: 'Create Or Update Resource Group'
     resourceGroupName: ${{ parameters.resourceGroup }}
-    location: 'Central US'
+    location: ${{ parameters.location }}
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/keyvault.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/keyvault.json'
@@ -42,7 +43,7 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     scriptLocation: 'inlineScript'
     inlineScript: |-
-      rg={{ parameters.resourceGroup }}
+      rg=${{ parameters.resourceGroup }}
       kVaultName=${{ parameters.keyVaultName }}
       blobStorageAccountName=$(az storage account list -g $rg | grep name | grep storage | awk -F "\"" '{print $4}')
       blobStorageKey=$(az storage account keys list -g $rg -n $blobStorageAccountName | grep value | head -n1 | awk -F "\"" '{print $4}')
