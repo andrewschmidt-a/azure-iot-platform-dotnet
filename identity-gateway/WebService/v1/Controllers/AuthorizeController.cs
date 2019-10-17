@@ -109,10 +109,11 @@ namespace IdentityGateway.Controllers
                 throw new NoAuthorizationException("The given token could not be read or validated.");
             }
 
-            // Create a userTenantInput for the purpose of finding the full tenant list associated with this user
+            // Create a userTenantInput for the purpose of finding if the user has access to the space
             UserTenantInput tenantInput = new UserTenantInput
             {
-                userId = jwt?.Claims?.Where(c => c.Type == "sub").First()?.Value
+                userId = jwt?.Claims?.Where(c => c.Type == "sub").First()?.Value,
+                tenant = tenant
             };
             UserTenantModel tenantResult = await this._userTenantContainer.GetAsync(tenantInput);
             if (tenantResult != null)
