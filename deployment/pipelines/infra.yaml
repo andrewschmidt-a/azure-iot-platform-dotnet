@@ -13,9 +13,9 @@ stages:
   - template: templates/infra.yaml
     parameters:
       serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
-      resourceGroup: rg-odin-test-deploy
+      resourceGroup: rg-crslbbiot-odin-dev
       cosmosDBName: odin-testing-deployment
-      aksName: crsliotakstestodin2
+      aksName: aks-dev-spaces-odin
       appConfigName: crsliotappconfigtestodin
       keyVaultName: crsliotkeyvaulttestodin
       
