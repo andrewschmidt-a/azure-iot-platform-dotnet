@@ -6,7 +6,7 @@ parameters:
   location: ''
   subscriptionId: ''
   certThumbprint: ''
-  keyVaultName: 
+  keyVaultName: ''
 
 steps:
 - task: AzureResourceGroupDeployment@2
