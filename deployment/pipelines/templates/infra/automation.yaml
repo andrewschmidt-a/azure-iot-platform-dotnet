@@ -4,8 +4,8 @@ parameters:
   resourceGroup: ''
   automationName: ''
   location: ''
-  applicationId: ''
-  subscriptionId: ''
+  #applicationId: ''
+  #subscriptionId: ''
   certThumbprint: ''
   keyVaultName: 
 
@@ -20,7 +20,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/automationacct.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/automationacct.json'
-    overrideParameters: '-automationAccountName ${{ parameters.automationName }} -location ${{ parameters.location }} -ApplicationId ${{ parameters.applicationId }} -SubscriptionId ${{ parameters.subscriptionId }} -CertThumbprint ${{ parameters.certThumbprint }}'
+    overrideParameters: '-automationAccountName ${{ parameters.automationName }} -location ${{ parameters.location }} -ApplicationId $servicePrincipalId -SubscriptionId $subscriptionId -CertThumbprint ${{ parameters.certThumbprint }}'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
