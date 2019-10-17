@@ -109,7 +109,13 @@ namespace IdentityGateway.Controllers
                 throw new NoAuthorizationException("The given token could not be read or validated.");
             }
 
-            if (jwt?.Claims?.Count(c => c.Type == "available_tenants" && c.Value == tenant) > 0)
+            // Create a userTenantInput for the purpose of finding the full tenant list associated with this user
+            UserTenantInput tenantInput = new UserTenantInput
+            {
+                userId = jwt?.Claims?.Where(c => c.Type == "sub").First()?.Value
+            };
+            UserTenantModel tenantResult = await this._userTenantContainer.GetAsync(tenantInput);
+            if (tenantResult != null)
             {
                 // Everything checks out so you can mint a new token
                 var tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(jwt.Claims.Where(c => new List<string>() { "sub", "name", "email" }.Contains(c.Type)).ToList(), tenant, jwt.Audiences.First(), jwt.ValidTo));
