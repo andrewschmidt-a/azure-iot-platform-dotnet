@@ -13,7 +13,7 @@ namespace IdentityGateway.Services
     {
         public override string tableName { get{return "userSettings";} }
 
-        public UserSettingsContainer(IHttpContextAccessor httpContextAccessor, TableHelper tableHelper) : base(httpContextAccessor, tableHelper)
+        public UserSettingsContainer(TableHelper tableHelper) : base(tableHelper)
         {
         }
 

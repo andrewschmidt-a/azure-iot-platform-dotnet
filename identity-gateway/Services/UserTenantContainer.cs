@@ -14,7 +14,7 @@ namespace IdentityGateway.Services
     {
         public override string tableName { get{return "user";} }
 
-        public UserTenantContainer(IHttpContextAccessor httpContextAccessor, TableHelper tableHelper) : base(httpContextAccessor, tableHelper)
+        public UserTenantContainer(TableHelper tableHelper) : base(tableHelper)
         {
         }
 
@@ -23,11 +23,11 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with the userId param</param>
         /// <returns></returns>
-        public async Task<List<UserTenantModel>> GetAllAsync(UserTenantInput input)
+        public async Task<UserTenantListModel> GetAllAsync(UserTenantInput input)
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            return resultSegment.Results.Select(t => (UserTenantModel)t).ToList();  // cast to a UserTenantModel list to easily parse result
+            return new UserTenantListModel(resultSegment.Results.Select(t => (UserTenantModel)t).ToList());  // cast to a UserTenantModel list to easily parse result
         }
 
 
@@ -36,11 +36,11 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with the tenant param</param>
         /// <returns></returns>
-        public async Task<List<UserTenantModel>> GetAllUsersAsync(UserTenantInput input)
+        public async Task<UserTenantListModel> GetAllUsersAsync(UserTenantInput input)
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.tenant));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            return resultSegment.Results.Select(t => (UserTenantModel)t).ToList();  // cast to a UserTenantModel list to easily parse result
+            return new UserTenantListModel(resultSegment.Results.Select(t => (UserTenantModel)t).ToList());  // cast to a UserTenantModel list to easily parse result
         }
         /// <summary>
         /// Get a single tenant for the user
@@ -123,22 +123,22 @@ namespace IdentityGateway.Services
         /// Delete the tenant from all users
         /// </summary>
         /// <returns></returns>
-        public async Task<UserTenantListModel> DeleteAllAsync()
+        public async Task<UserTenantListModel> DeleteAllAsync(UserTenantInput input)
         {
             // get all rows where the tenant exists
-            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, this.tenant));
+            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.tenant));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
             List<UserTenantModel> tenantRows = resultSegment.Results.Select(t => (UserTenantModel)t).ToList();  // cast to a UserTenantModel list to easily parse result
 
             // delete the rows
             var deleteTasks = tenantRows.Select(row =>
             {
-                UserTenantInput input = new UserTenantInput
+                UserTenantInput deleteInput = new UserTenantInput
                 {
                     userId = row.PartitionKey,
-                    tenant = this.tenant
+                    tenant = input.tenant
                 };
-                return this.DeleteAsync(input);
+                return this.DeleteAsync(deleteInput);
             });
             var deletionResult = await Task.WhenAll(deleteTasks);
             return new UserTenantListModel("Delete", deletionResult.ToList());
