@@ -20,8 +20,8 @@ stages:
       applicationCode: crsliot
       deployEnvironment: test
       certThumbprint: D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD
-      applicationId: 95d3c662-23ea-4e2d-8d3d-ea2448706934
-      applicationKey: tog]_*a?hXtzD6Z0TWSm6lyPHKsx7H*F
+      #applicationId: 95d3c662-23ea-4e2d-8d3d-ea2448706934
+      #applicationKey: tog]_*a?hXtzD6Z0TWSm6lyPHKsx7H*F
 
 # PSD
 - stage: DeployPSD

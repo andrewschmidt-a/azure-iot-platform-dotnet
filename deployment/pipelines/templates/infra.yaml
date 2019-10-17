@@ -139,7 +139,7 @@ jobs:
       #applicationId: '${{ parameters.applicationId }}'
       #applicationKey: '${{ parameters.applicationKey }}'
       tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
-      subscriptionId: ${{ parameters.subscriptionId}}
+      #subscriptionId: ${{ parameters.subscriptionId}}
 
 ## Create Private/Public Key Pair for Identity Gateway 
 # ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
@@ -170,7 +170,7 @@ jobs:
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
       automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
       #ApplicationId: ${{ parameters.applicationId }}
-      SubscriptionId: ${{ parameters.subscriptionId }}
+      #SubscriptionId: ${{ parameters.subscriptionId }}
       CertThumbprint: ${{ parameters.certThumbprint }}
 
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform

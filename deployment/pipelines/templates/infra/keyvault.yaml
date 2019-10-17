@@ -6,9 +6,9 @@ parameters:
   appConfigName: ''
   keyVaultName: ''
   userObjId: ''
-  applicationId: ''
-  applicationKey: ''
-  subscriptionId: ''
+  #applicationId: ''
+  #applicationKey: ''
+  #subscriptionId: ''
 
 steps:
 - task: AzureCLI@1
