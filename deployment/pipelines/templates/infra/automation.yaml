@@ -17,7 +17,8 @@ steps:
     ScriptType: 'InlineScript'
     Inline: |-
       $vaultValue = (Get-AzureKeyVaultSecret -VaultName ${{ parameters.keyVaultName }} -Name "ApplicationId").SecretValueText
-      Write-Host "##vso[task.setvariable variable=applicationId]$vaultValue"
+      Write-Host "##vso[task.setvariable variable=applicationId]$vaultValue" 
+      Write-Output "Appid is $vaultValue"
     azurePowerShellVersion: 'LatestVersion'
 
 # Create Automation Account using ARM    
