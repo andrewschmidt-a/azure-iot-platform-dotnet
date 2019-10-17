@@ -3,6 +3,7 @@ parameters:
   serviceConnection: ''
   resourceGroup: ''
   location: ''
+  subscriptionId: ''
   appInsightsLocation: 'eastus'
   cosmosDBName: 'iot'
   collectionName: 'telemetry'
@@ -100,6 +101,7 @@ jobs:
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
+      subscriptionId: ${{ parameters.subscriptionId }}
       eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
