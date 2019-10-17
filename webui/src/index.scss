@@ -2,6 +2,7 @@
 
 @import 'styles/font-face-imports';
 @import 'styles/variables';
+@import 'src/styles/themes';
 
 // @font-face urls don't work with CSS modules, so we need to declare them in a
 // non-module file: https://github.com/css-modules/css-modules/issues/95

@@ -14,7 +14,6 @@
   bottom: 0;
   left: 0;
   right: 0;
-  box-shadow: -1px 2px 5px rgba(0, 0, 0, 0.07);
 
   .panel-header {
     display: flex;
@@ -71,6 +70,8 @@
   }
 
   @include themify($themes) {
+    box-shadow: themed('shadow-panel-container');
+    
     .panel-header {
       background-color: themed('colorDashboardPanelHeaderBg');
       color: themed('colorDashboardPanelText');

@@ -9,7 +9,7 @@ import IconLightQuestionBubble from 'assets/icons/IconLightQuestionBubble.svg';
 
 /** A helper object mapping to themed(dark/light) paths */
 export const themedPaths = {
-  checkmarkBubble: { dark: IconDarkCheckmarkBubble, light: IconLightCheckmarkBubble },
-  infoBubble: { dark: IconDarkInfoBubble, light: IconLightInfoBubble },
-  questionBubble: { dark: IconDarkQuestionBubble, light: IconLightQuestionBubble }
+  checkmarkBubble: { dark: IconDarkCheckmarkBubble, light: IconLightCheckmarkBubble, mmm: IconLightCheckmarkBubble},
+  infoBubble: { dark: IconDarkInfoBubble, light: IconLightInfoBubble, mmm: IconLightInfoBubble },
+  questionBubble: { dark: IconDarkQuestionBubble, light: IconLightQuestionBubble, mmm: IconLightQuestionBubble }
 };
