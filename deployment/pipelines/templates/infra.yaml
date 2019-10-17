@@ -138,7 +138,7 @@ jobs:
       userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
       #applicationId: '${{ parameters.applicationId }}'
       #applicationKey: '${{ parameters.applicationKey }}'
-      tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
+      #tenant: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
       #subscriptionId: ${{ parameters.subscriptionId}}
 
 ## Create Private/Public Key Pair for Identity Gateway 
