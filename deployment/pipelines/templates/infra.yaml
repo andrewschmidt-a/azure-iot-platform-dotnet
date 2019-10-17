@@ -86,7 +86,7 @@ jobs:
       cosmosDBName: ${{ parameters.cosmosDBName }}
       location: ${{ parameters.location }}
       keyVaultName: ${{ parameters.keyVaultName }}
-      cosmosDBthroughput: ${{parameters.cosmosDBthroughput}}
+      cosmosDBthroughput: ${{ parameters.cosmosDBthroughput }}
       collectionName: ${{ parameters.collectionName }}
 
 ## Deploys Storage Account
@@ -116,7 +116,7 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       functionApp1Name: ${{ parameters.applicationCode }}-deviceproperties-${{ parameters.deployEnvironment }}
       functionApp2Name: ${{ parameters.applicationCode }}-hubmessaging-${{ parameters.deployEnvironment }}
-      functionApp3Name: ${{ parameters.applicationCode }}-appconfig-${{ parameters.deployEnvironment }}
+      functionApp3Name: ${{ parameters.applicationCode }}-appconfigController-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
