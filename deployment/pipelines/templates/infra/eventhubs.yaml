@@ -21,7 +21,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/eventhub.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/eventhub.json'
-    overrideParameters: '-namespaceName ${{ parameters.eventHubName }} -resourceGroup ${{ parameters.resourceGroup }} -location ${{ parameters.location }} -storageAccountName ${{ parameters.storageAccountName }} -subscriptionId ${{ parameters.subscriptionId }}'
+    overrideParameters: '-namespaceName ${{ parameters.eventHubName }} -resourceGroup ${{ parameters.resourceGroup }} -location ${{ parameters.location }} -storageAccountName ${{ parameters.storageAccountName }} -subscriptionId $subscriptionId }}'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
