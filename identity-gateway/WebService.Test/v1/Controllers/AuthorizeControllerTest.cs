@@ -22,7 +22,7 @@ namespace WebService.Test.v1.Controllers
     public class AuthorizeControllerTest
     {
         private Mock<IUserContainer<UserSettingsModel, UserSettingsInput>> mockUserSettingsContainer;
-        private Mock<IUserContainer<UserTenantModel, UserTenantInput>> mockUserTenantContainer;
+        private Mock<UserTenantContainer> mockUserTenantContainer;
         private AuthorizeController authorizeController;
         private string uiRedirectUri = new Uri("http://valid-uri.com").AbsoluteUri;
         private Guid tenant = Guid.NewGuid();
@@ -190,6 +190,10 @@ namespace WebService.Test.v1.Controllers
             var audClaim = new Claim("aud", "someAud");
             var expClaim = new Claim("exp", "1571240635");
             var jwtSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { claimWithCurrentTenant, claimWithAvailableTenant, subClaim, audClaim, expClaim });
+
+            // return sucessfully a UserTenant
+            mockUserTenantContainer.Setup(s => s.GetAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(new UserTenantModel("test", "test"));
+
             mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out jwtSecurityToken)).Returns(true);
             mockJwtHelper.Setup(m => m.GetIdentityToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(jwtSecurityToken);
 
@@ -203,11 +207,12 @@ namespace WebService.Test.v1.Controllers
         private void InitializeController()
         {
             mockServicesConfig = new Mock<IServicesConfig> { DefaultValue = DefaultValue.Mock };
-            mockUserTenantContainer = new Mock<IUserContainer<UserTenantModel, UserTenantInput>>();
+            mockUserTenantContainer = new Mock<UserTenantContainer>();
+
             mockUserSettingsContainer = new Mock<IUserContainer<UserSettingsModel, UserSettingsInput>>();
             mockJwtHelper = new Mock<IJWTHelper> { DefaultValue = DefaultValue.Mock };
             mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
-            authorizeController = new AuthorizeController(mockServicesConfig.Object, mockUserTenantContainer.Object as UserTenantContainer, mockUserSettingsContainer.Object as UserSettingsContainer, mockJwtHelper.Object)
+            authorizeController = new AuthorizeController(mockServicesConfig.Object, mockUserTenantContainer.Object, mockUserSettingsContainer.Object as UserSettingsContainer, mockJwtHelper.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
