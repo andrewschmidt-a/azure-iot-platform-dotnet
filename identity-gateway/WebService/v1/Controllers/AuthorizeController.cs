@@ -109,6 +109,10 @@ namespace IdentityGateway.Controllers
                 throw new NoAuthorizationException("The given token could not be read or validated.");
             }
 
+            if(jwt?.Claims?.Count(c => c.Type == "sub") == 0)
+            {
+                throw new NoAuthorizationException("Not allowed access. No User Claims");
+            }
             // Create a userTenantInput for the purpose of finding if the user has access to the space
             UserTenantInput tenantInput = new UserTenantInput
             {

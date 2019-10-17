@@ -26,6 +26,9 @@ namespace IdentityGateway.Services
         // abstracts
         abstract public string tableName { get; }
 
+        public UserContainer()
+        {
+        }
         public UserContainer(IHttpContextAccessor httpContextAccessor, TableHelper tableHelper)
         {
             this._httpContextAccessor = httpContextAccessor;
