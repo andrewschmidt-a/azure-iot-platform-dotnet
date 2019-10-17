@@ -116,6 +116,13 @@ namespace IdentityGateway.WebService
             // Store this setting to skip validating authorization in the controller if enabled
             context.Request.SetAuthRequired(this.config.AuthRequired);
 
+            context.Request.SetExternalRequest(true);
+
+            // Skip Authentication on certain URLS
+            if (allowedUrls.Where(s => context.Request.Path.StartsWithSegments(s)).Count() > 0)
+            {
+                return this.requestDelegate(context);
+            }
             if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER))
             {
                 // This is a service to service request running in the private
@@ -131,7 +138,6 @@ namespace IdentityGateway.WebService
                 return this.requestDelegate(context);
             }
 
-            context.Request.SetExternalRequest(true);
 
             if (!this.authRequired)
             {
@@ -140,11 +146,6 @@ namespace IdentityGateway.WebService
                 return this.requestDelegate(context);
             }
 
-            // Skip Authentication on certain URLS
-            if (allowedUrls.Where(s=> context.Request.Path.StartsWithSegments(s)).Count() > 0)
-            {
-                return this.requestDelegate(context);
-            }
 
             if (!this.InitializeTokenValidationAsync(context.RequestAborted).Result)
             {

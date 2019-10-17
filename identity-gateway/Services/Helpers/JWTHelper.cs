@@ -18,6 +18,7 @@ namespace IdentityGateway.Services.Helpers
     {
         Task<JwtSecurityToken> GetIdentityToken(List<Claim> claims, string tenant, string audience, DateTime? expiration);
         JwtSecurityToken MintToken(List<Claim> claims, string audience, DateTime expirationDateTime);
+        bool TryValidateToken(string audience, string encodedToken, HttpContext context, out JwtSecurityToken jwt);
     }
     public class JWTHelper : IJWTHelper
     {
@@ -113,6 +114,7 @@ namespace IdentityGateway.Services.Helpers
 
             return token;
         }
+
         public JwtSecurityToken MintToken(List<Claim> claims, string audience, DateTime expirationDateTime)
         {
 
@@ -142,6 +144,47 @@ namespace IdentityGateway.Services.Helpers
                 signingCredentials: credentials
             );
             return token;
+        }
+
+        public bool TryValidateToken(string audience, string encodedToken, HttpContext context, out JwtSecurityToken jwt)
+        {
+            jwt = null;
+            var jwtHandler = new JwtSecurityTokenHandler();
+            if (!jwtHandler.CanReadToken(encodedToken))
+            {
+                return false;
+            }
+
+            var config = new Configuration(context);
+            var tokenValidationParams = new TokenValidationParameters
+            {
+                // Validate the token signature
+                RequireSignedTokens = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKeys = RSA.GetJsonWebKey(this._config.PublicKey).Keys,
+
+                // Validate the token issuer
+                ValidateIssuer = false,
+                ValidIssuer = config.issuer,
+
+                // Validate the token audience
+                ValidateAudience = false,
+                ValidAudience = audience,
+
+                // Validate token lifetime
+                ValidateLifetime = true,
+                ClockSkew = new TimeSpan(0) // shouldnt be skewed as this is the same server that issued it.
+            };
+
+            SecurityToken validated_token = null;
+            jwtHandler.ValidateToken(encodedToken, tokenValidationParams, out validated_token);
+            if (validated_token == null)
+            {
+                return false;
+            }
+
+            jwt = jwtHandler.ReadJwtToken(encodedToken);
+            return true;
         }
     }
 }
