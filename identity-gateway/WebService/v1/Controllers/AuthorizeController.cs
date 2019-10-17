@@ -49,7 +49,8 @@ namespace IdentityGateway.Controllers
 
             Guid validatedGuid = Guid.Empty;
 			
-            if (!Guid.TryParse(tenant, out validatedGuid))
+            // if is not null we want to validate that it is a guid, Otherwise it will pick a tenant for the user
+            if (tenant != null && !Guid.TryParse(tenant, out validatedGuid))
             {
                 throw new Exception("Tenant is not valid!");
             }

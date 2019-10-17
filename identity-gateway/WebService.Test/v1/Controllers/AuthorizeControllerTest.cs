@@ -60,7 +60,7 @@ namespace WebService.Test.v1.Controllers
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("x")]
-        [InlineData(null)]
+        [InlineData("7")]
         [InlineData("")]
         [InlineData("not-a-valid-guid")]
         public void AuthorizeThrowsWhenTenantNotValidTest(string invalidTenant)
