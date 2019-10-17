@@ -7,6 +7,5 @@
     "ApplicationId": { "value": "d8beeda6-8896-4c7b-b504-7e27ee734768" },
     "SubscriptionId": { "value": "D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD" },
     "CertThumbprint": { "value": "c36fb2f8-f98d-40d0-90a9-d65e93acb428" }
-    // "artifactsLocation": { "value": "https://github.mmm.com/MMM/azure-iot-services-dotnet/blob/pirate-ninja-deployment/deployment/scripts" }
   }
 }

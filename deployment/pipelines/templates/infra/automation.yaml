@@ -9,6 +9,16 @@ parameters:
   keyVaultName: ''
 
 steps:
+# get the ApplicationId from Keyvault
+- task: AzurePowerShell@3
+  displayName: "Get the Appid from keyvault"
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    ScriptType: 'InlineScript'
+    Inline: '$vaultValue = (Get-AzureKeyVaultSecret -VaultName ${{ parameters.keyVaultName }} -Name "ApplicationId").SecretValueText\nWrite-Host "##vso[task.setvariable variable=applicationId]$vaultValue"'
+    azurePowerShellVersion: 'LatestVersion'
+
+# Create Automation Account using ARM    
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Azure Automation account"
   inputs:
@@ -19,7 +29,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/automationacct.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/automationacct.json'
-    overrideParameters: '-automationAccountName ${{ parameters.automationName }} -location ${{ parameters.location }} -ApplicationId $servicePrincipalId -SubscriptionId ${{ parameters.subscriptionId }} -CertThumbprint ${{ parameters.certThumbprint }}'
+    overrideParameters: '-automationAccountName ${{ parameters.automationName }} -location ${{ parameters.location }} -ApplicationId $(applicationId) -SubscriptionId ${{ parameters.subscriptionId }} -CertThumbprint ${{ parameters.certThumbprint }}'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 

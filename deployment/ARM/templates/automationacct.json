@@ -16,12 +16,6 @@
           "description": "Location for the Automation Account"
         }
       },
-      // "artifactsLocation": {
-      //   "type": "string",
-      //   "metadata": {
-      //     "description": "Location for the runbook Script"
-      //   }
-      // },
       "ApplicationId": {
         "type": "string",
         "defaultValue": "d8beeda6-8896-4c7b-b504-7e27ee734768",
@@ -44,10 +38,7 @@
         }
       }
     },
-    "variables": {
-      // "CreateIoThubscriptUri": "[concat(parameters('artifactsLocation'),'/CreateIoThubRunbook.ps1')]",
-      // "DeleteIoThubscriptUri": "[concat(parameters('artifactsLocation'),'/DeleteIoThubRunbook.ps1')]"
-    },
+    "variables": {},
     "resources": [
       {
         "name": "[parameters('automationAccountName')]",
@@ -99,47 +90,6 @@
               }
             }
           }
-          // runbook and webhook will be handled using a powershell script
-          // {
-          //   "type": "runbooks",
-          //   "apiVersion": "2015-10-31",
-          //   "name": "CreateIoTHubTenant",
-          //   "location": "[parameters('location')]",
-          //   "tags": {
-          //     "displayName": "runbooks"
-          //   },
-          //   "dependsOn": [
-          //     "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
-          //   ],
-          //   "properties": {
-          //     "description": "Creates a new IoT Hub for a new tenant and writes to table storage when the deployment is completed.",
-          //     "runbookType": "PowerShell",
-          //     "logVerbose": false,
-          //     "logProgress": false,
-          //     "publishContentLink": {
-          //       "uri": "[variables('CreateIoThubscriptUri')]",
-          //       "version": "1.0.0"
-          //     }
-          //   }
-          // },
-          // {
-          //   "type": "runbooks",
-          //   "apiVersion": "2015-10-31",
-          //   "name": "DeleteIoTHubTenant",
-          //   "location": "[parameters('location')]",
-          //   "dependsOn": [
-          //     "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
-          //   ],
-          //   "properties": {
-          //     "runbookType": "PowerShell",
-          //     "logVerbose": false,
-          //     "logProgress": false,
-          //     "publishContentLink": {
-          //       "uri": "[variables('DeleteIoThubscriptUri')]",
-          //       "version": "1.0.0"
-          //     }
-          //   }
-          // }
         ]
       }
      ]
