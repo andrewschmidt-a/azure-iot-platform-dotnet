@@ -157,27 +157,14 @@ $theme-mmm: (
   // Modal -  END
 
   colorBtnPrimaryTextHover: white,
-  // colorBtnPrimaryBackground: red,
-  // colorBtnPrimaryBackgroundHover: red,
-  // colorBtnPrimaryBackgroundActive: darkred,
-  // colorBtnPrimaryBackgroundDisabled:
 
   // This sets the logo / tenant icon color for some reason
   colorNavText: 'color-text-black',
 
   // Page Content Colors - START
-  // colorFlyoutSectionBorder: 'color-border-panel',
-  // colorPropertyGridBorder: 'color-border-panel',
-  // colorPropertyGridBottomBorder: 'color-border-panel',
-
   // This url is relative to the pageContent.scss file
   colorPageContentBackground: #f4f4f4, // url("../../../assets/images/repeating_meshed_grid.png"),
-  // colorContentText: 'color-text-rest',
   colorContentBackground: white,
-  // colorContentTextDim: 'color-text-rest',
-  // colorFlyoutBackground: 'color-bg-panel-contextual',
-  // colorFlyoutText: 'color-text-rest',
-  // colorFlyoutConfirmationText: 'color-text-rest',
   // Page Content Colors - END
 
   layoutMastheadHeight: 53px
@@ -187,10 +174,6 @@ $theme-mmm: (
 @import "~@microsoft/azure-iot-ux-fluent-css/src/colors";
 
 @import "./3mTheme/color.defaults";
-// Add 3M theme specific colors to the theme map
-// $themes: map-merge((
-//   mmm: $theme-mmm
-// ), $themes);
 
 // TEMPORARY: in order to make the transition to fluent colors easier, create a
 // mapping of existing RM color variables to Fluent color variables. This way,
