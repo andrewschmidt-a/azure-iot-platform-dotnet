@@ -24,6 +24,10 @@ namespace IdentityGateway.Services
         // abstracts
         abstract public string tableName { get; }
 
+        public UserContainer()
+        {
+        }
+
         public UserContainer(TableHelper tableHelper)
         {
             this._tableHelper = tableHelper;

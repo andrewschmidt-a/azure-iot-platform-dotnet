@@ -14,6 +14,10 @@ namespace IdentityGateway.Services
     {
         public override string tableName { get{return "user";} }
 
+        public UserTenantContainer()
+        {
+        }
+        
         public UserTenantContainer(TableHelper tableHelper) : base(tableHelper)
         {
         }
@@ -47,7 +51,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with a userid</param>
         /// <returns></returns>
-        public async Task<UserTenantModel> GetAsync(UserTenantInput input)
+        public virtual async Task<UserTenantModel> GetAsync(UserTenantInput input)
         {
             TableOperation retrieveUserTenant = TableOperation.Retrieve<UserTenantModel>(input.userId, input.tenant);
             TableResult result = await this._tableHelper.ExecuteOperationAsync(this.tableName, retrieveUserTenant);

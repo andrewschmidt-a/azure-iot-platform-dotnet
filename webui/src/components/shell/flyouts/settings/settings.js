@@ -153,7 +153,6 @@ export class Settings extends LinkedComponent {
       getDiagnosticsPending,
       getDiagnosticsError
     } = this.props;
-    const nextTheme = theme === 'dark' ? 'light' : 'dark';
     const {
       desiredSimulationState,
       loading,
@@ -170,6 +169,17 @@ export class Settings extends LinkedComponent {
     const simulationLabel = hasSimulationChanged
       ? this.desiredSimulationLabel[desiredSimulationState]
       : this.currSimulationLabel[isSimulationEnabled];
+
+    if (theme === 'light') {
+      var nextTheme1 = 'dark'
+      var nextTheme2 = 'mmm'
+    } else if (theme === 'dark') {
+      var nextTheme1 = 'light'
+      var nextTheme2 = 'mmm'
+    } else if (theme === 'mmm') {
+      var nextTheme1 = 'light'
+      var nextTheme2 = 'dark'
+    }
 
     return (
       <Flyout.Container header={t('settingsFlyout.title')} t={t} onClose={this.onFlyoutClose.bind(this, 'Settings_TopXClose_Click')}>
@@ -245,8 +255,11 @@ export class Settings extends LinkedComponent {
               <Section.Header>{t('settingsFlyout.theme')}</Section.Header>
               <Section.Content>
                 {t('settingsFlyout.changeTheme')}
-                <button type="button" onClick={this.onThemeChange.bind(this, nextTheme)} className="toggle-theme-btn">
-                  {t('settingsFlyout.switchTheme', { nextTheme })}
+                <button type="button" onClick={this.onThemeChange.bind(this, nextTheme1)} className="toggle-theme-btn">
+                  {t('settingsFlyout.switchTheme1', { nextTheme1 })}
+                </button>
+                <button type="button" onClick={this.onThemeChange.bind(this, nextTheme2)} className="toggle-theme-btn">
+                  {t('settingsFlyout.switchTheme2', { nextTheme2 })}
                 </button>
               </Section.Content>
             </Section.Container>
