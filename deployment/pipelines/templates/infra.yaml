@@ -164,6 +164,7 @@ jobs:
       location: ${{ parameters.location }}
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
       automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
+      subscriptionId: ${{ parameters.subscriptionId }}
       CertThumbprint: ${{ parameters.certThumbprint }}
 
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform

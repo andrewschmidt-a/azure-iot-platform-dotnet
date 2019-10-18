@@ -3,9 +3,9 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "automationAccountName": { "value": "crsl-automationAccount" },
-    "location": { "value": "eastus" },
-    "ApplicationId": { "value": "d8beeda6-8896-4c7b-b504-7e27ee734768" },
-    "SubscriptionId": { "value": "D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD" },
-    "CertThumbprint": { "value": "c36fb2f8-f98d-40d0-90a9-d65e93acb428" }
+    "location": { "value": "" },
+    "ApplicationId": { "value": "" },
+    "SubscriptionId": { "value": "" },
+    "CertThumbprint": { "value": "" }
   }
 }
