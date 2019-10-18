@@ -185,7 +185,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
             request.SetUriFromString($"{this.serviceUri}/{path}");
             
             string headerTenantId = tenantId ?? this._httpContextAccessor.HttpContext.Request.GetTenant();
-            Console.WriteLine(headerTenantId);
             request.AddHeader(TENANT_HEADER, headerTenantId);
 
             if (this.serviceUri.ToLowerInvariant().StartsWith("https:"))
