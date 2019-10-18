@@ -18,21 +18,21 @@
       },
       "ApplicationId": {
         "type": "string",
-        "defaultValue": "d8beeda6-8896-4c7b-b504-7e27ee734768",
+        "defaultValue": "",
         "metadata": {
           "description": "Azure AD application Id that Automation account will use to authenticate with Azure"
         }
       },
       "SubscriptionId": {
         "type": "string",
-        "defaultValue": "c36fb2f8-f98d-40d0-90a9-d65e93acb428",
+        "defaultValue": "",
         "metadata": {
           "description": "Azure Subscription Id Automation account will use to authenticate with Azure"
         }
       },
       "CertThumbprint": {
         "type": "string",
-        "defaultValue": "D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD",
+        "defaultValue": "",
         "metadata": {
           "description": "Certificate Thumbprint that Automation account will use to authenticate with Azure"
         }
