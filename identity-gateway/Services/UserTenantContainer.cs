@@ -129,13 +129,10 @@ namespace IdentityGateway.Services
         /// <returns></returns>
         public async Task<UserTenantListModel> DeleteAllAsync(UserTenantInput input)
         {
-            // get all rows where the tenant exists
-            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.tenant));
-            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            List<UserTenantModel> tenantRows = resultSegment.Results.Select(t => (UserTenantModel)t).ToList();  // cast to a UserTenantModel list to easily parse result
+            UserTenantListModel tenantRows = await this.GetAllUsersAsync(input);
 
             // delete the rows
-            var deleteTasks = tenantRows.Select(row =>
+            var deleteTasks = tenantRows.models.Select(row =>
             {
                 UserTenantInput deleteInput = new UserTenantInput
                 {
