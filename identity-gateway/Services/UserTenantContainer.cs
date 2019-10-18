@@ -131,7 +131,7 @@ namespace IdentityGateway.Services
         {
             UserTenantListModel tenantRows = await this.GetAllUsersAsync(input);
 
-            // delete the rows
+            // delete all rows as one asynchronous job
             var deleteTasks = tenantRows.models.Select(row =>
             {
                 UserTenantInput deleteInput = new UserTenantInput
