@@ -5,8 +5,8 @@
   "dependencies": {
     "@angular/common": "^8.2.2",
     "@angular/core": "^8.2.2",
-    "@microsoft/azure-iot-ux-fluent-controls": "^6.0.0",
-    "@microsoft/azure-iot-ux-fluent-css": "6.0.0",
+    "@microsoft/azure-iot-ux-fluent-controls": "file:azure-iot-ux-fluent-controls",
+    "@microsoft/azure-iot-ux-fluent-css": "file:azure-iot-ux-fluent-css",
     "adal-angular": "1.0.17",
     "ag-grid-community": "19.1.4",
     "ag-grid-react": "19.1.2",
