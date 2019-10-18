@@ -32,7 +32,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             this._jwtHelper = jwtHelper;
         }
 
-        public string claimsUserId
+        private string claimsUserId
         {
             get
             {
@@ -47,7 +47,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             }
         }
 
-        public string tenantId
+        private string tenantId
         {
             get
             {

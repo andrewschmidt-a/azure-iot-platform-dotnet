@@ -30,7 +30,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             this.keyVaultHelper = new KeyVaultHelper(this._config);
         }
 
-        public string claimsUserId
+        private string claimsUserId
         {
             get
             {
