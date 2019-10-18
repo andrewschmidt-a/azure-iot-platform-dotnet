@@ -7,15 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
-using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
-using MMM.Azure.IoTSolutions.TenantManager.Services.External;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
-using Microsoft.AspNetCore.Http;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Http;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {

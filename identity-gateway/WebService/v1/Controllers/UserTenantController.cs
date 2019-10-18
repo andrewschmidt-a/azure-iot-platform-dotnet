@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using IdentityGateway.Services;
 using IdentityGateway.Services.Models;
 using IdentityGateway.WebService.v1.Filters;
+using IdentityGateway.AuthUtils;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Configuration;
 using System;
-using RSA = IdentityGateway.Services.Helpers.RSA;
-using Microsoft.IdentityModel.Tokens;
 using IdentityGateway.Services.Runtime;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -34,38 +32,113 @@ namespace IdentityGateway.WebService.v1.Controllers
             this._jwtHelper = jwtHelper;
         }
 
+        private string claimsUserId
+        {
+            get
+            {
+                try
+                {
+                    return HttpContext.Request.GetCurrentUserObjectId();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("A request was sent to an API endpoint that requires a userId, but the userId was not passed through the url nor was it available in the user Claims.", e);
+                }
+            }
+        }
+
+        private string tenantId
+        {
+            get
+            {
+                try
+                {
+                    return HttpContext.Request.GetTenant();
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Unable to get the tenantId from the HttpContext.", e);
+                }
+            }
+        }
+
         /// <summary>
         /// Get all users in tenant
         /// </summary>
         /// <returns></returns>
         [HttpGet("users")]
-        public async Task<List<UserTenantModel>> GetAllAsync()
+        public async Task<UserTenantListModel> GetAllUsersForTenantAsync()
         {
             UserTenantInput input = new UserTenantInput
             {
                 userId = null,
-                tenant = this._container.tenant
+                tenant = this.tenantId
             };
-            List<UserTenantModel> models = await this._container.GetAllUsersAsync(input);
-            return models;
+            return await this._container.GetAllUsersAsync(input);
         }
 
         /// <summary>
-        /// Get User by Id
+        /// Get all tenants for a user using the userId in the claims
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("all")]
+        public async Task<UserTenantListModel> UserClaimsGetAllTenantsForUserAsync()
+        {
+            return await this.GetAllTenantsForUserAsync(this.claimsUserId);
+        }
+        
+        /// <summary>
+        /// Get all tenants for a user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet("{userId}/all")]
+        public async Task<UserTenantListModel> GetAllTenantsForUserAsync(string userId)
+        {
+            UserTenantInput input = new UserTenantInput
+            {
+                userId = userId,
+            };
+            return await this._container.GetAllAsync(input);
+        }
+
+        /// <summary>
+        /// Get the User-Tenant realtionship model by using the userId from the claims
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("")]
+        public async Task<UserTenantModel> UserClaimsGetAsync()
+        {
+            return await this.GetAsync(this.claimsUserId);
+        }
+
+        /// <summary>
+        /// Get User-Tenant relationship model by Id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         // GET: api/User/5
         [HttpGet("{userId}")]
-        public async Task<string> GetAsync(string userId)
+        public async Task<UserTenantModel> GetAsync(string userId)
         {
             UserTenantInput input = new UserTenantInput
             {
                 userId = userId,
-                tenant = this._container.tenant
+                tenant = this.tenantId
             };
-            UserTenantModel model = await this._container.GetAsync(input);
-            return JsonConvert.SerializeObject(model);
+            return await this._container.GetAsync(input);
+        }
+
+        /// <summary>
+        /// Create a user-tenant relationship record using the userId from the claims
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("")]
+        [Authorize("UserManage")]
+        public async Task<UserTenantModel> UserClaimsPostAsync([FromBody] UserTenantModel model)
+        {
+            return await this.PostAsync(this.claimsUserId, model);
         }
 
         /// <summary>
@@ -74,67 +147,89 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <param name="value"></param>
         [HttpPost("{userId}")]
         [Authorize("UserManage")]
-        public async Task<string> PostAsync(string userId, [FromBody] UserTenantModel model)
+        public async Task<UserTenantModel> PostAsync(string userId, [FromBody] UserTenantModel model)
         {
             UserTenantInput input = new UserTenantInput
             {
                 userId = userId,
-                tenant = this._container.tenant,
+                tenant = this.tenantId,
                 roles = model.Roles,
             };
-            var result = await this._container.CreateAsync(input);
-            return JsonConvert.SerializeObject(result);
+            return await this._container.CreateAsync(input);
         }
 
         /// <summary>
-        /// 
+        /// Update a user-tenant relationship record using the userId from the claims
+        /// </summary>
+        /// <param name="update"></param>
+        [HttpPut("")]
+        [Authorize("UserManage")]
+        public async Task<UserTenantModel> UserClaimsPutAsync([FromBody] UserTenantModel update)
+        {
+            return await this.PutAsync(this.claimsUserId, update);
+        }
+
+        /// <summary>
+        /// Update a user-tenant relationship record
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="update"></param>
         [HttpPut("{userId}")]
         [Authorize("UserManage")]
-        public async Task<string> PutAsync(string userId, [FromBody] UserTenantModel update)
+        public async Task<UserTenantModel> PutAsync(string userId, [FromBody] UserTenantModel update)
         {
             UserTenantInput input = new UserTenantInput
             {
                 userId = userId,
-                tenant = this._container.tenant,
+                tenant = this.tenantId,
                 roles = update.Roles,
             };
-            var result = await this._container.UpdateAsync(input);
-            return JsonConvert.SerializeObject(result);
+            return await this._container.UpdateAsync(input);
         }
 
         /// <summary>
-        /// Delete the tenant from a user
+        /// Delete a user-tenant relationship record using the userId from the claims
+        /// </summary>
+        /// <param name="id"></param>
+        [HttpDelete("")]
+        [Authorize("UserManage")]
+        public async Task<UserTenantModel> UserClaimsDeleteAsync(string userId)
+        {
+            return await this.DeleteAsync(this.claimsUserId);
+        }
+
+        /// <summary>
+        /// Delete a user-tenant relationship record
         /// </summary>
         /// <param name="id"></param>
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{userId}")]
         [Authorize("UserManage")]
-        public async Task<string> DeleteAsync(string userId)
+        public async Task<UserTenantModel> DeleteAsync(string userId)
         {
             UserTenantInput input = new UserTenantInput
             {
                 userId = userId,
-                tenant = this._container.tenant
+                tenant = this.tenantId
             };
-            var result = await this._container.DeleteAsync(input);
-            return JsonConvert.SerializeObject(result);
+            return await this._container.DeleteAsync(input);
         }
 
         /// <summary>
         /// Delete the tenant from all users
         /// </summary>
-        [HttpDelete("")]
+        [HttpDelete("all")]
         [Authorize("UserManage")]
-        public async Task<string> DeleteAllAsync()
+        public async Task<UserTenantListModel> DeleteAllAsync()
         {
-            var result = await this._container.DeleteAllAsync();
-            return JsonConvert.SerializeObject(result);
+            UserTenantInput input = new UserTenantInput
+            {
+                tenant = this.tenantId
+            };
+            return await this._container.DeleteAllAsync(input);
         }
         /// <summary>
-        /// 
+        /// Invite the user to join a tenant
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -147,7 +242,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 userId = Guid.NewGuid().ToString(),
-                tenant = this._container.tenant,
+                tenant = this.tenantId,
                 roles = JsonConvert.SerializeObject(new List<string>() { invitation.role }),
                 name = invitation.email_address,
                 type = "Invited"
@@ -156,7 +251,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             List<Claim> claims = new List<Claim>()
             {
                 new Claim("role", invitation.role),
-                new Claim("tenant", this._container.tenant),
+                new Claim("tenant", this.tenantId),
                 new Claim("userId", input.userId)
             };
 

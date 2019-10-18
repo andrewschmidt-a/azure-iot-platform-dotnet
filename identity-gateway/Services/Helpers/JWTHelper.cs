@@ -47,7 +47,8 @@ namespace IdentityGateway.Services.Helpers
             {
                 userId = userId
             };
-            List<UserTenantModel> tenantList = await this._userTenantContainer.GetAllAsync(tenantInput);
+            UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
+            List<UserTenantModel> tenantList = tenantsModel.models;
 
             //User did not specify the tenant to log into so get the default or last used
             if (String.IsNullOrEmpty(tenant))
