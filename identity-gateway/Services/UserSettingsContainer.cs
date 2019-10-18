@@ -22,11 +22,11 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsINput with a userId</param>
         /// <returns></returns>
-        public async Task<List<UserSettingsModel>> GetAllAsync(UserSettingsInput input)
+        public async Task<UserSettingsListModel> GetAllAsync(UserSettingsInput input)
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            return resultSegment.Results.Select(t=> (UserSettingsModel)t).ToList();
+            return new UserSettingsListModel("Get", resultSegment.Results.Select(t=> (UserSettingsModel)t).ToList());
         }
 
         /// <summary>
