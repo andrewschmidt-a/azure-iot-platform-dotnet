@@ -136,42 +136,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
         }
 
         /// <summary>
-        /// Create an HttpRequest with the necessary parameters for an IdentityGateway API request
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="tenantId"></param>
-        /// <returns></returns>
-        private HttpRequest CreateRequest(string path, string tenantId = null)
-        {
-            var request = new HttpRequest();
-            request.SetUriFromString($"{this.serviceUri}/{path}");
-            
-            string headerTenantId = tenantId ?? this._httpContextAccessor.HttpContext.Request.GetTenant();
-            Console.WriteLine(headerTenantId);
-            request.AddHeader(TENANT_HEADER, headerTenantId);
-
-            if (this.serviceUri.ToLowerInvariant().StartsWith("https:"))
-            {
-                request.Options.AllowInsecureSSLServer = true;
-            }
-
-            if (this._httpContextAccessor.HttpContext.Request.Headers.ContainsKey(AZDS_ROUTE_KEY))
-            {
-                try
-                {
-                    var azdsRouteAs = this._httpContextAccessor.HttpContext.Request.Headers.First(p => String.Equals(p.Key, AZDS_ROUTE_KEY, StringComparison.OrdinalIgnoreCase));
-                    request.Headers.Add(AZDS_ROUTE_KEY, azdsRouteAs.Value.First());  // azdsRouteAs.Value returns an iterable of strings, take the first
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Unable to attach the {AZDS_ROUTE_KEY} header to the IdentityGatewayClient Request.", e);
-                }
-            }
-
-            return request;
-        }
-
-        /// <summary>
         /// Process an IdentityGateway request for the IdentityGateway and transform the response to Model T
         /// </summary>
         /// <param name="method"></param>
@@ -207,6 +171,42 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
             {
                 throw new JsonReaderException("Unable to deserialize response content to the proper API model.", e);
             }
+        }
+
+        /// <summary>
+        /// Create an HttpRequest with the necessary parameters for an IdentityGateway API request
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="tenantId"></param>
+        /// <returns></returns>
+        private HttpRequest CreateRequest(string path, string tenantId = null)
+        {
+            var request = new HttpRequest();
+            request.SetUriFromString($"{this.serviceUri}/{path}");
+            
+            string headerTenantId = tenantId ?? this._httpContextAccessor.HttpContext.Request.GetTenant();
+            Console.WriteLine(headerTenantId);
+            request.AddHeader(TENANT_HEADER, headerTenantId);
+
+            if (this.serviceUri.ToLowerInvariant().StartsWith("https:"))
+            {
+                request.Options.AllowInsecureSSLServer = true;
+            }
+
+            if (this._httpContextAccessor.HttpContext.Request.Headers.ContainsKey(AZDS_ROUTE_KEY))
+            {
+                try
+                {
+                    var azdsRouteAs = this._httpContextAccessor.HttpContext.Request.Headers.First(p => String.Equals(p.Key, AZDS_ROUTE_KEY, StringComparison.OrdinalIgnoreCase));
+                    request.Headers.Add(AZDS_ROUTE_KEY, azdsRouteAs.Value.First());  // azdsRouteAs.Value returns an iterable of strings, take the first
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Unable to attach the {AZDS_ROUTE_KEY} header to the IdentityGatewayClient Request.", e);
+                }
+            }
+
+            return request;
         }
     }
 }
