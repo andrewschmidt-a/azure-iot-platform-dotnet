@@ -28,7 +28,7 @@ steps:
     command: 'upgrade'
     chartType: 'FilePath'
     chartPath: ${{parameters.chartLocation}}
-    releaseName: ${{parameters.releaseName}}-$(Build.TriggeredBy.BuildId)
+    releaseName: ${{parameters.releaseName}}
     overrideValues: 'image.tag=$(Build.TriggeredBy.BuildId)'
     force: true
     arguments: '--cleanup-on-fail'
