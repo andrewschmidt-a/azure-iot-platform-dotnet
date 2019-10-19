@@ -54,6 +54,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-serviceSecret:
-  ALLOWED_DOMAINS: azds.io
-  SITES: "*.azds.io"
+serviceSecret: {}
+#   ALLOWED_DOMAINS: azds.io
+#   SITES: "*.azds.io"
