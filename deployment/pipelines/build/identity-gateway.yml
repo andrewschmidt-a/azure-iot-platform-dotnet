@@ -20,6 +20,6 @@ pr:
 
 stages:
 - template: templates/build-service.yml
-  paramters:
+  parameters:
     service: identity-gateway
     dockerFile: "/WebService/Dockerfile"

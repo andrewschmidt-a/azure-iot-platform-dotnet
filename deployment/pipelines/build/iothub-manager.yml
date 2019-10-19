@@ -20,6 +20,6 @@ pr:
 
 stages:
 - template: templates/build-service.yml
-  paramters:
+  parameters:
     service: iothub-manager
     dockerFile: "/WebService/Dockerfile"

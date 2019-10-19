@@ -20,6 +20,6 @@ pr:
 
 stages:
 - template: templates/build-service.yml
-  paramters:
+  parameters:
     service: device-telemetry
     dockerFile: "/WebService/Dockerfile"
