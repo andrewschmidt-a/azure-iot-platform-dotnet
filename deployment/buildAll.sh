@@ -4,4 +4,5 @@
 ./runPipeline.sh identity-gateway-build
 ./runPipeline.sh storage-adapter-build
 ./runPipeline.sh reverse-proxy-build
+./runPipeline.sh tenant-manager-build
 ./runPipeline.sh webui-build
