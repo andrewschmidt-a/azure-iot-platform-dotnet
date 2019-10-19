@@ -30,7 +30,7 @@ steps:
 #    namespace: 'default'
 #    command: 'upgrade'
 #    chartType: 'FilePath'
-#    chartPath: 'storage-adapter'
+#    chartPath: 'storage-adapter' 
 #    releaseName: 'iothub-manager'
 #    recreate: true
 #    tillerNamespace: 'tiller' 
