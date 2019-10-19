@@ -28,6 +28,6 @@ steps:
     command: 'install'
     chartType: 'FilePath'
     chartPath: ${{parameters.chartLocation}}
-    releaseName: 'config'
+    releaseName: ${{parameters.releaseName}}
     overrideValues: 'image.tag=$(Build.TriggeredBy.BuildId)'
     force: true
