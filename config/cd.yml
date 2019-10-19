@@ -24,7 +24,7 @@ steps:
 # - task: HelmDeploy@0
 #  inputs:
 #    connectionType: 'Azure Resource Manager' 
-#    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+#    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev' 
 #    azureResourceGroup: 'rg-crslbbiot-odin-dev' 
 #    kubernetesCluster: 'aks-dev-spaces-odin'  
 #    namespace: 'default'
