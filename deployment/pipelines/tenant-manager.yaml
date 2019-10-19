@@ -3,5 +3,5 @@ pr: none
 
 stages:
 - template: 'templates/'
-    parameters:
-      service: tenant-manager
+  parameters:
+    service: tenant-manager

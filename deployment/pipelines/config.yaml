@@ -3,5 +3,5 @@ pr: none
 
 stages:
 - template: 'templates/'
-    parameters:
-      service: config
+  parameters:
+    service: config

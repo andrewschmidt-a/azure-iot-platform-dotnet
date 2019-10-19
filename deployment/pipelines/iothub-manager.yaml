@@ -3,5 +3,5 @@ pr: none
 
 stages:
 - template: 'templates/'
-    parameters:
-      service: iothub-manager
+  parameters:
+    service: iothub-manager

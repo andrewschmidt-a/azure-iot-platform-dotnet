@@ -3,5 +3,5 @@ pr: none
 
 stages:
 - template: 'templates/'
-    parameters:
-      service: webui
+  parameters:
+    service: webui

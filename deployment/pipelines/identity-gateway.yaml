@@ -3,5 +3,5 @@ pr: none
 
 stages:
 - template: 'templates/'
-    parameters:
-      service: identity-gateway
+  parameters:
+    service: identity-gateway

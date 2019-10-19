@@ -3,5 +3,5 @@ pr: none
 
 stages:
 - template: 'templates/'
-    parameters:
-      service: device-telemetry
+  parameters:
+    service: device-telemetry
