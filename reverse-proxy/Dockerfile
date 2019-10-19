@@ -15,7 +15,7 @@ RUN \
   pip --no-cache-dir install azure-cli && \
   apk del --purge build
 
-# RUN echo "Install App Configuration"     && RUN /bin/sh -c  "az extension add -n appconfig"
+# RUN echo "Install App Configuration"     && RUN /bin/sh -c  "az extension add -n appconfig" 
 
 
 MAINTAINER Andrew Schmidt (https://github.com/andrewschmidt-a)
