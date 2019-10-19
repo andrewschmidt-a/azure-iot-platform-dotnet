@@ -18,4 +18,4 @@ stages:
         serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
         resourceGroup: rg-pirate-ninja-test1
         aksName: crsliot-aks-test
-        chartLocation: 'deployment/charts/config'
+        chartLocation: 'deployment/charts/device-telemetry'

@@ -1,0 +1,31 @@
+# 
+# https://aka.ms/yaml
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  aksName: ''
+  chartLocation: ''
+
+steps:
+- task: HelmDeploy@0
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: ${{parameters.serviceConnection}}
+    azureResourceGroup: ${{parameters.resourceGroup}}
+    kubernetesCluster: ${{parameters.aksName}}
+    useClusterAdmin: true
+    namespace: 'default'
+    command: 'init'
+- task: HelmDeploy@0
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscription: ${{parameters.serviceConnection}}
+    azureResourceGroup: ${{parameters.resourceGroup}}
+    kubernetesCluster: ${{parameters.aksName}}
+    useClusterAdmin: false
+    namespace: 'default'
+    command: 'upgrade'
+    chartType: 'FilePath'
+    chartPath: ${{parameters.chartLocation}}
+    releaseName: 'config'
+    overrideValues: 'image.tag=$(Build.TriggeredBy.BuildId)'
