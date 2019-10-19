@@ -5,6 +5,7 @@ parameters:
   resourceGroup: ''
   aksName: ''
   chartLocation: ''
+  releaseName: ''
 
 steps:
 - task: HelmDeploy@0

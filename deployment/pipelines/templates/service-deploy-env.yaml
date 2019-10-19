@@ -19,3 +19,4 @@ stages:
         resourceGroup: rg-pirate-ninja-test1
         aksName: crsliot-aks-test
         chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}
