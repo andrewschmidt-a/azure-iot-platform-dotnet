@@ -25,7 +25,7 @@ steps:
     kubernetesCluster: ${{parameters.aksName}}
     useClusterAdmin: false
     namespace: 'default'
-    command: 'upgrade'
+    command: 'install'
     chartType: 'FilePath'
     chartPath: ${{parameters.chartLocation}}
     releaseName: 'config'
