@@ -31,3 +31,4 @@ steps:
     releaseName: ${{parameters.releaseName}}
     overrideValues: 'image.tag=$(Build.TriggeredBy.BuildId)'
     force: true
+    arguments: '--cleanup-on-fail'
