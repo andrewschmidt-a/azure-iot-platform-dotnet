@@ -66,6 +66,7 @@ steps:
     chartType: 'FilePath'
     chartPath: 'deployment/charts/config'
     releaseName: 'config'
+    overrideValues: 'image.tag=$(Build.TriggeredBy.BuildId)'
 # - task: PublishBuildArtifacts@1
 #   inputs:
 #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
