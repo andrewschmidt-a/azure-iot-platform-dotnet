@@ -1,0 +1,21 @@
+parameters:
+  service: ''
+
+stages:
+- stage: DeployCRSL
+  dependsOn: []
+  displayName: Deploy To CRSL
+  jobs:
+  - template: templates/approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: templates/service-deploy.yaml
+      parameters:
+        serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+        resourceGroup: rg-pirate-ninja-test1
+        aksName: crsliot-aks-test
+        chartLocation: 'deployment/charts/${{parameters.service}}'

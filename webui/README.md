@@ -7,7 +7,7 @@
 * [Build, Run and Test locally](#build-run-and-test-locally)
 * [Contributing to the solution](#contributing-to-the-solution)
 
-Azure Remote Monitoring WebUI
+Azure Remote Monitoring WebUI 
 =================================
 
 Web app for Azure IoT Remote Monitoring Solution [dotnet](https://github.com/Azure/azure-iot-pcs-remote-monitoring-dotnet) and [java](https://github.com/Azure/azure-iot-pcs-remote-monitoring-java).
