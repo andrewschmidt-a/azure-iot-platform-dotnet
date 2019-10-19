@@ -30,3 +30,4 @@ steps:
     chartPath: ${{parameters.chartLocation}}
     releaseName: 'config'
     overrideValues: 'image.tag=$(Build.TriggeredBy.BuildId)'
+    force: true
