@@ -28,7 +28,7 @@ steps:
 #    azureResourceGroup: 'rg-crslbbiot-odin-dev' 
 #    kubernetesCluster: 'aks-dev-spaces-odin'  
 #    namespace: 'default'
-#    command: 'upgrade'
+#    command: 'upgrade' 
 #    chartType: 'FilePath' 
 #    chartPath: 'storage-adapter' 
 #    releaseName: 'iothub-manager'
