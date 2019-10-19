@@ -1,5 +1,7 @@
 # 
 # https://aka.ms/yaml
+trigger: none
+pr: none
 
 stages:
 - stage: DeployCRSL
