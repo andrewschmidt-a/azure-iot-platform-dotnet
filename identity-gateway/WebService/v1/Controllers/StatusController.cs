@@ -18,13 +18,19 @@ namespace IdentityGateway.WebService.v1.Controllers
             this.config = config;
             this.statusService = statusService;
         }
-
+        [HttpGet]
         public async Task<StatusApiModel> GetAsync()
         {
             var result = new StatusApiModel(await this.statusService.GetStatusAsync());
 
             result.Properties.Add("Port", this.config.Port.ToString());
             return result;
+        }
+
+        [HttpGet("ping")]
+        public IActionResult Ping()
+        {
+            return new StatusCodeResult(200);
         }
     }
 }

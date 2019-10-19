@@ -32,5 +32,11 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
             result.Properties.Add("Port", this.config.Port.ToString());
             return result;
         }
+
+        [HttpGet("ping")]
+        public IActionResult Ping()
+        {
+            return new StatusCodeResult(200);
+        }
     }
 }
