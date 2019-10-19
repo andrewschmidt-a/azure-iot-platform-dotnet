@@ -25,7 +25,7 @@ steps:
 #  inputs:
 #    connectionType: 'Azure Resource Manager'
 #    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
-#    azureResourceGroup: 'rg-crslbbiot-odin-dev'
+#    azureResourceGroup: 'rg-crslbbiot-odin-dev' 
 #    kubernetesCluster: 'aks-dev-spaces-odin'
 #    namespace: 'default'
 #    command: 'upgrade'
