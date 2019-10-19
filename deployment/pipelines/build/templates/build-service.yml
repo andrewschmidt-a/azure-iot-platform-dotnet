@@ -26,4 +26,4 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/${{ parameters.service }}${{ parameters.dockerFile }}'
         buildContext: '$(Build.SourcesDirectory)/${{ parameters.service }}${{ parameters.context }}'
         tags: |
-          $(tag)
+          ${{ parameters.tag }}
