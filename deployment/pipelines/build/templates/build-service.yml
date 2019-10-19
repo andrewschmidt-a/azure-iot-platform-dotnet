@@ -1,0 +1,29 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+parameters:
+  tag: '$(Build.BuildId)' # Optional will take buildId
+  service: ''  # required
+  dockerFile: '/Dockerfile' # Most services require modification
+  context: '' # Never should need changing, just added it in case
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:  
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      displayName: Build an image
+      inputs:
+        containerRegistry: 'OdinDockerHub'
+        repository: 'azureiot3m/${{ parameters.service }}'
+        command: 'buildAndPush'
+        dockerfile: '$(Build.SourcesDirectory)/${{ parameters.service }}${{ parameters.dockerFile }}'
+        buildContext: '$(Build.SourcesDirectory)/${{ parameters.service }}${{ parameters.context }}'
+        tags: |
+          $(tag)

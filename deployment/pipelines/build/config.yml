@@ -1,0 +1,25 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  branches:
+    include:
+    - master 
+  paths:
+    include:
+    - config/
+
+pr:
+  branches:
+    include:
+    - master
+  paths: 
+    include:
+    - config/
+
+stages:
+- template: templates/build-service.yml
+  paramters:
+    service: config
+    dockerFile: "/WebService/Dockerfile"

@@ -1,0 +1,25 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  branches:
+    include:
+    - master 
+  paths:
+    include:
+    - device-telemetry/
+
+pr:
+  branches:
+    include:
+    - master
+  paths: 
+    include:
+    - device-telemetry/
+
+stages:
+- template: templates/build-service.yml
+  paramters:
+    service: device-telemetry
+    dockerFile: "/WebService/Dockerfile"

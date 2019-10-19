@@ -1,0 +1,25 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  branches:
+    include:
+    - master 
+  paths:
+    include:
+    - identity-gateway/
+
+pr:
+  branches:
+    include:
+    - master
+  paths: 
+    include:
+    - identity-gateway/
+
+stages:
+- template: templates/build-service.yml
+  paramters:
+    service: identity-gateway
+    dockerFile: "/WebService/Dockerfile"
