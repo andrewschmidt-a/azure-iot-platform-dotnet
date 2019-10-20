@@ -5,20 +5,10 @@ parameters:
   automationName: ''
   location: ''
   subscriptionId: ''
-  certThumbprint: ''
+  tenantId: ''
   keyVaultName: ''
 
 steps:
-# get the ApplicationId from Keyvault
-- task: AzurePowerShell@3
-  displayName: "Get the Appid from keyvault"
-  inputs:
-    azureSubscription: '${{ parameters.serviceConnection }}'
-    ScriptType: 'InlineScript'
-    Inline: |-
-      $vaultValue = (Get-AzureKeyVaultSecret -VaultName ${{ parameters.keyVaultName }} -Name "ApplicationId").SecretValueText
-      Write-Host "##vso[task.setvariable variable=applicationId]$vaultValue" 
-    azurePowerShellVersion: 'LatestVersion'
 
 # Create Automation Account using ARM    
 - task: AzureResourceGroupDeployment@2
@@ -31,9 +21,18 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/automationacct.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/automationacct.json'
-    overrideParameters: '-automationAccountName ${{ parameters.automationName }} -location ${{ parameters.location }} -ApplicationId $(applicationId) -SubscriptionId ${{ parameters.subscriptionId }} -CertThumbprint ${{ parameters.certThumbprint }}'
+    overrideParameters: '-automationAccountName ${{ parameters.automationName }} -location ${{ parameters.location }}'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
+
+- task: AzurePowerShell@3
+  displayName: "create certificate, connections on automation acct"
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    ScriptType: 'FilePath'
+    ScriptPath: '$(System.DefaultWorkingDirectory)/deployment/scripts/automationAcctCert.ps1'
+    ScriptArguments: '-accountName ${{ parameters.automationName }} -resourceGroup ${{ parameters.resourceGroup }} -subscriptionId ${{ parameters.subscriptionId }} -tenantId ${{ parameters.tenantId }} -keyvaultName ${{ parameters.keyVaultName }}'
+    azurePowerShellVersion: 'LatestVersion'
 
 ##  need to run after the  keyvault step and needs windows agent
 - task: AzurePowerShell@3

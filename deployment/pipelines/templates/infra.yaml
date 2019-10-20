@@ -21,7 +21,6 @@ parameters:
   mapsName: 'maps'
   applicationCode: ''
   deployEnvironment: ''
-  certThumbprint: ''
   
 jobs:
 - job: aks
@@ -165,7 +164,7 @@ jobs:
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
       automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
       subscriptionId: ${{ parameters.subscriptionId }}
-      CertThumbprint: ${{ parameters.certThumbprint }}
+      tenantId: ${{ parameters.tenantId }}
 
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform
 - job: ingress

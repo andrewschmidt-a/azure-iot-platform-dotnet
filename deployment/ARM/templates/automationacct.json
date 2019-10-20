@@ -15,28 +15,28 @@
         "metadata": {
           "description": "Location for the Automation Account"
         }
-      },
-      "ApplicationId": {
-        "type": "string",
-        "defaultValue": "",
-        "metadata": {
-          "description": "Azure AD application Id that Automation account will use to authenticate with Azure"
-        }
-      },
-      "SubscriptionId": {
-        "type": "string",
-        "defaultValue": "",
-        "metadata": {
-          "description": "Azure Subscription Id Automation account will use to authenticate with Azure"
-        }
-      },
-      "CertThumbprint": {
-        "type": "string",
-        "defaultValue": "",
-        "metadata": {
-          "description": "Certificate Thumbprint that Automation account will use to authenticate with Azure"
-        }
       }
+      // "ApplicationId": {
+      //   "type": "string",
+      //   "defaultValue": "",
+      //   "metadata": {
+      //     "description": "Azure AD application Id that Automation account will use to authenticate with Azure"
+      //   }
+      // },
+      // "SubscriptionId": {
+      //   "type": "string",
+      //   "defaultValue": "",
+      //   "metadata": {
+      //     "description": "Azure Subscription Id Automation account will use to authenticate with Azure"
+      //   }
+      // },
+      // "CertThumbprint": {
+      //   "type": "string",
+      //   "defaultValue": "",
+      //   "metadata": {
+      //     "description": "Certificate Thumbprint that Automation account will use to authenticate with Azure"
+      //   }
+      // }
     },
     "variables": {},
     "resources": [
@@ -70,26 +70,26 @@
           //    }
           //  }
           //},
-          {
-            "name": "AzureRunAsConnection",
-            "type": "connections",
-            "apiVersion": "2015-10-31",
-            "dependsOn": [
-              "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
-            ],
-            "properties": {
-              "description": "service principal that was automatically created for this automation account.",
-              "connectionType": {
-                "name": "AzureServicePrincipal"
-              },
-              "fieldDefinitionValues": {
-                "ApplicationId": "[parameters('ApplicationId')]",
-                "TenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb",
-                "CertificateThumbprint": "[parameters('CertThumbprint')]",
-                "SubscriptionId": "[parameters('SubscriptionId')]"
-              }
-            }
-          }
+          // {
+          //   "name": "AzureRunAsConnection",
+          //   "type": "connections",
+          //   "apiVersion": "2015-10-31",
+          //   "dependsOn": [
+          //     "[resourceId('Microsoft.Automation/automationAccounts', parameters('automationAccountName'))]"
+          //   ],
+          //   "properties": {
+          //     "description": "service principal that was automatically created for this automation account.",
+          //     "connectionType": {
+          //       "name": "AzureServicePrincipal"
+          //     },
+          //     "fieldDefinitionValues": {
+          //       "ApplicationId": "[parameters('ApplicationId')]",
+          //       "TenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb",
+          //       "CertificateThumbprint": "[parameters('CertThumbprint')]",
+          //       "SubscriptionId": "[parameters('SubscriptionId')]"
+          //     }
+          //   }
+          // }
         ]
       }
      ]

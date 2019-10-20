@@ -3,9 +3,9 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "automationAccountName": { "value": "crsl-automationAccount" },
-    "location": { "value": "" },
-    "ApplicationId": { "value": "" },
-    "SubscriptionId": { "value": "" },
-    "CertThumbprint": { "value": "" }
+    "location": { "value": "" }
+    //"ApplicationId": { "value": "" },
+    //"SubscriptionId": { "value": "" },
+    //"CertThumbprint": { "value": "" }
   }
 }
