@@ -24,6 +24,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
 
         // collection and iothub naming 
         private string iotHubNameFormat = "iothub-{0}";  // format with a guid
+        private string dpsNameFormat = "dps-{0}"; // format with a guid
         private string appConfigCollectionKeyFormat = "tenant:{0}:{1}-collection";  // format with a guid and collection name
         private List<string> tenantCollections = new List<string>{"telemetry", "twin-change", "lifecycle", "pcs"};
 
@@ -77,13 +78,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
         {
             /* Creates a new tenant */
             string iotHubName = String.Format(this.iotHubNameFormat, tenantId.Substring(0, 8));
+            string dpsName = String.Format(this.dpsNameFormat, tenantId.Substring(0, 8)); 
 
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantId, iotHubName);
             await this._tableStorageHelper.WriteToTableAsync<TenantModel>(TENANT_TABLE_ID, tenant);
 
             // Trigger run book to create a new IoT Hub
-            await this._tenantRunbookHelper.CreateIotHub(tenantId, iotHubName);
+            await this._tenantRunbookHelper.CreateIotHub(tenantId, iotHubName, dpsName);
 
             var userId = "";
             try
@@ -269,8 +271,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
             try
             {
                 string iotHubName = String.Format(this.iotHubNameFormat, tenantId.Substring(0, 8));
+                string dpsName = String.Format(this.dpsNameFormat, tenantId.Substring(0, 8));
                 //trigger delete iothub runbook
-                await this._tenantRunbookHelper.DeleteIotHub(tenantId, iotHubName);
+                await this._tenantRunbookHelper.DeleteIotHub(tenantId, iotHubName, dpsName);
                 deletionRecord["iotHub"] = true;
             }
             catch (Exception e)

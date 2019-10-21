@@ -90,14 +90,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
             return String.IsNullOrEmpty(unhealthyMessage) ? new StatusResultServiceModel(true, "Alive and well!") : new StatusResultServiceModel(false, unhealthyMessage);
         }
 
-        public async Task<HttpResponseMessage> CreateIotHub(string tenantId, string iotHubName)
+        public async Task<HttpResponseMessage> CreateIotHub(string tenantId, string iotHubName, string dpsName)
         {
-            return await this.TriggerTenantRunbook(this.webHooks[CREATE_IOT_HUB_WEBHOOK_KEY], tenantId, iotHubName);
+            return await this.TriggerTenantRunbook(this.webHooks[CREATE_IOT_HUB_WEBHOOK_KEY], tenantId, iotHubName, dpsName);
         }
 
-        public async Task<HttpResponseMessage> DeleteIotHub(string tenantId, string iotHubName)
+        public async Task<HttpResponseMessage> DeleteIotHub(string tenantId, string iotHubName, string dpsName)
         {
-            return await this.TriggerTenantRunbook(this.webHooks[DELETE_IOT_HUB_WEBHOOK_KEY], tenantId, iotHubName);
+            return await this.TriggerTenantRunbook(this.webHooks[DELETE_IOT_HUB_WEBHOOK_KEY], tenantId, iotHubName, dpsName);
         }
 
         /// <summary>
@@ -109,12 +109,13 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
         /// <param name="tenantId" type="string">Tenant Guid</param>
         /// <param name="iotHubName" type="string">Iot Hub Name for deletion or creation</param>
         /// <returns></returns>
-        private async Task<HttpResponseMessage> TriggerTenantRunbook(string webHookUrl, string tenantId, string iotHubName)
+        private async Task<HttpResponseMessage> TriggerTenantRunbook(string webHookUrl, string tenantId, string iotHubName, string dpsName)
         {
             var requestBody = new
             {
                 tenantId = tenantId,
                 iotHubName = iotHubName,
+                dpsName = dpsName,
                 token = this._tokenHelper.GetServicePrincipleToken(),
                 resourceGroup = this.resourceGroup,
                 location = this._config.Location,
