@@ -19,7 +19,6 @@ stages:
       subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
       applicationCode: crsliot
       deployEnvironment: test
-      certThumbprint: D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD
       
 # PSD
 - stage: DeployPSD
@@ -37,7 +36,6 @@ stages:
       subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
       applicationCode: psdiot
       deployEnvironment: dev
-      certThumbprint: D03EDA463EC6A2B2F0C87F2F72347D38B9AAB9AD
       
 - stage: DebugEnv
   dependsOn: []
