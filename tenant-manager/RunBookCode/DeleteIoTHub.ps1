@@ -1,9 +1,6 @@
 <#
     .DESCRIPTION
         A run book for creating a new IoT Hub for a tenant
-<#
-    .DESCRIPTION
-        A run book for creating a new IoT Hub for a tenant
 
     .NOTES
         AUTHOR: Nate Oelke
