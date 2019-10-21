@@ -8,6 +8,7 @@ parameters:
   collectionName: ''
   
 steps:
+# create Cosmos db account, database, collection/throughput
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Cosmos DB"
   inputs:

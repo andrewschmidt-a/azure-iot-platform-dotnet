@@ -25,6 +25,7 @@ steps:
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
+# create certs, add it to automation acct, create connection using certs/Thumbprint, store the cert to keyvault
 - task: AzurePowerShell@3
   displayName: "create certificate, connections on automation acct"
   inputs:
@@ -34,7 +35,7 @@ steps:
     ScriptArguments: '-accountName ${{ parameters.automationName }} -resourceGroup ${{ parameters.resourceGroup }} -subscriptionId ${{ parameters.subscriptionId }} -tenantId ${{ parameters.tenantId }} -keyvaultName ${{ parameters.keyVaultName }}'
     azurePowerShellVersion: 'LatestVersion'
 
-##  need to run after the  keyvault step and needs windows agent
+# import runbook with code, create webhook, store the webhook to keyvault
 - task: AzurePowerShell@3
   displayName: "import runbook code and create webhook"
   inputs:
