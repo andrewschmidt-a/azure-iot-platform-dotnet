@@ -1,6 +1,9 @@
 <#
     .DESCRIPTION
         A run book for creating a new IoT Hub for a tenant
+<#
+    .DESCRIPTION
+        A run book for creating a new IoT Hub for a tenant
 
     .NOTES
         AUTHOR: Nate Oelke
@@ -71,5 +74,8 @@ $appConfigBody = @"
 "@
 $appConfigBody
 $result = (Invoke-RestMethod -ContentType 'application/json' -Method delete -Headers $requestheader -Uri $setAppConfigEndpoint -Body $appConfigBody)
+
+# Remove dps
+Remove-AzIoTDeviceProvisioningService -ResourceGroupName $data.resourceGroup -Name $data.dpsName
 
 "Done"
