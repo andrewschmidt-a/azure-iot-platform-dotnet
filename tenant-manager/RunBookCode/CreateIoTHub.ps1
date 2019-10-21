@@ -1,6 +1,9 @@
 <#
     .DESCRIPTION
         A run book for creating a new IoT Hub for a tenant
+<#
+    .DESCRIPTION
+        A run book for creating a new IoT Hub for a tenant
 
     .NOTES
         AUTHOR: Nate Oelke
@@ -159,15 +162,10 @@ while (($result.properties.state -ne "Active") -and ($tries -lt 30)) {
 $policy = "iothubowner" 
 $iotHubKeysUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)/IotHubKeys/$policy/listkeys?api-version=2019-03-22-preview"
 $result = (Invoke-RestMethod -Method Post -Headers $requestheader -Uri $iotHubKeysUri)
-$result
 
 # Create the connection string
 $sharedAccessKey = $result.primaryKey
 $connectionString = "HostName=$($data.iotHubName).azure-devices.net;SharedAccessKeyName=$policy;SharedAccessKey=$sharedAccessKey"
-$dpsName="dps$($data.iotHubName)"
-$data.dpsName
-$data.resourceGroup
-$data.location
 
 # Add DPS to the current iothub
 New-AzIoTDeviceProvisioningService -Name $data.dpsName -Location "eastus" -ResourceGroupName $data.resourceGroup
