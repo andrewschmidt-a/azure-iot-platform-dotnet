@@ -4,7 +4,7 @@ parameters:
   location: ''
   cosmosDBAccount: ''
   cosmosDBName: 'iot'
-  cosmosDBthroughput: ''
+  throughput: 
   collectionName: ''
   
 steps:
