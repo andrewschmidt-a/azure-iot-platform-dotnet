@@ -22,17 +22,18 @@ namespace IdentityGateway.Controllers
     {
         private IServicesConfig _config;
         private IJWTHelper _jwtHelper;
+        private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
 
         private UserTenantContainer _userTenantContainer;
         private UserSettingsContainer _userSettingsContainer;
 
-        public AuthorizeController(IServicesConfig config, UserTenantContainer userTenantContainer,
-            UserSettingsContainer userSettingsContainer, IJWTHelper jwtHelper)
+        public AuthorizeController(IServicesConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJWTHelper jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration)
         {
             this._config = config;
             this._userTenantContainer = userTenantContainer;
             this._userSettingsContainer = userSettingsContainer;
             this._jwtHelper = jwtHelper;
+            this._openIdProviderConfiguration = openIdProviderConfiguration;
         }
 
         // GET: connect/authorize
@@ -55,14 +56,13 @@ namespace IdentityGateway.Controllers
                 throw new Exception("Tenant is not valid!");
             }
 
-            var config = new Configuration(HttpContext);
             var uri = new UriBuilder(this._config.AzureB2CBaseUri);
 
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
             query["state"] = JsonConvert.SerializeObject(new AuthState
             { returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce, client_id = clientId, invitation = invite });
-            query["redirect_uri"] = config.issuer + "/connect/callback"; // must be https for B2C
+            query["redirect_uri"] = _openIdProviderConfiguration.issuer + "/connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
             return Redirect(uri.Uri.ToString());
         }

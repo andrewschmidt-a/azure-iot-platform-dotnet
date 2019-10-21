@@ -14,6 +14,7 @@ using IdentityGateway.AuthUtils;
 using Autofac.Extensions.DependencyInjection;
 using Autofac;
 using IdentityGateway.Services.Diagnostics;
+using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Runtime;
 
 namespace IdentityGateway.WebService
@@ -67,6 +68,7 @@ namespace IdentityGateway.WebService
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IStatusService, StatusService>();
+            services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
 
             // Prepare DI container
             this.ApplicationContainer = DependencyResolution.Setup(services);
