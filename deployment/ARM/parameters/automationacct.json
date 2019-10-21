@@ -4,8 +4,5 @@
   "parameters": {
     "automationAccountName": { "value": "crsl-automationAccount" },
     "location": { "value": "" }
-    //"ApplicationId": { "value": "" },
-    //"SubscriptionId": { "value": "" },
-    //"CertThumbprint": { "value": "" }
   }
 }

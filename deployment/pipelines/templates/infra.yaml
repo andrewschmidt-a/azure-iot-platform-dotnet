@@ -1,4 +1,5 @@
 parameters:
+  tenantId: 'facac3c4-e2a5-4257-af76-205c8a821ddb'
   environment: ''
   serviceConnection: ''
   resourceGroup: ''
@@ -83,7 +84,7 @@ jobs:
       cosmosDBName: ${{ parameters.cosmosDBName }}
       location: ${{ parameters.location }}
       keyVaultName: ${{ parameters.keyVaultName }}
-      cosmosDBthroughput: ${{ parameters.cosmosDBthroughput }}
+      throughput: ${{ parameters.cosmosDBthroughput }}
       collectionName: ${{ parameters.collectionName }}
 
 ## Deploys Storage Account
