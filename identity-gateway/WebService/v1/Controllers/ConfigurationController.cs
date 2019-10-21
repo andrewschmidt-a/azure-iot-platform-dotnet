@@ -21,10 +21,10 @@ using IdentityGateway.Services.Runtime;
 namespace IdentityGateway.WebService.v1.Controllers
 {
     [Route("")]
-    public class ConfiguratonController : ControllerBase
+    public class ConfigurationController : ControllerBase
     {
         private IServicesConfig _config;
-        public ConfiguratonController(IServicesConfig config)
+        public ConfigurationController(IServicesConfig config)
         {
             this._config = config;
         }
