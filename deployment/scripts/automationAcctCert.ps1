@@ -20,8 +20,7 @@ function Import-Certificate() {
     $connectionDesc = "This connection contains information about the service principal that was automatically created for this automation account. For details on this service principal and its certificate, or to recreate them, go to this account’s Settings. For example usage, see the tutorial runbook in this account."
     $dnsName = "$accountName.azurewebsites.net"
     $certStore = "Cert:\LocalMachine\My"
-    # generate a random password and store to keyvault
-    $certPassword = Generate-Random-password
+    $certPassword = CreateRandomPassword
     $cert = New-SelfSignedCertificate -DnsName $dnsName `
                                       -CertStoreLocation $CertStore `
                                       -KeyExportPolicy Exportable `
@@ -34,6 +33,7 @@ function Import-Certificate() {
     Import-PfxCertificate -Password $pfxPassword -FilePath "$accountName.pfx" -CertStoreLocation 'Cert:\LocalMachine\My'
     # convert to .cer
     Set-Content -Path "$accountName.cer" -Value ([Convert]::ToBase64String($cert.RawData)) -Encoding Ascii
+    # import the .pfx cert to Azure Automation Acct
     New-AzureRmAutomationCertificate -Name "AzureRunAsCertificate" `
                                      -Path "$accountName.pfx" `
                                      -Password $pfxPassword `
@@ -45,14 +45,17 @@ function Import-Certificate() {
     Write-Output "AzureRunAsCertificate has been added to $accountName"
 
     # adding the cert to Azure Keyvault 
-    Write-Host "Adding Cert to Keyvault.."
     Import-AzureKeyVaultCertificate -VaultName $KeyVaultName `
                                     -Name $certName `
                                     -FilePath "$accountName.pfx" `
                                     -Password $pfxPassword 
 
-    Write-Host Cert $certName added for $dnsName    
+    Write-Host "Cert $certName added to Keyvault"
     
+    $vaultCertPwd = ConvertTo-SecureString -String $certPassword -AsPlainText -Force
+    Set-AzureKeyVaultSecret -VaultName $KeyVaultName -Name "AutomationCertPassword" -SecretValue $vaultCertPwd
+    Write-Host "Cert Password added to Keyvault"
+
     # Populate the ConnectionFieldValues
     $applicationId = (Get-AzureKeyVaultSecret -VaultName $KeyVaultName -Name "ApplicationId").SecretValueText
     $connectionTypeName = "AzureServicePrincipal"
@@ -94,27 +97,19 @@ function Get-RandomCharacters($length, $characters) {
     $private:ofs=""
     return [String]$characters[$random]
 }
-function Scramble-String([string]$inputString){     
+function ScrambletheString([string]$inputString){
     $characterArray = $inputString.ToCharArray()   
     $scrambledStringArray = $characterArray | Get-Random -Count $characterArray.Length     
     $outputString = -join $scrambledStringArray
     return $outputString 
 }
-function Generate-Random-password() {
-    $password = Get-RandomCharacters -length 1 -characters 'abcdefghiklmnoprstuvwxyz'
-    $password += Get-RandomCharacters -length 2 -characters '1234567890'
-    $password += Get-RandomCharacters -length 1 -characters '!"§$%&/()=?}][{@#*+'
-    $password += Get-RandomCharacters -length 1 -characters 'abcdefghiklmnoprstuvwxyz'
-    $password += Get-RandomCharacters -length 1 -characters '1234567890'
-    $password += Get-RandomCharacters -length 1 -characters 'ABCDEFGHKLMNOPRSTUVWXYZ'
-    $password += Get-RandomCharacters -length 1 -characters '1234567890'
-    $password += Get-RandomCharacters -length 1 -characters 'abcdefghiklmnoprstuvwxyz'
-    $password += Get-RandomCharacters -length 1 -characters '1234567890'
-    $password += Get-RandomCharacters -length 1 -characters 'abcdefghiklmnoprstuvwxyz'
-    $password += Get-RandomCharacters -length 1 -characters '!"§$%&/()=?}][{@#*+'
-    $password += Get-RandomCharacters -length 1 -characters 'ABCDEFGHKLMNOPRSTUVWXYZ'
+function CreateRandomPassword() {
+    $password = Get-RandomCharacters -length 4 -characters 'abcdefghiklmnoprstuvwxyz'
+    $password += Get-RandomCharacters -length 3 -characters '!"§$%&/()=?}][{@#*+'
+    $password += Get-RandomCharacters -length 3 -characters '1234567890'
+    $password += Get-RandomCharacters -length 4 -characters 'ABCDEFGHKLMNOPRSTUVWXYZ'
 
-    $password = Scramble-String $password
+    $password = ScrambletheString $password
     return $password
 }
 

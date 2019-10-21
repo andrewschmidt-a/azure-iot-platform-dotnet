@@ -13,32 +13,27 @@ param(
 $currtime = Get-Date
 $expDate = $currtime.AddDays(365)
 
-$automationAccountName = $accountName
-$scriptFolder = $scriptFolder
-$RGName = $resourceGroup
-$vaultName = $keyvaultName
-
 function importRunbook($runbookName, $filepath) {
     
     Import-AzureRMAutomationRunbook -Name $runbookName -Path $filepath `
-                                    -ResourceGroupName $RGName -AutomationAccountName $automationAccountName `
+                                    -ResourceGroupName $resourceGroup -AutomationAccountName $accountName `
                                     -Type PowerShell `
                                     -Force
 
-    Publish-AzureRmAutomationRunbook -Name $runbookName -AutomationAccountName $automationAccountName `
-                                     -ResourceGroupName $RGName
+    Publish-AzureRmAutomationRunbook -Name $runbookName -AutomationAccountName $accountName `
+                                     -ResourceGroupName $resourceGroup
 }
 
 function createWebhook($webhook, $runbookName, $expDate, $secretName) {
 
     $ifExists = Get-AzureRmAutomationWebhook -RunbookName $runbookName `
-                                             -ResourceGroupName $RGName `
-                                             -AutomationAccountName $automationAccountName
+                                             -ResourceGroupName $resourceGroup `
+                                             -AutomationAccountName $accountName
 
     if ([string]::IsNullOrEmpty($ifExists)) {
         $result = New-AzureRmAutomationWebhook -Name $webhook -RunbookName $runbookName `
-                                               -ExpiryTime $expDate -ResourceGroup $RGName `
-                                               -AutomationAccountName $automationAccountName `
+                                               -ExpiryTime $expDate -ResourceGroup $resourceGroup `
+                                               -AutomationAccountName $accountName `
                                                -IsEnabled $True `
                                                -Force
        
@@ -54,7 +49,7 @@ function createWebhook($webhook, $runbookName, $expDate, $secretName) {
 
 function addtoKeyvault($webookUri, $secretName ){
     $vaultwebookUri = ConvertTo-SecureString -String $webookUri -AsPlainText -Force
-    Set-AzureKeyVaultSecret -VaultName $vaultName -Name $secretName -SecretValue $vaultwebookUri
+    Set-AzureKeyVaultSecret -VaultName $keyvaultName -Name $secretName -SecretValue $vaultwebookUri
 }
 
 # import the runbook with code
