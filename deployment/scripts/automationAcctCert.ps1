@@ -20,8 +20,8 @@ function Import-Certificate() {
     $connectionDesc = "This connection contains information about the service principal that was automatically created for this automation account. For details on this service principal and its certificate, or to recreate them, go to this account’s Settings. For example usage, see the tutorial runbook in this account."
     $dnsName = "$accountName.azurewebsites.net"
     $certStore = "Cert:\LocalMachine\My"
-    $certPassword = "o30+v0B1z3w§N"
-    #$cert = New-SelfSignedCertificate -CertStoreLocation Cert:\LocalMachine\My -DnsName $IdentityServerDns
+    # generate a random password and store to keyvault
+    $certPassword = Generate-Random-password
     $cert = New-SelfSignedCertificate -DnsName $dnsName `
                                       -CertStoreLocation $CertStore `
                                       -KeyExportPolicy Exportable `
@@ -88,6 +88,38 @@ function Import-Certificate() {
     #>
 }
 
+## Generate a Random password 
+function Get-RandomCharacters($length, $characters) {
+    $random = 1..$length | ForEach-Object { Get-Random -Maximum $characters.length }
+    $private:ofs=""
+    return [String]$characters[$random]
+}
+
+function Scramble-String([string]$inputString){     
+    $characterArray = $inputString.ToCharArray()   
+    $scrambledStringArray = $characterArray | Get-Random -Count $characterArray.Length     
+    $outputString = -join $scrambledStringArray
+    return $outputString 
+}
+
+function Generate-Random-password() {
+    $password = Get-RandomCharacters -length 1 -characters 'abcdefghiklmnoprstuvwxyz'
+    $password += Get-RandomCharacters -length 2 -characters '1234567890'
+    $password += Get-RandomCharacters -length 1 -characters '!"§$%&/()=?}][{@#*+'
+    $password += Get-RandomCharacters -length 1 -characters 'abcdefghiklmnoprstuvwxyz'
+    $password += Get-RandomCharacters -length 1 -characters '1234567890'
+    $password += Get-RandomCharacters -length 1 -characters 'ABCDEFGHKLMNOPRSTUVWXYZ'
+    $password += Get-RandomCharacters -length 1 -characters '1234567890'
+    $password += Get-RandomCharacters -length 1 -characters 'abcdefghiklmnoprstuvwxyz'
+    $password += Get-RandomCharacters -length 1 -characters '1234567890'
+    $password += Get-RandomCharacters -length 1 -characters 'abcdefghiklmnoprstuvwxyz'
+    $password += Get-RandomCharacters -length 1 -characters '!"§$%&/()=?}][{@#*+'
+    $password += Get-RandomCharacters -length 1 -characters 'ABCDEFGHKLMNOPRSTUVWXYZ'
+
+    $password = Scramble-String $password
+    return $password
+}
+
 # check if cert exists or expired 
 $result = Get-AzureRmAutomationCertificate -ResourceGroupName $resourceGroup -AutomationAccountName $accountName
 
@@ -97,8 +129,6 @@ if ([string]::IsNullOrEmpty($result)){
     Import-Certificate
 }
 else {
-    #$expDate = $thumbprint.ExpiryTime | Where-Object $_.Name -eq "AzureRunAsCertificate"
-    #$expDt = $thumprint.expiryTime | Where-Object { $thumprint.Name -eq "AzureRunAsCertificate" }
     $certdetails = $result | Select-Object | Where-Object {$_.Name -eq "AzureRunAsCertificate"}
     $thumprint = $certdetails.Thumbprint
     $expDate = $certdetails.ExpiryTime.DateTime
