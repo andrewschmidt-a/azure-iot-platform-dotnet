@@ -38,7 +38,7 @@ spec:
           {{- if .Values.probes.enabled }}
           livenessProbe:
             httpGet:
-              path: /v1/status
+              path: /v1/status/ping
               port: http
             initialDelaySeconds: 5
             timeoutSeconds: 1
