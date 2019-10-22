@@ -26,13 +26,20 @@ steps:
     inlineScript: |-
       az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }}
       # Use Helm to deploy an NGINX ingress controller
-      helm upgrade ingress-controller stable/nginx-ingress \
+      n=0
+      until [ $n -ge 5 ]
+      do
+        helm upgrade ingress-controller stable/nginx-ingress \
           --install \
           --force \
           --namespace ingress-basic \
           --set controller.replicaCount=2 \
           --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
           --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux
+        n=$[$n+1]
+        sleep 15
+      done
+      
 # - task: HelmDeploy@0
 #   displayName: Deploy ingress controller
 #   inputs:
