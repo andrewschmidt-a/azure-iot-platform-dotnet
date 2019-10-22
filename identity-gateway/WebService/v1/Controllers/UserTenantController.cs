@@ -14,6 +14,7 @@ using IdentityGateway.Services.Helpers;
 using SendGrid.Helpers.Mail;
 using SendGrid;
 using System.Linq;
+using WebService;
 
 namespace IdentityGateway.WebService.v1.Controllers
 {

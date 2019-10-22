@@ -17,6 +17,7 @@ using IdentityGateway.Services.Diagnostics;
 using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Runtime;
 using SendGrid;
+using WebService;
 
 namespace IdentityGateway.WebService
 {
@@ -70,6 +71,7 @@ namespace IdentityGateway.WebService
             services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
             services.AddSingleton<IRsaHelpers, RsaHelpers>();
             services.AddTransient<IKeyVaultHelpers, KeyVaultHelpers>();
+            services.AddTransient<ISendGridClientFactory, SendGridClientFactory>();
 
             // Prepare DI container
             this.ApplicationContainer = DependencyResolution.Setup(services);

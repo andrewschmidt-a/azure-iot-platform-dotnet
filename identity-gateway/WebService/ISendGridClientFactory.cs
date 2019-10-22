@@ -1,6 +1,6 @@
 ﻿using SendGrid;
 
-namespace IdentityGateway.WebService.v1.Controllers
+namespace WebService
 {
     public interface ISendGridClientFactory
     {

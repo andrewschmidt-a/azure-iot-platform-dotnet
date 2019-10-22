@@ -1,7 +1,7 @@
 ﻿using IdentityGateway.Services.Runtime;
 using SendGrid;
 
-namespace IdentityGateway.WebService.v1.Controllers
+namespace WebService
 {
     public class SendGridClientFactory : ISendGridClientFactory
     {
