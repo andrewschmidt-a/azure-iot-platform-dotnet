@@ -47,6 +47,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
         private const string APPLICATION_KEY = "TenantManagerService:";
+        private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string AUTOMATION_ACCOUNT_KEY = APPLICATION_KEY + "automationAccountName";
         private const string TELEMETRY_CONNECTION_STRING_KEY = APPLICATION_KEY + "telemetryEventHubConnString";
         private const string LIFECYCLE_CONNECTION_STRING_KEY = APPLICATION_KEY + "lifecycleEventHubConnString";
@@ -74,6 +75,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
 
         public Config(IConfigData configData)
         {
+            this.Port = configData.GetInt(PORT_KEY);
+
             this.ServicesConfig = new ServicesConfig
             {
                 AuthRequired = configData.GetBool(AUTH_REQUIRED_KEY),

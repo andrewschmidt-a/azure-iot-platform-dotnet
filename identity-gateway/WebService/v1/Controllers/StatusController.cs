@@ -2,12 +2,12 @@
 using IdentityGateway.Services;
 using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Runtime;
+using IdentityGateway.WebService.v1.Filters;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace IdentityGateway.WebService.v1.Controllers
 {
-    [Route("v1/[controller]")]
+    [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public sealed class StatusController : Controller
     {
         private readonly IServicesConfig config;

@@ -46,7 +46,7 @@ namespace IdentityGateway.WebService
 #if DEBUG
                 .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
 #endif
-                ;
+                .AddEnvironmentVariables();
             // build configuration with environment variables
             var preConfig = builder.Build();
             // Add app config settings to the configuration builder

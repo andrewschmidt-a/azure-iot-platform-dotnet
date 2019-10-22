@@ -13,7 +13,6 @@ using Microsoft.Extensions.Configuration;
 namespace IdentityGateway.WebService.v1.Controllers
 {
     [Route("v1/settings"), TypeFilter(typeof(ExceptionsFilterAttribute))]
-
     [Authorize("ReadAll")]
     public class UserSettingsController : ControllerBase
     {

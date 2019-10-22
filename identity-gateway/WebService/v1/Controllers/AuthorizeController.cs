@@ -10,6 +10,7 @@ using IdentityGateway.Services.Exceptions;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Runtime;
+using IdentityGateway.WebService.v1.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -17,7 +18,7 @@ using Newtonsoft.Json;
 
 namespace IdentityGateway.Controllers
 {
-    [Route("")]
+    [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AuthorizeController : Controller
     {
         private IServicesConfig _config;

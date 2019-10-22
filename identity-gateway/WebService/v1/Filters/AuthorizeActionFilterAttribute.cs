@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using IdentityGateway.AuthUtils;
-using IdentityGateway.Services.Exceptions;
 
 namespace IdentityGateway.WebService.v1.Filters
 {
