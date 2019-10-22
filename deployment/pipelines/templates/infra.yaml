@@ -9,7 +9,7 @@ parameters:
   cosmosDBName: 'iot'
   collectionName: 'telemetry'
   cosmosDBthroughput: 1000
-  aksName: 'akstest'
+  aksName: 'akspn'
   keyVaultName: 'keyvault'
   functionAppName: ''
   storageAccountName: 'storageacct'
