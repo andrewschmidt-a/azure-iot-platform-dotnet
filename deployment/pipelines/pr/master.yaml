@@ -5,8 +5,6 @@ pr:
 # Don't trigger any CI 
 trigger: none
 
-resources:
-- repo: self
 
 variables:
   tag: '$(Build.BuildId)' 
