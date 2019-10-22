@@ -8,10 +8,10 @@ do
    IP=$(kubectl get service -l app=nginx-ingress -l component=controller --namespace ingress-basic -o json | jq -r .items[0].status.loadBalancer.ingress[0].ip) \
    2>&1 && break
   n=$[$n+1]
-  sleep 15
+  sleep 30
 done
 
-if [ $n -ge 5]
+if [ $n -ge 5 ]
 then
   echo "Error Deploying ingress controller" 1>&2
   exit 64

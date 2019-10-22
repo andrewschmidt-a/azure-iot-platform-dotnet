@@ -40,7 +40,7 @@ steps:
         n=$[$n+1]
         sleep 1m
       done
-      if [ $n -ge 5]
+      if [ $n -ge 5 ]
       then
         echo "Error Deploying ingress controller" 1>&2
         exit 64
