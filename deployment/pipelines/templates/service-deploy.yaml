@@ -17,6 +17,7 @@ steps:
     useClusterAdmin: true
     namespace: 'default'
     command: 'init'
+    arguments: '--force-upgrade'
 - task: HelmDeploy@0
   inputs:
     connectionType: 'Azure Resource Manager'
