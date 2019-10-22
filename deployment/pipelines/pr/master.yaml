@@ -6,14 +6,18 @@ pr:
 trigger: none
 
 
+resources:
+  - repo: self
+
+  
 variables:
   tag: '$(Build.BuildId)' 
   azureSubscription: 3M-CRSLAD16-BBIoTP-Dev
   resourceGroup: rg-crslbbiot-odin-dev
   aksCluster: aks-dev-spaces-odin
-  devSpace: pr-$(System.PullRequest.PullRequestNumber)-build-$(Build.BuildId)
-resources:
-  - repo: self
+  devSpace: pr-$(System.PullRequest.PullRequestNumber)-build-$(Build.BuildId) 
+
+
 stages:
 - stage: Create_Dev_Space_for_PR
   jobs:
