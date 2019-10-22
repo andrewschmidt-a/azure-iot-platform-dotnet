@@ -1,40 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using IdentityServer4.Extensions;
-using System.Security.Claims;
-using IdentityModel;
-using IdentityGateway.Services.Runtime;
-using Microsoft.AspNetCore.Http;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using IdentityGateway.Services.Models;
+using IdentityGateway.Services.Runtime;
+using IdentityModel;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 
 namespace IdentityGateway.Services.Helpers
 {
-    public interface IJWTHelper
-    {
-        Task<JwtSecurityToken> GetIdentityToken(List<Claim> claims, string tenant, string audience, DateTime? expiration);
-        JwtSecurityToken MintToken(List<Claim> claims, string audience, DateTime expirationDateTime);
-        bool TryValidateToken(string audience, string encodedToken, HttpContext context, out JwtSecurityToken jwt);
-    }
-    public class JWTHelper : IJWTHelper
+    public class JwtHelpers : IJwtHelpers
     {
         private UserTenantContainer _userTenantContainer;
         private UserSettingsContainer _userSettingsContainer;
         private IServicesConfig _config;
         private IHttpContextAccessor _httpContextAccessor;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
+        private readonly IRsaHelpers _rsaHelpers;
 
-        public JWTHelper(UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IServicesConfig config, IHttpContextAccessor httpContextAccessor, IOpenIdProviderConfiguration openIdProviderConfiguration)
+        public JwtHelpers(UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IServicesConfig config, IHttpContextAccessor httpContextAccessor, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
         {
-            this._userTenantContainer = userTenantContainer;
-            this._userSettingsContainer = userSettingsContainer;
-            this._config = config;
-            this._httpContextAccessor = httpContextAccessor;
-            this._openIdProviderConfiguration = openIdProviderConfiguration;
+            _userTenantContainer = userTenantContainer;
+            _userSettingsContainer = userSettingsContainer;
+            _config = config;
+            _httpContextAccessor = httpContextAccessor;
+            _openIdProviderConfiguration = openIdProviderConfiguration;
+            _rsaHelpers = rsaHelpers;
         }
 
         public async Task<JwtSecurityToken> GetIdentityToken(List<Claim> claims, string tenant, string audience, DateTime? expiration)
@@ -63,9 +57,9 @@ namespace IdentityGateway.Services.Helpers
                     settingKey = "LastUsedTenant"
                 };
                 UserSettingsModel lastUsedSetting = await this._userSettingsContainer.GetAsync(settingsInput);
-                if (lastUsedSetting != null)
+                // Has last used tenant and it is in the list
+                if (lastUsedSetting != null && tenantList.Count(t=> t.TenantId == lastUsedSetting.Value) > 0)
                 {
-
                     tenant = lastUsedSetting.Value;
                 }
 
@@ -131,7 +125,7 @@ namespace IdentityGateway.Services.Helpers
             // Create Security key  using private key above:
             // not that latest version of JWT using Microsoft namespace instead of System
             var securityKey =
-                new RsaSecurityKey(IdentityGateway.Services.Helpers.RSA.DecodeRSA(_config.PrivateKey));
+                new RsaSecurityKey(_rsaHelpers.DecodeRsa(_config.PrivateKey));
 
             // Also note that securityKey length should be >256b
             // so you have to make sure that your private key has a proper length
@@ -162,7 +156,7 @@ namespace IdentityGateway.Services.Helpers
                 // Validate the token signature
                 RequireSignedTokens = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKeys = RSA.GetJsonWebKey(this._config.PublicKey).Keys,
+                IssuerSigningKeys = _rsaHelpers.GetJsonWebKey(this._config.PublicKey).Keys,
 
                 // Validate the token issuer
                 ValidateIssuer = false,

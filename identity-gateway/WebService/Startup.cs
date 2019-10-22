@@ -69,6 +69,7 @@ namespace IdentityGateway.WebService
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IStatusService, StatusService>();
             services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
+            services.AddSingleton<IRsaHelpers, RsaHelpers>();
 
             // Prepare DI container
             this.ApplicationContainer = DependencyResolution.Setup(services);
