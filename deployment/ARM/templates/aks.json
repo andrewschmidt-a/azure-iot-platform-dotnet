@@ -173,7 +173,10 @@
                     }
                 }
             },
-            "tags": {}
+            "tags": {
+                "[concat('hidden-related:', resourceId('Microsoft.ContainerService/managedClusters', parameters('resourceName')))]": "Resource",
+                "displayName": "kubernetesCluster"
+              }
         }
     ],
     "outputs": {

@@ -2,44 +2,18 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "resourceName": {
-            "value": "aks-test-deploy"
-        },
-        "location": {
-            "value": "centralus"
-        },
-        "dnsPrefix": {
-            "value": "aks-test-deploy-dns"
-        },
-        "agentCount": {
-            "value": 3
-        },
-        "agentVMSize": {
-            "value": "Standard_DS2_v2"
-        },
-        "servicePrincipalClientId": {
-            "value": null
-        },
-        "servicePrincipalClientSecret": {
-            "value": null
-        },
-        "kubernetesVersion": {
-            "value": "1.13.10"
-        },
-        "networkPlugin": {
-            "value": "kubenet"
-        },
-        "omsworkspaceName":{
-            "value": "loganalyticsws-test1"
-        },
-        "enableRBAC": {
-            "value": false
-        },
-        "enableOmsAgent": {
-            "value": true
-	},
-        "enableHttpApplicationRouting": {
-            "value": false
-        }
+        "resourceName": { "value": "aks-test-deploy" },
+        "location": {"value": "centralus" },
+        "dnsPrefix": { "value": "aks-test-deploy-dns" },
+        "agentCount": { "value": 3 },
+        "agentVMSize": { "value": "Standard_DS2_v2" },
+        "servicePrincipalClientId": {  "value": "" },
+        "servicePrincipalClientSecret": { "value": "" },
+        "kubernetesVersion": { "value": "1.13.10" },
+        "networkPlugin": { "value": "kubenet" },
+        "omsworkspaceName":{ "value": "" },
+        "enableRBAC": { "value": false },
+        "enableOmsAgent": { "value": true },
+        "enableHttpApplicationRouting": { "value": false }
     }
 }
