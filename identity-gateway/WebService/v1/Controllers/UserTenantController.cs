@@ -23,9 +23,9 @@ namespace IdentityGateway.WebService.v1.Controllers
     {
         private IServicesConfig _config;
         private UserTenantContainer _container;
-        private IJWTHelper _jwtHelper;
+        private IJwtHelpers _jwtHelper;
 
-        public UserTenantController(IServicesConfig config, UserTenantContainer container, IJWTHelper jwtHelper)
+        public UserTenantController(IServicesConfig config, UserTenantContainer container, IJwtHelpers jwtHelper)
         {
             this._config = config;
             this._container = container;

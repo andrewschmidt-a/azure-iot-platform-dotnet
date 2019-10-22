@@ -1,4 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+﻿// Copyright (c) Microsoft. All rights reserved.    
 
 using System;
 using System.Collections;
@@ -7,7 +7,6 @@ using IdentityGateway.Services.Runtime;
 using IdentityGateway.AuthUtils;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using RSA = IdentityGateway.Services.Helpers.RSA;
 
 namespace IdentityGateway.WebService.Runtime
 {

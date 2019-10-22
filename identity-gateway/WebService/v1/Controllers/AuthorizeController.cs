@@ -21,13 +21,13 @@ namespace IdentityGateway.Controllers
     public class AuthorizeController : Controller
     {
         private IServicesConfig _config;
-        private IJWTHelper _jwtHelper;
+        private IJwtHelpers _jwtHelper;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
 
         private UserTenantContainer _userTenantContainer;
         private UserSettingsContainer _userSettingsContainer;
 
-        public AuthorizeController(IServicesConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJWTHelper jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration)
+        public AuthorizeController(IServicesConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJwtHelpers jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration)
         {
             this._config = config;
             this._userTenantContainer = userTenantContainer;

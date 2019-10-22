@@ -15,8 +15,9 @@ using Newtonsoft.Json.Serialization;
 using JsonWebKey = IdentityModel.Jwk.JsonWebKey;
 using JsonWebKeySet = IdentityModel.Jwk.JsonWebKeySet;
 using IdentityGateway.Services.Helpers;
-using RSA = IdentityGateway.Services.Helpers.RSA;
 using IdentityGateway.Services.Runtime;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace IdentityGateway.WebService.v1.Controllers
 {
@@ -25,11 +26,14 @@ namespace IdentityGateway.WebService.v1.Controllers
     {
         private IServicesConfig _config;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
+        private readonly IRsaHelpers _rsaHelpers;
+        public const string ContentType = "application/json";
 
-        public ConfigurationController(IServicesConfig config, IOpenIdProviderConfiguration openIdProviderConfiguration)
+        public ConfigurationController(IServicesConfig config, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
         {
-            this._config = config;
-            this._openIdProviderConfiguration = openIdProviderConfiguration;
+            _config = config;
+            _openIdProviderConfiguration = openIdProviderConfiguration;
+            _rsaHelpers = rsaHelpers;
         }
 
         /// <summary>
@@ -59,7 +63,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [HttpGet(".well-known/openid-configuration")]
         public IActionResult GetOpenIdProviderConfiguration()
         {
-            return new OkObjectResult(_openIdProviderConfiguration);
+            return new OkObjectResult(_openIdProviderConfiguration) { ContentTypes = new MediaTypeCollection { ContentType } };
         }
 
         // GET api/values
@@ -68,7 +72,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.ContractResolver = new LowercaseContractResolver();
-            return new ContentResult() {Content = JsonConvert.SerializeObject(RSA.GetJsonWebKey(this._config.PublicKey), serializerSettings), ContentType = "application/json"};
+            return new ContentResult() { Content = JsonConvert.SerializeObject(_rsaHelpers.GetJsonWebKey(_config.PublicKey), serializerSettings), ContentType = ContentType, StatusCode = StatusCodes.Status200OK };
         }
     }
 }
