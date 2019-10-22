@@ -63,8 +63,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         }
 
         /// <summary>
-        /// Get all users in tenant
+        /// Get all users for the current tenant 
         /// </summary>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("users")]
         public async Task<UserTenantListModel> GetAllUsersForTenantAsync()
@@ -115,7 +116,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <summary>
         /// Get User-Tenant relationship model by Id
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
         // GET: api/User/5
         [HttpGet("{userId}")]
@@ -172,7 +173,6 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <summary>
         /// Update a user-tenant relationship record
         /// </summary>
-        /// <param name="userId"></param>
         /// <param name="update"></param>
         [HttpPut("{userId}")]
         [Authorize("UserManage")]
@@ -190,7 +190,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <summary>
         /// Delete a user-tenant relationship record using the userId from the claims
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="userId"></param>
         [HttpDelete("")]
         [Authorize("UserManage")]
         public async Task<UserTenantModel> UserClaimsDeleteAsync(string userId)
@@ -201,7 +201,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <summary>
         /// Delete a user-tenant relationship record
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="userId"></param>
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{userId}")]
         [Authorize("UserManage")]
@@ -231,7 +231,6 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <summary>
         /// Invite the user to join a tenant
         /// </summary>
-        /// <param name="id"></param>
         /// <returns></returns>
         // GET: api/User/5
         [HttpPost("invite")]

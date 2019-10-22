@@ -32,7 +32,9 @@ export const permissions = {
   deleteDeployments: 'DeleteDeployments',
 
   inviteUsers: "InviteUsers",
-  deleteUsers: "DeleteUsers"
+  deleteUsers: "DeleteUsers",
+
+  deleteTenant: "DeleteTenant"
 };
 
 export const toUserModel = (user = {}) => camelCaseReshape(user, {

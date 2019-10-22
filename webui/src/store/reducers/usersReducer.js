@@ -30,7 +30,6 @@ export const epics = createEpicScenario({
   fetchUsers: {
     type: 'USERS_FETCH',
     epic: (fromAction, store) => {
-      console.log("USER FETCH")
       return IdentityGatewayService.getUsers()
         .map(toActionCreator(redux.actions.updateUsers, fromAction))
         .catch(handleError(fromAction))

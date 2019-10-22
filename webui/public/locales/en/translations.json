@@ -124,9 +124,15 @@
     "permissions": "Permissions",
     "noPermissions": "No permissions found",
     "close": "Close",
-    "tenant": "Tenant",
-    "noTenant": "No Tenants found",
-    "createTenant": "Create New Tenant"
+    "tenants": {
+      "tenantHeader": "Tenants",
+      "noTenant": "No Tenants found",
+      "createTenant": "Create New Tenant",
+      "deleteTenant": "Delete",
+      "tenantNameColumn": "Tenant",
+      "tenantRoleColumn": "Role",
+      "tenantActionColumn": "Action"
+    }
   },
   "deviceGroupsFlyout": {
     "actions": "Actions",
@@ -608,14 +614,6 @@
     "checkmark": "Checkmark",
     "uploadError": "Unable to upload file, please check the file type/size and try again.",
     "error": "Error"
-  },
-  "tenantManagement":{
-    "title": "Tenant Management",
-    "tenantGrid":{
-      "tenantName": "Tenant Name",
-      "tenantStatus": "Status"
-    },
-    "create": "Create Tenant"
   },
   "maintenance": {
     "acknowledge": "Acknowledge",

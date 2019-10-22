@@ -31,7 +31,7 @@ namespace IdentityGateway.Services
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            return new UserTenantListModel("GetTenants", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());  // cast to a UserTenantModel list to easily parse result
+            return new UserTenantListModel("GetTenants", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());
         }
 
 
@@ -44,7 +44,7 @@ namespace IdentityGateway.Services
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.tenant));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            return new UserTenantListModel("GetUsers", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());  // cast to a UserTenantModel list to easily parse result
+            return new UserTenantListModel("GetUsers", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());
         }
         /// <summary>
         /// Get a single tenant for the user

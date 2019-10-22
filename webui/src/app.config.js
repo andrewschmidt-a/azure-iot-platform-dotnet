@@ -4,7 +4,6 @@ const validExtensions = ['.png', '.jpeg', '.jpg', '.svg'];
 
 const Config = {
   limitedAccessUrls: [
-    "/tenantmanagement"
   ],
   serviceUrls: {
     auth: `${baseUrl}/auth/`,
@@ -14,9 +13,9 @@ const Config = {
     telemetry: `${baseUrl}/telemetry/v1/`,
     deviceSimulation: `${baseUrl}/devicesimulation/v1/`,
     diagnostics: `${baseUrl}/diagnostics/v1/`,
-    tenantManager: `${baseUrl}/tenantmanager/`,
+    tenantManager: `${baseUrl}/tenantmanager/api/`,
+    identityGateway: `${baseUrl}/auth/v1/`,
     privacy: 'https://privacy.microsoft.com/privacystatement',
-    //TODO: Determine if should query java or dotnet
     gitHubReleases: `https://api.github.com/repos/Azure/azure-iot-pcs-remote-monitoring-dotnet/releases/tags/3.0.0`
   },
   contextHelpUrls: {

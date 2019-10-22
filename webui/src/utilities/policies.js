@@ -25,7 +25,8 @@ module.exports = {
                 "DeletePackages",
                 "ReadAll",
                 "InviteUsers",
-                "DeleteUsers"
+                "DeleteUsers",
+                "DeleteTenant"
             ]
         },
         {

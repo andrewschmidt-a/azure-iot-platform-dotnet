@@ -3,6 +3,7 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 import Config from 'app.config';
+import { permissions } from 'services/models';
 import { svgs, getEnumTranslation } from 'utilities';
 import {
   Btn,
@@ -12,6 +13,7 @@ import {
   PropertyGrid as Grid,
   PropertyRow as Row,
   PropertyCell as Cell,
+  Protected,
 } from 'components/shared';
 import Flyout from 'components/shared/flyout';
 import {Policies} from 'utilities'
@@ -21,11 +23,10 @@ import './profile.scss';
 const Section = Flyout.Section;
 const jwt_decode = require('jwt-decode');
 export const Profile = (props) => {
-  const { t, user, logout, switchTenant, createTenant, onClose } = props;
+  const { t, user, logout, switchTenant, createTenant, tenants, fetchTenants, isPending, processTenantDisplayValue, onClose, deleteTenantThenSwitch } = props;
 
   const roleArray = Array.from(user.roles).map(r => Policies.filter(p=> p.Role == r).concat({DisplayName:"No Roles"})[0].DisplayName);
   const permissionArray = Array.from(user.permissions);
-  const tenantArray = Array.from(user.availableTenants);
   const currentTenant = user.tenant;
 
   return (
@@ -37,7 +38,7 @@ export const Profile = (props) => {
             <ErrorMsg className="profile-error">{t("profileFlyout.noUser")}</ErrorMsg>
             <Trans i18nKey={'profileFlyout.description'}>
               <Hyperlink href={Config.contextHelpUrls.rolesAndPermissions} target="_blank">{t('profileFlyout.learnMore')}</Hyperlink>
-              about roles and permisions
+              about roles and permisions 
             </Trans>
           </div>
         }
@@ -60,24 +61,51 @@ export const Profile = (props) => {
             </div>
 
             <Section.Container>
-              <Section.Header>{t('profileFlyout.tenant')}</Section.Header>
+              <Section.Header>{t('profileFlyout.tenants.tenantHeader')}</Section.Header>
               <Section.Content>
+                <div>
+                  {currentTenant ? "Current: " + processTenantDisplayValue(currentTenant) : ""}
+                </div>
                 {/* Fill in with programmable tenant options list */}
                 {
-                  (!tenantArray || tenantArray.length === 0)
-                    ? t('profileFlyout.noTenant')
+                  (!tenants || tenants.length === 0)
+                    ? t('profileFlyout.tenants.noTenant')
                     :
                     <Grid>
+                      <Row>
+                        <Cell>{t('profileFlyout.tenants.tenantNameColumn')}</Cell>
+                        <Cell>{t('profileFlyout.tenants.tenantRoleColumn')}</Cell>
+                        <Cell>{t('profileFlyout.tenants.tenantActionColumn')}</Cell>
+                      </Row>
                       {
-                        tenantArray.map((tenantGuid, idx) =>
-                          <Row key={idx}>
-                            <Cell>{
-                              (tenantGuid === currentTenant) ? tenantGuid : <a onClick={() => switchTenant(tenantGuid)} href="#">{tenantGuid}</a>
-                            }</Cell>
+                        tenants.map((tenant, idx) =>
+                          <Row key={tenant.id}>
+                            {/* Make the tenant display value a button if it is not the active tenant, the button will switch the user to the selected tenant */}
+                            <Cell>{(tenant.id === currentTenant) ? tenant.displayName : <a onClick={() => switchTenant(tenant.id)} href="#">{tenant.displayName}</a>}</Cell>
+                            <Cell>{tenant.role}</Cell>
+                            <Cell>
+                              {(tenant.id == currentTenant && tenants.length > 1)
+                              ?
+                              <Protected permission={permissions.deleteTenant}>
+                                <Btn className="delete-tenant-button" primary={true} onClick=
+                                  {() => deleteTenantThenSwitch(currentTenant, idx != 0 ? tenants[idx - 1].id : tenants[idx + 1].id)}>
+                                  {t('profileFlyout.tenants.deleteTenant')}
+                                </Btn>
+                              </Protected>
+                              :
+                              ""}
+                            </Cell>
                           </Row>
                         )
                       }
-                      <Cell><Btn className="create-tenant-button" primary={true} onClick={createTenant}>{t('profileFlyout.createTenant')}</Btn></Cell>
+                      <Cell id="create-tenant-cell">
+                        <Btn className="create-tenant-button" primary={true} onClick=
+                          {() =>
+                            createTenant().subscribe(r => fetchTenants())
+                          }>
+                          {t('profileFlyout.tenants.createTenant')}
+                        </Btn>
+                      </Cell>
                     </Grid>
                 }
               </Section.Content>

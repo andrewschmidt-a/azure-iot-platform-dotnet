@@ -7,7 +7,6 @@ using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.AuthUtils;
 using IdentityGateway.WebService.v1.Filters;
-using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
 
 namespace IdentityGateway.WebService.v1.Controllers

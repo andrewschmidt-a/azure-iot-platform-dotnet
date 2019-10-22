@@ -10,12 +10,14 @@ import { reducer as packagesReducer } from './reducers/packagesReducer';
 import { reducer as rulesReducer } from './reducers/rulesReducer';
 import { reducer as simulationReducer } from './reducers/deviceSimulationReducer';
 import { reducer as usersReducer } from './reducers/usersReducer';
+import { reducer as tenantsReducer } from './reducers/tenantsReducer';
 
 const rootReducer = combineReducers({
   ...appReducer,
   ...deploymentsReducer,
   ...devicesReducer,
   ...usersReducer,
+  ...tenantsReducer,
   ...packagesReducer,
   ...rulesReducer,
   ...simulationReducer

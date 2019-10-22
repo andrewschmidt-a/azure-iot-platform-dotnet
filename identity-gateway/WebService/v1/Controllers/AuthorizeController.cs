@@ -71,7 +71,7 @@ namespace IdentityGateway.Controllers
         // GET: connect/authorize
         /// <summary>
         /// This is a pass-through auth gateway so there is no need to officially end session.
-        /// Session state is never saved. Therefore, simply return to redirect. 
+        /// Session state is never saved. Therefore, simply return to redirect.
         /// </summary>
         /// <param name="post_logout_redirect_uri"></param>
         /// <returns></returns>
