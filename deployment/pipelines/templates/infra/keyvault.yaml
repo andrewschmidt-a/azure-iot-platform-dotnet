@@ -49,7 +49,7 @@ steps:
       blobStorageKey=$(az storage account keys list -g $rg -n $blobStorageAccountName | grep value | head -n1 | awk -F "\"" '{print $4}')
       blobStorageConnString="DefaultEndpointsProtocol=https;AccountName=$blobStorageAccountName;AccountKey=$blobStorageKey;EndpointSuffix=core.windows.net"
       cosmosDbAccountName=$(az cosmosdb list --resource-group $rg | grep name | awk -F "\"" '{print $4}')
-      cosmosDBUri="https://$myCosmosDbAccountName.documents.azure.com:443/"
+      cosmosDBUri="https://$cosmosDbAccountName.documents.azure.com:443/"
       cosmosDBAuthKey=$(az cosmosdb list-keys --resource-group $rg --name $cosmosDbAccountName | grep primaryMasterKey | awk -F "\"" '{print $4}')
       cosmosDBConnection="AccountEndpoint=$cosmosDBUri;AccountKey=$cosmosDBAuthKey;"
       eventhubNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhub| cut -d "/" -f1| awk -F "\"" '{print $4}')
