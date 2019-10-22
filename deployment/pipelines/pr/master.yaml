@@ -12,7 +12,8 @@ variables:
   resourceGroup: rg-crslbbiot-odin-dev
   aksCluster: aks-dev-spaces-odin
   devSpace: pr-$(System.PullRequest.PullRequestNumber)-build-$(Build.BuildId)
-
+resources:
+  - repo: self
 stages:
 - stage: Create_Dev_Space_for_PR
   jobs:
