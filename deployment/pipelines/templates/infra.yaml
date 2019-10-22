@@ -9,7 +9,7 @@ parameters:
   cosmosDBName: 'iot'
   collectionName: 'telemetry'
   cosmosDBthroughput: 1000
-  aksName: 'akspn'
+  aksName: 'aks'
   keyVaultName: 'keyvault'
   functionAppName: ''
   storageAccountName: 'storageacct'
@@ -170,7 +170,9 @@ jobs:
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform
 - job: ingress
   displayName: Deploy Ingress
-  dependsOn: aks
+  dependsOn: 
+    - aks
+    - resources
   pool:
     vmImage: 'ubuntu-16.04'
   steps:

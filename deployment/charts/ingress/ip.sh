@@ -1,22 +1,7 @@
 #!/bin/bash
 az aks get-credentials -n $1 -g $2
 # Public IP address of your ingress controller
-
-n=0
-until [ $n -ge 5 ]
-do
-   IP=$(kubectl get service -l app=nginx-ingress -l component=controller --namespace ingress-basic -o json | jq -r .items[0].status.loadBalancer.ingress[0].ip) \
-   2>&1 && break
-  n=$[$n+1]
-  sleep 30
-done
-
-if [ $n -ge 5 ]
-then
-  echo "Error Deploying ingress controller" 1>&2
-  exit 64
-fi
-
+IP=$(kubectl get service -l app=nginx-ingress -l component=controller --namespace ingress-basic -o json | jq -r .items[0].status.loadBalancer.ingress[0].ip)
 echo $IP
 # Name to associate with public IP address
 DNSNAME=${1,,} # Get from Env Variable

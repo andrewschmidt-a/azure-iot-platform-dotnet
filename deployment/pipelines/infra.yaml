@@ -13,12 +13,12 @@ stages:
   - template: templates/infra.yaml
     parameters:
       serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
-      resourceGroup: rg-pirate-ninja-test1
+      resourceGroup: rg-pirate-ninja-deployment
       location: centralus
       environment: IoT_CRSL_Environment
       subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
       applicationCode: crsliot
-      deployEnvironment: test
+      deployEnvironment: pn
       
 # PSD
 - stage: DeployPSD
