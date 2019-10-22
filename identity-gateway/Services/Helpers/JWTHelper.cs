@@ -26,13 +26,15 @@ namespace IdentityGateway.Services.Helpers
         private UserSettingsContainer _userSettingsContainer;
         private IServicesConfig _config;
         private IHttpContextAccessor _httpContextAccessor;
-        public JWTHelper(UserTenantContainer userTenantContainer,
-            UserSettingsContainer userSettingsContainer, IServicesConfig config, IHttpContextAccessor httpContextAccessor)
+        private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
+
+        public JWTHelper(UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IServicesConfig config, IHttpContextAccessor httpContextAccessor, IOpenIdProviderConfiguration openIdProviderConfiguration)
         {
             this._userTenantContainer = userTenantContainer;
             this._userSettingsContainer = userSettingsContainer;
             this._config = config;
             this._httpContextAccessor = httpContextAccessor;
+            this._openIdProviderConfiguration = openIdProviderConfiguration;
         }
 
         public async Task<JwtSecurityToken> GetIdentityToken(List<Claim> claims, string tenant, string audience, DateTime? expiration)
@@ -155,7 +157,6 @@ namespace IdentityGateway.Services.Helpers
                 return false;
             }
 
-            var config = new Configuration(context);
             var tokenValidationParams = new TokenValidationParameters
             {
                 // Validate the token signature
@@ -165,7 +166,7 @@ namespace IdentityGateway.Services.Helpers
 
                 // Validate the token issuer
                 ValidateIssuer = false,
-                ValidIssuer = config.issuer,
+                ValidIssuer = _openIdProviderConfiguration.issuer,
 
                 // Validate the token audience
                 ValidateAudience = false,
