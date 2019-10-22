@@ -1,7 +1,7 @@
 
 import { camelCaseReshape } from 'utilities';
 import {Policies} from 'utilities'
-export const toUserTenantModel = (response = []) => response.Models.map(user => {
+export const toUserTenantModel = (response = []) => response.map(user => {
   user = camelCaseReshape(user, {
     'userId': 'id',
     'name': 'name',

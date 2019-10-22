@@ -19,6 +19,7 @@ export class IdentityGatewayService {
   static getUsers() {
     
     return HttpClient.get(`${ENDPOINT}tenants/users`)
+      .map((res = {Models: []}) => res.Models)
       .map(toUserTenantModel);
   }
 
