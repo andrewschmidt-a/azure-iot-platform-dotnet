@@ -16,6 +16,7 @@ using Autofac;
 using IdentityGateway.Services.Diagnostics;
 using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Runtime;
+using SendGrid;
 
 namespace IdentityGateway.WebService
 {

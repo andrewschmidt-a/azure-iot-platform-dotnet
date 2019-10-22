@@ -24,12 +24,14 @@ namespace IdentityGateway.WebService.v1.Controllers
         private IServicesConfig _config;
         private UserTenantContainer _container;
         private IJwtHelpers _jwtHelper;
+        private readonly ISendGridClientFactory _sendGridClientFactory;
 
-        public UserTenantController(IServicesConfig config, UserTenantContainer container, IJwtHelpers jwtHelper)
+        public UserTenantController(IServicesConfig config, UserTenantContainer container, IJwtHelpers jwtHelper, ISendGridClientFactory sendGridClientFactory)
         {
             this._config = config;
             this._container = container;
             this._jwtHelper = jwtHelper;
+            this._sendGridClientFactory = sendGridClientFactory;
         }
 
         private string claimsUserId
@@ -193,7 +195,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <param name="userId"></param>
         [HttpDelete("")]
         [Authorize("UserManage")]
-        public async Task<UserTenantModel> UserClaimsDeleteAsync(string userId)
+        public async Task<UserTenantModel> UserClaimsDeleteAsync()
         {
             return await this.DeleteAsync(this.claimsUserId);
         }
@@ -281,7 +283,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             msg.AddContent(MimeType.Text, "Click here to join the tenant: ");
             msg.AddContent(MimeType.Html, "<a href=\""+ link + "\">"+link+"</a>");
 
-            var client = new SendGridClient(this._config.SendGridAPIKey);
+            var client = _sendGridClientFactory.CreateSendGridClient();
             var response = await client.SendEmailAsync(msg);
 
             return await this._container.CreateAsync(input);

@@ -27,7 +27,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with the userId param</param>
         /// <returns></returns>
-        public async Task<UserTenantListModel> GetAllAsync(UserTenantInput input)
+        public virtual async Task<UserTenantListModel> GetAllAsync(UserTenantInput input)
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
@@ -40,7 +40,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with the tenant param</param>
         /// <returns></returns>
-        public async Task<UserTenantListModel> GetAllUsersAsync(UserTenantInput input)
+        public virtual async Task<UserTenantListModel> GetAllUsersAsync(UserTenantInput input)
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.tenant));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
@@ -63,7 +63,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with a userId</param>
         /// <returns></returns>
-        public async Task<UserTenantModel> CreateAsync(UserTenantInput input)
+        public virtual async Task<UserTenantModel> CreateAsync(UserTenantInput input)
         {
             // If UserId is null then make it up
             if (input.userId == null)
@@ -93,7 +93,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with a userId, tenant, and rolelist</param>
         /// <returns></returns>
-        public async Task<UserTenantModel> UpdateAsync(UserTenantInput input)
+        public virtual async Task<UserTenantModel> UpdateAsync(UserTenantInput input)
         {
             UserTenantModel model = new UserTenantModel(input);
             if (model.RoleList != null && !model.RoleList.Any())
@@ -112,7 +112,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with a userId</param>
         /// <returns></returns>
-        public async Task<UserTenantModel> DeleteAsync(UserTenantInput input)
+        public virtual async Task<UserTenantModel> DeleteAsync(UserTenantInput input)
         {
             // Get a list of all user models for this user id - we will pick the one matching the current tenant to delete
             UserTenantModel user = await this.GetAsync(input);
@@ -127,7 +127,7 @@ namespace IdentityGateway.Services
         /// Delete the tenant from all users
         /// </summary>
         /// <returns></returns>
-        public async Task<UserTenantListModel> DeleteAllAsync(UserTenantInput input)
+        public virtual async Task<UserTenantListModel> DeleteAllAsync(UserTenantInput input)
         {
             UserTenantListModel tenantRows = await this.GetAllUsersAsync(input);
 

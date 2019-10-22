@@ -15,7 +15,7 @@ namespace IdentityGateway.AuthUtils
         private const string CONTEXT_KEY_ALLOWED_ACTIONS = "CurrentUserAllowedActions";
         private const string CONTEXT_KEY_EXTERNAL_REQUEST = "ExternalRequest";
 
-        private const string CONTEXT_KEY_TENANT_ID = "TenantID";
+        public const string CONTEXT_KEY_TENANT_ID = "TenantID";
 
         private const string CLAIM_KEY_TENANT_ID = "tenant";
         private const string HEADER_KEY_TENANT_ID = "ApplicationTenantID";
