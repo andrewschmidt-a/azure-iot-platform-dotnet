@@ -3,9 +3,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService
@@ -16,15 +14,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
         public IConfiguration Configuration { get; }
         public IContainer ApplicationContainer { get; private set; } 
 
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder();
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
 #if DEBUG
-            builder.AddIniFile("appsettings.ini", optional: false, reloadOnChange: true);
+                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
 #endif
-            builder.AddEnvironmentVariables();
-            var settings = builder.Build();
-            builder.AddAzureAppConfiguration(settings["PCS_APPLICATION_CONFIGURATION"]);
+                .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 

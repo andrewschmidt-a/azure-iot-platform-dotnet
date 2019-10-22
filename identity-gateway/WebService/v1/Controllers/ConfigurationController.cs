@@ -1,27 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.OpenSsl;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Models;
 using Newtonsoft.Json.Serialization;
-using JsonWebKey = IdentityModel.Jwk.JsonWebKey;
-using JsonWebKeySet = IdentityModel.Jwk.JsonWebKeySet;
-using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Runtime;
+using IdentityGateway.WebService.v1.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace IdentityGateway.WebService.v1.Controllers
 {
-    [Route("")]
+    [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ConfigurationController : ControllerBase
     {
         private IServicesConfig _config;

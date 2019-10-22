@@ -55,12 +55,11 @@ namespace IdentityGateway.Services.Runtime
 
             // More info about configuration at
             // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration
-            var configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder
+            var configurationBuilder = new ConfigurationBuilder()
 #if DEBUG
                 .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
-            .AddEnvironmentVariables();
+                .AddEnvironmentVariables();
 
             // build configuration with environment variables
             var preConfig = configurationBuilder.Build();
