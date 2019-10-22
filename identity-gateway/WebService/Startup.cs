@@ -57,12 +57,10 @@ namespace IdentityGateway.WebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
 
             services.AddScoped<TableHelper>();
-
             services.AddSingleton<UserSettingsContainer>();
             services.AddSingleton<UserTenantContainer>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -70,6 +68,7 @@ namespace IdentityGateway.WebService
             services.AddSingleton<IStatusService, StatusService>();
             services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
             services.AddSingleton<IRsaHelpers, RsaHelpers>();
+            services.AddTransient<IKeyVaultHelpers, KeyVaultHelpers>();
 
             // Prepare DI container
             this.ApplicationContainer = DependencyResolution.Setup(services);
@@ -79,7 +78,6 @@ namespace IdentityGateway.WebService
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,6 +86,7 @@ namespace IdentityGateway.WebService
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();
         }
+
         private void PrintBootstrapInfo(IContainer container)
         {
             var log = container.Resolve<ILogger>();

@@ -8,12 +8,12 @@ namespace IdentityGateway.Services.Helpers
 {
     public class TableHelper
     {
-        private readonly KeyVaultHelper _keyVaultHelper;
+        private readonly KeyVaultHelpers _keyVaultHelper;
         private readonly string storageAccountConnectionStringKey;
 
         public TableHelper(IConfiguration config)
         {
-            this._keyVaultHelper = new KeyVaultHelper(config);
+            this._keyVaultHelper = new KeyVaultHelpers(config);
             this.storageAccountConnectionStringKey = config["Global:StorageAccountConnectionStringKeyVaultSecret"];
         }
 
@@ -21,7 +21,7 @@ namespace IdentityGateway.Services.Helpers
         {
             get
             {
-                string tenantStorageAccountConnectionString = this._keyVaultHelper.getSecretAsync(this.storageAccountConnectionStringKey).GetAwaiter().GetResult();
+                string tenantStorageAccountConnectionString = this._keyVaultHelper.GetSecretAsync(this.storageAccountConnectionStringKey).GetAwaiter().GetResult();
                 return CloudStorageAccount.Parse(tenantStorageAccountConnectionString); 
             }
         }

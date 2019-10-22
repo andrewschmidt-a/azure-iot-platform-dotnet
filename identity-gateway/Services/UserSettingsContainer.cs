@@ -13,6 +13,8 @@ namespace IdentityGateway.Services
     {
         public override string tableName { get{return "userSettings";} }
 
+        public UserSettingsContainer() { }
+
         public UserSettingsContainer(TableHelper tableHelper) : base(tableHelper)
         {
         }
@@ -22,7 +24,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsINput with a userId</param>
         /// <returns></returns>
-        public async Task<UserSettingsListModel> GetAllAsync(UserSettingsInput input)
+        public virtual async Task<UserSettingsListModel> GetAllAsync(UserSettingsInput input)
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
@@ -34,7 +36,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId and settingKey</param>
         /// <returns></returns>        
-        public async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
+        public virtual async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
         {
             // TableOperation retrieveUserSettings = TableOperation.Retrieve<TableEntity>(input.userId, input.settingKey);
             TableOperation retrieveUserSettings = TableOperation.Retrieve<UserSettingsModel>(input.userId, input.settingKey);
@@ -47,7 +49,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId, settingkey name and value</param>
         /// <returns></returns>
-        public async Task<UserSettingsModel> CreateAsync(UserSettingsInput input)
+        public virtual async Task<UserSettingsModel> CreateAsync(UserSettingsInput input)
         {
             UserSettingsModel existingModel = await this.GetAsync(input);
             if (existingModel != null)
@@ -70,7 +72,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId, settingkey name and the udpated value</param>
         /// <returns></returns>
-        public async Task<UserSettingsModel> UpdateAsync(UserSettingsInput input)
+        public virtual async Task<UserSettingsModel> UpdateAsync(UserSettingsInput input)
         {
             UserSettingsModel model = new UserSettingsModel(input);
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
@@ -84,7 +86,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId and settingkey name</param>
         /// <returns></returns>
-        public async Task<UserSettingsModel> DeleteAsync(UserSettingsInput input)
+        public virtual async Task<UserSettingsModel> DeleteAsync(UserSettingsInput input)
         {
             UserSettingsModel model = await this.GetAsync(input);
             TableOperation deleteOperation = TableOperation.Delete(model);

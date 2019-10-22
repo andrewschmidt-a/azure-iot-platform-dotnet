@@ -31,7 +31,7 @@ namespace WebService.Test.v1.Controllers
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        public void GetOpenIdProviderConfigurationReturnsCorrectIssuer()
+        public void GetOpenIdProviderConfigurationReturnsExpectedIssuer()
         {
             // Arrange
             //Act
