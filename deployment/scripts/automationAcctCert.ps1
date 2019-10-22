@@ -132,7 +132,7 @@ else {
             #Create a new cert
             Import-Certificate
     }
-    else { 
+    else {
         Write-Output "Cert still active, expiring on $expDate " $thumprint 
     }
 }
