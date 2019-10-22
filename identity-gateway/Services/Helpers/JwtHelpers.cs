@@ -57,9 +57,9 @@ namespace IdentityGateway.Services.Helpers
                     settingKey = "LastUsedTenant"
                 };
                 UserSettingsModel lastUsedSetting = await this._userSettingsContainer.GetAsync(settingsInput);
-                if (lastUsedSetting != null)
+                // Has last used tenant and it is in the list
+                if (lastUsedSetting != null && tenantList.Count(t=> t.TenantId == lastUsedSetting.Value) > 0)
                 {
-
                     tenant = lastUsedSetting.Value;
                 }
 
