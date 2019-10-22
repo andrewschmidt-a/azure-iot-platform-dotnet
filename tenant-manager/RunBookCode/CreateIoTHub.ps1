@@ -4,7 +4,7 @@
 
     .NOTES
         AUTHOR: Nate Oelke
-				Sean Dubiel (AppConfig)	
+                Sean Dubiel
 #>
 
 param
@@ -60,80 +60,80 @@ $iotHubTemplate = @"
     "tier":"Standard",
     "capacity":1
   },
-	"properties": {
-		"state": "Active",
-		"routing":{  
-			"enrichments":[  
-				{  
-					"key":"tenant",
-					"value":"$($data.tenantId)",
-					"endpointNames":[  
-						"event-hub-telemetry", "event-hub-twin-change", "event-hub-lifecycle" 
-					]
-				}
-			],
-			"endpoints":{  
-				"serviceBusQueues":[  
+    "properties": {
+        "state": "Active",
+        "routing":{  
+            "enrichments":[  
+                {  
+                    "key":"tenant",
+                    "value":"$($data.tenantId)",
+                    "endpointNames":[  
+                        "event-hub-telemetry", "event-hub-twin-change", "event-hub-lifecycle" 
+                    ]
+                }
+            ],
+            "endpoints":{  
+                "serviceBusQueues":[  
 
-				],
-				"serviceBusTopics":[  
+                ],
+                "serviceBusTopics":[  
 
-				],
-				"eventHubs":[  
-					{
+                ],
+                "eventHubs":[  
+                    {
             "connectionString": "$($data.telemetryEventHubConnString)",
             "name": "event-hub-telemetry",
             "subscriptionId": "$($data.subscriptionId)",
             "resourceGroup": "$($data.resourceGroup)"
           },
-					{
+                    {
             "connectionString": "$($data.twinChangeEventHubConnString)",
             "name": "event-hub-twin-change",
             "subscriptionId": "$($data.subscriptionId)",
             "resourceGroup": "$($data.resourceGroup)"
           },
-					{
+                    {
             "connectionString": "$($data.lifecycleEventHubConnString)",
             "name": "event-hub-lifecycle",
             "subscriptionId": "$($data.subscriptionId)",
             "resourceGroup": "$($data.resourceGroup)"
           }
-				],
-				"storageContainers":[  
+                ],
+                "storageContainers":[  
 
-				]
-			},
-			"routes":[  
-				{  
-					"name": "telemetry",
-					"source":"DeviceMessages",
-					"condition":"true",
-					"endpointNames":[  
-						"event-hub-telemetry"
-					],
-					"isEnabled":true
-				},
-				{  
-					"name": "lifecycle",
-					"source":"DeviceLifecycleEvents",
-					"condition":"true",
-					"endpointNames":[  
-						"event-hub-lifecycle"
-					],
-					"isEnabled":true
-				},
-				{  
-					"name": "twin-change",
-					"source":"TwinChangeEvents",
-					"condition":"true",
-					"endpointNames":[  
-						"event-hub-twin-change"
-					],
-					"isEnabled":true
-				}
-			]
-		}
-	}
+                ]
+            },
+            "routes":[  
+                {  
+                    "name": "telemetry",
+                    "source":"DeviceMessages",
+                    "condition":"true",
+                    "endpointNames":[  
+                        "event-hub-telemetry"
+                    ],
+                    "isEnabled":true
+                },
+                {  
+                    "name": "lifecycle",
+                    "source":"DeviceLifecycleEvents",
+                    "condition":"true",
+                    "endpointNames":[  
+                        "event-hub-lifecycle"
+                    ],
+                    "isEnabled":true
+                },
+                {  
+                    "name": "twin-change",
+                    "source":"TwinChangeEvents",
+                    "condition":"true",
+                    "endpointNames":[  
+                        "event-hub-twin-change"
+                    ],
+                    "isEnabled":true
+                }
+            ]
+        }
+    }
 }
 "@
 
@@ -159,11 +159,15 @@ while (($result.properties.state -ne "Active") -and ($tries -lt 30)) {
 $policy = "iothubowner" 
 $iotHubKeysUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)/IotHubKeys/$policy/listkeys?api-version=2019-03-22-preview"
 $result = (Invoke-RestMethod -Method Post -Headers $requestheader -Uri $iotHubKeysUri)
-$result
 
 # Create the connection string
 $sharedAccessKey = $result.primaryKey
 $connectionString = "HostName=$($data.iotHubName).azure-devices.net;SharedAccessKeyName=$policy;SharedAccessKey=$sharedAccessKey"
+
+# Add DPS to the current iothub
+New-AzIoTDeviceProvisioningService -Name $data.dpsName -Location "eastus" -ResourceGroupName $data.resourceGroup
+
+Add-AzIoTDeviceProvisioningServiceLinkedHub -ResourceGroupName $data.resourceGroup -Name $data.dpsName -IotHubConnectionString $connectionString -IotHubLocation $data.location
 
 # Write the IoT Hub connection string to app config
 $requestHeader = @{
