@@ -1,4 +1,4 @@
-# Trigger on PRs into master
+# Trigger on PRs into master 
 pr:
 - master
 
