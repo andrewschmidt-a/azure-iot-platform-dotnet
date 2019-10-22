@@ -7,7 +7,6 @@ using IdentityGateway.Services.Runtime;
 using IdentityGateway.AuthUtils;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using RSA = IdentityGateway.Services.Helpers.RSA;
 
 namespace IdentityGateway.WebService.Runtime
 {

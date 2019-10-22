@@ -1,9 +1,12 @@
-﻿using IdentityGateway.Services.Models;
+﻿using IdentityGateway.Services.Helpers;
+using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Runtime;
 using IdentityGateway.WebService.v1.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Moq;
+using Newtonsoft.Json;
 using WebService.Test.helpers;
 using Xunit;
 
@@ -17,7 +20,9 @@ namespace WebService.Test.v1.Controllers
         private const string someUri = "http://azureb2caseuri.com";
         private Mock<IServicesConfig> mockServicesConfig;
         private Mock<OpenIdProviderConfiguration> mockOpenIdProviderConfiguration;
+        private Mock<IRsaHelpers> mockRsaHelpers;
         private const string someIssuer = "http://someissuer";
+        private JsonWebKeySet someJwks = new JsonWebKeySet();
 
         public ConfigurationControllerTest()
         {
@@ -35,6 +40,23 @@ namespace WebService.Test.v1.Controllers
 
             // Assert
             Assert.Equal(someIssuer, openIdProviderConfiguration.issuer);
+            Assert.Equal(ConfigurationController.ContentType, result.ContentTypes[0]);
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+        }
+
+        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        public void GetJsonWebKeySetReturnsExpctedJwks()
+        {
+            // Arrange
+            // Act
+            var result = controller.GetJsonWebKeySet();
+            var jwks = JsonConvert.DeserializeObject<JsonWebKeySet>(result.Content);
+
+            // Assert
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            Assert.Equal(someJwks.AdditionalData, jwks.AdditionalData);
+            Assert.Equal(someJwks.Keys, jwks.Keys);
+            Assert.Equal(ConfigurationController.ContentType, result.ContentType.ToLowerInvariant());
         }
 
         private void InitializeController()
@@ -42,7 +64,8 @@ namespace WebService.Test.v1.Controllers
             mockServicesConfig = new Mock<IServicesConfig> { DefaultValue = DefaultValue.Mock };
             mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
             mockOpenIdProviderConfiguration = new Mock<OpenIdProviderConfiguration> { DefaultValue = DefaultValue.Mock };
-            controller = new ConfigurationController(mockServicesConfig.Object, mockOpenIdProviderConfiguration.Object)
+            mockRsaHelpers = new Mock<IRsaHelpers> {DefaultValue = DefaultValue.Mock};
+            controller = new ConfigurationController(mockServicesConfig.Object, mockOpenIdProviderConfiguration.Object, mockRsaHelpers.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -56,6 +79,7 @@ namespace WebService.Test.v1.Controllers
             mockServicesConfig.Setup(m => m.AzureB2CBaseUri).Returns(someUri);
             mockServicesConfig.Setup(m => m.PublicKey).Returns(somePublicKey);
             mockOpenIdProviderConfiguration.SetupGet(m => m.issuer).Returns(someIssuer);
+            mockRsaHelpers.Setup(m => m.GetJsonWebKey(It.IsAny<string>())).Returns(someJwks);
         }
     }
 }

@@ -1,22 +1,19 @@
-﻿
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Security.Cryptography;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto; // Because why wouldnt you use a bouncy castle??? #NeverTooOld
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 
 namespace IdentityGateway.Services.Helpers
 {
-    public class RSA
+    public class RsaHelpers : IRsaHelpers
     {
-        public static System.Security.Cryptography.RSA DecodeRSA(string privateRsaKey)
+        public RSA DecodeRsa(string privateRsaKey)
         {
             RSAParameters rsaParams;
             using (var tr = new StringReader(privateRsaKey.Replace("\\n", "\n")))
@@ -36,7 +33,7 @@ namespace IdentityGateway.Services.Helpers
             return rsa;
         }
 
-        public static JsonWebKeySet GetJsonWebKey(string key)
+        public JsonWebKeySet GetJsonWebKey(string key)
         {
             var publicKey = key.Replace("\\n", "\n");
 

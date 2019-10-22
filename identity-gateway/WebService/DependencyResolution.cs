@@ -73,7 +73,7 @@ namespace IdentityGateway.WebService
 
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
 
-            builder.RegisterType<JWTHelper>().As<IJWTHelper>().InstancePerDependency();
+            builder.RegisterType<JwtHelpers>().As<IJwtHelpers>().InstancePerDependency();
 
         }
 
