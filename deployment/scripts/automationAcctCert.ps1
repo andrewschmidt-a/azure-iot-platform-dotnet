@@ -126,9 +126,13 @@ else {
     $certdetails = $result | Select-Object | Where-Object {$_.Name -eq "AzureRunAsCertificate"}
     $thumprint = $certdetails.Thumbprint
     $expDate = $certdetails.ExpiryTime.DateTime
-    if ( $currDate -gt $expDate)
-        { Write-Output "Cert expired, creating one" $thumprint }
-        #Create a new cert
-        Import-Certificate
-    else { Write-Output "Cert still active " $thumprint }
+    if ( $currDate -gt $expDate){
+            Write-Output "Cert expired, creating a new one" $thumprint 
+            #Create a new cert
+            Import-Certificate
+    }
+        
+    else { 
+        Write-Output "Cert still active, expiring on $expDate " $thumprint 
+    }
 }

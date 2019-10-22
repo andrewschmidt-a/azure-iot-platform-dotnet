@@ -24,21 +24,27 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     scriptLocation: 'inlineScript'
     inlineScript: |-
-      az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }}
-      # Use Helm to deploy an NGINX ingress controller
       n=0
       until [ $n -ge 5 ]
       do
+        az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }}
+        # Use Helm to deploy an NGINX ingress controller
         helm upgrade ingress-controller stable/nginx-ingress \
-          --install \
-          --force \
-          --namespace ingress-basic \
-          --set controller.replicaCount=2 \
-          --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
-          --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux
+            --install \
+            --force \
+            --namespace ingress-basic \
+            --set controller.replicaCount=2 \
+            --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+            --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
+          2>&1 && break
         n=$[$n+1]
-        sleep 15
+        sleep 1m
       done
+      if [ $n -ge 5]
+      then
+        echo "Error Deploying ingress controller" 1>&2
+        exit 64
+      fi
       
 # - task: HelmDeploy@0
 #   displayName: Deploy ingress controller
