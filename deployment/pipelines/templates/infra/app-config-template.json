@@ -151,12 +151,6 @@
         "rulestemplatesfolder": "./data/Rules/",
         "webserviceport": "80"
     },
-    "Tenant": {
-        "f12b0b58-8089-422c-a3b1-e1dacb99883b": {
-            "PcsCollection": "f12b0b58-8089-422c-a3b1-e1dacb99883b-pcsCollection",
-            "TwinMirrorCollection": "f12b0b58-8089-422c-a3b1-e1dacb99883b-twin-mirror"
-        }
-    },
     "TenantManagerService": {
         "CosmosDb": "https://cosmos-odin-mt-poc.documents.azure.com:443/",
         "StorageAdaptorDb": "pcs-storage",
