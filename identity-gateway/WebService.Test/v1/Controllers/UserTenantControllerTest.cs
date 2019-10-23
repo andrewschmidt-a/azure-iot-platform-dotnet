@@ -32,7 +32,6 @@ namespace WebService.Test.v1.Controllers
         private UserTenantListModel someUserTenantList = new UserTenantListModel();
         private UserTenantModel someUserTenant = new UserTenantModel();
         private Mock<HttpRequest> mockHttpRequest;
-        private Mock<IServicesConfig> mockServicesConfig;
         private Mock<IJwtHelpers> mockJwtHelper;
         private Mock<ISendGridClientFactory> mockSendGridClientFactory;
         private Mock<ISendGridClient> mockSendGridClient;
@@ -202,13 +201,12 @@ namespace WebService.Test.v1.Controllers
         private void InitializeController()
         {
             mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
-            mockServicesConfig = new Mock<IServicesConfig> { DefaultValue = DefaultValue.Mock };
             mockUserTenantContainer = new Mock<UserTenantContainer>();
             mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
             mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
             mockSendGridClientFactory = new Mock<ISendGridClientFactory> { DefaultValue = DefaultValue.Mock };
             mockSendGridClient = new Mock<ISendGridClient> { DefaultValue = DefaultValue.Mock };
-            controller = new UserTenantController(mockServicesConfig.Object, mockUserTenantContainer.Object, mockJwtHelper.Object, mockSendGridClientFactory.Object)
+            controller = new UserTenantController(mockUserTenantContainer.Object, mockJwtHelper.Object, mockSendGridClientFactory.Object)
             {
                 ControllerContext = new ControllerContext()
                 {

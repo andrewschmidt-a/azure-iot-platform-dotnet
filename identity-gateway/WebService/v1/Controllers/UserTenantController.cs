@@ -22,14 +22,12 @@ namespace IdentityGateway.WebService.v1.Controllers
     [Authorize("ReadAll")]
     public class UserTenantController : ControllerBase
     {
-        private IServicesConfig _config;
         private UserTenantContainer _container;
         private IJwtHelpers _jwtHelper;
         private readonly ISendGridClientFactory _sendGridClientFactory;
 
-        public UserTenantController(IServicesConfig config, UserTenantContainer container, IJwtHelpers jwtHelper, ISendGridClientFactory sendGridClientFactory)
+        public UserTenantController(UserTenantContainer container, IJwtHelpers jwtHelper, ISendGridClientFactory sendGridClientFactory)
         {
-            this._config = config;
             this._container = container;
             this._jwtHelper = jwtHelper;
             this._sendGridClientFactory = sendGridClientFactory;
