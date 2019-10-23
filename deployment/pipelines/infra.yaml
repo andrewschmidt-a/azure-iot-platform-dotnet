@@ -23,8 +23,8 @@ stages:
 
 ## CRSL QA ----
 - stage: DeployCRSLQA
-  dependsOn: 
-  - DeployCRSLDev
+  dependsOn: []
+  #- DeployCRSLDev
   displayName: Deploy To CRSL QA
   jobs:
   - template: templates/approval.yaml
@@ -42,8 +42,8 @@ stages:
       
 ## CRSL WKBNCH ----
 - stage: DeployCRSLWkBnch
-  dependsOn: 
-  - DeployCRSLQA
+  dependsOn: []
+  #- DeployCRSLQA
   displayName: Deploy To CRSL WorkBench
   jobs:
   - template: templates/approval.yaml
