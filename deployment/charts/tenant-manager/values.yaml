@@ -14,7 +14,7 @@ nameOverride: "tenant-manager"
 fullnameOverride: "tenant-manager"
 
 probes:
-  enabled: true
+  enabled: false
 
 service:
   type: ClusterIP
