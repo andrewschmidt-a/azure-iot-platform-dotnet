@@ -27,7 +27,7 @@ namespace IdentityGateway.WebService.Runtime
     {
         private const string GLOBAL_KEY = "Global:";
         private const string APPLICATION_KEY = "IdentityGatewayService:";
-        private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
+        private const string PORT_KEY = APPLICATION_KEY + "webserviceport";
                 
         private const string CLIENT_AUTH_KEY = GLOBAL_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";

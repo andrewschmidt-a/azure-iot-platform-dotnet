@@ -8,7 +8,7 @@
         "templatefolder": "./data/"
     },
     "IdentityGatewayService":{
-        "webservicePort": 80
+        "webserviceport": 80
     },
     "ConfigService": {
         "Actions": {
@@ -176,6 +176,7 @@
         "telemetryFunctionUri": "https://telemetry-processor-odin-mt-poc.scm.azurewebsites.net",
         "twinChangeEventHubConnString": "",
         "twinChangeFunctionName": "twin-change-processor",
-        "twinChangeFunctionUri": "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net"
+        "twinChangeFunctionUri": "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net",
+        "webserviceport": 80
     }
 }
