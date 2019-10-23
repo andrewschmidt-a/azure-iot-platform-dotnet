@@ -14,7 +14,7 @@ nameOverride: "device-telemetry"
 fullnameOverride: "device-telemetry"
 
 probes:
-  enabled: false
+  enabled: true
 service:
   type: ClusterIP
   port: 80

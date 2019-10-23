@@ -14,7 +14,7 @@ nameOverride: "webui"
 fullnameOverride: "webui"
 
 probes:
-  enabled: false
+  enabled: true
 
 service:
   type: ClusterIP
