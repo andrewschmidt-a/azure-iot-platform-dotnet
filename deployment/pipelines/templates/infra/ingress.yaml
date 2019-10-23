@@ -75,10 +75,10 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |-
       az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }}
-      HOST=$(kubectl get ingress -o json | jq -r .items[0].spec.rules[0].host)
-      echo $HOST
-      JwtIssuer="https://$HOST/auth"
-      az appconfig kv set --key Global:ClientAuth:JWT:authissuer --value $JwtIssuer --name ${{ parameters.appConfigName }} --yes
+      ingressHost=$(kubectl get ingress -o json | jq -r .items[0].spec.rules[0].host)
+      echo $ingressHost
+      jwtIssuer="https://$ingressHost/auth"
+      az appconfig kv set --key Global:ClientAuth:JWT:authissuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
 
 - task: Bash@3
   displayName: "Install jet stack repo"
