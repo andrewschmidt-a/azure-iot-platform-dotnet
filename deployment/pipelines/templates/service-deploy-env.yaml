@@ -22,6 +22,25 @@ stages:
         aksName: crsliot-akspn-test
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
+# Second Pirate ninja test env
+- stage: DeployCRSLDevPN
+  dependsOn: []
+  displayName: Deploy To CRSL
+  jobs:
+  - template: approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: service-deploy.yaml
+      parameters:
+        serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+        resourceGroup: rg-pirate-ninja-deployment
+        aksName: crsliot-aks-pn
+        chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}
 - stage: DeployCRSLDev
   dependsOn: []
   displayName: Deploy To CRSL Dev
