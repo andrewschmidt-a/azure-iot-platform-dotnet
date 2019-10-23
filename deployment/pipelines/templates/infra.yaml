@@ -181,3 +181,4 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
