@@ -34,7 +34,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 secrets: {}
-secretsRef: {} 
+secretsRef: 
+  - PCS_APPLICATION_CONFIGURATION
   # - ALLOWED_DOMAINS
   # - SITES
 resources: {}
