@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright (c) 3M. All rights reserved. 
 
 # Fetch App configuration
