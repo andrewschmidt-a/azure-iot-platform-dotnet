@@ -7,10 +7,13 @@ steps:
 ## Create SSH key for IdentityGateway, store in Keyvault
 - task: AzureCLI@1
   displayName: "create SSH key"
-  inlineScript: |-
-    ssh-keygen -b 2048 -t rsa -C "a9my8zz@mmm.com" -f $(System.DefaultWorkingDirectory)\sshkeys -q -N ""
-    ssh-keygen -f sshkeys -e -m pem > 3mpriv.pem  
-    ssh-keygen -f sshkeys.pub -e -m pem > 3mpub.pem
-    az keyvault secret set --vault-name ${{ parameters.keyVaultName }} --name 'identityGatewayPrivateKey' --file $(System.DefaultWorkingDirectory)\3mpriv.pem
-    az keyvault secret set --vault-name ${{ parameters.keyVaultName }} --name 'identityGatewayPublicKey' --file $(System.DefaultWorkingDirectory)\ 3mpub.pem
-  #useGlobalConfig: true
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      ssh-keygen -b 2048 -t rsa -C "a9my8zz@mmm.com" -f $(System.DefaultWorkingDirectory)\sshkeys -q -N ""
+      ssh-keygen -f sshkeys -e -m pem > 3mpriv.pem  
+      ssh-keygen -f sshkeys.pub -e -m pem > 3mpub.pem
+      az keyvault secret set --vault-name ${{ parameters.keyVaultName }} --name 'identityGatewayPrivateKey' --file $(System.DefaultWorkingDirectory)\3mpriv.pem
+      az keyvault secret set --vault-name ${{ parameters.keyVaultName }} --name 'identityGatewayPublicKey' --file $(System.DefaultWorkingDirectory)\ 3mpub.pem
+    useGlobalConfig: true
