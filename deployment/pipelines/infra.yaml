@@ -3,22 +3,61 @@ name: IoT Infrastructure
 
 stages:
 ## CRSL ----
-- stage: DeployCRSL
+## Currently Pirate Ninja environment. Please dont touch dev. Lets discuss Dev strategy
+- stage: DeployCRSLDev
   dependsOn: []
-  displayName: Deploy To CRSL
+  displayName: Deploy To CRSL Dev
   jobs:
   - template: templates/approval.yaml
     parameters:
       environment: IoT_CRSL_Environment
   - template: templates/infra.yaml
     parameters:
-      serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+      serviceConnection: '3M-CRSLAD16-BBIoTP-DEV'
       resourceGroup: rg-pirate-ninja-deployment
       location: centralus
       environment: IoT_CRSL_Environment
       subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
       applicationCode: crsliot
       deployEnvironment: pn
+
+## CRSL QA ----
+- stage: DeployCRSLQA
+  dependsOn: []
+  #- DeployCRSLDev
+  displayName: Deploy To CRSL QA
+  jobs:
+  - template: templates/approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment_QA
+  - template: templates/infra.yaml
+    parameters:
+      serviceConnection: '3M-CRSLAD17-BBIoTP-QA'
+      resourceGroup: rg-iot-crsl-qa
+      location: centralus
+      environment: IoT_CRSL_Environment_QA
+      subscriptionId: f27c7c03-1ea8-49b8-9878-106e434b8a23
+      applicationCode: crsliot
+      deployEnvironment: qa      
+      
+## CRSL WKBNCH ----
+- stage: DeployCRSLWkBnch
+  dependsOn: []
+  #- DeployCRSLQA
+  displayName: Deploy To CRSL WorkBench
+  jobs:
+  - template: templates/approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment_WKBNCH
+  - template: templates/infra.yaml
+    parameters:
+      serviceConnection: '3M-CRSLAD19-BBIoTP-Prod'
+      resourceGroup: rg-iot-crsl-wkbnch
+      location: centralus
+      environment: IoT_CRSL_Environment_WKBNCH
+      subscriptionId: dcb37438-95ca-4a68-812d-39ce0d591df2
+      applicationCode: crsliot
+      deployEnvironment: wkbnch      
       
 # PSD
 - stage: DeployPSD
