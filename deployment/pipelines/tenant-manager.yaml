@@ -1,7 +1,8 @@
 trigger: none
-pr: none
+pr: none 
 
 stages:
 - template: 'templates/service-deploy-env.yaml'
   parameters:
     service: tenant-manager
+ 
