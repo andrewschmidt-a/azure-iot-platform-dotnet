@@ -158,7 +158,7 @@ export class DeviceNew extends LinkedComponent {
         deviceId: '',
         isEdgeDevice: deviceOptions.device.value,
         isGenerateId: deviceIdTypeOptions.manual.value,
-        isSimulated: deviceTypeOptions.simulated.value,
+        isSimulated: false,
         deviceModel: undefined,
         authenticationType: authTypeOptions.symmetric.value,
         isGenerateKeys: authKeyTypeOptions.generate.value,
@@ -422,16 +422,17 @@ export class DeviceNew extends LinkedComponent {
                 </Radio>
               </FormGroup>
               {
-                isEdgeDevice &&
+                // Disabled due to Simulation not being a feature of this release
+                isEdgeDevice && false &&
                 <FormGroup>
                   <FormLabel>{t(deviceTypeOptions.labelName)}</FormLabel>
-                  <Radio
+                  {/* <Radio
                     id="device-type-simulated"
                     link={this.deviceTypeLink}
                     value={deviceTypeOptions.simulated.value}
                     onChange={this.deviceTypeChange}>
                     {t(deviceTypeOptions.simulated.labelName)}
-                  </Radio>
+                  </Radio> */}
                   <Radio
                     id="device-type-real"
                     link={this.deviceTypeLink}

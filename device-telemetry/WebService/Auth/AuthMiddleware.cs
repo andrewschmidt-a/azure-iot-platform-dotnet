@@ -62,6 +62,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
         private bool tokenValidationInitialized;
         private readonly IUserManagementClient userManagementClient;
         private readonly IServicesConfig servicesConfig;
+        private readonly List<string> allowedUrls = new List<string>() { "/v1/status" };
 
         public AuthMiddleware(
             // ReSharper disable once UnusedParameter.Local
@@ -119,6 +120,13 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             // Store this setting to skip validating authorization in the controller if enabled
             context.Request.SetAuthRequired(this.config.AuthRequired);
 
+            context.Request.SetExternalRequest(true);
+
+            // Skip Authentication on certain URLS
+            if (allowedUrls.Where(s => context.Request.Path.StartsWithSegments(s)).Count() > 0)
+            {
+                return this.requestDelegate(context);
+            }
             if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER) )
             {
                 // This is a service to service request running in the private
@@ -130,10 +138,9 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
                 // Call the next delegate/middleware in the pipeline
                 this.log.Debug("Skipping auth for service to service request", () => { });
                 context.Request.SetExternalRequest(false);
+                context.Request.SetTenant();
                 return this.requestDelegate(context);
             }
-
-            context.Request.SetExternalRequest(true);
 
             if (!this.authRequired)
             {

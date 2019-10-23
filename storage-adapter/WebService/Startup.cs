@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-    using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
 {
@@ -58,7 +57,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
             IApplicationLifetime appLifetime)
         {
             loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
-            
+
             app.UseMiddleware<Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.AuthMiddleware>();
             app.UseMvc();
 

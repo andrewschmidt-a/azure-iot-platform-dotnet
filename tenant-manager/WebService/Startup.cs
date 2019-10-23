@@ -1,18 +1,10 @@
 ﻿using System;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
-using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
-using MMM.Azure.IoTSolutions.TenantManager.Services.External;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
-using Microsoft.AspNetCore.Http;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Http;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
@@ -20,41 +12,26 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
     {
 
         public IConfiguration Configuration { get; }
+        public IContainer ApplicationContainer { get; private set; } 
 
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder();
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
 #if DEBUG
-            builder.AddIniFile("appsettings.ini", optional: false, reloadOnChange: true);
+                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
 #endif
-            builder.AddEnvironmentVariables();
-            var settings = builder.Build();
-            builder.AddAzureAppConfiguration(settings["PCS_APPLICATION_CONFIGURATION"]);
+                .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddMvc().AddControllersAsServices();
 
-            ILogger logger = new Logger(Uptime.ProcessId, MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.LogLevel.Info);
-            services.AddSingleton<ILogger>(logger);
+            this.ApplicationContainer = DependencyResolution.Setup(services);
 
-            IConfig config = new Config(new ConfigData(logger));
-            services.AddSingleton<IConfig>(config);
-
-            services.AddSingleton<IIdentityGatewayClient, IdentityGatewayClient>();
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            services.AddSingleton<IHttpClient, HttpClient>();
-
-            services.AddSingleton<IStatusService, StatusService>();
-
-            MMM.Azure.IoTSolutions.TenantManager.WebService.Auth.Startup.SetupDependencies(services, config);
-
+            return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

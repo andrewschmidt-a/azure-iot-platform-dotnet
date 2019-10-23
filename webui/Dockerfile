@@ -34,6 +34,8 @@ EXPOSE 10080
 VOLUME /app/logs
 
 COPY package.json .
+COPY azure-iot-ux-fluent-controls/package.json azure-iot-ux-fluent-controls/package.json
+COPY azure-iot-ux-fluent-css/package.json azure-iot-ux-fluent-css/package.json
 RUN echo "Installing node packages ..." && npm --add-python-to-path='true' install
 COPY ./ /app
 RUN ["chmod", "+x", "/app/run.sh"]

@@ -14,28 +14,44 @@ namespace IdentityGateway.Services
     {
         public override string tableName { get{return "user";} }
 
-        public UserTenantContainer(IHttpContextAccessor httpContextAccessor, TableHelper tableHelper) : base(httpContextAccessor, tableHelper)
+        public UserTenantContainer()
+        {
+        }
+        
+        public UserTenantContainer(TableHelper tableHelper) : base(tableHelper)
         {
         }
 
         /// <summary>
-        /// GetAll methods return all rows of the given user input userid
+        /// get all tenants for a user
         /// </summary>
         /// <param name="input">UserTenantInput with the userId param</param>
         /// <returns></returns>
-        public async Task<List<UserTenantModel>> GetAllAsync(UserTenantInput input)
+        public async Task<UserTenantListModel> GetAllAsync(UserTenantInput input)
         {
             TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
             TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            return resultSegment.Results.Select(t => (UserTenantModel)t).ToList();  // cast to a UserTenantModel list to easily parse result
+            return new UserTenantListModel("GetTenants", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());
         }
 
+
         /// <summary>
-        /// Get methods return a specific UserTenantModel from the required info
+        /// get all users for a tenant
+        /// </summary>
+        /// <param name="input">UserTenantInput with the tenant param</param>
+        /// <returns></returns>
+        public async Task<UserTenantListModel> GetAllUsersAsync(UserTenantInput input)
+        {
+            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.tenant));
+            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
+            return new UserTenantListModel("GetUsers", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());
+        }
+        /// <summary>
+        /// Get a single tenant for the user
         /// </summary>
         /// <param name="input">UserTenantInput with a userid</param>
         /// <returns></returns>
-        public async Task<UserTenantModel> GetAsync(UserTenantInput input)
+        public virtual async Task<UserTenantModel> GetAsync(UserTenantInput input)
         {
             TableOperation retrieveUserTenant = TableOperation.Retrieve<UserTenantModel>(input.userId, input.tenant);
             TableResult result = await this._tableHelper.ExecuteOperationAsync(this.tableName, retrieveUserTenant);
@@ -49,6 +65,11 @@ namespace IdentityGateway.Services
         /// <returns></returns>
         public async Task<UserTenantModel> CreateAsync(UserTenantInput input)
         {
+            // If UserId is null then make it up
+            if (input.userId == null)
+            {
+                input.userId = Guid.NewGuid().ToString();
+            }
             // Create the user and options for creating the user record in the user table
             UserTenantModel existingModel = await this.GetAsync(input);
             if (existingModel != null)
@@ -68,20 +89,20 @@ namespace IdentityGateway.Services
         }
 
         /// <summary>
-        /// Update a record
+        /// Update a user record
         /// </summary>
         /// <param name="input">UserTenantInput with a userId, tenant, and rolelist</param>
         /// <returns></returns>
         public async Task<UserTenantModel> UpdateAsync(UserTenantInput input)
         {
             UserTenantModel model = new UserTenantModel(input);
-            if (!model.RoleList.Any())
+            if (model.RoleList != null && !model.RoleList.Any())
             {
                 // If the RoleList of the model is empty, throw an exception. The RoleList is the only updateable feature of the UserTenant Table
                 throw new ArgumentException("The UserTenant update model must contain a serialized role array.");
             }
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
-            TableOperation replaceOperation = TableOperation.Replace(model);
+            TableOperation replaceOperation = TableOperation.InsertOrMerge(model);
             TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
             return replace.Result as UserTenantModel;
         }
@@ -100,6 +121,28 @@ namespace IdentityGateway.Services
             // delete the record and return the deleted user model
             TableResult deleteUser = await this._tableHelper.ExecuteOperationAsync(this.tableName, deleteOperation);
             return deleteUser.Result as UserTenantModel;
+        }
+
+        /// <summary>
+        /// Delete the tenant from all users
+        /// </summary>
+        /// <returns></returns>
+        public async Task<UserTenantListModel> DeleteAllAsync(UserTenantInput input)
+        {
+            UserTenantListModel tenantRows = await this.GetAllUsersAsync(input);
+
+            // delete all rows as one asynchronous job
+            var deleteTasks = tenantRows.models.Select(row =>
+            {
+                UserTenantInput deleteInput = new UserTenantInput
+                {
+                    userId = row.PartitionKey,
+                    tenant = input.tenant
+                };
+                return this.DeleteAsync(deleteInput);
+            });
+            var deletionResult = await Task.WhenAll(deleteTasks);
+            return new UserTenantListModel("Delete", deletionResult.ToList());
         }
     }
 }

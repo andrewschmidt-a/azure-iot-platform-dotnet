@@ -26,7 +26,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
         }
 
         [HttpGet]
-        [Authorize("ReadAll")]
         public async Task<StatusApiModel> GetAsync()
         {
             var result = new StatusApiModel(await this.statusService.GetStatusAsync());
@@ -34,6 +33,11 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
             result.Properties.Add("AuthRequired", this.config.ClientAuthConfig?.AuthRequired.ToString());
             result.Properties.Add("Port", this.config.Port.ToString());
             return result;
+        }
+        [HttpGet("ping")]
+        public IActionResult Ping()
+        {
+            return new StatusCodeResult(200);
         }
     }
 }

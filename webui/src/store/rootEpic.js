@@ -5,6 +5,8 @@ import { combineEpics } from 'redux-observable';
 // Epics
 import { epics as appEpics } from './reducers/appReducer';
 import { epics as devicesEpics } from './reducers/devicesReducer';
+import { epics as usersEpics } from './reducers/usersReducer';
+import { epics as tenantsEpics } from './reducers/tenantsReducer';
 import { epics as deploymentsEpics } from './reducers/deploymentsReducer';
 import { epics as rulesEpics } from './reducers/rulesReducer';
 import { epics as packagesEpics } from './reducers/packagesReducer';
@@ -17,7 +19,9 @@ const epics = [
   ...devicesEpics.getEpics(),
   ...packagesEpics.getEpics(),
   ...rulesEpics.getEpics(),
-  ...simulationEpics.getEpics()
+  ...simulationEpics.getEpics(),
+  ...usersEpics.getEpics(),
+  ...tenantsEpics.getEpics()
 ];
 
 const rootEpic = combineEpics(...epics);

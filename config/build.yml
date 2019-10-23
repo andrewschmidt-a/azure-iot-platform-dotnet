@@ -5,22 +5,18 @@
 trigger:
   branches:
     include:
-    - master
+    - master 
   paths:
     include:
     - config/
-
 
 pr:
   branches:
     include:
     - master
-  paths:
+  paths: 
     include:
     - config/
-
-resources:
-- repo: self
 
 variables:
   tag: '$(Build.BuildId)'

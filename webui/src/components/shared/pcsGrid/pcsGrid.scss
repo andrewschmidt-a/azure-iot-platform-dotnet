@@ -123,6 +123,11 @@ $doublePadding: $baseContentPadding * 2;
 
       // ag-grid doesn't really support row separators, so to emulate the fluent styling,
       // add a big vertical border with the page content background color:
+
+      // Uncomment for lines separate items
+      // padding-top: $rowBorderHeight;
+      // border-top: 1px solid lightgrey;
+
       border-top: $rowBorderHeight solid themed('color-bg-content');
       border-bottom: $rowBorderHeight solid themed('color-bg-content');
 
@@ -138,7 +143,6 @@ $doublePadding: $baseContentPadding * 2;
         color: themed('colorGridHeaderText');
 
         &:hover {
-          background-color: themed('colorGridRowBackground');
           color: themed('colorGridCellText');
         }
       }

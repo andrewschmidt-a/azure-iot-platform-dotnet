@@ -37,9 +37,8 @@ $companySvgSize: 23px;
   .nav-item-text { text-transform: capitalize; }
 
   @include themify($themes) {
-  .nav-item-icon svg { fill: themed('colorNavText'); }
+    .nav-item-icon svg { fill: themed('colorNavText'); }
   }
-
 }
 
 .app {

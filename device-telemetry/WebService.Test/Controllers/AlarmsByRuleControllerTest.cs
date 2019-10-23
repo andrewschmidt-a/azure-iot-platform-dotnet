@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter;
-using DeviceTelemetry.WebService.Test.helpers;
+using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 using Xunit;
 using Alarm = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Alarm;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +26,7 @@ namespace DeviceTelemetry.WebService.Test.Controllers
         private readonly Mock<ILogger> log;
         private readonly IStorageClient storage;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
+        private readonly Mock<IAppConfigurationHelper> appConfigHelper;
 
         private List<Alarm> sampleAlarms;
 
@@ -53,6 +54,7 @@ namespace DeviceTelemetry.WebService.Test.Controllers
             Mock<IStorageAdapterClient> storageAdapterClient = new Mock<IStorageAdapterClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             this.log = new Mock<ILogger>();
+            this.appConfigHelper = new Mock<IAppConfigurationHelper>();
 
             this.storage = new StorageClient(servicesConfig, this.log.Object);
             string dbName = servicesConfig.AlarmsConfig.StorageConfig.CosmosDbDatabase;
@@ -67,7 +69,7 @@ namespace DeviceTelemetry.WebService.Test.Controllers
                     this.AlarmToDocument(sampleAlarm));
             }
 
-            Alarms alarmService = new Alarms(servicesConfig, this.storage, this.log.Object,this.httpContextAccessor.Object);
+            Alarms alarmService = new Alarms(servicesConfig, this.storage, this.log.Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
             Rules rulesService = new Rules(storageAdapterClient.Object, this.log.Object, alarmService, new Mock<IDiagnosticsClient>().Object);
             this.controller = new AlarmsByRuleController(alarmService, rulesService, this.log.Object);
         }

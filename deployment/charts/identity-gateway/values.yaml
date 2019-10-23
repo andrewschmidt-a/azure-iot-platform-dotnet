@@ -14,7 +14,7 @@ nameOverride: "identity-gateway"
 fullnameOverride: "identity-gateway"
 
 probes:
-  enabled: false
+  enabled: true
 
 service:
   type: ClusterIP

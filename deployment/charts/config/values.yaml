@@ -14,7 +14,7 @@ nameOverride: "config"
 fullnameOverride: "config"
 
 probes:
-  enabled: false
+  enabled: true
 
 service:
   type: ClusterIP

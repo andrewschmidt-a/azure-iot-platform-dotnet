@@ -14,6 +14,8 @@ namespace IdentityGateway.Services
 
         public string tenant;
         public string roles;
+        public string name;
+        public string type;
     }
 
     public class UserSettingsInput : IUserInput<UserSettingsModel>

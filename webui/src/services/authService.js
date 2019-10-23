@@ -1,14 +1,12 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 import Config from 'app.config';
-// import AuthenticationContext from 'adal-angular/dist/adal.min.js'
-import { UserManager, UserManagerSettings, User, WebStorageStateStore, } from 'oidc-client';
+import { UserManager, WebStorageStateStore, } from 'oidc-client';
 import { Observable } from 'rxjs';
 import { HttpClient } from 'utilities/httpClient';
 import { toUserModel, authDisabledUser } from './models';
-import{ Policies } from './policies.json'
+import { Policies } from 'utilities'
 
-const ENDPOINT = Config.serviceUrls.auth;
 export class AuthService {
 
   static authContext; // Created on AuthService.initialize()
@@ -36,6 +34,11 @@ export class AuthService {
     AuthService._userManager = new UserManager(AuthService.settings);
   }
 
+  static isInvitation(hash) {
+    return (
+      hash.includes('invite')
+    );
+  }
   static isCallback(hash) {
     return (
       hash.includes('id_token') ||
@@ -60,6 +63,20 @@ export class AuthService {
       return;
     };
     console.log("Loading Auth....")
+    //Redirect if it is an invitation link
+    if(AuthService.isInvitation(window.location.hash)){
+      var parsedHash = new URLSearchParams(
+          window.location.hash.substr(1) // skip the first char (#)
+      );
+      AuthService.settings.extraQueryParams = {
+        invite: parsedHash.get("invite")
+      };
+      AuthService._userManager = new UserManager(AuthService.settings);
+      console.log('Invitation detected: redirecting for authentication');
+      AuthService._userManager.signinRedirect();
+
+    }
+
     // Attempt to sign in if the current window is not a callback
     if (!AuthService.isCallback(window.location.hash)) {
       console.log("is not a callback.. attempt to find user")
@@ -78,29 +95,6 @@ export class AuthService {
         window.location = window.location.origin
       })
     }
-
-    // Note: "window.location.hash" is the anchor part attached by
-    //       the Identity Provider when redirecting the user after
-    //       a successful authentication.
-    // if (AuthService.authContext.isCallback(window.location.hash)) {
-    //   console.debug('Handling Auth Window callback');
-    //   // Handle redirect after authentication
-    //   AuthService.authContext.handleWindowCallback();
-    //   const error = AuthService.authContext.getLoginError();
-    //   if (error) {
-    //     throw new Error(`Authentication Error: ${error}`);
-    //   }
-    // } else {
-    //   AuthService.getUserName(user => {
-    //     if (user) {
-    //       console.log(`Signed in as ${user.Name} with ${user.Email}`);
-    //       if (successCallback) successCallback();
-    //     } else {
-    //       console.log('The user is not signed in');
-    //       AuthService.authContext.login();
-    //     }
-    //   });
-    // }
   }
 
   static getUserName(callback) {
@@ -114,14 +108,6 @@ export class AuthService {
       console.log('The user is not signed in');
       AuthService._userManager.signinRedirect();
     }
-    // if (AuthService.authContext.getCachedUser()) {
-    //   Observable.of({ Name: 'Temp Name', Email: 'temp.name@contoso.com' })
-    //     .map(data => data ? { Name: data.Name, Email: data.Email } : null)
-    //     .subscribe(callback);
-    // } else {
-    //   console.log('The user is not signed in');
-    //   AuthService.authContext.login();
-    // }
   }
 
   static switchTenant(tenant) {
@@ -132,6 +118,12 @@ export class AuthService {
         HttpClient.post(`${global.DeploymentConfig.issuer}/connect/switch/${tenant}`).subscribe(new_token =>{
           user.id_token = new_token;
           user.profile.tenant = tenant;
+          let claims = JSON.parse(atob(new_token.split(".")[1]))
+          if (typeof claims.role === "string"){
+            claims.role = [claims.role]
+          }
+          user.profile.role = claims.role;
+
           AuthService._userManager.storeUser(user)
           window.location = window.location.origin;
         })
@@ -151,8 +143,8 @@ export class AuthService {
       return AuthService._userManager.getUser().then(user => {
         if (user) {
           // Following two should be Arrays but claims will return a string if only one value.
-          var roles = typeof(user.profile.role) == 'string'?[user.profile.role]:user.profile.role;
-          var availableTenants = typeof(user.profile.available_tenants) == 'string'?[user.profile.available_tenants]:user.profile.available_tenants
+          var roles = typeof(user.profile.role) == 'string' ? [user.profile.role] : user.profile.role;
+          var availableTenants = typeof(user.profile.available_tenants) == 'string' ? [user.profile.available_tenants] : user.profile.available_tenants;
 
           if(roles == undefined){
             roles = []
@@ -204,18 +196,5 @@ export class AuthService {
         observer.complete();
       });
     });
-    // return Observable.create(observer => {
-    //   return AuthService.authContext.acquireToken(
-    //     AuthService.appId,
-    //     (error, accessToken) => {
-    //       if (error) {
-    //         console.log(`Authentication Error: ${error}`);
-    //         observer.error(error);
-    //       }
-    //       else observer.next(accessToken);
-    //       observer.complete();
-    //     }
-    //   );
-    // });
   }
 }

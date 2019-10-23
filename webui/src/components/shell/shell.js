@@ -45,6 +45,7 @@ class Shell extends Component {
                   <Hyperlink href="/tenantmanagement" target="_blank">{t('accessDenied.createTenant')}</Hyperlink>
                 </Trans>
               </div>
+              {children}
             </Main>
           </div>
         }
@@ -105,6 +106,15 @@ class Shell extends Component {
       openFlyout
     } = this.props;
 
+    var toolbarItems = [];
+
+    toolbarItems.push({
+      icon: 'contact',
+      label: t('profileFlyout.title'),
+      selected: openFlyout === 'profile',
+      onClick: openUserProfile
+    });
+
     if (denyAccess) {
       return {
         branding: this.getMastheadBranding(),
@@ -113,29 +123,25 @@ class Shell extends Component {
           selected: this.state.isMastheadMoreExpanded,
           onClick: this.handleMastheadMoreToggle,
         },
+        toolbarItems: toolbarItems
       };
     } else if (pagesConfig) {
-      var toolbarItems = [];
       if(!this.props.limitedAccess){
-        toolbarItems.push({
+        toolbarItems.unshift({
           icon: 'settings',
           label: t('settingsFlyout.title'),
           selected: openFlyout === 'settings',
           onClick: openSystemSettings
         });
       }
-      toolbarItems.push({
+
+      toolbarItems.unshift({
         icon: 'help',
         label: t('helpFlyout.title'),
         selected: openFlyout === 'help',
         onClick: openHelpFlyout
       })
-      toolbarItems.push({
-        icon: 'contact',
-        label: t('profileFlyout.title'),
-        selected: openFlyout === 'profile',
-        onClick: openUserProfile
-      });
+
       return {
         branding: this.getMastheadBranding(),
         more: {

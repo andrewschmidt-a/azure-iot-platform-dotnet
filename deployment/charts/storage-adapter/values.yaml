@@ -14,7 +14,7 @@ nameOverride: "storage-adapter"
 fullnameOverride: "storage-adapter"
 
 probes:
-  enabled: false
+  enabled: true
 
 service:
   type: ClusterIP
@@ -53,6 +53,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-#need to add the endpoint before deployment of chart
-serviceSecret:
-  PCS_APPLICATION_CONFIGURATION:

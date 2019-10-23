@@ -12,7 +12,8 @@ import { configureStore as configureWalkthroughStore } from 'walkthrough/store/c
 import { AppContainer as WalkthroughApp } from 'walkthrough/components/app.container';
 import registerServiceWorker from 'registerServiceWorker';
 import { AuthService } from 'services/authService';
-import { epics as appEpics } from 'store/reducers/appReducer';
+import { epics as appEpics } from 'store/reducers/appReducer'
+import { epics as tenantsEpics } from 'store/reducers/tenantsReducer';
 
 // Initialize internationalization
 import './i18n';
@@ -52,6 +53,7 @@ AuthService.onLoad(() => {
 
   // Initialize the app redux state
   store.dispatch(appEpics.actions.initializeApp());
+  store.dispatch(tenantsEpics.actions.fetchTenants());
 
   // Create the React app
   ReactDOM.render(

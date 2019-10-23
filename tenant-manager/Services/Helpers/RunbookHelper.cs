@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 using Microsoft.Azure;
@@ -16,70 +16,53 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 {
     public class TenantRunbookHelper : IStatusOperation
     {
-        // Define constant configuration keys
-        private const string APP_CONFIGURATION_KEY = "PCS_APPLICATION_CONFIGURATION";
-
-        private const string GLOBAL_KEY = "Global:";
-        private const string SUBSCRIPTION_ID_KEY = GLOBAL_KEY + "subscriptionId";
-        private const string LOCATION_KEY = GLOBAL_KEY + "location";
-        private const string RESOURCE_GROUP_KEY = GLOBAL_KEY + "resourceGroup";
-
-        private const string TENANT_MANAGEMENT_KEY = "TenantManagerService:";
-        private const string EVENT_HUB_CONN_STRING_SUFFIX = "EventHubConnString";
-        private const string TELEMETRY_EVENT_HUB_CONN_STRING_KEY = TENANT_MANAGEMENT_KEY + "telemetry" + EVENT_HUB_CONN_STRING_SUFFIX;
-        private const string LIFECYCLE_EVENT_HUB_CONN_STRING_KEY = TENANT_MANAGEMENT_KEY + "lifecycle" + EVENT_HUB_CONN_STRING_SUFFIX;
-        private const string TWIN_CHANGE_EVENT_HUB_CONN_STRING_KEY = TENANT_MANAGEMENT_KEY + "twinChange" + EVENT_HUB_CONN_STRING_SUFFIX;
-        private const string APP_CONFIG_ENDPOINT_KEY = TENANT_MANAGEMENT_KEY + "setAppConfigEndpoint";
-        private const string AUTOMATION_ACCOUNT_NAME_KEY = TENANT_MANAGEMENT_KEY + "automationAccountName";
-
-        // keyvault webhook keys
-        private const string CREATE_IOT_HUB_WEBHOOK_KEY = "CreateIotHubWebHookUrl";
-        private const string DELETE_IOT_HUB_WEBHOOK_KEY = "DeleteIotHubWebHookUrl";
+        // webhook keys
+        private const string CREATE_IOT_HUB_WEBHOOK_KEY = "CreateIotHub";
+        private const string DELETE_IOT_HUB_WEBHOOK_KEY = "DeleteIotHub";
 
         // injection variables
-        private IConfiguration _config;
-        private KeyVaultHelper _keyVaultHelper;
+        private IServicesConfig _config;
 
         private string resourceGroup;
         private string automationAccountName;
 
         // created in constructor
-        public TokenHelper tokenHelper;
+        public TokenHelper _tokenHelper;
         public HttpClient httpClient;
-        public AutomationManagementClient automationClient;
 
         // webhooks object
         // Keys refer to the actual webhook name for the particular web hook
-        // Values refer to the accessor key in keyvault for that webhook's url
-        public Dictionary<string, string> webHooks = new Dictionary<string, string>
-        {
-            { "CreateIotHub", CREATE_IOT_HUB_WEBHOOK_KEY },
-            { "deleteiothub", DELETE_IOT_HUB_WEBHOOK_KEY } // note the case sensitivity here - there is a discrepency between the naming conventions of the two runbooks
-        };
+        // Values refer to the accessor key in config for that webhook's url
+        public Dictionary<string, string> webHooks; 
 
-        public TenantRunbookHelper(IConfiguration config)
+        public TenantRunbookHelper(IServicesConfig config, TokenHelper tokenHelper)
         {
+            this._tokenHelper = tokenHelper;
             this._config = config;
-
-            this.resourceGroup = this._config[RESOURCE_GROUP_KEY];
-            this.automationAccountName = this._config[AUTOMATION_ACCOUNT_NAME_KEY];
-
-            this.tokenHelper = new TokenHelper(this._config);
+            
+            this.resourceGroup = this._config.ResourceGroup;
+            this.automationAccountName = this._config.AutomationAccountName;
             this.httpClient = new HttpClient();
-            this.automationClient = this.GetAutomationManagementClient();
+
+            this.webHooks = new Dictionary<string, string>
+            {
+                { CREATE_IOT_HUB_WEBHOOK_KEY, this._config.CreateIotHubRunbookUrl },
+                { DELETE_IOT_HUB_WEBHOOK_KEY, this._config.DeleteIotHubRunbookUrl }
+            };
         }
 
-        public TenantRunbookHelper(IConfiguration config, KeyVaultHelper keyVaultHelper)
+        /// <summary>
+        /// Create the automation client using the tokenHelper and config variables to authenticate
+        /// </summary>
+        /// <returns>AutomationManagementClient</returns>
+        private AutomationManagementClient automationClient
         {
-            this._config = config;
-            this._keyVaultHelper = keyVaultHelper;
-
-            this.resourceGroup = this._config[RESOURCE_GROUP_KEY];
-            this.automationAccountName = this._config[AUTOMATION_ACCOUNT_NAME_KEY];
-
-            this.tokenHelper = new TokenHelper(this._config);
-            this.httpClient = new HttpClient();
-            this.automationClient = this.GetAutomationManagementClient();
+            get
+            {
+                string authToken = this._tokenHelper.GetServicePrincipleToken();
+                TokenCloudCredentials credentials = new TokenCloudCredentials(this._config.SubscriptionId, authToken);
+                return new AutomationManagementClient(credentials);
+            }
         }
 
         /// <summary>
@@ -107,39 +90,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
             return String.IsNullOrEmpty(unhealthyMessage) ? new StatusResultServiceModel(true, "Alive and well!") : new StatusResultServiceModel(false, unhealthyMessage);
         }
 
-        public async Task<HttpResponseMessage> CreateIotHub(string tenantId, string iotHubName)
+        public async Task<HttpResponseMessage> CreateIotHub(string tenantId, string iotHubName, string dpsName)
         {
-            try
-            {
-                return await this.TriggerTenantRunbook(this.webHooks["CreateIotHub"], tenantId, iotHubName);
-            }
-            catch (Exception e)
-            {
-                throw new RunbookTriggerException("Unable to successfully Create Iot Hub from runbook", e);
-            }
+            return await this.TriggerTenantRunbook(this.webHooks[CREATE_IOT_HUB_WEBHOOK_KEY], tenantId, iotHubName, dpsName);
         }
 
-        public async Task<HttpResponseMessage> DeleteIotHub(string tenantId, string iotHubName)
+        public async Task<HttpResponseMessage> DeleteIotHub(string tenantId, string iotHubName, string dpsName)
         {
-            try
-            {
-                return await this.TriggerTenantRunbook(this.webHooks["deleteiothub"], tenantId, iotHubName);
-            }
-            catch (Exception e)
-            {
-                throw new RunbookTriggerException("Unable to successfully Delete Iot Hub from runbook", e);
-            }
-        }
-
-        /// <summary>
-        /// Create the automation client using the tokenHelper and config variables to authenticate
-        /// </summary>
-        /// <returns>AutomationManagementClient</returns>
-        private AutomationManagementClient GetAutomationManagementClient()
-        {
-            string authToken = this.tokenHelper.GetServicePrincipleToken();
-            TokenCloudCredentials credentials = new TokenCloudCredentials(this._config[SUBSCRIPTION_ID_KEY], authToken);
-            return new AutomationManagementClient(credentials);
+            return await this.TriggerTenantRunbook(this.webHooks[DELETE_IOT_HUB_WEBHOOK_KEY], tenantId, iotHubName, dpsName);
         }
 
         /// <summary>
@@ -147,53 +105,40 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
         /// This method builds a very specific request body using configuration and the given parameters
         /// In general, the webhooks passed to this method will create or delete iot hubs
         /// </summary>
-        /// <param name="webHookUrlKey" type="string">The keyvault key for the url for the runbook to trigger</param>
+        /// <param name="webHookUrlKey" type="string">The config key for the url for the runbook to trigger</param>
         /// <param name="tenantId" type="string">Tenant Guid</param>
         /// <param name="iotHubName" type="string">Iot Hub Name for deletion or creation</param>
         /// <returns></returns>
-        private async Task<HttpResponseMessage> TriggerTenantRunbook(string webHookUrlKey, string tenantId, string iotHubName)
+        private async Task<HttpResponseMessage> TriggerTenantRunbook(string webHookUrl, string tenantId, string iotHubName, string dpsName)
         {
-            if (this._keyVaultHelper == null)
-            {
-                throw new RunbookTriggerException("No KeyVault Helper was configured for the RunbookHelper instance.");
-            }
-
             var requestBody = new
             {
                 tenantId = tenantId,
                 iotHubName = iotHubName,
-                token = this.tokenHelper.GetServicePrincipleToken(),
+                dpsName = dpsName,
+                token = this._tokenHelper.GetServicePrincipleToken(),
                 resourceGroup = this.resourceGroup,
-                location = this._config[LOCATION_KEY],
-                subscriptionId = this._config[SUBSCRIPTION_ID_KEY],
-                telemetryEventHubConnString = this._config[TELEMETRY_EVENT_HUB_CONN_STRING_KEY],
-                twinChangeEventHubConnString = this._config[TWIN_CHANGE_EVENT_HUB_CONN_STRING_KEY],
-                lifecycleEventHubConnString = this._config[LIFECYCLE_EVENT_HUB_CONN_STRING_KEY],
-                appConfigConnectionString = this._config[APP_CONFIGURATION_KEY],
-                setAppConfigEndpoint = this._config[APP_CONFIG_ENDPOINT_KEY]
+                location = this._config.Location,
+                subscriptionId = this._config.SubscriptionId,
+                telemetryEventHubConnString = this._config.TelemetryEventHubConnectionString,
+                twinChangeEventHubConnString = this._config.TwinChangeEventHubConnectionString,
+                lifecycleEventHubConnString = this._config.LifecycleEventHubConnectionString,
+                appConfigConnectionString = this._config.AppConfigConnectionString,
+                setAppConfigEndpoint = this._config.AppConfigEndpoint
             };
 
             try
             {
-                string webHookUrl = "";
-                try
+                if (String.IsNullOrEmpty(webHookUrl))
                 {
-                    webHookUrl = await this._keyVaultHelper.GetSecretAsync(webHookUrlKey);
-                    if (String.IsNullOrEmpty(webHookUrlKey))
-                    {
-                        throw new Exception($"KeyVault returned a null value for the web hook url at key: {webHookUrlKey}");
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Unable to get secret from KeyVault for {webHookUrlKey}", e);
+                    throw new Exception($"The given webHookUrl string was null or empty. It may not be configured correctly.");
                 }
                 var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
                 return await this.httpClient.PostAsync(webHookUrl, bodyContent);
             }
             catch (Exception e)
             {
-                throw new RunbookTriggerException($"Unable to successfully trigger the web hook", e);
+                throw new RunbookTriggerException($"Unable to successfully trigger the requested runbook operation.", e);
             }
         }
     }

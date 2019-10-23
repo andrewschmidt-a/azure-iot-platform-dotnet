@@ -19,4 +19,4 @@ RUN dotnet publish "WebService.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "IdentityGateway.WebService.dll"]
+ENTRYPOINT ["dotnet", "WebService.dll"]

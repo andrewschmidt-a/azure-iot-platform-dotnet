@@ -1,6 +1,6 @@
 FROM node:11-alpine as codebuilder
 WORKDIR /app
-RUN echo "Install Bash for scripts"     && apk add --no-cache --virtual bash
+RUN echo "Install Bash for scripts"     && apk add --no-cache bash
 RUN echo "Installing the python2 (reqd for node pckgs)" && apk --update add python3
 RUN echo "Install GCC for make command" && apk add --no-cache --virtual build-base
 RUN echo "Install Curl for scripts"     && apk add --no-cache --virtual curl
@@ -15,7 +15,7 @@ RUN \
   pip --no-cache-dir install azure-cli && \
   apk del --purge build
 
-# RUN echo "Install App Configuration"     && RUN /bin/sh -c  "az extension add -n appconfig"
+# RUN echo "Install App Configuration"     && RUN /bin/sh -c  "az extension add -n appconfig" 
 
 
 MAINTAINER Andrew Schmidt (https://github.com/andrewschmidt-a)
