@@ -3,9 +3,10 @@ name: IoT Infrastructure
 
 stages:
 ## CRSL ----
+## Currently Pirate Ninja environment. Please dont touch dev. Lets discuss Dev strategy
 - stage: DeployCRSLDev
   dependsOn: []
-  displayName: Deploy To CRSL
+  displayName: Deploy To CRSL Dev
   jobs:
   - template: templates/approval.yaml
     parameters:
@@ -24,7 +25,7 @@ stages:
 - stage: DeployCRSLQA
   dependsOn: 
   - DeployCRSLDev
-  displayName: Deploy To CRSL
+  displayName: Deploy To CRSL QA
   jobs:
   - template: templates/approval.yaml
     parameters:
@@ -43,7 +44,7 @@ stages:
 - stage: DeployCRSLWkBnch
   dependsOn: 
   - DeployCRSLQA
-  displayName: Deploy To CRSL
+  displayName: Deploy To CRSL WorkBench
   jobs:
   - template: templates/approval.yaml
     parameters:
