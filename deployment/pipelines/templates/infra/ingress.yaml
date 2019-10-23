@@ -75,9 +75,20 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |-
       az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }}
-      ingressHost=$(kubectl get ingress -o json | jq -r .items[0].spec.rules[0].host)
-      echo $ingressHost
-      jwtIssuer="https://$ingressHost/auth"
+      n=1
+      until [ $n -ge 3 ]
+      do
+        hostIngress=$(kubectl get ingress -o json | jq -r .items[0].spec.rules[0].host)
+        if [ -z "$hostIngress" ] 
+        then
+          echo "Host not available...waiting another minute...try $n"
+          sleep 1m
+        else
+          break
+        fi
+      done
+      echo $hostIngress
+      jwtIssuer="https://$hostIngress/auth"
       az appconfig kv set --key Global:ClientAuth:JWT:authissuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
 
 - task: Bash@3
