@@ -6,6 +6,7 @@ parameters:
   cosmosDBName: 'iot'
   throughput: 400
   collectionName: ''
+  appConfigName: ''
   
 steps:
 # create Cosmos db account, database, collection/throughput
@@ -21,6 +22,23 @@ steps:
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/cosmosdb.json'
     overrideParameters: '-accountName ${{ parameters.cosmosDBAccount }} -location ${{ parameters.location }} -primaryRegion ${{ parameters.location }} -databaseName ${{ parameters.cosmosDBName }} -throughput ${{ parameters.throughput }} -container1Name ${{ parameters.collectionName }}'
     deploymentMode: 'Incremental'
+
+- task: AzureCLI@1
+  displayName: Add Values to App Config
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      rg=${{ parameters.resourceGroup }}
+      cosmosDbAccountName=$(az cosmosdb list --resource-group $rg | grep name | awk -F "\"" '{print $4}')
+      cosmosDbEndpoint="https://$cosmosDbAccountName.documents.azure.com:443/"
+      cosmosDbAuthKey=$(az cosmosdb list-keys --resource-group $rg --name $cosmosDbAccountName | grep primaryMasterKey | awk -F "\"" '{print $4}')
+      cosmosDbConnection="AccountEndpoint=$cosmosDbEndpoint;AccountKey=$cosmosDbAuthKey;"
+      az appconfig kv set --key TenantManagerService:cosmosDbEndpoint --value $cosmosDbEndpoint --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:cosmosDbToken --value $cosmosDbAuthKey --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:cosmosDbConnection --value $cosmosDbConnection --name ${{ parameters.appConfigName }} --yes
+    addSpnToEnvironment: true
+
 ## handled using a keyvault script to load all secrets once all resources are created <Radha>
 # - task: AzureCLI@1
 #   displayName: Add Connection string to Key Vault

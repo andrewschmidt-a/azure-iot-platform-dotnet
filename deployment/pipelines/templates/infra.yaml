@@ -83,7 +83,7 @@ jobs:
       cosmosDBAccount: ${{ parameters.applicationCode }}-cosmos-${{ parameters.deployEnvironment }}
       cosmosDBName: ${{ parameters.cosmosDBName }}
       location: ${{ parameters.location }}
-      keyVaultName: ${{ parameters.keyVaultName }}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
       throughput: ${{ parameters.cosmosDBthroughput }}
       collectionName: ${{ parameters.collectionName }}
 
