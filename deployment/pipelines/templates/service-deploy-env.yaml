@@ -35,7 +35,7 @@ stages:
     steps:
     - template: service-deploy.yaml
       parameters:
-        serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+        serviceConnection: '3M-CRSLAD16-BBIoTP-DEV'
         resourceGroup: rg-crslbbiot-odin-dev
         aksName: aks-dev-spaces-odin
         chartLocation: 'deployment/charts/${{parameters.service}}'
@@ -55,7 +55,7 @@ stages:
     steps:
     - template: service-deploy.yaml
       parameters:
-        serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+        serviceConnection: '3M-CRSLAD17-BBIoTP-QA'
         resourceGroup: rg-iot-crsl-qa
         aksName: crsliot-aks-qa
         chartLocation: 'deployment/charts/${{parameters.service}}'
@@ -76,7 +76,7 @@ stages:
     steps:
     - template: service-deploy.yaml
       parameters:
-        serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+        serviceConnection: '3M-CRSLAD19-BBIoTP-Prod'
         resourceGroup: rg-iot-crsl-wkbnch
         aksName: crsliot-aks-wkbnch
         chartLocation: 'deployment/charts/${{parameters.service}}'
