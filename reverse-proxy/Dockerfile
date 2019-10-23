@@ -1,6 +1,6 @@
 FROM node:11-alpine as codebuilder
 WORKDIR /app
-RUN echo "Install Bash for scripts"     && apk add --no-cache --virtual bash
+RUN echo "Install Bash for scripts"     && apk add --no-cache bash
 RUN echo "Installing the python2 (reqd for node pckgs)" && apk --update add python3
 RUN echo "Install GCC for make command" && apk add --no-cache --virtual build-base
 RUN echo "Install Curl for scripts"     && apk add --no-cache --virtual curl
@@ -38,4 +38,4 @@ RUN chmod +x ./set_env.sh
 COPY ./run.sh .
 RUN chmod +x ./run.sh
 COPY ./content/nginx.conf /app/nginx.conf
-ENTRYPOINT [ "/app/run.sh" ]
+#ENTRYPOINT [ "/app/run.sh" ]

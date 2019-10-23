@@ -1,6 +1,4 @@
-#!/usr/bin/env bash
-
-# Copyright (c) 3M. All rights reserved.
+# Copyright (c) 3M. All rights reserved. 
 
 # Fetch App configuration
 _get_configuration() {
