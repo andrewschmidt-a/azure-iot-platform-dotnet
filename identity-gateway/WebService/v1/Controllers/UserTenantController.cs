@@ -73,8 +73,8 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = null,
-                tenant = this.TenantId
+                UserId = null,
+                Tenant = this.TenantId
             };
             return await this._container.GetAllUsersAsync(input);
         }
@@ -99,7 +99,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId,
+                UserId = userId,
             };
             return await this._container.GetAllAsync(input);
         }
@@ -125,8 +125,8 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId,
-                tenant = this.TenantId
+                UserId = userId,
+                Tenant = this.TenantId
             };
             return await this._container.GetAsync(input);
         }
@@ -153,9 +153,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId,
-                tenant = this.TenantId,
-                roles = model.Roles,
+                UserId = userId,
+                Tenant = this.TenantId,
+                Roles = model.Roles
             };
             return await this._container.CreateAsync(input);
         }
@@ -181,9 +181,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId,
-                tenant = this.TenantId,
-                roles = update.Roles,
+                UserId = userId,
+                Tenant = this.TenantId,
+                Roles = update.Roles
             };
             return await this._container.UpdateAsync(input);
         }
@@ -210,8 +210,8 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId,
-                tenant = this.TenantId
+                UserId = userId,
+                Tenant = this.TenantId
             };
             return await this._container.DeleteAsync(input);
         }
@@ -225,7 +225,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                tenant = this.TenantId
+                Tenant = this.TenantId
             };
             return await this._container.DeleteAllAsync(input);
         }
@@ -241,18 +241,18 @@ namespace IdentityGateway.WebService.v1.Controllers
             // Object to insert in table as placeholder
             UserTenantInput input = new UserTenantInput
             {
-                userId = Guid.NewGuid().ToString(),
-                tenant = this.TenantId,
-                roles = JsonConvert.SerializeObject(new List<string>() { invitation.role }),
-                name = invitation.email_address,
-                type = "Invited"
+                UserId = Guid.NewGuid().ToString(),
+                Tenant = this.TenantId,
+                Roles = JsonConvert.SerializeObject(new List<string>() { invitation.role }),
+                Name = invitation.email_address,
+                Type = "Invited"
             };
 
             List<Claim> claims = new List<Claim>()
             {
                 new Claim("role", invitation.role),
                 new Claim("tenant", this.TenantId),
-                new Claim("userId", input.userId)
+                new Claim("userId", input.UserId)
             };
 
             string forwardedFor = null;

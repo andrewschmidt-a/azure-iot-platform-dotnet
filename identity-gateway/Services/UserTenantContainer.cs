@@ -12,7 +12,7 @@ namespace IdentityGateway.Services
 {
     public class UserTenantContainer : UserContainer, IUserContainer<UserTenantModel, UserTenantInput> 
     {
-        public override string tableName { get{return "user";} }
+        public override string TableName { get{return "user";} }
 
         public UserTenantContainer()
         {
@@ -29,8 +29,8 @@ namespace IdentityGateway.Services
         /// <returns></returns>
         public virtual async Task<UserTenantListModel> GetAllAsync(UserTenantInput input)
         {
-            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
-            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
+            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.UserId));
+            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.TableName, query, null);
             return new UserTenantListModel("GetTenants", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());
         }
 
@@ -42,8 +42,8 @@ namespace IdentityGateway.Services
         /// <returns></returns>
         public virtual async Task<UserTenantListModel> GetAllUsersAsync(UserTenantInput input)
         {
-            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.tenant));
-            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
+            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.Tenant));
+            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.TableName, query, null);
             return new UserTenantListModel("GetUsers", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());
         }
         /// <summary>
@@ -53,8 +53,8 @@ namespace IdentityGateway.Services
         /// <returns></returns>
         public virtual async Task<UserTenantModel> GetAsync(UserTenantInput input)
         {
-            TableOperation retrieveUserTenant = TableOperation.Retrieve<UserTenantModel>(input.userId, input.tenant);
-            TableResult result = await this._tableHelper.ExecuteOperationAsync(this.tableName, retrieveUserTenant);
+            TableOperation retrieveUserTenant = TableOperation.Retrieve<UserTenantModel>(input.UserId, input.Tenant);
+            TableResult result = await this._tableHelper.ExecuteOperationAsync(this.TableName, retrieveUserTenant);
             return result.Result as UserTenantModel;
         }
 
@@ -66,9 +66,9 @@ namespace IdentityGateway.Services
         public virtual async Task<UserTenantModel> CreateAsync(UserTenantInput input)
         {
             // If UserId is null then make it up
-            if (input.userId == null)
+            if (input.UserId == null)
             {
-                input.userId = Guid.NewGuid().ToString();
+                input.UserId = Guid.NewGuid().ToString();
             }
             // Create the user and options for creating the user record in the user table
             UserTenantModel existingModel = await this.GetAsync(input);
@@ -84,7 +84,7 @@ namespace IdentityGateway.Services
             UserTenantModel user = new UserTenantModel(input);
             // Insert the user record. Return the user model from the user table insert
             TableOperation insertOperation = TableOperation.Insert(user);
-            TableResult userInsert = await this._tableHelper.ExecuteOperationAsync(this.tableName, insertOperation);
+            TableResult userInsert = await this._tableHelper.ExecuteOperationAsync(this.TableName, insertOperation);
             return userInsert.Result as UserTenantModel;  // cast to UserTenantModel to parse results
         }
 
@@ -103,7 +103,7 @@ namespace IdentityGateway.Services
             }
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
             TableOperation replaceOperation = TableOperation.InsertOrMerge(model);
-            TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
+            TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.TableName, replaceOperation);
             return replace.Result as UserTenantModel;
         }
 
@@ -119,7 +119,7 @@ namespace IdentityGateway.Services
             TableOperation deleteOperation = TableOperation.Delete(user);
 
             // delete the record and return the deleted user model
-            TableResult deleteUser = await this._tableHelper.ExecuteOperationAsync(this.tableName, deleteOperation);
+            TableResult deleteUser = await this._tableHelper.ExecuteOperationAsync(this.TableName, deleteOperation);
             return deleteUser.Result as UserTenantModel;
         }
 
@@ -136,8 +136,8 @@ namespace IdentityGateway.Services
             {
                 UserTenantInput deleteInput = new UserTenantInput
                 {
-                    userId = row.PartitionKey,
-                    tenant = input.tenant
+                    UserId = row.PartitionKey,
+                    Tenant = input.Tenant
                 };
                 return this.DeleteAsync(deleteInput);
             });
