@@ -28,7 +28,7 @@ steps:
 ## TODO -- Get Trigger binding information CLI probally. Event Hub based
 ## Deploy ARM Resource
 - task: AzureResourceGroupDeployment@2
-  displayName: "Create Azure function App: Messaging"
+  displayName: "Create Azure function App: deviceproperties"
   inputs:
     azureSubscription: ${{ parameters.serviceConnection }}
     action: 'Create Or Update Resource Group'
@@ -37,14 +37,14 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionApp1Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime node'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp1Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
 ## Deploy ARM Resource -- Deploy Device Properties Function App (talk to Swami)
 ## Function has been created with ver 1.0 in Odin env, here both the functions created with ver 2.0
 - task: AzureResourceGroupDeployment@2
-  displayName: "Create Azure function App: DeviceProperties"
+  displayName: "Create Azure function App: hubmessaging"
   inputs:
     azureSubscription: ${{ parameters.serviceConnection }}
     action: 'Create Or Update Resource Group'
