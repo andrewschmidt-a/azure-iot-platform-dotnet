@@ -107,18 +107,6 @@ jobs:
       location: ${{ parameters.location }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
 
-## Deploys Function Apps
-  - template: infra/functions.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      functionApp1Name: ${{ parameters.applicationCode }}-deviceproperties-${{ parameters.deployEnvironment }}
-      functionApp2Name: ${{ parameters.applicationCode }}-hubmessaging-${{ parameters.deployEnvironment }}
-      functionApp3Name: ${{ parameters.applicationCode }}-appconfig-${{ parameters.deployEnvironment }}
-      keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
-      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
-      location: ${{ parameters.location }}
-
 ## Deploys Azure Maps
   - template: infra/maps.yaml
     parameters:
@@ -148,6 +136,18 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
 
+  ## Deploys Function Apps
+  - template: infra/functions.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      functionApp1Name: ${{ parameters.applicationCode }}-deviceproperties-${{ parameters.deployEnvironment }}
+      functionApp2Name: ${{ parameters.applicationCode }}-hubmessaging-${{ parameters.deployEnvironment }}
+      functionApp3Name: ${{ parameters.applicationCode }}-appconfig-${{ parameters.deployEnvironment }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      location: ${{ parameters.location }}
+      
 ## Deploys Automation Account, Runbook, webhook
 - job: automationacct 
   displayName: Create Automation Acct

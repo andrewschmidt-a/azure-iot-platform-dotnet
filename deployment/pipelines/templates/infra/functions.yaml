@@ -57,3 +57,22 @@ steps:
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
+- task: AzureCLI@1
+  displayName: "CLI: set appsettings for fucntion app"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      devicepropertiesfn=${{ parameters.functionApp1Name }}
+      messagingfnapp=${{ parameters.functionApp2Name }}
+      appConfigfn=${{ parameters.functionApp3Name }}
+      kVaultName=${{ parameters.keyVaultName }}
+      cosmosDbConn=$(az keyvault secret show --name "documentDBConnectionString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
+      lifecycleEvConn=$(az keyvault secret show --name "lifecycleEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
+      telemetryEvConn=$(az keyvault secret show --name "telemetryEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
+      twinchangeEvConn=$(az keyvault secret show --name "twinChangeEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
+      az functionapp config appsettings set --name $messagingfnapp \
+        --settings "CosmosDbConnectionString=$cosmosDbConn CosmosDbDatabaseName=iot EventHubLifecycle=$lifecycleEvConn EventHubTelemetry=$telemetryEvConn EventHubTwinChange=$twinchangeEvConn" \
+        --resource-group ${{ parameters.resourceGroup }}
+      az functionapp config appsettings set --name $devicepropertiesfn \
+        --settings "ConsumerGroup=lifecyclecg ConsumerGroupTC=twinchangecg CosmosConnection=$cosmosDbConn CosmosDB=pcs-storage CosmosDBRus=400 EventHubLifecycle=$lifecycleEvConn EventHubName=lifecycle EventHubNameTC=twin-change EventHubTwinChange=$twinchangeEvConn WhiteList=tags.*,reported.*, reported.Protocol, reported.SupportedMethods, reported.DeviceMethodStatus, reported.FirmwareUpdateStatus"
