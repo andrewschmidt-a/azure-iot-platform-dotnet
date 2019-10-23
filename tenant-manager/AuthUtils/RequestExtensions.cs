@@ -139,7 +139,8 @@ namespace Microsoft.Azure.IoTSolutions.Auth
             {
                 if (GetCurrentUserClaims(request).All(t => t.Type != CLAIM_KEY_TENANT_ID))
                 {
-                    throw new Exception(CLAIM_KEY_TENANT_ID + " claim not found");
+                    // This is needed for Create Tenant. The only api that can be called without a tenant
+                    return;
                 }
 
                 tenantId = GetCurrentUserClaims(request).First(t => t.Type == CLAIM_KEY_TENANT_ID).Value;
