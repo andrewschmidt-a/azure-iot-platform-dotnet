@@ -23,7 +23,7 @@ stages:
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
 # Second Pirate ninja test env
-- stage: DeployCRSLDevPN
+- stage: DeployCRSLDevPN2
   dependsOn: []
   displayName: Deploy To CRSL
   jobs:
