@@ -38,4 +38,4 @@ RUN chmod +x ./set_env.sh
 COPY ./run.sh .
 RUN chmod +x ./run.sh
 COPY ./content/nginx.conf /app/nginx.conf
-#ENTRYPOINT [ "/app/run.sh" ]
+ENTRYPOINT [ "/app/run.sh" ]
