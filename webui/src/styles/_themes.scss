@@ -1,5 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 
+// Import from a node module
 @import "~@microsoft/azure-iot-ux-fluent-css/src/color.palette";
 @import 'variables';
 
@@ -54,6 +55,8 @@ $theme-dark: (
   // Modal - START
   colorModalDropShadow: $color-black-transparent-half,
   // Modal -  END
+
+  layoutMastheadHeight: 48px
 );
 
 $theme-light: (
@@ -102,10 +105,75 @@ $theme-light: (
   // Modal - START
   colorModalDropShadow: $color-black-transparent-tenth,
   // Modal -  END
+
+  layoutMastheadHeight: 48px
 );
 
-// now import the default fluent colors (this will preserve any overrides specified above):
+$theme-mmm: (
+  // Functional colors
+  colorAlert: $color-error-local-100,
+  colorFailed: $color-error-local-100,
+
+  // Grid - START
+  colorGridRowBackground: $color-transparent,
+  colorGridRowHoverBackground: $color-transparent,
+  colorGridRowSelectedBackground: $color-black,
+
+  gridSortIcon: '~assets/icons/sort_light.svg',
+  gridAscIcon: '~assets/icons/sort_a2z_light.svg',
+  gridDescIcon: '~assets/icons/sort_z2a_light.svg',
+  // Grid - END
+
+  // Btn - START
+  colorBtnBackground: transparent,
+  colorBtnBackgroundHover: transparent,
+  colorBtnBackgroundActive: transparent,
+  colorBtnBackgroundDisabled: transparent,
+  colorBtnPrimaryText: $color-white,
+  // Btn - END
+
+  // Pill - START
+  colorPillBackground: #DADADA,
+  colorPillBackgroundHover: #136BFB,
+  colorPillBackgroundSvg: #C8C8C8,
+  colorPillBackgroundSvgHover: #005A9E,
+  // Pill - END
+
+  // Page Content Colors - START
+  colorFlyoutDropShadow: $color-black-transparent-primary,
+  // Page Content Colors - END
+
+  // Dashboard Panel Colors - START
+  colorDashboardMapPopupText: $color-lightgrey-1200,
+  colorDashboardPanelText: #333,
+  colorDashboardPanelHeaderBg: $color-white,
+  colorDashboardPanelContentBg: $color-white,
+  colorDashboardPanelOverlayBg: rgba(255, 255, 255, .6),
+  colorDashboardPanelErrorOverlayBg: $color-white,
+  // Dashboard Panel Colors - END
+
+  // Modal - START
+  colorModalDropShadow: $color-black-transparent-tenth,
+  // Modal -  END
+
+  colorBtnPrimaryTextHover: white,
+
+  // This sets the logo / tenant icon color for some reason
+  colorNavText: 'color-text-black',
+
+  // Page Content Colors - START
+  // This url is relative to the pageContent.scss file
+  colorPageContentBackground: #f4f4f4, // url("../../../assets/images/repeating_meshed_grid.png"),
+  colorContentBackground: white,
+  // Page Content Colors - END
+
+  layoutMastheadHeight: 53px
+);
+
+// now import the default fluent colors from a node module (this will preserve any overrides specified above):
 @import "~@microsoft/azure-iot-ux-fluent-css/src/colors";
+
+@import "./3mTheme/color.defaults";
 
 // TEMPORARY: in order to make the transition to fluent colors easier, create a
 // mapping of existing RM color variables to Fluent color variables. This way,
@@ -210,7 +278,7 @@ $rmToFluentColorVariables: (
   colorModalBorder: 'color-border-controls',
   // Modal -  END
 
-  // Nav Colors - START
+  // Nav Colors - START (These don't work to change the navigation area)
   colorNavBg: 'color-bg-navbar',
   colorNavText: 'color-text-white',
   colorNavItemBgHover: 'color-bg-navbar-hover',
@@ -248,7 +316,7 @@ $rmToFluentColorVariables: (
 @each $theme, $colors in $themes {
   @each $key, $value in $rmToFluentColorVariables {
       $mappedValue: map-get($colors, '#{$value}');
-      $colors: map-merge($colors, ($key: $mappedValue));
+      $colors: map-merge(($key: $mappedValue), $colors);
   }
 
   $themes: map-merge($themes, ($theme: $colors));

@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using System.Collections.ObjectModel;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
+using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 {
@@ -13,11 +13,11 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
     {
         private DocumentClient client;
 
-        public CosmosHelper(String cosmosDb, String cosmosDbToken)
+        public CosmosHelper(IServicesConfig config)
         {
             try
             {
-                this.client = new DocumentClient(new Uri(cosmosDb), cosmosDbToken);
+                this.client = new DocumentClient(new Uri(config.CosmosDbEndpoint), config.CosmosDbToken);
             }
             catch (Exception e)
             {

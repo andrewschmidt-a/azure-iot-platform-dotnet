@@ -18,8 +18,9 @@ steps:
     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
     scriptLocation: 'inlineScript'
     inlineScript: |-
-      az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
-      azds up -d
+      #az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
+      #azds up -d
+      ls # placeholder
     workingDirectory: 'iothub-manager/WebService'
 # - task: HelmDeploy@0
 #  inputs:

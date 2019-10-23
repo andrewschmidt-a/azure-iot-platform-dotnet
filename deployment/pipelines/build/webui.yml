@@ -1,0 +1,25 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+pool: "3M Hosted Ubuntu"
+
+trigger:
+  branches:
+    include:
+    - master 
+  paths:
+    include:
+    - webui/
+
+pr:
+  branches:
+    include:
+    - master
+  paths: 
+    include:
+    - webui/
+
+stages:
+- template: templates/build-service.yml
+  parameters:
+    service: webui

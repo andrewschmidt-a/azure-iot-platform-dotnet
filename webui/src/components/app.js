@@ -12,9 +12,9 @@ import { ManageDeviceGroupsContainer, SettingsContainer, HelpContainer, ProfileC
 import {
   DashboardContainer,
   DevicesContainer,
+  UsersContainer,
   RulesContainer,
   MaintenanceContainer,
-  TenantManagementContainer,
   PackagesContainer,
   DeploymentsRouter
 } from './pages';
@@ -53,6 +53,13 @@ class App extends Component {
         component: DevicesContainer
       },
       {
+        to: '/users',
+        exact: true,
+        svg: svgs.tabs.users,
+        labelId: 'tabs.users',
+        component: UsersContainer
+      },
+      {
         to: '/rules',
         exact: true,
         svg: svgs.tabs.rules,
@@ -79,13 +86,6 @@ class App extends Component {
         svg: svgs.tabs.maintenance,
         labelId: 'tabs.maintenance',
         component: MaintenanceContainer
-      },
-      {
-        to: '/tenantmanagement',
-        exact: false,
-        svg: svgs.tabs.create,
-        labelId: 'tabs.create',
-        component: TenantManagementContainer
       }
     ];
 
@@ -163,6 +163,7 @@ class App extends Component {
       openFlyout: this.state.openFlyout,
       ...this.props
     };
+
     // Allow certain pages to have limited access (no nav bar, settings)
     var limitedAccess = Config.limitedAccessUrls.includes(window.location.pathname);
     console.log(limitedAccess)

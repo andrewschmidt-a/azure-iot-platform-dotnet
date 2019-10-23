@@ -5,6 +5,7 @@
 export * from './authModels';
 export * from './deviceSimulationModels';
 export * from './iotHubManagerModels';
+export * from './identityGatewayModels';
 export * from './telemetryModels';
 export * from './configModels';
 export * from './gitHubModels';

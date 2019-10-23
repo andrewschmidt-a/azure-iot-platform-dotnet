@@ -34,6 +34,7 @@ import LinkToPath from 'assets/icons/linkTo.svg';
 import LoadingToggleIconPath from 'assets/icons/loadingToggle.svg';
 import ManageFiltersIconPath from 'assets/icons/manageFilters.svg';
 import TabPackagesIconPath from 'assets/icons/packages.svg';
+import PeopleIconPath from 'assets/icons/people.svg';
 import PhysicalDeviceIconPath from 'assets/icons/physicalDevice.svg';
 import PlusIconPath from 'assets/icons/plus.svg';
 import QuestionMarkIconPath from 'assets/icons/questionMark.svg';
@@ -66,7 +67,8 @@ export const svgs = {
     maintenance: TabMaintenanceIconPath,
     packages: TabPackagesIconPath,
     rules: TabRulesIconPath,
-    example: InfoBubbleIconPath
+    example: InfoBubbleIconPath,
+    users: PeopleIconPath
   },
   devices: {
     generic: DeviceGenericIconPath,

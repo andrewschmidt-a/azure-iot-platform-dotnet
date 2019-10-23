@@ -18,20 +18,21 @@ steps:
     azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
     scriptLocation: 'inlineScript'
     inlineScript: |-
-      az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
-      azds up -d
+      #az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
+      #azds up -d
+      ls # placeholder
     workingDirectory: 'config/WebService'
 # - task: HelmDeploy@0
 #  inputs:
-#    connectionType: 'Azure Resource Manager'
-#    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
-#    azureResourceGroup: 'rg-crslbbiot-odin-dev'
-#    kubernetesCluster: 'aks-dev-spaces-odin'
+#    connectionType: 'Azure Resource Manager' 
+#    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev' 
+#    azureResourceGroup: 'rg-crslbbiot-odin-dev' 
+#    kubernetesCluster: 'aks-dev-spaces-odin'  
 #    namespace: 'default'
-#    command: 'upgrade'
-#    chartType: 'FilePath'
-#    chartPath: 'storage-adapter'
+#    command: 'upgrade'  
+#    chartType: 'FilePath' 
+#    chartPath: 'storage-adapter' 
 #    releaseName: 'iothub-manager'
 #    recreate: true
-#    tillerNamespace: 'tiller'
+#    tillerNamespace: 'tiller' 
     

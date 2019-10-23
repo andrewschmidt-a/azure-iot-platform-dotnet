@@ -72,4 +72,7 @@ $appConfigBody = @"
 $appConfigBody
 $result = (Invoke-RestMethod -ContentType 'application/json' -Method delete -Headers $requestheader -Uri $setAppConfigEndpoint -Body $appConfigBody)
 
+# Remove dps
+Remove-AzIoTDeviceProvisioningService -ResourceGroupName $data.resourceGroup -Name $data.dpsName
+
 "Done"

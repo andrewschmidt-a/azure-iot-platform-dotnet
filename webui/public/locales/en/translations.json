@@ -24,6 +24,7 @@
   "tabs": {
     "dashboard": "Dashboard",
     "devices": "Device Explorer",
+    "users": "User Management",
     "rules": "Rules",
     "maintenance": "Maintenance",
     "packages": "Packages",
@@ -66,7 +67,9 @@
     "DeletePackages": "Delete packages",
     "CreatePackages": "Create packages",
     "CreateDeployments": "Create deployments",
-    "DeleteDeployments": "Delete deployments"
+    "DeleteDeployments": "Delete deployments",
+    "InviteUsers": "Invite users",
+    "DeleteUsers": "Delete users"
   },
   "protected": {
     "permissionDenied": "Permission {{permission}} is denied."
@@ -83,7 +86,8 @@
     "viewRelNotes": "View release notes",
     "theme": "Theme",
     "changeTheme": "Change the application color theme",
-    "switchTheme": "Switch to {{nextTheme}} theme",
+    "switchTheme1": "Switch to {{nextTheme1}} theme",
+    "switchTheme2": "Switch to {{nextTheme2}} theme",
     "apply": "Apply",
     "cancel": "Cancel",
     "close": "Close",
@@ -120,9 +124,15 @@
     "permissions": "Permissions",
     "noPermissions": "No permissions found",
     "close": "Close",
-    "tenant": "Tenant",
-    "noTenant": "No Tenants found",
-    "createTenant": "Create New Tenant"
+    "tenants": {
+      "tenantHeader": "Tenants",
+      "noTenant": "No Tenants found",
+      "createTenant": "Create New Tenant",
+      "deleteTenant": "Delete",
+      "tenantNameColumn": "Tenant",
+      "tenantRoleColumn": "Role",
+      "tenantActionColumn": "Action"
+    }
   },
   "deviceGroupsFlyout": {
     "actions": "Actions",
@@ -207,6 +217,54 @@
     "refreshing": "Refreshing",
     "lastRefreshed": "Last refreshed",
     "ariaLabel": "Refresh page"
+  },
+  "users":{
+    "title": "User Management",
+    "ariaLabel": "Search users",
+    "searchPlaceholder": "Search users...",
+    "grid": {
+      "userName": "Name",
+      "userType": "Type",
+      "userId": "Guid",
+      "userRole": "Role"
+    },
+    "flyouts":{
+      "new": {
+        "contextMenuName": "New user",
+        "title": "Invite users",
+        "user": {
+          "label":"Email Address"
+        },
+        "roles": {
+          "hint": "Select user role",
+          "label": "User Role"
+        },
+        "apply": "Send invite",
+        "cancel": "Cancel",
+        "validation": {
+          "required": "Is required",
+          "invalidEmail": "Invalid email provided"
+        },
+        "summaryHeader": "Summary",
+        "pending": "Deleting devices... ",
+        "applySuccess": "user successfully invited!",
+        "close": "Close"
+      },
+      "delete": {
+        "title": "Delete",
+        "header": "Delete users",
+        "description": "This action will remove the selected user from this tenant.",
+        "confirmNo": "No, do not remove selected users from this tenant.",
+        "confirmYes": "Yes, please remove selected users from this tenant.",
+        "summaryHeader": "Summary",
+        "affected": "Affected users",
+        "cancel": "Cancel",
+        "apply": "Delete",
+        "pending": "Deleting users... ",
+        "applySuccess": "Users deleted successfully!",
+        "close": "Close"
+      }
+    }
   },
   "devices": {
     "title": "Device Explorer",
@@ -556,14 +614,6 @@
     "checkmark": "Checkmark",
     "uploadError": "Unable to upload file, please check the file type/size and try again.",
     "error": "Error"
-  },
-  "tenantManagement":{
-    "title": "Tenant Management",
-    "tenantGrid":{
-      "tenantName": "Tenant Name",
-      "tenantStatus": "Status"
-    },
-    "create": "Create Tenant"
   },
   "maintenance": {
     "acknowledge": "Acknowledge",

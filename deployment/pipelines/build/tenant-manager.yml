@@ -1,0 +1,26 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+pool: "3M Hosted Ubuntu"
+
+trigger:
+  branches:
+    include:
+    - master 
+  paths:
+    include:
+    - tenant-manager/
+
+pr:
+  branches:
+    include:
+    - master
+  paths: 
+    include:
+    - tenant-manager/
+
+stages:
+- template: templates/build-service.yml
+  parameters:
+    service: tenant-manager
+    dockerFile: "/WebService/Dockerfile"

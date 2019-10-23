@@ -10,7 +10,6 @@ namespace IdentityGateway.Services
 {
     public interface IUserContainer<TModel, UInput>
     {
-        Task<List<TModel>> GetAllAsync(UInput input);
         Task<TModel> GetAsync(UInput input);
         Task<TModel> CreateAsync(UInput input);
         Task<TModel> UpdateAsync(UInput input);
@@ -20,25 +19,18 @@ namespace IdentityGateway.Services
     public abstract class UserContainer
     {
         // injections
-        private IHttpContextAccessor _httpContextAccessor;
         protected TableHelper _tableHelper;
 
         // abstracts
         abstract public string tableName { get; }
 
-        public UserContainer(IHttpContextAccessor httpContextAccessor, TableHelper tableHelper)
+        public UserContainer()
         {
-            this._httpContextAccessor = httpContextAccessor;
-            this._tableHelper = tableHelper;
         }
 
-        public string tenant
+        public UserContainer(TableHelper tableHelper)
         {
-            // get the tenant guid from the http context - this utilizes AuthUtil's request extension
-            get
-            {
-                return this._httpContextAccessor.HttpContext.Request.GetTenant();
-            }
+            this._tableHelper = tableHelper;
         }
 
         public async Task<StatusResultServiceModel> PingAsync()

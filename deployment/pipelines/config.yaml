@@ -1,20 +1,7 @@
-# 
-# https://aka.ms/yaml
+trigger: none
+pr: none
 
 stages:
-- stage: DeployCRSL
-  dependsOn: []
-  displayName: Deploy To CRSL
-  jobs:
-  - template: templates/approval.yaml
-    parameters:
-      environment: IoT_CRSL_Environment
-  - job:
-    pool:
-      vmImage: 'ubuntu-16.04'
-    steps:
-    - template: templates/config.yaml
-      parameters:
-        serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
-        resourceGroup: rg-odin-test-deploy
-        aksName: crsliotakstestodin2
+- template: 'templates/service-deploy-env.yaml'
+  parameters:
+    service: config

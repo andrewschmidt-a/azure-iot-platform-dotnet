@@ -24,6 +24,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
         private const string STORAGE_TYPE_KEY = APPLICATION_KEY + "storageType";
         private const string DOCUMENT_DB_RUS_KEY = APPLICATION_KEY + "documentDBRUs";
         private const string APP_CONFIG_CONNECTION_STRING_KEY = "PCS_APPLICATION_CONFIGURATION";
+        private const string APP_INSIGHTS_INSTRUMENTATION_KEY = "Global:instrumentationKey";
         private const string EXTERNAL_DEPENDENCIES = "ExternalDependencies:";
         private const string USER_MANAGEMENT_URL_KEY = EXTERNAL_DEPENDENCIES + "authWebServiceUrl";
         private const string AUTH_REQUIRED_KEY = "AuthRequired";
@@ -58,6 +59,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
                                     "value in the 'appsettings.ini' configuration file.");
             }
             AppConfigurationHelper appConfig = new AppConfigurationHelper(appConfigConnectionString);
+            AppInsightsExceptionHelper.Initialize(configData.GetString(APP_INSIGHTS_INSTRUMENTATION_KEY));
             this.ServicesConfig = new ServicesConfig
             {
                 StorageType = configData.GetString(STORAGE_TYPE_KEY),

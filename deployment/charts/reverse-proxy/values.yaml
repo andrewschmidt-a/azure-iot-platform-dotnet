@@ -14,14 +14,14 @@ nameOverride: "reverse-proxy"
 fullnameOverride: "reverse-proxy"
 
 probes:
-  enabled: false
+  enabled: true
 
 service:
   type: ClusterIP
-  port: 80
+  port: 10080
 
 ingress:
-  enabled: true
+  enabled: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
@@ -34,9 +34,9 @@ ingress:
   #    hosts:
   #      - chart-example.local
 secrets: {}
-secretsRef: 
-  - ALLOWED_DOMAINS
-  - SITES
+secretsRef: {} 
+  # - ALLOWED_DOMAINS
+  # - SITES
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -54,6 +54,6 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-serviceSecret:
-  ALLOWED_DOMAINS: azds.io
-  SITES: "*.azds.io"
+serviceSecret: {}
+#   ALLOWED_DOMAINS: azds.io
+#   SITES: "*.azds.io"

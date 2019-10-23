@@ -2,7 +2,7 @@ We'll be glad to accept patches and contributions to the project. There are
 just few guidelines we ask to follow.
 
 Contribution License Agreement
-==============================
+============================== 
 
 If you want/plan to contribute, we ask you to sign a
 [CLA](https://cla.microsoft.com/) (Contribution License Agreement).

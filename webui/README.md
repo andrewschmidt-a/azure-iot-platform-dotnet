@@ -7,7 +7,7 @@
 * [Build, Run and Test locally](#build-run-and-test-locally)
 * [Contributing to the solution](#contributing-to-the-solution)
 
-Azure Remote Monitoring WebUI
+Azure Remote Monitoring WebUI 
 =================================
 
 Web app for Azure IoT Remote Monitoring Solution [dotnet](https://github.com/Azure/azure-iot-pcs-remote-monitoring-dotnet) and [java](https://github.com/Azure/azure-iot-pcs-remote-monitoring-java).
@@ -34,10 +34,11 @@ It is also possible to [deploy the solution locally](https://docs.microsoft.com/
 In order to run the Web UI, the following environment variables need to be created at least once. More information on configuring environment variables [here][envvars-howto-url].
 
 * `REACT_APP_BASE_SERVICE_URL` = {your-remote-monitoring-endpoint}
+* `NODE_PATH` = src/
 
 The endpoint given above is the base url you navigate to in order to see your deployed solution.
 
-The Web UI configuration is stored in [app.config.js](src/app.config.js). You can edit this file to update the endpoints. 
+The Web UI configuration is stored in [app.config.js](src/app.config.js). You can edit this file to update the endpoints.
 
 Build, run and test locally
 ===========================
@@ -60,6 +61,10 @@ request/response objects to front end models.
 - `styles`: Contains sass used across the application mixins, theming, variables,
 etc.
 - `utilities`: Contains helper scripts used across the application.
+
+Custom Theming
+===========================
+ Each custom theme, such as the 3M theme, has its own folder in `src/styles` with its own `_color.default.scss` and `_color.palette.scss` files. A custom theme must be defined in `src/styles/_themes.scss` and added to the themes map in `azure-iot-ux-fluent-css/src/_colors.scss`. When modifying the colors of a theme, changes will primarily be made to the `src/styles/{THEME_FOLDER}/_color.default.scss` and `src/styles/_themes.scss` files.
 
 Contributing to the solution
 ==============================
@@ -92,4 +97,3 @@ You can find a guide to using it [here](https://github.com/facebookincubator/cre
 [gitter-url]: https://gitter.im/azure/iot-solutions
 [windows-envvars-howto-url]: https://superuser.com/questions/949560/how-do-i-set-system-environment-variables-in-windows-10
 [envvars-howto-url]: https://www.schrodinger.com/kb/1842
-

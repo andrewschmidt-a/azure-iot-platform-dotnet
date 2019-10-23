@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 /app/set_env.sh
 echo "Starting server"
 cat /app/nginx.conf

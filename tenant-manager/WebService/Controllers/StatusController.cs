@@ -21,7 +21,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             this.config = config;
             this.statusService = statusService;
         }
-
+        [HttpGet]
         public async Task<StatusModel> GetAsync()
         {
             try
@@ -34,6 +34,11 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
             {
                 throw new Exception("An error occurred while attempting to get the service status", e);
             }
+        }
+        [HttpGet("ping")]
+        public IActionResult Ping()
+        {
+            return new StatusCodeResult(200);
         }
     }
 }

@@ -11,9 +11,15 @@
 /.vs/remote-monitoring/v15
 **/launchSettings.json
 ./.vs
+.vs/
 **/.DS_Store
 **/.vscode/
 .idea/
 webui/package-lock.json
 !.vscode
 **/lcov.info
+identity-gateway/.vscode/launch.json
+identity-gateway/.vscode/tasks.json
+tenant-manager/.vscode/launch.json
+tenant-manager/.vscode/tasks.json
+tenant-manager/WebService/appsettings.ini

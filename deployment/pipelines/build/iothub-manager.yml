@@ -1,0 +1,26 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+pool: "3M Hosted Ubuntu"
+
+trigger:
+  branches:
+    include:
+    - master 
+  paths:
+    include:
+    - iothub-manager/
+
+pr:
+  branches:
+    include:
+    - master
+  paths: 
+    include:
+    - iothub-manager/
+
+stages:
+- template: templates/build-service.yml
+  parameters:
+    service: iothub-manager
+    dockerFile: "/WebService/Dockerfile"

@@ -1,0 +1,83 @@
+parameters:
+  service: ''
+
+stages:
+
+# Pirate ninja test env
+- stage: DeployCRSLDevPN
+  dependsOn: []
+  displayName: Deploy To CRSL
+  jobs:
+  - template: approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: service-deploy.yaml
+      parameters:
+        serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+        resourceGroup: rg-pirate-ninja-test1
+        aksName: crsliot-akspn-test
+        chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}
+- stage: DeployCRSLDev
+  dependsOn: []
+  displayName: Deploy To CRSL Dev
+  jobs:
+  - template: approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment_Dev
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: service-deploy.yaml
+      parameters:
+        serviceConnection: '3M-CRSLAD16-BBIoTP-DEV'
+        resourceGroup: rg-crslbbiot-odin-dev
+        aksName: aks-dev-spaces-odin
+        chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}
+
+- stage: DeployCRSLQA
+  dependsOn:
+  - DeployCRSLDev
+  displayName: Deploy To CRSL QA
+  jobs:
+  - template: approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment_QA
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: service-deploy.yaml
+      parameters:
+        serviceConnection: '3M-CRSLAD17-BBIoTP-QA'
+        resourceGroup: rg-iot-crsl-qa
+        aksName: crsliot-aks-qa
+        chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}
+
+        
+- stage: DeployCRSLWkBnch
+  dependsOn:
+  - DeployCRSLQA
+  displayName: Deploy To CRSL Work Bench
+  jobs:
+  - template: approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment_WKBNCH
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: service-deploy.yaml
+      parameters:
+        serviceConnection: '3M-CRSLAD19-BBIoTP-Prod'
+        resourceGroup: rg-iot-crsl-wkbnch
+        aksName: crsliot-aks-wkbnch
+        chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}

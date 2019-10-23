@@ -14,7 +14,7 @@ nameOverride: "iothub-manager"
 fullnameOverride: "iothub-manager"
 
 probes:
-  enabled: false
+  enabled: true
 
 service:
   type: ClusterIP
