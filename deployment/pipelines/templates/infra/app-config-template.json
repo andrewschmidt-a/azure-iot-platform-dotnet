@@ -1,13 +1,5 @@
 {
-    "Actions": {
-        "actionseventhubconnectionstring": "",
-        "actionseventhubname": "actions-eventhub",
-        "logicappendpointurl": "https://prod-26.centralus.logic.azure.com:443/workflows/c0809c2788d14464bf7105f8f4145991/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=PmdxV0RSmEFj7TJRqQJQytGYWX1xF3Gc1P4u2wLf8YM",
-        "solutionwebsiteurl": "https://remotemonitering3m.azurewebsites.net",
-        "storagecontainer": "actions-eventhub-container",
-        "templatefolder": "./data/"
-    },
-    "ConfigService": {
+   "ConfigService": {
         "Actions": {
             "armendpointurl": "https://management.azure.com/",
             "managementapiversion": "\"2016-06-01\"",
@@ -172,6 +164,8 @@
         "telemetryFunctionUri": "https://telemetry-processor-odin-mt-poc.scm.azurewebsites.net",
         "twinChangeEventHubConnString": "",
         "twinChangeFunctionName": "twin-change-processor",
-        "twinChangeFunctionUri": "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net"
+        "twinChangeFunctionUri": "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net",
+        "createIotHubWebHookName": "CreateIotHub",
+        "deleteIotHubWebHookName": "DeleteIotHub"
     }
 }
