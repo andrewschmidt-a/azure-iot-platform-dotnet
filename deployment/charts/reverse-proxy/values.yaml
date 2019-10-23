@@ -18,7 +18,7 @@ probes:
 
 service:
   type: ClusterIP
-  port: 80
+  port: 10080
 
 ingress:
   enabled: false
