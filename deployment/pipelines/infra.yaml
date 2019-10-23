@@ -51,7 +51,7 @@ stages:
       environment: IoT_CRSL_Environment_WKBNCH
   - template: templates/infra.yaml
     parameters:
-      serviceConnection: '3M-CRSLAD19-BBIoTP-PROD'
+      serviceConnection: '3M-CRSLAD19-BBIoTP-Prod'
       resourceGroup: rg-iot-crsl-wkbnch
       location: centralus
       environment: IoT_CRSL_Environment_WKBNCH
