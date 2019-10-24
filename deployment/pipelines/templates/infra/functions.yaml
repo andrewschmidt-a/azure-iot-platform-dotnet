@@ -73,22 +73,23 @@ steps:
       telemetryEvConn=$(az keyvault secret show --name "telemetryEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       twinchangeEvConn=$(az keyvault secret show --name "twinChangeEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       az functionapp config appsettings set --name $messagingfnapp \
-        --settings "CosmosDbConnectionString=$cosmosDbConn \
-          CosmosDbDatabaseName=iot \
-          EventHubLifecycle=$lifecycleEvConn \
-          EventHubTelemetry=$telemetryEvConn \
-          EventHubTwinChange=$twinchangeEvConn" \
+        --settings "CosmosDbConnectionString"="$cosmosDbConn" \
+          "CosmosDbDatabaseName"="iot" \
+          "EventHubLifecycle"="$lifecycleEvConn" \
+          "EventHubTelemetry"="$telemetryEvConn" \
+          "EventHubTwinChange"="$twinchangeEvConn" \
         --resource-group ${{ parameters.resourceGroup }}
       az functionapp config appsettings set --name $devicepropertiesfn \
-        --settings "ConsumerGroup=lifecyclecg \
-          ConsumerGroupTC=twinchangecg \
-          CosmosConnection=$cosmosDbConn \
-          CosmosDB=pcs-storage \
-          CosmosDBRus=400 \
-          EventHubLifecycle=$lifecycleEvConn \
-          EventHubName=lifecycle \
-          EventHubNameTC=twin-change \
-          EventHubTwinChange=$twinchangeEvConn WhiteList=tags.*,reported.*, reported.Protocol, reported.SupportedMethods, reported.DeviceMethodStatus, reported.FirmwareUpdateStatus" \
+        --settings "ConsumerGroup"="lifecyclecg" \
+          "ConsumerGroupTC"="twinchangecg" \
+          "CosmosConnection"="$cosmosDbConn" \
+          "CosmosDB"="pcs-storage" \
+          "CosmosDBRus"="400" \
+          "EventHubLifecycle"="$lifecycleEvConn" \
+          "EventHubName"="lifecycle" \
+          "EventHubNameTC"="twin-change" \
+          "EventHubTwinChange"="$twinchangeEvConn" \
+          "WhiteList"="tags.*,reported.*, reported.Protocol, reported.SupportedMethods, reported.DeviceMethodStatus, reported.FirmwareUpdateStatus" \
         --resource-group ${{ parameters.resourceGroup }}
 
 # need to check with odin for exact values of these settings
