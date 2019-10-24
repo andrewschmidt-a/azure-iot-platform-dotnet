@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Security.Claims;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityGateway.AuthUtils;
 using IdentityGateway.Services;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Runtime;
 using IdentityGateway.WebService.v1.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +24,7 @@ namespace WebService.Test.v1.Controllers
     public class UserTenantControllerTest
     {
         private Mock<UserTenantContainer> mockUserTenantContainer;
-        private UserTenantController controller;
+        private UserTenantController userTenantController;
         private Mock<HttpContext> mockHttpContext;
         private UserTenantListModel someUserTenantList = new UserTenantListModel();
         private UserTenantModel someUserTenant = new UserTenantModel();
@@ -60,7 +57,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.GetAllUsersForTenantAsync();
+            var result = await userTenantController.GetAllUsersForTenantAsync();
 
             // Assert
             Assert.Equal(someUserTenantList, result);
@@ -71,7 +68,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.UserClaimsGetAllTenantsForUserAsync();
+            var result = await userTenantController.UserClaimsGetAllTenantsForUserAsync();
 
             // Assert
             Assert.Equal(someUserTenantList, result);
@@ -82,7 +79,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.GetAllTenantsForUserAsync(someUserId);
+            var result = await userTenantController.GetAllTenantsForUserAsync(someUserId);
 
             // Assert
             Assert.Equal(someUserTenantList, result);
@@ -93,7 +90,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.UserClaimsGetAsync();
+            var result = await userTenantController.UserClaimsGetAsync();
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -104,7 +101,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.GetAsync(someUserId);
+            var result = await userTenantController.GetAsync(someUserId);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -115,7 +112,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.PostAsync(someUserId, someUserTenant);
+            var result = await userTenantController.PostAsync(someUserId, someUserTenant);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -126,7 +123,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.UserClaimsPostAsync(someUserTenant);
+            var result = await userTenantController.UserClaimsPostAsync(someUserTenant);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -137,7 +134,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.PutAsync(someUserId, someUserTenant);
+            var result = await userTenantController.PutAsync(someUserId, someUserTenant);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -148,7 +145,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.UserClaimsPutAsync(someUserTenant);
+            var result = await userTenantController.UserClaimsPutAsync(someUserTenant);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -159,7 +156,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.DeleteAsync(someUserId);
+            var result = await userTenantController.DeleteAsync(someUserId);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -170,7 +167,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.UserClaimsDeleteAsync();
+            var result = await userTenantController.UserClaimsDeleteAsync();
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -181,7 +178,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.DeleteAllAsync();
+            var result = await userTenantController.DeleteAllAsync();
 
             // Assert
             Assert.Equal(someUserTenantList, result);
@@ -192,7 +189,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.InviteAsync(someInvitation);
+            var result = await userTenantController.InviteAsync(someInvitation);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -206,7 +203,7 @@ namespace WebService.Test.v1.Controllers
             mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
             mockSendGridClientFactory = new Mock<ISendGridClientFactory> { DefaultValue = DefaultValue.Mock };
             mockSendGridClient = new Mock<ISendGridClient> { DefaultValue = DefaultValue.Mock };
-            controller = new UserTenantController(mockUserTenantContainer.Object, mockJwtHelper.Object, mockSendGridClientFactory.Object)
+            userTenantController = new UserTenantController(mockUserTenantContainer.Object, mockJwtHelper.Object, mockSendGridClientFactory.Object)
             {
                 ControllerContext = new ControllerContext()
                 {

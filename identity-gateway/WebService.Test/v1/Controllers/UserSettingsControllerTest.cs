@@ -16,7 +16,7 @@ namespace WebService.Test.v1.Controllers
     public class UserSettingsControllerTest
     {
         private Mock<UserSettingsContainer> mockUserSettingsContainer;
-        private UserSettingsController controller;
+        private UserSettingsController userSettingsController;
         private Mock<HttpContext> mockHttpContext;
         private UserSettingsListModel someUserSettingsList = new UserSettingsListModel();
         private UserSettingsModel someUserSettings = new UserSettingsModel();
@@ -37,7 +37,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.GetAllAsync(someUserId);
+            var result = await userSettingsController.GetAllAsync(someUserId);
 
             // Assert
             Assert.Equal(someUserSettingsList, result);
@@ -48,7 +48,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.UserClaimsGetAllAsync();
+            var result = await userSettingsController.UserClaimsGetAllAsync();
 
             // Assert
             Assert.Equal(someUserSettingsList, result);
@@ -59,7 +59,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.GetAsync(someUserId, someSetting);
+            var result = await userSettingsController.GetAsync(someUserId, someSetting);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -70,7 +70,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.UserClaimsGetAsync(someSetting);
+            var result = await userSettingsController.UserClaimsGetAsync(someSetting);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -81,7 +81,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.PostAsync(someUserId, someSetting, someValue);
+            var result = await userSettingsController.PostAsync(someUserId, someSetting, someValue);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -92,7 +92,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.UserClaimsPostAsync(someSetting, someValue);
+            var result = await userSettingsController.UserClaimsPostAsync(someSetting, someValue);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -103,7 +103,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.PutAsync(someUserId, someSetting, someValue);
+            var result = await userSettingsController.PutAsync(someUserId, someSetting, someValue);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -114,7 +114,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.UserClaimsPutAsync(someSetting, someValue);
+            var result = await userSettingsController.UserClaimsPutAsync(someSetting, someValue);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -125,7 +125,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.DeleteAsync(someUserId, someSetting);
+            var result = await userSettingsController.DeleteAsync(someUserId, someSetting);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -136,7 +136,7 @@ namespace WebService.Test.v1.Controllers
         {
             // Arrange
             // Act
-            var result = await controller.UserClaimsDeleteAsync(someSetting);
+            var result = await userSettingsController.UserClaimsDeleteAsync(someSetting);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -150,7 +150,7 @@ namespace WebService.Test.v1.Controllers
             mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
             mockHttpRequest.Setup(m => m.HttpContext).Returns(mockHttpContext.Object);
             mockHttpContext.Setup(m => m.Request).Returns(mockHttpRequest.Object);
-            controller = new UserSettingsController(mockUserSettingsContainer.Object)
+            userSettingsController = new UserSettingsController(mockUserSettingsContainer.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
