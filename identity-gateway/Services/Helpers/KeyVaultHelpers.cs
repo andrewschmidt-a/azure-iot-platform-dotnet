@@ -1,21 +1,15 @@
-﻿using Microsoft.Azure.KeyVault;
-using Microsoft.Azure;
-using Microsoft.Azure.Services.AppAuthentication;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using DependencyResolver;
-using Microsoft.Azure.KeyVault.Models;
 using IdentityGateway.Services.Models;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
+using Microsoft.Extensions.Configuration;
 
 namespace IdentityGateway.Services.Helpers
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class KeyVaultHelper : IDisposable
+    public class KeyVaultHelpers : IKeyVaultHelpers
     {
         const string KeyVaultAppId = "Global:AzureActiveDirectory:aadappid";
         const string KeyVaultSecret = "Global:AzureActiveDirectory:aadappsecret";
@@ -25,8 +19,8 @@ namespace IdentityGateway.Services.Helpers
 
         private IKeyVaultClient client;
         private IConfiguration _config;
-        
-        public KeyVaultHelper(IConfiguration config)
+
+        public KeyVaultHelpers(IConfiguration config)
         {
             string AzureServicesAuthConnectionString =
                 $"RunAs=App;AppId={config[KeyVaultAppId]};TenantId={config[TenantID]};AppKey={config[KeyVaultSecret]};";
@@ -47,22 +41,22 @@ namespace IdentityGateway.Services.Helpers
                 throw new Exception("One of the required Key vault secrets is not configured correctly");
             }
         }
-        
-        public string getKeyVaultSecretIdentifier(string secret)
+
+        public string GetKeyVaultSecretIdentifier(string secret)
         {
             return $"https://{ this._config[KeyVaultName]}.vault.azure.net/secrets/{secret}";
         }
-        
-        public async Task<string> getSecretAsync(string secret)
+
+        public async Task<string> GetSecretAsync(string secret)
         {
-            return (await this.client.GetSecretAsync(getKeyVaultSecretIdentifier(secret))).Value;
+            return (await this.client.GetSecretAsync(GetKeyVaultSecretIdentifier(secret))).Value;
         }
 
         public async Task<StatusResultServiceModel> PingAsync()
         {
             try
             {
-                var value = await this.getSecretAsync(IdentityGatewayPrivateKey);
+                var value = await this.GetSecretAsync(IdentityGatewayPrivateKey);
                 if (value != null && value != "")
                 {
                     return new StatusResultServiceModel(true, "Alive and well!");
