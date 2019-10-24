@@ -56,6 +56,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
         private const string COSMOS_DB_TOKEN_KEY = APPLICATION_KEY + "cosmosDbToken";
         private const string APP_CONFIG_ENDPOINT_KEY = APPLICATION_KEY + "setAppConfigEndpoint";
         private const string TENANT_MANAGER_DB_ID_KEY = APPLICATION_KEY + "databaseName";
+        private const string CREATE_IOT_HUB_WEBHOOK_NAME = APPLICATION_KEY + "createIotHubWebHookName";
+        private const string DELETE_IOT_HUB_WEBHOOK_NAME = APPLICATION_KEY + "deleteIotHubWebHookName";
 
         private const string IDENTITY_GATEWAY_WEBSERVICE_URL_KEY = "ExternalDependencies:identitygatewaywebserviceurl";
 
@@ -92,7 +94,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
                 TwinChangeEventHubConnectionString = configData.GetString(TWIN_CHANGE_CONNECTION_STRING_KEY),
                 LifecycleEventHubConnectionString = configData.GetString(LIFECYCLE_CONNECTION_STRING_KEY),
                 CreateIotHubRunbookUrl = configData.GetString(CREATE_IOT_HUB_WEBHOOK_KEY),
+                CreateIotHubRunbookName = configData.GetString(CREATE_IOT_HUB_WEBHOOK_NAME),
                 DeleteIotHubRunbookUrl = configData.GetString(DELETE_IOT_HUB_WEBHOOK_KEY),
+                DeleteIotHubRunbookName = configData.GetString(DELETE_IOT_HUB_WEBHOOK_NAME),
                 AppConfigConnectionString = configData.GetString(APPCONFIG_CONNSTRING_KEY),
                 AppConfigEndpoint = configData.GetString(APP_CONFIG_ENDPOINT_KEY),
                 CosmosDbEndpoint = configData.GetString(COSMOS_DB_ENDPOINT_KEY),
