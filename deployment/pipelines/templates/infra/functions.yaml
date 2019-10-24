@@ -7,6 +7,7 @@ parameters:
   functionApp3Name: ''
   storageAccountName: ''
   location: ''
+  appConfigName: ''
   
 steps:
 
@@ -99,6 +100,6 @@ steps:
     inlineScript: |-
       az appconfig kv set --key StorageAccount:name --value "functiondefinition" --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:telemetryFunctionUri --value "https://${{ parameters.functionApp2Name }}.scm.azurewebsites.net" --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key TenantManagerService:twinChangeFunctionUri --value https://${{ parameters.functionApp2Name }}.scm.azurewebsites.net --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key TenantManagerService:lifecycleFunctionUri --value https://${{ parameters.functionApp2Name }}.scm.azurewebsites.net --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key TenantManagerService:setAppConfigEndpoint --value $twinchangeEvConn --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:twinChangeFunctionUri --value "https://${{ parameters.functionApp2Name }}.scm.azurewebsites.net" --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:lifecycleFunctionUri --value "https://${{ parameters.functionApp2Name }}.scm.azurewebsites.net" --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:setAppConfigEndpoint --value "https://${{ parameters.functionApp2Name }}.scm.azurewebsites.net" --name ${{ parameters.appConfigName }} --yes
