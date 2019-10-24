@@ -119,7 +119,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
         public async Task<IdentityGatewayApiSettingModel> addSettingsForUserAsync(string userId, string settingKey, string settingValue)
         {
             HttpRequest request = CreateRequest($"settings/{userId}/{settingKey}/{settingValue}");
-            return await this.processApiModelRequest<IdentityGatewayApiSettingModel>(this._httpClient.GetAsync, request);
+            return await this.processApiModelRequest<IdentityGatewayApiSettingModel>(this._httpClient.PostAsync, request);
         }
 
         /// <summary>
