@@ -14,7 +14,6 @@ const Config = {
     deviceSimulation: `${baseUrl}/devicesimulation/v1/`,
     diagnostics: `${baseUrl}/diagnostics/v1/`,
     tenantManager: `${baseUrl}/tenantmanager/api/`,
-    identityGateway: `${baseUrl}/auth/v1/`,
     privacy: 'https://privacy.microsoft.com/privacystatement',
     gitHubReleases: `https://api.github.com/repos/Azure/azure-iot-pcs-remote-monitoring-dotnet/releases/tags/3.0.0`
   },
