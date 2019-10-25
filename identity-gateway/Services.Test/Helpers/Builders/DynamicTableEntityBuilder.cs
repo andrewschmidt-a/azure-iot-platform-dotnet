@@ -12,6 +12,11 @@ namespace Services.Test.Helpers.Builders
             return Set(dte => dte.Properties, new Dictionary<string, EntityProperty> { { "Value", new EntityProperty(Any.String()) } });
         }
 
+        public virtual DynamicTableEntityBuilder WithRandomRolesProperty()
+        {
+            return Set(dte => dte.Properties, new Dictionary<string, EntityProperty> { { "Roles", new EntityProperty(Any.String()) } });
+        }
+
         protected override DynamicTableEntity BuildObject()
         {
             return new DynamicTableEntity(Get(dte => dte.PartitionKey), Get(dte => dte.RowKey), Get(dte => dte.ETag), Get(dte => dte.Properties));

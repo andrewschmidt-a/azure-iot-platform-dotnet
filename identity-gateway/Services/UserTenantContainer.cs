@@ -1,26 +1,24 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using IdentityGateway.Services.Helpers;
+using IdentityGateway.Services.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Helpers;
 
 namespace IdentityGateway.Services
 {
     public class UserTenantContainer : UserContainer, IUserContainer<UserTenantModel, UserTenantInput> 
     {
-        public override string TableName { get{return "user";} }
-
         public UserTenantContainer()
         {
         }
         
-        public UserTenantContainer(TableHelper tableHelper) : base(tableHelper)
+        public UserTenantContainer(ITableHelper tableHelper) : base(tableHelper)
         {
         }
+
+        public override string TableName => "user";
 
         /// <summary>
         /// get all tenants for a user
@@ -116,6 +114,12 @@ namespace IdentityGateway.Services
         {
             // Get a list of all user models for this user id - we will pick the one matching the current tenant to delete
             UserTenantModel user = await this.GetAsync(input);
+            if (user == null)
+            {
+                throw new StorageException($"That UserTenant does not exist");
+            }
+
+            user.ETag = "*";  // An ETag is required for deleting - this allows any etag to be used
             TableOperation deleteOperation = TableOperation.Delete(user);
 
             // delete the record and return the deleted user model
