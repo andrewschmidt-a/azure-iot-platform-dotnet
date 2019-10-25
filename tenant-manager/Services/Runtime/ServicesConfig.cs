@@ -30,6 +30,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         string DeleteIotHubRunbookUrl { get; set; }
         string DeleteIotHubRunbookName { get; set;}
         string IdentityGatewayWebServiceUrl { get; set; }
+        string ConfigWebServiceUrl { get; set; }
 
         Dictionary<string, List<string>> UserPermissions { get; set; }
     }
@@ -61,6 +62,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         public string DeleteIotHubRunbookUrl { get; set; }
         public string DeleteIotHubRunbookName { get; set;}
         public string IdentityGatewayWebServiceUrl { get; set; }
+        public string ConfigWebServiceUrl { get; set; }
     
         public Dictionary<string, List<string>> UserPermissions { get; set; }
     }

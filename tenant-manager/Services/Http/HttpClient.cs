@@ -22,6 +22,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Http
         Task<IHttpResponse> HeadAsync(IHttpRequest request);
 
         Task<IHttpResponse> OptionsAsync(IHttpRequest request);
+
+        Task<IHttpResponse> SendAsync(IHttpRequest request, HttpMethod method);
     }
 
     public class HttpClient : IHttpClient
@@ -68,7 +70,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Http
             return await this.SendAsync(request, HttpMethod.Options);
         }
 
-        private async Task<IHttpResponse> SendAsync(IHttpRequest request, HttpMethod httpMethod)
+        public async Task<IHttpResponse> SendAsync(IHttpRequest request, HttpMethod httpMethod)
         {
             var clientHandler = new HttpClientHandler();
             using (var client = new System.Net.Http.HttpClient(clientHandler))

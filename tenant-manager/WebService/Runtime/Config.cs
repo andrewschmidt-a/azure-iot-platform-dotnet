@@ -59,7 +59,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
         private const string CREATE_IOT_HUB_WEBHOOK_NAME = APPLICATION_KEY + "createIotHubWebHookName";
         private const string DELETE_IOT_HUB_WEBHOOK_NAME = APPLICATION_KEY + "deleteIotHubWebHookName";
 
-        private const string IDENTITY_GATEWAY_WEBSERVICE_URL_KEY = "ExternalDependencies:identitygatewaywebserviceurl";
+        private const string EXTERNAL_DEPENDENCIES_KEY = "ExternalDependencies:";
+        private const string IDENTITY_GATEWAY_WEBSERVICE_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "identitygatewaywebserviceurl";
+        private const string CONFIG_WEBSERVICE_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "configwebserviceurl";
 
         private const string STORAGE_ADAPTER_DB_ID_KEY = "StorageAdapter:documentDb";
 
@@ -105,7 +107,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
                 StorageAdapterDatabseId = configData.GetString(STORAGE_ADAPTER_DB_ID_KEY),
                 UserPermissions = configData.GetUserPermissions(),
                 StorageAccountConnectionString = configData.GetString(STORAGE_ACCOUNT_CONNECTIN_STRING_KEY),
-                IdentityGatewayWebServiceUrl = configData.GetString(IDENTITY_GATEWAY_WEBSERVICE_URL_KEY)
+                IdentityGatewayWebServiceUrl = configData.GetString(IDENTITY_GATEWAY_WEBSERVICE_URL_KEY),
+                ConfigWebServiceUrl = configData.GetString(CONFIG_WEBSERVICE_URL_KEY)
             };
 
             this.ClientAuthConfig = new ClientAuthConfig
