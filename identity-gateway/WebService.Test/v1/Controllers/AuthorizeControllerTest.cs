@@ -168,7 +168,9 @@ namespace WebService.Test.v1.Controllers
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [MemberData(nameof(GetJwtSecurityTokens))]
+        #pragma warning disable xUnit1026
         public async Task SwitchTenantThrowsWhenTenantAccessNotAllowed(JwtSecurityToken jwtSecurityToken)
+        #pragma warning restore xUnit1026
         {
             // Arrange
             mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out jwtSecurityToken)).Returns(true);
