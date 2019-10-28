@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
     <AssemblyName>IdentityGateway.Services</AssemblyName>
     <RootNamespace>IdentityGateway.Services</RootNamespace>
   </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
@@ -25,6 +23,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
     <ProjectReference Include="..\AuthUtils\AuthUtils.csproj" />
