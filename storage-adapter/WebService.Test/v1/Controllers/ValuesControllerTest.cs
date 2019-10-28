@@ -64,9 +64,9 @@ namespace StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(result.Key, key);
             Assert.Equal(result.Data, data);
             Assert.Equal(result.ETag, etag);
-            Assert.Equal(result.Metadata["$type"], "Value;1");
-            Assert.Equal(result.Metadata["$modified"], timestamp.ToString(CultureInfo.InvariantCulture));
-            Assert.Equal(result.Metadata["$uri"], $"/v1/collections/{collectionId}/values/{key}");
+            Assert.Equal("Value;1", result.Metadata["$type"]);
+            Assert.Equal(timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
+            Assert.Equal($"/v1/collections/{collectionId}/values/{key}", result.Metadata["$uri"]);
 
             this.mockContainer
                 .Verify(x => x.GetAsync(
@@ -124,13 +124,13 @@ namespace StorageAdapter.WebService.Test.v1.Controllers
                 var model = models.Single(m => m.Key == item.Key);
                 Assert.Equal(item.Data, model.Data);
                 Assert.Equal(item.ETag, model.ETag);
-                Assert.Equal(item.Metadata["$type"], "Value;1");
-                Assert.Equal(item.Metadata["$modified"], model.Timestamp.ToString(CultureInfo.InvariantCulture));
-                Assert.Equal(item.Metadata["$uri"], $"/v1/collections/{collectionId}/values/{model.Key}");
+                Assert.Equal("Value;1", item.Metadata["$type"]);
+                Assert.Equal(model.Timestamp.ToString(CultureInfo.InvariantCulture), item.Metadata["$modified"]);
+                Assert.Equal($"/v1/collections/{collectionId}/values/{model.Key}", item.Metadata["$uri"]);
             }
 
-            Assert.Equal(result.Metadata["$type"], "ValueList;1");
-            Assert.Equal(result.Metadata["$uri"], $"/v1/collections/{collectionId}/values");
+            Assert.Equal("ValueList;1", result.Metadata["$type"]);
+            Assert.Equal($"/v1/collections/{collectionId}/values", result.Metadata["$uri"]);
 
             this.mockContainer
                 .Verify(x => x.GetAllAsync(
@@ -176,9 +176,9 @@ namespace StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(result.Key, key);
             Assert.Equal(result.Data, data);
             Assert.Equal(result.ETag, etag);
-            Assert.Equal(result.Metadata["$type"], "Value;1");
-            Assert.Equal(result.Metadata["$modified"], modelOut.Timestamp.ToString(CultureInfo.InvariantCulture));
-            Assert.Equal(result.Metadata["$uri"], $"/v1/collections/{collectionId}/values/{key}");
+            Assert.Equal("Value;1", result.Metadata["$type"]);
+            Assert.Equal(modelOut.Timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
+            Assert.Equal($"/v1/collections/{collectionId}/values/{key}", result.Metadata["$uri"]);
 
             this.mockContainer
                 .Verify(x => x.CreateAsync(
@@ -222,9 +222,9 @@ namespace StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(result.Key, key);
             Assert.Equal(result.Data, data);
             Assert.Equal(result.ETag, etag);
-            Assert.Equal(result.Metadata["$type"], "Value;1");
-            Assert.Equal(result.Metadata["$modified"], modelOut.Timestamp.ToString(CultureInfo.InvariantCulture));
-            Assert.Equal(result.Metadata["$uri"], $"/v1/collections/{collectionId}/values/{key}");
+            Assert.Equal("Value;1", result.Metadata["$type"]);
+            Assert.Equal(modelOut.Timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
+            Assert.Equal($"/v1/collections/{collectionId}/values/{key}", result.Metadata["$uri"]);
 
             this.mockContainer
                 .Verify(x => x.CreateAsync(
@@ -271,9 +271,9 @@ namespace StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(result.Key, key);
             Assert.Equal(result.Data, data);
             Assert.Equal(result.ETag, etagNew);
-            Assert.Equal(result.Metadata["$type"], "Value;1");
-            Assert.Equal(result.Metadata["$modified"], modelOut.Timestamp.ToString(CultureInfo.InvariantCulture));
-            Assert.Equal(result.Metadata["$uri"], $"/v1/collections/{collectionId}/values/{key}");
+            Assert.Equal("Value;1", result.Metadata["$type"]);
+            Assert.Equal(modelOut.Timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
+            Assert.Equal($"/v1/collections/{collectionId}/values/{key}", result.Metadata["$uri"]);
 
             this.mockContainer
                 .Verify(x => x.UpsertAsync(
