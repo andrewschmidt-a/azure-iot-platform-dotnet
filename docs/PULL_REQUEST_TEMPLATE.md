@@ -10,7 +10,7 @@
 - [ ] The code follows the code style and conventions of this project.
 - [ ] The change requires a change to the documentation.
 - [ ] I have updated the documentation accordingly.
-- [ ] I have added or removed App config keys
+- [ ] I have added or removed App Config keys
 - [ ] I have updated deployment scrips to reflect configuration changes
 
 # Description of the change
