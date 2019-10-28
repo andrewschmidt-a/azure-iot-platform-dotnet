@@ -50,7 +50,7 @@ namespace WebService.Test.v1.Controllers
         [InlineData("not-a-valid-uri")]
         [InlineData(null)]
         [InlineData("")]
-        public void AuthorizeThrowsWhenRedirectUriNotValidTest(string invalidUri)
+        public void AuthorizeThrowsWhenRedirectUriNotValid(string invalidUri)
         {
             // Arrange
             // Act
@@ -65,7 +65,7 @@ namespace WebService.Test.v1.Controllers
         [InlineData("7")]
         [InlineData("")]
         [InlineData("not-a-valid-guid")]
-        public void AuthorizeThrowsWhenTenantNotValidTest(string invalidTenant)
+        public void AuthorizeThrowsWhenTenantNotValid(string invalidTenant)
         {
             // Arrange
             // Act
@@ -76,7 +76,7 @@ namespace WebService.Test.v1.Controllers
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        public void AuthorizeRedirectsToRedirectUriTest()
+        public void AuthorizeRedirectsToRedirectUri()
         {
             // Arrange
             // Act
@@ -103,7 +103,7 @@ namespace WebService.Test.v1.Controllers
         [InlineData("not-a-valid-uri")]
         [InlineData(null)]
         [InlineData("")]
-        public void LogoutThrowsWhenRedirectUriNotValidTest(string invalidUri)
+        public void LogoutThrowsWhenRedirectUriNotValid(string invalidUri)
         {
             // Arrange
             // Act
@@ -114,7 +114,7 @@ namespace WebService.Test.v1.Controllers
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        public void LogoutRedirectsToRedirectUriTest()
+        public void LogoutRedirectsToRedirectUri()
         {
             // Arrange
             // Act
@@ -128,7 +128,7 @@ namespace WebService.Test.v1.Controllers
         [InlineData("not-a-valid-auth-header")]
         [InlineData(null)]
         [InlineData("")]
-        public async Task SwitchTenantThrowsWhenAuthorizationHeaderNotValidTest(string invalidAuthHeader)
+        public async Task SwitchTenantThrowsWhenAuthorizationHeaderNotValid(string invalidAuthHeader)
         {
             // Arrange
             // Act
@@ -147,7 +147,7 @@ namespace WebService.Test.v1.Controllers
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [MemberData(nameof(GetInvalidAuthHeaders))]
-        public async Task SwitchTenantThrowsWhenAuthorizationHeaderTokenNotReadableOrValidTest(string invalidAuthHeader)
+        public async Task SwitchTenantThrowsWhenAuthorizationHeaderTokenNotReadableOrValid(string invalidAuthHeader)
         {
             // Arrange
             JwtSecurityToken jwtSecurityToken = null;

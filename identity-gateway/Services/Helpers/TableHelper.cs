@@ -6,7 +6,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 
 namespace IdentityGateway.Services.Helpers
 {
-    public class TableHelper
+    public class TableHelper : ITableHelper
     {
         private readonly KeyVaultHelpers _keyVaultHelper;
         private readonly string storageAccountConnectionStringKey;

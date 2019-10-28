@@ -54,7 +54,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserSettingsInput input = new UserSettingsInput
             {
-                userId = userId,
+                UserId = userId,
             };
             return await this._container.GetAllAsync(input);
         }
@@ -81,8 +81,8 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserSettingsInput input = new UserSettingsInput
             {
-                userId = userId,
-                settingKey = setting
+                UserId = userId,
+                SettingKey = setting
             };
             return await this._container.GetAsync(input);
         }
@@ -113,9 +113,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserSettingsInput input = new UserSettingsInput
             {
-                userId = userId,
-                settingKey = setting,
-                value = value
+                UserId = userId,
+                SettingKey = setting,
+                Value = value
             };
             return await this._container.CreateAsync(input);
         }
@@ -146,9 +146,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserSettingsInput input = new UserSettingsInput
             {
-                userId = userId,
-                settingKey = setting,
-                value = value
+                UserId = userId,
+                SettingKey = setting,
+                Value = value
             };
             return await this._container.UpdateAsync(input);
         }
@@ -177,8 +177,8 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserSettingsInput input = new UserSettingsInput
             {
-                userId = userId,
-                settingKey = setting,
+                UserId = userId,
+                SettingKey = setting,
             };
             return await this._container.DeleteAsync(input);
         }

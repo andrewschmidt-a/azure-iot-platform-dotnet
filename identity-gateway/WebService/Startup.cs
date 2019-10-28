@@ -72,6 +72,7 @@ namespace IdentityGateway.WebService
             services.AddSingleton<IRsaHelpers, RsaHelpers>();
             services.AddTransient<IKeyVaultHelpers, KeyVaultHelpers>();
             services.AddTransient<ISendGridClientFactory, SendGridClientFactory>();
+            services.AddTransient<ITableHelper, TableHelper>();
 
             // Prepare DI container
             this.ApplicationContainer = DependencyResolution.Setup(services);

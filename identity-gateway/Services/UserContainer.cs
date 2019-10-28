@@ -1,41 +1,29 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using IdentityGateway.AuthUtils;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace IdentityGateway.Services
 {
-    public interface IUserContainer<TModel, UInput>
-    {
-        Task<TModel> GetAsync(UInput input);
-        Task<TModel> CreateAsync(UInput input);
-        Task<TModel> UpdateAsync(UInput input);
-        Task<TModel> DeleteAsync(UInput input);
-    }
-
     public abstract class UserContainer
     {
         // injections
-        protected TableHelper _tableHelper;
+        protected ITableHelper _tableHelper;
 
         // abstracts
-        abstract public string tableName { get; }
+        public abstract string TableName { get; }
 
         public UserContainer()
         {
         }
 
-        public UserContainer(TableHelper tableHelper)
+        public UserContainer(ITableHelper tableHelper)
         {
             this._tableHelper = tableHelper;
         }
 
         public async Task<StatusResultServiceModel> PingAsync()
         {
-            await this._tableHelper.GetTableAsync(this.tableName);
+            await this._tableHelper.GetTableAsync(this.TableName);
             return new StatusResultServiceModel(true, "Alive and Well!");
         }
     }
