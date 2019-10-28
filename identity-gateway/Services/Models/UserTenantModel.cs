@@ -67,7 +67,8 @@ namespace IdentityGateway.Services.Models
             {
                 try
                 {
-                    return this.Roles == null ? null : JsonConvert.DeserializeObject<List<string>>(this.Roles);
+                    var rolesIsNullOrEmptyOrWhitespace = string.IsNullOrEmpty(Roles) || string.IsNullOrWhiteSpace(Roles);
+                    return rolesIsNullOrEmptyOrWhitespace ? null : JsonConvert.DeserializeObject<List<string>>(Roles);
                 }
                 catch
                 {
