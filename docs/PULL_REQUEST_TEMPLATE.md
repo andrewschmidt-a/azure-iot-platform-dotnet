@@ -10,6 +10,8 @@
 - [ ] The code follows the code style and conventions of this project.
 - [ ] The change requires a change to the documentation.
 - [ ] I have updated the documentation accordingly.
+- [ ] I have added or removed App config keys
+- [ ] I have updated deployment scrips to reflect configuration changes
 
 # Description of the change
 <!-- Please provide enough information so others can review your pull request -->
