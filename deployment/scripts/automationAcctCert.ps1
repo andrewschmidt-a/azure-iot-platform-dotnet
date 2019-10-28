@@ -133,6 +133,6 @@ else {
             Import-Certificate
     }
     else {
-        Write-Output "Cert still active, expiring on $expDate " $thumprint 
+        Write-Output "Cert still active, expiring on $expDate"
     }
 }

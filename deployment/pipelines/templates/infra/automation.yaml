@@ -42,5 +42,5 @@ steps:
     azureSubscription: '${{ parameters.serviceConnection }}'
     ScriptType: 'FilePath'
     ScriptPath: '$(System.DefaultWorkingDirectory)/deployment/scripts/automationAcct.ps1'
-    ScriptArguments: '-accountName ${{ parameters.automationName }} -resourceGroup ${{ parameters.resourceGroup }} -scriptFolder $(System.DefaultWorkingDirectory)/deployment/scripts -keyvaultName ${{ parameters.keyVaultName }}'
+    ScriptArguments: '-accountName ${{ parameters.automationName }} -resourceGroup ${{ parameters.resourceGroup }} -scriptFolder $(System.DefaultWorkingDirectory)/tenant-manager/RunBookCode -keyvaultName ${{ parameters.keyVaultName }}'
     azurePowerShellVersion: 'LatestVersion'
