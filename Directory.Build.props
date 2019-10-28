@@ -1,0 +1,8 @@
+<Project>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- <TargetFramework>netcoreapp2.2</TargetFramework> -->
+  </PropertyGroup>
+
+</Project>

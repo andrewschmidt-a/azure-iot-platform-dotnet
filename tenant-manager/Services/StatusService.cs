@@ -13,7 +13,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
     {
         private ILogger _log;
         private IServicesConfig _config;
-        private IIdentityGatewayClient _identityGatewayClient;
         
         private Dictionary<string, IStatusOperation> dependencies;
         

@@ -194,7 +194,7 @@ namespace Services.Test
             Func<Task> a = async () => await userTenantContainer.UpdateAsync(someUserTenantInput);
 
             // Assert
-            Assert.ThrowsAsync<ArgumentException>(a);
+            await Assert.ThrowsAsync<ArgumentException>(a);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
