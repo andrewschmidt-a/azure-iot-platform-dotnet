@@ -56,6 +56,8 @@ function addModulefromGallery($moduleName){
                                 -AutomationAccountName $accountName `
                                 -Name $moduleName `
                                 -ContentLink $moduleUri
+
+    Write-Output "Module $moduleName added to Automation Acct .."
 }
 
 function addtoKeyvault($webookUri, $secretName ){
@@ -63,23 +65,13 @@ function addtoKeyvault($webookUri, $secretName ){
     Set-AzureKeyVaultSecret -VaultName $keyvaultName -Name $secretName -SecretValue $vaultwebookUri
 }
 
-# check for module AzureRM.Storage
-$ifExists = Get-AzureRmAutomationModule -AutomationAccountName $accountName -Name "AzureRM.Storage" -ResourceGroupName $resourceGroup
-if ([string]::IsNullOrEmpty($ifExists)) {
-    # import from PS Gallery
-    addModulefromGallery -moduleName "AzureRM.Storage"
-}
-else { Write-Output "Module AzureRM.Storage already present.." }
-
-# check for module Az.Accounts 
-$ifExists = Get-AzureRmAutomationModule -AutomationAccountName $accountName -Name "Az.Accounts" -ResourceGroupName $resourceGroup
-if ([string]::IsNullOrEmpty($ifExists)) {
-    # import from PS Gallery
-    addModulefromGallery -moduleName "Az.Accounts"
-}
-else { Write-Output "Module Az.Accounts already present.." }
+# import modules from PS Gallery
+Write-Output "Adding modules to Automation Acct .."
+addModulefromGallery -moduleName "AzureRM.Storage"
+addModulefromGallery -moduleName "Az.Accounts"
 
 # import the runbook with code with the Path specified
+Write-Output "Importing modules to Automation Acct .."
 importRunbook -runbookName "CreateIoTHubTenant" -filepath "$scriptFolder\CreateIoTHub.ps1" 
 importRunbook -runbookName "DeleteIoTHubTenant" -filepath "$scriptFolder\DeleteIoTHub.ps1"
 
