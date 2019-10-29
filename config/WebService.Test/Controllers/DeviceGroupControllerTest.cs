@@ -8,8 +8,8 @@ using Microsoft.Azure.IoTSolutions.UIConfig.Services;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using Config.WebService.Test.helpers;
 using Xunit;
 
 namespace Config.WebService.Test.Controllers

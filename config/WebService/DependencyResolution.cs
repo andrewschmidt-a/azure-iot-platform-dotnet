@@ -5,14 +5,17 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
-
-using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Extensions.DependencyInjection;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.WebService;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
 {
@@ -92,43 +95,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
         private static void RegisterFactory(IContainer container)
         {
             Factory.RegisterContainer(container);
-        }
-
-        /// <summary>
-        /// Provide factory pattern for dependencies that are instantiated
-        /// multiple times during the application lifetime.
-        /// How to use:
-        /// <code>
-        /// class MyClass : IMyClass {
-        ///     public MyClass(DependencyInjection.IFactory factory) {
-        ///         this.factory = factory;
-        ///     }
-        ///     public SomeMethod() {
-        ///         var instance1 = this.factory.Resolve<ISomething>();
-        ///         var instance2 = this.factory.Resolve<ISomething>();
-        ///         var instance3 = this.factory.Resolve<ISomething>();
-        ///     }
-        /// }
-        /// </code>
-        /// </summary>
-        public interface IFactory
-        {
-            T Resolve<T>();
-        }
-
-        public class Factory : IFactory
-        {
-            private static IContainer container;
-
-            public static void RegisterContainer(IContainer c)
-            {
-                container = c;
-            }
-
-            public T Resolve<T>()
-            {
-                return container.Resolve<T>();
-            }
         }
     }
 }

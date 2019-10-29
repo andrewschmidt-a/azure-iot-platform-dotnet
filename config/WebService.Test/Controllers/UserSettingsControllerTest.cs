@@ -4,8 +4,8 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using Config.WebService.Test.helpers;
 using Xunit;
 
 namespace Config.WebService.Test.Controllers

@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.Auth;
+using Mmm.Platform.IoT.Common.AuthUtils;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
 {
@@ -30,9 +29,9 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
             IServicesConfig config,
             IHttpContextAccessor httpContextAccessor)
         {
-            
+
             this.httpClient = httpClient;
-            
+
             this.serviceUri = config.DeviceSimulationApiUrl;
             this._httpContextAccessor = httpContextAccessor;
         }

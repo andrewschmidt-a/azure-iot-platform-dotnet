@@ -10,15 +10,11 @@
   "profiles": {
     "WebService": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "http://localhost:9002/v1/status",
       "environmentVariables": {
-        "PCS_KEYVAULT_NAME": "$(PCS_KEYVAULT_NAME)",
-        "PCS_AAD_APPID": "$(PCS_AAD_APPID)",
-        "PCS_APPLICATION_CONFIGURATION": "${PCS_APPLICATION_CONFIGURATION}",
-        "PCS_AAD_APPSECRET": "$(PCS_AAD_APPSECRET)"
+        "PCS_APPLICATION_CONFIGURATION": "Endpoint=https://app-config-odin.azconfig.io;Id=0-l4-s0:/avC76+mF2P0dRQdykx0;Secret=/yJ835E0xwCfEPGP36FGp9lPgswgoNVLjeCOfYu34v0="
       },
-      "applicationUrl": "http://localhost:9002/v1/status"
+      "applicationUrl": ""
     },
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",

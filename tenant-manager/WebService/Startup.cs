@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
@@ -12,7 +13,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
     {
 
         public IConfiguration Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; } 
+        public IContainer ApplicationContainer { get; private set; }
 
         public Startup(IHostingEnvironment env)
         {

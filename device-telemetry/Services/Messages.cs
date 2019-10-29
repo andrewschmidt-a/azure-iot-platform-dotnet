@@ -2,18 +2,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.IoTSolutions.Auth;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.TimeSeries;
+using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 using Newtonsoft.Json.Linq;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services

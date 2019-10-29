@@ -3,7 +3,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Filters;
+using Mmm.Platform.IoT.Common.WebService.v1;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
 {

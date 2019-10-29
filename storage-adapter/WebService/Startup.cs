@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
 {
@@ -39,7 +40,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
         {
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
-            
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             this.ApplicationContainer = DependencyResolution.Setup(services);
@@ -58,7 +59,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
         {
             loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
 
-            app.UseMiddleware<Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.AuthMiddleware>();
+            app.UseMiddleware<ClientToClientAuthMiddleware>();
             app.UseMvc();
 
             // If you want to dispose of resources that have been resolved in the

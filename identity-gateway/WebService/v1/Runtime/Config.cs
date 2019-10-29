@@ -1,12 +1,9 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.    
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using IdentityGateway.Services.Runtime;
-using IdentityGateway.AuthUtils;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
 namespace IdentityGateway.WebService.Runtime
 {
@@ -28,11 +25,14 @@ namespace IdentityGateway.WebService.Runtime
         private const string GLOBAL_KEY = "Global:";
         private const string APPLICATION_KEY = "IdentityGatewayService:";
         private const string PORT_KEY = APPLICATION_KEY + "webserviceport";
-                
+
         private const string CLIENT_AUTH_KEY = GLOBAL_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";
         private const string AUTH_TYPE_KEY = CLIENT_AUTH_KEY + "authType";
         private const string AUTH_REQUIRED_KEY = "AuthRequired";
+        
+        private const string EXTERNAL_DEPENDENCIES_KEY = "ExternalDependencies:";
+        private const string USER_MANAGEMENT_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "authWebServiceUrl";
 
         private const string JWT_KEY = GLOBAL_KEY + "ClientAuth:JWT:";
         private const string JWT_ALGOS_KEY = JWT_KEY + "allowedAlgorithms";
@@ -63,7 +63,8 @@ namespace IdentityGateway.WebService.Runtime
                 StorageAccountConnectionString = configData.GetString(STORAGE_CONNECTION_STRING_KEY),
                 AzureB2CBaseUri = configData.GetString(AZURE_B2C_BASE_URI),
                 Port = configData.GetString(PORT_KEY),
-                SendGridAPIKey = configData.GetString(SEND_GRID_API_KEY)
+                SendGridAPIKey = configData.GetString(SEND_GRID_API_KEY),
+                UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

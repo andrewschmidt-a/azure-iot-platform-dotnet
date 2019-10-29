@@ -4,8 +4,9 @@ using System;
 using System.Linq;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Actions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Actions;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
 

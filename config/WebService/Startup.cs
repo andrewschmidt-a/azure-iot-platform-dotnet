@@ -9,15 +9,9 @@ using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ILogger = Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics.ILogger;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
+using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
 {
@@ -61,7 +55,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
 
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
-            
+
             // Prepare DI container
             this.ApplicationContainer = DependencyResolution.Setup(services);
 

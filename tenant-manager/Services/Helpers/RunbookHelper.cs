@@ -11,6 +11,7 @@ using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 using Microsoft.Azure;
 using Microsoft.Azure.Management.Automation;
+using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 {
@@ -29,13 +30,13 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
         // webhooks object
         // Keys refer to the actual webhook name for the particular web hook
         // Values refer to the accessor key in config for that webhook's url
-        public Dictionary<string, string> webHooks; 
+        public Dictionary<string, string> webHooks;
 
         public TenantRunbookHelper(IServicesConfig config, TokenHelper tokenHelper)
         {
             this._tokenHelper = tokenHelper;
             this._config = config;
-            
+
             this.resourceGroup = this._config.ResourceGroup;
             this.automationAccountName = this._config.AutomationAccountName;
             this.httpClient = new HttpClient();
@@ -119,7 +120,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
                 telemetryEventHubConnString = this._config.TelemetryEventHubConnectionString,
                 twinChangeEventHubConnString = this._config.TwinChangeEventHubConnectionString,
                 lifecycleEventHubConnString = this._config.LifecycleEventHubConnectionString,
-                appConfigConnectionString = this._config.AppConfigConnectionString,
+                appConfigConnectionString = this._config.ApplicationConfigurationConnectionString,
                 setAppConfigEndpoint = this._config.AppConfigEndpoint,
                 storageAccount = this._config.StorageAccountName
             };

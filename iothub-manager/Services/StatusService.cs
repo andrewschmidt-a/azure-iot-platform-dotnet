@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Http;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 {
@@ -73,7 +74,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             {
                 result.Status.Message = string.Join("; ", errors);
             }
-            
+
             result.Properties.Add("StorageAdapterApiUrl", this.servicesConfig?.StorageAdapterApiUrl);
 
             this.log.Info(
@@ -102,7 +103,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
             result.Dependencies.Add(dependencyName, serviceResult);
         }
-        
+
         private async Task<StatusResultServiceModel> PingServiceAsync(string serviceName, string serviceURL)
         {
             var result = new StatusResultServiceModel(false, $"{serviceName} check failed");
@@ -149,7 +150,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         // Check whether the configuration contains a connection string
         private bool IsHubConnectionStringConfigured()
         {
-            var cs = this.servicesConfig?.AppConfigConnection?.ToLowerInvariant().Trim();
+            var cs = this.servicesConfig?.ApplicationConfigurationConnectionString?.ToLowerInvariant().Trim();
             return (!string.IsNullOrEmpty(cs)
                     && cs.Contains("hostname=")
                     && cs.Contains("sharedaccesskeyname=")

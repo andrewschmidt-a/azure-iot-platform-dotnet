@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
 {
@@ -31,7 +32,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
             this.servicesConfig = servicesConfig;
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync()
+        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();

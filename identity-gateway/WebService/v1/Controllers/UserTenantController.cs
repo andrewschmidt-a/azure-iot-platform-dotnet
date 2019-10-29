@@ -1,19 +1,18 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Models;
-using IdentityGateway.WebService.v1.Filters;
-using IdentityGateway.AuthUtils;
-using Newtonsoft.Json;
-using System;
-using IdentityGateway.Services.Runtime;
+﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using IdentityGateway.Services.Helpers;
-using SendGrid.Helpers.Mail;
-using SendGrid;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using IdentityGateway.Services;
+using IdentityGateway.Services.Helpers;
+using IdentityGateway.Services.Models;
+using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using Newtonsoft.Json;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using WebService;
 
 namespace IdentityGateway.WebService.v1.Controllers
@@ -93,7 +92,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             return await this.GetAllTenantsForUserAsync(this.ClaimsUserId);
         }
-        
+
         /// <summary>
         /// Get all tenants for a user
         /// </summary>
@@ -288,7 +287,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             Uri uri = new Uri(forwardedFor ?? "https://" + HttpContext.Request.Host.ToString());
             string link = uri.Host + "#invite=" + inviteToken;
             msg.AddContent(MimeType.Text, "Click here to join the tenant: ");
-            msg.AddContent(MimeType.Html, "<a href=\""+ link + "\">"+link+"</a>");
+            msg.AddContent(MimeType.Html, "<a href=\"" + link + "\">" + link + "</a>");
 
             var client = _sendGridClientFactory.CreateSendGridClient();
             var response = await client.SendEmailAsync(msg);

@@ -1,22 +1,22 @@
 ﻿
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using IdentityGateway.Services;
 using IdentityGateway.Services.Helpers;
+using IdentityGateway.Services.Models;
+using IdentityGateway.Services.Runtime;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using IdentityGateway.AppConfiguration;
-using IdentityGateway.AuthUtils;
-using Autofac.Extensions.DependencyInjection;
-using Autofac;
-using IdentityGateway.Services.Diagnostics;
-using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Runtime;
-using SendGrid;
+using Mmm.Platform.IoT.Common.AppConfiguration;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
 using WebService;
 
 namespace IdentityGateway.WebService

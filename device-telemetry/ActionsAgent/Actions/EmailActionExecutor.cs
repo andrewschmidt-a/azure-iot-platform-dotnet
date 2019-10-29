@@ -4,10 +4,10 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Actions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Actions
@@ -40,7 +40,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Actions
             if (metadata.GetType() != typeof(AsaAlarmApiModel)
                 || action.GetType() != typeof(EmailAction))
             {
-                string errorMessage = "Email action expects metadata to be alarm and action" + 
+                string errorMessage = "Email action expects metadata to be alarm and action" +
                                       " to be EmailAction, will not send email";
                 this.logger.Error(errorMessage, () => { });
                 return;
@@ -79,7 +79,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Actions
             string alarmDate = DateTimeOffset.FromUnixTimeMilliseconds(alarm.DateCreated).ToString(DATE_FORMAT_STRING);
             emailTemplate = emailTemplate.Replace("${subject}", emailAction.GetSubject());
             emailTemplate = emailTemplate.Replace(
-                "${alarmDate}", 
+                "${alarmDate}",
                 DateTimeOffset.FromUnixTimeMilliseconds(alarm.DateCreated).ToString(DATE_FORMAT_STRING));
             emailTemplate = emailTemplate.Replace("${ruleId}", alarm.RuleId);
             emailTemplate = emailTemplate.Replace("${ruleDescription}", alarm.RuleDescription);

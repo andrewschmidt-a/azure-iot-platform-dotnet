@@ -1,9 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
 {

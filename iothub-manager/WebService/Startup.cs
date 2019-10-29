@@ -5,13 +5,13 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime;
 using Microsoft.Azure.IoTSolutions.IotHubManager.RecurringTasksAgent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ILogger = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics.ILogger;
+using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
+using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
 {

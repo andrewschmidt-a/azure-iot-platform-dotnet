@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Actions;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Models

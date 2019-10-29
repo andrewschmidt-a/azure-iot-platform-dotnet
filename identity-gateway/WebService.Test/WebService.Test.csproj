@@ -10,6 +10,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\common\TestHelpers\TestHelpers.csproj" />
+    <ProjectReference Include="..\..\common\WebService.Test\WebService.Test.csproj" />
     <ProjectReference Include="..\WebService\WebService.csproj" />
   </ItemGroup>
 

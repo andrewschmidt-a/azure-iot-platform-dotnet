@@ -8,7 +8,7 @@ using Microsoft.Azure.EventHubs;
 using Microsoft.Azure.EventHubs.Processor;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Actions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.EventHub
 {
@@ -34,7 +34,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.EventHub
             this.logger.Debug("Event Processor Shutting Down.", () => new { context.PartitionId, reason });
             await context.CheckpointAsync();
         }
-        
+
         /**
          * Processes all alarms and executes any actions associated with the alarms
          */
@@ -46,7 +46,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.EventHub
                 {
                     string data = Encoding.UTF8.GetString(eventData.Body.Array);
                     IEnumerable<AsaAlarmApiModel> alarms = AlarmParser.ParseAlarmList(data, this.logger);
-                        await this.actionManager.ExecuteAlarmActions(alarms);
+                    await this.actionManager.ExecuteAlarmActions(alarms);
                 }
             }
 

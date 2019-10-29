@@ -6,12 +6,17 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers;
 using Microsoft.Extensions.DependencyInjection;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Wrappers;
+using Mmm.Platform.IoT.Common.WebService;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
 {
@@ -71,48 +76,15 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
             builder.RegisterType<DocumentClientExceptionChecker>().As<IExceptionChecker>().SingleInstance();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
             builder.RegisterType<GuidKeyGenerator>().As<IKeyGenerator>().SingleInstance();
+
+            // TODO: why is the HTTP client registered as a singleton? shouldn't be required
+            var httpClient = new HttpClient(logger);
+            builder.RegisterInstance(httpClient).As<IHttpClient>().SingleInstance();
         }
 
         private static void RegisterFactory(IContainer container)
         {
             Factory.RegisterContainer(container);
-        }
-
-        /// <summary>
-        /// Provide factory pattern for dependencies that are instantiated
-        /// multiple times during the application lifetime.
-        /// How to use:
-        /// <code>
-        /// class MyClass : IMyClass {
-        ///     public MyClass(DependencyInjection.IFactory factory) {
-        ///         this.factory = factory;
-        ///     }
-        ///     public SomeMethod() {
-        ///         var instance1 = this.factory.Resolve<ISomething>();
-        ///         var instance2 = this.factory.Resolve<ISomething>();
-        ///         var instance3 = this.factory.Resolve<ISomething>();
-        ///     }
-        /// }
-        /// </code>
-        /// </summary>
-        public interface IFactory
-        {
-            T Resolve<T>();
-        }
-
-        public class Factory : IFactory
-        {
-            private static IContainer container;
-
-            public static void RegisterContainer(IContainer c)
-            {
-                container = c;
-            }
-
-            public T Resolve<T>()
-            {
-                return container.Resolve<T>();
-            }
         }
     }
 }

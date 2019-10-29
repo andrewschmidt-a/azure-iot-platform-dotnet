@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Extensions;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.External;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;

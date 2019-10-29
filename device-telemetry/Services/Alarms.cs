@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.IoTSolutions.Auth;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
+using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 {
@@ -72,13 +73,13 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 
         private const string ALARM_STATUS_OPEN = "open";
         private const string ALARM_STATUS_ACKNOWLEDGED = "acknowledged";
-        
+
         private const string TENANT_INFO_KEY = "tenant";
         private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
 
         private const int DOC_QUERY_LIMIT = 1000;
-        
-        
+
+
         private string collectionId
         {
             get
@@ -270,7 +271,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 
         public async Task Delete(List<string> ids)
         {
-            foreach(var id in ids)
+            foreach (var id in ids)
             {
                 InputValidator.Validate(id);
             }
@@ -322,14 +323,14 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                     TimeSpan retryTimeSpan = TimeSpan.Zero;
                     if (e.GetType() == typeof(DocumentClientException))
                     {
-                        retryTimeSpan = ((DocumentClientException) e).RetryAfter;
+                        retryTimeSpan = ((DocumentClientException)e).RetryAfter;
                     }
                     retryCount++;
-                    
+
                     if (retryCount >= this.maxDeleteRetryCount)
                     {
                         this.log.Error("Failed to delete alarm", () => new { id, e });
-                        throw new ExternalDependencyException(e);
+                        throw new ExternalDependencyException(e.Message);
                     }
 
                     this.log.Warn("Exception on delete alarm", () => new { id, e });

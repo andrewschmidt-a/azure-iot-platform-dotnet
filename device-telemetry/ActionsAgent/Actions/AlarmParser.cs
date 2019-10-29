@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.Actions
