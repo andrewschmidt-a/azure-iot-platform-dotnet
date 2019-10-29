@@ -27,7 +27,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="2.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols" Version="5.5.0" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="5.5.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.3-beta2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="4.5.0" />
     <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.4" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.5.0" />
