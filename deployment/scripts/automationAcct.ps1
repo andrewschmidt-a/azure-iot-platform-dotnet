@@ -50,7 +50,7 @@ function createWebhook($webhook, $runbookName, $expDate, $secretName) {
 function addModulefromGallery($moduleName){
     # import AzureRM.Storage from PS Gallery
     $galleryRepoUri = (find-module -Name AzureRM.Storage).RepositorySourceLocation
-    $moduleUri = '{0}{1}' -f $galleryRepoUri, [string]::Concat('package/',$moduleName)
+    $moduleUri = '{0}{1}' -f $galleryRepoUri, [string]::Concat('/package/',$moduleName)
     Write-Output "Importing $moduleName from $moduleUri"
     New-AzureRmAutomationModule -ResourceGroupName $resourceGroup `
                                 -AutomationAccountName $accountName `
