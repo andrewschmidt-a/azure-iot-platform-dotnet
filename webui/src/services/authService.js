@@ -146,7 +146,7 @@ export class AuthService {
           var roles = typeof(user.profile.role) == 'string' ? [user.profile.role] : user.profile.role;
           var availableTenants = typeof(user.profile.available_tenants) == 'string' ? [user.profile.available_tenants] : user.profile.available_tenants;
 
-          if(roles == undefined){
+          if(roles === undefined){
             roles = []
           }
 

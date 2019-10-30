@@ -3,10 +3,8 @@ using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
 {
-    public interface IIdentityGatewayClient
+    public interface IIdentityGatewayClient : IStatusOperation
     {
-        Task<StatusResultServiceModel> StatusAsync();
-
         Task<IdentityGatewayApiModel> addTenantForUserAsync(string userId, string tenantId, string roles);
 
         Task<IdentityGatewayApiModel> getTenantForUserAsync(string userId, string tenantId);

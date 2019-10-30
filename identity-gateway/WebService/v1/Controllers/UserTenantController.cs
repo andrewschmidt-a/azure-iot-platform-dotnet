@@ -14,6 +14,7 @@ using IdentityGateway.Services.Helpers;
 using SendGrid.Helpers.Mail;
 using SendGrid;
 using System.Linq;
+using WebService;
 
 namespace IdentityGateway.WebService.v1.Controllers
 {
@@ -21,18 +22,18 @@ namespace IdentityGateway.WebService.v1.Controllers
     [Authorize("ReadAll")]
     public class UserTenantController : ControllerBase
     {
-        private IServicesConfig _config;
         private UserTenantContainer _container;
         private IJwtHelpers _jwtHelper;
+        private readonly ISendGridClientFactory _sendGridClientFactory;
 
-        public UserTenantController(IServicesConfig config, UserTenantContainer container, IJwtHelpers jwtHelper)
+        public UserTenantController(UserTenantContainer container, IJwtHelpers jwtHelper, ISendGridClientFactory sendGridClientFactory)
         {
-            this._config = config;
             this._container = container;
             this._jwtHelper = jwtHelper;
+            this._sendGridClientFactory = sendGridClientFactory;
         }
 
-        private string claimsUserId
+        private string ClaimsUserId
         {
             get
             {
@@ -47,7 +48,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             }
         }
 
-        private string tenantId
+        private string TenantId
         {
             get
             {
@@ -72,8 +73,8 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = null,
-                tenant = this.tenantId
+                UserId = null,
+                Tenant = this.TenantId
             };
             return await this._container.GetAllUsersAsync(input);
         }
@@ -85,7 +86,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [HttpGet("all")]
         public async Task<UserTenantListModel> UserClaimsGetAllTenantsForUserAsync()
         {
-            return await this.GetAllTenantsForUserAsync(this.claimsUserId);
+            return await this.GetAllTenantsForUserAsync(this.ClaimsUserId);
         }
         
         /// <summary>
@@ -98,7 +99,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId,
+                UserId = userId,
             };
             return await this._container.GetAllAsync(input);
         }
@@ -110,7 +111,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [HttpGet("")]
         public async Task<UserTenantModel> UserClaimsGetAsync()
         {
-            return await this.GetAsync(this.claimsUserId);
+            return await this.GetAsync(this.ClaimsUserId);
         }
 
         /// <summary>
@@ -124,8 +125,8 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId,
-                tenant = this.tenantId
+                UserId = userId,
+                Tenant = this.TenantId
             };
             return await this._container.GetAsync(input);
         }
@@ -139,7 +140,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserTenantModel> UserClaimsPostAsync([FromBody] UserTenantModel model)
         {
-            return await this.PostAsync(this.claimsUserId, model);
+            return await this.PostAsync(this.ClaimsUserId, model);
         }
 
         /// <summary>
@@ -152,9 +153,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId,
-                tenant = this.tenantId,
-                roles = model.Roles,
+                UserId = userId,
+                Tenant = this.TenantId,
+                Roles = model.Roles
             };
             return await this._container.CreateAsync(input);
         }
@@ -167,7 +168,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserTenantModel> UserClaimsPutAsync([FromBody] UserTenantModel update)
         {
-            return await this.PutAsync(this.claimsUserId, update);
+            return await this.PutAsync(this.ClaimsUserId, update);
         }
 
         /// <summary>
@@ -180,9 +181,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId,
-                tenant = this.tenantId,
-                roles = update.Roles,
+                UserId = userId,
+                Tenant = this.TenantId,
+                Roles = update.Roles
             };
             return await this._container.UpdateAsync(input);
         }
@@ -193,9 +194,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <param name="userId"></param>
         [HttpDelete("")]
         [Authorize("UserManage")]
-        public async Task<UserTenantModel> UserClaimsDeleteAsync(string userId)
+        public async Task<UserTenantModel> UserClaimsDeleteAsync()
         {
-            return await this.DeleteAsync(this.claimsUserId);
+            return await this.DeleteAsync(this.ClaimsUserId);
         }
 
         /// <summary>
@@ -209,8 +210,8 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                userId = userId,
-                tenant = this.tenantId
+                UserId = userId,
+                Tenant = this.TenantId
             };
             return await this._container.DeleteAsync(input);
         }
@@ -224,7 +225,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                tenant = this.tenantId
+                Tenant = this.TenantId
             };
             return await this._container.DeleteAllAsync(input);
         }
@@ -240,18 +241,18 @@ namespace IdentityGateway.WebService.v1.Controllers
             // Object to insert in table as placeholder
             UserTenantInput input = new UserTenantInput
             {
-                userId = Guid.NewGuid().ToString(),
-                tenant = this.tenantId,
-                roles = JsonConvert.SerializeObject(new List<string>() { invitation.role }),
-                name = invitation.email_address,
-                type = "Invited"
+                UserId = Guid.NewGuid().ToString(),
+                Tenant = this.TenantId,
+                Roles = JsonConvert.SerializeObject(new List<string>() { invitation.role }),
+                Name = invitation.email_address,
+                Type = "Invited"
             };
 
             List<Claim> claims = new List<Claim>()
             {
                 new Claim("role", invitation.role),
-                new Claim("tenant", this.tenantId),
-                new Claim("userId", input.userId)
+                new Claim("tenant", this.TenantId),
+                new Claim("userId", input.UserId)
             };
 
             string forwardedFor = null;
@@ -281,7 +282,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             msg.AddContent(MimeType.Text, "Click here to join the tenant: ");
             msg.AddContent(MimeType.Html, "<a href=\""+ link + "\">"+link+"</a>");
 
-            var client = new SendGridClient(this._config.SendGridAPIKey);
+            var client = _sendGridClientFactory.CreateSendGridClient();
             var response = await client.SendEmailAsync(msg);
 
             return await this._container.CreateAsync(input);

@@ -16,10 +16,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 {
     public class TenantRunbookHelper : IStatusOperation
     {
-        // webhook keys
-        private const string CREATE_IOT_HUB_WEBHOOK_KEY = "CreateIotHub";
-        private const string DELETE_IOT_HUB_WEBHOOK_KEY = "DeleteIotHub";
-
         // injection variables
         private IServicesConfig _config;
 
@@ -43,12 +39,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
             this.resourceGroup = this._config.ResourceGroup;
             this.automationAccountName = this._config.AutomationAccountName;
             this.httpClient = new HttpClient();
-
-            this.webHooks = new Dictionary<string, string>
-            {
-                { CREATE_IOT_HUB_WEBHOOK_KEY, this._config.CreateIotHubRunbookUrl },
-                { DELETE_IOT_HUB_WEBHOOK_KEY, this._config.DeleteIotHubRunbookUrl }
-            };
         }
 
         /// <summary>
@@ -72,19 +62,24 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             string unhealthyMessage = "";
-            foreach (var webHookInfo in this.webHooks)
+            List<string> webHooks = new List<string>
+            {
+                this._config.CreateIotHubRunbookName,
+                this._config.DeleteIotHubRunbookName
+            };
+            foreach (var webHook in webHooks)
             {
                 try
                 {
-                    var webHookResponse = await this.automationClient.Webhooks.GetAsync(this.resourceGroup, this.automationAccountName, webHookInfo.Key);
+                    var webHookResponse = await this.automationClient.Webhooks.GetAsync(this.resourceGroup, this.automationAccountName, webHook);
                     if (!webHookResponse.Webhook.Properties.IsEnabled)
                     {
-                        unhealthyMessage += $"{webHookInfo.Key} is not enabled.\n";
+                        unhealthyMessage += $"{webHook} is not enabled.\n";
                     }
                 }
                 catch (Exception e)
                 {
-                    unhealthyMessage += $"Unable to get status for {webHookInfo.Key}: {e.Message}";
+                    unhealthyMessage += $"Unable to get status for {webHook}: {e.Message}";
                 }
             }
             return String.IsNullOrEmpty(unhealthyMessage) ? new StatusResultServiceModel(true, "Alive and well!") : new StatusResultServiceModel(false, unhealthyMessage);
@@ -92,12 +87,12 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
 
         public async Task<HttpResponseMessage> CreateIotHub(string tenantId, string iotHubName, string dpsName)
         {
-            return await this.TriggerTenantRunbook(this.webHooks[CREATE_IOT_HUB_WEBHOOK_KEY], tenantId, iotHubName, dpsName);
+            return await this.TriggerTenantRunbook(this._config.CreateIotHubRunbookUrl, tenantId, iotHubName, dpsName);
         }
 
         public async Task<HttpResponseMessage> DeleteIotHub(string tenantId, string iotHubName, string dpsName)
         {
-            return await this.TriggerTenantRunbook(this.webHooks[DELETE_IOT_HUB_WEBHOOK_KEY], tenantId, iotHubName, dpsName);
+            return await this.TriggerTenantRunbook(this._config.DeleteIotHubRunbookUrl, tenantId, iotHubName, dpsName);
         }
 
         /// <summary>
@@ -120,6 +115,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
                 resourceGroup = this.resourceGroup,
                 location = this._config.Location,
                 subscriptionId = this._config.SubscriptionId,
+                // Event Hub Connection Strings for setting up IoT Hub Routing
                 telemetryEventHubConnString = this._config.TelemetryEventHubConnectionString,
                 twinChangeEventHubConnString = this._config.TwinChangeEventHubConnectionString,
                 lifecycleEventHubConnString = this._config.LifecycleEventHubConnectionString,

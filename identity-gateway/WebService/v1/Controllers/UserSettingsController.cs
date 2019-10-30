@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using IdentityGateway.AuthUtils;
 using IdentityGateway.Services;
 using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.AuthUtils;
 using IdentityGateway.WebService.v1.Filters;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityGateway.WebService.v1.Controllers
 {
@@ -15,20 +12,14 @@ namespace IdentityGateway.WebService.v1.Controllers
     [Authorize("ReadAll")]
     public class UserSettingsController : ControllerBase
     {
-
-        private IConfiguration _config;
         private UserSettingsContainer _container;
 
-        public KeyVaultHelper keyVaultHelper;
-
-        public UserSettingsController(IConfiguration config, UserSettingsContainer container)
+        public UserSettingsController(UserSettingsContainer container)
         {
-            this._config = config;
-            this._container = container;
-            this.keyVaultHelper = new KeyVaultHelper(this._config);
+            _container = container;
         }
 
-        private string claimsUserId
+        private string ClaimsUserId
         {
             get
             {
@@ -44,13 +35,13 @@ namespace IdentityGateway.WebService.v1.Controllers
         }
 
         /// <summary>
-        /// Get all settings for the suer id from the claims
+        /// Get all settings for the user id from the claims
         /// </summary>
         /// <returns></returns>
         [HttpGet("all")]
         public async Task<UserSettingsListModel> UserClaimsGetAllAsync()
         {
-            return await this.GetAllAsync(this.claimsUserId);
+            return await this.GetAllAsync(this.ClaimsUserId);
         }
 
         /// <summary>
@@ -63,7 +54,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserSettingsInput input = new UserSettingsInput
             {
-                userId = userId,
+                UserId = userId,
             };
             return await this._container.GetAllAsync(input);
         }
@@ -76,7 +67,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [HttpGet("{setting}")]
         public async Task<UserSettingsModel> UserClaimsGetAsync(string setting)
         {
-            return await this.GetAsync(this.claimsUserId, setting);
+            return await this.GetAsync(this.ClaimsUserId, setting);
         }
         
         /// <summary>
@@ -90,8 +81,8 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserSettingsInput input = new UserSettingsInput
             {
-                userId = userId,
-                settingKey = setting
+                UserId = userId,
+                SettingKey = setting
             };
             return await this._container.GetAsync(input);
         }
@@ -106,7 +97,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserSettingsModel> UserClaimsPostAsync(string setting, string value)
         {
-            return await this.PostAsync(this.claimsUserId, setting, value);
+            return await this.PostAsync(this.ClaimsUserId, setting, value);
         }
 
         /// <summary>
@@ -122,9 +113,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserSettingsInput input = new UserSettingsInput
             {
-                userId = userId,
-                settingKey = setting,
-                value = value
+                UserId = userId,
+                SettingKey = setting,
+                Value = value
             };
             return await this._container.CreateAsync(input);
         }
@@ -139,7 +130,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserSettingsModel> UserClaimsPutAsync(string setting, string value)
         {
-            return await this.PutAsync(this.claimsUserId, setting, value);
+            return await this.PutAsync(this.ClaimsUserId, setting, value);
         }
 
         /// <summary>
@@ -155,9 +146,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserSettingsInput input = new UserSettingsInput
             {
-                userId = userId,
-                settingKey = setting,
-                value = value
+                UserId = userId,
+                SettingKey = setting,
+                Value = value
             };
             return await this._container.UpdateAsync(input);
         }
@@ -171,7 +162,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserSettingsModel> UserClaimsDeleteAsync(string setting)
         {
-            return await this.DeleteAsync(this.claimsUserId, setting);
+            return await this.DeleteAsync(this.ClaimsUserId, setting);
         }
 
         /// <summary>
@@ -186,8 +177,8 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserSettingsInput input = new UserSettingsInput
             {
-                userId = userId,
-                settingKey = setting,
+                UserId = userId,
+                SettingKey = setting,
             };
             return await this._container.DeleteAsync(input);
         }
