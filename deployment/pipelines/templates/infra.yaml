@@ -57,15 +57,6 @@ jobs:
   steps:
 ## Tags resources by injecting tags into ARM Templates
   - template: infra/tagARM.yaml
-## Deploys App Config
-  - template: infra/appconfig.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
-      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
-      location: ${{ parameters.location }}
-
 ## Deploys Application Insights
   - template: infra/appinsights.yaml
     parameters:
@@ -83,7 +74,6 @@ jobs:
       cosmosDBAccount: ${{ parameters.applicationCode }}-cosmos-${{ parameters.deployEnvironment }}
       cosmosDBName: ${{ parameters.cosmosDBName }}
       location: ${{ parameters.location }}
-      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
       throughput: ${{ parameters.cosmosDBthroughput }}
       collectionName: ${{ parameters.collectionName }}
 
@@ -105,7 +95,6 @@ jobs:
       eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
-      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
 
 ## Deploys Azure Maps
   - template: infra/maps.yaml
@@ -125,18 +114,22 @@ jobs:
       userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
       
 ## Create Private/Public Key Pair for Identity Gateway 
-# ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
-# https://help.github.com/en/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
-# store in Key Vault :
-# identityGatewayPrivateKey
-# identityGatewayPublicKey
   - template: infra/identitygateway.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
 
-  ## Deploys Function Apps
+## Deploys App Config
+  - template: infra/appconfig.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
+      location: ${{ parameters.location }}
+
+## Deploys Function Apps
   - template: infra/functions.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}

@@ -6,7 +6,7 @@ parameters:
   location: ''
 
 steps:
-## TODO -- Deploy ARM Resource
+## Deploy ARM Resource
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Azure Maps"
   inputs:
@@ -20,6 +20,3 @@ steps:
     overrideParameters: '-mapsAccountName ${{ parameters.mapsName }}'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
-
-## TODO -- Store the azureMapsKey in keyvault 
-# added to keyvault script 

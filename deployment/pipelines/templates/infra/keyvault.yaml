@@ -32,11 +32,7 @@ steps:
     overrideParameters: '-resourceName ${{ parameters.keyVaultName }} -applicationObjId $(servicePrincipalObjectId) -userObjId ${{ parameters.userObjId }}'
     deploymentMode: 'Incremental'
     #addSpnToEnvironment: true
-# - task: Bash@3
-#   displayName: "Shell Script : Loading Secrets to Keyvault"
-#   inputs:
-#     filePath: '$(System.DefaultWorkingDirectory)/deployment/scripts/keyvaultsecrets.sh'
-#     arguments: '--azureSubscription $(subscriptionId) --resourceGroup ${{ parameters.resourceGroup }} --tenant ${{ parameters.tenant }} --ClientSecret $(servicePrincipalKey) --ApplicationId $(servicePrincipalId)'
+
 - task: AzureCLI@1
   displayName: "Add secrets to keyvault"
   inputs:

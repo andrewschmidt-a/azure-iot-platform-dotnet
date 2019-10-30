@@ -91,16 +91,3 @@ steps:
           "EventHubTwinChange"="$twinchangeEvConn" \
           "WhiteList"="tags.*,reported.*, reported.Protocol, reported.SupportedMethods, reported.DeviceMethodStatus, reported.FirmwareUpdateStatus" \
         --resource-group ${{ parameters.resourceGroup }}
-
-# need to check with odin for exact values of these settings
-# - task: AzureCLI@1
-#   displayName: "CLI: add functionapps to appconfig"
-#   inputs:
-#     azureSubscription: ${{ parameters.serviceConnection }}
-#     scriptLocation: 'inlineScript'
-#     inlineScript: |-
-#       az appconfig kv set --key StorageAccount:name --value "functiondefinition" --name ${{ parameters.appConfigName }} --yes
-#       az appconfig kv set --key TenantManagerService:telemetryFunctionUri --value "https://${{ parameters.functionApp2Name }}.scm.azurewebsites.net" --name ${{ parameters.appConfigName }} --yes
-#       az appconfig kv set --key TenantManagerService:twinChangeFunctionUri --value "https://${{ parameters.functionApp2Name }}.scm.azurewebsites.net" --name ${{ parameters.appConfigName }} --yes
-#       az appconfig kv set --key TenantManagerService:lifecycleFunctionUri --value "https://${{ parameters.functionApp2Name }}.scm.azurewebsites.net" --name ${{ parameters.appConfigName }} --yes
-#       az appconfig kv set --key TenantManagerService:setAppConfigEndpoint --value "https://${{ parameters.functionApp2Name }}.scm.azurewebsites.net" --name ${{ parameters.appConfigName }} --yes
