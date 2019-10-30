@@ -59,7 +59,7 @@
               "[variables('storageAccountName')]"
             ],
             "properties": {
-              "publicAccess": "Container"
+              "publicAccess": "None"
             }
           }
         ]
