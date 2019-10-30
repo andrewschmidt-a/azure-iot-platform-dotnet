@@ -14,7 +14,7 @@ nameOverride: "storage-adapter"
 fullnameOverride: "storage-adapter"
 
 probes:
-  enabled: false
+  enabled: true
 
 service:
   type: ClusterIP
