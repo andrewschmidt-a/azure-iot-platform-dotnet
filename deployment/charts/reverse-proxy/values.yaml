@@ -14,7 +14,7 @@ nameOverride: "reverse-proxy"
 fullnameOverride: "reverse-proxy"
 
 probes:
-  enabled: true
+  enabled: false
 
 service:
   type: ClusterIP
