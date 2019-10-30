@@ -11,7 +11,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers
     {
         public static bool IsValid(string pathToTemplate)
         {
-            // TODO: JsonSchema is obsolete - see http://www.newtonsoft.com/jsonschema for more details
             var fileSchema = JSchema.Parse(
                 @"{
                 'type':'object',
