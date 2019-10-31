@@ -14,7 +14,6 @@ steps:
     azureSubscription: ${{parameters.serviceConnection}}
     azureResourceGroup: ${{parameters.resourceGroup}}
     kubernetesCluster: ${{parameters.aksName}}
-    useClusterAdmin: true
     namespace: 'default'
     command: 'init'
     arguments: '--force-upgrade'
