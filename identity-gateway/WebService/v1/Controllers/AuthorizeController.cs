@@ -118,8 +118,8 @@ namespace IdentityGateway.Controllers
             // Create a userTenantInput for the purpose of finding if the user has access to the space
             UserTenantInput tenantInput = new UserTenantInput
             {
-                userId = jwt?.Claims?.Where(c => c.Type == "sub").First()?.Value,
-                tenant = tenant
+                UserId = jwt?.Claims?.Where(c => c.Type == "sub").First()?.Value,
+                Tenant = tenant
             };
             UserTenantModel tenantResult = await this._userTenantContainer.GetAsync(tenantInput);
             if (tenantResult != null)
@@ -169,15 +169,15 @@ namespace IdentityGateway.Controllers
                 var inviteJWT = jwtHandler.ReadJwtToken(authState.invitation);
                 UserTenantInput UserTenant = new UserTenantInput()
                 {
-                    userId = claims.Where(c => c.Type == "sub").First().Value,
-                    tenant = inviteJWT.Claims.Where(c => c.Type == "tenant").First().Value,
-                    roles = JsonConvert.SerializeObject(inviteJWT.Claims.Where(c => c.Type == "role").Select(c => c.Value).ToList()),
-                    type = "Member"
+                    UserId = claims.Where(c => c.Type == "sub").First().Value,
+                    Tenant = inviteJWT.Claims.Where(c => c.Type == "tenant").First().Value,
+                    Roles = JsonConvert.SerializeObject(inviteJWT.Claims.Where(c => c.Type == "role").Select(c => c.Value).ToList()),
+                    Type = "Member"
                 };
                 await this._userTenantContainer.UpdateAsync(UserTenant);
 
                 // Delete placeholder for invite
-                UserTenant.userId = inviteJWT.Claims.Where(c => c.Type == "userId").First().Value;
+                UserTenant.UserId = inviteJWT.Claims.Where(c => c.Type == "userId").First().Value;
                 await this._userTenantContainer.DeleteAsync(UserTenant);
             }
 

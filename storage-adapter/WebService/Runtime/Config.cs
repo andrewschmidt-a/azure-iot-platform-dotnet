@@ -18,8 +18,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
     /// <summary>Web service configuration</summary>
     public class Config : IConfig
     {
+        private const string GLOBAL_KEY = "Global:";
+        private const string COSMOSDB_KEY = GLOBAL_KEY + "CosmosDb:";
         private const string APPLICATION_KEY = "StorageAdapter:";
-        private const string COSMOS_CONNECTION_STRING_KEY = APPLICATION_KEY + "cosmosconnectionstring";
+        private const string COSMOS_CONNECTION_STRING_KEY = COSMOSDB_KEY + "documentDBConnectionString";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string STORAGE_TYPE_KEY = APPLICATION_KEY + "storageType";
         private const string DOCUMENT_DB_RUS_KEY = APPLICATION_KEY + "documentDBRUs";

@@ -37,7 +37,7 @@ namespace IdentityGateway.Services
             SetServiceStatus("TableStorage", storageResult, result, errors);
 
             // Check KeyVault
-            var keyVaulthelper = new KeyVaultHelper(this._config);
+            var keyVaulthelper = new KeyVaultHelpers(this._config);
             var kvResult = await keyVaulthelper.PingAsync();
             SetServiceStatus("KeyVault", kvResult, result, errors);
 

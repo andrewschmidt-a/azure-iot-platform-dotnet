@@ -1,36 +1,34 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using IdentityGateway.Services.Helpers;
+using IdentityGateway.Services.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Helpers;
 
 namespace IdentityGateway.Services
 {
     public class UserTenantContainer : UserContainer, IUserContainer<UserTenantModel, UserTenantInput> 
     {
-        public override string tableName { get{return "user";} }
-
         public UserTenantContainer()
         {
         }
         
-        public UserTenantContainer(TableHelper tableHelper) : base(tableHelper)
+        public UserTenantContainer(ITableHelper tableHelper) : base(tableHelper)
         {
         }
+
+        public override string TableName => "user";
 
         /// <summary>
         /// get all tenants for a user
         /// </summary>
         /// <param name="input">UserTenantInput with the userId param</param>
         /// <returns></returns>
-        public async Task<UserTenantListModel> GetAllAsync(UserTenantInput input)
+        public virtual async Task<UserTenantListModel> GetAllAsync(UserTenantInput input)
         {
-            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
-            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
+            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.UserId));
+            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.TableName, query, null);
             return new UserTenantListModel("GetTenants", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());
         }
 
@@ -40,10 +38,10 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with the tenant param</param>
         /// <returns></returns>
-        public async Task<UserTenantListModel> GetAllUsersAsync(UserTenantInput input)
+        public virtual async Task<UserTenantListModel> GetAllUsersAsync(UserTenantInput input)
         {
-            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.tenant));
-            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
+            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.Tenant));
+            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.TableName, query, null);
             return new UserTenantListModel("GetUsers", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());
         }
         /// <summary>
@@ -53,8 +51,8 @@ namespace IdentityGateway.Services
         /// <returns></returns>
         public virtual async Task<UserTenantModel> GetAsync(UserTenantInput input)
         {
-            TableOperation retrieveUserTenant = TableOperation.Retrieve<UserTenantModel>(input.userId, input.tenant);
-            TableResult result = await this._tableHelper.ExecuteOperationAsync(this.tableName, retrieveUserTenant);
+            TableOperation retrieveUserTenant = TableOperation.Retrieve<UserTenantModel>(input.UserId, input.Tenant);
+            TableResult result = await this._tableHelper.ExecuteOperationAsync(this.TableName, retrieveUserTenant);
             return result.Result as UserTenantModel;
         }
 
@@ -63,12 +61,12 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with a userId</param>
         /// <returns></returns>
-        public async Task<UserTenantModel> CreateAsync(UserTenantInput input)
+        public virtual async Task<UserTenantModel> CreateAsync(UserTenantInput input)
         {
             // If UserId is null then make it up
-            if (input.userId == null)
+            if (input.UserId == null)
             {
-                input.userId = Guid.NewGuid().ToString();
+                input.UserId = Guid.NewGuid().ToString();
             }
             // Create the user and options for creating the user record in the user table
             UserTenantModel existingModel = await this.GetAsync(input);
@@ -84,7 +82,7 @@ namespace IdentityGateway.Services
             UserTenantModel user = new UserTenantModel(input);
             // Insert the user record. Return the user model from the user table insert
             TableOperation insertOperation = TableOperation.Insert(user);
-            TableResult userInsert = await this._tableHelper.ExecuteOperationAsync(this.tableName, insertOperation);
+            TableResult userInsert = await this._tableHelper.ExecuteOperationAsync(this.TableName, insertOperation);
             return userInsert.Result as UserTenantModel;  // cast to UserTenantModel to parse results
         }
 
@@ -93,7 +91,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with a userId, tenant, and rolelist</param>
         /// <returns></returns>
-        public async Task<UserTenantModel> UpdateAsync(UserTenantInput input)
+        public virtual async Task<UserTenantModel> UpdateAsync(UserTenantInput input)
         {
             UserTenantModel model = new UserTenantModel(input);
             if (model.RoleList != null && !model.RoleList.Any())
@@ -103,7 +101,7 @@ namespace IdentityGateway.Services
             }
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
             TableOperation replaceOperation = TableOperation.InsertOrMerge(model);
-            TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
+            TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.TableName, replaceOperation);
             return replace.Result as UserTenantModel;
         }
 
@@ -112,14 +110,20 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserTenantInput with a userId</param>
         /// <returns></returns>
-        public async Task<UserTenantModel> DeleteAsync(UserTenantInput input)
+        public virtual async Task<UserTenantModel> DeleteAsync(UserTenantInput input)
         {
             // Get a list of all user models for this user id - we will pick the one matching the current tenant to delete
             UserTenantModel user = await this.GetAsync(input);
+            if (user == null)
+            {
+                throw new StorageException($"That UserTenant does not exist");
+            }
+
+            user.ETag = "*";  // An ETag is required for deleting - this allows any etag to be used
             TableOperation deleteOperation = TableOperation.Delete(user);
 
             // delete the record and return the deleted user model
-            TableResult deleteUser = await this._tableHelper.ExecuteOperationAsync(this.tableName, deleteOperation);
+            TableResult deleteUser = await this._tableHelper.ExecuteOperationAsync(this.TableName, deleteOperation);
             return deleteUser.Result as UserTenantModel;
         }
 
@@ -127,7 +131,7 @@ namespace IdentityGateway.Services
         /// Delete the tenant from all users
         /// </summary>
         /// <returns></returns>
-        public async Task<UserTenantListModel> DeleteAllAsync(UserTenantInput input)
+        public virtual async Task<UserTenantListModel> DeleteAllAsync(UserTenantInput input)
         {
             UserTenantListModel tenantRows = await this.GetAllUsersAsync(input);
 
@@ -136,8 +140,8 @@ namespace IdentityGateway.Services
             {
                 UserTenantInput deleteInput = new UserTenantInput
                 {
-                    userId = row.PartitionKey,
-                    tenant = input.tenant
+                    UserId = row.PartitionKey,
+                    Tenant = input.Tenant
                 };
                 return this.DeleteAsync(deleteInput);
             });

@@ -5,15 +5,15 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
 {
     public class DeleteTenantModel
     {
-        public string tenantId;
-        public bool ensuredDeployment;
-        public Dictionary<string, bool> deletionRecord;
+        public string TenantId;
+        public bool EnsuredDeployment;
+        public Dictionary<string, bool> DeletionRecord;
 
         public DeleteTenantModel (string tenantGuid, Dictionary<string, bool> deletionRecord, bool ensuredDeployment)
         {
-            this.tenantId = tenantGuid;
-            this.ensuredDeployment = ensuredDeployment;
-            this.deletionRecord = deletionRecord;
+            this.TenantId = tenantGuid;
+            this.EnsuredDeployment = ensuredDeployment;
+            this.DeletionRecord = deletionRecord;
         }
 
         public DeleteTenantModel () { }
@@ -22,7 +22,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
         {
             get
             {
-                return this.deletionRecord.All(item => item.Value);
+                return this.DeletionRecord.All(item => item.Value);
             }
         }
     }

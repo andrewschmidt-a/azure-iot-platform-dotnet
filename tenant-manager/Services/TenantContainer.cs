@@ -32,6 +32,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
         public readonly IHttpContextAccessor _httpContextAccessor;
         public readonly ILogger _log;
         public readonly IIdentityGatewayClient _identityClient;
+        public readonly IDeviceGroupsConfigClient _deviceGroupClient;
         public readonly TenantRunbookHelper _tenantRunbookHelper;
         public readonly CosmosHelper _cosmosHelper;
         public readonly TableStorageHelper _tableStorageHelper;
@@ -43,7 +44,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
             TenantRunbookHelper tenantRunbookHelper,
             CosmosHelper cosmosHelper,
             TableStorageHelper tableStorageHelper,
-            IIdentityGatewayClient identityGatewayClient)
+            IIdentityGatewayClient identityGatewayClient,
+            IDeviceGroupsConfigClient deviceGroupConfigClient)
         {
             this._config = config;
             this._httpContextAccessor = httpContextAccessor;
@@ -52,6 +54,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
             this._cosmosHelper = cosmosHelper;
             this._tableStorageHelper = tableStorageHelper;
             this._identityClient = identityGatewayClient;
+            this._deviceGroupClient = deviceGroupConfigClient;
         }
 
         /// <summary>
@@ -160,6 +163,15 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
             {
                 // In order for a complete tenant creation, all app config keys must be created. throw an error if not
                 throw new Exception($"Unable to add required collection ids to App Config for tenant {tenantId}", e);
+            }
+
+            try
+            {
+                await this._deviceGroupClient.CreateDefaultDeviceGroupAsync(tenantId);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to create the default device group for the new tenant.", e);
             }
 
             return new CreateTenantModel(tenantId);
