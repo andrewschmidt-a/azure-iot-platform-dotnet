@@ -28,8 +28,28 @@ function deleteTenantFlow(id, switchId) {
         console.log(response);
       },
       error => {
+        console.log(error);
         alert("Unable to delete this tenant. You may not have the correct permissions, or it may not be fully deployed yet.")
       },
+    );
+}
+
+function switchTenantFlow(switchId) {
+  TenantService.tenantIsDeployed(switchId)
+    .subscribe(
+      response => {
+        console.log(response);
+        if (response) {
+          AuthService.switchTenant(switchId);
+        }
+        else {
+          alert("The tenant you're trying to switch to is not fully deployed. Please wait a few minutes before trying to access your new tenant.");
+        }
+      },
+      error => {
+        console.log(error);
+        alert("An error ocurred while trying to switch tenants.");
+      }
     );
 }
 
@@ -44,7 +64,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   fetchTenants: () => dispatch(tenantsEpics.actions.fetchTenants()),
   logout: () => AuthService.logout(),
-  switchTenant: (tenant) => AuthService.switchTenant(tenant),
+  switchTenant: (tenant) => switchTenantFlow(tenant),
   createTenant: () => TenantService.createTenant(),
   processTenantDisplayValue: (tenant) => TenantService.processDisplayValue(tenant),
   logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel)),

@@ -1,19 +1,19 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using IdentityGateway.Services.Helpers;
+using IdentityGateway.Services.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
-using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Helpers;
 
 namespace IdentityGateway.Services
 {
     public class UserSettingsContainer : UserContainer, IUserContainer<UserSettingsModel, UserSettingsInput>
     {
-        public override string tableName { get{return "userSettings";} }
+        public override string TableName => "userSettings";
 
-        public UserSettingsContainer(TableHelper tableHelper) : base(tableHelper)
+        public UserSettingsContainer() { }
+
+        public UserSettingsContainer(ITableHelper tableHelper) : base(tableHelper)
         {
         }
 
@@ -22,11 +22,11 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsINput with a userId</param>
         /// <returns></returns>
-        public async Task<UserSettingsListModel> GetAllAsync(UserSettingsInput input)
+        public virtual async Task<UserSettingsListModel> GetAllAsync(UserSettingsInput input)
         {
-            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.userId));
-            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.tableName, query, null);
-            return new UserSettingsListModel("Get", resultSegment.Results.Select(t=> (UserSettingsModel)t).ToList());
+            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.UserId));
+            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.TableName, query, null);
+            return new UserSettingsListModel("Get", resultSegment.Results.Select(t => (UserSettingsModel)t).ToList());
         }
 
         /// <summary>
@@ -34,11 +34,11 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId and settingKey</param>
         /// <returns></returns>        
-        public async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
+        public virtual async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
         {
             // TableOperation retrieveUserSettings = TableOperation.Retrieve<TableEntity>(input.userId, input.settingKey);
-            TableOperation retrieveUserSettings = TableOperation.Retrieve<UserSettingsModel>(input.userId, input.settingKey);
-            TableResult result = await this._tableHelper.ExecuteOperationAsync(this.tableName, retrieveUserSettings);
+            TableOperation retrieveUserSettings = TableOperation.Retrieve<UserSettingsModel>(input.UserId, input.SettingKey);
+            TableResult result = await this._tableHelper.ExecuteOperationAsync(this.TableName, retrieveUserSettings);
             return (UserSettingsModel)result.Result;
         }
 
@@ -47,7 +47,7 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId, settingkey name and value</param>
         /// <returns></returns>
-        public async Task<UserSettingsModel> CreateAsync(UserSettingsInput input)
+        public virtual async Task<UserSettingsModel> CreateAsync(UserSettingsInput input)
         {
             UserSettingsModel existingModel = await this.GetAsync(input);
             if (existingModel != null)
@@ -61,7 +61,7 @@ namespace IdentityGateway.Services
             }
             UserSettingsModel model = new UserSettingsModel(input);
             TableOperation insertOperation = TableOperation.Insert(model);
-            TableResult insert = await this._tableHelper.ExecuteOperationAsync(this.tableName, insertOperation);
+            TableResult insert = await this._tableHelper.ExecuteOperationAsync(this.TableName, insertOperation);
             return (UserSettingsModel)insert.Result;
         }
 
@@ -70,12 +70,12 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId, settingkey name and the udpated value</param>
         /// <returns></returns>
-        public async Task<UserSettingsModel> UpdateAsync(UserSettingsInput input)
+        public virtual async Task<UserSettingsModel> UpdateAsync(UserSettingsInput input)
         {
             UserSettingsModel model = new UserSettingsModel(input);
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
             TableOperation replaceOperation = TableOperation.InsertOrReplace(model);
-            TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.tableName, replaceOperation);
+            TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.TableName, replaceOperation);
             return (UserSettingsModel)replace.Result;
         }
 
@@ -84,11 +84,17 @@ namespace IdentityGateway.Services
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId and settingkey name</param>
         /// <returns></returns>
-        public async Task<UserSettingsModel> DeleteAsync(UserSettingsInput input)
+        public virtual async Task<UserSettingsModel> DeleteAsync(UserSettingsInput input)
         {
             UserSettingsModel model = await this.GetAsync(input);
+            if (model == null)
+            {
+                throw new StorageException($"That UserSetting does not exist");
+            }
+
+            model.ETag = "*";  // An ETag is required for deleting - this allows any etag to be used
             TableOperation deleteOperation = TableOperation.Delete(model);
-            TableResult delete = await this._tableHelper.ExecuteOperationAsync(this.tableName, deleteOperation);
+            TableResult delete = await this._tableHelper.ExecuteOperationAsync(this.TableName, deleteOperation);
             return (UserSettingsModel)delete.Result;
         }
     }

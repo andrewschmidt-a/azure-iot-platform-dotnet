@@ -19,9 +19,9 @@ namespace IdentityGateway.Services.Models
 
         public UserSettingsModel(UserSettingsInput input)
         {
-            this.PartitionKey = input.userId;
-            this.RowKey = input.settingKey;
-            this.Value = input.value;
+            this.PartitionKey = input.UserId;
+            this.RowKey = input.SettingKey;
+            this.Value = input.Value;
         }
 
         public UserSettingsModel(DynamicTableEntity tableEntity)

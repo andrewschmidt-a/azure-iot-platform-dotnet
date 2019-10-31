@@ -50,6 +50,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
         /// <summary>Setup Custom rules overriding autowired ones.</summary>
         private static void SetupCustomRules(ContainerBuilder builder)
         {
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
 
             // Make sure the configuration is read only once.
             IConfig config = new Config(new ConfigData(new Logger(Uptime.ProcessId, LogLevel.Info)));
@@ -60,23 +61,18 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             builder.RegisterInstance(config.ServicesConfig).As<IServicesConfig>().SingleInstance();
 
             // Instantiate only one logger
-            // TODO: read log level from configuration
             var logger = new Logger(Uptime.ProcessId, LogLevel.Debug);
             builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
 
             // Add helpers
-            builder.RegisterInstance(new CosmosHelper(config.ServicesConfig)).As<CosmosHelper>().SingleInstance();
-            builder.RegisterInstance(new TableStorageHelper(config.ServicesConfig)).As<TableStorageHelper>().SingleInstance();
-
             var tokenHelper = new TokenHelper(config.ServicesConfig);
             builder.RegisterInstance(new TenantRunbookHelper(config.ServicesConfig, tokenHelper)).As<TenantRunbookHelper>().SingleInstance();
+            builder.RegisterInstance(new CosmosHelper(config.ServicesConfig)).As<CosmosHelper>().SingleInstance();
+            builder.RegisterInstance(new TableStorageHelper(config.ServicesConfig)).As<TableStorageHelper>().SingleInstance();
+            builder.RegisterType<ExternalRequestHelper>().As<IExternalRequestHelper>().SingleInstance();
 
             // Auth and CORS setup
             Auth.Startup.SetupDependencies(builder, config);
-
-
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
-
         }
 
         private static void RegisterFactory(IContainer container)
