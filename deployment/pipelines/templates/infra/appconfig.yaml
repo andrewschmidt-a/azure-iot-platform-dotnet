@@ -78,7 +78,7 @@ steps:
       telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
       twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $evNamespace| grep name |grep twin-change| awk -F "\"" '{print $4}'| cut -d "/" -f1)
       twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
-      # set the keys 
+      # set the keys
       az appconfig kv set --key Global:instrumentationKey --value $appInsightKey --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:cosmosDbEndpoint --value $cosmosDbEndpoint --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:cosmosDbToken --value $cosmosDbAuthKey --name ${{ parameters.appConfigName }} --yes
