@@ -83,11 +83,11 @@ steps:
       jwtIssuer="https://$aksName.${{ parameters.location }}.cloudapp.azure.com/auth"
       # set the keys
       az appconfig kv set --key Global:instrumentationKey --value $appInsightKey --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:ClientAuth:JWT:authissuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:cosmosDbEndpoint --value $cosmosDbEndpoint --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:cosmosDbToken --value $cosmosDbAuthKey --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:documentDBConnectionString --value $cosmosDbConnection --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:lifecycleEventHubConnString --value $lifecycleEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:telemetryEventHubConnString --value $telemetryEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:twinChangeEventHubConnString --value $twinchangeEvConn --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key Global:ClientAuth:JWT:authissuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
     addSpnToEnvironment: true
