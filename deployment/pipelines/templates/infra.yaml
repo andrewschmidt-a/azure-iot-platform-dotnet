@@ -164,9 +164,7 @@ jobs:
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform
 - job: ingress
   displayName: Deploy Ingress
-  dependsOn: 
-    - aks
-    - resources 
+  dependsOn: aks
   pool:
     vmImage: 'ubuntu-16.04'
   steps:

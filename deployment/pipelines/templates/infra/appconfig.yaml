@@ -78,6 +78,9 @@ steps:
       telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
       twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $evNamespace| grep name |grep twin-change| awk -F "\"" '{print $4}'| cut -d "/" -f1)
       twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
+      # aks JWT issuer
+      aksName=$(az aks list -g $rg | grep name | grep aks | cut -d "/" -f1| awk -F "\"" '{print $4}')
+      jwtIssuer="https://$aksName.${{ parameters.location }}.cloudapp.azure.com/auth"
       # set the keys
       az appconfig kv set --key Global:instrumentationKey --value $appInsightKey --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:cosmosDbEndpoint --value $cosmosDbEndpoint --name ${{ parameters.appConfigName }} --yes
@@ -86,4 +89,5 @@ steps:
       az appconfig kv set --key TenantManagerService:lifecycleEventHubConnString --value $lifecycleEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:telemetryEventHubConnString --value $telemetryEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:twinChangeEventHubConnString --value $twinchangeEvConn --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:ClientAuth:JWT:authissuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
     addSpnToEnvironment: true

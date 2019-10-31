@@ -68,29 +68,6 @@ steps:
     scriptPath: '$(System.DefaultWorkingDirectory)/deployment/charts/ingress/ip.sh'
     arguments: ${{ parameters.aksName }} ${{ parameters.resourceGroup }}
 
-- task: AzureCLI@1
-  displayName: "CLI: add Ingress DNS to App config"
-  inputs:
-    azureSubscription: ${{ parameters.serviceConnection }}
-    scriptLocation: 'inlineScript'
-    inlineScript: |-
-      az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }}
-      n=1
-      until [ $n -ge 3 ]
-      do
-        hostIngress=$(kubectl get ingress -o json | jq -r .items[0].spec.rules[0].host)
-        if [ -z "$hostIngress" ] 
-        then
-          echo "Host not available...waiting another minute...try $n"
-          sleep 1m
-        else
-          break
-        fi
-      done
-      echo $hostIngress
-      jwtIssuer="https://$hostIngress/auth"
-      az appconfig kv set --key Global:ClientAuth:JWT:authissuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
-
 - task: Bash@3
   displayName: "Install jet stack repo"
   inputs:
