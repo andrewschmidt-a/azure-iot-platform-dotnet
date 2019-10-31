@@ -6,7 +6,7 @@ stages:
 # Pirate ninja test env
 - stage: DeployCRSLDevPN
   dependsOn: []
-  displayName: Deploy To CRSL
+  displayName: Deploy To CRSL - rg-pirate-ninja-test1
   jobs:
   - template: approval.yaml
     parameters:
@@ -25,7 +25,7 @@ stages:
 # Second Pirate ninja test env
 - stage: DeployCRSLDevPN2
   dependsOn: []
-  displayName: Deploy To CRSL
+  displayName: Deploy To CRSL - rg-pirate-ninja-deployment
   jobs:
   - template: approval.yaml
     parameters:
@@ -43,7 +43,7 @@ stages:
         releaseName: ${{parameters.service}}
 - stage: DeployCRSLDev
   dependsOn: []
-  displayName: Deploy To CRSL Dev
+  displayName: Deploy To CRSL - rg-crslbbiot-odin-dev
   jobs:
   - template: approval.yaml
     parameters:
@@ -63,7 +63,7 @@ stages:
 - stage: DeployCRSLQA
   dependsOn:
   - DeployCRSLDev
-  displayName: Deploy To CRSL QA
+  displayName: Deploy To CRSL QA - rg-iot-crsl-qa
   jobs:
   - template: approval.yaml
     parameters:
@@ -84,7 +84,7 @@ stages:
 - stage: DeployCRSLWkBnch
   dependsOn:
   - DeployCRSLQA
-  displayName: Deploy To CRSL Work Bench
+  displayName: Deploy To CRSL Work Bench - rg-iot-crsl-wkbnch
   jobs:
   - template: approval.yaml
     parameters:
