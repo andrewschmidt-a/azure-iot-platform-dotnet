@@ -60,7 +60,11 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |-
       rg=${{ parameters.resourceGroup }}
-      # cosmos db connection string 
+      # app insight key
+      appInsightName=$(az resource list -g $rg --resource-type "Microsoft.Insights/components" | grep name | grep appinsight | awk -F "\"" '{print $4}')
+      appInsightKey=$(az resource show -g $rg -n $appInsightName --resource-type "Microsoft.Insights/components" --query properties.InstrumentationKey)
+      appInsightKey="${appInsightKey//\"}"
+      # cosmos db connection string
       cosmosDbAccountName=$(az cosmosdb list --resource-group $rg | grep name | awk -F "\"" '{print $4}')
       cosmosDbEndpoint="https://$cosmosDbAccountName.documents.azure.com:443/"
       cosmosDbAuthKey=$(az cosmosdb list-keys --resource-group $rg --name $cosmosDbAccountName | grep primaryMasterKey | awk -F "\"" '{print $4}')
@@ -75,6 +79,7 @@ steps:
       twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $evNamespace| grep name |grep twin-change| awk -F "\"" '{print $4}'| cut -d "/" -f1)
       twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
       # set the keys 
+      az appconfig kv set --key Global:instrumentationKey --value $appInsightKey --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:cosmosDbEndpoint --value $cosmosDbEndpoint --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:cosmosDbToken --value $cosmosDbAuthKey --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:documentDBConnectionString --value $cosmosDbConnection --name ${{ parameters.appConfigName }} --yes
