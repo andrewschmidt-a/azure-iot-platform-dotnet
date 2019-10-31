@@ -73,7 +73,7 @@ spec:
             - name: {{ $ref }}
               valueFrom:
                 secretKeyRef:
-                  name: reverse-proxy
+                  name: globalsecrets
                   key: {{ $ref }}
             {{- end }}
           resources:
