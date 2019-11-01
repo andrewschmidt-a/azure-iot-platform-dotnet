@@ -3,6 +3,7 @@ WORKDIR /app
 
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src
+COPY ["./Directory.Build.props", "/src/"]
 COPY ["AppConfiguration/AppConfiguration.csproj", "AppConfiguration/"]
 COPY ["AuthUtils/AuthUtils.csproj", "AuthUtils/"]
 COPY ["Services/Services.csproj", "Services/"]

@@ -4,6 +4,7 @@ EXPOSE 80
 
 FROM microsoft/aspnetcore-build:2.0 AS build
 WORKDIR /src
+COPY ["./Directory.Build.props", "/src/"]
 COPY ["RecurringTasksAgent/RecurringTasksAgent.csproj", "RecurringTasksAgent/"]
 COPY ["AppConfiguration/AppConfiguration.csproj", "AppConfiguration/"]
 COPY ["AuthUtils/AuthUtils.csproj", "AuthUtils/"]
