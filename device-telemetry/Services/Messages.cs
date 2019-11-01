@@ -161,7 +161,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 foreach (var item in jsonDoc)
                 {
                     // Ignore fields that werent sent by device (system fields)"
-                    if (!item.Key.StartsWith(SYSTEM_PREFIX) && item.Key != "id")
+                    if (!item.Key.StartsWith(SYSTEM_PREFIX) && item.Key != "id" && item.Key != "deviceId")
                     {
                         string key = item.Key.ToString();
                         data.Add(key, item.Value);
