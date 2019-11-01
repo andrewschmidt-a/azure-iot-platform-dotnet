@@ -128,7 +128,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 order, "_timeReceived",
                 skip,
                 limit,
-                devices, "_deviceId");
+                devices, "deviceId");
 
             this.log.Debug("Created Message Query", () => new { sql });
 
@@ -171,7 +171,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                     }
                 }
                 messages.Add(new Message(
-                    doc.GetPropertyValue<string>("_deviceId"),
+                    doc.GetPropertyValue<string>("deviceId"),
                     doc.GetPropertyValue<long>("_timeReceived"),
                     data));
             }
