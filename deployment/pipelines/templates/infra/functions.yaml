@@ -54,7 +54,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime node'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
