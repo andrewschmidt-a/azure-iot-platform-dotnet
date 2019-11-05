@@ -40,7 +40,7 @@ steps:
     overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -appInsightsName ${{ parameters.appInsightsName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
-    
+
 - task: AzureCLI@1
   displayName: "CLI: set appsettings for fucntion app"
   inputs:
@@ -58,8 +58,8 @@ steps:
           "CosmosDbDatabaseName"="iot" \
           "EventHubTelemetry"="$telemetryEvConn" \
           "ConsumerGroup"="lifecyclecg" \
-          "DeviceCG"="messagingfunctions"\
-          "DPCacheCG"="dpcache",
+          "DeviceCG"="messagingfunctions" \
+          "DPCacheCG"="dpcache" \
           "ConsumerGroupTC"="twinchangecg" \
           "CosmosConnection"="$cosmosDbConn" \
           "CosmosDB"="pcs-storage" \
