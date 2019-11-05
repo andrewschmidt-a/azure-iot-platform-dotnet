@@ -32,7 +32,7 @@ class Shell extends Component {
   }
 
   render() {
-    const { pagesConfig, t, theme, children, denyAccess } = this.props;
+    const { pagesConfig, t, theme, children, denyAccess, logout, createTenant } = this.props;
     return (
       <FluentShell theme={theme} isRtl={false} navigation={this.getNavProps()} masthead={this.getMastheadProps()}>
         {
@@ -42,7 +42,6 @@ class Shell extends Component {
               <div className="access-denied">
                 <Trans i18nKey={'accessDenied.message'}>
                   You don't have permissions.
-                  <Hyperlink href="/tenantmanagement" target="_blank">{t('accessDenied.createTenant')}</Hyperlink>
                 </Trans>
               </div>
               {children}
