@@ -11,21 +11,6 @@ parameters:
   
 steps:
 
-## Deploy ARM Resource -- AppConfig controller FunctionApp
-- task: AzureResourceGroupDeployment@2
-  displayName: "Create Azure function App: AppConfigController"
-  inputs:
-    azureSubscription: ${{ parameters.serviceConnection }}
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: ${{ parameters.resourceGroup }}
-    location: '${{ parameters.location }}'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
-    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -appInsightsName ${{ parameters.appInsightsName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
-    deploymentMode: 'Incremental'
-    addSpnToEnvironment: true
-
 ## Deploy ARM Resource - DeviceTwinFunctionApp 
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Azure function App: DeviceTwinFunctionApp"
@@ -41,6 +26,21 @@ steps:
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
+## Deploy ARM Resource -- AppConfig controller FunctionApp
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Azure function App: AppConfigController"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: '${{ parameters.location }}'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -appInsightsName ${{ parameters.appInsightsName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true
+    
 - task: AzureCLI@1
   displayName: "CLI: set appsettings for fucntion app"
   inputs:

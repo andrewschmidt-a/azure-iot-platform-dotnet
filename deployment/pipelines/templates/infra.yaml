@@ -125,8 +125,8 @@ jobs:
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
-      functionApp1Name: ${{ parameters.applicationCode }}-deviceTwinFuncApp-${{ parameters.deployEnvironment }}
-      functionApp2Name: ${{ parameters.applicationCode }}-appConfigFuncApp-${{ parameters.deployEnvironment }}
+      functionApp1Name: ${{ parameters.applicationCode }}-devicetwinfuncapp-${{ parameters.deployEnvironment }}
+      functionApp2Name: ${{ parameters.applicationCode }}-appconfigfuncapp-${{ parameters.deployEnvironment }}
       appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
