@@ -191,8 +191,7 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('functionAppName'))]",
-                "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('functionAppName'))]"
             ],
             "resources": []
         },
