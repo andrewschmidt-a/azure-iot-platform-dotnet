@@ -81,6 +81,11 @@ steps:
       # aks JWT issuer
       aksName=$(az aks list -g $rg | grep name | grep aks | cut -d "/" -f1| awk -F "\"" '{print $4}')
       jwtIssuer="https://$aksName.${{ parameters.location }}.cloudapp.azure.com/auth"
+      # app config endpoint
+      appConfig=$(az functionapp list --resource-group $rg | grep name | grep appConfig | awk -F "\"" '{print $4}' | head -1)
+      appConfigEndpoint="https://$appConfig/api/SetAppConfigKey"
+      deviceTwin=$(az functionapp list --resource-group $rg | grep name | grep deviceTwin | awk -F "\"" '{print $4}' | tail -1)
+      deviceTwinFuncUri="https://$twinChange.scm.azurewebsites.net"
       # set the keys
       az appconfig kv set --key Global:instrumentationKey --value $appInsightKey --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:ClientAuth:JWT:authissuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
@@ -90,5 +95,10 @@ steps:
       az appconfig kv set --key TenantManagerService:lifecycleEventHubConnString --value $lifecycleEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:telemetryEventHubConnString --value $telemetryEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:twinChangeEventHubConnString --value $twinchangeEvConn --name ${{ parameters.appConfigName }} --yes
-      #az appconfig kv set --key TenantManagerService:setAppConfigEndpoint --value 
+      az appconfig kv set --key TenantManagerService:setAppConfigEndpoint --value $appConfigEndpoint --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --ket TenantManagerService:setAppConfigFunction --value $appConfigEndpoint --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --ket TenantManagerService:twinChangeFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --ket TenantManagerService:telemetryFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --ket TenantManagerService:lifecycleFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
+
     addSpnToEnvironment: true
