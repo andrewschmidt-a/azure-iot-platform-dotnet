@@ -14,7 +14,7 @@ COPY [".", "/src/"]
 RUN dotnet build --configuration Release
 RUN dotnet publish . --configuration Release --output /app/webservice
 
-FROM mcr.microsoft.com/dotnet/core/runtime:2.2
-COPY --from=build /app /app
-ENTRYPOINT ["dotnet", "/app/webservice/tenant-manager.dll"]
-EXPOSE 80
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2
+COPY --from=build /app/webservice /app
+ENTRYPOINT ["dotnet", "/app/tenant-manager.dll"]
+EXPOSE 80 
