@@ -75,7 +75,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
                 response = await this._httpClient.SendAsync(request, method);
                 if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.NoContent)
                 {
-                    throw new Exception("Http Request returned a status code other than 200.");
+                    throw new Exception($"Http Request was unsuccessful with status code: {response.StatusCode}.");
                 }
             }
             catch (Exception e)
