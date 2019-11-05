@@ -24,7 +24,7 @@ stages:
         releaseName: ${{parameters.service}}
         
 # Second Pirate ninja test env
-- stage: DeployCRSLDevPN
+- stage: DeployCRSLDevPNTwo
   dependsOn: []
   displayName: Deploy To CRSL - rg-pirate-ninja-deployment
   jobs:
