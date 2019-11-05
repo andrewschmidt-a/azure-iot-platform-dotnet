@@ -55,10 +55,10 @@ steps:
       az functionapp config appsettings set --name $devicetwinPropfn \
         --settings "CosmosDbConnectionString"="$cosmosDbConn" \
           "CosmosDbDatabaseName"="iot" \
-          "EventHubLifecycle"="$lifecycleEvConn" \
           "EventHubTelemetry"="$telemetryEvConn" \
-          "EventHubTwinChange"="$twinchangeEvConn" \
           "ConsumerGroup"="lifecyclecg" \
+          "DeviceCG"="messagingfunctions"\
+          "DPCacheCG"="dpcache",
           "ConsumerGroupTC"="twinchangecg" \
           "CosmosConnection"="$cosmosDbConn" \
           "CosmosDB"="pcs-storage" \
