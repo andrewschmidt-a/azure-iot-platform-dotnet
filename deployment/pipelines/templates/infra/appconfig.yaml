@@ -100,5 +100,5 @@ steps:
       az appconfig kv set --key TenantManagerService:twinChangeFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:telemetryFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:lifecycleFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
-
+      
     addSpnToEnvironment: true
