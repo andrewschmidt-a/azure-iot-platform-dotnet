@@ -120,15 +120,6 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
 
-## Deploys App Config
-  - template: infra/appconfig.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
-      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
-      location: ${{ parameters.location }}
-
 ## Deploys Function Apps
   - template: infra/functions.yaml
     parameters:
@@ -140,7 +131,16 @@ jobs:
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }} 
-      
+
+## Deploys App Config
+  - template: infra/appconfig.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
+      location: ${{ parameters.location }}
+
 ## Deploys Automation Account, Runbook, webhook
 - job: automationacct 
   displayName: Create Automation Acct
