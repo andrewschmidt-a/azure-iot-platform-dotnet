@@ -31,7 +31,8 @@
         "identitygatewaywebserviceurl": "http://identity-gateway:80/v1",
         "storageadapterwebservicetimeout": "10000",
         "storageadapterwebserviceurl": "http://storage-adapter:80/v1",
-        "telemetryWebServiceUrl": "http://device-telemetry:80/v1"
+        "telemetryWebServiceUrl": "http://device-telemetry:80/v1",
+        "configwebserviceurl": "http://config:80/v1"
     },
     "Global": {
         "AuthRequired": "false",
@@ -171,6 +172,8 @@
         "twinChangeEventHubConnString": "",
         "twinChangeFunctionName": "twin-change-processor",
         "twinChangeFunctionUri": "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net",
+        "createIotHubWebHookName": "CreateIotHub",
+        "deleteIotHubWebHookName": "DeleteIotHub",
         "webserviceport": 80
     }
 }

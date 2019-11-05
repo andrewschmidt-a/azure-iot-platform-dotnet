@@ -14,7 +14,7 @@ nameOverride: "reverse-proxy"
 fullnameOverride: "reverse-proxy"
 
 probes:
-  enabled: false
+  enabled: true
 
 service:
   type: ClusterIP
@@ -34,8 +34,7 @@ ingress:
   #    hosts:
   #      - chart-example.local
 secrets: {}
-secretsRef: 
-  - PCS_APPLICATION_CONFIGURATION
+secretsRef: {} 
   # - ALLOWED_DOMAINS
   # - SITES
 resources: {}

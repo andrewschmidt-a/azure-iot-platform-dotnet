@@ -3,6 +3,8 @@ parameters:
   serviceConnection: ''
   resourceGroup: ''
   aksName: ''
+  location: ''
+  omsworkspaceName: ''
 
 steps:
 - task: AzureResourceGroupDeployment@2
@@ -11,11 +13,11 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     action: 'Create Or Update Resource Group'
     resourceGroupName: ${{ parameters.resourceGroup }}
-    location: 'Central US'
+    location: '${{ parameters.location }}'
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/aks.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/aks.json'
-    overrideParameters: '-resourceName ${{ parameters.aksName }} -dnsPrefix ${{ parameters.aksName }}-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey'
+    overrideParameters: '-resourceName ${{ parameters.aksName }} -location ${{ parameters.location }} -dnsPrefix ${{ parameters.aksName }}-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey -omsworkspaceName ${{ parameters.omsWorkspaceName }}'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 

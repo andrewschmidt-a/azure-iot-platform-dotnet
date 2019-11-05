@@ -1,0 +1,23 @@
+
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  storageAccountName: ''
+  blobContainer: ''
+  location: ''
+
+steps:
+## Deploy ARM Resource 
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Azure Storage account"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: '${{ parameters.location }}'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/storageacct.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/storageacct.json'
+    overrideParameters: '-storageAccountName ${{ parameters.storageAccountName }} -blobContainerName ${{ parameters.blobContainerName }} -location ${{ parameters.location }}'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true

@@ -90,7 +90,6 @@ namespace IdentityGateway.WebService
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();
         }
-
         private void PrintBootstrapInfo(IContainer container)
         {
             var log = container.Resolve<ILogger>();

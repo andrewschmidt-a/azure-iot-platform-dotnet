@@ -1,0 +1,21 @@
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  omsWorkspaceName: ''
+  location: ''
+
+steps:
+## Deploy ARM Resource - OMS/LogAnalytics 
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Log Analyics"
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '${{ parameters.resourceGroup }}'
+    location: '${{ parameters.location }}'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/loganalytics.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/loganalytics.json'
+    overrideParameters: '-omsWorkspaceName ${{ parameters.omsWorkspaceName }}'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true

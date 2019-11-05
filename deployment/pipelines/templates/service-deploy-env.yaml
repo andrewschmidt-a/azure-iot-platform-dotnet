@@ -22,8 +22,9 @@ stages:
         aksName: crsliot-akspn-test
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
+        
 # Second Pirate ninja test env
-- stage: DeployCRSLDevPN2
+- stage: DeployCRSLDevPN
   dependsOn: []
   displayName: Deploy To CRSL - rg-pirate-ninja-deployment
   jobs:
@@ -41,6 +42,7 @@ stages:
         aksName: crsliot-aks-pn
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
+        
 - stage: DeployCRSLDev
   dependsOn: []
   displayName: Deploy To CRSL - rg-crslbbiot-odin-dev

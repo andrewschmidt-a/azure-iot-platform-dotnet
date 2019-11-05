@@ -1,0 +1,46 @@
+
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  automationName: ''
+  location: ''
+  subscriptionId: ''
+  tenantId: ''
+  keyVaultName: ''
+
+steps:
+
+# Create Automation Account using ARM    
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Azure Automation account"
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '${{ parameters.resourceGroup }}'
+    location: '${{ parameters.location }}'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/automationacct.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/automationacct.json'
+    overrideParameters: '-automationAccountName ${{ parameters.automationName }} -location ${{ parameters.location }}'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true
+
+# create certs, add it to automation acct, create connection using certs/Thumbprint, store the cert to keyvault
+- task: AzurePowerShell@3
+  displayName: "create certificate, connections on automation acct"
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    ScriptType: 'FilePath'
+    ScriptPath: '$(System.DefaultWorkingDirectory)/deployment/scripts/automationAcctCert.ps1'
+    ScriptArguments: '-accountName ${{ parameters.automationName }} -resourceGroup ${{ parameters.resourceGroup }} -subscriptionId ${{ parameters.subscriptionId }} -tenantId ${{ parameters.tenantId }} -keyvaultName ${{ parameters.keyVaultName }}'
+    azurePowerShellVersion: 'LatestVersion'
+
+# import runbook with code, create webhook, store the webhook to keyvault
+- task: AzurePowerShell@3
+  displayName: "import runbook code and create webhook"
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    ScriptType: 'FilePath'
+    ScriptPath: '$(System.DefaultWorkingDirectory)/deployment/scripts/automationAcct.ps1'
+    ScriptArguments: '-accountName ${{ parameters.automationName }} -resourceGroup ${{ parameters.resourceGroup }} -scriptFolder $(System.DefaultWorkingDirectory)/tenant-manager/RunBookCode -keyvaultName ${{ parameters.keyVaultName }}'
+    azurePowerShellVersion: 'LatestVersion'

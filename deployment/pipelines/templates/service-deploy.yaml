@@ -14,7 +14,7 @@ steps:
     azureSubscription: ${{parameters.serviceConnection}}
     azureResourceGroup: ${{parameters.resourceGroup}}
     kubernetesCluster: ${{parameters.aksName}}
-    useClusterAdmin: true
+    useClusterAdmin: false
     namespace: 'default'
     command: 'init'
     arguments: '--force-upgrade'
@@ -32,4 +32,4 @@ steps:
     releaseName: ${{parameters.releaseName}}
     overrideValues: 'image.tag=$(Build.TriggeredBy.BuildId)'
     force: true
-    arguments: '--cleanup-on-fail --timeout 600 --debug'
+    arguments: '--cleanup-on-fail'
