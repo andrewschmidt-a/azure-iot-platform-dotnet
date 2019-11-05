@@ -55,6 +55,12 @@
                 "description": "the pricing tier"
             }
         },
+        "appInsightsName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Application Insight"
+            }
+        },
         "appInsightsLocation": {
             "minLength": 2,
             "type": "string",
@@ -104,7 +110,6 @@
     "variables": {
         "apiVersion": "2016-02-03",
         "location": "[resourceGroup().location]",
-        "applicationInsightName": "[parameters('functionAppName')]",
         "storageVersion": "2016-01-01"
     },
     "resources": [
@@ -172,7 +177,7 @@
                         },
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('functionAppName')), '2015-05-01').InstrumentationKey]"
+                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('appInsightsName')), '2015-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
@@ -182,53 +187,26 @@
                             "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listkeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2015-05-01-preview').key1,';')]"
                         }
-                        //{
-                        //  "name": "WEBSITE_RUN_FROM_PACKAGE",
-                        //  "value": [parameters('codedeployPackageUrl')]
-                        //  //"value": "https://automationtestradha.blob.core.windows.net/function/crsltest-fn-dev.zip?sp=r&st=2019-10-11T18:54:10Z&se=2019-10-12T02:54:10Z&spr=https&sv=2018-03-28&sig=Ov9gY0sRxWetMAp1d8%2BzEazlJLUf6zCK9ABHAc3oKuk%3D&sr=b"
-                        //},
-                        //{
-                        //  "name": "CosmosDbConnectionString",
-                        //  "value": "AccountEndpoint=https://cosmos-odin-mt-poc.documents.azure.com:443/;AccountKey=0Fr4FU7kvZsLLLprOaJsH0YfAmuSiGkQH29mDxRbYd0IPhiqhpf6U10mXd0TpgaYM3hVqs0Y7UXYa2dduyOVVQ==;"
-                        //},
-                        //{
-                        //  "name": "CosmosDbDatabaseName",
-                        //  "value": "iot"
-                        //},
-                        //{
-                        //  "name": "EventHubLifecycle",
-                        //  "value": "Endpoint=sb://eventhubs-odin-mt-poc.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=6nzksDnikxZ9sy7M13ubWJjKxc/qWqlxLDdfH15uDVo=;EntityPath=lifecycle"
-                        //},
-                        //{
-                        //  "name": "EventHubTelemetry",
-                        //  "value": "Endpoint=sb://eventhubs-odin-mt-poc.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=6nzksDnikxZ9sy7M13ubWJjKxc/qWqlxLDdfH15uDVo=;EntityPath=telemetry"
-                        //},
-                        //{
-                        //  "name": "EventHubTwinChange",
-                        //  "value": "Endpoint=sb://eventhubs-odin-mt-poc.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=6nzksDnikxZ9sy7M13ubWJjKxc/qWqlxLDdfH15uDVo=;EntityPath=twin-change"
-                        //}
                     ]
                 }
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', parameters('functionAppName'))]",
-                "[resourceId('Microsoft.Insights/components', parameters('functionAppName'))]"
+                "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]"
             ],
             "resources": []
         },
         {
             "type": "Microsoft.Insights/components",
-            "name": "[parameters('functionAppName')]",
+            "name": "[parameters('appInsightsName')]",
             "location": "[parameters('appInsightsLocation')]",
             "apiVersion": "2014-04-01",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('functionAppName'))]"
-            ],
+            "dependsOn": [],
             "tags": {
-                "displayName": "[parameters('functionAppName')]"
+                "displayName": "[parameters('appInsightsName')]"
             },
             "properties": {
-                "applicationId": "[parameters('functionAppName')]"
+                "applicationId": "[parameters('appInsightsName')]"
             }
         }
     ],

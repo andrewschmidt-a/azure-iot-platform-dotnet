@@ -6,9 +6,10 @@
       "skuName": { "value": "Y1" },
       "skuCapacity": { "value": 1 },
       "skuTier": { "value": "Standard" },
+      "appInsightsName": { "value": ""},
       "appInsightsLocation": { "value": "eastus" },
-      "storageAccountName": { "value": "automationtestradha" },
-      "runtime": { "value": "node" },
+      "storageAccountName": { "value": "" },
+      "runtime": { "value": "dotnet" },
       "funcVersion": { "value": "~2" },
       "codedeployPackageUrl": { "value": "" }
     }
