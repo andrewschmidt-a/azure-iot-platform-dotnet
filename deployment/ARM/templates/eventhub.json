@@ -169,7 +169,7 @@
                         },
                         {
                             "apiVersion": "2017-04-01",
-                            "name": "lifecyclecg",
+                            "name": "dpcache",
                             "type": "consumergroups",
                             "dependsOn": [
                                 "lifecycle"
@@ -217,7 +217,17 @@
                                     "Send"
                                 ]
                             }
+                        },
+                        {
+                            "apiVersion": "2017-04-01",
+                            "name": "messagingfunctions",
+                            "type": "consumergroups",
+                            "dependsOn": [
+                                "telemetry"
+                            ],
+                            "properties": {}
                         }
+
                     ]
                 },
                 {
@@ -248,7 +258,16 @@
                         },
                         {
                             "apiVersion": "2017-04-01",
-                            "name": "twinchangecg",
+                            "name": "dpcache",
+                            "type": "consumergroups",
+                            "dependsOn": [
+                                "twin-change"
+                            ],
+                            "properties": {}
+                        },
+                        {
+                            "apiVersion": "2017-04-01",
+                            "name": "messagingfunctions",
                             "type": "consumergroups",
                             "dependsOn": [
                                 "twin-change"
