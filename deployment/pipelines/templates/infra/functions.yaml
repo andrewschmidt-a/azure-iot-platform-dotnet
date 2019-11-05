@@ -21,7 +21,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionApp1Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
@@ -36,7 +36,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp1Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
@@ -46,7 +46,7 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     scriptLocation: 'inlineScript'
     inlineScript: |-
-      devicetwinPropfn=${{ parameters.functionApp2Name }}
+      devicetwinPropfn=${{ parameters.functionApp1Name }}
       kVaultName=${{ parameters.keyVaultName }}
       cosmosDbConn=$(az keyvault secret show --name "documentDBConnectionString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       lifecycleEvConn=$(az keyvault secret show --name "lifecycleEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
