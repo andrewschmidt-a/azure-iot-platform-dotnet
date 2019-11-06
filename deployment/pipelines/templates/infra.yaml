@@ -140,6 +140,7 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
 
 ## Deploys Automation Account, Runbook, webhook

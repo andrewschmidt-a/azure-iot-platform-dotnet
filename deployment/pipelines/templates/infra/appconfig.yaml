@@ -5,6 +5,7 @@ parameters:
   location: ''
   appConfigName: ''
   aksName: ''
+  keyVaultName: ''
 
 steps:
 - task: AzureResourceGroupDeployment@2
@@ -53,6 +54,17 @@ steps:
       az appconfig kv set --key Global:resourceGroup --value ${{ parameters.resourceGroup }} --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:subscriptionId --value $(az account show | jq -r .id) --name ${{ parameters.appConfigName }} --yes
     addSpnToEnvironment: true
+
+- task: AzureCLI@1
+  displayName: Add Keyvault Name to App Config
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      az appconfig kv set --key KeyVault:name --value ${{ parameters.keyVaultName }} --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:KeyVault:name --value ${{ parameters.keyVaultName }} --name ${{ parameters.appConfigName }} --yes
+    addSpnToEnvironment: true
+
 - task: AzureCLI@1
   displayName: Add Values to App Config
   inputs:
