@@ -6,6 +6,7 @@ parameters:
   appConfigName: ''
   aksName: ''
   keyVaultName: ''
+  storageAccountName: ''
 
 steps:
 - task: AzureResourceGroupDeployment@2
@@ -53,6 +54,8 @@ steps:
       # Set Environment Info
       az appconfig kv set --key Global:resourceGroup --value ${{ parameters.resourceGroup }} --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:subscriptionId --value $(az account show | jq -r .id) --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:StorageAccount:name --value ${{ parameters.storageAccountName }} --name ${{ parameters.appConfigName }} --yes
+
     addSpnToEnvironment: true
 
 - task: AzureCLI@1
