@@ -183,7 +183,7 @@ $result = (Invoke-RestMethod -Method Post -Headers $requestheader -Uri $setAppCo
 
 # Write to table storage
 "Trying to write to table storage"
-$storageAccount = "functiondefinition"
+$storageAccount = $data.storageAccount
 $tableName = "tenant"
 $table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $tableName -storageAccountName $storageAccount
 $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
