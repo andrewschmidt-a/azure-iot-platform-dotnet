@@ -53,11 +53,16 @@ namespace IdentityGateway.WebService.v1.Controllers
             {
                 try
                 {
-                    return HttpContext.Request.GetTenant();
+                    string tenantId = HttpContext.Request.GetTenant();
+                    if (String.IsNullOrEmpty(tenantId))
+                    {
+                        throw new Exception("The TenantId was not attached in the user claims or request headers.");
+                    }
+                    return tenantId;
                 }
                 catch (Exception e)
                 {
-                    throw new Exception("Unable to get the tenantId from the HttpContext.", e);
+                    throw new Exception("Unable to get the tenantId.", e);
                 }
             }
         }
@@ -110,6 +115,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("")]
+        [Authorize("ReadAll")]
         public async Task<UserTenantModel> UserClaimsGetAsync()
         {
             return await this.GetAsync(this.ClaimsUserId);
