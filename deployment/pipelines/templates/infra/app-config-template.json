@@ -106,8 +106,8 @@
     "KeyVault": {
         "aadappid": "",
         "aadappsecret": "",
-        "name": "key-vault-odin",
-        "newName": "key-vault-odin"
+        "name": "OVERWRITTEN_IN_DEPLOYMENT",
+        "newName": "OVERWRITTEN_IN_DEPLOYMENT"
     },
     "Logging": {
         "includescopes": "true",
