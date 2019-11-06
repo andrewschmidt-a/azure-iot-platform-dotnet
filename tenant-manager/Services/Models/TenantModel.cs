@@ -17,10 +17,10 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
 
             this.RowKey = id;
             this.IotHubName = iotHubName;
-            // this.IotHubConnectionString = "";
+            
             this.IsIotHubDeployed = false;
 
-            this.IotHubConnectionString = null;
+            this.IotHubConnectionString = "";
         }
 
         public TenantModel () { }
