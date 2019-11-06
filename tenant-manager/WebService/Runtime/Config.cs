@@ -70,7 +70,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
 
         // KeyVault
         private const string STORAGE_ACCOUNT_CONNECTIN_STRING_KEY = "storageAccountConnectionString";
-        private const string STORAGE_ACCOUNT_NAME = "StorageAccount:name";
+        private const string STORAGE_ACCOUNT_NAME = "Global:StorageAccount:name";
         private const string CREATE_IOT_HUB_WEBHOOK_KEY = "CreateIotHubWebHookUrl";
         private const string DELETE_IOT_HUB_WEBHOOK_KEY = "DeleteIotHubWebHookUrl";
 
