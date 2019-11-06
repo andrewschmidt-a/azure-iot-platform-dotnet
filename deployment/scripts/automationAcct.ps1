@@ -69,6 +69,7 @@ function addtoKeyvault($webookUri, $secretName ){
 Write-Output "Adding modules to Automation Acct .."
 addModulefromGallery -moduleName "Az.Storage"
 addModulefromGallery -moduleName "Az.Accounts"
+addModulefromGallery -moduleName "Az.DeviceProvisioningServices"
 
 # import the runbook with code with the Path specified
 Write-Output "Importing modules to Automation Acct .."
