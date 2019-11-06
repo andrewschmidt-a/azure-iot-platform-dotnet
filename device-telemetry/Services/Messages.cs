@@ -96,7 +96,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 
             return this.timeSeriesEnabled ? 
                 await this.GetListFromTimeSeriesAsync(from, to, order, skip, limit, devices) : 
-                this.GetListFromCosmosDb(from, to, order, skip, limit, devices);
+                await this.GetListFromCosmosDbAsync(from, to, order, skip, limit, devices);
         }
 
         private async Task<MessageList> GetListFromTimeSeriesAsync(
@@ -110,7 +110,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             return await this.timeSeriesClient.QueryEventsAsync(from, to, order, skip, limit, devices);
         }
 
-        private MessageList GetListFromCosmosDb(
+        private async Task<MessageList> GetListFromCosmosDbAsync(
             DateTimeOffset? from,
             DateTimeOffset? to,
             string order,
@@ -136,7 +136,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             queryOptions.EnableCrossPartitionQuery = true;
             queryOptions.EnableScanInQuery = true;
 
-            List<Document> docs = this.storageClient.QueryDocuments(
+            List<Document> docs = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
                 this.collectionId,
                 queryOptions,

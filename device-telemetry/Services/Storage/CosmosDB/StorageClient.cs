@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
             string colId,
             string docId);
 
-        List<Document> QueryDocuments(
+        Task<List<Document>> QueryDocumentsAsync(
             string databaseName,
             string colId,
             FeedOptions queryOptions,
@@ -41,7 +42,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
             int skip,
             int limit);
 
-        int QueryCount(
+        Task<int> QueryCountAsync(
             string databaseName,
             string colId,
             FeedOptions queryOptions,
@@ -52,6 +53,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
 
     public class StorageClient : IStorageClient, IDisposable
     {
+        private const string STORAGE_PARTITION_KEY = "deviceId";
+
         private readonly ILogger log;
         private Uri storageUri;
         private string storagePrimaryKey;
@@ -78,6 +81,13 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
             collectionInfo.IndexingPolicy = new IndexingPolicy(
                 new Index[] { index });
             collectionInfo.Id = id;
+            collectionInfo.PartitionKey = new PartitionKeyDefinition
+            {
+                Paths = new Collection<string>
+                {
+                    STORAGE_PARTITION_KEY
+                }
+            };
 
             // Azure Cosmos DB collections can be reserved with
             // throughput specified in request units/second.
@@ -138,6 +148,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
                 colId,
                 docId);
 
+            await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
             try
             {
                 return await this.client.DeleteDocumentAsync(
@@ -213,7 +224,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
             return result;
         }
 
-        public List<Document> QueryDocuments(
+        public async Task<List<Document>> QueryDocumentsAsync(
             string databaseName,
             string colId,
             FeedOptions queryOptions,
@@ -227,6 +238,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
                 queryOptions.EnableCrossPartitionQuery = true;
                 queryOptions.EnableScanInQuery = true;
             }
+
+            await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
 
             List<Document> docs = new List<Document>();
             string collectionLink = string.Format(
@@ -252,7 +265,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
             return docs;
         }
 
-        public int QueryCount(
+        public async Task<int> QueryCountAsync(
             string databaseName,
             string colId,
             FeedOptions queryOptions,
@@ -270,6 +283,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
                 databaseName,
                 colId);
 
+            await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
             var resultList = this.client.CreateDocumentQuery(
                 collectionLink,
                 querySpec,
@@ -293,6 +307,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
             string colUrl = string.Format("/dbs/{0}/colls/{1}",
                 databaseName, colId);
 
+            await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
             try
             {
                 return await this.client.UpsertDocumentAsync(colUrl, document,
