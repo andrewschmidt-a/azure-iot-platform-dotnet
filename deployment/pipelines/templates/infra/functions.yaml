@@ -54,12 +54,11 @@ steps:
       telemetryEvConn=$(az keyvault secret show --name "telemetryEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       twinchangeEvConn=$(az keyvault secret show --name "twinChangeEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       az functionapp config appsettings set --name $devicetwinPropfn \
-        --settings "cosmosconnection"="$cosmosDbConn" \
+        --settings "CosmosConnection"="$cosmosDbConn" \
           "DeviceOperationsDB"="iot" \
           "EventHubTelemetry"="$telemetryEvConn" \
           "DeviceCG"="messagingfunctions" \
           "DPCacheCG"="dpcache" \
-          "CosmosConnection"="$cosmosDbConn" \
           "CosmosDB"="pcs-storage" \
           "CosmosDBRus"="400" \
           "EventHubLifecycle"="$lifecycleEvConn" \
