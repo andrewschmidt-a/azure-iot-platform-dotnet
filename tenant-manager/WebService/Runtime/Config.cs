@@ -1,9 +1,8 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Mmm.Crsl.Platform.IoT.Common.WebService.Auth;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using Mmm.Crsl.Platform.IoT.Common.Services.Runtime;
+using MMM.Azure.IoTSolutions.TenantManager.WebService.Auth;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
 {
