@@ -8,6 +8,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
         // public string IotHubConnectionString { get; set; }
         public bool IsIotHubDeployed { get; set; }
 
+        public string IotHubConnectionString {get; set;}
+
         public TenantModel (string id, string iotHubName)
         {
             // Use the first character of the tenant id as the partion key as it is randomly distributed
@@ -17,6 +19,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
             this.IotHubName = iotHubName;
             // this.IotHubConnectionString = "";
             this.IsIotHubDeployed = false;
+
+            this.IotHubConnectionString = null;
         }
 
         public TenantModel () { }
