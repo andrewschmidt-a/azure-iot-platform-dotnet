@@ -60,7 +60,7 @@
             "rus": "400"
         },
         "KeyVault": {
-            "name": "key-vault-odin"
+            "name": "OVERWRITTEN_IN_DEPLOYMENT"
         },
         "Permissions": {
             "admin": {
