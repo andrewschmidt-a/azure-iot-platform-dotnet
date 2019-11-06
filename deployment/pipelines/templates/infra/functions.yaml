@@ -22,7 +22,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionApp1Name }} -appInsightsName ${{ parameters.appInsightsName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp1Name }} -appInsightsName ${{ parameters.appInsightsName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet -funcVersion ~1'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
@@ -37,7 +37,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -appInsightsName ${{ parameters.appInsightsName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -appInsightsName ${{ parameters.appInsightsName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet -funcVersion ~2'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
