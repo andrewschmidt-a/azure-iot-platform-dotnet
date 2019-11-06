@@ -19,7 +19,6 @@ using WebService;
 namespace IdentityGateway.WebService.v1.Controllers
 {
     [Route("v1/tenants"), TypeFilter(typeof(ExceptionsFilterAttribute))]
-    [Authorize("ReadAll")]
     public class UserTenantController : ControllerBase
     {
         private UserTenantContainer _container;
@@ -69,6 +68,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("users")]
+        [Authorize("ReadAll")]
         public async Task<UserTenantListModel> GetAllUsersForTenantAsync()
         {
             UserTenantInput input = new UserTenantInput
@@ -95,6 +95,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet("{userId}/all")]
+        [Authorize("ReadAll")]
         public async Task<UserTenantListModel> GetAllTenantsForUserAsync(string userId)
         {
             UserTenantInput input = new UserTenantInput
@@ -121,6 +122,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <returns></returns>
         // GET: api/User/5
         [HttpGet("{userId}")]
+        [Authorize("ReadAll")]
         public async Task<UserTenantModel> GetAsync(string userId)
         {
             UserTenantInput input = new UserTenantInput
