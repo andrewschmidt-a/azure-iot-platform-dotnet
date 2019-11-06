@@ -68,11 +68,17 @@ function addtoKeyvault($webookUri, $secretName ){
 # import modules from PS Gallery
 Write-Output "Adding modules to Automation Acct .."
 addModulefromGallery -moduleName "Az.Accounts"
+Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.AppConfiguration"
+Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.Automation"
+Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.DeviceProvisioningServices"
+Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.Resources"
+Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.Storage"
+Start-Sleep -Seconds 120
 addModulefromGallery -moduleName "AzTable"
 
 # import the runbook with code with the Path specified
