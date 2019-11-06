@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using Mmm.Crsl.Platform.IoT.Common.WebService.Auth;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Auth;
+using Mmm.Crsl.Platform.IoT.Common.Services.Runtime;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
 {
@@ -29,7 +30,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
         private const string RESOURCE_GROUP_KEY = GLOBAL_KEY + "resourceGroup";
 
         private const string KEYVAULT_NAME_KEY = GLOBAL_KEY + "KeyVault:name";
-        
+
         private const string GLOBAL_AAD_KEY = GLOBAL_KEY + "AzureActiveDirectory:";
         private const string AAD_APP_ID_KEY = GLOBAL_AAD_KEY + "aadappid";
         private const string AAD_APP_SECRET_KEY = GLOBAL_AAD_KEY + "aadappsecret";
@@ -70,6 +71,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
 
         // KeyVault
         private const string STORAGE_ACCOUNT_CONNECTIN_STRING_KEY = "storageAccountConnectionString";
+        private const string STORAGE_ACCOUNT_NAME = "StorageAccount:name";
         private const string CREATE_IOT_HUB_WEBHOOK_KEY = "CreateIotHubWebHookUrl";
         private const string DELETE_IOT_HUB_WEBHOOK_KEY = "DeleteIotHubWebHookUrl";
 
@@ -107,6 +109,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
                 StorageAdapterDatabseId = configData.GetString(STORAGE_ADAPTER_DB_ID_KEY),
                 UserPermissions = configData.GetUserPermissions(),
                 StorageAccountConnectionString = configData.GetString(STORAGE_ACCOUNT_CONNECTIN_STRING_KEY),
+                StorageAccountName = configData.GetString(STORAGE_ACCOUNT_NAME),
                 IdentityGatewayWebServiceUrl = configData.GetString(IDENTITY_GATEWAY_WEBSERVICE_URL_KEY),
                 ConfigWebServiceUrl = configData.GetString(CONFIG_WEBSERVICE_URL_KEY)
             };
