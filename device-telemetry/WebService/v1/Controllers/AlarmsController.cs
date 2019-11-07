@@ -35,7 +35,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
 
         [HttpGet(Version.PATH + "/[controller]")]
         [Authorize("ReadAll")]
-        public AlarmListApiModel List(
+        public async Task<AlarmListApiModel> ListAsync(
             [FromQuery] string from,
             [FromQuery] string to,
             [FromQuery] string order,
@@ -49,18 +49,18 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
                 deviceIds = devices.Split(',');
             }
 
-            return this.ListHelper(from, to, order, skip, limit, deviceIds);
+            return await this.ListHelperAsync(from, to, order, skip, limit, deviceIds);
         }
 
         [HttpPost(Version.PATH + "/[controller]")]
         [Authorize("ReadAll")]
-        public AlarmListApiModel Post([FromBody] QueryApiModel body)
+        public async Task<AlarmListApiModel> PostAsync([FromBody] QueryApiModel body)
         {
             string[] deviceIds = body.Devices == null
                 ? new string[0]
                 : body.Devices.ToArray();
 
-            return this.ListHelper(
+            return await this.ListHelperAsync(
                 body.From,
                 body.To,
                 body.Order,
@@ -71,9 +71,9 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
 
         [HttpGet(Version.PATH + "/[controller]/{id}")]
         [Authorize("ReadAll")]
-        public AlarmApiModel Get([FromRoute] string id)
+        public async Task<AlarmApiModel> GetAsync([FromRoute] string id)
         {
-            Alarm alarm = this.alarmService.Get(id);
+            Alarm alarm = await this.alarmService.GetAsync(id);
             return new AlarmApiModel(alarm);
         }
 
@@ -126,7 +126,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
             this.alarmService.Delete(alarmList.Items);
         }
 
-        private AlarmListApiModel ListHelper(
+        private async Task<AlarmListApiModel> ListHelperAsync(
             string from,
             string to,
             string order,
@@ -147,7 +147,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
                 throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
             }
 
-            List<Alarm> alarmsList = this.alarmService.List(
+            List<Alarm> alarmsList = await this.alarmService.ListAsync(
                 fromDate,
                 toDate,
                 order,

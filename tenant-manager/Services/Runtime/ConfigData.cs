@@ -48,6 +48,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
             "ExternalDependencies",
             "TenantManagerService",
             "StorageAdapter",
+            "Global:StorageAccount"
         };
 
         public ConfigData(ILogger logger)

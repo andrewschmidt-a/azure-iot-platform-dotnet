@@ -96,7 +96,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 
             return this.timeSeriesEnabled ? 
                 await this.GetListFromTimeSeriesAsync(from, to, order, skip, limit, devices) : 
-                this.GetListFromCosmosDb(from, to, order, skip, limit, devices);
+                await this.GetListFromCosmosDbAsync(from, to, order, skip, limit, devices);
         }
 
         private async Task<MessageList> GetListFromTimeSeriesAsync(
@@ -110,7 +110,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             return await this.timeSeriesClient.QueryEventsAsync(from, to, order, skip, limit, devices);
         }
 
-        private MessageList GetListFromCosmosDb(
+        private async Task<MessageList> GetListFromCosmosDbAsync(
             DateTimeOffset? from,
             DateTimeOffset? to,
             string order,
@@ -128,7 +128,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 order, "_timeReceived",
                 skip,
                 limit,
-                devices, "_deviceId");
+                devices, "deviceId");
 
             this.log.Debug("Created Message Query", () => new { sql });
 
@@ -136,7 +136,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             queryOptions.EnableCrossPartitionQuery = true;
             queryOptions.EnableScanInQuery = true;
 
-            List<Document> docs = this.storageClient.QueryDocuments(
+            List<Document> docs = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
                 this.collectionId,
                 queryOptions,
@@ -161,7 +161,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 foreach (var item in jsonDoc)
                 {
                     // Ignore fields that werent sent by device (system fields)"
-                    if (!item.Key.StartsWith(SYSTEM_PREFIX) && item.Key != "id")
+                    if (!item.Key.StartsWith(SYSTEM_PREFIX) && item.Key != "id" && item.Key != "deviceId")
                     {
                         string key = item.Key.ToString();
                         data.Add(key, item.Value);
@@ -171,7 +171,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                     }
                 }
                 messages.Add(new Message(
-                    doc.GetPropertyValue<string>("_deviceId"),
+                    doc.GetPropertyValue<string>("deviceId"),
                     doc.GetPropertyValue<long>("_timeReceived"),
                     data));
             }

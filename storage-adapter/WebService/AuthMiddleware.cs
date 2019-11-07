@@ -22,10 +22,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
         private RequestDelegate requestDelegate;
 
         private readonly ILogger log;
-        public AuthMiddleware(RequestDelegate requestDelegate,
-            ILogger log)
+        public AuthMiddleware(RequestDelegate requestDelegate, ILogger log)
         {
             this.requestDelegate = requestDelegate;
+            this.log = log;
         }
 
         public Task Invoke(HttpContext context)

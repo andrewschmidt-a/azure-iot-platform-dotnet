@@ -73,9 +73,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
             try
             {
                 response = await this._httpClient.SendAsync(request, method);
-                if (response.StatusCode != HttpStatusCode.OK)
+                if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.NoContent)
                 {
-                    throw new Exception("Http Request returned a status code other than 200.");
+                    throw new Exception($"Http Request was unsuccessful with status code: {response.StatusCode}.");
                 }
             }
             catch (Exception e)
@@ -84,11 +84,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
             }
 
             string responseContent = response?.Content?.ToString();
-            if (String.IsNullOrEmpty(responseContent))
-            {
-                throw new Exception("The response was null or did not contain any content. Unable deserialize to the proper API model.");
-            }
-
             try
             {
                 return JsonConvert.DeserializeObject<T>(responseContent);

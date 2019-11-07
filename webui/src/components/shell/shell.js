@@ -42,7 +42,6 @@ class Shell extends Component {
               <div className="access-denied">
                 <Trans i18nKey={'accessDenied.message'}>
                   You don't have permissions.
-                  <Hyperlink href="/tenantmanagement" target="_blank">{t('accessDenied.createTenant')}</Hyperlink>
                 </Trans>
               </div>
               {children}

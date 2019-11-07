@@ -12,7 +12,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers
     public class AppConfigurationHelper : IAppConfigurationHelper
     {
         private ConfigurationClient client;
-        private IServicesConfig _config;
 
         public AppConfigurationHelper(IServicesConfig config)
         {

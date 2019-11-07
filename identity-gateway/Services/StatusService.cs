@@ -36,12 +36,6 @@ namespace IdentityGateway.Services
             var storageResult = await this._userTenantContainer.PingAsync();
             SetServiceStatus("TableStorage", storageResult, result, errors);
 
-            // Check KeyVault
-            var keyVaulthelper = new KeyVaultHelpers(this._config);
-            var kvResult = await keyVaulthelper.PingAsync();
-            SetServiceStatus("KeyVault", kvResult, result, errors);
-
-
             // Check Azure B2C instance
             StatusResultServiceModel azureB2CResult;
 

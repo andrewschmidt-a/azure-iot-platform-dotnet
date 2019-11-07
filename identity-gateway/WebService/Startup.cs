@@ -70,7 +70,6 @@ namespace IdentityGateway.WebService
             services.AddSingleton<IStatusService, StatusService>();
             services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
             services.AddSingleton<IRsaHelpers, RsaHelpers>();
-            services.AddTransient<IKeyVaultHelpers, KeyVaultHelpers>();
             services.AddTransient<ISendGridClientFactory, SendGridClientFactory>();
             services.AddTransient<ITableHelper, TableHelper>();
 

@@ -185,16 +185,14 @@ namespace Services.Test
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [MemberData(nameof(GetRoleLists))]
-        public async void UpdateThrowsWhenUserTenantRoleListIsEmpty(string roles)
+        public async void UpdateDoesNotThrowWhenUserTenantRoleListIsNullOrEmptyOrWhitespace(string roles)
         {
             // Arrange
             someUserTenantInput.Roles = roles;
 
             // Act
-            Func<Task> a = async () => await userTenantContainer.UpdateAsync(someUserTenantInput);
-
             // Assert
-            Assert.ThrowsAsync<ArgumentException>(a);
+            await userTenantContainer.UpdateAsync(someUserTenantInput);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

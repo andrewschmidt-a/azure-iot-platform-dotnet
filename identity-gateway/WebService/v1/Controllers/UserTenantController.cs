@@ -19,7 +19,6 @@ using WebService;
 namespace IdentityGateway.WebService.v1.Controllers
 {
     [Route("v1/tenants"), TypeFilter(typeof(ExceptionsFilterAttribute))]
-    [Authorize("ReadAll")]
     public class UserTenantController : ControllerBase
     {
         private UserTenantContainer _container;
@@ -54,11 +53,16 @@ namespace IdentityGateway.WebService.v1.Controllers
             {
                 try
                 {
-                    return HttpContext.Request.GetTenant();
+                    string tenantId = HttpContext.Request.GetTenant();
+                    if (String.IsNullOrEmpty(tenantId))
+                    {
+                        throw new Exception("The TenantId was not attached in the user claims or request headers.");
+                    }
+                    return tenantId;
                 }
                 catch (Exception e)
                 {
-                    throw new Exception("Unable to get the tenantId from the HttpContext.", e);
+                    throw new Exception("Unable to get the tenantId.", e);
                 }
             }
         }
@@ -69,6 +73,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("users")]
+        [Authorize("ReadAll")]
         public async Task<UserTenantListModel> GetAllUsersForTenantAsync()
         {
             UserTenantInput input = new UserTenantInput
@@ -95,6 +100,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <param name="userId"></param>
         /// <returns></returns>
         [HttpGet("{userId}/all")]
+        [Authorize("ReadAll")]
         public async Task<UserTenantListModel> GetAllTenantsForUserAsync(string userId)
         {
             UserTenantInput input = new UserTenantInput
@@ -109,6 +115,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("")]
+        [Authorize("ReadAll")]
         public async Task<UserTenantModel> UserClaimsGetAsync()
         {
             return await this.GetAsync(this.ClaimsUserId);
@@ -121,6 +128,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         /// <returns></returns>
         // GET: api/User/5
         [HttpGet("{userId}")]
+        [Authorize("ReadAll")]
         public async Task<UserTenantModel> GetAsync(string userId)
         {
             UserTenantInput input = new UserTenantInput

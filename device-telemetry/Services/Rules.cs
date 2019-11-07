@@ -221,7 +221,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             // get open alarm count and most recent alarm for each rule
             foreach (var rule in rulesList)
             {
-                var alarmCount = this.alarms.GetCountByRule(
+                var alarmCount = await this.alarms.GetCountByRuleAsync(
                     rule.Id,
                     from,
                     to,
@@ -234,7 +234,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 }
 
                 // get most recent alarm for rule
-                var recentAlarm = this.GetLastAlarmForRule(rule.Id, from, to, devices);
+                var recentAlarm = await this.GetLastAlarmForRuleAsync(rule.Id, from, to, devices);
 
                 // add alarmCountByRule to list
                 alarmCountByRuleList.Add(
@@ -346,13 +346,13 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             return updatedRule;
         }
 
-        private Alarm GetLastAlarmForRule(
+        private async Task<Alarm> GetLastAlarmForRuleAsync(
             string id,
             DateTimeOffset? from,
             DateTimeOffset? to,
             string[] devices)
         {
-            var resultList = this.alarms.ListByRule(
+            var resultList = await this.alarms.ListByRuleAsync(
                 id,
                 from,
                 to,

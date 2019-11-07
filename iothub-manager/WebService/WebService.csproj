@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
-    <LangVersion>7</LangVersion>
     <AssemblyName>Microsoft.Azure.IoTSolutions.IotHubManager.WebService</AssemblyName>
     <RootNamespace>Microsoft.Azure.IoTSolutions.IotHubManager.WebService</RootNamespace>
-    <StartupObject>Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Program</StartupObject>
   </PropertyGroup>
+
   <ItemGroup>
     <Content Include="appsettings.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Autofac" Version="4.6.2" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
@@ -21,12 +21,15 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="2.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="2.1.4" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\AuthUtils\AuthUtils.csproj" />
     <ProjectReference Include="..\RecurringTasksAgent\RecurringTasksAgent.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <Folder Include="Properties" />
   </ItemGroup>
+  
 </Project>

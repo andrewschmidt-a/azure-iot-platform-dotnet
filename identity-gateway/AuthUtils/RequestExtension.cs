@@ -122,26 +122,27 @@ namespace IdentityGateway.AuthUtils
             string tenantId = null;
             if (IsExternalRequest(request)) // If external then get from claims
             {
-                if (GetCurrentUserClaims(request).All(t => t.Type != CLAIM_KEY_TENANT_ID))
+                if (GetCurrentUserClaims(request).Any(t => t.Type == CLAIM_KEY_TENANT_ID))
                 {
-                    throw new Exception(CLAIM_KEY_TENANT_ID + " claim not found");
+                    tenantId = GetCurrentUserClaims(request).First(t => t.Type == CLAIM_KEY_TENANT_ID).Value;
                 }
-
-                tenantId = GetCurrentUserClaims(request).First(t => t.Type == CLAIM_KEY_TENANT_ID).Value;
+                else
+                {
+                    tenantId = null;
+                }
             }
             else // service to service -- get from Header
             {
-                if (!request.Headers.ContainsKey(HEADER_KEY_TENANT_ID))
+                if (request.Headers.ContainsKey(HEADER_KEY_TENANT_ID))
                 {
-                    throw new Exception(HEADER_KEY_TENANT_ID + " header not found");
+                    tenantId = request.Headers[HEADER_KEY_TENANT_ID];
                 }
-
-                tenantId = request.Headers[HEADER_KEY_TENANT_ID];
+                else
+                {
+                    tenantId = null;
+                }
             }
-
             SetTenant(request, tenantId);
-
-
             return; 
         }
         // Set the user's Tenant  from string

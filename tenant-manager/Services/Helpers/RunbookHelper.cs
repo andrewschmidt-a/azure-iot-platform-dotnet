@@ -120,7 +120,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
                 twinChangeEventHubConnString = this._config.TwinChangeEventHubConnectionString,
                 lifecycleEventHubConnString = this._config.LifecycleEventHubConnectionString,
                 appConfigConnectionString = this._config.AppConfigConnectionString,
-                setAppConfigEndpoint = this._config.AppConfigEndpoint
+                setAppConfigEndpoint = this._config.AppConfigEndpoint,
+                storageAccount = this._config.StorageAccountName
             };
 
             try
