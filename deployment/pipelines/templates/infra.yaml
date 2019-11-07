@@ -24,132 +24,132 @@ parameters:
   deployEnvironment: ''
   
 jobs:
-# - job: aks
-#   displayName: Deploy AKS
-#   pool:
-#     vmImage: 'ubuntu-16.04'
-#   steps:
-# ## Tags resources by injecting tags into ARM Templates
-#   - template: infra/tagARM.yaml
-#     parameters:
-#       environment: ${{ parameters.environment }}
-# ## Deploys Loganalytics/OMS workspace
-#   - template: infra/loganalytics.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       location: ${{ parameters.location }}
-#       omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
-# ## Deploys AKS, integrate with OMS workspace
-#   - template: infra/aks.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
-#       location: ${{ parameters.location }}
-#       omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
+- job: aks
+  displayName: Deploy AKS
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+## Tags resources by injecting tags into ARM Templates
+  - template: infra/tagARM.yaml
+    parameters:
+      environment: ${{ parameters.environment }}
+## Deploys Loganalytics/OMS workspace
+  - template: infra/loganalytics.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      location: ${{ parameters.location }}
+      omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
+## Deploys AKS, integrate with OMS workspace
+  - template: infra/aks.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
+      location: ${{ parameters.location }}
+      omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
      
-# - job: resources
-#   displayName: Deploy Resources
-#   dependsOn: aks
-#   pool:
-#     vmImage: 'ubuntu-16.04'
-#   steps:
-# ## Tags resources by injecting tags into ARM Templates
-#   - template: infra/tagARM.yaml
-# ## Deploys Application Insights
-#   - template: infra/appinsights.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
-#       appInsightsLocation: ${{ parameters.appInsightsLocation }}
-#       location: ${{ parameters.location }}
+- job: resources
+  displayName: Deploy Resources
+  dependsOn: aks
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+## Tags resources by injecting tags into ARM Templates
+  - template: infra/tagARM.yaml
+## Deploys Application Insights
+  - template: infra/appinsights.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
+      appInsightsLocation: ${{ parameters.appInsightsLocation }}
+      location: ${{ parameters.location }}
 
-# ## Deploys CosmosDB
-#   - template: infra/cosmosdb.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       cosmosDBAccount: ${{ parameters.applicationCode }}-cosmos-${{ parameters.deployEnvironment }}
-#       cosmosDBName: ${{ parameters.cosmosDBName }}
-#       location: ${{ parameters.location }}
-#       throughput: ${{ parameters.cosmosDBthroughput }}
-#       collectionName: ${{ parameters.collectionName }}
+## Deploys CosmosDB
+  - template: infra/cosmosdb.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      cosmosDBAccount: ${{ parameters.applicationCode }}-cosmos-${{ parameters.deployEnvironment }}
+      cosmosDBName: ${{ parameters.cosmosDBName }}
+      location: ${{ parameters.location }}
+      throughput: ${{ parameters.cosmosDBthroughput }}
+      collectionName: ${{ parameters.collectionName }}
 
-# ## Deploys Storage Account
-#   - template: infra/storageaccount.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       location: ${{ parameters.location }}
-#       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
-#       blobContainerName: ${{ parameters.blobContainerName }}
+## Deploys Storage Account
+  - template: infra/storageaccount.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      location: ${{ parameters.location }}
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      blobContainerName: ${{ parameters.blobContainerName }}
 
-# ## Deploys EventHubs
-#   - template: infra/eventhubs.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       subscriptionId: ${{ parameters.subscriptionId }}
-#       eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
-#       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
-#       location: ${{ parameters.location }}
+## Deploys EventHubs
+  - template: infra/eventhubs.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      subscriptionId: ${{ parameters.subscriptionId }}
+      eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      location: ${{ parameters.location }}
 
-# ## Deploys Azure Maps
-#   - template: infra/maps.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       mapsName: ${{ parameters.applicationCode }}-mapsacct-${{ parameters.deployEnvironment }}
+## Deploys Azure Maps
+  - template: infra/maps.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      mapsName: ${{ parameters.applicationCode }}-mapsacct-${{ parameters.deployEnvironment }}
 
-# ## Deploys KeyVault and load the secrets to keyvault
-#   - template: infra/keyvault.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       location: ${{ parameters.location }}
-#       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
-#       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
-#       userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
+## Deploys KeyVault and load the secrets to keyvault
+  - template: infra/keyvault.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      location: ${{ parameters.location }}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
+      userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
       
-# ## Create Private/Public Key Pair for Identity Gateway 
-#   - template: infra/identitygateway.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
+## Create Private/Public Key Pair for Identity Gateway 
+  - template: infra/identitygateway.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
 
-# ## Deploys Function Apps
-#   - template: infra/functions.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       functionApp1Name: ${{ parameters.applicationCode }}-devicetwinfuncapp-${{ parameters.deployEnvironment }}
-#       functionApp2Name: ${{ parameters.applicationCode }}-appconfigfuncapp-${{ parameters.deployEnvironment }}
-#       appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
-#       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
-#       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
-#       location: ${{ parameters.location }}
-#       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }} 
+## Deploys Function Apps
+  - template: infra/functions.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      functionApp1Name: ${{ parameters.applicationCode }}-devicetwinfuncapp-${{ parameters.deployEnvironment }}
+      functionApp2Name: ${{ parameters.applicationCode }}-appconfigfuncapp-${{ parameters.deployEnvironment }}
+      appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      location: ${{ parameters.location }}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }} 
 
-# ## Deploys App Config
-#   - template: infra/appconfig.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
-#       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
-#       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
-#       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
-#       location: ${{ parameters.location }}
+## Deploys App Config
+  - template: infra/appconfig.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      location: ${{ parameters.location }}
 
 ## Deploys Automation Account, Runbook, webhook
 - job: automationacct 
   displayName: Create Automation Acct
-  # dependsOn: 
-  #   - aks
-  #   - resources
+  dependsOn: 
+    - aks
+    - resources
   pool: 
     vmImage: 'windows-latest'
   steps:
@@ -164,15 +164,15 @@ jobs:
       tenantId: ${{ parameters.tenantId }}
 
 ## Deploying Ingress Controller, Cert manager and Ingress for the platform
-# - job: ingress
-#   displayName: Deploy Ingress
-#   dependsOn: aks
-#   pool:
-#     vmImage: 'ubuntu-16.04'
-#   steps:
-#   - template: infra/ingress.yaml
-#     parameters:
-#       serviceConnection: ${{ parameters.serviceConnection }}
-#       resourceGroup: ${{ parameters.resourceGroup }}
-#       aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
-#       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
+- job: ingress
+  displayName: Deploy Ingress
+  dependsOn: aks
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - template: infra/ingress.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
