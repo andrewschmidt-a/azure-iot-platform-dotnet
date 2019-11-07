@@ -25,7 +25,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
         // GET api/tenantready/<tenantId>
         [HttpGet("{tenantId}")]
-        [Authorize("ReadAll")]
         public async Task<bool> GetAsync(string tenantId)
         {
             return await this._tenantContainer.TenantIsReadyAsync(tenantId);

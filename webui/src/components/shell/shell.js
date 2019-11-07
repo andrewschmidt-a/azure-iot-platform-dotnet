@@ -32,7 +32,7 @@ class Shell extends Component {
   }
 
   render() {
-    const { pagesConfig, t, theme, children, denyAccess, logout, createTenant } = this.props;
+    const { pagesConfig, t, theme, children, denyAccess } = this.props;
     return (
       <FluentShell theme={theme} isRtl={false} navigation={this.getNavProps()} masthead={this.getMastheadProps()}>
         {

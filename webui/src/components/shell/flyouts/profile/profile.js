@@ -104,9 +104,7 @@ export const Profile = (props) => {
                   <Cell id="create-tenant-cell">
                     <Btn className="create-tenant-button" primary={true} onClick=
                       {() =>
-                        createTenant().subscribe(r => {
-                          (tenants && tenants.length > 0) ? fetchTenants() : logout()
-                        })
+                        createTenant().subscribe(r => fetchTenants())
                       }>
                       {t('profileFlyout.tenants.createTenant')}
                     </Btn>
