@@ -19,6 +19,9 @@ if (-Not $WebhookData) {
     Write-Error "This runbook is meant to be started from an Azure alert webhook only."
 }
 
+# Retrieve the data from the Webhook request body
+$data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
+
 # Authenticate with the service principle
 $connectionName = "AzureRunAsConnection"
 try
@@ -44,8 +47,7 @@ catch {
     }
 }
 
-# Retrieve the data from the Webhook request body
-$data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
+# Get data
 $appConfigConnectionString = $data.appConfigConnectionString
 $setAppConfigEndpoint = $data.setAppConfigEndpoint
 $data.token
