@@ -26,10 +26,11 @@ try
     $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName
 
     "Logging in to Azure..."
-    $connectionResult =  Connect-AzAccount -Tenant $servicePrincipalConnection.TenantID `
+    $connectionResult = Connect-AzAccount -Tenant $servicePrincipalConnection.TenantID `
                              -ApplicationId $servicePrincipalConnection.ApplicationID   `
                              -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint `
                              -ServicePrincipal
+                             -SubscriptionId $data.subscriptionId
     "Logged in."
 }
 catch {
