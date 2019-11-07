@@ -40,6 +40,24 @@ stages:
       applicationCode: crsliot
       deployEnvironment: qa      
       
+## CRSL CT ----
+- stage: DeployCRSLCT
+  dependsOn: []
+  #- DeployCRSLDev
+  displayName: Deploy To CRSL CT
+  jobs:
+  - template: templates/approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment_CT
+  - template: templates/infra.yaml
+    parameters:
+      serviceConnection: '3M-CRSLAD18-BBIoTP-CT'
+      resourceGroup: rg-iot-crsl-ct
+      location: centralus
+      environment: IoT_CRSL_Environment_CT
+      subscriptionId: f27c7c03-1ea8-49b8-9878-106e434b8a23
+      applicationCode: crsliot
+      deployEnvironment: ct      
 ## CRSL WKBNCH ----
 - stage: DeployCRSLWkBnch
   dependsOn: []
