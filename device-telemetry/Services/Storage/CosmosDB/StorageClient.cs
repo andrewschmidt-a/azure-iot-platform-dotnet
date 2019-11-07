@@ -121,7 +121,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
             {
                 try
                 {
-                    response = await this.client.CreateDocumentCollectionAsync(
+                    response = await this.client.CreateDocumentCollectionIfNotExistsAsync(
                         dbUrl,
                         collectionInfo,
                         requestOptions);
@@ -130,7 +130,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
                 {
                     this.log.Error("Error creating collection.",
                         () => new { id, dbUrl, collectionInfo, ex });
-                    throw;
+                    throw new Exception("Could not create the collection");
                 }
             }
 
@@ -322,7 +322,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
 
         public void Dispose()
         {
-            if (!this.client.IsNull())
+            if (this.client != null)
             {
                 this.client.Dispose();
             }
