@@ -53,7 +53,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
 
     public class StorageClient : IStorageClient, IDisposable
     {
-        private const string STORAGE_PARTITION_KEY = "deviceId";
+        private const string STORAGE_PARTITION_KEY = "/deviceId";
 
         private readonly ILogger log;
         private Uri storageUri;
@@ -81,13 +81,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB
             collectionInfo.IndexingPolicy = new IndexingPolicy(
                 new Index[] { index });
             collectionInfo.Id = id;
-            collectionInfo.PartitionKey = new PartitionKeyDefinition
-            {
-                Paths = new Collection<string>
-                {
-                    STORAGE_PARTITION_KEY
-                }
-            };
+            collectionInfo.PartitionKey.Paths.Add(STORAGE_PARTITION_KEY);
 
             // Azure Cosmos DB collections can be reserved with
             // throughput specified in request units/second.
