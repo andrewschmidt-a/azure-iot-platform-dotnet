@@ -29,7 +29,7 @@ try
     $connectionResult = Connect-AzAccount -Tenant $servicePrincipalConnection.TenantID `
                              -ApplicationId $servicePrincipalConnection.ApplicationID   `
                              -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint `
-                             -ServicePrincipal
+                             -ServicePrincipal `
                              -SubscriptionId $data.subscriptionId
     "Logged in."
 }
