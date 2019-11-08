@@ -41,7 +41,7 @@ namespace IdentityGateway.Services.Helpers
             // Create a userTenantInput for the purpose of finding the full tenant list associated with this user
             UserTenantInput tenantInput = new UserTenantInput
             {
-                userId = userId
+                UserId = userId
             };
             UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
             List<UserTenantModel> tenantList = tenantsModel.models;
@@ -53,8 +53,8 @@ namespace IdentityGateway.Services.Helpers
                 // Create a UserSettingsInput for the purpose of finding the LastUsedTenant setting for this user
                 UserSettingsInput settingsInput = new UserSettingsInput
                 {
-                    userId = userId,
-                    settingKey = "LastUsedTenant"
+                    UserId = userId,
+                    SettingKey = "LastUsedTenant"
                 };
                 UserSettingsModel lastUsedSetting = await this._userSettingsContainer.GetAsync(settingsInput);
                 // Has last used tenant and it is in the list
@@ -76,8 +76,8 @@ namespace IdentityGateway.Services.Helpers
             {
                 UserTenantInput input = new UserTenantInput
                 {
-                    userId = userId,
-                    tenant = tenant
+                    UserId = userId,
+                    Tenant = tenant
                 };
                 UserTenantModel tenantModel = await this._userTenantContainer.GetAsync(input);
                 // Add Tenant
@@ -88,15 +88,15 @@ namespace IdentityGateway.Services.Helpers
                 // Settings Update LastUsedTenant
                 UserSettingsInput settingsInput = new UserSettingsInput
                 {
-                    userId = claims.Where(c => c.Type == "sub").First().Value,
-                    settingKey = "LastUsedTenant",
-                    value = tenant
+                    UserId = claims.Where(c => c.Type == "sub").First().Value,
+                    SettingKey = "LastUsedTenant",
+                    Value = tenant
                 };
                 // Update if name is not the same
                 await this._userSettingsContainer.UpdateAsync(settingsInput);
                 if (tenantModel.Name != claims.Where(c => c.Type == "name").First().Value)
                 {
-                    input.name = claims.Where(c => c.Type == "name").First().Value;
+                    input.Name = claims.Where(c => c.Type == "name").First().Value;
                     await this._userTenantContainer.UpdateAsync(input);
                 }
             }

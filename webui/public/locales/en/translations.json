@@ -13,7 +13,7 @@
     "collapse": "Collapse Side Navigation"
   },
   "accessDenied": {
-    "message": "Oops looks like you dont have a tenant. Talk to your administrator to be added or create a new one. <1><0>createTenant</0></1>",
+    "message": "Oops looks like you dont have a tenant. You can create a new tenant by opening your profile and clicking the 'Create New Tenant' button.",
     "learnMore": "Learn more",
     "createTenant": "Create Tenant"
   },

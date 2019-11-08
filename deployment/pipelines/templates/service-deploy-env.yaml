@@ -6,7 +6,7 @@ stages:
 # Pirate ninja test env
 - stage: DeployCRSLDevPN
   dependsOn: []
-  displayName: Deploy To CRSL
+  displayName: Deploy To CRSL - rg-pirate-ninja-test1
   jobs:
   - template: approval.yaml
     parameters:
@@ -22,9 +22,30 @@ stages:
         aksName: crsliot-akspn-test
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
+        
+# Second Pirate ninja test env
+- stage: DeployCRSLDevPNTwo
+  dependsOn: []
+  displayName: Deploy To CRSL - rg-pirate-ninja-deployment
+  jobs:
+  - template: approval.yaml
+    parameters:
+      environment: IoT_CRSL_Environment
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: service-deploy.yaml
+      parameters:
+        serviceConnection: 81b05a72-5abf-4916-a1b6-4798213d8865
+        resourceGroup: rg-pirate-ninja-deployment
+        aksName: crsliot-aks-pn
+        chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}
+        
 - stage: DeployCRSLDev
   dependsOn: []
-  displayName: Deploy To CRSL Dev
+  displayName: Deploy To CRSL - rg-crslbbiot-odin-dev
   jobs:
   - template: approval.yaml
     parameters:
@@ -44,7 +65,7 @@ stages:
 - stage: DeployCRSLQA
   dependsOn:
   - DeployCRSLDev
-  displayName: Deploy To CRSL QA
+  displayName: Deploy To CRSL QA - rg-iot-crsl-qa
   jobs:
   - template: approval.yaml
     parameters:
@@ -65,7 +86,7 @@ stages:
 - stage: DeployCRSLWkBnch
   dependsOn:
   - DeployCRSLQA
-  displayName: Deploy To CRSL Work Bench
+  displayName: Deploy To CRSL Work Bench - rg-iot-crsl-wkbnch
   jobs:
   - template: approval.yaml
     parameters:

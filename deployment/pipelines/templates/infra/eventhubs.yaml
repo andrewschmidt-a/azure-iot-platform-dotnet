@@ -1,0 +1,26 @@
+
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  location: ''
+  eventHubName: ''
+  storageAccountName: ''
+  subscriptionId: ''
+  
+steps:
+
+## Deploy ARM Resource
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Event Hub"
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '${{ parameters.resourceGroup }}'
+    location: '${{ parameters.location }}'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/eventhub.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/eventhub.json'
+    overrideParameters: '-namespaceName ${{ parameters.eventHubName }} -resourceGroup ${{ parameters.resourceGroup }} -location ${{ parameters.location }} -storageAccountName ${{ parameters.storageAccountName }} -subscriptionId ${{ parameters.subscriptionId }}'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true
+    

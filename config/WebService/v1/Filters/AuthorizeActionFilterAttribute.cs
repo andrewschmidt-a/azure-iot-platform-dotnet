@@ -3,11 +3,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Azure.IoTSolutions.Auth;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
+using Microsoft.Extensions.Logging;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Filters
 {

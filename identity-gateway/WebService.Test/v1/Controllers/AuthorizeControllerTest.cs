@@ -24,8 +24,8 @@ namespace WebService.Test.v1.Controllers
         private Mock<IUserContainer<UserSettingsModel, UserSettingsInput>> mockUserSettingsContainer;
         private Mock<UserTenantContainer> mockUserTenantContainer;
         private AuthorizeController authorizeController;
-        private string uiRedirectUri = new Uri("http://valid-uri.com").AbsoluteUri;
-        private Guid tenant = Guid.NewGuid();
+        private string someUiRedirectUri = new Uri("http://valid-uri.com").AbsoluteUri;
+        private Guid someTenant = Guid.NewGuid();
         private Mock<HttpContext> mockHttpContext;
         private string state = "someState";
         private string clientId = "someClientId";
@@ -36,6 +36,7 @@ namespace WebService.Test.v1.Controllers
         private const string someUri = "http://azureb2caseuri.com";
         private Mock<IServicesConfig> mockServicesConfig;
         private Mock<IJwtHelpers> mockJwtHelper;
+        private JwtSecurityToken someSecurityToken;
         public static readonly string ValidAuthHeader = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
         private Mock<IOpenIdProviderConfiguration> mockOpenIdProviderConfiguration;
 
@@ -49,7 +50,7 @@ namespace WebService.Test.v1.Controllers
         [InlineData("not-a-valid-uri")]
         [InlineData(null)]
         [InlineData("")]
-        public void AuthorizeThrowsWhenRedirectUriNotValidTest(string invalidUri)
+        public void AuthorizeThrowsWhenRedirectUriNotValid(string invalidUri)
         {
             // Arrange
             // Act
@@ -64,22 +65,22 @@ namespace WebService.Test.v1.Controllers
         [InlineData("7")]
         [InlineData("")]
         [InlineData("not-a-valid-guid")]
-        public void AuthorizeThrowsWhenTenantNotValidTest(string invalidTenant)
+        public void AuthorizeThrowsWhenTenantNotValid(string invalidTenant)
         {
             // Arrange
             // Act
-            Action a = () => authorizeController.Get(uiRedirectUri, null, null, null, invalidTenant, null);
+            Action a = () => authorizeController.Get(someUiRedirectUri, null, null, null, invalidTenant, null);
 
             // Assert
             Assert.Throws<Exception>(a);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        public void AuthorizeRedirectsToRedirectUriTest()
+        public void AuthorizeRedirectsToRedirectUri()
         {
             // Arrange
             // Act
-            var redirectResult = authorizeController.Get(uiRedirectUri, state, clientId, nonce, tenant.ToString(), invite) as RedirectResult;
+            var redirectResult = authorizeController.Get(someUiRedirectUri, state, clientId, nonce, someTenant.ToString(), invite) as RedirectResult;
 
             // Assert
             Assert.NotNull(redirectResult);
@@ -89,9 +90,9 @@ namespace WebService.Test.v1.Controllers
             var queryStrings = HttpUtility.ParseQueryString(uriResult.Query);
             Assert.Contains("state", queryStrings.AllKeys);
             var returnedState = JObject.Parse(queryStrings["state"]);
-            Assert.Equal(uiRedirectUri, returnedState["returnUrl"]);
+            Assert.Equal(someUiRedirectUri, returnedState["returnUrl"]);
             Assert.Equal(state, returnedState["state"]);
-            Assert.Equal(tenant, returnedState["tenant"]);
+            Assert.Equal(someTenant, returnedState["tenant"]);
             Assert.Equal(nonce, returnedState["nonce"]);
             Assert.Equal(clientId, returnedState["client_id"]);
             Assert.Equal($"{someIssuer}/connect/callback", queryStrings["redirect_uri"]);
@@ -102,7 +103,7 @@ namespace WebService.Test.v1.Controllers
         [InlineData("not-a-valid-uri")]
         [InlineData(null)]
         [InlineData("")]
-        public void LogoutThrowsWhenRedirectUriNotValidTest(string invalidUri)
+        public void LogoutThrowsWhenRedirectUriNotValid(string invalidUri)
         {
             // Arrange
             // Act
@@ -113,21 +114,21 @@ namespace WebService.Test.v1.Controllers
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        public void LogoutRedirectsToRedirectUriTest()
+        public void LogoutRedirectsToRedirectUri()
         {
             // Arrange
             // Act
-            var redirectResult = authorizeController.Get(uiRedirectUri) as RedirectResult;
+            var redirectResult = authorizeController.Get(someUiRedirectUri) as RedirectResult;
 
             // Assert
-            Assert.Equal(uiRedirectUri, redirectResult.Url);
+            Assert.Equal(someUiRedirectUri, redirectResult.Url);
         }
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("not-a-valid-auth-header")]
         [InlineData(null)]
         [InlineData("")]
-        public async Task SwitchTenantThrowsWhenAuthorizationHeaderNotValidTest(string invalidAuthHeader)
+        public async Task SwitchTenantThrowsWhenAuthorizationHeaderNotValid(string invalidAuthHeader)
         {
             // Arrange
             // Act
@@ -146,7 +147,7 @@ namespace WebService.Test.v1.Controllers
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [MemberData(nameof(GetInvalidAuthHeaders))]
-        public async Task SwitchTenantThrowsWhenAuthorizationHeaderTokenNotReadableOrValidTest(string invalidAuthHeader)
+        public async Task SwitchTenantThrowsWhenAuthorizationHeaderTokenNotReadableOrValid(string invalidAuthHeader)
         {
             // Arrange
             JwtSecurityToken jwtSecurityToken = null;
@@ -167,13 +168,15 @@ namespace WebService.Test.v1.Controllers
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [MemberData(nameof(GetJwtSecurityTokens))]
+#pragma warning disable xUnit1026
         public async Task SwitchTenantThrowsWhenTenantAccessNotAllowed(JwtSecurityToken jwtSecurityToken)
+#pragma warning restore xUnit1026
         {
             // Arrange
             mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out jwtSecurityToken)).Returns(true);
 
             // Act
-            Func<Task> a = async () => await authorizeController.PostAsync(ValidAuthHeader, tenant.ToString());
+            Func<Task> a = async () => await authorizeController.PostAsync(ValidAuthHeader, someTenant.ToString());
 
             // Assert
             await Assert.ThrowsAsync<NoAuthorizationException>(a);
@@ -183,7 +186,7 @@ namespace WebService.Test.v1.Controllers
         public async Task SwitchTenantMintsNewTokenWithNewTenant()
         {
             // Arrange
-            var currentTenant = tenant;
+            var currentTenant = someTenant;
             var availableTenant = Guid.NewGuid();
             var claimWithCurrentTenant = new Claim("available_tenants", currentTenant.ToString());
             var claimWithAvailableTenant = new Claim("available_tenants", availableTenant.ToString());
@@ -227,8 +230,8 @@ namespace WebService.Test.v1.Controllers
         {
             mockServicesConfig.Setup(m => m.AzureB2CBaseUri).Returns(someUri);
             mockServicesConfig.Setup(m => m.PublicKey).Returns(somePublicKey);
-            var jwtSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", tenant.ToString()) });
-            mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out jwtSecurityToken)).Returns(true);
+            someSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", someTenant.ToString()) });
+            mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out someSecurityToken)).Returns(true);
             mockOpenIdProviderConfiguration.Setup(m => m.issuer).Returns(someIssuer);
         }
     }

@@ -2,8 +2,11 @@
 parameters:
   serviceConnection: ''
   resourceGroup: ''
+  location: ''
   appConfigName: ''
   keyVaultName: ''
+  userObjId: ''
+  SendGridApiKey: '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'
 
 steps:
 - task: AzureCLI@1
@@ -22,13 +25,51 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     action: 'Create Or Update Resource Group'
     resourceGroupName: ${{ parameters.resourceGroup }}
-    location: 'Central US'
+    location: ${{ parameters.location }}
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/keyvault.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/keyvault.json'
-    overrideParameters: '-resourceName ${{ parameters.keyVaultName }} -objectId $(servicePrincipalObjectId)'
+    overrideParameters: '-resourceName ${{ parameters.keyVaultName }} -applicationObjId $(servicePrincipalObjectId) -userObjId ${{ parameters.userObjId }}'
     deploymentMode: 'Incremental'
     #addSpnToEnvironment: true
+
+- task: AzureCLI@1
+  displayName: "Add secrets to keyvault"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      rg=${{ parameters.resourceGroup }}
+      kVaultName=${{ parameters.keyVaultName }}
+      blobStorageAccountName=$(az storage account list -g $rg | grep name | grep storage | awk -F "\"" '{print $4}')
+      blobStorageKey=$(az storage account keys list -g $rg -n $blobStorageAccountName | grep value | head -n1 | awk -F "\"" '{print $4}')
+      blobStorageConnString="DefaultEndpointsProtocol=https;AccountName=$blobStorageAccountName;AccountKey=$blobStorageKey;EndpointSuffix=core.windows.net"
+      cosmosDbAccountName=$(az cosmosdb list --resource-group $rg | grep name | awk -F "\"" '{print $4}')
+      cosmosDBUri="https://$cosmosDbAccountName.documents.azure.com:443/"
+      cosmosDBAuthKey=$(az cosmosdb list-keys --resource-group $rg --name $cosmosDbAccountName | grep primaryMasterKey | awk -F "\"" '{print $4}')
+      cosmosDBConnection="AccountEndpoint=$cosmosDBUri;AccountKey=$cosmosDBAuthKey;"
+      eventhubNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhub| cut -d "/" -f1| awk -F "\"" '{print $4}')
+      ehQueueAuthRule='iothubroutes'
+      lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace| grep name |grep lifecycle| awk -F "\"" '{print $4}'| cut -d "/" -f1)
+      lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
+      telemetryEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace| grep name |grep telemetry| awk -F "\"" '{print $4}'| cut -d "/" -f1)
+      telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
+      twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace| grep name |grep twin-change| awk -F "\"" '{print $4}'| cut -d "/" -f1)
+      twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
+      mapsacct=$(az maps account list --resource-group $rg| grep name | grep map | awk -F "\"" '{print $4}')
+      mapskey=$(az maps account keys list --name $mapsacct --resource-group $rg | grep primaryKey | awk -F "\"" '{print $4}'| head -1)
+      az keyvault secret set --vault-name $kVaultName --name 'documentDBAuthKey' --value $cosmosDBAuthKey
+      az keyvault secret set --vault-name $kVaultName --name 'documentDBEndpoint' --value $cosmosDBUri
+      az keyvault secret set --vault-name $kVaultName --name 'documentDBConnectionString' --value $cosmosDBConnection
+      az keyvault secret set --vault-name $kVaultName --name 'sendGridAPIKey' --value ${{ parameters.SendGridApiKey }}
+      az keyvault secret set --vault-name $kVaultName --name 'ApplicationId' --value $servicePrincipalId
+      az keyvault secret set --vault-name $kVaultName --name 'ClientSecret' --value $servicePrincipalKey
+      az keyvault secret set --vault-name $kVaultName --name 'storageAccountConnectionString' --value $blobStorageConnString
+      az keyvault secret set --vault-name $kVaultName --name 'lifecycleEventHubConnString' --value $lifecycleEvConn
+      az keyvault secret set --vault-name $kVaultName --name 'telemetryEventHubConnString' --value $telemetryEvConn
+      az keyvault secret set --vault-name $kVaultName --name 'twinChangeEventHubConnString' --value $twinchangeEvConn
+      az keyvault secret set --vault-name $kVaultName --name 'azureMapsKey' --value $mapskey
+    addSpnToEnvironment: true
 - task: AzureCLI@1
   displayName: Add Keyvault Name to App Config
   inputs:

@@ -20,9 +20,9 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 {
     public interface IAlarms
     {
-        Alarm Get(string id);
+        Task<Alarm> GetAsync(string id);
 
-        List<Alarm> List(
+        Task<List<Alarm>> ListAsync(
             DateTimeOffset? from,
             DateTimeOffset? to,
             string order,
@@ -30,7 +30,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             int limit,
             string[] devices);
 
-        List<Alarm> ListByRule(
+        Task<List<Alarm>> ListByRuleAsync(
             string id,
             DateTimeOffset? from,
             DateTimeOffset? to,
@@ -39,7 +39,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             int limit,
             string[] devices);
 
-        int GetCountByRule(
+        Task<int> GetCountByRuleAsync(
             string id,
             DateTimeOffset? from,
             DateTimeOffset? to,
@@ -105,13 +105,13 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 
         }
 
-        public Alarm Get(string id)
+        public async Task<Alarm> GetAsync(string id)
         {
-            Document doc = this.GetDocumentById(id);
+            Document doc = await this.GetDocumentByIdAsync(id);
             return new Alarm(doc);
         }
 
-        public List<Alarm> List(
+        public async Task<List<Alarm>> ListAsync(
             DateTimeOffset? from,
             DateTimeOffset? to,
             string order,
@@ -135,7 +135,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             queryOptions.EnableCrossPartitionQuery = true;
             queryOptions.EnableScanInQuery = true;
 
-            List<Document> docs = this.storageClient.QueryDocuments(
+            List<Document> docs = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
                 this.collectionId,
                 queryOptions,
@@ -153,7 +153,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             return alarms;
         }
 
-        public List<Alarm> ListByRule(
+        public async Task<List<Alarm>> ListByRuleAsync(
             string id,
             DateTimeOffset? from,
             DateTimeOffset? to,
@@ -178,7 +178,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             queryOptions.EnableCrossPartitionQuery = true;
             queryOptions.EnableScanInQuery = true;
 
-            List<Document> docs = this.storageClient.QueryDocuments(
+            List<Document> docs = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
                 this.collectionId,
                 queryOptions,
@@ -195,7 +195,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             return alarms;
         }
 
-        public int GetCountByRule(
+        public async Task<int> GetCountByRuleAsync(
             string id,
             DateTimeOffset? from,
             DateTimeOffset? to,
@@ -216,7 +216,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             queryOptions.EnableScanInQuery = true;
 
             // request count of alarms for a rule id with given parameters
-            var result = this.storageClient.QueryCount(
+            var result = await this.storageClient.QueryCountAsync(
                 this.databaseName,
                 this.collectionId,
                 queryOptions,
@@ -230,7 +230,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             InputValidator.Validate(id);
             InputValidator.Validate(status);
 
-            Document document = this.GetDocumentById(id);
+            Document document = await this.GetDocumentByIdAsync(id);
             document.SetPropertyValue(STATUS_KEY, status);
 
             document = await this.storageClient.UpsertDocumentAsync(
@@ -241,7 +241,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             return new Alarm(document);
         }
 
-        private Document GetDocumentById(string id)
+        private async Task<Document> GetDocumentByIdAsync(string id)
         {
             InputValidator.Validate(id);
 
@@ -252,7 +252,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 })
             );
             // Retrieve the document using the DocumentClient.
-            List<Document> documentList = this.storageClient.QueryDocuments(
+            List<Document> documentList = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
                 this.collectionId,
                 null,

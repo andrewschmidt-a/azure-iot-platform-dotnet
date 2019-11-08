@@ -156,9 +156,9 @@ namespace DeviceTelemetry.Services.Test
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.alarms.DeleteAsync(xssString));
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.alarms.Delete(xssList));
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.alarms.UpdateAsync(xssString, xssString));
-            Assert.Throws<InvalidInputException>(() => this.alarms.GetCountByRule(xssString, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue, xssList.ToArray()));
-            Assert.Throws<InvalidInputException>(() => this.alarms.List(null, null, xssString, 0, 1, xssList.ToArray()));
-            Assert.Throws<InvalidInputException>(() => this.alarms.ListByRule(xssString, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue, xssString, 0, 1, xssList.ToArray()));
+            await Assert.ThrowsAsync <InvalidInputException>(async () => await this.alarms.GetCountByRuleAsync(xssString, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue, xssList.ToArray()));
+            await Assert.ThrowsAsync<InvalidInputException>(async () => await this.alarms.ListAsync(null, null, xssString, 0, 1, xssList.ToArray()));
+            await Assert.ThrowsAsync<InvalidInputException>(async () => await this.alarms.ListByRuleAsync(xssString, DateTimeOffset.MaxValue, DateTimeOffset.MaxValue, xssString, 0, 1, xssList.ToArray()));
         }
     }
 }

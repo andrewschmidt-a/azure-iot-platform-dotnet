@@ -25,9 +25,13 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         string TenantManagerDatabaseId { get; set; }
         string StorageAdapterDatabseId { get; set; }
         string StorageAccountConnectionString { get; set; }
+        string StorageAccountName { get; set; }
         string CreateIotHubRunbookUrl { get; set; }
+        string CreateIotHubRunbookName { get; set; }
         string DeleteIotHubRunbookUrl { get; set; }
+        string DeleteIotHubRunbookName { get; set;}
         string IdentityGatewayWebServiceUrl { get; set; }
+        string ConfigWebServiceUrl { get; set; }
 
         Dictionary<string, List<string>> UserPermissions { get; set; }
     }
@@ -54,9 +58,13 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         public string TenantManagerDatabaseId { get; set; }
         public string StorageAdapterDatabseId { get; set; }
         public string StorageAccountConnectionString { get; set; }
+        public string StorageAccountName {get; set;}
         public string CreateIotHubRunbookUrl { get; set; }
+        public string CreateIotHubRunbookName { get; set; }
         public string DeleteIotHubRunbookUrl { get; set; }
+        public string DeleteIotHubRunbookName { get; set;}
         public string IdentityGatewayWebServiceUrl { get; set; }
+        public string ConfigWebServiceUrl { get; set; }
     
         public Dictionary<string, List<string>> UserPermissions { get; set; }
     }

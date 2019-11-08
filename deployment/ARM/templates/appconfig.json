@@ -2,9 +2,19 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "resourceName": {
+        "appConfigName": {
+            "type": "string",
             "defaultValue": "app-config-odin",
-            "type": "String"
+            "metadata": {
+                "description": "Name of the App config resoutrce to be created."
+            }
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for the resource"
+            }
         }
     },
     "variables": {},
@@ -12,13 +22,11 @@
         {
             "type": "Microsoft.AppConfiguration/configurationStores",
             "apiVersion": "2019-02-01-preview",
-            "name": "[parameters('resourceName')]",
-            "location": "centralus",
-            "tags":{},
+            "name": "[parameters('appConfigName')]",
+            "location": "[parameters('location')]",
+            "tags": {},
             "properties": {
-                "provisioningState": "Succeeded",
-                "creationDate": "2019-07-10T19:08:06+00:00",
-                "endpoint": "[concat('https://', parameters('resourceName'), '.azconfig.io')]"
+                "endpoint": "[concat('https://', parameters('appConfigName'), '.azconfig.io')]"
             }
         }
     ]

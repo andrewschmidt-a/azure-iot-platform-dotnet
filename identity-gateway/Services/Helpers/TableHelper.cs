@@ -1,34 +1,23 @@
-using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using IdentityGateway.Services.Runtime;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
 namespace IdentityGateway.Services.Helpers
 {
-    public class TableHelper
+    public class TableHelper : ITableHelper
     {
-        private readonly KeyVaultHelper _keyVaultHelper;
-        private readonly string storageAccountConnectionStringKey;
+        private readonly string storageAccountConnectionString;
 
-        public TableHelper(IConfiguration config)
+        public TableHelper(IServicesConfig config)
         {
-            this._keyVaultHelper = new KeyVaultHelper(config);
-            this.storageAccountConnectionStringKey = config["Global:StorageAccountConnectionStringKeyVaultSecret"];
-        }
-
-        private CloudStorageAccount storageAccount
-        {
-            get
-            {
-                string tenantStorageAccountConnectionString = this._keyVaultHelper.getSecretAsync(this.storageAccountConnectionStringKey).GetAwaiter().GetResult();
-                return CloudStorageAccount.Parse(tenantStorageAccountConnectionString); 
-            }
+            this.storageAccountConnectionString = config.StorageAccountConnectionString;
         }
 
         public async Task<CloudTable> GetTableAsync(string tableName)
         {
-            CloudTableClient client = this.storageAccount.CreateCloudTableClient();
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(this.storageAccountConnectionString);
+            CloudTableClient client = storageAccount.CreateCloudTableClient();
             CloudTable table = client.GetTableReference(tableName);
 
             // Create the table if it doesn't already exist

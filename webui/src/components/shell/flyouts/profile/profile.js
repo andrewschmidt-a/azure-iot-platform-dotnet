@@ -66,8 +66,8 @@ export const Profile = (props) => {
                 <div>
                   {currentTenant ? "Current: " + processTenantDisplayValue(currentTenant) : ""}
                 </div>
-                {/* Fill in with programmable tenant options list */}
                 {
+                  /* Create the list of available tenants if there are any */
                   (!tenants || tenants.length === 0)
                     ? t('profileFlyout.tenants.noTenant')
                     :
@@ -98,16 +98,18 @@ export const Profile = (props) => {
                           </Row>
                         )
                       }
-                      <Cell id="create-tenant-cell">
-                        <Btn className="create-tenant-button" primary={true} onClick=
-                          {() =>
-                            createTenant().subscribe(r => fetchTenants())
-                          }>
-                          {t('profileFlyout.tenants.createTenant')}
-                        </Btn>
-                      </Cell>
                     </Grid>
                 }
+                <Grid>
+                  <Cell id="create-tenant-cell">
+                    <Btn className="create-tenant-button" primary={true} onClick=
+                      {() =>
+                        createTenant().subscribe(r => fetchTenants())
+                      }>
+                      {t('profileFlyout.tenants.createTenant')}
+                    </Btn>
+                  </Cell>
+                </Grid>
               </Section.Content>
             </Section.Container>
 

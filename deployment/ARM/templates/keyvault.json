@@ -1,206 +1,114 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-		"objectId": { 
-			"type": "string", 
-			"defaultValue": ""
-		},
-        "resourceName": {
-            "defaultValue": "",
-            "type": "string"
+      "resourceName": {
+        "minLength": 2,
+        "type": "string",
+        "metadata": {
+          "description": "Name of the the Keyvault"
         }
+      },
+      "userObjId": {
+        "type": "string",
+        "metadata": {
+          "description": "Object Id of the User to be added to Access policy"
+        }
+      },
+      "applicationObjId": {
+        "type": "string",
+        "metadata": {
+          "description": "Object Id of the Application to be added to Access policy"
+        }
+      }
     },
-    "variables": {},
+    "variables": {
+      "location": "[resourceGroup().location]"
+    },
     "resources": [
-        {
-            "type": "Microsoft.KeyVault/vaults",
-            "apiVersion": "2016-10-01",
-            "name": "[parameters('resourceName')]",
-            "location": "centralus",
-            "properties": {
-                "sku": {
-                    "family": "A",
-                    "name": "standard"
-                },
-                "tenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb",
-                "accessPolicies": [
-                    {
-                        "tenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb",
-                        "objectId": "[parameters('objectId')]",
-                        "permissions": {
-                            "keys": [
-                                "get",
-                                "list",
-                                "update",
-                                "create",
-                                "import",
-                                "delete",
-                                "recover",
-                                "backup",
-                                "restore",
-                                "decrypt",
-                                "encrypt",
-                                "unwrapKey",
-                                "wrapKey",
-                                "verify",
-                                "sign",
-                                "purge"
-                            ],
-                            "secrets": [
-                                "get",
-                                "list",
-                                "set",
-                                "delete",
-                                "recover",
-                                "backup",
-                                "restore",
-                                "purge"
-                            ],
-                            
-                            "certificates": [
-                                "get",
-                                "list",
-                                "update",
-                                "create",
-                                "import",
-                                "delete",
-                                "recover",
-                                "managecontacts",
-                                "manageissuers",
-                                "getissuers",
-                                "listissuers",
-                                "setissuers",
-                                "deleteissuers",
-                                "purge"
-                            ]
-                        }
-                    }
+      {
+        "type": "Microsoft.KeyVault/vaults",
+        "name": "[parameters('resourceName')]",
+        "apiVersion": "2016-10-01",
+        "location": "[variables('location')]",
+        "tags": {},
+        "properties": {
+          "sku": {
+            "family": "A",
+            "name": "standard"
+          },
+          "tenantId": "[subscription().tenantId]",
+          "accessPolicies": [
+            {
+              "condition": "[not(empty(parameters('userObjId')))]",
+              "objectId": "[parameters('userObjId')]",
+              "tenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb",
+              "permissions": {
+                "keys": [],
+                "secrets": [
+                  "get",
+                  "list",
+                  "set",
+                  "delete",
+                  "recover",
+                  "backup",
+                  "restore"
                 ],
-                "enabledForDeployment": false,
-                "enabledForDiskEncryption": false,
-                "enabledForTemplateDeployment": false
+                "certificates": [
+                  "get",
+                  "list",
+                  "update",
+                  "delete",
+                  "recover",
+                  "create"
+                ]
+              }
+            },
+            {
+              "condition": "[not(empty(parameters('applicationObjId')))]",
+              "objectId": "[parameters('applicationObjId')]",
+              "tenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb",
+              "permissions": {
+                "keys": [
+                  "get",
+                  "list"
+                ],
+                "secrets": [
+                  "get",
+                  "list",
+                  "set",
+                  "delete",
+                  "recover",
+                  "backup",
+                  "restore"
+                ],
+                "certificates": [
+                  "get",
+                  "list",
+                  "update",
+                  "delete",
+                  "recover",
+                  "create",
+                  "import"
+                ]
+              }
             }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('resourceName'), '/azureMapsKey')]",
-            "location": "centralus",
-            "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('resourceName'))]"
-            ],
-            "properties": {
-                "attributes": {
-                    "enabled": true
-                },
-                "value": "DEFAULT_VALUE"
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('resourceName'), '/createIotHubWebHookUrl')]",
-            "location": "centralus",
-            "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('resourceName'))]"
-            ],
-            "properties": {
-                "attributes": {
-                    "enabled": true
-                },
-                "value": "DEFAULT_VALUE"
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('resourceName'), '/deleteIotHubWebHookUrl')]",
-            "location": "centralus",
-            "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('resourceName'))]"
-            ],
-            "properties": {
-                "attributes": {
-                    "enabled": true
-                },
-                "value": "DEFAULT_VALUE"
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('resourceName'), '/documentDBConnectionString')]",
-            "location": "centralus",
-            "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('resourceName'))]"
-            ],
-            "properties": {
-                "attributes": {
-                    "enabled": true
-                },
-                "value": "DEFAULT_VALUE"
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('resourceName'), '/identityGatewayPrivateKey')]",
-            "location": "centralus",
-            "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('resourceName'))]"
-            ],
-            "properties": {
-                "attributes": {
-                    "enabled": true
-                },
-                "value": "DEFAULT_VALUE"
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('resourceName'), '/identityGatewayPublicKey')]",
-            "location": "centralus",
-            "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('resourceName'))]"
-            ],
-            "properties": {
-                "attributes": {
-                    "enabled": true
-                },
-                "value": "DEFAULT_VALUE"
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('resourceName'), '/storageAccountConnectionString')]",
-            "location": "centralus",
-            "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('resourceName'))]"
-            ],
-            "properties": {
-                "attributes": {
-                    "enabled": true
-                },
-                "value": "DEFAULT_VALUE"
-            }
-        },
-        {
-            "type": "Microsoft.KeyVault/vaults/secrets",
-            "apiVersion": "2016-10-01",
-            "name": "[concat(parameters('resourceName'), '/updateFunctionsWebHookUrl')]",
-            "location": "centralus",
-            "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', parameters('resourceName'))]"
-            ],
-            "properties": {
-                "attributes": {
-                    "enabled": true
-                },
-                "value": "DEFAULT_VALUE"
-            }
+          ]
         }
-    ]
-}
+      }
+    ],
+    "outputs": {
+      "CloudResourceName": {
+        "value": "[parameters('resourceName')]",
+        "type": "string"
+      },
+      "CloudResourceUri": {
+        "value": "",
+        "type": "string"
+      },
+      "CloudResourceType": {
+        "value": "Key vault",
+        "type": "string"
+      }
+    }
+  }

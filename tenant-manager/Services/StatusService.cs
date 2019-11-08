@@ -13,7 +13,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
     {
         private ILogger _log;
         private IServicesConfig _config;
-        private IIdentityGatewayClient _identityGatewayClient;
         
         private Dictionary<string, IStatusOperation> dependencies;
         
@@ -21,19 +20,21 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
             IServicesConfig config,
             ILogger logger,
             IIdentityGatewayClient identityGatewayClient,
+            IDeviceGroupsConfigClient deviceGroupsConfigClient,
             CosmosHelper cosmosHelper,
             TableStorageHelper tableStorageHelper,
             TenantRunbookHelper tenantRunbookHelper)
         {
             this._log = logger;
             this._config = config;
-            this._identityGatewayClient = identityGatewayClient;
 
             this.dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "CosmosDb", cosmosHelper },
                 { "Tenant Runbooks", tenantRunbookHelper },
-                { "Table Storage", tableStorageHelper}
+                { "Table Storage", tableStorageHelper },
+                { "Identity Gateway", identityGatewayClient },
+                { "Config", deviceGroupsConfigClient }
             };
         }
 
@@ -49,10 +50,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
                 var serviceResult = await service.StatusAsync();
                 SetServiceStatus(dependency.Key, serviceResult, result, errors);
             }
-
-            // Check Identity Gateway as well
-            var identityGatewayResult = await this._identityGatewayClient.StatusAsync();
-            SetServiceStatus("Identity Gateway", identityGatewayResult, result, errors);
 
             if (errors.Count > 0)
             {

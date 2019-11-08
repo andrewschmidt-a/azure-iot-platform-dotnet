@@ -1,0 +1,26 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "mapsAccountName": {
+        "defaultValue": "crsl-map",
+        "type": "string"
+      }
+    },
+    "variables": {},
+    "resources": [
+      {
+        "type": "Microsoft.Maps/accounts",
+        "apiVersion": "2018-05-01",
+        "name": "[parameters('mapsAccountName')]",
+        "location": "global",
+        "sku": {
+          "name": "s0",
+          "tier": "Standard"
+        },
+        "properties": {
+          //        "x-ms-client-id": "05dce9d8-4c11-482c-adba-928f183ca52e"
+        }
+      }
+    ]
+  }

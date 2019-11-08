@@ -71,7 +71,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
 
         [HttpGet("{id}")]
         [Authorize("ReadAll")]
-        public AlarmListByRuleApiModel Get(
+        public async Task<AlarmListByRuleApiModel> GetAsync(
             [FromRoute] string id,
             [FromQuery] string from,
             [FromQuery] string to,
@@ -86,12 +86,12 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
                 deviceIds = devices.Split(',');
             }
 
-            return this.GetAlarmListByRuleHelper(id, from, to, order, skip, limit, deviceIds);
+            return await this.GetAlarmListByRuleHelperAsync(id, from, to, order, skip, limit, deviceIds);
         }
 
         [HttpPost("{id}")]
         [Authorize("ReadAll")]
-        public AlarmListByRuleApiModel Post(
+        public async Task<AlarmListByRuleApiModel> PostAsync(
             [FromRoute] string id,
             [FromBody] QueryApiModel body)
         {
@@ -99,7 +99,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
                 ? new string[0]
                 : body.Devices.ToArray();
 
-            return this.GetAlarmListByRuleHelper(
+            return await this.GetAlarmListByRuleHelperAsync(
                 id,
                 body.From,
                 body.To,
@@ -146,7 +146,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
             return new AlarmByRuleListApiModel(alarmsList);
         }
 
-        private AlarmListByRuleApiModel GetAlarmListByRuleHelper(
+        private async Task<AlarmListByRuleApiModel> GetAlarmListByRuleHelperAsync(
             string id,
             string from,
             string to,
@@ -172,7 +172,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
                 throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
             }
 
-            List<Alarm> alarmsList = this.alarmService.ListByRule(
+            List<Alarm> alarmsList = await this.alarmService.ListByRuleAsync(
                 id,
                 fromDate,
                 toDate,

@@ -28,11 +28,11 @@ namespace IdentityGateway.Services.Models
 
         public UserTenantModel(UserTenantInput input)
         {
-            this.PartitionKey = input.userId;
-            this.RowKey = input.tenant;
-            this.Roles = input.roles;
-            this.Name = input.name;
-            this.Type = input.type;
+            this.PartitionKey = input.UserId;
+            this.RowKey = input.Tenant;
+            this.Roles = input.Roles;
+            this.Name = input.Name;
+            this.Type = input.Type;
         }
 
         public UserTenantModel(DynamicTableEntity tableEntity)
@@ -67,7 +67,8 @@ namespace IdentityGateway.Services.Models
             {
                 try
                 {
-                    return this.Roles == null ? null : JsonConvert.DeserializeObject<List<string>>(this.Roles);
+                    var rolesIsNullOrEmptyOrWhitespace = string.IsNullOrEmpty(Roles) || string.IsNullOrWhiteSpace(Roles);
+                    return rolesIsNullOrEmptyOrWhitespace ? null : JsonConvert.DeserializeObject<List<string>>(Roles);
                 }
                 catch
                 {

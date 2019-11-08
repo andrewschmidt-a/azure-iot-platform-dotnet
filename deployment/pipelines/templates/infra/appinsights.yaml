@@ -1,0 +1,20 @@
+parameters:
+  serviceConnection: ''
+  resourceGroup: ''
+  location: ''
+  appInsightsName: ''
+  appInsightsLocation: 'eastus'
+
+steps:
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Application Insights"
+  inputs:
+    azureSubscription: '${{ parameters.serviceConnection }}'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: '${{ parameters.location }}'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/appinsights.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/appinsights.json'
+    overrideParameters: '-appInsightsName ${{ parameters.appInsightsName }} -appInsightsLocation ${{ parameters.appInsightsLocation }}'
+    deploymentMode: 'Incremental'
