@@ -83,7 +83,8 @@
                 "UpdateDevices": "",
                 "UpdateRules": "",
                 "UpdateSIMManagement": "",
-                "UserManage": ""
+                "UserManage": "",
+                "DeleteTenant": ""
             },
             "readOnly": {
                 "ReadAll": ""
