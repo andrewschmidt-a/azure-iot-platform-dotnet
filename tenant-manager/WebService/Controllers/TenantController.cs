@@ -57,9 +57,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 
         [HttpDelete("{tenantId}")]
         [Authorize("DeleteTenant")]
-        public async Task<string> DeleteAsync(string tenantId)
+        public async Task<string> DeleteAsync(string tenantId, [FromQuery] bool ensureFullyDeployed = true)
         {
-            var response = await this._tenantContainer.DeleteTenantAsync(tenantId);
+            var response = await this._tenantContainer.DeleteTenantAsync(tenantId, ensureFullyDeployed);
             return JsonConvert.SerializeObject(response);
         }
     }
