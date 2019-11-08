@@ -1,7 +1,7 @@
 # Docker
 # Build a Docker image 
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-pool: "ubuntu-16.04"
+pool: "Azure Pipelines"
 
 trigger:
   branches:
