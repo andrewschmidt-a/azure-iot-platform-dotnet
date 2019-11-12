@@ -2,63 +2,27 @@
 
 using System.Reflection;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers;
-using Microsoft.Extensions.DependencyInjection;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.Common.WebService;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
 {
-    public class DependencyResolution
+    public class DependencyResolution : DependencyResolutionBase
     {
-        /// <summary>
-        /// Autofac configuration. Find more information here:
-        /// @see http://docs.autofac.org/en/latest/integration/aspnetcore.html
-        /// </summary>
-        public static IContainer Setup(IServiceCollection services)
+        protected override void SetupCustomRules(ContainerBuilder builder, ILogger logger, IHttpClient httpClient)
         {
-            var builder = new ContainerBuilder();
-
-            builder.Populate(services);
-
-            AutowireAssemblies(builder);
-            SetupCustomRules(builder);
-
-            var container = builder.Build();
-            RegisterFactory(container);
-
-            return container;
-        }
-
-        /// <summary>Autowire interfaces to classes from all the assemblies</summary>
-        private static void AutowireAssemblies(ContainerBuilder builder)
-        {
-            var assembly = Assembly.GetEntryAssembly();
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
-
             // Auto-wire additional assemblies
-            assembly = typeof(IServicesConfig).GetTypeInfo().Assembly;
+            var assembly = typeof(IServicesConfig).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
-        }
-
-        /// <summary>Setup Custom rules overriding autowired ones.</summary>
-        private static void SetupCustomRules(ContainerBuilder builder)
-        {
-            // Instantiate only one logger
-            // TODO: read log level from configuration
-            var logger = new Logger(Uptime.ProcessId, LogLevel.Debug);
-            builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
 
             // Make sure the configuration is read only once.
             var config = new Config(new ConfigData(logger));
@@ -74,17 +38,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
             builder.RegisterType<DocumentDbKeyValueContainer>().As<IKeyValueContainer>().SingleInstance();
             builder.RegisterType<DocumentClientFactory>().As<IFactory<IDocumentClient>>().SingleInstance();
             builder.RegisterType<DocumentClientExceptionChecker>().As<IExceptionChecker>().SingleInstance();
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
             builder.RegisterType<GuidKeyGenerator>().As<IKeyGenerator>().SingleInstance();
-
-            // TODO: why is the HTTP client registered as a singleton? shouldn't be required
-            var httpClient = new HttpClient(logger);
-            builder.RegisterInstance(httpClient).As<IHttpClient>().SingleInstance();
-        }
-
-        private static void RegisterFactory(IContainer container)
-        {
-            Factory.RegisterContainer(container);
         }
     }
 }

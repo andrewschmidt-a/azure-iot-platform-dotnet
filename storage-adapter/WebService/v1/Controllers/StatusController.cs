@@ -22,6 +22,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
             this.statusService = statusService;
         }
 
+        [HttpGet]
         public async Task<StatusApiModel> GetAsync()
         {
             var result = new StatusApiModel(await this.statusService.GetStatusAsync(false));

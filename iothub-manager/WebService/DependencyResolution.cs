@@ -2,16 +2,11 @@
 
 using System.Reflection;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.IoTSolutions.IotHubManager.RecurringTasksAgent;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime;
-using Microsoft.Extensions.DependencyInjection;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Common.WebService;
@@ -20,50 +15,18 @@ using Mmm.Platform.IoT.Common.WebService.Runtime;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
 {
-    public class DependencyResolution
+    public class DependencyResolution : DependencyResolutionBase
     {
-        /// <summary>
-        /// Autofac configuration. Find more information here:
-        /// @see http://docs.autofac.org/en/latest/integration/aspnetcore.html
-        /// </summary>
-        public static IContainer Setup(IServiceCollection services)
+        protected override void SetupCustomRules(ContainerBuilder builder, ILogger logger, IHttpClient httpClient)
         {
-            var builder = new ContainerBuilder();
-
-            builder.Populate(services);
-
-            AutowireAssemblies(builder);
-            SetupCustomRules(builder);
-
-            var container = builder.Build();
-            RegisterFactory(container);
-
-            return container;
-        }
-
-        /// <summary>
-        /// Autowire interfaces to classes from all the assemblies, to avoid
-        /// manual configuration. Note that autowiring works only for interfaces
-        /// with just one implementation.
-        /// @see http://autofac.readthedocs.io/en/latest/register/scanning.html
-        /// </summary>
-        private static void AutowireAssemblies(ContainerBuilder builder)
-        {
-            var assembly = Assembly.GetEntryAssembly();
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
-
             // Auto-wire additional assemblies
-            assembly = typeof(IServicesConfig).GetTypeInfo().Assembly;
+            var assembly = typeof(IServicesConfig).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
 
             // Auto-wire RecurringTasksAgent.DLL
             assembly = typeof(IRecurringTasksAgent).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
-        }
 
-        /// <summary>Setup Custom rules overriding autowired ones.</summary>
-        private static void SetupCustomRules(ContainerBuilder builder)
-        {
             // Make sure the configuration is read only once.
             IConfig config = new Config(new ConfigData(new Logger(Uptime.ProcessId, LogLevel.Info)));
             builder.RegisterInstance(config).As<IConfig>().SingleInstance();
@@ -72,11 +35,6 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
             // prepare the instance here.
             builder.RegisterInstance(config.ServicesConfig).As<IServicesConfig>().SingleInstance();
             builder.RegisterInstance(config.ServicesConfig).As<IAuthMiddlewareConfig>().SingleInstance();
-
-            // Instantiate only one logger
-            // TODO: read log level from configuration
-            var logger = new Logger(Uptime.ProcessId, LogLevel.Debug);
-            builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
 
             // Auth and CORS setup
             Auth.Startup.SetupDependencies(builder, config);
@@ -87,20 +45,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
             builder.RegisterType<Services.Devices>().As<IDevices>().SingleInstance();
             builder.RegisterType<DeviceService>().As<IDeviceService>().SingleInstance();
             builder.RegisterType<Jobs>().As<IJobs>().SingleInstance();
-            builder.RegisterType<StorageAdapterClient>().As<IStorageAdapterClient>().SingleInstance();
             builder.RegisterType<DeviceProperties>().As<IDeviceProperties>().SingleInstance();
-
-            // TODO: why is the HTTP client registered as a singleton? shouldn't be required
-            var httpClient = new HttpClient(logger);
-            builder.RegisterInstance(httpClient).As<IHttpClient>().SingleInstance();
-
-            builder.RegisterType<UserManagementClient>().As<IUserManagementClient>().SingleInstance();
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
-        }
-
-        private static void RegisterFactory(IContainer container)
-        {
-            Factory.RegisterContainer(container);
         }
     }
 }
