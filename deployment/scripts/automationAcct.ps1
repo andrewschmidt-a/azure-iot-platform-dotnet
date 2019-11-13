@@ -78,6 +78,8 @@ Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.Resources"
 Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.Storage"
+Start-Sleep -Seconds 30
+addModulefromGallery -moduleName "Az.StreamAnalytics"
 Start-Sleep -Seconds 120
 addModulefromGallery -moduleName "AzTable"
 
@@ -85,9 +87,10 @@ addModulefromGallery -moduleName "AzTable"
 Write-Output "Importing modules to Automation Acct .."
 importRunbook -runbookName "CreateIoTHubTenant" -filepath "$scriptFolder\CreateIoTHub.ps1" 
 importRunbook -runbookName "DeleteIoTHubTenant" -filepath "$scriptFolder\DeleteIoTHub.ps1"
+importRunbook -runbookName "CreateStreamAnalyticsJob" -filepath "$scriptFolder\CreateSAJob.ps1"
 
 # create the webhook and store to the Keyvault
 createWebhook -webhook "CreateIotHub" -runbookName "CreateIoTHubTenant" -expDate $expDate -secretName "createIotHubWebHookUrl"
 createWebhook -webhook "DeleteIotHub" -runbookName "DeleteIoTHubTenant" -expDate $expDate -secretName "deleteIotHubWebHookUrl"
-
+createWebhook -webhook "CreateSAJob" -runbookName "CreateStreamAnalyticsJob" -expDate $expDate -secretName "CreateSAJobWebHookUrl"
 # end 
