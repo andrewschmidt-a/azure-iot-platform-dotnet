@@ -33,7 +33,7 @@ try
                              -ApplicationId $servicePrincipalConnection.ApplicationID   `
                              -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint `
                              -ServicePrincipal `
-                             -SubscriptionId $data.subscriptionId
+                             -Subscription $data.subscriptionId
     "Logged in."
 }
 catch {
