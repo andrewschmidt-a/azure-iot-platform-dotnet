@@ -21,7 +21,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
         private const string GLOBAL_KEY = "Global:";
         private const string COSMOSDB_KEY = GLOBAL_KEY + "CosmosDb:";
         private const string APPLICATION_KEY = "StorageAdapter:";
-        private const string COSMOS_CONNECTION_STRING_KEY = COSMOSDB_KEY + "documentDBConnectionString";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string STORAGE_TYPE_KEY = APPLICATION_KEY + "storageType";
         private const string DOCUMENT_DB_RUS_KEY = APPLICATION_KEY + "documentDBRUs";
@@ -30,6 +29,8 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime
         private const string EXTERNAL_DEPENDENCIES = "ExternalDependencies:";
         private const string USER_MANAGEMENT_URL_KEY = EXTERNAL_DEPENDENCIES + "authWebServiceUrl";
         private const string AUTH_REQUIRED_KEY = "AuthRequired";
+
+        private const string COSMOS_CONNECTION_STRING_KEY = "documentDBConnectionString";
 
         /// <summary>Web service listening port</summary>
         public int Port { get; }
