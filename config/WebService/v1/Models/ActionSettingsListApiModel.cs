@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.Actions;
+using Mmm.Platform.IoT.Common.WebService.v1;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models

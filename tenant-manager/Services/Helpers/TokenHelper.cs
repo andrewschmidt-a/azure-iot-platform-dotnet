@@ -1,7 +1,6 @@
 using System;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
@@ -14,13 +13,13 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
         {
             this._config = _config;
         }
-        
+
         public string GetServicePrincipleToken()
         {
             string keyVaultAppId = this._config.AzureActiveDirectoryAppId;
             string aadTenantId = this._config.AzureActiveDirectoryTenant;
             string keyVaultAppKey = this._config.AzureActiveDirectoryAppKey;
-            
+
             // Retrieve a token from Azure AD using the application id and password.
             try
             {

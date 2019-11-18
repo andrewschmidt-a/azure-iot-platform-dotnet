@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.EventHubs.Processor;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.EventHub;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent
 {

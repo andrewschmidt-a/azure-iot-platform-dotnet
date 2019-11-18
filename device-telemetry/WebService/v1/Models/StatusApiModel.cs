@@ -2,8 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
+using Mmm.Platform.IoT.Common.WebService.v1.Models;
 using Newtonsoft.Json;
 
 // TODO: complete - https://github.com/Azure/device-simulation-dotnet/issues/82

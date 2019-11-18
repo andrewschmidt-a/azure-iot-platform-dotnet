@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
 {

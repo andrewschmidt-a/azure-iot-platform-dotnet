@@ -7,12 +7,11 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Extensions.Configuration;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using IoTHubManager.Services.Test.helpers;
 using Xunit;
 using AuthenticationType = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models.AuthenticationType;
 
@@ -38,7 +37,7 @@ namespace IoTHubManager.Services.Test
             MockIdentity.mockClaims("one");
 
             this.devices = new Devices(tenantHelper.Object, ioTHubHostName);
-            
+
         }
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -252,10 +251,10 @@ namespace IoTHubManager.Services.Test
                         SecondaryKey = Convert.ToBase64String(Encoding.UTF8.GetBytes("SomeTestSecondaryKey"))
                     }
                 },
-                Capabilities = isEdgeDevice ? new DeviceCapabilities() {IotEdge = true} : null
+                Capabilities = isEdgeDevice ? new DeviceCapabilities() { IotEdge = true } : null
             };
             return dvc;
-        }        
+        }
 
         /// <summary>
         /// Returns a set of edge and non-edge twins

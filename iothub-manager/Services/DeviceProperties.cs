@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.External;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
@@ -34,23 +34,23 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
     /// </remarks>
     public class DeviceProperties : IDeviceProperties
     {
-        private readonly IStorageAdapterClient storageClient;
-        private readonly IDevices devices;
-        private readonly ILogger log;
+        public readonly IStorageAdapterClient storageClient;
+        public readonly IDevices devices;
+        public readonly ILogger log;
         /// Hardcoded in appsettings.ini
-        private readonly string whitelist;
+        public readonly string whitelist;
         /// Hardcoded in appsettings.ini
-        private readonly long ttl;
+        public readonly long ttl;
         /// Hardcoded in appsettings.ini
-        private readonly long rebuildTimeout;
-        private readonly TimeSpan serviceQueryInterval = TimeSpan.FromSeconds(10);
-        internal const string CACHE_COLLECTION_ID = "device-twin-properties";
-        internal const string CACHE_KEY = "cache";
+        public readonly long rebuildTimeout;
+        public readonly TimeSpan serviceQueryInterval = TimeSpan.FromSeconds(10);
+        public const string CACHE_COLLECTION_ID = "device-twin-properties";
+        public const string CACHE_KEY = "cache";
 
-        private const string WHITELIST_TAG_PREFIX = "tags.";
-        private const string WHITELIST_REPORTED_PREFIX = "reported.";
-        private const string TAG_PREFIX = "Tags.";
-        private const string REPORTED_PREFIX = "Properties.Reported.";
+        public const string WHITELIST_TAG_PREFIX = "tags.";
+        public const string WHITELIST_REPORTED_PREFIX = "reported.";
+        public const string TAG_PREFIX = "Tags.";
+        public const string REPORTED_PREFIX = "Properties.Reported.";
 
         private DateTime DevicePropertiesLastUpdated;
 

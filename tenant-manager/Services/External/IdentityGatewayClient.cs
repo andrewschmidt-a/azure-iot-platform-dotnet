@@ -4,6 +4,7 @@ using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
@@ -79,7 +80,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
             string url = this.RequestUrl($"tenants/{userId}");
             return await this._requestHelper.ProcessApiModelRequestAsync<IdentityGatewayApiModel>(HttpMethod.Get, url, tenantId);
         }
-        
+
         /// <summary>
         /// delete all user-tenant relationships for the given tenantId
         /// </summary>

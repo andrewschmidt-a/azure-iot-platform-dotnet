@@ -3,10 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.Actions
 {

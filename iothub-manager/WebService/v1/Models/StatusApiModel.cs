@@ -2,8 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
+using Mmm.Platform.IoT.Common.WebService.v1.Models;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Models

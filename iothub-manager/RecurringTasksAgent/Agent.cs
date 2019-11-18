@@ -4,7 +4,7 @@
 using System;
 using System.Threading;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.RecurringTasksAgent
 {
@@ -55,7 +55,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.RecurringTasksAgent
                 }
                 catch (Exception)
                 {
-                    this.log.Debug("DeviceProperties Cache creation failed, will retry in few seconds", () => new { CACHE_INIT_RETRY_SECS});
+                    this.log.Debug("DeviceProperties Cache creation failed, will retry in few seconds", () => new { CACHE_INIT_RETRY_SECS });
                 }
 
                 this.log.Warn("Pausing thread before retrying DeviceProperties cache creation", () => new { CACHE_INIT_RETRY_SECS });

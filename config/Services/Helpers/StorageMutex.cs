@@ -2,9 +2,10 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
 {

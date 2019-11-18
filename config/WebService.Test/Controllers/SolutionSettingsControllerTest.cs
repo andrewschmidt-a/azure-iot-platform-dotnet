@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.Actions;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using Config.WebService.Test.helpers;
 using Xunit;
 
 namespace Config.WebService.Test.Controllers
@@ -160,15 +160,15 @@ namespace Config.WebService.Test.Controllers
         {
             var image = this.rand.NextString();
             var type = this.rand.NextString();
- 
+
             using (var mockContext = new MockHttpContext())
             {
                 this.controller.ControllerContext.HttpContext = mockContext.Object;
-               
+
                 this.mockStorage
                     .Setup(x => x.SetLogoAsync(It.IsAny<Logo>()))
                     .ReturnsAsync((Logo logo) => logo);
-                
+
                 mockContext.Object.Request.ContentType = type;
                 mockContext.SetBody(image);
 
@@ -178,7 +178,7 @@ namespace Config.WebService.Test.Controllers
                     .Verify(x => x.SetLogoAsync(
                         It.Is<Logo>(m => m.Image == image && m.Type == type && !m.IsDefault)),
                         Times.Once);
-                
+
                 Assert.Equal(image, mockContext.GetBody());
                 Assert.Equal(type, mockContext.Object.Response.ContentType);
                 Assert.Equal("False", mockContext.GetHeader(Logo.IS_DEFAULT_HEADER));
@@ -227,7 +227,7 @@ namespace Config.WebService.Test.Controllers
                 this.controller.ControllerContext.HttpContext = mockContext.Object;
 
                 var config = new ServicesConfig();
-                var action = new EmailActionSettings(this.mockResourceManagementClient.Object, config, this.mockLogger.Object);   
+                var action = new EmailActionSettings(this.mockResourceManagementClient.Object, config, this.mockLogger.Object);
                 var actionsList = new List<IActionSettings>
                 {
                     action

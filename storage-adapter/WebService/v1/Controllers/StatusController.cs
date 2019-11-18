@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Filters;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime;
+using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.WebService.v1;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
 {
@@ -21,9 +22,10 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
             this.statusService = statusService;
         }
 
+        [HttpGet]
         public async Task<StatusApiModel> GetAsync()
         {
-            var result = new StatusApiModel(await this.statusService.GetStatusAsync());
+            var result = new StatusApiModel(await this.statusService.GetStatusAsync(false));
 
             result.Properties.Add("Port", this.config.Port.ToString());
             return result;

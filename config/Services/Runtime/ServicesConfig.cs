@@ -1,28 +1,29 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
 {
-    public interface IServicesConfig
+    public interface IServicesConfig : IStorageAdapterClientConfig, IAuthMiddlewareConfig, IUserManagementClientConfig
     {
         string SolutionType { get; set; }
-        string StorageAdapterApiUrl { get; }
         string DeviceSimulationApiUrl { get; }
         string TelemetryApiUrl { get; }
         string SeedTemplate { get; }
         string AzureMapsKey { get; }
-        string UserManagementApiUrl { get; }
         string Office365LogicAppUrl { get; }
         string ResourceGroup { get; }
         string SubscriptionId { get; }
         string ManagementApiVersion { get; }
         string ArmEndpointUrl { get; }
-        Dictionary<string, List<string>> UserPermissions { get; }
     }
 
     public class ServicesConfig : IServicesConfig
     {
+        public int StorageAdapterApiTimeout { get; set; }
         public string SolutionType { get; set; }
         public string StorageAdapterApiUrl { get; set; }
         public string DeviceSimulationApiUrl { get; set; }

@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\common\TestHelpers\TestHelpers.csproj" />
     <ProjectReference Include="..\ActionsAgent\ActionsAgent.csproj" />
   </ItemGroup>
 

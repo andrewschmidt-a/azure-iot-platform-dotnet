@@ -1,16 +1,16 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Filters;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Helpers;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.IoTSolutions.UIConfig.Services;
+using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
+using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Helpers;
+using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
 {
@@ -34,7 +34,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
         [HttpGet]
         [Authorize("ReadAll")]
         public async Task<PackageListApiModel> GetFilteredAsync(
-            [FromQuery]string packageType, 
+            [FromQuery]string packageType,
             [FromQuery]string configType)
         {
             if (string.IsNullOrEmpty(packageType) && string.IsNullOrEmpty(configType))
@@ -48,7 +48,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
             }
 
             return new PackageListApiModel(await this.storage.GetFilteredPackagesAsync(
-                packageType, 
+                packageType,
                 configType));
         }
 
@@ -111,7 +111,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
             var packageToAdd = new PackageApiModel(
                 packageContent,
                 package.FileName,
-                uploadedPackageType, 
+                uploadedPackageType,
                 configType);
 
             return new PackageApiModel(await this.storage.AddPackageAsync(packageToAdd.ToServiceModel()));

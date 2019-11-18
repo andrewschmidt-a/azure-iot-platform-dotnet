@@ -12,6 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\common\Services.Test\Services.Test.csproj" />
+    <ProjectReference Include="..\..\common\Services\Services.csproj" />
+    <ProjectReference Include="..\..\common\TestHelpers\TestHelpers.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
 

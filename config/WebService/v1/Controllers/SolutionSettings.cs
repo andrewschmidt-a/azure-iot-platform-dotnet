@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.Actions;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Filters;
 using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models;
 using Microsoft.Extensions.Primitives;
+using Mmm.Platform.IoT.Common.WebService.v1;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
 {
@@ -72,7 +71,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
             {
                 model.Name = this.Request.Headers[Logo.NAME_HEADER];
             }
-        
+
             var response = await this.storage.SetLogoAsync(model);
             this.SetImageResponse(response);
         }
@@ -86,7 +85,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
 
         private void SetImageResponse(Logo model)
         {
-            if(model.Name != null)
+            if (model.Name != null)
             {
                 this.Response.Headers.Add(Logo.NAME_HEADER, model.Name);
             }

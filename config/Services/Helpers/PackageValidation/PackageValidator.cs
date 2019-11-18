@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 

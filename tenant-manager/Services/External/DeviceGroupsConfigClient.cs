@@ -5,6 +5,7 @@ using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.Services.External

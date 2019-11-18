@@ -2,10 +2,11 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Filters;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Models;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.WebService.v1;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
 {

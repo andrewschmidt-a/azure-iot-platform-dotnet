@@ -2,11 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Actions;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.WebService.v1.Models;
 using Newtonsoft.Json;
-using Rule = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Rule;
+using Rule = Mmm.Platform.IoT.Common.Services.Models.Rule;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Models
 {

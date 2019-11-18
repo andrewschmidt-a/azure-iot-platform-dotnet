@@ -20,8 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AuthUtils\AuthUtils.csproj" />
-    <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
+    <ProjectReference Include="..\..\common\AppConfiguration\AppConfiguration.csproj" />
+    <ProjectReference Include="..\..\common\AuthUtils\AuthUtils.csproj" />
+    <ProjectReference Include="..\..\common\Services\Services.csproj" />
   </ItemGroup>
   
 </Project>

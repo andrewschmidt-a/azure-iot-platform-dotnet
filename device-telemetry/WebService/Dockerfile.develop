@@ -5,18 +5,20 @@ ENV DOTNET_USE_POLLING_FILE_WATCHER=true
 EXPOSE 80
 
 WORKDIR /src
-COPY ["./Directory.Build.props", "/src/"]
-COPY ["AppConfiguration/AppConfiguration.csproj", "AppConfiguration/"]
-COPY ["AuthUtils/AuthUtils.csproj", "AuthUtils/"]
-COPY ["ActionsAgent/ActionsAgent.csproj", "ActionsAgent/"]
-COPY ["Services/Services.csproj", "Services/"]
-COPY ["WebService/WebService.csproj", "WebService/"]
+COPY Directory.Build.props .
+COPY common/AuthUtils/AuthUtils.csproj common/AuthUtils/
+COPY common/AppConfiguration/AppConfiguration.csproj common/AppConfiguration/
+COPY common/Services/Services.csproj common/Services/
+COPY common/WebService/WebService.csproj common/WebService/
+COPY device-telemetry/ActionsAgent/ActionsAgent.csproj device-telemetry/ActionsAgent/
+COPY device-telemetry/Services/Services.csproj device-telemetry/Services/
+COPY device-telemetry/WebService/WebService.csproj device-telemetry/WebService/
+RUN dotnet restore device-telemetry/WebService/WebService.csproj
+COPY common common
+COPY device-telemetry device-telemetry
+WORKDIR /src/device-telemetry/WebService
+RUN dotnet build  WebService.csproj --configuration $BUILD_CONFIGURATION
 
-RUN dotnet restore "WebService/WebService.csproj"
-COPY . .
-WORKDIR "/src/WebService"
-RUN dotnet build  "WebService.csproj" -c $BUILD_CONFIGURATION
-
-RUN echo "exec dotnet run --no-build --no-launch-profile -c $BUILD_CONFIGURATION --" > /entrypoint.sh
+RUN echo "exec dotnet run --no-build --no-launch-profile --configuration $BUILD_CONFIGURATION --" > /entrypoint.sh
 
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]

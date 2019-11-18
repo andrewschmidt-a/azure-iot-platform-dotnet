@@ -3,9 +3,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.Auth;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Common.AuthUtils;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
 {

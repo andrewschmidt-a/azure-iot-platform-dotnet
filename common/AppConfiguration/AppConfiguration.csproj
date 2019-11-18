@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>Mmm.Platform.IoT.Common.AppConfiguration</RootNamespace>
+    <AssemblyName>Mmm.Platform.IoT.Common.AppConfiguration</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="1.0.0-preview-008520001" />
+  </ItemGroup>
+
+</Project>

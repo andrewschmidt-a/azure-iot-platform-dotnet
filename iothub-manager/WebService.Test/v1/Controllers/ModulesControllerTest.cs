@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
 using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Controllers;
 using Microsoft.Extensions.Primitives;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json.Linq;
-using WebService.Test.helpers;
 using Xunit;
 
 namespace WebService.Test.v1.Controllers
@@ -73,7 +73,7 @@ namespace WebService.Test.v1.Controllers
         {
             const string resultToken = "nextToken";
 
-            var twinList = new List<TwinServiceModel>() {ModulesControllerTest.CreateTestTwin("d", "m")};
+            var twinList = new List<TwinServiceModel>() { ModulesControllerTest.CreateTestTwin("d", "m") };
             var twins = new TwinServiceListModel(twinList, resultToken);
 
             this.devicesMock.Setup(x => x.GetModuleTwinsByQueryAsync(query, continuationToken))
