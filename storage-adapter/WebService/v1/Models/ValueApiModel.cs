@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
+using Mmm.Platform.IoT.Common.WebService.v1;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models

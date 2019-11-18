@@ -6,12 +6,13 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Auth;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ILogger = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics.ILogger;
+using Microsoft.OpenApi.Models;
+using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
+using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
 {
@@ -44,6 +45,11 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
         // Configure method below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Device Telemetry API", Version = "v1" });
+            });
+
             // Setup (not enabling yet) CORS
             services.AddCors();
 
@@ -51,7 +57,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             services.AddMvc().AddControllersAsServices();
 
             // Prepare DI container
-            this.ApplicationContainer = DependencyResolution.Setup(services);
+            this.ApplicationContainer = new DependencyResolution().Setup(services);
 
             // Print some useful information at bootstrap time
             this.PrintBootstrapInfo(this.ApplicationContainer);
@@ -69,6 +75,17 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             ICorsSetup corsSetup,
             IApplicationLifetime appLifetime)
         {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
+                c.RoutePrefix = string.Empty;
+            });
+
             loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
 
             // Check for Authorization header before dispatching requests

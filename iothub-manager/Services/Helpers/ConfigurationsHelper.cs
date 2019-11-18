@@ -4,10 +4,10 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Azure.Devices;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
 {
@@ -89,7 +89,8 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
             string deploymentLabel = null;
 
             if (deployment.Labels != null &&
-                deployment.Labels.ContainsKey(ConfigurationsHelper.PACKAGE_TYPE_LABEL)) {
+                deployment.Labels.ContainsKey(ConfigurationsHelper.PACKAGE_TYPE_LABEL))
+            {
                 deploymentLabel = deployment.Labels[ConfigurationsHelper.PACKAGE_TYPE_LABEL];
             }
 
@@ -110,9 +111,9 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
             }
             else
             {
-               /* This is for the backward compatibility, as some of the old
-                * deployments may not have the required label.
-                */
+                /* This is for the backward compatibility, as some of the old
+                 * deployments may not have the required label.
+                 */
                 if (deployment.Content?.ModulesContent != null)
                 {
                     return true;
@@ -130,7 +131,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
 
         // Replaces DeploymentId, if present, in the custom metrics query 
         public static IDictionary<string, string> SubstituteDeploymentIdIfPresent(
-            IDictionary<string, string> customMetrics, 
+            IDictionary<string, string> customMetrics,
             string deploymentId)
         {
             const string deploymentClause = @"configurations\.\[\[[a-zA-Z0-9\-]+\]\]";

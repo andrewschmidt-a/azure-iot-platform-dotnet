@@ -15,8 +15,15 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="2.0.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.19.8" />
-    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.3" />
+    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.4" />
     <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.11" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\common\AppConfiguration\AppConfiguration.csproj" />
+    <ProjectReference Include="..\..\common\AuthUtils\AuthUtils.csproj" />
+    <ProjectReference Include="..\..\common\Services\Services.csproj" />
+    <ProjectReference Include="..\..\common\WebService\WebService.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,8 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AuthUtils\AuthUtils.csproj" />
-    <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
+    <Folder Include="Converters\" />
   </ItemGroup>
   
 </Project>

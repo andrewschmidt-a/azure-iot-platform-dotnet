@@ -1,14 +1,12 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Http;
 using Newtonsoft.Json;
 
 namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
@@ -18,9 +16,9 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
         Task<T> GetAsync<T>(string uri, string description, bool acceptNotFound = false);
         Task PostAsync(string uri, string description, object content = null);
         Task PutAsync(string uri, string description, object content = null);
-        void SetHeaders(Dictionary<string,string> headers);
+        void SetHeaders(Dictionary<string, string> headers);
     }
-    
+
     public class HttpClientWrapper : IHttpClientWrapper
     {
         private readonly ILogger log;
@@ -52,7 +50,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
             request.Headers.Add("Cache-Control", "no-cache");
             request.Headers.Add("User-Agent", "Config");
             this.AddDefaultHeaders(request);
-            
+
             if (uri.ToLowerInvariant().StartsWith("https:"))
             {
                 request.Options.AllowInsecureSSLServer = true;
@@ -143,7 +141,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
             request.Headers.Add("Cache-Control", "no-cache");
             request.Headers.Add("User-Agent", "Config");
             this.AddDefaultHeaders(request);
-            
+
             if (uri.ToLowerInvariant().StartsWith("https:"))
             {
                 request.Options.AllowInsecureSSLServer = true;
@@ -177,7 +175,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
         {
             foreach (var key in this.headers.Keys)
             {
-                request.Headers.Add(key,this.headers[key]);
+                request.Headers.Add(key, this.headers[key]);
             }
         }
         public void SetHeaders(Dictionary<string, string> headers)

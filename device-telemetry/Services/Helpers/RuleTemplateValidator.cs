@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.IO;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
@@ -53,7 +53,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers
 
             JToken json = JToken.Parse(File.ReadAllText(pathToTemplate));
 
-            JArray rulesList = (JArray) json["Rules"];
+            JArray rulesList = (JArray)json["Rules"];
 
             if (rulesList == null) return false;
 

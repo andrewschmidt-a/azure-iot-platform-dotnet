@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using IdentityGateway.Services.Helpers;
 using IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace IdentityGateway.Services
 {

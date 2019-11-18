@@ -6,12 +6,12 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.Auth;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Http;
 using Newtonsoft.Json;
-using HttpRequest = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpRequest;
+using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
 
 namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
 {
@@ -29,7 +29,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
     public class DiagnosticsClient : IDiagnosticsClient
     {
         public bool CanLogToDiagnostics { get; }
-        
+
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string TENANT_ID = "TenantID";
         private readonly IHttpClient httpClient;
@@ -77,7 +77,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
             try
             {
                 request.SetUriFromString($"{this.serviceUrl}/diagnosticsevents");
-                
+
                 string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
                 request.Headers.Add(TENANT_HEADER, tenantId);
                 DiagnosticsRequestModel model = new DiagnosticsRequestModel

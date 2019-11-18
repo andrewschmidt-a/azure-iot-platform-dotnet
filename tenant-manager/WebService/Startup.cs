@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 {
@@ -12,7 +15,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
     {
 
         public IConfiguration Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; } 
+        public IContainer ApplicationContainer { get; private set; }
 
         public Startup(IHostingEnvironment env)
         {
@@ -27,16 +30,33 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Tenant Manager API", Version = "v1" });
+            });
+
             services.AddMvc().AddControllersAsServices();
-
-            this.ApplicationContainer = DependencyResolution.Setup(services);
-
+            this.ApplicationContainer = new DependencyResolution().Setup(services);
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        [Obsolete]
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
+                c.RoutePrefix = string.Empty;
+            });
+
+            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -5,15 +5,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Config.Services.Test.helpers;
 using Xunit;
 
 namespace Config.Services.Test
@@ -136,12 +137,12 @@ namespace Config.Services.Test
 
             this.azureMapsKey = this.rand.NextString();
             this.mockClient = new Mock<IStorageAdapterClient>();
-            this.storage = new Storage( 
+            this.storage = new Storage(
                 this.mockClient.Object,
                 new ServicesConfig
                 {
                     AzureMapsKey = this.azureMapsKey
-                }, 
+                },
                 new Logger(string.Empty, LogLevel.Debug));
         }
 
@@ -395,7 +396,7 @@ namespace Config.Services.Test
                 Image = image,
                 Type = type
             };
-            
+
             Logo result = await SetLogoHelper(logo, oldImage, oldName, oldType, false);
 
             this.mockClient
@@ -821,8 +822,8 @@ namespace Config.Services.Test
                 Name = name + i,
                 Content = content + i,
                 PackageType = (i == 0) ? PackageType.DeviceConfiguration : PackageType.EdgeManifest,
-                ConfigType = (i == 0) ? ConfigType.Firmware.ToString() : string.Empty 
-                                                
+                ConfigType = (i == 0) ? ConfigType.Firmware.ToString() : string.Empty
+
             }).ToList();
 
             this.mockClient
@@ -896,7 +897,7 @@ namespace Config.Services.Test
             };
 
             // Act & Assert
-            await Assert.ThrowsAsync<InvalidInputException>(async () => 
+            await Assert.ThrowsAsync<InvalidInputException>(async () =>
                 await this.storage.AddPackageAsync(pkg));
         }
 

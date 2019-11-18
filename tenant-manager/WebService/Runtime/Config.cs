@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Auth;
+using Mmm.Platform.IoT.Common.Services.Runtime;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
 {
@@ -100,7 +101,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
                 CreateIotHubRunbookName = configData.GetString(CREATE_IOT_HUB_WEBHOOK_NAME),
                 DeleteIotHubRunbookUrl = configData.GetString(DELETE_IOT_HUB_WEBHOOK_KEY),
                 DeleteIotHubRunbookName = configData.GetString(DELETE_IOT_HUB_WEBHOOK_NAME),
-                AppConfigConnectionString = configData.GetString(APPCONFIG_CONNSTRING_KEY),
+                ApplicationConfigurationConnectionString = configData.GetString(APPCONFIG_CONNSTRING_KEY),
                 AppConfigEndpoint = configData.GetString(APP_CONFIG_ENDPOINT_KEY),
                 CosmosDbEndpoint = configData.GetString(COSMOS_DB_ENDPOINT_KEY),
                 CosmosDbToken = configData.GetString(COSMOS_DB_TOKEN_KEY),

@@ -6,16 +6,17 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
-using Config.Services.Test.helpers;
 using Xunit;
-using HttpResponse = Microsoft.Azure.IoTSolutions.UIConfig.Services.Http.HttpResponse;
+using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
 
 namespace Config.Services.Test
 {
@@ -33,7 +34,7 @@ namespace Config.Services.Test
         {
             this.mockHttpClient = new Mock<IHttpClient>();
             this.mockHTTPContext = new Mock<IHttpContextAccessor>();
-            
+
             this.mockHTTPContext.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
                 {{"TenantID", "test_tenant"}});
             this.mockHTTPContext.Setup(t => t.HttpContext.Request.Headers).Returns(new HeaderDictionary() { { AZDS_ROUTE_KEY, "mockDevSpace" } });
@@ -46,7 +47,7 @@ namespace Config.Services.Test
                     StorageAdapterApiUrl = MOCK_SERVICE_URI
                 },
                 new Logger("UnitTest", LogLevel.Debug), this.mockHTTPContext.Object);
-            
+
             this.rand = new Random();
         }
 

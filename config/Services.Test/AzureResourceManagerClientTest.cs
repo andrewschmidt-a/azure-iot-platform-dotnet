@@ -2,14 +2,14 @@
 
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Http;
 using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using Config.Services.Test.helpers;
 using Xunit;
-using IUserManagementClient = Microsoft.Azure.IoTSolutions.UIConfig.Services.External.IUserManagementClient;
 
 namespace Config.Services.Test
 {
@@ -66,7 +66,7 @@ namespace Config.Services.Test
 
             // Act
             var result = await this.client.IsOffice365EnabledAsync();
-            
+
             // Assert
             this.mockHttpClient
                 .Verify(x => x.GetAsync(

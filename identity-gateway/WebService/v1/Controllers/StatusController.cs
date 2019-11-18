@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
-using IdentityGateway.Services;
 using IdentityGateway.Services.Models;
 using IdentityGateway.Services.Runtime;
-using IdentityGateway.WebService.v1.Filters;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using WebService.Models;
 
 namespace IdentityGateway.WebService.v1.Controllers
 {
@@ -21,7 +22,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [HttpGet]
         public async Task<StatusApiModel> GetAsync()
         {
-            var result = new StatusApiModel(await this.statusService.GetStatusAsync());
+            var result = new StatusApiModel(await this.statusService.GetStatusAsync(false));
 
             result.Properties.Add("Port", this.config.Port.ToString());
             return result;

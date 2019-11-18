@@ -1,8 +1,9 @@
-﻿using IdentityGateway.Services.Diagnostics;
-using IdentityGateway.Services.Runtime;
+﻿using IdentityGateway.Services.Runtime;
 using IdentityGateway.WebService.Runtime;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
 
 namespace IdentityGateway.WebService
 {

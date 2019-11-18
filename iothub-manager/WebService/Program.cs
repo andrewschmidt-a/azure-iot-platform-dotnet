@@ -1,18 +1,19 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
 
 namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
 {
-    public static class Program
+    public class Program
     {
         // Application entry point
         public static void Main(string[] args)
         {
-            IConfig config = new Config(new ConfigData(new Logger(Uptime.ProcessId, LogLevel.Info)));
+            var config = new Config(new ConfigData(new Logger(Uptime.ProcessId, LogLevel.Info)));
 
             /*
             Kestrel is a cross-platform HTTP server based on libuv,

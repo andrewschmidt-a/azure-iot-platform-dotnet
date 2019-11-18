@@ -2,10 +2,10 @@
 
 using System;
 using Autofac;
-using MMM.Azure.IoTSolutions.TenantManager.WebService;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Mmm.Platform.IoT.Common.WebService.Auth;
+using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Auth
 {

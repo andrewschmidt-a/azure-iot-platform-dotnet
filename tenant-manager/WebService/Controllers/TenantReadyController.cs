@@ -1,11 +1,9 @@
 ﻿using System.Threading.Tasks;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Filters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.Auth;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using MMM.Azure.IoTSolutions.TenantManager.Services;
 
 namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
 {

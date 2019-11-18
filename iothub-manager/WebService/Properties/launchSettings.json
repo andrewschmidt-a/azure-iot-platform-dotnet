@@ -10,15 +10,11 @@
   "profiles": {
     "WebService": {
       "commandName": "Project",
-      "launchBrowser": true,
       "launchUrl": "http://localhost:9002/v1/status",
       "environmentVariables": {
-        "PCS_KEYVAULT_NAME": "$(PCS_KEYVAULT_NAME)",
-        "PCS_AAD_APPID": "$(PCS_AAD_APPID)",
-        "PCS_APPLICATION_CONFIGURATION": "${PCS_APPLICATION_CONFIGURATION}",
-        "PCS_AAD_APPSECRET": "$(PCS_AAD_APPSECRET)"
+        "PCS_APPLICATION_CONFIGURATION": ""
       },
-      "applicationUrl": "http://localhost:9002/v1/status"
+      "applicationUrl": ""
     },
     "Azure Dev Spaces": {
       "commandName": "AzureDevSpaces",

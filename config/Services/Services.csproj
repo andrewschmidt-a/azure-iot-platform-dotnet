@@ -34,14 +34,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Data\device-simulation-template.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\..\common\AppConfiguration\AppConfiguration.csproj" />
+    <ProjectReference Include="..\..\common\AuthUtils\AuthUtils.csproj" />
+    <ProjectReference Include="..\..\common\Services\Services.csproj" />
+    <ProjectReference Include="..\..\common\WebService\WebService.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AuthUtils\AuthUtils.csproj" />
-    <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
+    <None Update="Data\device-simulation-template.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   
 </Project>

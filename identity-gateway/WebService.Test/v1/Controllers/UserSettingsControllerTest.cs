@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentityGateway.AuthUtils;
 using IdentityGateway.Services;
 using IdentityGateway.Services.Models;
 using IdentityGateway.WebService.v1.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using WebService.Test.helpers;
 using Xunit;
 
 namespace WebService.Test.v1.Controllers
@@ -166,7 +166,7 @@ namespace WebService.Test.v1.Controllers
             mockUserSettingsContainer.Setup(m => m.CreateAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettings);
             mockUserSettingsContainer.Setup(m => m.UpdateAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettings);
             mockUserSettingsContainer.Setup(m => m.DeleteAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettings);
-            mockHttpContext.Object.Items = new Dictionary<object, object> { { RequestExtension.CONTEXT_KEY_USER_CLAIMS, new List<Claim> { new Claim(RequestExtension.USER_OBJECT_ID_CLAIM_TYPE, someSub) } } };
+            mockHttpContext.Object.Items = new Dictionary<object, object> { { RequestExtension.ContextKeyUserClaims, new List<Claim> { new Claim(RequestExtension.UserObjectIdClaimType, someSub) } } };
         }
     }
 }

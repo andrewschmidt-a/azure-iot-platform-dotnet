@@ -3,6 +3,7 @@
 using System;
 using System.Net;
 using Microsoft.Azure.Documents;
+using Mmm.Platform.IoT.Common.Services.Wrappers;
 
 namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers
 {
