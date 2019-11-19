@@ -77,7 +77,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
             ICorsSetup corsSetup,
             IApplicationLifetime appLifetime)
         {
@@ -91,8 +90,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
                 c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
                 c.RoutePrefix = string.Empty;
             });
-
-            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
 
             // Check for Authorization header before dispatching requests
             app.UseMiddleware<AuthMiddleware>();

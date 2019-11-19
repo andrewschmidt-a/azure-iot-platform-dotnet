@@ -3,7 +3,6 @@
 using System.Reflection;
 using Autofac;
 using Microsoft.Azure.EventHubs.Processor;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.ActionsAgent.EventHub;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime;
@@ -24,9 +23,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
         {
             // Auto-wire additional assemblies
             var assembly = typeof(IServicesConfig).GetTypeInfo().Assembly;
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
-
-            assembly = typeof(ActionsAgent.IAgent).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
 
             // Make sure the configuration is read only once.
@@ -54,12 +50,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             // leaks, but not so good for the overall performance.
             //builder.RegisterType<CLASS_NAME>().As<INTERFACE_NAME>().SingleInstance();
             builder.RegisterType<DiagnosticsClient>().As<IDiagnosticsClient>().SingleInstance();
-
-            // Event Hub Classes
-            IEventProcessorHostWrapper eventProcessorHostWrapper = new EventProcessorHostWrapper();
-            builder.RegisterInstance(eventProcessorHostWrapper).As<IEventProcessorHostWrapper>().SingleInstance();
-            IEventProcessorFactory eventProcessorFactory = new ActionsEventProcessorFactory(logger, config.ServicesConfig, httpClient);
-            builder.RegisterInstance(eventProcessorFactory).As<IEventProcessorFactory>().SingleInstance();
         }
     }
 }

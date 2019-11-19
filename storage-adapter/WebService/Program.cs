@@ -3,6 +3,7 @@
 using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Common.WebService.Runtime;
@@ -15,7 +16,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
     {
         public static void Main(string[] args)
         {
-            var config = new Config(new ConfigData(new Logger(Uptime.ProcessId, LogLevel.Info)));
+            var config = new Config(new ConfigData(new Logger(Uptime.ProcessId, Mmm.Platform.IoT.Common.Services.Diagnostics.LogLevel.Info)));
 
             /*
             Print some information to help development and debugging, like
@@ -35,6 +36,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
                 .UseKestrel(options => { options.AddServerHeader = false; })
                 .UseIISIntegration()
                 .UseStartup<Startup>()
+                .ConfigureLogging(builder => builder.AddConsole())
                 .Build();
 
             host.Run();

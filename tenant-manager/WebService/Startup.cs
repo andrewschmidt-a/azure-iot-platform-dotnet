@@ -22,7 +22,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
 #if DEBUG
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -57,20 +57,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 
             loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
-
             // Check for Authorization header before dispatching requests
             app.UseMiddleware<AuthMiddleware>();
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

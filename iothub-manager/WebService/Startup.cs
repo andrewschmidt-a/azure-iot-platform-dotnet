@@ -5,7 +5,6 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.IotHubManager.RecurringTasksAgent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -30,7 +29,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
 #if DEBUG
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
                 ;
             this.Configuration = builder.Build();
@@ -67,7 +66,6 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
             ICorsSetup corsSetup,
             IApplicationLifetime appLifetime)
         {
@@ -82,8 +80,6 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
                 c.RoutePrefix = string.Empty;
             });
 
-            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
-
             // Check for Authorization header before dispatching requests
             app.UseMiddleware<AuthMiddleware>();
 
@@ -96,8 +92,6 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
-            // Run a recurring tasks which updates the device properties in CosmosDB every 1 hour
-            appLifetime.ApplicationStarted.Register(() => this.ApplicationContainer.Resolve<IRecurringTasksAgent>().Run());
         }
 
         private void PrintBootstrapInfo(IContainer container)

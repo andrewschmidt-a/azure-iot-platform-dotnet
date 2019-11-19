@@ -2,7 +2,6 @@
 
 using System.Reflection;
 using Autofac;
-using Microsoft.Azure.IoTSolutions.IotHubManager.RecurringTasksAgent;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
 using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
 using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime;
@@ -21,10 +20,6 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
         {
             // Auto-wire additional assemblies
             var assembly = typeof(IServicesConfig).GetTypeInfo().Assembly;
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
-
-            // Auto-wire RecurringTasksAgent.DLL
-            assembly = typeof(IRecurringTasksAgent).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
 
             // Make sure the configuration is read only once.

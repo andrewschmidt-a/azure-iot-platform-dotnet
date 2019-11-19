@@ -28,7 +28,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
 #if DEBUG
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
                 ;
             this.Configuration = builder.Build();
@@ -57,7 +57,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
             IApplicationLifetime appLifetime)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
@@ -70,8 +69,6 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
                 c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
                 c.RoutePrefix = string.Empty;
             });
-
-            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
 
             app.UseMiddleware<ClientToClientAuthMiddleware>();
             app.UseMvc();
