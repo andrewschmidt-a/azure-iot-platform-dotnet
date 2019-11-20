@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
+using Mmm.Platform.IoT.TenantManager.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
+namespace Mmm.Platform.IoT.TenantManager.Services.Runtime
 {
     public interface IServicesConfig : IAppConfigClientConfig, IUserManagementClientConfig, IAuthMiddlewareConfig
     {

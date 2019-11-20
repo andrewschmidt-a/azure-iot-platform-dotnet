@@ -4,12 +4,12 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Azure.Devices;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     public static class ConfigurationsHelper
     {

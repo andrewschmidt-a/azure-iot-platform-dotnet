@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.WebService.v1.Filters;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
+using Mmm.Platform.IoT.TenantManager.Services;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
+namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {
     [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class TenantReadyController : ControllerBase

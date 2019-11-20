@@ -26,4 +26,4 @@ RUN dotnet publish WebService.csproj \
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Microsoft.Azure.IoTSolutions.UIConfig.WebService.dll"]
+ENTRYPOINT ["dotnet", "Mmm.Platform.IoT.Config.WebService.dll"]

@@ -2,7 +2,7 @@
 
 using Xunit;
 
-namespace WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 {
     public class DevicesControllerTest
     {

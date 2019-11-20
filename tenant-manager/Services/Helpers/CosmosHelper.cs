@@ -5,9 +5,9 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Models;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
+namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public class CosmosHelper : IStatusOperation
     {

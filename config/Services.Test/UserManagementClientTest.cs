@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
@@ -15,7 +15,7 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Config.Services.Test
+namespace Mmm.Platform.IoT.Config.Services.Test
 {
     public class UserManagementClientTest
     {

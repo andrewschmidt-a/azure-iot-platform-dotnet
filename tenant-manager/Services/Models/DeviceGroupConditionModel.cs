@@ -2,7 +2,7 @@
 
 using Newtonsoft.Json;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
+namespace Mmm.Platform.IoT.TenantManager.Services.Models
 {
     public class DeviceGroupConditionModel
     {

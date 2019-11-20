@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Microsoft.Azure.KeyVault;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Mmm.Platform.IoT.Common.Services.Models;
 
-namespace IdentityGateway.Services.Helpers
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 {
     public class KeyVaultHelpers : IKeyVaultHelpers
     {

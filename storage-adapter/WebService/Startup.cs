@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
+namespace Mmm.Platform.IoT.StorageAdapter.WebService
 {
     public class Startup
     {

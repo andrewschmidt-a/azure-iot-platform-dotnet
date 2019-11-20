@@ -3,7 +3,7 @@ using Microsoft.WindowsAzure.Storage.Table;
 using TestStack.Dossier;
 using TestStack.Dossier.EquivalenceClasses;
 
-namespace Services.Test.Helpers.Builders
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Test.Helpers.Builders
 {
     public class DynamicTableEntityBuilder : TestDataBuilder<DynamicTableEntity, DynamicTableEntityBuilder>
     {

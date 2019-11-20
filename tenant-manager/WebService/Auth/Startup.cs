@@ -5,9 +5,9 @@ using Autofac;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Mmm.Platform.IoT.Common.WebService.Auth;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
+using Mmm.Platform.IoT.TenantManager.WebService.Runtime;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Auth
+namespace Mmm.Platform.IoT.TenantManager.WebService.Auth
 {
     public class Startup
     {

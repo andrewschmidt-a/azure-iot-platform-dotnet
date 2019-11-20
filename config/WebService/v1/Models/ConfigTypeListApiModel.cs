@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
+using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Common.WebService.v1;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models
+namespace Mmm.Platform.IoT.Config.WebService.v1.Models
 {
     public class ConfigTypeListApiModel
     {

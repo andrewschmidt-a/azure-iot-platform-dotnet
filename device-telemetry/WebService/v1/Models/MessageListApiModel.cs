@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Models
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 {
     public class MessageListApiModel
     {

@@ -3,7 +3,7 @@
 using System;
 using Microsoft.Azure.Devices;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class DeviceJobServiceModel
     {
@@ -22,27 +22,27 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
 
             switch (deviceJob.Status)
             {
-                case Azure.Devices.DeviceJobStatus.Pending:
+                case Microsoft.Azure.Devices.DeviceJobStatus.Pending:
                     this.Status = DeviceJobStatus.Pending;
                     break;
 
-                case Azure.Devices.DeviceJobStatus.Scheduled:
+                case Microsoft.Azure.Devices.DeviceJobStatus.Scheduled:
                     this.Status = DeviceJobStatus.Scheduled;
                     break;
 
-                case Azure.Devices.DeviceJobStatus.Running:
+                case Microsoft.Azure.Devices.DeviceJobStatus.Running:
                     this.Status = DeviceJobStatus.Running;
                     break;
 
-                case Azure.Devices.DeviceJobStatus.Completed:
+                case Microsoft.Azure.Devices.DeviceJobStatus.Completed:
                     this.Status = DeviceJobStatus.Completed;
                     break;
 
-                case Azure.Devices.DeviceJobStatus.Failed:
+                case Microsoft.Azure.Devices.DeviceJobStatus.Failed:
                     this.Status = DeviceJobStatus.Failed;
                     break;
 
-                case Azure.Devices.DeviceJobStatus.Canceled:
+                case Microsoft.Azure.Devices.DeviceJobStatus.Canceled:
                     this.Status = DeviceJobStatus.Canceled;
                     break;
             }
@@ -65,7 +65,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
     }
 
     /// <summary>
-    /// refer to Microsoft.Azure.Devices.DeviceJobStatus
+    /// refer to Microsoft.Microsoft.Azure.Devices.DeviceJobStatus
     /// </summary>
     public enum DeviceJobStatus
     {

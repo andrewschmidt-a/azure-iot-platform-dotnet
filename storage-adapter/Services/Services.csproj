@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Microsoft.Azure.IoTSolutions.StorageAdapter.Services</AssemblyName>
-    <RootNamespace>Microsoft.Azure.IoTSolutions.StorageAdapter.Services</RootNamespace>
+    <AssemblyName>Mmm.Platform.IoT.StorageAdapter.Services</AssemblyName>
+    <RootNamespace>Mmm.Platform.IoT.StorageAdapter.Services</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

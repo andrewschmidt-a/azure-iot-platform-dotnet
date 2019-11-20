@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService
+namespace Mmm.Platform.IoT.TenantManager.WebService
 {
     public class Startup
     {

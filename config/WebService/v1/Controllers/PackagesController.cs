@@ -5,14 +5,14 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Helpers;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models;
+using Mmm.Platform.IoT.Config.Services;
+using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Platform.IoT.Config.WebService.v1.Helpers;
+using Mmm.Platform.IoT.Config.WebService.v1.Models;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
 {
     [Route(Version.PATH + "/packages"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class PackagesController : Controller

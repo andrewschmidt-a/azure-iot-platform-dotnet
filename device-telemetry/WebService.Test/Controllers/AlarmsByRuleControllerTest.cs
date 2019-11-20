@@ -4,11 +4,11 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers;
+using Mmm.Platform.IoT.DeviceTelemetry.Services;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.Runtime;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
@@ -17,9 +17,9 @@ using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Common.WebService.Runtime;
 using Moq;
 using Xunit;
-using Alarm = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Alarm;
+using Alarm = Mmm.Platform.IoT.DeviceTelemetry.Services.Models.Alarm;
 
-namespace DeviceTelemetry.WebService.Test.Controllers
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
 {
     class AlarmsByRuleControllerTest
     {

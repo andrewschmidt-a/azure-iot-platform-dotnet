@@ -5,7 +5,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
+using Mmm.Platform.IoT.Config.WebService.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ using Mmm.Platform.IoT.Common.WebService.Auth;
 using Mmm.Platform.IoT.Common.WebService.Runtime;
 using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
+namespace Mmm.Platform.IoT.Config.WebService
 {
     public class Startup
     {

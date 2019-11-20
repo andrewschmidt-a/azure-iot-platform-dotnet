@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <RootNamespace>MMM.Azure.IoTSolutions.TenantManager.WebService</RootNamespace>
+    <RootNamespace>Mmm.Platform.IoT.TenantManager.WebService</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

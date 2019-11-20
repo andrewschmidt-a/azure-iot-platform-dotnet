@@ -9,7 +9,7 @@ using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
+namespace Mmm.Platform.IoT.Config.Services.Helpers
 {
     public interface IHttpClientWrapper
     {

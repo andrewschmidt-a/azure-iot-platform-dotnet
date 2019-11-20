@@ -7,7 +7,7 @@ using Mmm.Platform.IoT.Common.WebService.Runtime;
 using Mmm.Platform.IoT.Common.WebService.v1.Models;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Models
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public sealed class StatusApiModel
     {

@@ -5,7 +5,7 @@ using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers
 {
     class RuleTemplateValidator
     {

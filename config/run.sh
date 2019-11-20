@@ -4,4 +4,4 @@ cd /app/
 
 cd webservice
 
-dotnet Microsoft.Azure.IoTSolutions.UIConfig.WebService.dll
+dotnet Mmm.Platform.IoT.Config.WebService.dll

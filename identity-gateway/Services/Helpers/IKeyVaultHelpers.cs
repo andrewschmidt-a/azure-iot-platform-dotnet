@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Models;
 
-namespace IdentityGateway.Services.Helpers
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 {
     public interface IKeyVaultHelpers : IDisposable
     {

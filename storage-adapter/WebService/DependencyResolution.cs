@@ -3,18 +3,18 @@
 using System.Reflection;
 using Autofac;
 using Microsoft.Azure.Documents;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers;
+using Mmm.Platform.IoT.StorageAdapter.Services;
+using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
+using Mmm.Platform.IoT.StorageAdapter.Services.Wrappers;
+using Mmm.Platform.IoT.StorageAdapter.WebService.Runtime;
+using Mmm.Platform.IoT.StorageAdapter.WebService.Wrappers;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.Common.WebService;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
+namespace Mmm.Platform.IoT.StorageAdapter.WebService
 {
     public class DependencyResolution : DependencyResolutionBase
     {

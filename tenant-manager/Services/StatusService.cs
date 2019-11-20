@@ -2,12 +2,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Models;
-using MMM.Azure.IoTSolutions.TenantManager.Services.External;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.TenantManager.Services.External;
+using Mmm.Platform.IoT.TenantManager.Services.Helpers;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services
+namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class StatusService : IStatusService
     {

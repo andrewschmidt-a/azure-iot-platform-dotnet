@@ -3,9 +3,9 @@
 using System.Reflection;
 using Autofac;
 using Microsoft.Azure.EventHubs.Processor;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.Runtime;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
@@ -15,7 +15,7 @@ using Mmm.Platform.IoT.Common.WebService;
 using Mmm.Platform.IoT.Common.WebService.Auth;
 using Mmm.Platform.IoT.Common.WebService.Runtime;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 {
     public class DependencyResolution : DependencyResolutionBase
     {

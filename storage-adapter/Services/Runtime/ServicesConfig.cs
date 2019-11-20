@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 using System;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
+using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
 using Microsoft.Extensions.Configuration;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
+namespace Mmm.Platform.IoT.StorageAdapter.Services.Runtime
 {
     public interface IServicesConfig : IAppConfigClientConfig
     {

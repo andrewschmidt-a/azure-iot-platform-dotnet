@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.TenantManager.Services.Exceptions;
+using Mmm.Platform.IoT.TenantManager.Services.Models;
 using Microsoft.Azure;
 using Microsoft.Azure.Management.Automation;
 using Mmm.Platform.IoT.Common.Services.Models;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
+namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public class TenantRunbookHelper : IStatusOperation
     {

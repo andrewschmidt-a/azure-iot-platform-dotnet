@@ -2,14 +2,14 @@
 
 using System;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime;
+using Mmm.Platform.IoT.StorageAdapter.WebService.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Common.WebService.Runtime;
-using Version = Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Version;
+using Version = Mmm.Platform.IoT.StorageAdapter.WebService.v1.Version;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
+namespace Mmm.Platform.IoT.StorageAdapter.WebService
 {
     /// <summary>Application entry point</summary>
     public class Program

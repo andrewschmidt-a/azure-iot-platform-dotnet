@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
+using Mmm.Platform.IoT.Config.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models
+namespace Mmm.Platform.IoT.Config.WebService.v1.Models
 {
     public class PackageApiModel
     {

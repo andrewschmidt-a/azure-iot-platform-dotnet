@@ -2,9 +2,9 @@
 
 using System.Reflection;
 using Autofac;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Runtime;
-using IdentityGateway.WebService.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.WebService.Runtime;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.Http;
@@ -13,7 +13,7 @@ using Mmm.Platform.IoT.Common.WebService;
 using Mmm.Platform.IoT.Common.WebService.Auth;
 using Mmm.Platform.IoT.Common.WebService.Runtime;
 
-namespace IdentityGateway.WebService
+namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {
     public class DependencyResolution : DependencyResolutionBase
     {

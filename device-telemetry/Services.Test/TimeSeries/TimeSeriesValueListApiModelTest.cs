@@ -7,7 +7,7 @@ using Mmm.Platform.IoT.Common.TestHelpers;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace DeviceTelemetry.Services.Test.TimeSeries
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesValueListApiModelTest
     {

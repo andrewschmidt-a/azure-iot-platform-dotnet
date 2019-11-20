@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using Services.Test.Helpers.Builders;
+using Mmm.Platform.IoT.IdentityGateway.Services.Test.Helpers.Builders;
 using TestStack.Dossier;
 using TestStack.Dossier.Lists;
 using Xunit;
 
-namespace Services.Test
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
 {
     public class UserSettingsContainerTest
     {

@@ -8,7 +8,7 @@ using Mmm.Platform.IoT.Common.WebService.v1.Models;
 using Newtonsoft.Json;
 using Rule = Mmm.Platform.IoT.Common.Services.Models.Rule;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Models
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 {
     public class RuleApiModel
     {

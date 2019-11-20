@@ -2,11 +2,11 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services;
+using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models;
 using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers
 {
     [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class DevicePropertiesController : Controller

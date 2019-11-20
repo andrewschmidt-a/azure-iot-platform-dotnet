@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>MMM.Azure.IoTSolutions.TenantManager.Services</AssemblyName>
-    <RootNamespace>MMM.Azure.IoTSolutions.TenantManager.Services</RootNamespace>
+    <AssemblyName>Mmm.Platform.IoT.TenantManager.Services</AssemblyName>
+    <RootNamespace>Mmm.Platform.IoT.TenantManager.Services</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

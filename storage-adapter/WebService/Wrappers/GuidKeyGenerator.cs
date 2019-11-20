@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers
+namespace Mmm.Platform.IoT.StorageAdapter.WebService.Wrappers
 {
     public class GuidKeyGenerator : IKeyGenerator
     {

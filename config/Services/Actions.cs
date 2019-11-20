@@ -2,12 +2,12 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.Actions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Platform.IoT.Config.Services.Models.Actions;
+using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
+namespace Mmm.Platform.IoT.Config.Services
 {
     public interface IActions
     {

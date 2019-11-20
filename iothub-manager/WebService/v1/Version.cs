@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1
 {
     /// <summary>Web service API version 1 information</summary>
     public static class Version

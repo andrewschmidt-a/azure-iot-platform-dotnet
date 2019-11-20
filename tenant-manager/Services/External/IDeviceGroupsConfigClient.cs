@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
+using Mmm.Platform.IoT.TenantManager.Services.Models;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
+namespace Mmm.Platform.IoT.TenantManager.Services.External
 {
     public interface IDeviceGroupsConfigClient : IStatusOperation
     {

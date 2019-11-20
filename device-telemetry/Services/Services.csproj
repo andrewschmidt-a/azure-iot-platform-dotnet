@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services</AssemblyName>
-    <RootNamespace>Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services</RootNamespace>
+    <AssemblyName>Mmm.Platform.IoT.DeviceTelemetry.Services</AssemblyName>
+    <RootNamespace>Mmm.Platform.IoT.DeviceTelemetry.Services</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.    
 
 using System;
-using IdentityGateway.Services.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace IdentityGateway.WebService.Runtime
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.Runtime
 {
     public interface IConfig
     {

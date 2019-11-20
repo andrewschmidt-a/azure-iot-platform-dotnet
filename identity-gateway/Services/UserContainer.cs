@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Models;
 
-namespace IdentityGateway.Services
+namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public abstract class UserContainer
     {

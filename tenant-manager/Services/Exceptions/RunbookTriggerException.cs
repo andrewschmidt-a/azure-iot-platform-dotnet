@@ -2,7 +2,7 @@
 
 using System;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions
+namespace Mmm.Platform.IoT.TenantManager.Services.Exceptions
 {
     /// <summary>
     /// This exception is thrown when a runbook fails to succesfully execute from the TenantRunbookHelper class

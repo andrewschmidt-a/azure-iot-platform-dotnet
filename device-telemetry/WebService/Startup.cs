@@ -14,7 +14,7 @@ using Mmm.Platform.IoT.Common.WebService.Auth;
 using Mmm.Platform.IoT.Common.WebService.Runtime;
 using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 {
     public class Startup
     {

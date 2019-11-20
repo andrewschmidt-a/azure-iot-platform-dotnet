@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace IdentityGateway.Services.Runtime
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Runtime
 {
     public interface IServicesConfig : IUserManagementClientConfig, IAuthMiddlewareConfig
     {

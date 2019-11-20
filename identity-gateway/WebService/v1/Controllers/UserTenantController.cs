@@ -4,18 +4,18 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.AuthUtils;
 using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 using Newtonsoft.Json;
 using SendGrid;
 using SendGrid.Helpers.Mail;
-using WebService;
+using Mmm.Platform.IoT.IdentityGateway.WebService;
 
-namespace IdentityGateway.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
 {
     [Route("v1/tenants"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class UserTenantController : ControllerBase

@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
+namespace Mmm.Platform.IoT.Config.Services.External
 {
     public class SimulationApiModel
     {

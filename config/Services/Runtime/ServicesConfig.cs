@@ -5,7 +5,7 @@ using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime
+namespace Mmm.Platform.IoT.Config.Services.Runtime
 {
     public interface IServicesConfig : IStorageAdapterClientConfig, IAuthMiddlewareConfig, IUserManagementClientConfig
     {

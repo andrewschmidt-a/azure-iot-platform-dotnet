@@ -6,14 +6,14 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Mmm.Platform.IoT.Common.AuthUtils;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Newtonsoft.Json;
 using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
 {
     public interface IDiagnosticsClient
     {

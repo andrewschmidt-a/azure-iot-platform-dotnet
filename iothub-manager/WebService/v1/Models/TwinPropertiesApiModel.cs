@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Models
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class TwinPropertiesApiModel
     {

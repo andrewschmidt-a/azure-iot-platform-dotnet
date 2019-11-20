@@ -1,9 +1,9 @@
 using System;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
+namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public class TokenHelper
     {

@@ -8,7 +8,7 @@ using Mmm.Platform.IoT.Common.Services.Http;
 using Newtonsoft.Json;
 using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
+namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public interface IExternalRequestHelper
     {

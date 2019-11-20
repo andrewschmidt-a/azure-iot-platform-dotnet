@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.Common.AuthUtils;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using MMM.Azure.IoTSolutions.TenantManager.Services.External;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.TenantManager.Services.External;
+using Mmm.Platform.IoT.TenantManager.Services.Helpers;
+using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services
+namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class TenantContainer : ITenantContainer
     {

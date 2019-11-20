@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Concurrency
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
 {
     public interface ITimer
     {

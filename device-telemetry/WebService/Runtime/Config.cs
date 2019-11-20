@@ -2,11 +2,11 @@
 
 using System;
 using System.IO;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Runtime
 {
     public interface IConfig
     {

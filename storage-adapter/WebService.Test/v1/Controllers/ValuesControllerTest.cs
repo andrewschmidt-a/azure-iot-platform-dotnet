@@ -4,10 +4,10 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers;
+using Mmm.Platform.IoT.StorageAdapter.Services;
+using Mmm.Platform.IoT.StorageAdapter.Services.Models;
+using Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers;
+using Mmm.Platform.IoT.StorageAdapter.WebService.Wrappers;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.Common.WebService.v1.Exceptions;
@@ -15,7 +15,7 @@ using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace StorageAdapter.WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
 {
     public class ValuesControllerTest
     {

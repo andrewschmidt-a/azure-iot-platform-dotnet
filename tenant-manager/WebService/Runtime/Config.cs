@@ -2,10 +2,10 @@
 
 using System;
 using Mmm.Platform.IoT.Common.WebService.Auth;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime
+namespace Mmm.Platform.IoT.TenantManager.WebService.Runtime
 {
     public interface IConfig
     {

@@ -3,12 +3,12 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.Http;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
+namespace Mmm.Platform.IoT.Config.Services.External
 {
     public interface IAzureResourceManagerClient
     {

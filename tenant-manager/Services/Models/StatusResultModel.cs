@@ -1,7 +1,7 @@
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Models
+namespace Mmm.Platform.IoT.TenantManager.WebService.Models
 {
     public class StatusResultModel
     {

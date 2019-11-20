@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
@@ -18,7 +18,7 @@ using Newtonsoft.Json;
 using Xunit;
 using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
 
-namespace Config.Services.Test
+namespace Mmm.Platform.IoT.Config.Services.Test
 {
     public class StorageAdapterClientTest
     {
