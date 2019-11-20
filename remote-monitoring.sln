@@ -60,7 +60,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "identity-gatewa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tenant-manager", "tenant-manager", "{5189373E-EC70-416D-BE18-C9B19C2A5250}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tenant-manager", "tenant-manager\WebService\tenant-manager.csproj", "{53D708EB-2DDD-485B-B90B-8A16874DB5DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "tenant-manager\WebService\WebService.csproj", "{53D708EB-2DDD-485B-B90B-8A16874DB5DE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "tenant-manager\Services\Services.csproj", "{0662B27C-D894-4EF5-9ABD-447D8FB21A2D}"
 EndProject

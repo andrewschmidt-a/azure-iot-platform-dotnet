@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>Mmm.Platform.IoT.Common.WebService.Test</RootNamespace>
     <AssemblyName>Mmm.Platform.IoT.Common.WebService.Test</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

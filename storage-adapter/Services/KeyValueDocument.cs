@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.Azure.Documents;
 using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
 
-[assembly: InternalsVisibleTo("Services.Test")]
+[assembly: InternalsVisibleTo("Mmm.Platform.IoT.StorageAdapter.Services.Test")]
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services
 {

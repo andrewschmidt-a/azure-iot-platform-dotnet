@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Mmm.Platform.IoT.IoTHubManager.WebService</AssemblyName>
-    <RootNamespace>Mmm.Platform.IoT.IoTHubManager.WebService</RootNamespace>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>IdentityGateway.Services</AssemblyName>
-    <RootNamespace>IdentityGateway.Services</RootNamespace>
+    <AssemblyName>Mmm.Platform.IoT.IdentityGateway.Services</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <RootNamespace>Mmm.Platform.IoT.Common.AppConfiguration</RootNamespace>
     <AssemblyName>Mmm.Platform.IoT.Common.AppConfiguration</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

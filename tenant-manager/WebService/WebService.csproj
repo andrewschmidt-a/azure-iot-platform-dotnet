@@ -1,8 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <RootNamespace>Mmm.Platform.IoT.TenantManager.WebService</RootNamespace>
+    <AssemblyName>Mmm.Platform.IoT.TenantManager.WebService</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App"/>

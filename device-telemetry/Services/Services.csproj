@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <AssemblyName>Mmm.Platform.IoT.DeviceTelemetry.Services</AssemblyName>
-    <RootNamespace>Mmm.Platform.IoT.DeviceTelemetry.Services</RootNamespace>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

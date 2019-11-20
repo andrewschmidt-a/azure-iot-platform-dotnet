@@ -4,8 +4,10 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Services.Test")]
-
+[assembly: InternalsVisibleTo("Mmm.Platform.IoT.Config.Services.Test")]
+[assembly: InternalsVisibleTo("Mmm.Platform.IoT.DeviceTelemetry.Services.Test")]
+[assembly: InternalsVisibleTo("Mmm.Platform.IoT.StorageAdapter.Services.Test")]
+[assembly: InternalsVisibleTo("Mmm.Platform.IoT.IoTHubManager.Services.Test")]
 namespace Mmm.Platform.IoT.Common.Services.Http
 {
     public class HttpResponse : IHttpResponse
