@@ -33,7 +33,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Models
             };
         }
 
-        /* Converts image from base 64 string to byte array */
+        /* Converts image from base 64 string to byte array */   
         public byte[] ConvertImageToBytes()
         {
             return Convert.FromBase64String(this.Image);
