@@ -25,6 +25,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
         private const string someSub = "someSub";
         private const string someSetting = "someSetting";
         private const string someValue = "someValue";
+        private IDictionary<object, object> contextItems;
 
         public UserSettingsControllerTest()
         {
@@ -146,10 +147,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
         {
             mockUserSettingsContainer = new Mock<UserSettingsContainer>();
             mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
-            mockHttpContext.SetupAllProperties();
             mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
-            mockHttpRequest.Setup(m => m.HttpContext).Returns(mockHttpContext.Object);
-            mockHttpContext.Setup(m => m.Request).Returns(mockHttpRequest.Object);
             userSettingsController = new UserSettingsController(mockUserSettingsContainer.Object)
             {
                 ControllerContext = new ControllerContext()
@@ -166,7 +164,16 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             mockUserSettingsContainer.Setup(m => m.CreateAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettings);
             mockUserSettingsContainer.Setup(m => m.UpdateAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettings);
             mockUserSettingsContainer.Setup(m => m.DeleteAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettings);
-            mockHttpContext.Object.Items = new Dictionary<object, object> { { RequestExtension.ContextKeyUserClaims, new List<Claim> { new Claim(RequestExtension.UserObjectIdClaimType, someSub) } } };
+            mockHttpRequest.Setup(m => m.HttpContext).Returns(mockHttpContext.Object);
+            mockHttpContext.Setup(m => m.Request).Returns(mockHttpRequest.Object);
+            contextItems = new Dictionary<object, object>
+            {
+                {
+                    RequestExtension.ContextKeyUserClaims,
+                    new List<Claim> {new Claim(RequestExtension.UserObjectIdClaimType, someSub)}
+                }
+            };
+            mockHttpContext.Setup(m => m.Items).Returns(contextItems);
         }
     }
 }
