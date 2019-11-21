@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.DeviceTelemetry.Services;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Http;
@@ -25,7 +25,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
     public class RulesTest
     {
         private readonly Mock<IStorageAdapterClient> storageAdapter;
-        private readonly Mock<ILogger> logger;
+        private readonly Mock<ILogger<Rules>> _logger;
         private readonly IServicesConfig servicesConfig;
         private readonly Mock<IRules> rulesMock;
         private readonly Mock<IAlarms> alarms;
@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         public RulesTest()
         {
             this.storageAdapter = new Mock<IStorageAdapterClient>();
-            this.logger = new Mock<ILogger>();
+            _logger = new Mock<ILogger<Rules>>();
             this.servicesConfig = new ServicesConfig
             {
                 DiagnosticsApiUrl = "http://localhost:9006/v1",
@@ -51,12 +51,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.alarms = new Mock<IAlarms>();
             this.httpClientMock = new Mock<IHttpClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
-            this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.servicesConfig, this.logger.Object, this.httpContextAccessor.Object);
+            this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.servicesConfig, new Mock<ILogger<DiagnosticsClient>>().Object, this.httpContextAccessor.Object);
 
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
                 {{"TenantID", TENANT_ID}});
 
-            this.rules = new Rules(this.storageAdapter.Object, this.logger.Object, this.alarms.Object, this.diagnosticsClient);
+            this.rules = new Rules(this.storageAdapter.Object, _logger.Object, this.alarms.Object, this.diagnosticsClient);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

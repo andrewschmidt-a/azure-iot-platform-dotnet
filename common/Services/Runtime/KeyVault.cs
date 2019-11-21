@@ -3,18 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.KeyVault;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Mmm.Platform.IoT.Common.Services.Runtime
 {
     public class KeyVault
     {
-
-        // Key Vault details and access
-        private readonly string name;
-        private readonly string clientId;
-        private readonly string clientSecret;
-        private ILogger log;
+        public string Name { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+        private readonly ILogger _logger;
 
         // Key Vault Client
         private readonly KeyVaultClient keyVaultClient;
@@ -22,24 +20,31 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
         // Constants
         private const string KEY_VAULT_URI = "https://{0}.vault.azure.net/secrets/{1}";
 
+        public KeyVault() : this(null)
+        {
+        }
+
+        public KeyVault(ILogger<KeyVault> logger) : this(null, null, null, logger)
+        {
+        }
+
         public KeyVault(
             string name,
             string clientId,
             string clientSecret,
-            ILogger logger)
+            ILogger<KeyVault> logger)
         {
-            this.name = name;
-            this.clientId = clientId;
-            this.clientSecret = clientSecret;
-            this.log = logger;
-            this.keyVaultClient = new KeyVaultClient(
-                                    new KeyVaultClient.AuthenticationCallback(this.GetToken));
+            Name = name;
+            ClientId = clientId;
+            ClientSecret = clientSecret;
+            _logger = logger;
+            this.keyVaultClient = new KeyVaultClient(this.GetToken);
         }
 
         public string GetSecret(string secretKey)
         {
             secretKey = secretKey.Split(':').Last();
-            var uri = string.Format(KEY_VAULT_URI, this.name, secretKey);
+            var uri = string.Format(KEY_VAULT_URI, Name, secretKey);
 
             try
             {
@@ -47,7 +52,7 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
             }
             catch (Exception)
             {
-                this.log.Error($"Secret {secretKey} not found in Key Vault.", () => { });
+                _logger?.LogError($"Secret {secretKey} not found in Key Vault.");
                 return null;
             }
         }
@@ -56,12 +61,12 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
         private async Task<string> GetToken(string authority, string resource, string scope)
         {
             var authContext = new AuthenticationContext(authority);
-            ClientCredential clientCred = new ClientCredential(this.clientId, this.clientSecret);
+            ClientCredential clientCred = new ClientCredential(ClientId, ClientSecret);
             AuthenticationResult result = await authContext.AcquireTokenAsync(resource, clientCred);
 
             if (result == null)
             {
-                this.log.Debug($"Failed to obtain authentication token from key vault.", () => { });
+                _logger?.LogDebug($"Failed to obtain authentication token from key vault.");
                 throw new System.InvalidOperationException("Failed to obtain the JWT token");
             }
 

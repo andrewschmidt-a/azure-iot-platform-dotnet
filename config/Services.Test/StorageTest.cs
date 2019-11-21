@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Mmm.Platform.IoT.Config.Services;
 using Mmm.Platform.IoT.Config.Services.Models;
 using Mmm.Platform.IoT.Config.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
@@ -143,7 +143,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     AzureMapsKey = this.azureMapsKey
                 },
-                new Logger(string.Empty, LogLevel.Debug));
+                new Mock<ILogger<Storage>>().Object);
         }
 
         [Fact]

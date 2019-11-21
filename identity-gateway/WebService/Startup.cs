@@ -10,8 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Auth;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
-using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.IdentityGateway.Services;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
@@ -77,9 +75,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
             // Prepare DI container
             this.ApplicationContainer = new DependencyResolution().Setup(services);
 
-            // Print some useful information at bootstrap time
-            this.PrintBootstrapInfo(this.ApplicationContainer);
-
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
@@ -100,11 +95,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
 
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();
-        }
-        private void PrintBootstrapInfo(IContainer container)
-        {
-            var log = container.Resolve<ILogger>();
-            log.Info("Web service started", () => new { Uptime.ProcessId });
         }
     }
 }

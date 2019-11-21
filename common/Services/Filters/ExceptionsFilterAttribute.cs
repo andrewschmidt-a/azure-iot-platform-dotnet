@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Newtonsoft.Json;
 
@@ -23,11 +23,11 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
     /// </summary>
     public class ExceptionsFilterAttribute : ExceptionFilterAttribute
     {
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
-        public ExceptionsFilterAttribute(ILogger logger)
+        public ExceptionsFilterAttribute(ILogger<ExceptionsFilterAttribute> logger)
         {
-            this.log = logger;
+            _logger = logger;
         }
 
         public override void OnException(ExceptionContext context)
@@ -60,11 +60,7 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             }
             else
             {
-                this.log.Error("Unknown exception", () => new
-                {
-                    ExceptionType = context.Exception.GetType().FullName,
-                    context.Exception.Message
-                });
+                _logger.LogError(context.Exception, "Unknown exception");
                 base.OnException(context);
             }
         }
@@ -112,7 +108,7 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             result.StatusCode = (int)code;
             result.Formatters.Add(new JsonOutputFormatter(new JsonSerializerSettings(), ArrayPool<char>.Shared));
 
-            this.log.Error(e.Message, () => new { result.StatusCode });
+            _logger.LogError(e, "Status code was {statusCode}", result.StatusCode);
 
             return result;
         }

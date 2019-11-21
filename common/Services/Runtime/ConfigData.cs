@@ -6,19 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 
 namespace Mmm.Platform.IoT.Common.Services.Runtime
 {
     public class ConfigData : IConfigData
     {
-        private readonly IConfigurationRoot configuration;
-        private readonly ILogger log;
+        private IConfiguration configuration;
+        private readonly ILogger _logger;
 
         // Key Vault
-        private KeyVault keyVault;
+        private readonly KeyVault keyVault;
 
         // Constants
         private const string CLIENT_ID = "Global:AzureActiveDirectory:aadAppId";
@@ -54,12 +53,20 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
             "TelemetryService:TimeSeries"
         };
 
-        public ConfigData(ILogger logger)
+        public ConfigData() : this(null, null)
         {
-            this.log = logger;
+        }
 
-            // More info about configuration at
-            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration
+        public ConfigData(ILogger<ConfigData> logger, KeyVault kv)
+        {
+            _logger = logger;
+            InitializeConfiguration();
+            keyVault = kv;
+            SetUpKeyVault();
+        }
+
+        private void InitializeConfiguration()
+        {
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder
 #if DEBUG
@@ -67,13 +74,9 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
 #endif
             .AddEnvironmentVariables();
 
-            // build configuration with environment variables
             var preConfig = configurationBuilder.Build();
-            // Add app config settings to the configuration builder
             configurationBuilder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
-            this.configuration = configurationBuilder.Build();
-            // Set up Key Vault
-            this.SetUpKeyVault();
+            configuration = configurationBuilder.Build();
         }
 
         public Dictionary<string, List<string>> GetUserPermissions()
@@ -121,16 +124,22 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
 
         private void SetUpKeyVault()
         {
+            if (keyVault == null)
+            {
+                return;
+            }
+
             var clientId = this.GetEnvironmentVariable(CLIENT_ID, string.Empty);
             var clientSecret = this.GetEnvironmentVariable(CLIENT_SECRET, string.Empty);
             var keyVaultName = this.GetEnvironmentVariable(KEY_VAULT_NAME, string.Empty);
-            if (String.IsNullOrEmpty(clientId) || String.IsNullOrEmpty(clientSecret) || String.IsNullOrEmpty(keyVaultName))
+            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret) || string.IsNullOrEmpty(keyVaultName))
             {
                 throw new Exception("One of the required key vault keys was not configured correctly.");
             }
 
-            // Initailize key vault
-            this.keyVault = new KeyVault(keyVaultName, clientId, clientSecret, this.log);
+            keyVault.ClientId = clientId;
+            keyVault.Name = keyVaultName;
+            keyVault.ClientSecret = clientSecret;
         }
 
         private string GetSecrets(string key, string defaultValue = "")
@@ -142,9 +151,8 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
             // If secrets are not found locally, search in Key-Vault
             if (string.IsNullOrEmpty(value))
             {
-                log.Warn($"Value for secret {key} not found in local env. " +
-                    $" Trying to get the secret from KeyVault.", () => { });
-                value = this.keyVault.GetSecret(key);
+                _logger?.LogWarning("Value for secret {key} not found in local env. Trying to get the secret from KeyVault.", key);
+                value = this.keyVault?.GetSecret(key);
             }
 
             return !string.IsNullOrEmpty(value) ? value : defaultValue;
@@ -152,7 +160,7 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
 
         public string GetSecretsFromKeyVault(string key)
         {
-            return this.keyVault.GetSecret(key);
+            return this.keyVault?.GetSecret(key);
         }
 
         private string GetLocalVariables(string key, string defaultValue = "")
@@ -205,7 +213,7 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
             if (keys.Length > 0)
             {
                 var varsNotFound = keys.Aggregate(", ", (current, k) => current + k);
-                this.log.Error("Environment variables not found", () => new { varsNotFound });
+                _logger?.LogError("Environment variables not found: {environmentVariables}", varsNotFound);
                 throw new InvalidConfigurationException("Environment variables not found: " + varsNotFound);
             }
         }
@@ -239,7 +247,7 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
                 value = keys.Aggregate(value, (current, k) => current.Replace("${?" + k + "}", string.Empty));
 
                 var varsNotFound = keys.Aggregate(", ", (current, k) => current + k);
-                this.log.Warn("Environment variables not found", () => new { varsNotFound });
+                _logger?.LogWarning("Environment variables not found: {environmentVariables}", varsNotFound);
 
                 notFound = true;
             }

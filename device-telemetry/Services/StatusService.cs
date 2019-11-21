@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Http;
@@ -28,17 +28,17 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly IHttpClient httpClient;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private readonly IServicesConfig servicesConfig;
 
         public StatusService(
-            ILogger logger,
+            ILogger<StatusService> logger,
             IStorageClient storageClient,
             ITimeSeriesClient timeSeriesClient,
             IHttpClient httpClient,
             IServicesConfig servicesConfig)
         {
-            this.log = logger;
+            _logger = logger;
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
             this.httpClient = httpClient;
@@ -111,13 +111,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             result.Properties.Add("DiagnosticsEndpointUrl", this.servicesConfig?.DiagnosticsApiUrl);
             result.Properties.Add("StorageAdapterApiUrl", this.servicesConfig?.StorageAdapterApiUrl);
 
-            this.log.Info(
-                "Service status request",
-                () => new
-                {
-                    Healthy = result.Status.IsHealthy,
-                    result.Status.Message
-                });
+            _logger.LogInformation("Service status request {result}", result);
 
             return result;
         }
@@ -155,7 +149,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             }
             catch (Exception e)
             {
-                this.log.Error(result.Message, () => new { e });
+                _logger.LogError(e, result.Message);
             }
 
             return result;
@@ -175,7 +169,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
             }
 
-            this.log.Debug("Prepare Request", () => new { request });
+            _logger.LogDebug("Prepare request {request}", request);
 
             return request;
         }

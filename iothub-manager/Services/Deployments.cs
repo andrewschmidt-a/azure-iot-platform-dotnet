@@ -9,7 +9,7 @@ using Microsoft.Azure.Devices;
 using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Newtonsoft.Json;
@@ -53,13 +53,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private const string DEVICE_ID_KEY = "DeviceId";
         private const string EDGE_MANIFEST_SCHEMA = "schemaVersion";
 
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         private ITenantConnectionHelper _tenantHelper;
 
         public Deployments(
             IAppConfigClientConfig config,
-            ILogger logger,
+            ILogger<Deployments> logger,
             IHttpContextAccessor httpContextAccessor)
         {
             if (config == null)
@@ -69,7 +69,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
             this._tenantHelper = new TenantConnectionHelper(httpContextAccessor, config);
 
-            this.log = logger;
+            _logger = logger;
         }
 
         public Deployments(ITenantConnectionHelper _tenantHelper)
@@ -281,7 +281,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
             catch (Exception ex)
             {
-                this.log.Error($"Error getting status of devices in query {query}", () => new { ex.Message });
+                _logger.LogError(ex, "Error getting status of devices in query {query}", query);
             }
 
             return deviceIds;

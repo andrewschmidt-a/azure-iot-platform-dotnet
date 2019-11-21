@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Helpers;
@@ -24,7 +24,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
     {
         private AlarmsByRuleController controller;
 
-        private readonly Mock<ILogger> log;
+        private readonly Mock<ILogger<AlarmsByRuleController>> _logger;
         private readonly IStorageClient storage;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly Mock<IAppConfigurationHelper> appConfigHelper;
@@ -49,15 +49,15 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
 
         public AlarmsByRuleControllerTest()
         {
-            ConfigData configData = new ConfigData(new Logger(Uptime.ProcessId, LogLevel.Info));
+            ConfigData configData = new ConfigData();
             Config config = new Config(configData);
             IServicesConfig servicesConfig = config.ServicesConfig;
             Mock<IStorageAdapterClient> storageAdapterClient = new Mock<IStorageAdapterClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
-            this.log = new Mock<ILogger>();
+            _logger = new Mock<ILogger<AlarmsByRuleController>>();
             this.appConfigHelper = new Mock<IAppConfigurationHelper>();
 
-            this.storage = new StorageClient(servicesConfig, this.log.Object);
+            this.storage = new StorageClient(servicesConfig, new Mock<ILogger<StorageClient>>().Object);
             string dbName = servicesConfig.AlarmsConfig.StorageConfig.CosmosDbDatabase;
             this.storage.CreateCollectionIfNotExistsAsync(dbName, "");
 
@@ -70,9 +70,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
                     this.AlarmToDocument(sampleAlarm));
             }
 
-            Alarms alarmService = new Alarms(servicesConfig, this.storage, this.log.Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
-            Rules rulesService = new Rules(storageAdapterClient.Object, this.log.Object, alarmService, new Mock<IDiagnosticsClient>().Object);
-            this.controller = new AlarmsByRuleController(alarmService, rulesService, this.log.Object);
+            Alarms alarmService = new Alarms(servicesConfig, this.storage, new Mock<ILogger<Alarms>>().Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
+            Rules rulesService = new Rules(storageAdapterClient.Object, new Mock<ILogger<Rules>>().Object, alarmService, new Mock<IDiagnosticsClient>().Object);
+            this.controller = new AlarmsByRuleController(alarmService, rulesService, _logger.Object);
         }
 
         // Ignoring test. Updating .net core and xunit version wants this class to be public. However, this test fails when the class is made public. 

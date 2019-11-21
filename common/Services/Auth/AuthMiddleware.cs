@@ -8,10 +8,10 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.External;
 
 namespace Mmm.Platform.IoT.Common.Services.Auth
@@ -51,7 +51,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
         private readonly RequestDelegate requestDelegate;
         private readonly IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan;
         private readonly IClientAuthConfig config;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private TokenValidationParameters tokenValidationParams;
         private readonly bool authRequired;
         private bool tokenValidationInitialized;
@@ -64,13 +64,13 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan,
             IClientAuthConfig config,
             IUserManagementClient userManagementClient,
-            ILogger log,
+            ILogger<AuthMiddleware> logger,
             IAuthMiddlewareConfig authMiddlewareConfig)
         {
             this.requestDelegate = requestDelegate;
             this.openIdCfgMan = openIdCfgMan;
             this.config = config;
-            this.log = log;
+            _logger = logger;
             this.authRequired = config.AuthRequired;
             this.tokenValidationInitialized = false;
             this.userManagementClient = userManagementClient;
@@ -79,20 +79,13 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             // This will show in development mode, or in case auth is turned off
             if (!this.authRequired)
             {
-                this.log.Warn("### AUTHENTICATION IS DISABLED! ###", () => { });
-                this.log.Warn("### AUTHENTICATION IS DISABLED! ###", () => { });
-                this.log.Warn("### AUTHENTICATION IS DISABLED! ###", () => { });
+                _logger.LogWarning("### AUTHENTICATION IS DISABLED! ###");
+                _logger.LogWarning("### AUTHENTICATION IS DISABLED! ###");
+                _logger.LogWarning("### AUTHENTICATION IS DISABLED! ###");
             }
             else
             {
-                this.log.Info("Auth config", () => new
-                {
-                    this.config.AuthType,
-                    this.config.JwtIssuer,
-                    this.config.JwtAudience,
-                    this.config.JwtAllowedAlgos,
-                    this.config.JwtClockSkew
-                });
+                _logger.LogInformation("Auth config is {config}", config);
 
                 this.InitializeTokenValidationAsync(CancellationToken.None).Wait();
             }
@@ -101,9 +94,9 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             // TODO ~devis: remove this approach and use the service to service authentication
             // https://github.com/Azure/pcs-auth-dotnet/issues/18
             // https://github.com/Azure/azure-iot-pcs-remote-monitoring-dotnet/issues/11
-            this.log.Warn("### Service to service authentication is not available in public preview ###", () => { });
-            this.log.Warn("### Service to service authentication is not available in public preview ###", () => { });
-            this.log.Warn("### Service to service authentication is not available in public preview ###", () => { });
+            _logger.LogWarning("### Service to service authentication is not available in public preview ###");
+            _logger.LogWarning("### Service to service authentication is not available in public preview ###");
+            _logger.LogWarning("### Service to service authentication is not available in public preview ###");
         }
 
         public Task Invoke(HttpContext context)
@@ -130,7 +123,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                 // https://github.com/Azure/azure-iot-pcs-remote-monitoring-dotnet/issues/11
 
                 // Call the next delegate/middleware in the pipeline
-                this.log.Debug("Skipping auth for service to service request", () => { });
+                _logger.LogDebug("Skipping auth for service to service request");
                 context.Request.SetExternalRequest(false);
                 context.Request.SetTenant();
                 return this.requestDelegate(context);
@@ -139,7 +132,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             if (!this.authRequired)
             {
                 // Call the next delegate/middleware in the pipeline
-                this.log.Debug("Skipping auth (auth disabled)", () => { });
+                _logger.LogDebug("Skipping auth (auth disabled)");
                 return this.requestDelegate(context);
             }
 
@@ -157,7 +150,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             }
             else
             {
-                this.log.Error("Authorization header not found", () => { });
+                _logger.LogError("Authorization header not found");
             }
 
             if (header != null && header.StartsWith(AUTH_HEADER_PREFIX))
@@ -166,7 +159,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             }
             else
             {
-                this.log.Error("Authorization header prefix not found", () => { });
+                _logger.LogError("Authorization header prefix not found");
             }
 
             if (this.ValidateToken(token, context) || !this.authRequired)
@@ -175,7 +168,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                 return this.requestDelegate(context);
             }
 
-            this.log.Warn("Authentication required", () => { });
+            _logger.LogWarning("Authentication required");
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             context.Response.Headers["Content-Type"] = "application/json";
             context.Response.WriteAsync(ERROR401);
@@ -216,7 +209,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                     }
                     else
                     {
-                        this.log.Warn("JWT token doesn't include any role claims.", () => { });
+                        _logger.LogWarning("JWT token doesn't include any role claims.");
                     }
                     //DISBABLED RBAC -- adding all access 
                     context.Request.SetCurrentUserAllowedActions(allowedActions);
@@ -227,11 +220,11 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                     return true;
                 }
 
-                this.log.Error("JWT token signature algorithm is not allowed.", () => new { jwtToken.SignatureAlgorithm });
+                _logger.LogError("JWT token signature algorithm '{signatureAlgorithm}' is not allowed.", jwtToken.SignatureAlgorithm);
             }
             catch (Exception e)
             {
-                this.log.Error("Failed to validate JWT token", () => new { e });
+                _logger.LogError(e, "Failed to validate JWT token");
             }
 
             return false;
@@ -243,7 +236,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
             try
             {
-                this.log.Info("Initializing OpenID configuration", () => { });
+                _logger.LogInformation("Initializing OpenID configuration");
                 var openIdConfig = await this.openIdCfgMan.GetConfigurationAsync(token);
 
                 //Attempted to do it myself still issue with SSL
@@ -282,7 +275,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             }
             catch (Exception e)
             {
-                this.log.Error("Failed to setup OpenId Connect", () => new { e });
+                _logger.LogError(e, "Failed to setup OpenId Connect");
             }
 
             return this.tokenValidationInitialized;

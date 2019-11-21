@@ -1,13 +1,13 @@
-using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Http;
+using System.Reflection;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 
 namespace Mmm.Platform.IoT.Common.Services
@@ -18,16 +18,18 @@ namespace Mmm.Platform.IoT.Common.Services
         {
             var builder = new ContainerBuilder();
             builder.Populate(services);
+            builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
             AutowireAssemblies(builder);
-            var logger = SetupLogger(builder);
+            builder.RegisterType<KeyVault>();
+            builder.RegisterType<ConfigData>();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
             builder.RegisterType<UserManagementClient>().As<IUserManagementClient>().SingleInstance();
             builder.RegisterType<AppConfigurationHelper>().As<IAppConfigurationHelper>().SingleInstance();
             builder.RegisterType<StorageAdapterClient>().As<IStorageAdapterClient>().SingleInstance();
-            var httpClient = SetupHttpClient(builder, logger);
-            SetupCustomRules(builder, logger, httpClient);
+            builder.RegisterType<HttpClient>().As<IHttpClient>().SingleInstance();
+            SetupCustomRules(builder);
             var container = builder.Build();
-            RegisterFactory(container);
+            Factory.RegisterContainer(container);
             return container;
         }
 
@@ -37,28 +39,6 @@ namespace Mmm.Platform.IoT.Common.Services
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
         }
 
-        private ILogger SetupLogger(ContainerBuilder builder)
-        {
-            // Instantiate only one logger
-            // TODO: read log level from configuration
-            var logger = new Logger(Uptime.ProcessId, LogLevel.Debug);
-            builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
-            return logger;
-        }
-
-        private IHttpClient SetupHttpClient(ContainerBuilder builder, ILogger logger)
-        {
-            // TODO: why is the HTTP client registered as a singleton? shouldn't be required
-            var httpClient = new HttpClient(logger);
-            builder.RegisterInstance(httpClient).As<IHttpClient>().SingleInstance();
-            return httpClient;
-        }
-
-        protected abstract void SetupCustomRules(ContainerBuilder builder, ILogger logger, IHttpClient httpClient);
-
-        private static void RegisterFactory(IContainer container)
-        {
-            Factory.RegisterContainer(container);
-        }
+        protected abstract void SetupCustomRules(ContainerBuilder builder);
     }
 }

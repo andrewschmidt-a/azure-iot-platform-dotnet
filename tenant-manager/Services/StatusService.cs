@@ -5,27 +5,27 @@ using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.TenantManager.Services.External;
 using Mmm.Platform.IoT.TenantManager.Services.Helpers;
 using Mmm.Platform.IoT.TenantManager.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class StatusService : IStatusService
     {
-        private ILogger _log;
+        private readonly ILogger _logger;
         private IServicesConfig _config;
 
         private Dictionary<string, IStatusOperation> dependencies;
 
         public StatusService(
             IServicesConfig config,
-            ILogger logger,
+            ILogger<StatusService> logger,
             IIdentityGatewayClient identityGatewayClient,
             IDeviceGroupsConfigClient deviceGroupsConfigClient,
             CosmosHelper cosmosHelper,
             TableStorageHelper tableStorageHelper,
             TenantRunbookHelper tenantRunbookHelper)
         {
-            this._log = logger;
+            _logger = logger;
             this._config = config;
 
             this.dependencies = new Dictionary<string, IStatusOperation>

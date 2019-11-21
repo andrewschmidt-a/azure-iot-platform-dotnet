@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
@@ -20,12 +20,12 @@ namespace Mmm.Platform.IoT.Common.Services.Test.Filters
     public class ExceptionsFilterAttributeTest
     {
         private readonly ExceptionsFilterAttribute target;
-        private readonly Mock<ILogger> logger;
+        private readonly Mock<ILogger<ExceptionsFilterAttribute>> _logger;
 
         public ExceptionsFilterAttributeTest()
         {
-            this.logger = new Mock<ILogger>();
-            this.target = new ExceptionsFilterAttribute(this.logger.Object);
+            _logger = new Mock<ILogger<ExceptionsFilterAttribute>>();
+            this.target = new ExceptionsFilterAttribute(_logger.Object);
         }
 
         /// <summary>

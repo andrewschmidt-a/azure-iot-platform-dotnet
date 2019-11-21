@@ -10,7 +10,7 @@ using Microsoft.Azure.Documents.Client;
 using Mmm.Platform.IoT.StorageAdapter.Services;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.TestHelpers;
@@ -60,7 +60,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                 new MockFactory<IDocumentClient>(this.mockClient),
                 new MockExceptionChecker(),
                 mockServicesConfig.Object,
-                new Logger("UnitTest", LogLevel.Debug),
+                new Mock<ILogger<DocumentDbKeyValueContainer>>().Object,
                 this.mockContextAccessor.Object);
         }
 

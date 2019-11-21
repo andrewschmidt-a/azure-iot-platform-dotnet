@@ -10,8 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Mmm.Platform.IoT.Common.Services.Auth;
-using Mmm.Platform.IoT.Common.Services.Runtime;
-using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 {
@@ -56,9 +54,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             // Prepare DI container
             this.ApplicationContainer = new DependencyResolution().Setup(services);
 
-            // Print some useful information at bootstrap time
-            this.PrintBootstrapInfo(this.ApplicationContainer);
-
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
@@ -94,12 +89,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
-        }
-
-        private void PrintBootstrapInfo(IContainer container)
-        {
-            var log = container.Resolve<ILogger>();
-            log.Info("Web service started", () => new { Uptime.ProcessId });
         }
     }
 }

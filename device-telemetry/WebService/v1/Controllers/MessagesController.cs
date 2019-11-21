@@ -3,7 +3,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Filters;
@@ -19,14 +19,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
         private const int DEVICE_LIMIT = 1000;
 
         private readonly IMessages messageService;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         public MessagesController(
             IMessages messageService,
-            ILogger logger)
+            ILogger<MessagesController> logger)
         {
             this.messageService = messageService;
-            this.log = logger;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -79,7 +79,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
             // limit for the IN clause.
             if (deviceIds.Length > DEVICE_LIMIT)
             {
-                this.log.Warn("The client requested too many devices: {}", () => new { deviceIds.Length });
+                _logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
                 throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
             }
 

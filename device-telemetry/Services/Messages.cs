@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Newtonsoft.Json.Linq;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services
@@ -40,7 +39,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private const string TENANT_INFO_KEY = "tenant";
         private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
 
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly IServicesConfig _config;
@@ -64,7 +63,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             IServicesConfig config,
             IStorageClient storageClient,
             ITimeSeriesClient timeSeriesClient,
-            ILogger logger,
+            ILogger<Messages> logger,
             IHttpContextAccessor contextAccessor,
             IAppConfigurationHelper appConfigurationHelper)
         {
@@ -74,7 +73,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 TSI_STORAGE_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
             this.documentClient = storageClient.GetDocumentClient();
             this.databaseName = config.MessagesConfig.CosmosDbDatabase;
-            this.log = logger;
+            _logger = logger;
             this._config = config;
             this._httpContextAccessor = contextAccessor;
             this._appConfigurationHelper = appConfigurationHelper;
@@ -130,7 +129,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 limit,
                 devices, "deviceId");
 
-            this.log.Debug("Created Message Query", () => new { sql });
+            _logger.LogDebug("Created message query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;

@@ -9,7 +9,7 @@ using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation;
 using Mmm.Platform.IoT.Config.Services.Models;
 using Mmm.Platform.IoT.Config.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
@@ -44,7 +44,7 @@ namespace Mmm.Platform.IoT.Config.Services
     {
         private readonly IStorageAdapterClient client;
         private readonly IServicesConfig config;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         public const string SOLUTION_COLLECTION_ID = "solution-settings";
         public const string THEME_KEY = "theme";
@@ -59,11 +59,11 @@ namespace Mmm.Platform.IoT.Config.Services
         public Storage(
             IStorageAdapterClient client,
             IServicesConfig config,
-            ILogger log)
+            ILogger<Storage> logger)
         {
             this.client = client;
             this.config = config;
-            this.log = log;
+            _logger = logger;
         }
 
         public async Task<object> GetThemeAsync()
@@ -288,7 +288,7 @@ namespace Mmm.Platform.IoT.Config.Services
             }
             catch (ResourceNotFoundException)
             {
-                log.Debug("Document config-types has not been created.", () => { });
+                _logger.LogDebug("Document config-types has not been created.");
                 // Return empty Package Config types
                 return new ConfigTypeListServiceModel();
             }
@@ -304,7 +304,7 @@ namespace Mmm.Platform.IoT.Config.Services
             }
             catch (ResourceNotFoundException)
             {
-                log.Debug("Config Types have not been created.", () => { });
+                _logger.LogDebug("Config Types have not been created.");
                 // Create empty Package Config Types
                 list = new ConfigTypeListServiceModel();
             }

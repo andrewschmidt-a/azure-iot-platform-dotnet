@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.TenantManager.Services;
 
@@ -12,13 +12,13 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ITenantContainer _tenantContainer;
-        private readonly ILogger _log;
+        private readonly ILogger _logger;
 
-        public TenantReadyController(IHttpContextAccessor httpContextAccessor, ITenantContainer tenantContainer, ILogger log)
+        public TenantReadyController(IHttpContextAccessor httpContextAccessor, ITenantContainer tenantContainer, ILogger<TenantReadyController> log)
         {
             this._httpContextAccessor = httpContextAccessor;
             this._tenantContainer = tenantContainer;
-            this._log = log;
+            _logger = log;
         }
 
         // GET api/tenantready/<tenantId>

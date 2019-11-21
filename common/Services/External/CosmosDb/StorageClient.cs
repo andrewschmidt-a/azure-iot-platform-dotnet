@@ -1,17 +1,15 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Models;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.Documents.SystemFunctions;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 {
@@ -19,7 +17,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
     {
         private const string STORAGE_PARTITION_KEY = "/deviceId";
 
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private Uri storageUri;
         private string storagePrimaryKey;
         private int storageThroughput;
@@ -27,12 +25,12 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 
         public StorageClient(
             IStorageClientConfig config,
-            ILogger logger)
+            ILogger<StorageClient> logger)
         {
             this.storageUri = config.CosmosDbUri;
             this.storagePrimaryKey = config.CosmosDbKey;
             this.storageThroughput = config.CosmosDbThroughput;
-            this.log = logger;
+            _logger = logger;
             this.client = this.GetDocumentClient();
         }
 
@@ -70,8 +68,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
                 }
                 else
                 {
-                    this.log.Error("Error reading collection.",
-                        () => new { id, dcx });
+                    _logger.LogError(dcx, "Error reading collection with ID {id}", id);
                 }
             }
 
@@ -86,8 +83,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
                 }
                 catch (Exception ex)
                 {
-                    this.log.Error("Error creating collection.",
-                        () => new { id, dbUrl, collectionInfo, ex });
+                    _logger.LogError(ex, "Error creating collection with ID {id}, database URL {databaseUrl}, and collection info {collectionInfo}", id, dbUrl, collectionInfo);
                     throw new Exception("Could not create the collection");
                 }
             }
@@ -115,8 +111,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception ex)
             {
-                this.log.Error("Error deleting document in collection",
-                    () => new { colId, ex });
+                _logger.LogError(ex, "Error deleting document in collection with collection ID {collectionId}", colId);
                 throw;
             }
         }
@@ -135,9 +130,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
                 }
                 catch (Exception e)
                 {
-                    this.log.Error("Could not connect to DocumentClient, " +
-                                   "check connection string",
-                        () => new { this.storageUri, e });
+                    _logger.LogError(e, "Could not connect to storage at URI {storageUri}; check connection string", storageUri);
                     throw new InvalidConfigurationException(
                         "Could not connect to DocumentClient, " +
                         "check connection string");
@@ -145,8 +138,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 
                 if (this.client == null)
                 {
-                    this.log.Error("Could not connect to DocumentClient",
-                        () => new { this.storageUri });
+                    _logger.LogError("Could not connect to storage at URI {uri}", storageUri);
                     throw new InvalidConfigurationException(
                         "Could not connect to DocumentClient");
                 }
@@ -176,7 +168,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                this.log.Info(result.Message, () => new { e });
+                _logger.LogInformation(e, result.Message);
             }
 
             return result;
@@ -218,7 +210,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
                 docs.Add(doc);
             }
 
-            this.log.Info("Query results count:", () => new { docs.Count });
+            _logger.LogInformation("Query results count: {count}", docs.Count);
 
             return docs;
         }
@@ -252,7 +244,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
                 return (int)resultList[0];
             }
 
-            this.log.Info("No results found for count query", () => new { databaseName, colId, querySpec });
+            _logger.LogInformation("No results found for count query '{querySpec}' on collection with ID {collectionId} and database name {databaseName}", querySpec, colId, databaseName);
 
             return 0;
         }
@@ -273,7 +265,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception ex)
             {
-                this.log.Error("Error upserting document.", (() => new { colId, ex }));
+                _logger.LogError(ex, "Error upserting document into collection with collection ID {collectionId}", colId);
                 throw;
             }
         }

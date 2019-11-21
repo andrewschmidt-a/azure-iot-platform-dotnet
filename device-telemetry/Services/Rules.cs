@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Helpers;
@@ -52,19 +52,19 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
 
         private readonly IStorageAdapterClient storage;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         private readonly IAlarms alarms;
         private readonly IDiagnosticsClient diagnosticsClient;
 
         public Rules(
             IStorageAdapterClient storage,
-            ILogger logger,
+            ILogger<Rules> logger,
             IAlarms alarms,
             IDiagnosticsClient diagnosticsClient)
         {
             this.storage = storage;
-            this.log = logger;
+            _logger = logger;
             this.alarms = alarms;
             this.diagnosticsClient = diagnosticsClient;
         }
@@ -99,12 +99,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             }
             catch (ResourceNotFoundException exception)
             {
-                this.log.Debug("Tried to delete rule which did not exist", () => new { id, exception });
+                _logger.LogDebug(exception, "Tried to delete rule {id} which did not exist", id);
                 return;
             }
             catch (Exception exception)
             {
-                this.log.Error("Error trying to delete rule", () => new { id, exception });
+                _logger.LogError(exception, "Error trying to delete rule {id}", id);
                 throw exception;
             }
 
@@ -121,7 +121,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 existing.Id,
                 item,
                 existing.ETag);
-            this.LogEventAndRuleCountToDiagnostics("Rule_Deleted");
+            LogEventAndRuleCountToDiagnostics("Rule_Deleted");
         }
 
         public async Task<Rule> GetAsync(string id)
@@ -169,8 +169,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 }
                 catch (Exception e)
                 {
-                    this.log.Debug("Could not parse result from Key Value Storage",
-                        () => new { e });
+                    _logger.LogDebug(e, "Could not parse result from Key Value Storage");
                     throw new InvalidDataException(
                         "Could not parse result from Key Value Storage", e);
                 }
@@ -186,8 +185,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             if (skip >= ruleList.Count)
             {
-                this.log.Debug("Skip value greater than size of list returned",
-                    () => new { skip, ruleList.Count });
+                _logger.LogDebug("Skip value {skip} greater than size of list returned ({ruleListCount})", skip, ruleList.Count);
 
                 return new List<Rule>();
             }
@@ -268,7 +266,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             newRule.ETag = result.ETag;
 
             if (string.IsNullOrEmpty(newRule.Id)) newRule.Id = result.Key;
-            this.LogEventAndRuleCountToDiagnostics("Rule_Created");
+            LogEventAndRuleCountToDiagnostics("Rule_Created");
 
             return newRule;
         }
@@ -292,7 +290,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             catch (ResourceNotFoundException e)
             {
                 // Following the pattern of Post should create or update
-                this.log.Info("Rule not found will create new rule for Id:", () => new { rule.Id, e });
+                _logger.LogInformation(e, "Rule not found will create new rule for ID {ruleId}", rule.Id);
             }
 
             if (savedRule != null && savedRule.Deleted)
@@ -368,7 +366,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             }
             else
             {
-                this.log.Debug("Could not retrieve most recent alarm", () => new { id });
+                _logger.LogDebug("Could not retrieve most recent alarm {id}", id);
                 throw new ExternalDependencyException(
                     "Could not retrieve most recent alarm");
             }

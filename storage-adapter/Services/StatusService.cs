@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
@@ -19,19 +19,19 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         private const string AUTH_NAME = "Auth";
 
         private readonly int timeoutMS = 10000;
-        private readonly ILogger _log;
+        private readonly ILogger _logger;
         private readonly IHttpClient _httpClient;
         private readonly IKeyValueContainer _keyValueContainer;
         private readonly IServicesConfig _servicesConfig;
 
         public StatusService(
-            ILogger logger,
+            ILogger<StatusService> logger,
             IHttpClient httpClient,
             IKeyValueContainer keyValueContainer,
             IServicesConfig servicesConfig
             )
         {
-            this._log = logger;
+            _logger = logger;
             this._keyValueContainer = keyValueContainer;
             this._servicesConfig = servicesConfig;
             this._httpClient = httpClient;
@@ -57,13 +57,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
 
             result.Properties.Add("StorageType", this._servicesConfig.StorageType);
-            this._log.Info(
-                "Service status request",
-                () => new
-                {
-                    Healthy = result.Status.IsHealthy,
-                    result.Status.Message
-                });
+            _logger.LogInformation("Service status request {result}", result);
 
             if (errors.Count > 0)
             {
@@ -105,7 +99,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception e)
             {
-                this._log.Error(result.Message, () => new { e });
+                _logger.LogError(e, result.Message);
             }
 
             return result;
@@ -124,7 +118,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
             }
 
-            this._log.Debug("Prepare Request", () => new { request });
+            _logger.LogDebug("Prepare request {request}", request);
 
             return request;
         }

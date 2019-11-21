@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Newtonsoft.Json;
@@ -14,17 +14,17 @@ namespace Mmm.Platform.IoT.Common.Services.External
     public class UserManagementClient : IUserManagementClient
     {
         private readonly IHttpClient httpClient;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private readonly string serviceUri;
         private const string DEFAULT_USER_ID = "default";
 
         public UserManagementClient(
             IHttpClient httpClient,
             IUserManagementClientConfig userManagementClientConfig,
-            ILogger logger)
+            ILogger<UserManagementClient> logger)
         {
             this.httpClient = httpClient;
-            this.log = logger;
+            _logger = logger;
             this.serviceUri = userManagementClientConfig.UserManagementApiUrl;
         }
 
@@ -75,12 +75,7 @@ namespace Mmm.Platform.IoT.Common.Services.External
                 return;
             }
 
-            this.log.Info($"Auth service returns {response.StatusCode} for request {request.Uri}", () => new
-            {
-                request.Uri,
-                response.StatusCode,
-                response.Content
-            });
+            _logger.LogInformation("Auth service returns {responseStatusCode} for request {requestUri} with content {requestContent}", response.StatusCode, request.Uri, response.Content);
 
             switch (response.StatusCode)
             {

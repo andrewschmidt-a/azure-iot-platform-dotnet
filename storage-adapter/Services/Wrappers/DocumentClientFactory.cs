@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
 
@@ -14,13 +14,13 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Wrappers
     public class DocumentClientFactory : IFactory<IDocumentClient>
     {
         private IServicesConfig _config;
-        private ILogger _log;
+        private readonly ILogger _logger;
         private string connectionStringRegex = "^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$";
 
-        public DocumentClientFactory(IServicesConfig config, ILogger logger)
+        public DocumentClientFactory(IServicesConfig config, ILogger<DocumentClientFactory> logger)
         {
             this._config = config;
-            this._log = logger;
+            _logger = logger;
         }
 
         public IDocumentClient Create()
@@ -40,7 +40,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Wrappers
             }
             catch (Exception ex)
             {
-                this._log.Error(ex.Message, () => { });
+                _logger.LogError(ex.Message);
                 throw;
             }
         }

@@ -3,7 +3,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.StorageAdapter.Services;
@@ -19,16 +19,16 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
     {
         private readonly IKeyValueContainer container;
         private readonly IKeyGenerator keyGenerator;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         public ValuesController(
             IKeyValueContainer container,
             IKeyGenerator keyGenerator,
-            ILogger logger)
+            ILogger<ValuesController> logger)
         {
             this.container = container;
             this.keyGenerator = keyGenerator;
-            this.log = logger;
+            _logger = logger;
         }
 
         [HttpGet("collections/{collectionId}/values/{key}")]
@@ -98,16 +98,14 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
 
             if (!collectionId.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))
             {
-                var message = $"Invalid collectionId: '{collectionId}'";
-                this.log.Info(message, () => new { collectionId });
-                throw new BadRequestException(message);
+                _logger.LogInformation("Invalid collectionId {collectionId}", collectionId);
+                throw new BadRequestException($"Invalid collectionId: '{collectionId}'");
             }
 
             if (key.Any() && !key.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))
             {
-                var message = $"Invalid key: '{key}'";
-                this.log.Info(message, () => new { key });
-                throw new BadRequestException(message);
+                _logger.LogInformation("Invalid key {key}", key);
+                throw new BadRequestException($"Invalid key: '{key}'");
             }
 
             // "The id is a user defined string, of up to 256 characters that is unique within the context of a specific parent resource."
@@ -117,9 +115,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
             string id = DocumentIdHelper.GenerateId(collectionId, key);
             if (id.Length > 255)
             {
-                var message = $"The collectionId/Key are too long: '{collectionId}', '{key}'";
-                this.log.Info(message, () => new { collectionId, key, id });
-                throw new BadRequestException(message);
+                _logger.LogInformation("The collectionId/Key are too long: '{collectionId}', '{key}', '{id}'", collectionId, key, id);
+                throw new BadRequestException($"The collectionId/Key are too long: '{collectionId}', '{key}'");
             }
         }
     }

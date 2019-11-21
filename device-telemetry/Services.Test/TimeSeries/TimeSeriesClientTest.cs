@@ -2,7 +2,7 @@
 
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Http;
@@ -14,20 +14,20 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesClientTest
     {
-        private readonly Mock<ILogger> logger;
+        private readonly Mock<ILogger<TimeSeriesClient>> _logger;
         private readonly Mock<IHttpClient> httpClient;
         private Mock<IServicesConfig> servicesConfig;
         private TimeSeriesClient client;
 
         public TimeSeriesClientTest()
         {
-            this.logger = new Mock<ILogger>();
+            _logger = new Mock<ILogger<TimeSeriesClient>>();
             this.servicesConfig = new Mock<IServicesConfig>();
             this.httpClient = new Mock<IHttpClient>();
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.servicesConfig.Object,
-                this.logger.Object);
+                _logger.Object);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -72,7 +72,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.servicesConfig.Object,
-                this.logger.Object);
+                _logger.Object);
         }
 
         private void SetupClientWithConfigValues()
@@ -89,7 +89,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.servicesConfig.Object,
-                this.logger.Object);
+                _logger.Object);
         }
     }
 }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Azure.Data.AppConfiguration;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.TenantManager.Services.External;
 using Mmm.Platform.IoT.TenantManager.Services.Helpers;
@@ -30,7 +30,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
         public readonly IServicesConfig _config;
         public readonly IHttpContextAccessor _httpContextAccessor;
-        public readonly ILogger _log;
+        public readonly ILogger _logger;
         public readonly IIdentityGatewayClient _identityClient;
         public readonly IDeviceGroupsConfigClient _deviceGroupClient;
         public readonly TenantRunbookHelper _tenantRunbookHelper;
@@ -40,7 +40,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         public TenantContainer(
             IServicesConfig config,
             IHttpContextAccessor httpContextAccessor,
-            ILogger log,
+            ILogger<TenantContainer> log,
             TenantRunbookHelper tenantRunbookHelper,
             CosmosHelper cosmosHelper,
             TableStorageHelper tableStorageHelper,
@@ -49,7 +49,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         {
             this._config = config;
             this._httpContextAccessor = httpContextAccessor;
-            this._log = log;
+            _logger = log;
             this._tenantRunbookHelper = tenantRunbookHelper;
             this._cosmosHelper = cosmosHelper;
             this._tableStorageHelper = tableStorageHelper;
@@ -234,7 +234,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
             else if (tenant == null)
             {
-                this._log.Info($"The tenant {tenantId} could not be deleted from Table Storage because it does not exist or was not fully created.", () => new { tenantId });
+                _logger.LogInformation("The tenant {tenantId} could not be deleted from Table Storage because it does not exist or was not fully created.", tenantId);
                 deletionRecord["tenantTableStorage"] = true;
             }
             else
@@ -246,8 +246,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 }
                 catch (Exception e)
                 {
-                    string message = $"Unable to delete info from table storage for tenant {tenantId}";
-                    this._log.Info(message, () => new { tenantId, e.Message });
+                    _logger.LogInformation(e, "Unable to delete info from table storage for tenant {tenantId}", tenantId);
                     deletionRecord["tableStorage"] = false;
                 }
             }
@@ -260,7 +259,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
             catch (Exception e)
             {
-                this._log.Info($"Unable to delete user-tenant relationships for tenant {tenantId} in the user table.", () => new { tenantId, e.Message });
+                _logger.LogInformation(e, "Unable to delete user-tenant relationships for tenant {tenantId} in the user table.", tenantId);
                 deletionRecord["userTableStorage"] = false;
             }
 
@@ -276,7 +275,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
             catch (Exception e)
             {
-                this._log.Info($"Unable to get the user {userId} LastUsedTenant setting, the setting will not be updated.", () => new { userId, e.Message });
+                _logger.LogInformation(e, "Unable to get the user {userId} LastUsedTenant setting, the setting will not be updated.", userId);
             }
 
             // Gather tenant information
@@ -290,8 +289,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
             catch (Exception e)
             {
-                string message = $"Unable to successfully trigger Delete IoTHub Runbook for tenant {tenantId}";
-                this._log.Info(message, () => new { tenantId, e.Message });
+                _logger.LogInformation(e, "Unable to successfully trigger Delete IoTHub Runbook for tenant {tenantId}", tenantId);
                 deletionRecord["iotHub"] = false;
             }
 
@@ -311,14 +309,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 }
                 catch (Exception e)
                 {
-                    string message = $"Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantId}";
-                    this._log.Info(message, () => new { collectionKey, tenantId, e.Message });
+                    _logger.LogInformation(e, "Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantId}", collectionKey, tenantId);
                 }
 
                 if (String.IsNullOrEmpty(collectionId))
                 {
-                    string message = $"The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection";
-                    this._log.Info(message, () => new { collectionKey, tenantId });
+                    _logger.LogInformation("The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection", collectionKey, tenantId);
                     // Currently, the assumption for an unknown collection id is that it has been deleted.
                     // We can come to this conclusion by assuming that the app config key containing the collection id was already deleted.
                     // TODO: Determine a more explicit outcome for this scenario - jrb
@@ -334,15 +330,13 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 }
                 catch (ResourceNotFoundException e)
                 {
-                    string message = $"The {collection} collection for tenant {tenantId} does exist and cannot be deleted.";
-                    this._log.Info(message, () => new { collectionId, tenantId, e.Message });
+                    _logger.LogInformation(e, "The {collection} collection for tenant {tenantId} does exist and cannot be deleted.", collectionId, tenantId);
                     deletionRecord[$"{collection}Collection"] = true;
                 }
                 catch (Exception e)
                 {
-                    string message = $"An error occurred while deleting the {collection} collection for tenant {tenantId}";
                     deletionRecord[$"{collection}Collection"] = false;
-                    this._log.Info(message, () => new { collectionId, tenantId, e.Message });
+                    _logger.LogInformation(e, "An error occurred while deleting the {collection} collection for tenant {tenantId}", collectionId, tenantId);
                 }
 
                 try
@@ -352,8 +346,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 }
                 catch (Exception e)
                 {
-                    string message = $"Unable to delete {collectionKey} from App Config";
-                    this._log.Info(message, () => new { collectionKey, tenantId, e.Message });
+                    _logger.LogInformation(e, "Unable to delete {collectionKey} from App Config", collectionKey, tenantId);
                 }
             }
 

@@ -4,7 +4,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.StorageAdapter.Services;
@@ -32,7 +32,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             this.controller = new ValuesController(
                 this.mockContainer.Object,
                 this.mockGenerator.Object,
-                new Logger("UnitTest", LogLevel.Debug));
+                new Mock<ILogger<ValuesController>>().Object);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

@@ -31,13 +31,7 @@ stages:
         azureSubscription: $(azureSubscription)
         scriptLocation: 'inlineScript'
         inlineScript: |
-          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
-          az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
-
-    - task: KubectlInstaller@0
-      displayName: Install kubectl
-      inputs:
-        kubectlVersion: 'latest'
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
 
     - task: AzureCLI@1
       displayName: Load app config connection string and add it as a Kubernetes secret
@@ -48,47 +42,141 @@ stages:
           pcsAppConfig=`az appconfig credential list -o json -n app-config-odin -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString`
           kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=PCS_APPLICATION_CONFIGURATION="$pcsAppConfig"
 
-- stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
+- stage: azds_up
   jobs:
-  - template: standUpServiceIfChangedTemplate.yaml
-    parameters:
-      service: config
-      azureSubscription: ${{variables.azureSubscription}}
-      resourceGroup: ${{variables.resourceGroup}}
-      aksCluster: ${{variables.aksCluster}}
-      devSpace: ${{variables.devSpace}}
+  - job: azds_up_config
+    steps:
+    - task: AzureCLI@1
+      displayName: Azds Up (config)
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
+          cd $(System.DefaultWorkingDirectory)/config/WebService
+          azds up -d
 
-  - template: standUpServiceIfChangedTemplate.yaml
-    parameters:
-      service: device-telemetry
-      azureSubscription: ${{variables.azureSubscription}}
-      resourceGroup: ${{variables.resourceGroup}}
-      aksCluster: ${{variables.aksCluster}}
-      devSpace: ${{variables.devSpace}}
+  - job: azds_up_devicetelemetry
+    steps:
+    - task: AzureCLI@1
+      displayName: Azds Up (device-telemetry)
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
+          cd $(System.DefaultWorkingDirectory)/device-telemetry/WebService
+          azds up -d
 
-  - template: standUpServiceIfChangedTemplate.yaml
-    parameters:
-      service: iothub-manager
-      azureSubscription: ${{variables.azureSubscription}}
-      resourceGroup: ${{variables.resourceGroup}}
-      aksCluster: ${{variables.aksCluster}}
-      devSpace: ${{variables.devSpace}}
+  - job: azds_up_identitygateway
+    steps:
+    - task: AzureCLI@1
+      displayName: Azds Up (identity-gateway)
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
+          cd $(System.DefaultWorkingDirectory)/identity-gateway/WebService
+          azds up -d
 
-  - template: standUpServiceIfChangedTemplate.yaml
-    parameters:
-      service: storage-adapter
-      azureSubscription: ${{variables.azureSubscription}}
-      resourceGroup: ${{variables.resourceGroup}}
-      aksCluster: ${{variables.aksCluster}}
-      devSpace: ${{variables.devSpace}}
+  - job: azds_up_iothubmanager
+    steps:
+    - task: AzureCLI@1
+      displayName: Azds Up (iothub-manager)
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
+          cd $(System.DefaultWorkingDirectory)/iothub-manager/WebService
+          azds up -d
 
-  - template: standUpServiceIfChangedTemplate.yaml
-    parameters:
-      service: identity-gateway
-      azureSubscription: ${{variables.azureSubscription}}
-      resourceGroup: ${{variables.resourceGroup}}
-      aksCluster: ${{variables.aksCluster}}
-      devSpace: ${{variables.devSpace}}
+  - job: azds_up_storageadapter
+    steps:
+    - task: AzureCLI@1
+      displayName: Azds Up (storage-adapter)
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
+          cd $(System.DefaultWorkingDirectory)/storage-adapter/WebService
+          azds up -d
+
+  - job: azds_up_tenantmanager
+    steps:
+    - task: AzureCLI@1
+      displayName: Azds Up (tenant-manager)
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
+          cd $(System.DefaultWorkingDirectory)/tenant-manager/WebService
+          azds up -d
+
+  - job: azds_up_reverseproxy
+    steps:
+    - task: AzureCLI@1
+      displayName: Azds Up (reverse-proxy)
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
+          cd $(System.DefaultWorkingDirectory)/reverse-proxy
+          azds up -d
+          
+# - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
+#   jobs:
+#   - template: standUpServiceIfChangedTemplate.yaml
+#     parameters:
+#       service: tenant-manager
+#       azureSubscription: ${{variables.azureSubscription}}
+#       resourceGroup: ${{variables.resourceGroup}}
+#       aksCluster: ${{variables.aksCluster}}
+#       devSpace: ${{variables.devSpace}}
+
+#   - template: standUpServiceIfChangedTemplate.yaml
+#     parameters:
+#       service: config
+#       azureSubscription: ${{variables.azureSubscription}}
+#       resourceGroup: ${{variables.resourceGroup}}
+#       aksCluster: ${{variables.aksCluster}}
+#       devSpace: ${{variables.devSpace}}
+
+#   - template: standUpServiceIfChangedTemplate.yaml
+#     parameters:
+#       service: device-telemetry
+#       azureSubscription: ${{variables.azureSubscription}}
+#       resourceGroup: ${{variables.resourceGroup}}
+#       aksCluster: ${{variables.aksCluster}}
+#       devSpace: ${{variables.devSpace}}
+
+#   - template: standUpServiceIfChangedTemplate.yaml
+#     parameters:
+#       service: iothub-manager
+#       azureSubscription: ${{variables.azureSubscription}}
+#       resourceGroup: ${{variables.resourceGroup}}
+#       aksCluster: ${{variables.aksCluster}}
+#       devSpace: ${{variables.devSpace}}
+
+#   - template: standUpServiceIfChangedTemplate.yaml
+#     parameters:
+#       service: storage-adapter
+#       azureSubscription: ${{variables.azureSubscription}}
+#       resourceGroup: ${{variables.resourceGroup}}
+#       aksCluster: ${{variables.aksCluster}}
+#       devSpace: ${{variables.devSpace}}
+
+#   - template: standUpServiceIfChangedTemplate.yaml
+#     parameters:
+#       service: identity-gateway
+#       azureSubscription: ${{variables.azureSubscription}}
+#       resourceGroup: ${{variables.resourceGroup}}
+#       aksCluster: ${{variables.aksCluster}}
+#       devSpace: ${{variables.devSpace}}
       
 - stage: Test_Services_that_Changed
   jobs:

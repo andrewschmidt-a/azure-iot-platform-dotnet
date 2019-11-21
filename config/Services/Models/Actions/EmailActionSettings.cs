@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 
 namespace Mmm.Platform.IoT.Config.Services.Models.Actions
@@ -18,7 +18,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
 
         private readonly IAzureResourceManagerClient resourceManagerClient;
         private readonly IServicesConfig servicesConfig;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         public ActionType Type { get; }
 
@@ -29,11 +29,11 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
         public EmailActionSettings(
             IAzureResourceManagerClient resourceManagerClient,
             IServicesConfig servicesConfig,
-            ILogger log)
+            ILogger<EmailActionSettings> logger)
         {
             this.resourceManagerClient = resourceManagerClient;
             this.servicesConfig = servicesConfig;
-            this.log = log;
+            _logger = logger;
 
             this.Type = ActionType.Email;
             this.Settings = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
@@ -54,9 +54,9 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
                 // been given owner permissions to make the isEnabled check. This can be configured
                 // by an owner in the Azure Portal.
                 applicationPermissionsAssigned = false;
-                this.log.Debug("The application is not authorized and has not been " +
+                _logger.LogError(notAuthorizedException, "The application is not authorized and has not been " +
                                "assigned owner permissions for the subscription. Go to the Azure portal and " +
-                               "assign the application as an owner in order to retrieve the token.", () => new { notAuthorizedException });
+                               "assign the application as an owner in order to retrieve the token.");
             }
             this.Settings.Add(IS_ENABLED_KEY, office365IsEnabled);
             this.Settings.Add(APP_PERMISSIONS_KEY, applicationPermissionsAssigned);
@@ -65,7 +65,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
             // for display on the webui for one-time setup.
             this.Settings.Add(OFFICE365_CONNECTOR_URL_KEY, this.servicesConfig.Office365LogicAppUrl);
 
-            this.log.Debug("Email Action Settings Retrieved. Email setup status: " + office365IsEnabled, () => new { this.Settings });
+            _logger.LogDebug("Email action settings retrieved: {settings}. Email setup status: {status}", office365IsEnabled, Settings);
         }
     }
 }

@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.Common.Services.Auth
@@ -12,26 +12,26 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
     public class CorsSetup : ICorsSetup
     {
         private readonly IClientAuthConfig config;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         public CorsSetup(
             IClientAuthConfig config,
-            ILogger logger)
+            ILogger<CorsSetup> logger)
         {
             this.config = config;
-            this.log = logger;
+            _logger = logger;
         }
 
         public void UseMiddleware(IApplicationBuilder app)
         {
             if (this.config.CorsEnabled)
             {
-                this.log.Warn("CORS is enabled", () => { });
+                _logger.LogWarning("CORS is enabled");
                 app.UseCors(this.BuildCorsPolicy);
             }
             else
             {
-                this.log.Info("CORS is disabled", () => { });
+                _logger.LogInformation("CORS is disabled");
             }
         }
 
@@ -43,58 +43,58 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                 model = JsonConvert.DeserializeObject<CorsWhitelistModel>(this.config.CorsWhitelist);
                 if (model == null)
                 {
-                    this.log.Error("Invalid CORS whitelist. Ignored", () => new { this.config.CorsWhitelist });
+                    _logger.LogError("Ignoring invalid CORS whitelist: '{whitelist}'", config.CorsWhitelist);
                     return;
                 }
             }
             catch (Exception ex)
             {
-                this.log.Error("Invalid CORS whitelist. Ignored", () => new { this.config.CorsWhitelist, ex.Message });
+                _logger.LogError(ex, "Ignoring invalid CORS whitelist: '{whitelist}'", config.CorsWhitelist);
                 return;
             }
 
             if (model.Origins == null)
             {
-                this.log.Info("No setting for CORS origin policy was found, ignore", () => { });
+                _logger.LogInformation("No setting for CORS origin policy was found, ignore");
             }
             else if (model.Origins.Contains("*"))
             {
-                this.log.Info("CORS policy allowed any origin", () => { });
+                _logger.LogInformation("CORS policy allowed any origin");
                 builder.AllowAnyOrigin();
             }
             else
             {
-                this.log.Info("Add specified origins to CORS policy", () => new { model.Origins });
+                _logger.LogInformation("Add origins '{origins}' to CORS policy", model.Origins);
                 builder.WithOrigins(model.Origins);
             }
 
             if (model.Origins == null)
             {
-                this.log.Info("No setting for CORS method policy was found, ignore", () => { });
+                _logger.LogInformation("No setting for CORS method policy was found, ignore");
             }
             else if (model.Methods.Contains("*"))
             {
-                this.log.Info("CORS policy allowed any method", () => { });
+                _logger.LogInformation("CORS policy allowed any method");
                 builder.AllowAnyMethod();
             }
             else
             {
-                this.log.Info("Add specified methods to CORS policy", () => new { model.Methods });
+                _logger.LogInformation("Add methods '{methods}' to CORS policy", model.Methods);
                 builder.WithMethods(model.Methods);
             }
 
             if (model.Origins == null)
             {
-                this.log.Info("No setting for CORS header policy was found, ignore", () => { });
+                _logger.LogInformation("No setting for CORS header policy was found, ignore");
             }
             else if (model.Headers.Contains("*"))
             {
-                this.log.Info("CORS policy allowed any header", () => { });
+                _logger.LogInformation("CORS policy allowed any header");
                 builder.AllowAnyHeader();
             }
             else
             {
-                this.log.Info("Add specified headers to CORS policy", () => new { model.Headers });
+                _logger.LogInformation("Add headers '{headers}' to CORS policy", model.Headers);
                 builder.WithHeaders(model.Headers);
             }
         }

@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.Http;
@@ -34,7 +34,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 {
                     UserManagementApiUrl = MOCK_SERVICE_URI
                 },
-                new Logger("UnitTest", LogLevel.Debug));
+                new Mock<ILogger<UserManagementClient>>().Object);
             this.rand = new Random();
         }
 

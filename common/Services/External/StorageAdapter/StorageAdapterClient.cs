@@ -6,8 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Newtonsoft.Json;
@@ -23,15 +22,15 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
         private const string AZDS_ROUTE_KEY = "azds-route-as";
 
         private readonly IHttpClient httpClient;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private readonly string serviceUri;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly int timeout;
 
-        public StorageAdapterClient(IHttpClient httpClient, IStorageAdapterClientConfig storageAdapterClientConfig, ILogger logger, IHttpContextAccessor contextAccessor)
+        public StorageAdapterClient(IHttpClient httpClient, IStorageAdapterClientConfig storageAdapterClientConfig, ILogger<StorageAdapterClient> logger, IHttpContextAccessor contextAccessor)
         {
             this.httpClient = httpClient;
-            this.log = logger;
+            _logger = logger;
             this.serviceUri = storageAdapterClientConfig.StorageAdapterApiUrl;
             this._httpContextAccessor = contextAccessor;
             this.timeout = storageAdapterClientConfig.StorageAdapterApiTimeout;
@@ -137,12 +136,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
                 return;
             }
 
-            this.log.Info($"StorageAdapter returns {response.StatusCode} for request {request.Uri}", () => new
-            {
-                request.Uri,
-                response.StatusCode,
-                response.Content
-            });
+            _logger.LogInformation("StorageAdapter returns {responseStatusCode} for request {requestUri} with content {responseContent}", response.StatusCode, request.Uri, response.Content);
 
             switch (response.StatusCode)
             {

@@ -8,15 +8,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
-using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
-using Mmm.Platform.IoT.StorageAdapter.Services.Wrappers;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
+using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
+using Mmm.Platform.IoT.StorageAdapter.Services.Models;
+using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
@@ -24,7 +23,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
     {
         private readonly IFactory<IDocumentClient> _clientFactory;
         private readonly IExceptionChecker _exceptionChecker;
-        private readonly ILogger _log;
+        private readonly ILogger _logger;
         private readonly IServicesConfig _config;  // injected
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string documentDataType = "pcs";  // a datatype for this type of key value container. This could go into the constructor later if necessary
@@ -39,14 +38,14 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             IFactory<IDocumentClient> clientFactory,
             IExceptionChecker exceptionChecker,
             IServicesConfig config,
-            ILogger logger,
+            ILogger<DocumentDbKeyValueContainer> logger,
             IHttpContextAccessor httpContextAcessor)
         {
             this.disposedValue = false;
             this._clientFactory = clientFactory;
             this._config = config;
             this._exceptionChecker = exceptionChecker;
-            this._log = logger;
+            _logger = logger;
             this._httpContextAccessor = httpContextAcessor;
         }
 
@@ -57,9 +56,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 string docDbDatabase = this._config.DocumentDbDatabase;
                 if (String.IsNullOrEmpty(docDbDatabase))
                 {
-                    string message = $"A valid DocumentDb Database Id could not be retrieved for {this.documentDataType}";
-                    this._log.Info(message, () => new { this.documentDataType });
-                    throw new Exception(message);
+                    _logger.LogInformation("A valid DocumentDb Database Id could not be retrieved for {docDataType}", this.documentDataType);
+                    throw new Exception($"A valid DocumentDb Database Id could not be retrieved for {this.documentDataType}");
                 }
                 return docDbDatabase;
             }
@@ -77,7 +75,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 }
                 catch (Exception ex)
                 {
-                    this._log.Info("A valid DocumentDb Collection Id was not included in the Claim.", () => new { ex });
+                    _logger.LogInformation(ex, "A valid DocumentDb Collection Id was not included in the Claim");
                     throw;
                 }
             }
@@ -113,7 +111,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception e)
             {
-                this._log.Info(result.Message, () => new { e });
+                _logger.LogInformation(e, result.Message);
             }
 
             return result;
@@ -134,12 +132,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 if (!this._exceptionChecker.IsNotFoundException(ex)) throw;
 
                 const string message = "The resource requested doesn't exist.";
-                this._log.Info(message, () => new
-                {
-                    collectionId,
-                    key
-                });
-
+                _logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
                 throw new ResourceNotFoundException(message);
             }
         }
@@ -170,7 +163,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 if (!this._exceptionChecker.IsConflictException(ex)) throw;
 
                 const string message = "There is already a value with the key specified.";
-                this._log.Info(message, () => new { collectionId, key });
+                _logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
                 throw new ConflictingResourceException(message);
             }
         }
@@ -192,7 +185,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 if (!this._exceptionChecker.IsPreconditionFailedException(ex)) throw;
 
                 const string message = "ETag mismatch: the resource has been updated by another client.";
-                this._log.Info(message, () => new { collectionId, key, input.ETag });
+                _logger.LogInformation(message + " {collection ID {collectionId}, key {key}, ETag {eTag}", collectionId, key, input.ETag);
                 throw new ConflictingResourceException(message);
             }
         }
@@ -209,7 +202,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 if (!this._exceptionChecker.IsNotFoundException(ex)) throw;
 
-                this._log.Debug("Key does not exist, nothing to do", () => new { key });
+                _logger.LogDebug("Key {key} does not exist, nothing to do");
             }
         }
 
@@ -247,7 +240,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 if (e.StatusCode != HttpStatusCode.NotFound)
                 {
-                    this._log.Error("Error while getting DocumentDb database", () => new { e });
+                    _logger.LogError(e, "Error while getting DocumentDb database");
                 }
 
                 await this.CreateDatabaseAsync();
@@ -265,7 +258,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 if (e.StatusCode != HttpStatusCode.NotFound)
                 {
-                    this._log.Error("Error while getting DocumentDb collection", () => new { e });
+                    _logger.LogError(e, "Error while getting DocumentDb collection");
                 }
 
                 await this.CreateCollectionAsync();
@@ -276,8 +269,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             try
             {
-                this._log.Info("Creating DocumentDb database",
-                    () => new { this.docDbDatabase });
+                _logger.LogInformation("Creating DocumentDb database {docDbDatabase}", docDbDatabase);
                 var db = new Database { Id = this.docDbDatabase };
                 await this.client.CreateDatabaseAsync(db);
             }
@@ -285,17 +277,14 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 if (e.StatusCode == HttpStatusCode.Conflict)
                 {
-                    this._log.Warn("Another process already created the database",
-                        () => new { this.docDbDatabase });
+                    _logger.LogWarning("Another process already created the database {docDbDatabase}", docDbDatabase);
                 }
 
-                this._log.Error("Error while creating DocumentDb database",
-                    () => new { this.docDbDatabase, e });
+                _logger.LogError(e, "Error while creating DocumentDb database {docDbDatabase}", docDbDatabase);
             }
             catch (Exception e)
             {
-                this._log.Error("Error while creating DocumentDb database",
-                    () => new { this.docDbDatabase, e });
+                _logger.LogError(e, "Error while creating DocumentDb database {docDbDatabase}", docDbDatabase);
                 throw;
             }
         }
@@ -304,8 +293,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             try
             {
-                this._log.Info("Creating DocumentDb collection",
-                    () => new { this.docDbCollection });
+                _logger.LogInformation("Creating DocumentDb collection {docDbCollection}", docDbCollection);
                 var coll = new DocumentCollection { Id = this.docDbCollection };
 
                 var index = Index.Range(DataType.String, -1);
@@ -322,17 +310,14 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 if (e.StatusCode == HttpStatusCode.Conflict)
                 {
-                    this._log.Warn("Another process already created the collection",
-                        () => new { this.docDbCollection });
+                    _logger.LogWarning("Another process already created the collection {docDbCollection}", docDbCollection);
                 }
 
-                this._log.Error("Error while creating DocumentDb collection",
-                    () => new { this.docDbCollection, e });
+                _logger.LogError(e, "Error while creating DocumentDb collection {docDbCollection}", docDbCollection);
             }
             catch (Exception e)
             {
-                this._log.Error("Error while creating DocumentDb collection",
-                    () => new { this.docDbDatabase, e });
+                _logger.LogError(e, "Error while creating DocumentDb collection {docDbCollection}", docDbDatabase);
                 throw;
             }
         }

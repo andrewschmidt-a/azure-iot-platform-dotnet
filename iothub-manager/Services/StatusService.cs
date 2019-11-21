@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
@@ -20,17 +20,17 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
         private readonly IDevices devices;
         private readonly IHttpClient httpClient;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private readonly IServicesConfig servicesConfig;
 
         public StatusService(
-            ILogger logger,
+            ILogger<StatusService> logger,
             IHttpClient httpClient,
             IDevices devices,
             IServicesConfig servicesConfig
             )
         {
-            this.log = logger;
+            _logger = logger;
             this.httpClient = httpClient;
             this.devices = devices;
             this.servicesConfig = servicesConfig;
@@ -77,13 +77,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
             result.Properties.Add("StorageAdapterApiUrl", this.servicesConfig?.StorageAdapterApiUrl);
 
-            this.log.Info(
-                "Service status request",
-                () => new
-                {
-                    Healthy = result.Status.IsHealthy,
-                    result.Status.Message
-                });
+            _logger.LogInformation("Service status request {result}", result);
 
             return result;
         }
@@ -122,7 +116,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
             catch (Exception e)
             {
-                this.log.Error(result.Message, () => new { e });
+                _logger.LogError(e, result.Message);
             }
 
             return result;
@@ -142,7 +136,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
             }
 
-            this.log.Debug("Prepare Request", () => new { request });
+            _logger.LogDebug("Prepare request {request}", request);
 
             return request;
         }

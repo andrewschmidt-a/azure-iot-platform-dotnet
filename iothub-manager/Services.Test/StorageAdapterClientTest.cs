@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Http;
@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 {
                     StorageAdapterApiUrl = MOCK_SERVICE_URI
                 },
-                new Logger("UnitTest", LogLevel.Debug),
+                new Mock<ILogger<StorageAdapterClient>>().Object,
                 this.httpContextAccessor.Object);
             this.rand = new Random();
         }

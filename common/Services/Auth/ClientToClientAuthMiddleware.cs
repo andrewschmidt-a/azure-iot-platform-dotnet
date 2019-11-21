@@ -2,8 +2,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace Mmm.Platform.IoT.Common.Services.Auth
 {
@@ -21,11 +20,11 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
         private RequestDelegate requestDelegate;
 
-        private readonly ILogger log;
-        public ClientToClientAuthMiddleware(RequestDelegate requestDelegate, ILogger log)
+        private readonly ILogger _logger;
+        public ClientToClientAuthMiddleware(RequestDelegate requestDelegate, ILogger<ClientToClientAuthMiddleware> logger)
         {
             this.requestDelegate = requestDelegate;
-            this.log = log;
+            _logger = logger;
         }
 
         public Task Invoke(HttpContext context)

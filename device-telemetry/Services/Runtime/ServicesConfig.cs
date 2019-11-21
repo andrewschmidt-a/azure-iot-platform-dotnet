@@ -63,17 +63,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime
 
                 Uri endpoint;
 
-                if (!match.Success ||
-                    !Uri.TryCreate(match.Groups["endpoint"].Value,
-                        UriKind.RelativeOrAbsolute,
-                        out endpoint))
-                {
-                    var message = "Invalid connection string for CosmosDB";
-                    throw new InvalidConfigurationException(message);
-                }
+                Uri.TryCreate(match.Groups["endpoint"].Value, UriKind.RelativeOrAbsolute, out endpoint);
 
                 this.CosmosDbUri = endpoint;
-                this.CosmosDbKey = match.Groups["key"].Value;
+                this.CosmosDbKey = match.Groups["key"]?.Value;
             }
         }
 
