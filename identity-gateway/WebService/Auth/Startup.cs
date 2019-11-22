@@ -2,12 +2,12 @@
 
 using System;
 using Autofac;
-using IdentityGateway.WebService;
-using IdentityGateway.WebService.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.WebService.Runtime;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace IdentityGateway.WebService.Auth
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.Auth
 {
     public class Startup
     {

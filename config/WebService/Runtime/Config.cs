@@ -1,14 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.Auth;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
+using Mmm.Platform.IoT.Config.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
+namespace Mmm.Platform.IoT.Config.WebService.Runtime
 {
     public interface IConfig
     {

@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Extensions
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Extensions
 {
     public static class DateTimeOffsetExtension
     {

@@ -1,24 +1,23 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.AuthUtils;
-using Microsoft.Extensions.Configuration;
+using Mmm.Platform.IoT.StorageAdapter.Services;
+using Mmm.Platform.IoT.StorageAdapter.Services.Models;
+using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using StorageAdapter.Services.Test.helpers;
 using Xunit;
 
-namespace StorageAdapter.Services.Test
+namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
 {
     public class DocumentDbKeyValueContainerTest
     {
@@ -56,7 +55,7 @@ namespace StorageAdapter.Services.Test
             mockServicesConfig.Setup(t => t.DocumentDbRUs).Returns(400);
             mockServicesConfig.Setup((t => t.DocumentDbDatabase)).Returns(MOCK_DB_ID);
             mockServicesConfig.Setup((t => t.DocumentDbCollection(It.IsAny<string>(), It.IsAny<string>()))).Returns(MOCK_COLL_ID);
-            
+
             this.container = new DocumentDbKeyValueContainer(
                 new MockFactory<IDocumentClient>(this.mockClient),
                 new MockExceptionChecker(),
@@ -308,7 +307,7 @@ namespace StorageAdapter.Services.Test
                 .Setup(x => x.DeleteDocumentAsync(
                     It.IsAny<string>(),
                     It.IsAny<RequestOptions>()))
-                .ReturnsAsync((ResourceResponse<Document>) null);
+                .ReturnsAsync((ResourceResponse<Document>)null);
 
             await this.container.DeleteAsync(collectionId, key);
 

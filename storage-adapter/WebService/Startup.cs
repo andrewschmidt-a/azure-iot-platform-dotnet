@@ -9,8 +9,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
+namespace Mmm.Platform.IoT.StorageAdapter.WebService
 {
     public class Startup
     {
@@ -26,7 +28,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
 #if DEBUG
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
                 ;
             this.Configuration = builder.Build();
@@ -37,12 +39,14 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
         // Configure method below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Storage Adapter API", Version = "v1" });
+            });
+
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
-            
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
-            this.ApplicationContainer = DependencyResolution.Setup(services);
+            this.ApplicationContainer = new DependencyResolution().Setup(services);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
@@ -53,12 +57,20 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
             IApplicationLifetime appLifetime)
         {
-            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
 
-            app.UseMiddleware<Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.AuthMiddleware>();
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
+                c.RoutePrefix = string.Empty;
+            });
+
+            app.UseMiddleware<ClientToClientAuthMiddleware>();
             app.UseMvc();
 
             // If you want to dispose of resources that have been resolved in the

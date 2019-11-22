@@ -6,14 +6,15 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Auth;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ILogger = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics.ILogger;
+using Microsoft.OpenApi.Models;
+using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
+using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 {
     public class Startup
     {
@@ -22,8 +23,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
 
         // Initialized in `ConfigureServices`
         public IContainer ApplicationContainer { get; private set; }
-
-        private ActionsAgent.IAgent actionsAgent;
         private readonly CancellationTokenSource agentsRunState;
 
         // Invoked by `Program.cs`
@@ -32,7 +31,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
 #if DEBUG
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
                 ;
             this.Configuration = builder.Build();
@@ -44,6 +43,11 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
         // Configure method below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Device Telemetry API", Version = "v1" });
+            });
+
             // Setup (not enabling yet) CORS
             services.AddCors();
 
@@ -51,7 +55,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             services.AddMvc().AddControllersAsServices();
 
             // Prepare DI container
-            this.ApplicationContainer = DependencyResolution.Setup(services);
+            this.ApplicationContainer = new DependencyResolution().Setup(services);
 
             // Print some useful information at bootstrap time
             this.PrintBootstrapInfo(this.ApplicationContainer);
@@ -65,11 +69,19 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
             ICorsSetup corsSetup,
             IApplicationLifetime appLifetime)
         {
-            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             // Check for Authorization header before dispatching requests
             app.UseMiddleware<AuthMiddleware>();
@@ -80,10 +92,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
 
             app.UseMvc();
 
-            // Start agent threads
-            appLifetime.ApplicationStarted.Register(this.StartAgents);
-            appLifetime.ApplicationStopping.Register(this.StopAgents);
-
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
@@ -93,17 +101,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
         {
             var log = container.Resolve<ILogger>();
             log.Info("Web service started", () => new { Uptime.ProcessId });
-        }
-
-        private void StartAgents()
-        {
-            this.actionsAgent = this.ApplicationContainer.Resolve<ActionsAgent.IAgent>();
-            this.actionsAgent.RunAsync(this.agentsRunState.Token);
-        }
-
-        private void StopAgents()
-        {
-            this.agentsRunState.Cancel();
         }
     }
 }

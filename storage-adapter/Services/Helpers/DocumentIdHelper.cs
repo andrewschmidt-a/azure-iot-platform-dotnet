@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers
+namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
 {
     public static class DocumentIdHelper
     {

@@ -1,23 +1,22 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.External;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Http;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
-using IoTHubManager.Services.Test.helpers;
 using Xunit;
-using HttpResponse = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Http.HttpResponse;
-using System.Collections.Generic;
+using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
 
-namespace IoTHubManager.Services.Test
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 {
     public class StorageAdapterClientTest
     {

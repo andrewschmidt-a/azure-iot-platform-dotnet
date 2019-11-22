@@ -1,21 +1,21 @@
-using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
-using MMM.Azure.IoTSolutions.TenantManager.Services.External;
-using ILogger = MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics.ILogger;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.TenantManager.Services.External;
+using Mmm.Platform.IoT.TenantManager.Services.Helpers;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services
+namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class StatusService : IStatusService
     {
         private ILogger _log;
         private IServicesConfig _config;
-        
+
         private Dictionary<string, IStatusOperation> dependencies;
-        
+
         public StatusService(
             IServicesConfig config,
             ILogger logger,
@@ -38,7 +38,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
             };
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync()
+        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();

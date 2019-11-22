@@ -1,11 +1,12 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 using System;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
+using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
 using Microsoft.Extensions.Configuration;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
+namespace Mmm.Platform.IoT.StorageAdapter.Services.Runtime
 {
-    public interface IServicesConfig
+    public interface IServicesConfig : IAppConfigClientConfig
     {
         bool AuthRequired { get; set; }
         string StorageType { get; set; }
@@ -31,6 +32,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime
         public int DocumentDbRUs { get; set; }
         public string UserManagementApiUrl { get; set; }
         public IAppConfigurationHelper AppConfig { get; set; }
+        public string ApplicationConfigurationConnectionString { get; }
 
         /// <summary>
         /// Use the object initializer pattern to set the object's attributes

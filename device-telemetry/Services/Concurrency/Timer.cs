@@ -2,9 +2,9 @@
 
 using System;
 using System.Threading;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Concurrency
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
 {
     public interface ITimer
     {
@@ -30,7 +30,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Concurrency
 
         public ITimer Setup(Action<object> action, object context, TimeSpan frequency)
         {
-            return this.Setup(action, context, (int) frequency.TotalMilliseconds);
+            return this.Setup(action, context, (int)frequency.TotalMilliseconds);
         }
 
         public ITimer Setup(Action<object> action, object context, int frequency)
@@ -57,7 +57,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Concurrency
                 throw new TimerNotInitializedException();
             }
 
-            this.timer.Change((int) delay.TotalMilliseconds, this.frequency);
+            this.timer.Change((int)delay.TotalMilliseconds, this.frequency);
             return this;
         }
 

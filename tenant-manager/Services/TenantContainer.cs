@@ -1,17 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
-using MMM.Azure.IoTSolutions.TenantManager.Services.External;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Exceptions;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.Auth;
 using Azure.ApplicationModel.Configuration;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.TenantManager.Services.External;
+using Mmm.Platform.IoT.TenantManager.Services.Helpers;
+using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services
+namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class TenantContainer : ITenantContainer
     {
@@ -26,7 +26,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
         private string iotHubNameFormat = "iothub-{0}";  // format with a guid
         private string dpsNameFormat = "dps-{0}"; // format with a guid
         private string appConfigCollectionKeyFormat = "tenant:{0}:{1}-collection";  // format with a guid and collection name
-        private List<string> tenantCollections = new List<string>{"telemetry", "twin-change", "lifecycle", "pcs"};
+        private List<string> tenantCollections = new List<string> { "telemetry", "twin-change", "lifecycle", "pcs" };
 
         public readonly IServicesConfig _config;
         public readonly IHttpContextAccessor _httpContextAccessor;
@@ -81,7 +81,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
         {
             /* Creates a new tenant */
             string iotHubName = String.Format(this.iotHubNameFormat, tenantId.Substring(0, 8));
-            string dpsName = String.Format(this.dpsNameFormat, tenantId.Substring(0, 8)); 
+            string dpsName = String.Format(this.dpsNameFormat, tenantId.Substring(0, 8));
 
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantId, iotHubName);
@@ -122,7 +122,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
             {
                 userSettings = await _identityClient.getSettingsForUserAsync(userId, LAST_USED_SETTING_KEY);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw new Exception("Could not access user settings for LastUsedTenant.", e);
             }
@@ -142,7 +142,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
             // Write tenant info cosmos db collection name to app config
             try
             {
-                var appConfigClient = new ConfigurationClient(this._config.AppConfigConnectionString);
+                var appConfigClient = new ConfigurationClient(this._config.ApplicationConfigurationConnectionString);
                 foreach (string collection in this.tenantCollections)
                 {
                     string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
@@ -205,7 +205,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
         /// <returns></returns>
         public async Task<DeleteTenantModel> DeleteTenantAsync(string tenantId, bool ensureFullyDeployed = true)
         {
-            
+
             var userId = "";
             try
             {
@@ -220,7 +220,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
                 throw new Exception("Unable to retrieve the userId from the httpContextAccessor", e);
             }
 
-            Dictionary<string, bool> deletionRecord = new Dictionary<string, bool>{};
+            Dictionary<string, bool> deletionRecord = new Dictionary<string, bool> { };
 
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
@@ -298,7 +298,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services
             // Delete collections
             string dbIdTms = this._config.TenantManagerDatabaseId;
             string dbIdStorage = this._config.StorageAdapterDatabseId;
-            var appConfigClient = new ConfigurationClient(this._config.AppConfigConnectionString);
+            var appConfigClient = new ConfigurationClient(this._config.ApplicationConfigurationConnectionString);
             foreach (string collection in this.tenantCollections)
             {
                 // pcs colleciton uses a different database than the other collections

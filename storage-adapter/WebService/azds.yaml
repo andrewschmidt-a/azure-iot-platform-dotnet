@@ -1,7 +1,7 @@
 kind: helm-release
 apiVersion: 1.1
 build:
-  context: ..
+  context: ../../
   dockerfile: Dockerfile
 install:
   chart: charts/webservice
@@ -37,6 +37,6 @@ configurations:
       - "!**/*.{sln,csproj}"
       command: [dotnet, run, --no-restore, --no-build, --no-launch-profile, -c, "${BUILD_CONFIGURATION:-Debug}"]
       iterate:
-        processesToKill: [dotnet, vsdbg, Microsoft.Azure.IoTSolutions.StorageAdapter.WebService]
+        processesToKill: [dotnet, vsdbg, Mmm.Platform.IoT.StorageAdapter.WebService]
         buildCommands:
         - [dotnet, build, --no-restore, -c, "${BUILD_CONFIGURATION:-Debug}"]

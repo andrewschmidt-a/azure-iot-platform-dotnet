@@ -1,25 +1,23 @@
 ﻿
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Helpers;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using IdentityGateway.AppConfiguration;
-using IdentityGateway.AuthUtils;
-using Autofac.Extensions.DependencyInjection;
-using Autofac;
-using IdentityGateway.Services.Diagnostics;
-using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Runtime;
-using SendGrid;
-using WebService;
+using Microsoft.OpenApi.Models;
+using Mmm.Platform.IoT.Common.AppConfiguration;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
 
-namespace IdentityGateway.WebService
+namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {
     public class Startup
     {
@@ -46,7 +44,7 @@ namespace IdentityGateway.WebService
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
 #if DEBUG
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
                 .AddEnvironmentVariables();
             // build configuration with environment variables
@@ -59,13 +57,17 @@ namespace IdentityGateway.WebService
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Identity Gateway API", Version = "v1" });
+            });
+
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
 
             services.AddScoped<TableHelper>();
             services.AddSingleton<UserSettingsContainer>();
             services.AddSingleton<UserTenantContainer>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IStatusService, StatusService>();
             services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
@@ -74,7 +76,7 @@ namespace IdentityGateway.WebService
             services.AddTransient<ITableHelper, TableHelper>();
 
             // Prepare DI container
-            this.ApplicationContainer = DependencyResolution.Setup(services);
+            this.ApplicationContainer = new DependencyResolution().Setup(services);
 
             // Print some useful information at bootstrap time
             this.PrintBootstrapInfo(this.ApplicationContainer);
@@ -86,6 +88,17 @@ namespace IdentityGateway.WebService
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
+                c.RoutePrefix = string.Empty;
+            });
+
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();
         }

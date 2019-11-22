@@ -4,20 +4,20 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
-using IdentityGateway.Controllers;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Exceptions;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.Controllers;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json.Linq;
-using WebService.Test.helpers;
 using Xunit;
 
-namespace WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
     public class AuthorizeControllerTest
     {
@@ -203,7 +203,7 @@ namespace WebService.Test.v1.Controllers
 
             // Act
             var objectResult = await authorizeController.PostAsync(ValidAuthHeader, availableTenant.ToString()) as ObjectResult;
-            
+
             // Assert
             Assert.Equal(objectResult.StatusCode, StatusCodes.Status200OK);
         }
@@ -212,11 +212,10 @@ namespace WebService.Test.v1.Controllers
         {
             mockServicesConfig = new Mock<IServicesConfig> { DefaultValue = DefaultValue.Mock };
             mockUserTenantContainer = new Mock<UserTenantContainer>();
-
             mockUserSettingsContainer = new Mock<IUserContainer<UserSettingsModel, UserSettingsInput>>();
             mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
             mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
-            mockOpenIdProviderConfiguration = new Mock<IOpenIdProviderConfiguration> {DefaultValue = DefaultValue.Mock};
+            mockOpenIdProviderConfiguration = new Mock<IOpenIdProviderConfiguration> { DefaultValue = DefaultValue.Mock };
             authorizeController = new AuthorizeController(mockServicesConfig.Object, mockUserTenantContainer.Object, mockUserSettingsContainer.Object as UserSettingsContainer, mockJwtHelper.Object, mockOpenIdProviderConfiguration.Object)
             {
                 ControllerContext = new ControllerContext()

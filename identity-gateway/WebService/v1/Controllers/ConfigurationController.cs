@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
-using Newtonsoft.Json.Serialization;
-using IdentityGateway.Services.Runtime;
-using IdentityGateway.WebService.v1.Filters;
+﻿using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
-namespace IdentityGateway.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
 {
     [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ConfigurationController : ControllerBase

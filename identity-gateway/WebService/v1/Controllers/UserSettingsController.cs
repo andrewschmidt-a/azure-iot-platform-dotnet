@@ -1,12 +1,12 @@
 using System;
 using System.Threading.Tasks;
-using IdentityGateway.AuthUtils;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Models;
-using IdentityGateway.WebService.v1.Filters;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
-namespace IdentityGateway.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
 {
     [Route("v1/settings"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     [Authorize("ReadAll")]
@@ -69,7 +69,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             return await this.GetAsync(this.ClaimsUserId, setting);
         }
-        
+
         /// <summary>
         /// Get the setting of the given key for the given userId
         /// </summary>

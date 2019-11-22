@@ -8,7 +8,7 @@ using System;
 using System.IO;
 using System.Security.Cryptography;
 
-namespace KeyGenerator
+namespace Mmm.Platform.IoT.IdentityGateway.KeyGenerator
 {
     class Program
     {

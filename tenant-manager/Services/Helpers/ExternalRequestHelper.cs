@@ -1,15 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using Microsoft.AspNetCore.Http;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Http;
-using HttpRequest = MMM.Azure.IoTSolutions.TenantManager.Services.Http.HttpRequest;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Mmm.Platform.IoT.Common.Services.Http;
 using Newtonsoft.Json;
+using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
+namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public interface IExternalRequestHelper
     {

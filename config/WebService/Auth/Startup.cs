@@ -2,12 +2,12 @@
 
 using System;
 using Autofac;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
+using Mmm.Platform.IoT.Config.WebService.Runtime;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Auth
+namespace Mmm.Platform.IoT.Config.WebService.Auth
 {
     public class Startup
     {

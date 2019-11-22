@@ -2,10 +2,11 @@
 
 using System;
 using System.IO;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Auth;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Runtime
 {
     public interface IConfig
     {
@@ -117,7 +118,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
                 ActionsEventHubConnectionString = configData.GetString(ACTIONS_EVENTHUB_CONNSTRING),
                 ActionsEventHubName = configData.GetString(ACTIONS_EVENTHUB_NAME),
                 LogicAppEndpointUrl = configData.GetString(ACTIONS_LOGICAPP_ENDPOINTURL),
-                BlobStorageConnectionString = configData.GetSecretsFromKeyVault( configData.GetString(ACTIONS_AZUREBLOB_CONNSTRING)),
+                BlobStorageConnectionString = configData.GetSecretsFromKeyVault(configData.GetString(ACTIONS_AZUREBLOB_CONNSTRING)),
                 ActionsBlobStorageContainer = configData.GetString(ACTIONS_AZUREBLOB_CONTAINER),
                 SolutionUrl = configData.GetString(SOLUTION_URL),
                 TemplateFolder = AppContext.BaseDirectory + Path.DirectorySeparatorChar + configData.GetString(TEMPLATE_FOLDER),

@@ -1,15 +1,14 @@
-﻿﻿using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.Auth;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Filters;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using Mmm.Platform.IoT.TenantManager.Services;
+using Mmm.Platform.IoT.TenantManager.Services.Models;
 using Newtonsoft.Json;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
+namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {
     [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class TenantController : ControllerBase
@@ -42,7 +41,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
                 // If there is an error while creating the new tenant - delete all of the created tenant resources
                 // this may not be able to delete iot hub - due to the long running process
                 var deleteResponse = await this._tenantContainer.DeleteTenantAsync(tenantGuid, false);
-                this._log.Info("The Tenant was unable to be created properly. To ensure the failed tenant does not consume resources, some of its resources were deleted after creation failed.", () => new {deleteResponse});
+                this._log.Info("The Tenant was unable to be created properly. To ensure the failed tenant does not consume resources, some of its resources were deleted after creation failed.", () => new { deleteResponse });
                 throw e;
             }
         }

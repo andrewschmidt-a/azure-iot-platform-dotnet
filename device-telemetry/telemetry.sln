@@ -79,10 +79,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{B3A8
 		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActionsAgent", "ActionsAgent\ActionsAgent.csproj", "{5AAA652D-1D1B-403B-B9DE-2207D83FDFEF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActionsAgent.Test", "ActionsAgent.Test\ActionsAgent.Test.csproj", "{BB60F9AC-6419-40CC-A756-1FBC0882705D}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuthUtils", "AuthUtils\AuthUtils.csproj", "{AD5141D7-F6A8-4BC8-91AB-969482F53FB8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppConfiguration", "AppConfiguration\AppConfiguration.csproj", "{E73A8A6B-38CA-4F19-B774-59D3147BE9FE}"
@@ -109,14 +105,6 @@ Global
 		{1BC54189-1DF9-448E-AE5F-66EB2EF51D82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BC54189-1DF9-448E-AE5F-66EB2EF51D82}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BC54189-1DF9-448E-AE5F-66EB2EF51D82}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5AAA652D-1D1B-403B-B9DE-2207D83FDFEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5AAA652D-1D1B-403B-B9DE-2207D83FDFEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5AAA652D-1D1B-403B-B9DE-2207D83FDFEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5AAA652D-1D1B-403B-B9DE-2207D83FDFEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB60F9AC-6419-40CC-A756-1FBC0882705D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB60F9AC-6419-40CC-A756-1FBC0882705D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB60F9AC-6419-40CC-A756-1FBC0882705D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB60F9AC-6419-40CC-A756-1FBC0882705D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E1DBFE22-816D-4779-A529-7CD13B62C830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E1DBFE22-816D-4779-A529-7CD13B62C830}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1DBFE22-816D-4779-A529-7CD13B62C830}.Release|Any CPU.ActiveCfg = Release|Any CPU

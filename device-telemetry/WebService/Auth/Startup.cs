@@ -2,12 +2,12 @@
 
 using System;
 using Autofac;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.Runtime;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Auth
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Auth
 {
     public class Startup
     {

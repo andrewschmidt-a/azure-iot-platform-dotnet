@@ -1,21 +1,22 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
+using Mmm.Platform.IoT.DeviceTelemetry.Services;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 
-namespace DeviceTelemetry.Services.Test
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class AlarmsTest
     {
@@ -43,7 +44,7 @@ namespace DeviceTelemetry.Services.Test
 
 
             this.logger = new Mock<ILogger>();
-            this.alarms = new Alarms(servicesConfig, this.storageClient.Object, this.logger.Object,this.httpContextAccessor.Object, this.appConfigHelper.Object);
+            this.alarms = new Alarms(servicesConfig, this.storageClient.Object, this.logger.Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
         }
 
         /**

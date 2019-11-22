@@ -3,11 +3,11 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Http;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     public interface IHttpClientWrapper
     {

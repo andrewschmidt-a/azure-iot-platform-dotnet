@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
-using Microsoft.IdentityModel.Tokens;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace IdentityGateway.Services.Runtime
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Runtime
 {
-    public interface IServicesConfig
+    public interface IServicesConfig : IUserManagementClientConfig, IAuthMiddlewareConfig
     {
-        Dictionary<string, List<string>> UserPermissions { get; }
         string PrivateKey { get; }
         string PublicKey { get; }
         string StorageAccountConnectionString { get; }
@@ -25,5 +25,6 @@ namespace IdentityGateway.Services.Runtime
         public string AzureB2CBaseUri { get; set; }
         public string Port { get; set; }
         public string SendGridAPIKey { get; set; }
+        public string UserManagementApiUrl { get; set; }
     }
 }

@@ -1,12 +1,14 @@
 using System.Collections.Generic;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers; 
+using Mmm.Platform.IoT.TenantManager.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
+namespace Mmm.Platform.IoT.TenantManager.Services.Runtime
 {
-    public interface IServicesConfig
+    public interface IServicesConfig : IAppConfigClientConfig, IUserManagementClientConfig, IAuthMiddlewareConfig
     {
         bool AuthRequired { get; set; }
-
         string KeyvaultName { get; set; }
         string AzureActiveDirectoryAppId { get; set; }
         string AzureActiveDirectoryAppKey { get; set; }
@@ -18,7 +20,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         string TelemetryEventHubConnectionString { get; set; }
         string TwinChangeEventHubConnectionString { get; set; }
         string LifecycleEventHubConnectionString { get; set; }
-        string AppConfigConnectionString { get; set; }
         string AppConfigEndpoint { get; set; }
         string CosmosDbEndpoint { get; set; }
         string CosmosDbToken { get; set; }
@@ -32,11 +33,9 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         string DeleteIotHubRunbookName { get; set;}
         string IdentityGatewayWebServiceUrl { get; set; }
         string ConfigWebServiceUrl { get; set; }
-
-        Dictionary<string, List<string>> UserPermissions { get; set; }
     }
 
-    public class ServicesConfig: IServicesConfig
+    public class ServicesConfig : IServicesConfig
     {
         public bool AuthRequired { get; set; }
 
@@ -51,7 +50,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         public string TelemetryEventHubConnectionString { get; set; }
         public string TwinChangeEventHubConnectionString { get; set; }
         public string LifecycleEventHubConnectionString { get; set; }
-        public string AppConfigConnectionString { get; set; }
         public string AppConfigEndpoint { get; set; }
         public string CosmosDbEndpoint { get; set; }
         public string CosmosDbToken { get; set; }
@@ -65,7 +63,8 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Runtime
         public string DeleteIotHubRunbookName { get; set;}
         public string IdentityGatewayWebServiceUrl { get; set; }
         public string ConfigWebServiceUrl { get; set; }
-    
         public Dictionary<string, List<string>> UserPermissions { get; set; }
+        public string ApplicationConfigurationConnectionString { get; set; }
+        public string UserManagementApiUrl { get; set; }
     }
 }

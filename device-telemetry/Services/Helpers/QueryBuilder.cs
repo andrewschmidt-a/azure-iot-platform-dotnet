@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Azure.Documents;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers
 {
     public class QueryBuilder
     {

@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityGateway.Services.Helpers
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 {
     public interface IRsaHelpers
     {

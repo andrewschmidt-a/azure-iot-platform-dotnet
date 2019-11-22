@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
 {
     public class DiagnosticsRequestModel
     {

@@ -5,25 +5,22 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Actions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.StorageAdapter;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter;
+using Mmm.Platform.IoT.DeviceTelemetry.Services;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
-using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
-using HttpRequest = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpRequest;
-using HttpResponse = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpResponse;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
+using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
+using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
 
-namespace DeviceTelemetry.Services.Test
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class RulesTest
     {
@@ -362,6 +359,7 @@ namespace DeviceTelemetry.Services.Test
         {
             // Arrange
             ValueListApiModel fakeRules = new ValueListApiModel();
+            fakeRules.Items = new List<ValueApiModel>();
             fakeRules.Items.Add(this.CreateFakeRule("rule1"));
             fakeRules.Items.Add(this.CreateFakeRule("rule2"));
             this.storageAdapter.Setup(x => x.GetAllAsync(It.IsAny<string>())).Returns(Task.FromResult(fakeRules));
@@ -390,6 +388,7 @@ namespace DeviceTelemetry.Services.Test
         {
             // Arrange
             ValueListApiModel fakeRules = new ValueListApiModel();
+            fakeRules.Items = new List<ValueApiModel>();
             fakeRules.Items.Add(this.CreateFakeRule("rule1"));
             fakeRules.Items.Add(this.CreateFakeRule("rule2"));
             this.storageAdapter.Setup(x => x.GetAllAsync(It.IsAny<string>())).Returns(Task.FromResult(fakeRules));

@@ -1,24 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Microsoft.Azure.IoTSolutions.IotHubManager.Services</AssemblyName>
-    <RootNamespace>Microsoft.Azure.IoTSolutions.IotHubManager.Services</RootNamespace>
+    <AssemblyName>Mmm.Platform.IoT.IoTHubManager.Services</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.ApplicationModel.Configuration" Version="1.0.0-preview.2" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.Azure.Devices" Version="1.17.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.0.0-preview7.19362.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="2.0.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="4.5.0" />
-    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="1.0.0-preview-008520001" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AuthUtils\AuthUtils.csproj" />
-    <ProjectReference Include="..\AppConfiguration\AppConfiguration.csproj" />
+    <ProjectReference Include="..\..\common\AppConfiguration\AppConfiguration.csproj" />
+    <ProjectReference Include="..\..\common\AuthUtils\AuthUtils.csproj" />
+    <ProjectReference Include="..\..\common\Services\Services.csproj" />
+    <ProjectReference Include="..\..\common\WebService\WebService.csproj" />
   </ItemGroup>
   
 </Project>

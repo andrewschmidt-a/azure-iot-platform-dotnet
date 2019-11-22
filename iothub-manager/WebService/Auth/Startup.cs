@@ -2,12 +2,12 @@
 
 using System;
 using Autofac;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime;
+using Mmm.Platform.IoT.IoTHubManager.WebService.Runtime;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.Auth
 {
     public class Startup
     {

@@ -5,16 +5,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers.PackageValidation;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation;
+using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Platform.IoT.Config.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
+namespace Mmm.Platform.IoT.Config.Services
 {
     public interface IStorage
     {
@@ -44,15 +46,15 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
         private readonly IServicesConfig config;
         private readonly ILogger log;
 
-        internal const string SOLUTION_COLLECTION_ID = "solution-settings";
-        internal const string THEME_KEY = "theme";
-        internal const string LOGO_KEY = "logo";
-        internal const string USER_COLLECTION_ID = "user-settings";
-        internal const string DEVICE_GROUP_COLLECTION_ID = "devicegroups";
-        internal const string PACKAGES_COLLECTION_ID = "packages";
-        internal const string PACKAGES_CONFIG_TYPE_KEY = "config-types";
-        private const string AZURE_MAPS_KEY = "AzureMapsKey";
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        public const string SOLUTION_COLLECTION_ID = "solution-settings";
+        public const string THEME_KEY = "theme";
+        public const string LOGO_KEY = "logo";
+        public const string USER_COLLECTION_ID = "user-settings";
+        public const string DEVICE_GROUP_COLLECTION_ID = "devicegroups";
+        public const string PACKAGES_COLLECTION_ID = "packages";
+        public const string PACKAGES_CONFIG_TYPE_KEY = "config-types";
+        public const string AZURE_MAPS_KEY = "AzureMapsKey";
+        public const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
 
         public Storage(
             IStorageAdapterClient client,
@@ -136,10 +138,10 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
         public async Task<Logo> SetLogoAsync(Logo model)
         {
             //Do not overwrite existing name or image with null
-            if(model.Name == null || model.Image == null)
+            if (model.Name == null || model.Image == null)
             {
                 Logo current = await this.GetLogoAsync();
-                if(!current.IsDefault)
+                if (!current.IsDefault)
                 {
                     model.Name = model.Name ?? current.Name;
                     if (model.Image == null && current.Image != null)
@@ -233,7 +235,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
                     $"for type {package.PackageType}";
 
                 msg += package.PackageType.Equals(PackageType.DeviceConfiguration) ?
-                    $"and configuration {package.ConfigType}" : string.Empty; 
+                    $"and configuration {package.ConfigType}" : string.Empty;
 
                 throw new InvalidInputException(msg);
             }
@@ -250,12 +252,13 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
             package.DateCreated = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
             var value = JsonConvert.SerializeObject(package,
                                                     Formatting.Indented,
-                                                    new JsonSerializerSettings {
+                                                    new JsonSerializerSettings
+                                                    {
                                                         NullValueHandling = NullValueHandling.Ignore
                                                     });
 
             var response = await this.client.CreateAsync(PACKAGES_COLLECTION_ID, value);
-            
+
             if (!(string.IsNullOrEmpty(package.ConfigType))
                 && package.PackageType.Equals(PackageType.DeviceConfiguration))
             {
@@ -287,7 +290,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
             {
                 log.Debug("Document config-types has not been created.", () => { });
                 // Return empty Package Config types
-                return new ConfigTypeListServiceModel(); 
+                return new ConfigTypeListServiceModel();
             }
         }
 
@@ -299,7 +302,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
                 var response = await this.client.GetAsync(PACKAGES_COLLECTION_ID, PACKAGES_CONFIG_TYPE_KEY);
                 list = JsonConvert.DeserializeObject<ConfigTypeListServiceModel>(response.Data);
             }
-            catch (ResourceNotFoundException) 
+            catch (ResourceNotFoundException)
             {
                 log.Debug("Config Types have not been created.", () => { });
                 // Create empty Package Config Types

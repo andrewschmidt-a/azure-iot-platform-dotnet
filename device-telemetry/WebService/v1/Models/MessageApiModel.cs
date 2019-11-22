@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
+using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Models
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 {
     public class MessageApiModel
     {

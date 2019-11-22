@@ -5,15 +5,15 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime;
-using Microsoft.Azure.IoTSolutions.IotHubManager.RecurringTasksAgent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ILogger = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics.ILogger;
+using Microsoft.OpenApi.Models;
+using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
+using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
+namespace Mmm.Platform.IoT.IoTHubManager.WebService
 {
     public class Startup
     {
@@ -29,7 +29,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
 #if DEBUG
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
                 ;
             this.Configuration = builder.Build();
@@ -40,6 +40,11 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
         // Configure method below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc($"v1", new OpenApiInfo { Title = "IoTHub Manager API", Version = "v1" });
+            });
+
             // Setup (not enabling yet) CORS
             services.AddCors();
 
@@ -47,7 +52,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
             services.AddMvc().AddControllersAsServices();
 
             // Prepare DI container
-            this.ApplicationContainer = DependencyResolution.Setup(services);
+            this.ApplicationContainer = new DependencyResolution().Setup(services);
 
             // Print some useful information at bootstrap time
             this.PrintBootstrapInfo(this.ApplicationContainer);
@@ -61,11 +66,19 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
             ICorsSetup corsSetup,
             IApplicationLifetime appLifetime)
         {
-            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             // Check for Authorization header before dispatching requests
             app.UseMiddleware<AuthMiddleware>();
@@ -79,8 +92,6 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
-            // Run a recurring tasks which updates the device properties in CosmosDB every 1 hour
-            appLifetime.ApplicationStarted.Register(() => this.ApplicationContainer.Resolve<IRecurringTasksAgent>().Run());
         }
 
         private void PrintBootstrapInfo(IContainer container)

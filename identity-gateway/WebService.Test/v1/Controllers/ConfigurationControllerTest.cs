@@ -1,16 +1,16 @@
-﻿using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Runtime;
-using IdentityGateway.WebService.v1.Controllers;
+﻿using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
-using WebService.Test.helpers;
 using Xunit;
 
-namespace WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
     public class ConfigurationControllerTest
     {

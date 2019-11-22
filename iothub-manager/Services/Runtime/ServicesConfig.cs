@@ -1,29 +1,29 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Runtime
 {
-    public interface IServicesConfig
+    public interface IServicesConfig : IStorageAdapterClientConfig, IUserManagementClientConfig, IAppConfigClientConfig, IAuthMiddlewareConfig
     {
-        string StorageAdapterApiUrl { get; }
-        string UserManagementApiUrl { get; }
         string DevicePropertiesWhiteList { get; }
-        string AppConfigConnection { get; }
-        // ReSharper disable once InconsistentNaming
         long DevicePropertiesTTL { get; }
         long DevicePropertiesRebuildTimeout { get; }
-        Dictionary<string, List<string>> UserPermissions { get; }
     }
 
     public class ServicesConfig : IServicesConfig
     {
+        public int StorageAdapterApiTimeout { get; set; }
         public string StorageAdapterApiUrl { get; set; }
         public string UserManagementApiUrl { get; set; }
         public string DevicePropertiesWhiteList { get; set; }
-        public string AppConfigConnection { get; set; }
         public long DevicePropertiesTTL { get; set; }
         public long DevicePropertiesRebuildTimeout { get; set; }
         public Dictionary<string, List<string>> UserPermissions { get; set; }
+        public string ApplicationConfigurationConnectionString { get; set; }
     }
 }

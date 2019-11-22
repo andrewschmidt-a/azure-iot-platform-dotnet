@@ -3,30 +3,22 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime
 {
-    public interface IServicesConfig
+    public interface IServicesConfig : IAppConfigClientConfig, IStorageClientConfig, ITimeSeriesClientConfig, IUserManagementClientConfig, IStorageAdapterClientConfig, IAuthMiddlewareConfig
     {
-        string StorageAdapterApiUrl { get; set; }
-        int StorageAdapterApiTimeout { get; set; }
-        string UserManagementApiUrl { get; }
         StorageConfig MessagesConfig { get; set; }
         AlarmsConfig AlarmsConfig { get; set; }
         string StorageType { get; set; }
-        Uri CosmosDbUri { get; }
-        string CosmosDbKey { get; }
-        int CosmosDbThroughput { get; set; }
-        string TimeSeriesFqdn { get; }
-        string TimeSeriesAuthority { get; }
-        string TimeSeriesAudience { get; }
-        string TimeSeriesExplorerUrl { get; }
-        string TimeSertiesApiVersion { get; }
-        string TimeSeriesTimeout { get; }
-        string ActiveDirectoryTenant { get; }
-        string ActiveDirectoryAppId { get; }
-        string ActiveDirectoryAppSecret { get; }
         string DiagnosticsApiUrl { get; }
         int DiagnosticsMaxLogRetries { get; }
         string ActionsEventHubConnectionString { get; }
@@ -36,8 +28,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         string LogicAppEndpointUrl { get; }
         string SolutionUrl { get; }
         string TemplateFolder { get; }
-        Dictionary<string, List<string>> UserPermissions { get; }
-        string ApplicationConfigurationConnectionString { get; }
     }
 
     public class ServicesConfig : IServicesConfig
@@ -116,11 +106,11 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         public string LogicAppEndpointUrl { get; set; }
 
         public string SolutionUrl { get; set; }
-        
+
         public string TemplateFolder { get; set; }
-        
+
         public Dictionary<string, List<string>> UserPermissions { get; set; }
-        
+
         public string ApplicationConfigurationConnectionString { get; set; }
     }
 }

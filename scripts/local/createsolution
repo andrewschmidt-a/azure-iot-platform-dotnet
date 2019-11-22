@@ -31,5 +31,3 @@ dotnet sln remote-monitoring.sln add asa-manager/TelemetryRulesAgent.Test/Teleme
 
 dotnet sln remote-monitoring.sln add device-simulation/SimulationAgent/SimulationAgent.csproj
 dotnet sln remote-monitoring.sln add device-simulation/SimulationAgent.Test/SimulationAgent.Test.csproj
-
-dotnet sln remote-monitoring.sln add iothub-manager/RecurringTasksAgent/RecurringTasksAgent.csproj

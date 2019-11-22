@@ -1,16 +1,17 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Http;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
+namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
     class StatusService : IStatusService
     {
@@ -36,7 +37,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             this._httpClient = httpClient;
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync()
+        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();
@@ -44,7 +45,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             // Check connection to CosmosDb
             var storageResult = await this._keyValueContainer.PingAsync();
             SetServiceStatus("Storage", storageResult, result, errors);
-            
+
             if (this._servicesConfig.AuthRequired)
             {
                 // Check access to Auth

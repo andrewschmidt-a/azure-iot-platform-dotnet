@@ -1,9 +1,10 @@
-﻿using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
+using Mmm.Platform.IoT.TenantManager.WebService.Runtime;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService
+namespace Mmm.Platform.IoT.TenantManager.WebService
 {
     public class Program
     {

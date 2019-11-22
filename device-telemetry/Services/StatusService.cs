@@ -1,20 +1,21 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.TimeSeries;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
-    class StatusService : IStatusService
+    public class StatusService : IStatusService
     {
         private const string STORAGE_TYPE_KEY = "StorageType";
         private const string TIME_SERIES_KEY = "tsi";

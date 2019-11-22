@@ -4,25 +4,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Wrappers;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.AuthUtils;
+using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
+using Mmm.Platform.IoT.StorageAdapter.Services.Models;
+using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
+using Mmm.Platform.IoT.StorageAdapter.Services.Wrappers;
+using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Wrappers;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
+namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
     public sealed class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
     {
-        private readonly IFactory<IDocumentClient> _clientFactory; 
+        private readonly IFactory<IDocumentClient> _clientFactory;
         private readonly IExceptionChecker _exceptionChecker;
         private readonly ILogger _log;
         private readonly IServicesConfig _config;  // injected
@@ -60,7 +60,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                     string message = $"A valid DocumentDb Database Id could not be retrieved for {this.documentDataType}";
                     this._log.Info(message, () => new { this.documentDataType });
                     throw new Exception(message);
-                } 
+                }
                 return docDbDatabase;
             }
         }

@@ -5,21 +5,16 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
+using Mmm.Platform.IoT.Config.WebService.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ILogger = Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics.ILogger;
-using Microsoft.Extensions.Configuration.AzureAppConfiguration;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.OpenApi.Models;
+using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.WebService.Runtime;
+using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
+namespace Mmm.Platform.IoT.Config.WebService
 {
     public class Startup
     {
@@ -43,6 +38,11 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
         // Configure method below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Config API", Version = "v1" });
+            });
+
             // Setup (not enabling yet) CORS 
             services.AddCors();
             //services.AddIoTTokenValidator(new IoTTokenValidatorOptions
@@ -61,9 +61,9 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
 
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
-            
+
             // Prepare DI container
-            this.ApplicationContainer = DependencyResolution.Setup(services);
+            this.ApplicationContainer = new DependencyResolution().Setup(services);
 
             // Print some useful information at bootstrap time
             this.PrintBootstrapInfo(this.ApplicationContainer);
@@ -77,11 +77,19 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
-            ILoggerFactory loggerFactory,
             ICorsSetup corsSetup,
             IApplicationLifetime appLifetime)
         {
-            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             // Check for Authorization header before dispatching requests
             app.UseMiddleware<AuthMiddleware>();

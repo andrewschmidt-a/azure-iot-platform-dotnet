@@ -1,10 +1,11 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Models;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
+namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public class TableStorageHelper : IStatusOperation
     {
@@ -72,14 +73,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
             }
         }
 
-        public async Task<TableResult> WriteToTableAsync<T>(string tableName, T entity) where T: TableEntity
+        public async Task<TableResult> WriteToTableAsync<T>(string tableName, T entity) where T : TableEntity
         {
             CloudTable table = await this.GetTableAsync(tableName);
             TableOperation insertOperation = TableOperation.Insert(entity);
             return await this.ExecuteTableOperationAsync(table, insertOperation);
         }
 
-        public async Task<T> ReadFromTableAsync<T>(string tableName, string partitionKey, string rowKey) where T: TableEntity
+        public async Task<T> ReadFromTableAsync<T>(string tableName, string partitionKey, string rowKey) where T : TableEntity
         {
             CloudTable table = await this.GetTableAsync(tableName);
             TableOperation readOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
@@ -94,7 +95,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Helpers
             }
         }
 
-        public async Task<TableResult> DeleteEntityAsync<T>(string tableName, T entity) where T: TableEntity
+        public async Task<TableResult> DeleteEntityAsync<T>(string tableName, T entity) where T : TableEntity
         {
             CloudTable table = await this.GetTableAsync(tableName);
             TableOperation deleteOperation = TableOperation.Delete(entity);

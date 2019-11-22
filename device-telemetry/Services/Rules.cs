@@ -5,17 +5,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.StorageAdapter;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
     public interface IRules
     {
@@ -86,7 +87,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 }
             }
         }
-        
+
         public async Task DeleteAsync(string id)
         {
             InputValidator.Validate(id);
@@ -305,7 +306,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
         private async void LogEventAndRuleCountToDiagnostics(string eventName)
         {
             if (this.diagnosticsClient.CanLogToDiagnostics)
-            { 
+            {
                 await this.diagnosticsClient.LogEventAsync(eventName);
                 int ruleCount = await this.GetRuleCountAsync();
                 var eventProperties = new Dictionary<string, object>

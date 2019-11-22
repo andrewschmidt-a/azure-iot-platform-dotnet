@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Wrappers
+namespace Mmm.Platform.IoT.StorageAdapter.WebService.Wrappers
 {
     public interface IKeyGenerator
     {

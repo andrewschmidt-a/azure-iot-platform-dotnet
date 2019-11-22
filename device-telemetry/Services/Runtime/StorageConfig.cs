@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime
 {
     public class StorageConfig
     {

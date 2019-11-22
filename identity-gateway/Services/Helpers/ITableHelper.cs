@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Table;
 
-namespace IdentityGateway.Services.Helpers
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 {
     public interface ITableHelper
     {
