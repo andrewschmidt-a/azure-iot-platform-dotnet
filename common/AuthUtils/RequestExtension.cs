@@ -112,7 +112,7 @@ namespace Mmm.Platform.IoT.Common.AuthUtils
             string tenantId = null;
             if (IsExternalRequest(request))
             {
-                if (GetCurrentUserClaims(request).All(t => t.Type == ClaimKeyTenantId))
+                if (GetCurrentUserClaims(request).Any(t => t.Type == ClaimKeyTenantId))
                 {
                     tenantId = GetCurrentUserClaims(request).First(t => t.Type == ClaimKeyTenantId).Value;
                 }
