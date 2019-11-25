@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Azure.ApplicationModel.Configuration;
+using Azure.Data.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.Common.Services.Helpers
@@ -8,7 +8,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
     public class AppConfigurationHelper : IAppConfigurationHelper
     {
         private ConfigurationClient client;
-        private Dictionary<string, AppConfigCacheValue> _cache;
+        private Dictionary<string, AppConfigCacheValue> _cache = new Dictionary<string, AppConfigCacheValue>();
 
         public AppConfigurationHelper(IAppConfigClientConfig config)
         {
@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
                 }
                 else
                 {
-                    ConfigurationSetting setting = this.client.Get(key);
+                    ConfigurationSetting setting = this.client.GetConfigurationSetting(key);
                     value = setting.Value;
                     if (this._cache.ContainsKey(key))
                     {

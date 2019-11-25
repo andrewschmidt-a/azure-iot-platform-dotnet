@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Azure.ApplicationModel.Configuration;
+using Azure.Data.AppConfiguration;
 using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.Common.AuthUtils;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
@@ -150,7 +150,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                     var collectionSetting = new ConfigurationSetting(collectionKey, collectionId);
                     try
                     {
-                        appConfigClient.Set(collectionSetting);
+                        await appConfigClient.SetConfigurationSettingAsync(collectionSetting);
                     }
                     catch (Exception e)
                     {
@@ -307,7 +307,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 string collectionId = "";
                 try
                 {
-                    collectionId = appConfigClient.Get(collectionKey).Value.Value;
+                    collectionId = (await appConfigClient.GetConfigurationSettingAsync(collectionKey)).Value.Value;
                 }
                 catch (Exception e)
                 {
@@ -348,7 +348,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 try
                 {
                     // now that we have the collection Id, delete the key from app config
-                    await appConfigClient.DeleteAsync(collectionKey);
+                    await appConfigClient.DeleteConfigurationSettingAsync(collectionKey);
                 }
                 catch (Exception e)
                 {
