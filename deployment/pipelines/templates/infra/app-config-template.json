@@ -55,8 +55,6 @@
             "authtype": "JWT"
         },
         "CosmosDb": {
-            "documentDbConnectionString": "",
-            "documentdbconnectionstring": "",
             "rus": "400"
         },
         "KeyVault": {
