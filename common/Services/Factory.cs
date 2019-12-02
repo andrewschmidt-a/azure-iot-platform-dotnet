@@ -1,6 +1,6 @@
 ﻿using Autofac;
 
-namespace Mmm.Platform.IoT.Common.WebService
+namespace Mmm.Platform.IoT.Common.Services
 {
     public class Factory : IFactory
     {

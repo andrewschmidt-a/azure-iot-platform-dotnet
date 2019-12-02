@@ -3,16 +3,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.StorageAdapter.Services;
 using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Mmm.Platform.IoT.StorageAdapter.WebService.v1.Models;
 using Mmm.Platform.IoT.StorageAdapter.WebService.Wrappers;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.WebService.v1;
-using Mmm.Platform.IoT.Common.WebService.v1.Exceptions;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
 {

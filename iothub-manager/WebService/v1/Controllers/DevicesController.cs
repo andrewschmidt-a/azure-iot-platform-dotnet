@@ -3,9 +3,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.IoTHubManager.Services;
 using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers
 {

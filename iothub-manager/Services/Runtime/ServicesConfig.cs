@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
+using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.WebService.Auth;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Runtime
 {

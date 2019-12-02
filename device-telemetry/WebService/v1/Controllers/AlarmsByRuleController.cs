@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.DeviceTelemetry.Services;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
 using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers.Helpers;
 using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.WebService.v1.Exceptions;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
 {

@@ -1,4 +1,4 @@
-﻿namespace Mmm.Platform.IoT.Common.WebService
+﻿namespace Mmm.Platform.IoT.Common.Services
 {
     public interface IFactory
     {

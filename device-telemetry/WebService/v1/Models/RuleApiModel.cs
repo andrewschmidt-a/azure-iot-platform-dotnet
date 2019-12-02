@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.WebService.v1.Models;
 using Newtonsoft.Json;
 using Rule = Mmm.Platform.IoT.Common.Services.Models.Rule;
 

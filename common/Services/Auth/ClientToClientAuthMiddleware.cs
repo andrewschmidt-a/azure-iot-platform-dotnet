@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.Common.AuthUtils;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
-namespace Mmm.Platform.IoT.Common.WebService.Auth
+namespace Mmm.Platform.IoT.Common.Services.Auth
 {
     /// <summary>
     /// Insert into the HttpContext a tenant coming from the header. (assumes a client 2 client call

@@ -3,9 +3,6 @@ using System;
 using System.Collections.Generic;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using Mmm.Platform.IoT.IdentityGateway.Services;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -13,9 +10,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Mmm.Platform.IoT.Common.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
-using Mmm.Platform.IoT.Common.WebService.Auth;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {

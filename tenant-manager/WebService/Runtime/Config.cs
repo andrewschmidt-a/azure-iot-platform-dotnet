@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 

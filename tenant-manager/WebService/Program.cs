@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
 using Mmm.Platform.IoT.TenantManager.WebService.Runtime;
 
 namespace Mmm.Platform.IoT.TenantManager.WebService

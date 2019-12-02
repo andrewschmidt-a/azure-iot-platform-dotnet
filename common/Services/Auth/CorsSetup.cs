@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.WebService.Auth
+namespace Mmm.Platform.IoT.Common.Services.Auth
 {
     public class CorsSetup : ICorsSetup
     {

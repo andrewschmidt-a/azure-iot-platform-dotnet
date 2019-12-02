@@ -1,6 +1,6 @@
 // Copyright (c) Microsoft. All rights reserved.
 
-namespace Mmm.Platform.IoT.Common.WebService.Auth
+namespace Mmm.Platform.IoT.Common.Services.Auth
 {
     public class CorsWhitelistModel
     {

@@ -3,17 +3,17 @@
 using System.Reflection;
 using Autofac;
 using Microsoft.Azure.Documents;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.StorageAdapter.Services;
 using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
 using Mmm.Platform.IoT.StorageAdapter.Services.Wrappers;
 using Mmm.Platform.IoT.StorageAdapter.WebService.Runtime;
 using Mmm.Platform.IoT.StorageAdapter.WebService.Wrappers;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
-using Mmm.Platform.IoT.Common.WebService;
-using Mmm.Platform.IoT.Common.Services.Helpers;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService
 {

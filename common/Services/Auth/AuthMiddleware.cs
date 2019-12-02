@@ -15,7 +15,7 @@ using Mmm.Platform.IoT.Common.AuthUtils;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.External;
 
-namespace Mmm.Platform.IoT.Common.WebService.Auth
+namespace Mmm.Platform.IoT.Common.Services.Auth
 {
     /// <summary>
     /// Validate every incoming request checking for a valid authorization header.

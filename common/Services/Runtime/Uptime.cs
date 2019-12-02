@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.WebService.Runtime
+namespace Mmm.Platform.IoT.Common.Services.Runtime
 {
     /// <summary>Helper capturing runtime information.</summary>
     public static class Uptime

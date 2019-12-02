@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Mmm.Platform.IoT.Common.AuthUtils;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 
-namespace Mmm.Platform.IoT.Common.WebService.v1.Filters
+namespace Mmm.Platform.IoT.Common.Services.Filters
 {
     public class AuthorizeActionFilterAttribute : Attribute, IAsyncActionFilter
     {

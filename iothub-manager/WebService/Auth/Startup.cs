@@ -5,7 +5,7 @@ using Autofac;
 using Mmm.Platform.IoT.IoTHubManager.WebService.Runtime;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.Services.Auth;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.Auth
 {

@@ -8,10 +8,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.WebService.Auth;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Platform.IoT.Common.Services.Runtime;
 using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService

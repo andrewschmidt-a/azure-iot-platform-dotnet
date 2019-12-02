@@ -1,4 +1,4 @@
-﻿namespace Mmm.Platform.IoT.Common.WebService.Test.v1.Filters
+﻿namespace Mmm.Platform.IoT.Common.Services.Test.Filters
 {
     public class AuthorizeActionFilterAttributeTest
     {

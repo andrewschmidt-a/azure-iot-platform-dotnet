@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using Microsoft.AspNetCore.Hosting;
-using Mmm.Platform.IoT.DeviceTelemetry.WebService.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.Runtime;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 {

@@ -2,9 +2,9 @@
 
 using System;
 using System.IO;
+using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.Common.WebService.Auth;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Runtime
 {

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.Services.Auth;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService
 {

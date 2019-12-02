@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Mmm.Platform.IoT.IdentityGateway.WebService.Models;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers

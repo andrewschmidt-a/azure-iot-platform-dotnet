@@ -2,9 +2,8 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.Config.Services;
-using Mmm.Platform.IoT.Common.WebService.v1;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 
 namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
 {

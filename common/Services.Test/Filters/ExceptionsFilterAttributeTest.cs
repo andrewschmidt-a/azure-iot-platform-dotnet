@@ -10,12 +10,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.Common.WebService.Test.v1.Filters
+namespace Mmm.Platform.IoT.Common.Services.Test.Filters
 {
     public class ExceptionsFilterAttributeTest
     {

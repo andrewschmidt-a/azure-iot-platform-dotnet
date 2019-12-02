@@ -1,9 +1,8 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.WebService.v1.Models
+namespace Mmm.Platform.IoT.Common.Services.Models
 {
     public class StatusResultApiModel
     {

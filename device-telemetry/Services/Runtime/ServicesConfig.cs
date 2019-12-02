@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
@@ -10,7 +11,6 @@ using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.WebService.Auth;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime
 {

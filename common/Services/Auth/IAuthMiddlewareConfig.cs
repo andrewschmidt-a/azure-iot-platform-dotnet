@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Mmm.Platform.IoT.Common.WebService.Auth
+namespace Mmm.Platform.IoT.Common.Services.Auth
 {
     public interface IAuthMiddlewareConfig
     {

@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.WebService.v1.Exceptions
+namespace Mmm.Platform.IoT.Common.Services.Exceptions
 {
     public class BadRequestException : Exception
     {

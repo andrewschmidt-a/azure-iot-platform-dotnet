@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
-using Mmm.Platform.IoT.Common.WebService.v1;
 using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Models

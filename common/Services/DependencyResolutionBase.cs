@@ -8,9 +8,9 @@ using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Runtime;
 
-namespace Mmm.Platform.IoT.Common.WebService
+namespace Mmm.Platform.IoT.Common.Services
 {
     public abstract class DependencyResolutionBase
     {

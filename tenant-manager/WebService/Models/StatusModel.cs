@@ -3,8 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.TenantManager.Services.Runtime;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Runtime;
 using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.TenantManager.WebService.Models

@@ -1,19 +1,18 @@
 // Copyright (c) Microsoft. All rights reserved.
 
+using System.Reflection;
 using Autofac;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.Common.WebService;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
 using Mmm.Platform.IoT.Config.Services;
 using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Config.WebService.Runtime;
-using System.Reflection;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.WebService.Auth;
 
 namespace Mmm.Platform.IoT.Config.WebService
 {

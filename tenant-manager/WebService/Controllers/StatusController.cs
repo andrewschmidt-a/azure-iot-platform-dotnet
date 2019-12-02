@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.TenantManager.WebService.Models;
 using Mmm.Platform.IoT.TenantManager.WebService.Runtime;
 

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.TenantManager.Services;
 using Mmm.Platform.IoT.TenantManager.Services.Models;
 using Newtonsoft.Json;

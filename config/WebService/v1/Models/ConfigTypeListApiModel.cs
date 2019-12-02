@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Common.WebService.v1;
 using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.Config.WebService.v1.Models

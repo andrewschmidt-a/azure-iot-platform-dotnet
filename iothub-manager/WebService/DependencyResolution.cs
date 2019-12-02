@@ -2,18 +2,17 @@
 
 using System.Reflection;
 using Autofac;
-using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
-using Mmm.Platform.IoT.IoTHubManager.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.Common.WebService;
-using Mmm.Platform.IoT.Common.WebService.Auth;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
+using Mmm.Platform.IoT.IoTHubManager.Services;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
+using Mmm.Platform.IoT.IoTHubManager.WebService.Runtime;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService
 {
