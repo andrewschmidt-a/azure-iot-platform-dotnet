@@ -8,7 +8,6 @@ COPY Directory.Build.props .
 COPY common/AuthUtils/AuthUtils.csproj common/AuthUtils/
 COPY common/AppConfiguration/AppConfiguration.csproj common/AppConfiguration/
 COPY common/Services/Services.csproj common/Services/
-COPY common/WebService/WebService.csproj common/WebService/
 COPY config/Services/Services.csproj config/Services/
 COPY config/WebService/WebService.csproj config/WebService/
 RUN dotnet restore config/WebService/WebService.csproj

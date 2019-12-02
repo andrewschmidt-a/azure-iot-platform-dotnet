@@ -9,7 +9,6 @@ COPY Directory.Build.props .
 COPY common/AuthUtils/AuthUtils.csproj common/AuthUtils/
 COPY common/AppConfiguration/AppConfiguration.csproj common/AppConfiguration/
 COPY common/Services/Services.csproj common/Services/
-COPY common/WebService/WebService.csproj common/WebService/
 COPY storage-adapter/Services/Services.csproj storage-adapter/Services/
 COPY storage-adapter/WebService/WebService.csproj storage-adapter/WebService/
 RUN dotnet restore storage-adapter/WebService/WebService.csproj

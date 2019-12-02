@@ -8,7 +8,6 @@ COPY Directory.Build.props .
 COPY common/AuthUtils/AuthUtils.csproj common/AuthUtils/
 COPY common/AppConfiguration/AppConfiguration.csproj common/AppConfiguration/
 COPY common/Services/Services.csproj common/Services/
-COPY common/WebService/WebService.csproj common/WebService/
 COPY device-telemetry/Services/Services.csproj device-telemetry/Services/
 COPY device-telemetry/WebService/WebService.csproj device-telemetry/WebService/
 RUN dotnet restore device-telemetry/WebService/WebService.csproj

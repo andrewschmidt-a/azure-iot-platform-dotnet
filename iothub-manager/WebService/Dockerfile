@@ -8,7 +8,6 @@ COPY Directory.Build.props .
 COPY common/AuthUtils/AuthUtils.csproj common/AuthUtils/
 COPY common/AppConfiguration/AppConfiguration.csproj common/AppConfiguration/
 COPY common/Services/Services.csproj common/Services/
-COPY common/WebService/WebService.csproj common/WebService/
 COPY iothub-manager/Services/Services.csproj iothub-manager/Services/
 COPY iothub-manager/WebService/WebService.csproj iothub-manager/WebService/
 RUN dotnet restore iothub-manager/WebService/WebService.csproj

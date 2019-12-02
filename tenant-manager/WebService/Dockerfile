@@ -8,7 +8,6 @@ COPY Directory.Build.props .
 COPY common/AuthUtils/AuthUtils.csproj common/AuthUtils/
 COPY common/AppConfiguration/AppConfiguration.csproj common/AppConfiguration/
 COPY common/Services/Services.csproj common/Services/
-COPY common/WebService/WebService.csproj common/WebService/
 COPY tenant-manager/Services/Services.csproj tenant-manager/Services/
 COPY tenant-manager/WebService/WebService.csproj tenant-manager/WebService/
 RUN dotnet restore tenant-manager/WebService/WebService.csproj
