@@ -13,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\common\AppConfiguration\AppConfiguration.csproj" />
     <ProjectReference Include="..\..\common\Services\Services.csproj" />
     <ProjectReference Include="..\..\common\WebService\WebService.csproj" />
   </ItemGroup>
