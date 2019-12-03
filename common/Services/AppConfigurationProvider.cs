@@ -8,7 +8,7 @@ using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
-namespace Mmm.Platform.IoT.Common.AppConfiguration
+namespace Mmm.Platform.IoT.Common.Services
 {
     public class AppConfigurationProvider : ConfigurationProvider
     {

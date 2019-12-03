@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.Config.Services.Helpers;
 using Mmm.Platform.IoT.Config.Services.Runtime;
-using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services;
 
 namespace Mmm.Platform.IoT.Config.Services.External
 {

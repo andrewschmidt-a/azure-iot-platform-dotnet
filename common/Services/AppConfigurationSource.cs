@@ -6,7 +6,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 
-namespace Mmm.Platform.IoT.Common.AppConfiguration
+namespace Mmm.Platform.IoT.Common.Services
 {
     public class AppConfigurationSource : IConfigurationSource
     {

@@ -12,7 +12,7 @@ using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using SendGrid;

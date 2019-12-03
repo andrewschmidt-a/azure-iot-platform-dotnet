@@ -6,8 +6,6 @@ EXPOSE 80
 
 WORKDIR /src
 COPY Directory.Build.props .
-COPY common/AuthUtils/AuthUtils.csproj common/AuthUtils/
-COPY common/AppConfiguration/AppConfiguration.csproj common/AppConfiguration/
 COPY common/Services/Services.csproj common/Services/
 COPY storage-adapter/Services/Services.csproj storage-adapter/Services/
 COPY storage-adapter/WebService/WebService.csproj storage-adapter/WebService/

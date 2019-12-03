@@ -2,7 +2,7 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
 namespace Mmm.Platform.IoT.Common.Services.Auth

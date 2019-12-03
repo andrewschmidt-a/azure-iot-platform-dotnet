@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace Mmm.Platform.IoT.Common.AuthUtils
+namespace Mmm.Platform.IoT.Common.Services
 {
     public static class RequestExtension
     {

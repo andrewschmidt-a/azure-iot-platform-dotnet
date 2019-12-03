@@ -12,7 +12,7 @@ using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
 using Mmm.Platform.IoT.StorageAdapter.Services.Wrappers;
-using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Models;

@@ -11,7 +11,7 @@ using Microsoft.Azure.Documents.Client;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
-using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Diagnostics;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
