@@ -2,18 +2,22 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Azure.Data.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Common.Services.Helpers
 {
     public class AppConfigurationHelper : IAppConfigurationHelper
     {
         private ConfigurationClient client;
-        private Dictionary<string, AppConfigCacheValue> _cache = new Dictionary<string, AppConfigCacheValue>();
 
         public AppConfigurationHelper(IAppConfigClientConfig config)
         {
             this.client = new ConfigurationClient(config.ApplicationConfigurationConnectionString);
+        }
+
+        public AppConfigurationHelper(AppConfig config)
+        {
+            this.client = new ConfigurationClient(config.PCS_APPLICATION_CONFIGURATION);
         }
 
         public AppConfigurationHelper(string applicationConfigurationConnectionString)
@@ -59,23 +63,8 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             string value = "";
             try
             {
-                if (this._cache.ContainsKey(key) && this._cache[key].ExpirationTime > DateTime.UtcNow)
-                {
-                    value = this._cache[key].Value.Value; // get string from configuration setting
-                }
-                else
-                {
-                    ConfigurationSetting setting = this.client.GetConfigurationSetting(key);
-                    value = setting.Value;
-                    if (this._cache.ContainsKey(key))
-                    {
-                        this._cache[key] = new AppConfigCacheValue(setting);
-                    }
-                    else
-                    {
-                        this._cache.Add(key, new AppConfigCacheValue(setting));
-                    }
-                }
+                ConfigurationSetting setting = this.client.GetConfigurationSetting(key);
+                value = setting.Value;
             }
             catch (Exception e)
             {

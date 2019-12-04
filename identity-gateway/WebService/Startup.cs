@@ -74,7 +74,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
             services.AddTransient<ISendGridClientFactory, SendGridClientFactory>();
 
             // Prepare DI container
-            this.ApplicationContainer = new DependencyResolution().Setup(services);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);

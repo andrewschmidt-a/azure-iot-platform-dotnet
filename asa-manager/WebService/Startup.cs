@@ -42,7 +42,7 @@ namespace Mmm.Platform.IoT.AsaManager.WebService
 
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
-            this.ApplicationContainer = new DependencyResolution().Setup(services);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);

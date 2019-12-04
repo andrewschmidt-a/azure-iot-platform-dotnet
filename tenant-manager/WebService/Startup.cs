@@ -35,7 +35,7 @@ namespace Mmm.Platform.IoT.TenantManager.WebService
             });
 
             services.AddMvc().AddControllersAsServices();
-            this.ApplicationContainer = new DependencyResolution().Setup(services);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 

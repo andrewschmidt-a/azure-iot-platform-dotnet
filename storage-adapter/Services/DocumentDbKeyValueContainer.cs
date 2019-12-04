@@ -10,27 +10,25 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
-using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
     public class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
     {
         private const string COLLECTION_ID_KEY_FORMAT = "tenant:{0}:{1}-collection";
-
+        private readonly IAppConfigurationHelper _appConfigHelper;
+        private readonly AppConfig _appConfig;
         private readonly IFactory<IDocumentClient> _clientFactory;
         private readonly IExceptionChecker _exceptionChecker;
         private readonly ILogger _logger;
-        private readonly IServicesConfig _config;  // injected
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAppConfigurationHelper _appConfigHelper;
-
         private IDocumentClient client;
         private int docDbRUs;
         private RequestOptions docDbOptions;
@@ -42,18 +40,18 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         public DocumentDbKeyValueContainer(
             IFactory<IDocumentClient> clientFactory,
             IExceptionChecker exceptionChecker,
+            AppConfig appConfig,
             IAppConfigurationHelper appConfigHelper,
-            IServicesConfig config,
             ILogger<DocumentDbKeyValueContainer> logger,
             IHttpContextAccessor httpContextAcessor)
         {
-            this.disposedValue = false;
-            this._clientFactory = clientFactory;
-            this._config = config;
-            this._exceptionChecker = exceptionChecker;
+            disposedValue = false;
+            _clientFactory = clientFactory;
+            _exceptionChecker = exceptionChecker;
+            _appConfig = appConfig;
+            _appConfigHelper = appConfigHelper;
             _logger = logger;
-            this._httpContextAccessor = httpContextAcessor;
-            this._appConfigHelper = appConfigHelper;
+            _httpContextAccessor = httpContextAcessor;
         }
 
         private string CollectionLink
@@ -234,7 +232,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         private void SetClientOptions()
         {
             this.client = this._clientFactory.Create();
-            this.docDbRUs = this._config.DocumentDbRUs;
+            this.docDbRUs = _appConfig.StorageAdapter.DocumentDbRus;
             this.docDbOptions = this.GetDocDbOptions();
         }
 

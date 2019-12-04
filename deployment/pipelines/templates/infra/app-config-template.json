@@ -11,17 +11,17 @@
         "webserviceport": "80"
     },
     "ConfigService": {
-        "Actions": {
-            "armendpointurl": "https://management.azure.com/",
-            "managementapiversion": "\"2016-06-01\"",
-            "office365connectionurl": "https://portal.azure.com/#@facac3c4-e2a5-4257-af76-205c8a821ddb/resource/subscriptions/c36fb2f8-f98d-40d0-90a9-d65e93acb428/resourceGroups/remotemonitering3m/providers/Microsoft.Web/connections/office365-connector/edit",
-            "solutionname": "remotemonitering3m",
-            "subscriptionid": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
+        "ConfigServiceActions": {
+            "ArmEndpointUrl": "https://management.azure.com/",
+            "ManagementApiVersion": "2016-06-01",
+            "Office365ConnectionUrl": "https://portal.azure.com/#@facac3c4-e2a5-4257-af76-205c8a821ddb/resource/subscriptions/c36fb2f8-f98d-40d0-90a9-d65e93acb428/resourceGroups/remotemonitering3m/providers/Microsoft.Web/connections/office365-connector/edit",
+            "SolutionName": "remotemonitering3m",
+            "SubscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
         },
-        "azureMapsKey": "",
-        "seedtemplate": "default",
-        "solutiontype": "remotemonitoring",
-        "webserviceport": "80"
+        "AzureMapsKey": "",
+        "SeedTemplate": "default",
+        "SolutionType": "remotemonitoring",
+        "FirstName": "Kyle Estes"
     },
     "ExternalDependencies": {
         "asamanagerwebserviceurl": "http://asa-manager:80/v1",
@@ -37,24 +37,24 @@
         "telemetryWebServiceUrl": "http://device-telemetry:80/v1"
     },
     "Global": {
-        "AuthRequired": "false",
+        "AuthRequired": false,
         "AzureActiveDirectory": {
-            "aadappid": "",
-            "aadappsecret": "",
-            "aadtenantid": "facac3c4-e2a5-4257-af76-205c8a821ddb"
+            "AadAppId": "",
+            "AadAppSecret": "",
+            "TenantId": "facac3c4-e2a5-4257-af76-205c8a821ddb"
         },
-        "AzureB2CBaseUri": "https://login.microsoftonline.com/crsltestab2c.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_testpolicy&client_id=6e2a6569-f0b9-4a2b-a75c-5ec6c80869eb&nonce=defaultNonce&redirect_uri=https%3A%2F%2Flocalhost%3A44367%2Fconnect%2Fcallback&scope=openid&response_type=id_token&prompt=login&response_mode=form_post",
+        "AzureB2cBaseUri": "https://login.microsoftonline.com/crsltestab2c.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_testpolicy&client_id=6e2a6569-f0b9-4a2b-a75c-5ec6c80869eb&nonce=defaultNonce&redirect_uri=https%3A%2F%2Flocalhost%3A44367%2Fconnect%2Fcallback&scope=openid&response_type=id_token&prompt=login&response_mode=form_post",
         "ClientAuth": {
-            "CORSWhiteList": "*",
-            "JWT": {
-                "aadappid": "",
-                "allowedalgorithms": "RS256",
-                "audience": "IoTPlatform",
-                "authissuer": "https://crsliotkubedev.centralus.cloudapp.azure.com/auth",
-                "clockskewseconds": "300"
-            },
-            "authrequired": "true",
-            "authtype": "JWT"
+            "AuthRequired": true,
+            "AuthType": "JWT",
+            "CorsWhitelist": "*",
+            "Jwt": {
+                "AadAppId": "",
+                "AllowedAlgorithms": "RS256",
+                "Audience": "IoTPlatform",
+                "AuthIssuer": "https://crsliotkubedev.centralus.cloudapp.azure.com/auth",
+                "ClockSkewSeconds": 300
+            }
         },
         "CosmosDb": {
             "accountName": "",
@@ -64,7 +64,7 @@
             "name": "OVERWRITTEN_IN_DEPLOYMENT"
         },
         "Permissions": {
-            "admin": {
+            "Admin": {
                 "AcquireToken": "",
                 "CreateDeployments": "",
                 "CreateDeviceGroups": "",
@@ -89,7 +89,7 @@
                 "UpdateSIMManagement": "",
                 "UserManage": ""
             },
-            "readOnly": {
+            "ReadOnly": {
                 "ReadAll": ""
             }
         },
@@ -97,50 +97,54 @@
             "name": ""
         },
         "StorageAccountConnectionStringKeyVaultSecret": "storageAccountConnectionString",
-        "developmentMode": "true",
-        "location": "centralus",
-        "resourceGroup": "rg-crslbbiot-odin-dev",
-        "subscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
+        "DevelopmentMode": true,
+        "Location": "centralus",
+        "ResourceGroup": "rg-crslbbiot-odin-dev",
+        "SubscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
     },
     "IdentityGatewayService": {
         "webserviceport": "80"
     },
     "IothubManagerService": {
         "DevicePropertiesCache": {
-            "rebuildtimeout": "20",
-            "ttl": "3600",
-            "whitelist": "tags.*,reported.Protocol,reported.SupportedMethods,reported.FirmwareUpdateStatus"
-        },
-        "webserviceport": "80"
+            "RebuildTimeout": 20,
+            "Ttl": 3600,
+            "Whitelist": "tags.*,reported.Protocol,reported.SupportedMethods,reported.FirmwareUpdateStatus"
+        }
+    },
+    "Logging": {
+        "LogLevel": {
+            "Default": "Debug",
+            "System": "Information",
+            "Microsoft": "Information"
+        }
     },
     "StorageAdapter": {
-        "documentdbrus": "400",
-        "messages": "iot",
-        "storagetype": "documentDb",
-        "webserviceport": "80"
+        "DocumentDbRus": 400,
+        "Messages": "iot",
+        "StorageType": "documentDb"
     },
     "TelemetryService": {
         "Alarms": {
-            "collection": "\"alarms\"",
-            "database": "iot",
-            "maxdeleteretries": "3",
-            "storage_type": "\"cosmosdb\""
+            "Collection": "alarms",
+            "Database": "iot",
+            "MaxDeleteRetries": 3,
+            "StorageType": "cosmosdb"
         },
         "Messages": {
-            "collection": "\"messages\"",
-            "database": "iot",
-            "telemetrystoragetype": "cosmosdb"
+            "Collection": "messages",
+            "Database": "iot",
+            "TelemetryStorageType": "cosmosdb"
         },
         "TimeSeries": {
-            "apiversion": "\"2016-12-12\"",
-            "audience": "\"https://api.timeseries.azure.com/\"",
-            "authority": "\"https://login.windows.net/\"",
-            "explorerurl": "\"https://insights.timeseries.azure.com/\"",
-            "timeout": "\"PT20S\"",
-            "tsidataaccessfqdn": "Undefined"
+            "ApiVersion": "2016-12-12",
+            "Audience": "https://api.timeseries.azure.com/",
+            "Authority": "https://login.windows.net/",
+            "ExplorerUrl": "https://insights.timeseries.azure.com/",
+            "Timeout": "PT20S",
+            "TsiDataAccessFqdn": "Undefined"
         },
-        "rulestemplatesfolder": "./data/Rules/",
-        "webserviceport": "80"
+        "RulesTemplatesFolder": "./data/Rules/"
     },
     "TenantManagerService": {
         "EventHubNamespaceName": "",

@@ -1,19 +1,19 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services;
-using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
-    class StatusService : IStatusService
+    public class StatusService : IStatusService
     {
         private const bool ALLOW_INSECURE_SSL_SERVER = true;
         private const string AUTH_NAME = "Auth";
@@ -22,19 +22,19 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         private readonly ILogger _logger;
         private readonly IHttpClient _httpClient;
         private readonly IKeyValueContainer _keyValueContainer;
-        private readonly IServicesConfig _servicesConfig;
+        private readonly AppConfig _appConfig;
 
         public StatusService(
             ILogger<StatusService> logger,
             IHttpClient httpClient,
             IKeyValueContainer keyValueContainer,
-            IServicesConfig servicesConfig
+            AppConfig appConfig
             )
         {
             _logger = logger;
-            this._keyValueContainer = keyValueContainer;
-            this._servicesConfig = servicesConfig;
-            this._httpClient = httpClient;
+            _appConfig = appConfig;
+            _keyValueContainer = keyValueContainer;
+            _httpClient = httpClient;
         }
 
         public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
@@ -46,17 +46,17 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             var storageResult = await this._keyValueContainer.StatusAsync();
             SetServiceStatus("Storage", storageResult, result, errors);
 
-            if (this._servicesConfig.AuthRequired)
+            if (this._appConfig.Global.AuthRequired)
             {
                 // Check access to Auth
                 var authResult = await this.PingServiceAsync(
                     AUTH_NAME,
-                    this._servicesConfig.UserManagementApiUrl);
+                    _appConfig.ExternalDependencies.AuthWebServiceUrl);
                 SetServiceStatus(AUTH_NAME, authResult, result, errors);
-                result.Properties.Add("UserManagementApiUrl", this._servicesConfig?.UserManagementApiUrl);
+                result.Properties.Add("UserManagementApiUrl", _appConfig.ExternalDependencies.AuthWebServiceUrl);
             }
 
-            result.Properties.Add("StorageType", this._servicesConfig.StorageType);
+            result.Properties.Add("StorageType", _appConfig.StorageAdapter.StorageType);
             _logger.LogInformation("Service status request {result}", result);
 
             if (errors.Count > 0)

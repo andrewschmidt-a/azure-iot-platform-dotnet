@@ -1,5 +1,6 @@
 ### Custom
 
+common/Services/Config/*.Generated.cs
 *.bak
 _dev/
 *.crt

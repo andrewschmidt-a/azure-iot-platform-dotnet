@@ -46,7 +46,7 @@ namespace Mmm.Platform.IoT.Config.WebService
             services.AddMvc().AddControllersAsServices();
 
             // Prepare DI container
-            this.ApplicationContainer = new DependencyResolution().Setup(services);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
