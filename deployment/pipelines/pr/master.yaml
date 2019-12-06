@@ -30,14 +30,7 @@ stages:
       inputs:
         azureSubscription: $(azureSubscription)
         scriptLocation: 'inlineScript'
-        inlineScript: |
-          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
-          az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
-
-    - task: KubectlInstaller@0
-      displayName: Install kubectl
-      inputs:
-        kubectlVersion: 'latest'
+        inlineScript: az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
 
     - task: AzureCLI@1
       displayName: Load app config connection string and add it as a Kubernetes secret
