@@ -25,6 +25,5 @@ jobs:
       scriptLocation: 'inlineScript'
       inlineScript: |
         az aks use-dev-spaces -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}} -s default/${{parameters.devSpace}} -y
-        az aks get-credentials -g ${{parameters.resourceGroup}} -n ${{parameters.aksCluster}}
         cd $(System.DefaultWorkingDirectory)/${{parameters.service}}/WebService
         azds up -d
