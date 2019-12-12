@@ -6,6 +6,8 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.TenantManager.Services.Helpers;
@@ -25,21 +27,21 @@ namespace Mmm.Platform.IoT.TenantManager.WebService
             builder.Register(context => new Config(context.Resolve<ConfigData>())).As<IConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IConfig>().ClientAuthConfig).As<IClientAuthConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IConfig>().ServicesConfig).As<IServicesConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<IStorageClientConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IServicesConfig>()).As<IAppConfigClientConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IServicesConfig>()).As<IUserManagementClientConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IServicesConfig>()).As<IAuthMiddlewareConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<ITableStorageClientConfig>().SingleInstance();
             builder.Register(context => GetOpenIdConnectManager(context.Resolve<IConfig>())).As<IConfigurationManager<OpenIdConnectConfiguration>>().SingleInstance();
             builder.RegisterType<CorsSetup>().As<ICorsSetup>().SingleInstance();
+            // Add helper dependency types first
+            builder.RegisterType<TokenHelper>().As<ITokenHelper>().SingleInstance();
 
-            builder.Register(context => new CosmosHelper(context.Resolve<IServicesConfig>())).As<CosmosHelper>().SingleInstance();
-            builder.Register(context =>
-            {
-                var servicesConfig = context.Resolve<IServicesConfig>();
-                return new TenantRunbookHelper(servicesConfig, new TokenHelper(servicesConfig));
-            }).As<TenantRunbookHelper>().SingleInstance();
-
-            builder.Register(context => new TableStorageHelper(context.Resolve<IServicesConfig>())).As<TableStorageHelper>().SingleInstance();
-            builder.RegisterType<ExternalRequestHelper>().As<IExternalRequestHelper>().SingleInstance();
+            builder.RegisterType<StorageClient>().As<IStorageClient>().SingleInstance();
+            builder.RegisterType<AppConfigurationHelper>().As<IAppConfigurationHelper>().SingleInstance();
+            builder.RegisterType<RunbookHelper>().As<IRunbookHelper>().SingleInstance();
+            builder.RegisterType<StreamAnalyticsHelper>().As<IStreamAnalyticsHelper>().SingleInstance();
+            builder.RegisterType<TableStorageClient>().As<ITableStorageClient>().SingleInstance();
         }
 
         // Prepare the OpenId Connect configuration manager, responsibile

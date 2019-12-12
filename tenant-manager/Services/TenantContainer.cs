@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Azure.Data.AppConfiguration;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.TenantManager.Services.External;
 using Mmm.Platform.IoT.TenantManager.Services.Helpers;
 using Mmm.Platform.IoT.TenantManager.Services.Models;
@@ -24,37 +25,44 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
         // collection and iothub naming 
         private string iotHubNameFormat = "iothub-{0}";  // format with a guid
-        private string dpsNameFormat = "dps-{0}"; // format with a guid
+        private string dpsNameFormat = "dps-{0}";  // format with a guid
+        private string streamAnalyticsNameFormat = "sa-{0}";  // format with a guide
         private string appConfigCollectionKeyFormat = "tenant:{0}:{1}-collection";  // format with a guid and collection name
         private List<string> tenantCollections = new List<string> { "telemetry", "twin-change", "lifecycle", "pcs" };
 
         public readonly IServicesConfig _config;
-        public readonly IHttpContextAccessor _httpContextAccessor;
         public readonly ILogger _logger;
         public readonly IIdentityGatewayClient _identityClient;
         public readonly IDeviceGroupsConfigClient _deviceGroupClient;
-        public readonly TenantRunbookHelper _tenantRunbookHelper;
-        public readonly CosmosHelper _cosmosHelper;
-        public readonly TableStorageHelper _tableStorageHelper;
+        public readonly IRunbookHelper _runbookHelper;
+        public readonly IStorageClient _cosmosClient;
+        public readonly ITableStorageClient _tableStorageClient;
+        public readonly IAppConfigurationHelper _appConfigHelper;
 
         public TenantContainer(
             IServicesConfig config,
             IHttpContextAccessor httpContextAccessor,
             ILogger<TenantContainer> log,
-            TenantRunbookHelper tenantRunbookHelper,
-            CosmosHelper cosmosHelper,
-            TableStorageHelper tableStorageHelper,
+            IRunbookHelper RunbookHelper,
+            IStorageClient cosmosClient,
+            ITableStorageClient tableStorageClient,
             IIdentityGatewayClient identityGatewayClient,
-            IDeviceGroupsConfigClient deviceGroupConfigClient)
+            IDeviceGroupsConfigClient deviceGroupConfigClient,
+            IAppConfigurationHelper appConfigHelper)
         {
             this._config = config;
-            this._httpContextAccessor = httpContextAccessor;
             _logger = log;
-            this._tenantRunbookHelper = tenantRunbookHelper;
-            this._cosmosHelper = cosmosHelper;
-            this._tableStorageHelper = tableStorageHelper;
+            this._runbookHelper = RunbookHelper;
+            this._cosmosClient = cosmosClient;
+            this._tableStorageClient = tableStorageClient;
             this._identityClient = identityGatewayClient;
             this._deviceGroupClient = deviceGroupConfigClient;
+            this._appConfigHelper = appConfigHelper;
+        }
+
+        private string FormatResourceName(string format, string tenantId)
+        {
+            return String.Format(format, tenantId.Substring(0, 8));
         }
 
         /// <summary>
@@ -66,7 +74,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         {
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
-            TenantModel tenant = await this._tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
+            TenantModel tenant = await this._tableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
             return (tenant != null && tenant.IsIotHubDeployed);  // True if the tenant's IoTHub is fully deployed, false otherwise
         }
 
@@ -77,32 +85,18 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         /// </summary>
         /// <param name="tenantId"></param>
         /// <returns>CreateTenantModel</returns>
-        public async Task<CreateTenantModel> CreateTenantAsync(string tenantId)
+        public async Task<CreateTenantModel> CreateTenantAsync(string tenantId, string userId)
         {
             /* Creates a new tenant */
-            string iotHubName = String.Format(this.iotHubNameFormat, tenantId.Substring(0, 8));
-            string dpsName = String.Format(this.dpsNameFormat, tenantId.Substring(0, 8));
+            string iotHubName = this.FormatResourceName(this.iotHubNameFormat, tenantId);
+            string dpsName = this.FormatResourceName(this.dpsNameFormat, tenantId);
 
             // Create a new tenant and save it to table storage
-            var tenant = new TenantModel(tenantId, iotHubName);
-            await this._tableStorageHelper.WriteToTableAsync<TenantModel>(TENANT_TABLE_ID, tenant);
+            var tenant = new TenantModel(tenantId);
+            await this._tableStorageClient.InsertAsync<TenantModel>(TENANT_TABLE_ID, tenant);
 
-            // Trigger run book to create a new IoT Hub
-            await this._tenantRunbookHelper.CreateIotHub(tenantId, iotHubName, dpsName);
-
-            var userId = "";
-            try
-            {
-                userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
-                if (String.IsNullOrEmpty(userId))
-                {
-                    throw new NullReferenceException("The UserId retrieved from Http Context was null or empty.");
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Unable to retrieve the userId from the httpContextAccessor.", e);
-            }
+            // kick off provisioning runbooks
+            await this._runbookHelper.CreateIotHub(tenantId, iotHubName, dpsName);
 
             // Give the requesting user an admin role to the new tenant        
 
@@ -142,21 +136,11 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // Write tenant info cosmos db collection name to app config
             try
             {
-                var appConfigClient = new ConfigurationClient(this._config.ApplicationConfigurationConnectionString);
                 foreach (string collection in this.tenantCollections)
                 {
                     string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
                     string collectionId = $"{collection}-{tenantId}";
-                    var collectionSetting = new ConfigurationSetting(collectionKey, collectionId);
-                    try
-                    {
-                        await appConfigClient.SetConfigurationSettingAsync(collectionSetting);
-                    }
-                    catch (Exception e)
-                    {
-                        // log which key could not be created
-                        throw new Exception($"Unable to create App Config key {collectionId}", e);
-                    }
+                    await this._appConfigHelper.SetValueAsync(collectionKey, collectionId);
                 }
             }
             catch (Exception e)
@@ -187,7 +171,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             try
             {
                 // Load the tenant from table storage
-                var tenant = await this._tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, tenantId.Substring(0, 1), tenantId);
+                var tenant = await this._tableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, tenantId.Substring(0, 1), tenantId);
                 return tenant;
             }
             catch (Exception e)
@@ -203,28 +187,13 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         /// <param name="tenantId"></param>
         /// <param name="ensureFullyDeployed">Optional parameter that will run a check for of whether or not the tenant is fully deployed before attempting to delete</param>
         /// <returns></returns>
-        public async Task<DeleteTenantModel> DeleteTenantAsync(string tenantId, bool ensureFullyDeployed = true)
+        public async Task<DeleteTenantModel> DeleteTenantAsync(string tenantId, string userId, bool ensureFullyDeployed = true)
         {
-
-            var userId = "";
-            try
-            {
-                userId = this._httpContextAccessor.HttpContext.Request.GetCurrentUserObjectId();
-                if (String.IsNullOrEmpty(userId))
-                {
-                    throw new NullReferenceException("The UserId retrieved from Http Context was null or empty.");
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Unable to retrieve the userId from the httpContextAccessor", e);
-            }
-
             Dictionary<string, bool> deletionRecord = new Dictionary<string, bool> { };
 
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
-            TenantModel tenant = await this._tableStorageHelper.ReadFromTableAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
+            TenantModel tenant = await this._tableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
             if (tenant != null && !tenant.IsIotHubDeployed && ensureFullyDeployed)
             {
                 // If the tenant iothub is not deployed, we should not be able to start the delete process
@@ -241,7 +210,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 try
                 {
-                    await this._tableStorageHelper.DeleteEntityAsync<TenantModel>(TENANT_TABLE_ID, tenant);
+                    await this._tableStorageClient.DeleteAsync<TenantModel>(TENANT_TABLE_ID, tenant);
                     deletionRecord["tenantTableStorage"] = true;
                 }
                 catch (Exception e)
@@ -279,12 +248,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
 
             // Gather tenant information
+            string iotHubName = this.FormatResourceName(this.iotHubNameFormat, tenantId);
+            string dpsName = this.FormatResourceName(this.dpsNameFormat, tenantId);
+            //trigger delete iothub runbook
             try
             {
-                string iotHubName = String.Format(this.iotHubNameFormat, tenantId.Substring(0, 8));
-                string dpsName = String.Format(this.dpsNameFormat, tenantId.Substring(0, 8));
-                //trigger delete iothub runbook
-                await this._tenantRunbookHelper.DeleteIotHub(tenantId, iotHubName, dpsName);
+                await this._runbookHelper.DeleteIotHub(tenantId, iotHubName, dpsName);
                 deletionRecord["iotHub"] = true;
             }
             catch (Exception e)
@@ -293,10 +262,22 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 deletionRecord["iotHub"] = false;
             }
 
+            string saJobName = this.FormatResourceName(this.streamAnalyticsNameFormat, tenantId);
+            // trigger delete SA runbook
+            try
+            {
+                await this._runbookHelper.DeleteAlerting(tenantId, saJobName);
+                deletionRecord["alerting"] = true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation(e, "Unable to successfully trigger Delete Alerting runbook for tenant {tenantId}", tenantId);
+                deletionRecord["alerting"] = false;
+            }
+
             // Delete collections
             string dbIdTms = this._config.TenantManagerDatabaseId;
             string dbIdStorage = this._config.StorageAdapterDatabseId;
-            var appConfigClient = new ConfigurationClient(this._config.ApplicationConfigurationConnectionString);
             foreach (string collection in this.tenantCollections)
             {
                 // pcs colleciton uses a different database than the other collections
@@ -305,7 +286,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 string collectionId = "";
                 try
                 {
-                    collectionId = (await appConfigClient.GetConfigurationSettingAsync(collectionKey)).Value.Value;
+                    collectionId = this._appConfigHelper.GetValue(collectionKey);
                 }
                 catch (Exception e)
                 {
@@ -325,7 +306,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
                 try
                 {
-                    await this._cosmosHelper.DeleteCosmosDbCollection(databaseId, collectionId);
+                    await this._cosmosClient.DeleteCollectionAsync(databaseId, collectionId);
                     deletionRecord[$"{collection}Collection"] = true;
                 }
                 catch (ResourceNotFoundException e)
@@ -342,7 +323,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 try
                 {
                     // now that we have the collection Id, delete the key from app config
-                    await appConfigClient.DeleteConfigurationSettingAsync(collectionKey);
+                    await this._appConfigHelper.DeleteKeyAsync(collectionKey);
                 }
                 catch (Exception e)
                 {

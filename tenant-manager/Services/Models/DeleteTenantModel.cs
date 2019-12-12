@@ -9,14 +9,14 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
         public bool EnsuredDeployment;
         public Dictionary<string, bool> DeletionRecord;
 
-        public DeleteTenantModel (string tenantGuid, Dictionary<string, bool> deletionRecord, bool ensuredDeployment)
+        public DeleteTenantModel() { }
+
+        public DeleteTenantModel(string tenantGuid, Dictionary<string, bool> deletionRecord, bool ensuredDeployment)
         {
             this.TenantId = tenantGuid;
             this.EnsuredDeployment = ensuredDeployment;
             this.DeletionRecord = deletionRecord;
         }
-
-        public DeleteTenantModel () { }
 
         public bool fullyDeleted
         {

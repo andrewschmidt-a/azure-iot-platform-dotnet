@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Azure.Cosmos.Table;
 using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services.Models

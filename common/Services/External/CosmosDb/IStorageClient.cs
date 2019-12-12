@@ -2,13 +2,19 @@
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 {
-    public interface IStorageClient
+    public interface IStorageClient : IStatusOperation
     {
         DocumentClient GetDocumentClient();
+
+        Task DeleteCollectionAsync(
+            string databaseName,
+            string id
+        );
 
         Task<ResourceResponse<DocumentCollection>> CreateCollectionIfNotExistsAsync(
             string databaseName,
@@ -37,7 +43,5 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             string colId,
             FeedOptions queryOptions,
             SqlQuerySpec querySpec);
-
-        Task<StatusResultServiceModel> PingAsync();
     }
 }

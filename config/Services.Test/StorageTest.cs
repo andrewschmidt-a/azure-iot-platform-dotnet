@@ -9,7 +9,7 @@ using Mmm.Platform.IoT.Config.Services.Models;
 using Mmm.Platform.IoT.Config.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
@@ -23,6 +23,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
     {
         private readonly string azureMapsKey;
         private readonly Mock<IStorageAdapterClient> mockClient;
+        private readonly Mock<IAsaManagerClient> mockAsaManager;
         private readonly Storage storage;
         private readonly Random rand;
         private const string PACKAGES_COLLECTION_ID = "packages";
@@ -137,8 +138,13 @@ namespace Mmm.Platform.IoT.Config.Services.Test
 
             this.azureMapsKey = this.rand.NextString();
             this.mockClient = new Mock<IStorageAdapterClient>();
+            this.mockAsaManager = new Mock<IAsaManagerClient>();
+
+            this.mockAsaManager.Setup(x => x.BeginConversionAsync(It.IsAny<string>())).ReturnsAsync(new BeginConversionApiModel());
+
             this.storage = new Storage(
                 this.mockClient.Object,
+                this.mockAsaManager.Object,
                 new ServicesConfig
                 {
                     AzureMapsKey = this.azureMapsKey
@@ -598,6 +604,11 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         It.Is<string>(s => s == JsonConvert.SerializeObject(group, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }))),
                     Times.Once);
 
+            this.mockAsaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID)),
+                    Times.Once);
+
             Assert.Equal(result.Id, groupId);
             Assert.Equal(result.DisplayName, displayName);
             Assert.Equal(result.Conditions.First().Key, conditions.First().Key);
@@ -646,6 +657,11 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         It.Is<string>(s => s == groupId),
                         It.Is<string>(s => s == JsonConvert.SerializeObject(group, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore })),
                         It.Is<string>(s => s == etagOld)),
+                    Times.Once);
+
+            this.mockAsaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID)),
                     Times.Once);
 
             Assert.Equal(result.Id, groupId);
@@ -703,6 +719,11 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         It.Is<string>(s => s == Storage.LOGO_KEY),
                         It.Is<string>(s => s == JsonConvert.SerializeObject(logo)),
                         It.Is<string>(s => s == "*")),
+                    Times.Once);
+
+            this.mockAsaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID)),
                     Times.Once);
 
             return result;

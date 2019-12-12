@@ -57,7 +57,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Runtime
 
             this.ServicesConfig = new ServicesConfig
             {
-                UserPermissions = configData.GetUserPermissions(),
+                UserPermissions = configData.UserPermissions,
                 PublicKey = configData.GetString(PUBLIC_KEY_KEY),
                 PrivateKey = configData.GetString(PRIVATE_KEY_KEY),
                 StorageAccountConnectionString = configData.GetString(STORAGE_CONNECTION_STRING_KEY),

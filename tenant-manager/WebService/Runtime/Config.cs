@@ -29,13 +29,6 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Runtime
         private const string LOCATION_KEY = GLOBAL_KEY + "location";
         private const string RESOURCE_GROUP_KEY = GLOBAL_KEY + "resourceGroup";
 
-        private const string KEYVAULT_NAME_KEY = GLOBAL_KEY + "KeyVault:name";
-
-        private const string GLOBAL_AAD_KEY = GLOBAL_KEY + "AzureActiveDirectory:";
-        private const string AAD_APP_ID_KEY = GLOBAL_AAD_KEY + "aadappid";
-        private const string AAD_APP_SECRET_KEY = GLOBAL_AAD_KEY + "aadappsecret";
-        private const string AAD_TENANT_KEY = GLOBAL_AAD_KEY + "aadtenantid";
-
         private const string CLIENT_AUTH_KEY = GLOBAL_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";
         private const string AUTH_TYPE_KEY = CLIENT_AUTH_KEY + "authType";
@@ -47,18 +40,21 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Runtime
         private const string JWT_AUDIENCE_KEY = JWT_KEY + "audience";
         private const string JWT_CLOCK_SKEW_KEY = JWT_KEY + "clockSkewSeconds";
 
+        private const string GLOBAL_STORAGE_KEY = GLOBAL_KEY + "StorageAccount:";
+        private const string STORAGE_ACCOUNT_NAME = GLOBAL_STORAGE_KEY + "name";
+        private const string STORAGE_ACCOUNT_KEY = GLOBAL_STORAGE_KEY + "key";
+
         private const string APPLICATION_KEY = "TenantManagerService:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string AUTOMATION_ACCOUNT_KEY = APPLICATION_KEY + "automationAccountName";
         private const string TELEMETRY_CONNECTION_STRING_KEY = APPLICATION_KEY + "telemetryEventHubConnString";
         private const string LIFECYCLE_CONNECTION_STRING_KEY = APPLICATION_KEY + "lifecycleEventHubConnString";
         private const string TWIN_CHANGE_CONNECTION_STRING_KEY = APPLICATION_KEY + "twinChangeEventHubConnString";
-        private const string COSMOS_DB_ENDPOINT_KEY = APPLICATION_KEY + "cosmosDbEndpoint";
-        private const string COSMOS_DB_TOKEN_KEY = APPLICATION_KEY + "cosmosDbToken";
+        private const string EVENTHUB_NAMESPACE_NAME_KEY = APPLICATION_KEY + "eventHubNamespaceName";
+        private const string COSMOS_DB_ACCOUNT_KEY = APPLICATION_KEY + "cosmosAccount";
         private const string APP_CONFIG_ENDPOINT_KEY = APPLICATION_KEY + "setAppConfigEndpoint";
         private const string TENANT_MANAGER_DB_ID_KEY = APPLICATION_KEY + "databaseName";
-        private const string CREATE_IOT_HUB_WEBHOOK_NAME = APPLICATION_KEY + "createIotHubWebHookName";
-        private const string DELETE_IOT_HUB_WEBHOOK_NAME = APPLICATION_KEY + "deleteIotHubWebHookName";
+        private const string STREAM_ANALYTICS_DB_ID_KEY = APPLICATION_KEY + "streamAnalyticsCosmosDbDatabseId";
 
         private const string EXTERNAL_DEPENDENCIES_KEY = "ExternalDependencies:";
         private const string IDENTITY_GATEWAY_WEBSERVICE_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "identitygatewaywebserviceurl";
@@ -70,10 +66,14 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Runtime
         private const string APPCONFIG_CONNSTRING_KEY = "PCS_APPLICATION_CONFIGURATION";
 
         // KeyVault
+        private const string COSMOS_DB_CONNECTION_STRING = "documentDbConnectionString";
+        private const string COSMOS_DB_KEY = "documentDbAuthKey";
+        private const string EVENTHUB_ACCESS_POLICY_KEY = "eventHubAccessPolicyKey";
         private const string STORAGE_ACCOUNT_CONNECTIN_STRING_KEY = "storageAccountConnectionString";
-        private const string STORAGE_ACCOUNT_NAME = "Global:StorageAccount:name";
         private const string CREATE_IOT_HUB_WEBHOOK_KEY = "CreateIotHubWebHookUrl";
         private const string DELETE_IOT_HUB_WEBHOOK_KEY = "DeleteIotHubWebHookUrl";
+        private const string CREATE_STREAM_ANALYTICS_WEBHOOK_KEY = "CreateSAJobWebHookUrl";
+        private const string DELETE_STREAM_ANALYTICS_WEBHOOK_KEY = "DeleteSAJobWebHookUrl";
 
         public int Port { get; }
         public IServicesConfig ServicesConfig { get; }
@@ -86,10 +86,6 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Runtime
             this.ServicesConfig = new ServicesConfig
             {
                 AuthRequired = configData.GetBool(AUTH_REQUIRED_KEY),
-                KeyvaultName = configData.GetString(KEYVAULT_NAME_KEY),
-                AzureActiveDirectoryAppId = configData.GetString(AAD_APP_ID_KEY),
-                AzureActiveDirectoryAppKey = configData.GetString(AAD_APP_SECRET_KEY),
-                AzureActiveDirectoryTenant = configData.GetString(AAD_TENANT_KEY),
                 SubscriptionId = configData.GetString(SUBSCRIPTION_ID_KEY),
                 Location = configData.GetString(LOCATION_KEY),
                 ResourceGroup = configData.GetString(RESOURCE_GROUP_KEY),
@@ -97,21 +93,30 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Runtime
                 TelemetryEventHubConnectionString = configData.GetString(TELEMETRY_CONNECTION_STRING_KEY),
                 TwinChangeEventHubConnectionString = configData.GetString(TWIN_CHANGE_CONNECTION_STRING_KEY),
                 LifecycleEventHubConnectionString = configData.GetString(LIFECYCLE_CONNECTION_STRING_KEY),
+                EventHubNamespaceName = configData.GetString(EVENTHUB_NAMESPACE_NAME_KEY),
+                EventHubAccessPolicyKey = configData.GetString(EVENTHUB_ACCESS_POLICY_KEY),
                 CreateIotHubRunbookUrl = configData.GetString(CREATE_IOT_HUB_WEBHOOK_KEY),
-                CreateIotHubRunbookName = configData.GetString(CREATE_IOT_HUB_WEBHOOK_NAME),
                 DeleteIotHubRunbookUrl = configData.GetString(DELETE_IOT_HUB_WEBHOOK_KEY),
-                DeleteIotHubRunbookName = configData.GetString(DELETE_IOT_HUB_WEBHOOK_NAME),
-                ApplicationConfigurationConnectionString = configData.GetString(APPCONFIG_CONNSTRING_KEY),
+                CreateStreamAnalyticsRunbookUrl = configData.GetString(CREATE_STREAM_ANALYTICS_WEBHOOK_KEY),
+                DeleteStreamAnalyticsRunbookUrl = configData.GetString(DELETE_STREAM_ANALYTICS_WEBHOOK_KEY),
                 AppConfigEndpoint = configData.GetString(APP_CONFIG_ENDPOINT_KEY),
-                CosmosDbEndpoint = configData.GetString(COSMOS_DB_ENDPOINT_KEY),
-                CosmosDbToken = configData.GetString(COSMOS_DB_TOKEN_KEY),
+                CosmosDbConnectionString = configData.GetString(COSMOS_DB_CONNECTION_STRING),
+                CosmosDbAccount = configData.GetString(COSMOS_DB_ACCOUNT_KEY),
+                CosmosDbKey = configData.GetString(COSMOS_DB_KEY),
                 TenantManagerDatabaseId = configData.GetString(TENANT_MANAGER_DB_ID_KEY),
                 StorageAdapterDatabseId = configData.GetString(STORAGE_ADAPTER_DB_ID_KEY),
-                UserPermissions = configData.GetUserPermissions(),
+                StreamAnalyticsDatabaseId = configData.GetString(STREAM_ANALYTICS_DB_ID_KEY),
                 StorageAccountConnectionString = configData.GetString(STORAGE_ACCOUNT_CONNECTIN_STRING_KEY),
                 StorageAccountName = configData.GetString(STORAGE_ACCOUNT_NAME),
+                StorageAccountKey = configData.GetString(STORAGE_ACCOUNT_KEY),
                 IdentityGatewayWebServiceUrl = configData.GetString(IDENTITY_GATEWAY_WEBSERVICE_URL_KEY),
-                ConfigWebServiceUrl = configData.GetString(CONFIG_WEBSERVICE_URL_KEY)
+                ConfigWebServiceUrl = configData.GetString(CONFIG_WEBSERVICE_URL_KEY),
+                UserPermissions = configData.UserPermissions,
+                ApplicationConfigurationConnectionString = configData.AppConfigurationConnectionString,
+                KeyvaultName = configData.KeyVaultName,
+                AzureActiveDirectoryAppId = configData.AadAppId,
+                AzureActiveDirectoryAppKey = configData.AadAppSecret,
+                AzureActiveDirectoryTenant = configData.AadTenantId
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

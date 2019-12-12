@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.StorageAdapter.Services;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers;
-using Mmm.Platform.IoT.StorageAdapter.WebService.Wrappers;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
@@ -66,7 +66,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(result.ETag, etag);
             Assert.Equal("Value;1", result.Metadata["$type"]);
             Assert.Equal(timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
-            Assert.Equal($"/v1/collections/{collectionId}/values/{key}", result.Metadata["$uri"]);
 
             this.mockContainer
                 .Verify(x => x.GetAsync(
@@ -126,11 +125,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                 Assert.Equal(item.ETag, model.ETag);
                 Assert.Equal("Value;1", item.Metadata["$type"]);
                 Assert.Equal(model.Timestamp.ToString(CultureInfo.InvariantCulture), item.Metadata["$modified"]);
-                Assert.Equal($"/v1/collections/{collectionId}/values/{model.Key}", item.Metadata["$uri"]);
             }
 
             Assert.Equal("ValueList;1", result.Metadata["$type"]);
-            Assert.Equal($"/v1/collections/{collectionId}/values", result.Metadata["$uri"]);
 
             this.mockContainer
                 .Verify(x => x.GetAllAsync(
@@ -178,7 +175,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(result.ETag, etag);
             Assert.Equal("Value;1", result.Metadata["$type"]);
             Assert.Equal(modelOut.Timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
-            Assert.Equal($"/v1/collections/{collectionId}/values/{key}", result.Metadata["$uri"]);
 
             this.mockContainer
                 .Verify(x => x.CreateAsync(
@@ -224,7 +220,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(result.ETag, etag);
             Assert.Equal("Value;1", result.Metadata["$type"]);
             Assert.Equal(modelOut.Timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
-            Assert.Equal($"/v1/collections/{collectionId}/values/{key}", result.Metadata["$uri"]);
 
             this.mockContainer
                 .Verify(x => x.CreateAsync(
@@ -273,7 +268,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(result.ETag, etagNew);
             Assert.Equal("Value;1", result.Metadata["$type"]);
             Assert.Equal(modelOut.Timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
-            Assert.Equal($"/v1/collections/{collectionId}/values/{key}", result.Metadata["$uri"]);
 
             this.mockContainer
                 .Verify(x => x.UpsertAsync(

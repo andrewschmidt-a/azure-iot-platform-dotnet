@@ -11,7 +11,6 @@ using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Newtonsoft.Json.Linq;
 

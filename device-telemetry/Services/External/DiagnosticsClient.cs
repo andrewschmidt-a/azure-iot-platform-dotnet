@@ -9,21 +9,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Newtonsoft.Json;
 using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
 {
-    public interface IDiagnosticsClient
+    public interface IDiagnosticsClient : IStatusOperation
     {
         bool CanLogToDiagnostics { get; }
 
         Task LogEventAsync(string eventName);
 
         Task LogEventAsync(string eventName, Dictionary<string, object> eventProperties);
-
-        Task<Tuple<bool, string>> PingAsync();
     }
 
     public class DiagnosticsClient : IDiagnosticsClient
@@ -136,7 +135,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
             }
         }
 
-        public async Task<Tuple<bool, string>> PingAsync()
+        public async Task<StatusResultServiceModel> StatusAsync()
         {
             var isHealthy = false;
             var message = "Diagnostics check failed";
@@ -164,7 +163,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
                 _logger.LogError(e, message);
             }
 
-            return new Tuple<bool, string>(isHealthy, message);
+            return new StatusResultServiceModel(isHealthy, message);
         }
     }
 }

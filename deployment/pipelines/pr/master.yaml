@@ -45,6 +45,14 @@ stages:
   jobs:
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
+      service: asa-manager
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
       service: config
       azureSubscription: ${{variables.azureSubscription}}
       resourceGroup: ${{variables.resourceGroup}}
@@ -85,6 +93,14 @@ stages:
       
 - stage: Test_Services_that_Changed
   jobs:
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: asa-manager
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
   - template: testServiceIfChangedTemplate.yaml
     parameters:
       service: config

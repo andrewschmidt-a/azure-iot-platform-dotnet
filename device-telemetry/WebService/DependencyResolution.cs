@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
@@ -35,13 +36,16 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             builder.Register(context => context.Resolve<IServicesConfig>()).As<ITimeSeriesClientConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IServicesConfig>()).As<IUserManagementClientConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IServicesConfig>()).As<IStorageAdapterClientConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<IAsaManagerClientConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IServicesConfig>()).As<IAuthMiddlewareConfig>().SingleInstance();
             builder.Register(context => GetOpenIdConnectManager(context.Resolve<IConfig>())).As<IConfigurationManager<OpenIdConnectConfiguration>>().SingleInstance();
             builder.RegisterType<CorsSetup>().As<ICorsSetup>().SingleInstance();
 
             // Set up storage client for Cosmos DB
             builder.RegisterType<StorageClient>().As<IStorageClient>().SingleInstance();
-            builder.RegisterType<StorageClient>().As<IStorageClient>().SingleInstance();
+            
+            // Set up asa manager client
+            builder.RegisterType<AsaManagerClient>().As<IAsaManagerClient>().SingleInstance();
 
             // Setup Time Series Insights Client
             builder.RegisterType<TimeSeriesClient>().As<ITimeSeriesClient>().SingleInstance();

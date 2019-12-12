@@ -32,7 +32,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 
             // Check connection to Table Storage
             // TODO: Add check of settings table as well
-            var storageResult = await this._userTenantContainer.PingAsync();
+            var storageResult = await this._userTenantContainer.StatusAsync();
             SetServiceStatus("TableStorage", storageResult, result, errors);
 
             // Check Azure B2C instance

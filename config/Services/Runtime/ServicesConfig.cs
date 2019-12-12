@@ -3,11 +3,12 @@
 using System.Collections.Generic;
 using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 
 namespace Mmm.Platform.IoT.Config.Services.Runtime
 {
-    public interface IServicesConfig : IStorageAdapterClientConfig, IAuthMiddlewareConfig, IUserManagementClientConfig
+    public interface IServicesConfig : IStorageAdapterClientConfig, IAuthMiddlewareConfig, IUserManagementClientConfig, IAsaManagerClientConfig
     {
         string SolutionType { get; set; }
         string DeviceSimulationApiUrl { get; }
@@ -23,6 +24,7 @@ namespace Mmm.Platform.IoT.Config.Services.Runtime
 
     public class ServicesConfig : IServicesConfig
     {
+        public string AsaManagerApiUrl { get; set; }
         public int StorageAdapterApiTimeout { get; set; }
         public string SolutionType { get; set; }
         public string StorageAdapterApiUrl { get; set; }

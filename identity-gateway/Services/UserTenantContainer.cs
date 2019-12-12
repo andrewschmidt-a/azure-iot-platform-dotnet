@@ -1,10 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Microsoft.Azure.Cosmos.Table;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
@@ -14,7 +14,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         {
         }
         
-        public UserTenantContainer(ITableHelper tableHelper) : base(tableHelper)
+        public UserTenantContainer(ITableStorageClient tableStorageClient) : base(tableStorageClient)
         {
         }
 
@@ -27,9 +27,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         /// <returns></returns>
         public virtual async Task<UserTenantListModel> GetAllAsync(UserTenantInput input)
         {
-            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.UserId));
-            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.TableName, query, null);
-            return new UserTenantListModel("GetTenants", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());
+            TableQuery<UserTenantModel> query = new TableQuery<UserTenantModel>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.UserId));
+            List<UserTenantModel> result = await this._tableStorageClient.QueryAsync<UserTenantModel>(this.TableName, query);
+            return new UserTenantListModel("GetTenants", result);
         }
 
 
@@ -40,9 +40,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         /// <returns></returns>
         public virtual async Task<UserTenantListModel> GetAllUsersAsync(UserTenantInput input)
         {
-            TableQuery query = new TableQuery().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.Tenant));
-            TableQuerySegment resultSegment = await this._tableHelper.QueryAsync(this.TableName, query, null);
-            return new UserTenantListModel("GetUsers", resultSegment.Results.Select(t => (UserTenantModel)t).ToList());
+            TableQuery<UserTenantModel> query = new TableQuery<UserTenantModel>().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.Tenant));
+            List<UserTenantModel> result = await this._tableStorageClient.QueryAsync<UserTenantModel>(this.TableName, query);
+            return new UserTenantListModel("GetUsers", result);
         }
         /// <summary>
         /// Get a single tenant for the user
@@ -51,9 +51,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         /// <returns></returns>
         public virtual async Task<UserTenantModel> GetAsync(UserTenantInput input)
         {
-            TableOperation retrieveUserTenant = TableOperation.Retrieve<UserTenantModel>(input.UserId, input.Tenant);
-            TableResult result = await this._tableHelper.ExecuteOperationAsync(this.TableName, retrieveUserTenant);
-            return result.Result as UserTenantModel;
+            return await this._tableStorageClient.RetrieveAsync<UserTenantModel>(this.TableName, input.UserId, input.Tenant);
         }
 
         /// <summary>
@@ -63,7 +61,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         /// <returns></returns>
         public virtual async Task<UserTenantModel> CreateAsync(UserTenantInput input)
         {
-            // If UserId is null then make it up
+            // In order to create a new user with a tenant, create a new user id
             if (input.UserId == null)
             {
                 input.UserId = Guid.NewGuid().ToString();
@@ -80,10 +78,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                 );
             }
             UserTenantModel user = new UserTenantModel(input);
-            // Insert the user record. Return the user model from the user table insert
-            TableOperation insertOperation = TableOperation.Insert(user);
-            TableResult userInsert = await this._tableHelper.ExecuteOperationAsync(this.TableName, insertOperation);
-            return userInsert.Result as UserTenantModel;  // cast to UserTenantModel to parse results
+            return await this._tableStorageClient.InsertAsync(this.TableName, user);
         }
 
         /// <summary>
@@ -100,9 +95,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                 throw new ArgumentException("The UserTenant update model must contain a serialized role array.");
             }
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
-            TableOperation replaceOperation = TableOperation.InsertOrMerge(model);
-            TableResult replace = await this._tableHelper.ExecuteOperationAsync(this.TableName, replaceOperation);
-            return replace.Result as UserTenantModel;
+            return await this._tableStorageClient.InsertOrMergeAsync(this.TableName, model);
         }
 
         /// <summary>
@@ -120,11 +113,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             }
 
             user.ETag = "*";  // An ETag is required for deleting - this allows any etag to be used
-            TableOperation deleteOperation = TableOperation.Delete(user);
-
-            // delete the record and return the deleted user model
-            TableResult deleteUser = await this._tableHelper.ExecuteOperationAsync(this.TableName, deleteOperation);
-            return deleteUser.Result as UserTenantModel;
+            return await this._tableStorageClient.DeleteAsync(this.TableName, user);
         }
 
         /// <summary>

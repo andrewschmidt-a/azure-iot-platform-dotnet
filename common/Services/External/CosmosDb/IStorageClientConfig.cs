@@ -4,8 +4,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 {
     public interface IStorageClientConfig
     {
-        Uri CosmosDbUri { get; }
-        string CosmosDbKey { get; }
+        string CosmosDbConnectionString { get; set; }
         int CosmosDbThroughput { get; set; }
     }
 }

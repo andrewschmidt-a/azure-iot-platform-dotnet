@@ -4,10 +4,8 @@ using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 {
-    public interface ITimeSeriesClient
+    public interface ITimeSeriesClient : IStatusOperation
     {
-        Task<StatusResultServiceModel> PingAsync();
-
         Task<MessageList> QueryEventsAsync(
             DateTimeOffset? from,
             DateTimeOffset? to,

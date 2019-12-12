@@ -28,9 +28,9 @@ namespace Mmm.Platform.IoT.Common.Services.Http
             this.Content = content;
         }
 
-        public HttpStatusCode StatusCode { get; internal set; }
-        public HttpResponseHeaders Headers { get; internal set; }
-        public string Content { get; internal set; }
+        public HttpStatusCode StatusCode { get; set; }
+        public HttpResponseHeaders Headers { get; set; }
+        public string Content { get; set; }
 
         public bool IsSuccess
         {
@@ -63,6 +63,6 @@ namespace Mmm.Platform.IoT.Common.Services.Http
         public bool IsConflict => (int)this.StatusCode == 409;
         public bool IsServerError => (int)this.StatusCode >= 500;
         public bool IsServiceUnavailable => (int)this.StatusCode == 503;
-        public bool IsSuccessStatusCode { get; internal set; }
+        public bool IsSuccessStatusCode { get; set; }
     }
 }

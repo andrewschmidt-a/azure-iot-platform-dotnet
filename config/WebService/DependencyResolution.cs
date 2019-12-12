@@ -8,9 +8,11 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Config.Services;
+using Mmm.Platform.IoT.Config.Services.Models.Actions;
 using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Config.WebService.Runtime;
@@ -31,6 +33,7 @@ namespace Mmm.Platform.IoT.Config.WebService
             builder.Register(context => context.Resolve<IServicesConfig>()).As<IStorageAdapterClientConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IServicesConfig>()).As<IAuthMiddlewareConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IServicesConfig>()).As<IUserManagementClientConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<IAsaManagerClientConfig>().SingleInstance();
             builder.Register(context => GetOpenIdConnectManager(context.Resolve<IConfig>())).As<IConfigurationManager<OpenIdConnectConfiguration>>().SingleInstance();
             builder.RegisterType<CorsSetup>().As<ICorsSetup>().SingleInstance();
 
@@ -38,7 +41,10 @@ namespace Mmm.Platform.IoT.Config.WebService
             // for each request, which is good to reduce the risk of memory
             // leaks, but not so good for the overall performance.
             builder.RegisterType<Storage>().As<IStorage>().SingleInstance();
+            builder.RegisterType<AsaManagerClient>().As<IAsaManagerClient>().SingleInstance();
             builder.RegisterType<AzureResourceManagerClient>().As<IAzureResourceManagerClient>().SingleInstance();
+            builder.RegisterType<EmailActionSettings>().As<EmailActionSettings>().SingleInstance();
+            builder.RegisterType<Actions>().As<IActions>().SingleInstance();
         }
 
         // Prepare the OpenId Connect configuration manager, responsibile
