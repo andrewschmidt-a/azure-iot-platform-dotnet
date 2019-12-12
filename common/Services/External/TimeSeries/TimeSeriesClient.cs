@@ -78,7 +78,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         /// that the fqdn provided can reach Time Series Insights.
         /// Returns a tuple with the status [bool isAvailable, string message].
         /// </summary>
-        public async Task<StatusResultServiceModel> PingAsync()
+        public async Task<StatusResultServiceModel> StatusAsync()
         {
             var result = new StatusResultServiceModel(false, "TimeSeries check failed");
 

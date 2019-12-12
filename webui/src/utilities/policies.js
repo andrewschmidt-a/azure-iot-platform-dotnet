@@ -26,7 +26,9 @@ module.exports = {
                 "ReadAll",
                 "InviteUsers",
                 "DeleteUsers",
-                "DeleteTenant"
+                "DeleteTenant",
+                "EnableAlerting",
+                "DisableAlerting"
             ]
         },
         {

@@ -69,7 +69,10 @@
     "CreateDeployments": "Create deployments",
     "DeleteDeployments": "Delete deployments",
     "InviteUsers": "Invite users",
-    "DeleteUsers": "Delete users"
+    "DeleteUsers": "Delete users",
+    "DeleteTenant": "Delete tenant",
+    "EnableAlerting": "Enable alerting",
+    "DisableAlerting": "Disable alerting"
   },
   "protected": {
     "permissionDenied": "Permission {{permission}} is denied."

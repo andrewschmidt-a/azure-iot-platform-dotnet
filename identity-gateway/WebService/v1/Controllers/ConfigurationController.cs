@@ -11,7 +11,7 @@ using Newtonsoft.Json.Serialization;
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
 {
     [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
-    public class ConfigurationController : ControllerBase
+    public class ConfigurationController : Controller
     {
         private IServicesConfig _config;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;

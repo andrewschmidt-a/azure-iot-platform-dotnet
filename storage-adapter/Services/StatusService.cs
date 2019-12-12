@@ -43,7 +43,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             var errors = new List<string>();
 
             // Check connection to CosmosDb
-            var storageResult = await this._keyValueContainer.PingAsync();
+            var storageResult = await this._keyValueContainer.StatusAsync();
             SetServiceStatus("Storage", storageResult, result, errors);
 
             if (this._servicesConfig.AuthRequired)

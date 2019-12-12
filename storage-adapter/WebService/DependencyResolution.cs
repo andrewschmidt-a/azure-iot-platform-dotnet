@@ -11,7 +11,6 @@ using Mmm.Platform.IoT.StorageAdapter.Services;
 using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
 using Mmm.Platform.IoT.StorageAdapter.Services.Wrappers;
 using Mmm.Platform.IoT.StorageAdapter.WebService.Runtime;
-using Mmm.Platform.IoT.StorageAdapter.WebService.Wrappers;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService
 {
@@ -33,7 +32,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
             builder.RegisterType<DocumentDbKeyValueContainer>().As<IKeyValueContainer>().SingleInstance();
             builder.RegisterType<DocumentClientFactory>().As<IFactory<IDocumentClient>>().SingleInstance();
             builder.RegisterType<DocumentClientExceptionChecker>().As<IExceptionChecker>().SingleInstance();
-            builder.RegisterType<GuidKeyGenerator>().As<IKeyGenerator>().SingleInstance();
         }
     }
 }

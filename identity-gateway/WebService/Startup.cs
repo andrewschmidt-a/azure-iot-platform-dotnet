@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.IdentityGateway.Services;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
@@ -62,15 +63,15 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
 
-            services.AddScoped<TableHelper>();
             services.AddSingleton<UserSettingsContainer>();
             services.AddSingleton<UserTenantContainer>();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IStatusService, StatusService>();
-            services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
+            services.AddSingleton<ITableStorageClient>();
             services.AddSingleton<IRsaHelpers, RsaHelpers>();
+
+            services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
             services.AddTransient<ISendGridClientFactory, SendGridClientFactory>();
-            services.AddTransient<ITableHelper, TableHelper>();
 
             // Prepare DI container
             this.ApplicationContainer = new DependencyResolution().Setup(services);

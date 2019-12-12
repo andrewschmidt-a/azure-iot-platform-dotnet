@@ -20,15 +20,22 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
         private readonly KeyVault keyVault;
 
         // Constants
-        private const string CLIENT_ID = "Global:AzureActiveDirectory:aadAppId";
-        private const string CLIENT_SECRET = "Global:AzureActiveDirectory:aadAppSecret";
-        private const string KEY_VAULT_NAME = "Global:KeyVault:name";
-        private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
+        private const string GLOBAL_KEY = "Global:";
         private const string ALLOWED_ACTION_KEY = "Global:Permissions";
+
+        private const string AAD_KEY = GLOBAL_KEY + "AzureActiveDirectory:"; 
+        private const string CLIENT_ID = AAD_KEY + "aadAppId";
+        private const string CLIENT_SECRET = AAD_KEY + "aadAppSecret";
+        private const string CLIENT_TENANT = AAD_KEY + "aadTenantId";
+
+        private const string KEY_VAULT_NAME = GLOBAL_KEY + "KeyVault:name";
+
+        private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
 
         private readonly List<string> appConfigKeys = new List<string>
         {
             "Actions",
+            "AsaManagerService",
             "ConfigService",
             "ConfigService:Actions",
             "ExternalDependencies",
@@ -65,6 +72,59 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
             SetUpKeyVault();
         }
 
+        public string AppConfigurationConnectionString
+        {
+            get
+            {
+                return this.GetString(APP_CONFIGURATION);
+            }
+        }
+
+        public Dictionary<string, List<string>> UserPermissions
+        {
+            get
+            {
+                Dictionary<string, List<string>> permissions = new Dictionary<string, List<string>>();
+                foreach (var roleSection in this.configuration.GetSection(ALLOWED_ACTION_KEY).GetChildren())
+                {
+                    permissions.Add(roleSection.Key, roleSection.GetChildren().Select(t => t.Key).ToList());
+                }
+                return permissions;
+            }
+        }
+
+        public string AadAppId
+        {
+            get
+            {
+                return this.GetString(CLIENT_ID);
+            }
+        }
+
+        public string AadAppSecret
+        {
+            get
+            {
+                return this.GetString(CLIENT_SECRET);
+            }
+        }
+
+        public string AadTenantId
+        {
+            get
+            {
+                return this.GetString(CLIENT_TENANT);
+            }
+        }
+
+        public string KeyVaultName
+        {
+            get
+            {
+                return this.GetString(KEY_VAULT_NAME);
+            }
+        }
+
         private void InitializeConfiguration()
         {
             var configurationBuilder = new ConfigurationBuilder();
@@ -77,17 +137,6 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
             var preConfig = configurationBuilder.Build();
             configurationBuilder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
             configuration = configurationBuilder.Build();
-        }
-
-        public Dictionary<string, List<string>> GetUserPermissions()
-        {
-            Dictionary<string, List<string>> permissions = new Dictionary<string, List<string>>();
-            foreach (var roleSection in this.configuration.GetSection(ALLOWED_ACTION_KEY).GetChildren())
-            {
-                permissions.Add(roleSection.Key, roleSection.GetChildren().Select(t => t.Key).ToList());
-            }
-
-            return permissions;
         }
 
         public string GetString(string key, string defaultValue = "")
@@ -158,7 +207,7 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
             return !string.IsNullOrEmpty(value) ? value : defaultValue;
         }
 
-        public string GetSecretsFromKeyVault(string key)
+        private string GetSecretsFromKeyVault(string key)
         {
             return this.keyVault?.GetSecret(key);
         }

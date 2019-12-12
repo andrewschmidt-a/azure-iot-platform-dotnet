@@ -8,12 +8,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
         public string TenantId;
         public string Message;
 
-        public CreateTenantModel (string tenantGuid)
+        public CreateTenantModel() { }
+
+        public CreateTenantModel(string tenantGuid)
         {
             this.TenantId = tenantGuid;
             this.Message = $"Your tenant is currently being deployed. This may take several minutes. You can check if your tenant is fully deployed using GET /api/tenantready";
         }
-
-        public CreateTenantModel () { }
     }
 }

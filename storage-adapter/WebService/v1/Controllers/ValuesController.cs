@@ -6,19 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.StorageAdapter.Services;
 using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Mmm.Platform.IoT.StorageAdapter.WebService.v1.Models;
-using Mmm.Platform.IoT.StorageAdapter.WebService.Wrappers;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
 {
     [Route(Version.PATH), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ValuesController : Controller
     {
-        private readonly IKeyValueContainer container;
-        private readonly IKeyGenerator keyGenerator;
+        private readonly IKeyValueContainer _container;
+        private readonly IKeyGenerator _keyGenerator;
         private readonly ILogger _logger;
 
         public ValuesController(
@@ -26,9 +26,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
             IKeyGenerator keyGenerator,
             ILogger<ValuesController> logger)
         {
-            this.container = container;
-            this.keyGenerator = keyGenerator;
-            _logger = logger;
+            this._container = container;
+            this._keyGenerator = keyGenerator;
+            this._logger = logger;
         }
 
         [HttpGet("collections/{collectionId}/values/{key}")]
@@ -36,7 +36,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
         {
             this.EnsureValidId(collectionId, key);
 
-            var result = await this.container.GetAsync(collectionId, key);
+            var result = await this._container.GetAsync(collectionId, key);
 
             return new ValueApiModel(result);
         }
@@ -46,7 +46,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
         {
             this.EnsureValidId(collectionId);
 
-            var result = await this.container.GetAllAsync(collectionId);
+            var result = await this._container.GetAllAsync(collectionId);
 
             return new ValueListApiModel(result, collectionId);
         }
@@ -59,10 +59,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
                 throw new InvalidInputException("The request is empty");
             }
 
-            string key = this.keyGenerator.Generate();
+            string key = this._keyGenerator.Generate();
             this.EnsureValidId(collectionId, key);
 
-            var result = await this.container.CreateAsync(collectionId, key, model);
+            var result = await this._container.CreateAsync(collectionId, key, model);
 
             return new ValueApiModel(result);
         }
@@ -77,7 +77,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
 
             this.EnsureValidId(collectionId, key);
 
-            var result = model.ETag == null ? await this.container.CreateAsync(collectionId, key, model) : await this.container.UpsertAsync(collectionId, key, model);
+            var result = model.ETag == null ? await this._container.CreateAsync(collectionId, key, model) : await this._container.UpsertAsync(collectionId, key, model);
 
             return new ValueApiModel(result);
         }
@@ -87,7 +87,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
         {
             this.EnsureValidId(collectionId, key);
 
-            await this.container.DeleteAsync(collectionId, key);
+            await this._container.DeleteAsync(collectionId, key);
         }
 
         private void EnsureValidId(string collectionId, string key = "")

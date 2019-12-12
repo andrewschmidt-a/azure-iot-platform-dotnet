@@ -82,8 +82,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Runtime
                 DevicePropertiesRebuildTimeout = configData.GetInt(DEVICE_PROPERTIES_REBUILD_TIMEOUT_KEY),
                 StorageAdapterApiUrl = configData.GetString(STORAGE_ADAPTER_URL_KEY),
                 UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
-                ApplicationConfigurationConnectionString = configData.GetString(APPCONFIG_CONNSTRING_KEY),
-                UserPermissions = configData.GetUserPermissions()
+                ApplicationConfigurationConnectionString = configData.AppConfigurationConnectionString,
+                UserPermissions = configData.UserPermissions
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

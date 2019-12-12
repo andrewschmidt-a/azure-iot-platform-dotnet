@@ -1,58 +1,74 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Net.Http;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 using Mmm.Platform.IoT.TenantManager.Services.Exceptions;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
 using Microsoft.Azure;
 using Microsoft.Azure.Management.Automation;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
-    public class TenantRunbookHelper : IStatusOperation
+    public class RunbookHelper : IRunbookHelper
     {
+        private string iotHubConnectionStringKeyFormat = "tenant:{0}:iotHubConnectionString";
+        private Regex iotHubKeyRegexMatch = new Regex(@"(?<=SharedAccessKey=)[^;]*");
+
         // injection variables
-        private IServicesConfig _config;
+        private readonly IServicesConfig _config;
+        private readonly ITokenHelper _tokenHelper;
+        private readonly IAppConfigurationHelper _appConfigHelper;
 
-        private string resourceGroup;
-        private string automationAccountName;
-
-        // created in constructor
-        public TokenHelper _tokenHelper;
         public HttpClient httpClient;
 
-        // webhooks object
-        // Keys refer to the actual webhook name for the particular web hook
-        // Values refer to the accessor key in config for that webhook's url
-        public Dictionary<string, string> webHooks;
-
-        public TenantRunbookHelper(IServicesConfig config, TokenHelper tokenHelper)
+        public RunbookHelper(IServicesConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
         {
             this._tokenHelper = tokenHelper;
             this._config = config;
+            this._appConfigHelper = appConfigHelper;
 
-            this.resourceGroup = this._config.ResourceGroup;
-            this.automationAccountName = this._config.AutomationAccountName;
             this.httpClient = new HttpClient();
         }
 
         /// <summary>
-        /// Create the automation client using the tokenHelper and config variables to authenticate
+        /// Get an automation client using an auth token from the token helper
         /// </summary>
         /// <returns>AutomationManagementClient</returns>
-        private AutomationManagementClient automationClient
+        private async Task<AutomationManagementClient> GetAutomationClientAsync()
         {
-            get
+            string authToken = await this._tokenHelper.GetTokenAsync();
+            TokenCloudCredentials credentials = new TokenCloudCredentials(this._config.SubscriptionId, authToken);
+            return new AutomationManagementClient(credentials);
+        }
+
+        private string GetIotHubKey(string tenantId, string iotHubName)
+        {
+            try
             {
-                string authToken = this._tokenHelper.GetServicePrincipleToken();
-                TokenCloudCredentials credentials = new TokenCloudCredentials(this._config.SubscriptionId, authToken);
-                return new AutomationManagementClient(credentials);
+                string appConfigKey = String.Format(this.iotHubConnectionStringKeyFormat, tenantId);
+                string iotHubConnectionString = this._appConfigHelper.GetValue(appConfigKey);
+                if (String.IsNullOrEmpty(iotHubConnectionString))
+                {
+                    throw new Exception($"The iotHubConnectionString returned by app config for the key {appConfigKey} returned a null value.");
+                }
+
+                Match iotHubKeyMatch = this.iotHubKeyRegexMatch.Match(iotHubConnectionString);
+                string iotHubKey = iotHubKeyMatch.Value;
+                if (String.IsNullOrEmpty(iotHubKey))
+                {
+                    throw new Exception("Unable to parse the iotHub connection string for the SharedAccessKey value.");
+                }
+                return iotHubKey;
+            }
+            catch (Exception e)
+            {
+                throw new IotHubKeyException($"Unable to get the iothub SharedAccessKey for tenant {tenantId}", e);
             }
         }
 
@@ -65,14 +81,17 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             string unhealthyMessage = "";
             List<string> webHooks = new List<string>
             {
-                this._config.CreateIotHubRunbookName,
-                this._config.DeleteIotHubRunbookName
+                "CreateIotHub",
+                "DeleteIotHub",
+                "CreateSAJob",
+                "DeleteSAJob"
             };
             foreach (var webHook in webHooks)
             {
                 try
                 {
-                    var webHookResponse = await this.automationClient.Webhooks.GetAsync(this.resourceGroup, this.automationAccountName, webHook);
+                    var automationClient = await this.GetAutomationClientAsync();
+                    var webHookResponse = await automationClient.Webhooks.GetAsync(this._config.ResourceGroup, this._config.AutomationAccountName, webHook);
                     if (!webHookResponse.Webhook.Properties.IsEnabled)
                     {
                         unhealthyMessage += $"{webHook} is not enabled.\n";
@@ -88,12 +107,52 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 
         public async Task<HttpResponseMessage> CreateIotHub(string tenantId, string iotHubName, string dpsName)
         {
-            return await this.TriggerTenantRunbook(this._config.CreateIotHubRunbookUrl, tenantId, iotHubName, dpsName);
+            return await this.TriggerIotHubRunbook(this._config.CreateIotHubRunbookUrl, tenantId, iotHubName, dpsName);
         }
 
         public async Task<HttpResponseMessage> DeleteIotHub(string tenantId, string iotHubName, string dpsName)
         {
-            return await this.TriggerTenantRunbook(this._config.DeleteIotHubRunbookUrl, tenantId, iotHubName, dpsName);
+            return await this.TriggerIotHubRunbook(this._config.DeleteIotHubRunbookUrl, tenantId, iotHubName, dpsName);
+        }
+
+        public async Task<HttpResponseMessage> CreateAlerting(string tenantId, string saJobName, string iotHubName)
+        {
+            string iotHubKey = this.GetIotHubKey(tenantId, iotHubName);
+
+            var requestBody = new
+            {
+                tenantId = tenantId,
+                location = this._config.Location,
+                resourceGroup = this._config.ResourceGroup,
+                subscriptionId = this._config.SubscriptionId,
+                saJobName = saJobName,
+                storageAccountName = this._config.StorageAccountName,
+                storageAccountKey = this._config.StorageAccountKey,
+                eventHubNamespaceName = this._config.EventHubNamespaceName,
+                eventHubAccessPolicyKey = this._config.EventHubAccessPolicyKey,
+                iotHubName = iotHubName,
+                iotHubAccessKey = iotHubKey,
+                cosmosDbAccountName = this._config.CosmosDbAccount,
+                cosmosDbAccountKey = this._config.CosmosDbKey,
+                cosmosDbDatabaseId = this._config.StreamAnalyticsDatabaseId
+            };
+
+            var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            return await this.TriggerRunbook(this._config.CreateStreamAnalyticsRunbookUrl, bodyContent);
+        }
+
+        public async Task<HttpResponseMessage> DeleteAlerting(string tenantId, string saJobName)
+        {
+            var requestBody = new
+            {
+                tenantId = tenantId,
+                resourceGroup = this._config.ResourceGroup,
+                subscriptionId = this._config.SubscriptionId,
+                saJobName = saJobName,
+            };
+
+            var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            return await this.TriggerRunbook(this._config.DeleteStreamAnalyticsRunbookUrl, bodyContent);
         }
 
         /// <summary>
@@ -105,15 +164,15 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         /// <param name="tenantId" type="string">Tenant Guid</param>
         /// <param name="iotHubName" type="string">Iot Hub Name for deletion or creation</param>
         /// <returns></returns>
-        private async Task<HttpResponseMessage> TriggerTenantRunbook(string webHookUrl, string tenantId, string iotHubName, string dpsName)
+        private async Task<HttpResponseMessage> TriggerIotHubRunbook(string webHookUrl, string tenantId, string iotHubName, string dpsName)
         {
             var requestBody = new
             {
                 tenantId = tenantId,
                 iotHubName = iotHubName,
                 dpsName = dpsName,
-                token = this._tokenHelper.GetServicePrincipleToken(),
-                resourceGroup = this.resourceGroup,
+                token = await this._tokenHelper.GetTokenAsync(),
+                resourceGroup = this._config.ResourceGroup,
                 location = this._config.Location,
                 subscriptionId = this._config.SubscriptionId,
                 // Event Hub Connection Strings for setting up IoT Hub Routing
@@ -125,13 +184,18 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 storageAccount = this._config.StorageAccountName
             };
 
+            var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+            return await this.TriggerRunbook(webHookUrl, bodyContent);
+        }
+
+        private async Task<HttpResponseMessage> TriggerRunbook(string webHookUrl, StringContent bodyContent)
+        {
             try
             {
                 if (String.IsNullOrEmpty(webHookUrl))
                 {
                     throw new Exception($"The given webHookUrl string was null or empty. It may not be configured correctly.");
                 }
-                var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
                 return await this.httpClient.PostAsync(webHookUrl, bodyContent);
             }
             catch (Exception e)

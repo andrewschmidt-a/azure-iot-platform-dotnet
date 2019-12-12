@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Http;
@@ -56,6 +57,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             string diagnosticsName = "Diagnostics";
             string authName = "Auth";
             string timeSeriesName = "TimeSeries";
+            string asaManagerName = "AsaManager";
+
+            var asaManagerResult = await this.PingServiceAsync(
+                asaManagerName,
+                this.servicesConfig.AsaManagerApiUrl);
+            SetServiceStatus(asaManagerName, asaManagerResult, result, errors);
 
             // Check access to StorageAdapter
             var storageAdapterResult = await this.PingServiceAsync(
@@ -87,7 +94,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 StringComparison.OrdinalIgnoreCase))
             {
                 // Check connection to Time Series Insights
-                var timeSeriesResult = await this.timeSeriesClient.PingAsync();
+                var timeSeriesResult = await this.timeSeriesClient.StatusAsync();
                 SetServiceStatus(timeSeriesName, timeSeriesResult, result, errors);
 
                 // Add Time Series Insights explorer url
@@ -100,7 +107,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             }
 
             // Check access to Storage
-            var storageResult = await this.storageClient.PingAsync();
+            var storageResult = await this.storageClient.StatusAsync();
             SetServiceStatus(storageName, storageResult, result, errors);
 
             if (errors.Count > 0)

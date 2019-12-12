@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.DeviceTelemetry.Services;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
@@ -25,6 +25,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
     public class RulesTest
     {
         private readonly Mock<IStorageAdapterClient> storageAdapter;
+        private readonly Mock<IAsaManagerClient> asaManager;
         private readonly Mock<ILogger<Rules>> _logger;
         private readonly IServicesConfig servicesConfig;
         private readonly Mock<IRules> rulesMock;
@@ -41,7 +42,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         public RulesTest()
         {
             this.storageAdapter = new Mock<IStorageAdapterClient>();
-            _logger = new Mock<ILogger<Rules>>();
+            this.asaManager = new Mock<IAsaManagerClient>();
+            this._logger = new Mock<ILogger<Rules>>();
             this.servicesConfig = new ServicesConfig
             {
                 DiagnosticsApiUrl = "http://localhost:9006/v1",
@@ -55,8 +57,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
                 {{"TenantID", TENANT_ID}});
+            this.asaManager.Setup(t => t.BeginConversionAsync(It.IsAny<string>())).ReturnsAsync(new BeginConversionApiModel());
 
-            this.rules = new Rules(this.storageAdapter.Object, _logger.Object, this.alarms.Object, this.diagnosticsClient);
+            this.rules = new Rules(this.storageAdapter.Object, this.asaManager.Object, this._logger.Object, this.alarms.Object, this.diagnosticsClient);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -109,7 +112,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             await this.rules.DeleteAsync("id");
 
             this.storageAdapter.Verify(x => x.GetAsync(It.IsAny<string>(), "id"), Times.Once);
-            this.storageAdapter.Verify(x => x.UpsertAsync(It.IsAny<string>(), "id", It.IsAny<string>(), "123"), Times.Once);
+            this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), "id", It.IsAny<string>(), "123"), Times.Once);
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Once);
         }
 
         /**
@@ -131,7 +139,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             await this.rules.DeleteAsync("id");
 
             this.storageAdapter.Verify(x => x.GetAsync(It.IsAny<string>(), "id"), Times.Once);
-            this.storageAdapter.Verify(x => x.UpsertAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Never);
         }
 
         /**
@@ -155,7 +168,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             await this.rules.DeleteAsync("id");
 
             this.storageAdapter.Verify(x => x.GetAsync(It.IsAny<string>(), "id"), Times.Once);
-            this.storageAdapter.Verify(x => x.UpsertAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Never);
         }
 
 
@@ -180,7 +198,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             await Assert.ThrowsAsync<Exception>(async () => await this.rules.DeleteAsync("id"));
 
             this.storageAdapter.Verify(x => x.GetAsync(It.IsAny<string>(), "id"), Times.Once);
-            this.storageAdapter.Verify(x => x.UpsertAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Never);
         }
 
         /**
@@ -204,7 +227,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 
             // Assert
             this.storageAdapter.Verify(x => x.GetAsync(It.IsAny<string>(), "id"), Times.Once);
-            this.storageAdapter.Verify(x => x.UpsertAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Never);
         }
 
         /**
@@ -305,7 +333,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 .Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .Throws(new ResourceNotFoundException());
 
-            this.storageAdapter.Setup(x => x.UpsertAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            this.storageAdapter.Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(result));
 
             // Act
@@ -380,6 +408,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             // Assert
             this.storageAdapter.Verify(x => x.GetAllAsync(It.IsAny<string>()), Times.Once);
             this.httpClientMock.Verify(x => x.PostAsync(It.IsAny<HttpRequest>()), Times.Exactly(2));
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Once);
         }
 
 
@@ -412,6 +445,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             // Assert
             this.storageAdapter.Verify(x => x.GetAllAsync(It.IsAny<string>()), Times.Once);
             this.httpClientMock.Verify(x => x.PostAsync(It.IsAny<HttpRequest>()), Times.Exactly(4));
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Once);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

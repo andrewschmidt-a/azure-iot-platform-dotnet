@@ -40,6 +40,12 @@ namespace Mmm.Platform.IoT.Config.Services
             string deviceTelemetryName = "DeviceTelemetry";
             string deviceSimulationName = "DeviceSimulation";
             string authName = "Auth";
+            string asaManagerName = "AsaManager";
+
+            var asaManagerResult = await this.PingServiceAsync(
+                asaManagerName,
+                this.servicesConfig.AsaManagerApiUrl);
+            SetServiceStatus(asaManagerName, asaManagerResult, result, errors);
 
             // Check access to StorageAdapter
             var storageAdapterResult = await this.PingServiceAsync(

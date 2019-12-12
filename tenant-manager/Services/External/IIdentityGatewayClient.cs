@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.TenantManager.Services.Models;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.External

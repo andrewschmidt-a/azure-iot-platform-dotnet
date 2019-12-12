@@ -34,6 +34,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Runtime
         private const string DEVICE_SIMULATION_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "deviceSimulationWebServiceUrl";
         private const string TELEMETRY_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "telemetryWebServiceUrl";
         private const string USER_MANAGEMENT_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "authWebServiceUrl";
+        private const string ASA_MANAGER_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "asamanagerwebserviceurl";
 
         private const string DEVICE_SIMULATION_KEY = "DeviceSimulationService:";
         private const string TELEMETRY_KEY = "TelemetryService:";
@@ -66,6 +67,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Runtime
 
             this.ServicesConfig = new ServicesConfig
             {
+                AsaManagerApiUrl = configData.GetString(ASA_MANAGER_URL_KEY),
                 StorageAdapterApiUrl = configData.GetString(STORAGE_ADAPTER_URL_KEY),
                 DeviceSimulationApiUrl = configData.GetString(DEVICE_SIMULATION_URL_KEY),
                 TelemetryApiUrl = configData.GetString(TELEMETRY_URL_KEY),
@@ -78,7 +80,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Runtime
                 SubscriptionId = configData.GetString(SUBSCRIPTION_ID_KEY),
                 ManagementApiVersion = configData.GetString(MANAGEMENT_API_VERSION_KEY),
                 ArmEndpointUrl = configData.GetString(ARM_ENDPOINT_URL_KEY),
-                UserPermissions = configData.GetUserPermissions()
+                UserPermissions = configData.UserPermissions
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

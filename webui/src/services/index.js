@@ -11,3 +11,4 @@ export * from './configService';
 export * from './gitHubService';
 export * from './diagnosticsService';
 export * from './tenantService';
+export * from './alertingService';

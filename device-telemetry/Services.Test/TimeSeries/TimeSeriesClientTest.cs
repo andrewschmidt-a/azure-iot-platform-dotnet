@@ -48,7 +48,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
             this.SetupClientWithNullConfigValues();
 
             // Act
-            var result = await this.client.PingAsync();
+            var result = await this.client.StatusAsync();
 
             // Assert
             Assert.False(result.IsHealthy);

@@ -7,6 +7,7 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
@@ -26,9 +27,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
             builder.Register(context => context.Resolve<IConfig>().ClientAuthConfig).As<IClientAuthConfig>().SingleInstance();
             builder.Register(context => context.Resolve<IConfig>().ServicesConfig).As<IServicesConfig>().SingleInstance();
             builder.Register(context => GetOpenIdConnectManager(context.Resolve<IConfig>())).As<IConfigurationManager<OpenIdConnectConfiguration>>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<ITableStorageClientConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<IAuthMiddlewareConfig>().SingleInstance();
             builder.RegisterType<CorsSetup>().As<ICorsSetup>().SingleInstance();
 
             builder.RegisterType<JwtHelpers>().As<IJwtHelpers>().InstancePerDependency();
+            builder.RegisterType<TableStorageClient>().As<ITableStorageClient>().SingleInstance();
         }
 
         // Prepare the OpenId Connect configuration manager, responsibile

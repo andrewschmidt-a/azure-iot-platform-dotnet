@@ -41,24 +41,6 @@ steps:
       jq --arg delim ':' 'reduce (tostream|select(length==2)) as $i ({};
           .[[$i[0][]|tostring]|join($delim)] = $i[1]
       )' $(System.DefaultWorkingDirectory)/deployment/pipelines/templates/infra/app-config-template.json > $(System.DefaultWorkingDirectory)/deployment/pipelines/templates/infra/app-config-template-translated.json 
-      # Import Keys
-      az appconfig kv import -y --name ${{ parameters.appConfigName }} --format json --source file --path "$(System.DefaultWorkingDirectory)/deployment/pipelines/templates/infra/app-config-template-translated.json"
-      # Set KeyVault Keys
-      az appconfig kv set --key Global:ClientAuth:JWT:aadappid --value $servicePrincipalId --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key Global:AzureActiveDirectory:aadappid --value $servicePrincipalId --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key KeyVault:aadappid --value $servicePrincipalId --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key KeyVault:aadappsecret --value $servicePrincipalKey --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key Global:AzureActiveDirectory:aadappsecret --value $servicePrincipalKey --name ${{ parameters.appConfigName }} --yes
-      # Set Environment Info
-      az appconfig kv set --key Global:resourceGroup --value ${{ parameters.resourceGroup }} --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key Global:subscriptionId --value $(az account show | jq -r .id) --name ${{ parameters.appConfigName }} --yes
-    addSpnToEnvironment: true
-- task: AzureCLI@1
-  displayName: Add Values to App Config
-  inputs:
-    azureSubscription: ${{ parameters.serviceConnection }}
-    scriptLocation: 'inlineScript'
-    inlineScript: |-
       rg=${{ parameters.resourceGroup }}
       # app insight key
       appInsightName=$(az resource list -g $rg --resource-type "Microsoft.Insights/components" | grep name | grep appinsight | awk -F "\"" '{print $4}')
@@ -81,12 +63,36 @@ steps:
       # aks JWT issuer
       aksName=$(az aks list -g $rg | grep name | grep aks | cut -d "/" -f1| awk -F "\"" '{print $4}')
       jwtIssuer="https://$aksName.${{ parameters.location }}.cloudapp.azure.com/auth"
+      # app config endpoint
+      appConfig=$(az functionapp list --resource-group $rg | grep name | grep appconfig | awk -F "\"" '{print $4}' | head -1)
+      appConfigEndpoint="https://$appConfig/api/SetAppConfigKey"
+      deviceTwin=$(az functionapp list --resource-group $rg | grep name | grep devicetwin | awk -F "\"" '{print $4}' | tail -1)
+      deviceTwinFuncUri="https://$deviceTwin.scm.azurewebsites.net"
+      storageAccountKey=$(az storage account keys list -g $ODIN_DEV_RG -n functiondefinition --query [0].value -o tsv)
       # set the keys
-      az appconfig kv set --key Global:instrumentationKey --value $appInsightKey --name ${{ parameters.appConfigName }} --yes
+      # Import Keys
+      az appconfig kv import -y --name ${{ parameters.appConfigName }} --format json --source file --path "$(System.DefaultWorkingDirectory)/deployment/pipelines/templates/infra/app-config-template-translated.json"
+      # Set KeyVault Keys
+      az appconfig kv set --key Global:ClientAuth:JWT:aadappid --value $servicePrincipalId --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:ClientAuth:JWT:authissuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:AzureActiveDirectory:aadappid --value $servicePrincipalId --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:AzureActiveDirectory:aadappsecret --value $servicePrincipalKey --name ${{ parameters.appConfigName }} --yes
+      # Set Environment Info
+      az appconfig kv set --key Global:resourceGroup --value ${{ parameters.resourceGroup }} --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:subscriptionId --value $(az account show | jq -r .id) --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:instrumentationKey --value $appInsightKey --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:StorageAccount:Key --value $storageAccountKey --name ${{ parameters.appConfigName }} --yes
+      # Set dynamic TMS keys
       az appconfig kv set --key TenantManagerService:cosmosDbEndpoint --value $cosmosDbEndpoint --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:cosmosDbToken --value $cosmosDbAuthKey --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:lifecycleEventHubConnString --value $lifecycleEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:telemetryEventHubConnString --value $telemetryEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:twinChangeEventHubConnString --value $twinchangeEvConn --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:setAppConfigEndpoint --value $appConfigEndpoint --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:setAppConfigFunction --value $appConfigEndpoint --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:twinChangeFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:telemetryFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:lifecycleFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:eventHubNamespaceName --value $evNamespace --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:eventHubAccessPolicyKey --value $evAccessPolicyKey --name ${{ parameters.appConfigName }} --yes
     addSpnToEnvironment: true

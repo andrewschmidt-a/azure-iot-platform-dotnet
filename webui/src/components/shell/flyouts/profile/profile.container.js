@@ -20,8 +20,8 @@ import {
   getTenantsLastUpdated
 } from 'store/reducers/tenantsReducer';
 
-function deleteTenantFlow(id, switchId) {
-  TenantService.deleteTenant(id)
+function deleteTenantFlow(switchId) {
+  TenantService.deleteTenant()
     .subscribe(
       response => {
         AuthService.switchTenant(switchId);
@@ -68,7 +68,7 @@ const mapDispatchToProps = dispatch => ({
   createTenant: () => TenantService.createTenant(),
   processTenantDisplayValue: (tenant) => TenantService.processDisplayValue(tenant),
   logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel)),
-  deleteTenantThenSwitch: (id, switchId) => deleteTenantFlow(id, switchId)
+  deleteTenantThenSwitch: (switchId) => deleteTenantFlow(switchId)
 });
 
 export const ProfileContainer = withRouter(withNamespaces()(connect(mapStateToProps, mapDispatchToProps)(Profile)));

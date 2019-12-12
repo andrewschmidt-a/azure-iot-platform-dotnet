@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.TenantManager.Services.External;
 using Mmm.Platform.IoT.TenantManager.Services.Helpers;
 using Mmm.Platform.IoT.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Microsoft.Extensions.Logging;
 
 namespace Mmm.Platform.IoT.TenantManager.Services
@@ -21,18 +23,18 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             ILogger<StatusService> logger,
             IIdentityGatewayClient identityGatewayClient,
             IDeviceGroupsConfigClient deviceGroupsConfigClient,
-            CosmosHelper cosmosHelper,
-            TableStorageHelper tableStorageHelper,
-            TenantRunbookHelper tenantRunbookHelper)
+            IStorageClient cosmosClient,
+            ITableStorageClient tableStorageClient,
+            IRunbookHelper RunbookHelper)
         {
             _logger = logger;
             this._config = config;
 
             this.dependencies = new Dictionary<string, IStatusOperation>
             {
-                { "CosmosDb", cosmosHelper },
-                { "Tenant Runbooks", tenantRunbookHelper },
-                { "Table Storage", tableStorageHelper },
+                { "CosmosDb", cosmosClient },
+                { "Tenant Runbooks", RunbookHelper },
+                { "Table Storage", tableStorageClient },
                 { "Identity Gateway", identityGatewayClient },
                 { "Config", deviceGroupsConfigClient }
             };
