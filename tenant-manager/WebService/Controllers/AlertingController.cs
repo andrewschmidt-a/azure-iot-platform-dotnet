@@ -38,7 +38,7 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 
         [HttpGet]
         [Authorize("ReadAll")]
-        public async Task<StreamAnalyticsJobModel> GetAlertingAsync([FromQuery] bool createIfNotExists = true)
+        public async Task<StreamAnalyticsJobModel> GetAlertingAsync([FromQuery] bool createIfNotExists = false)
         {
             string tenantId = this.GetTenantId();
             StreamAnalyticsJobModel model = await this._alertingContainer.GetAlertingAsync(tenantId);
