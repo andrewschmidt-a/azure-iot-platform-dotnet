@@ -1,20 +1,6 @@
-trigger:
-  branches:
-    include:
-    - master 
-  paths:
-    include:
-    - asa-manager/
-    - common/
+trigger: none
 
-pr:
-  branches:
-    include:
-    - master
-  paths: 
-    include:
-    - asa-manager/
-    - common/
+pr: none
 
 stages:
 - template: 'templates/service-deploy-env.yaml'
