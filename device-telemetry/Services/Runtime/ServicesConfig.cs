@@ -3,18 +3,17 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime
 {
-    public interface IServicesConfig : IAppConfigClientConfig, IStorageClientConfig, ITimeSeriesClientConfig, IUserManagementClientConfig, IStorageAdapterClientConfig, IAuthMiddlewareConfig
+    public interface IServicesConfig : IAppConfigClientConfig, IStorageClientConfig, ITimeSeriesClientConfig, IUserManagementClientConfig, IStorageAdapterClientConfig, IAuthMiddlewareConfig, IAsaManagerClientConfig
     {
         StorageConfig MessagesConfig { get; set; }
         AlarmsConfig AlarmsConfig { get; set; }
@@ -32,6 +31,8 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
 
     public class ServicesConfig : IServicesConfig
     {
+        public string AsaManagerApiUrl { get; set; }
+
         public string StorageAdapterApiUrl { get; set; }
 
         public int StorageAdapterApiTimeout { get; set; }
@@ -44,38 +45,13 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
 
         public string StorageType { get; set; }
 
-        public Uri CosmosDbUri { get; set; }
-
-        public string CosmosDbKey { get; set; }
-
         public int CosmosDbThroughput { get; set; }
 
         public string DiagnosticsApiUrl { get; set; }
 
         public int DiagnosticsMaxLogRetries { get; set; }
 
-        public string CosmosDbConnString
-        {
-            set
-            {
-                var match = Regex.Match(value,
-                    @"^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$");
-
-                Uri endpoint;
-
-                if (!match.Success ||
-                    !Uri.TryCreate(match.Groups["endpoint"].Value,
-                        UriKind.RelativeOrAbsolute,
-                        out endpoint))
-                {
-                    var message = "Invalid connection string for CosmosDB";
-                    throw new InvalidConfigurationException(message);
-                }
-
-                this.CosmosDbUri = endpoint;
-                this.CosmosDbKey = match.Groups["key"].Value;
-            }
-        }
+        public string CosmosDbConnectionString { get; set; }
 
         public string TimeSeriesFqdn { get; set; }
 

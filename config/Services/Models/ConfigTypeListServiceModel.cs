@@ -3,10 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
+using Mmm.Platform.IoT.Config.Services.Models;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
+namespace Mmm.Platform.IoT.Config.Services.External
 {
     public class ConfigTypeListServiceModel
     {

@@ -1,4 +1,4 @@
-namespace IdentityGateway.Services
+namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public interface IUserInput<TModel>
     {

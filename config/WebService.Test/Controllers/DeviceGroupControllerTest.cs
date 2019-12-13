@@ -4,15 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models;
+using Mmm.Platform.IoT.Config.Services;
+using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
+using Mmm.Platform.IoT.Config.WebService.v1.Models;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
 
-namespace Config.WebService.Test.Controllers
+namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class DeviceGroupControllerTest
     {

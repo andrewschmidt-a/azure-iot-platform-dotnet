@@ -8,13 +8,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.WebService.Auth;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
-using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
+using Mmm.Platform.IoT.Common.Services.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 {
     public class Startup
     {
@@ -57,9 +54,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             // Prepare DI container
             this.ApplicationContainer = new DependencyResolution().Setup(services);
 
-            // Print some useful information at bootstrap time
-            this.PrintBootstrapInfo(this.ApplicationContainer);
-
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
@@ -95,12 +89,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
-        }
-
-        private void PrintBootstrapInfo(IContainer container)
-        {
-            var log = container.Resolve<ILogger>();
-            log.Info("Web service started", () => new { Uptime.ProcessId });
         }
     }
 }

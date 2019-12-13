@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using Microsoft.Azure.Devices;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     /// <summary>
     /// Statistics exposed by configuration queries

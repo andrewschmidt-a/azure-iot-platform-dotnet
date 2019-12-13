@@ -3,11 +3,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
-using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Config.Services.Helpers;
+using Mmm.Platform.IoT.Config.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
+namespace Mmm.Platform.IoT.Config.Services.External
 {
     public interface IDeviceSimulationClient
     {

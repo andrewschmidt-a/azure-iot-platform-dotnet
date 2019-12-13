@@ -3,22 +3,19 @@ using System;
 using System.Collections.Generic;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
-using Mmm.Platform.IoT.Common.WebService.Auth;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
-using WebService;
+using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 
-namespace IdentityGateway.WebService
+namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {
     public class Startup
     {
@@ -66,21 +63,18 @@ namespace IdentityGateway.WebService
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
 
-            services.AddScoped<TableHelper>();
             services.AddSingleton<UserSettingsContainer>();
             services.AddSingleton<UserTenantContainer>();
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddSingleton<IStatusService, StatusService>();
-            services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
+            services.AddSingleton<ITableStorageClient>();
             services.AddSingleton<IRsaHelpers, RsaHelpers>();
+
+            services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
             services.AddTransient<ISendGridClientFactory, SendGridClientFactory>();
-            services.AddTransient<ITableHelper, TableHelper>();
 
             // Prepare DI container
             this.ApplicationContainer = new DependencyResolution().Setup(services);
-
-            // Print some useful information at bootstrap time
-            this.PrintBootstrapInfo(this.ApplicationContainer);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
@@ -102,11 +96,6 @@ namespace IdentityGateway.WebService
 
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();
-        }
-        private void PrintBootstrapInfo(IContainer container)
-        {
-            var log = container.Resolve<ILogger>();
-            log.Info("Web service started", () => new { Uptime.ProcessId });
         }
     }
 }

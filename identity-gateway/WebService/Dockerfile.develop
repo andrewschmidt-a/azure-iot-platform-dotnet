@@ -6,10 +6,7 @@ EXPOSE 80
 
 WORKDIR /src
 COPY Directory.Build.props .
-COPY common/AuthUtils/AuthUtils.csproj common/AuthUtils/
-COPY common/AppConfiguration/AppConfiguration.csproj common/AppConfiguration/
 COPY common/Services/Services.csproj common/Services/
-COPY common/WebService/WebService.csproj common/WebService/
 COPY identity-gateway/Services/Services.csproj identity-gateway/Services/
 COPY identity-gateway/WebService/WebService.csproj identity-gateway/WebService/
 RUN dotnet restore identity-gateway/WebService/WebService.csproj

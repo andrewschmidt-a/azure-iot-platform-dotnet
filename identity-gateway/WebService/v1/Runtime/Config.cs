@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.    
 
 using System;
-using IdentityGateway.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace IdentityGateway.WebService.Runtime
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.Runtime
 {
     public interface IConfig
     {
@@ -57,7 +57,7 @@ namespace IdentityGateway.WebService.Runtime
 
             this.ServicesConfig = new ServicesConfig
             {
-                UserPermissions = configData.GetUserPermissions(),
+                UserPermissions = configData.UserPermissions,
                 PublicKey = configData.GetString(PUBLIC_KEY_KEY),
                 PrivateKey = configData.GetString(PRIVATE_KEY_KEY),
                 StorageAccountConnectionString = configData.GetString(STORAGE_CONNECTION_STRING_KEY),

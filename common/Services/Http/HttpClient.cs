@@ -1,19 +1,19 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
 
 namespace Mmm.Platform.IoT.Common.Services.Http
 {
     public class HttpClient : IHttpClient
     {
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
-        public HttpClient(ILogger logger)
+        public HttpClient(ILogger<HttpClient> logger)
         {
-            this.log = logger;
+            _logger = logger;
         }
 
         public async Task<IHttpResponse> GetAsync(IHttpRequest request)
@@ -67,7 +67,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
                 SetContent(request, httpMethod, httpRequest);
                 SetHeaders(request, httpRequest);
 
-                this.log.Debug("Sending request", () => new { httpMethod, request.Uri, request.Options });
+                _logger.LogDebug("Sending {method} request to URI {uri} with options {options}", httpMethod, request.Uri, request.Options);
 
                 try
                 {
@@ -92,13 +92,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
                         errorMessage += " - " + e.InnerException.Message;
                     }
 
-                    this.log.Error("Request failed", () => new
-                    {
-                        ExceptionMessage = e.Message,
-                        InnerExceptionType = e.InnerException != null ? e.InnerException.GetType().FullName : "",
-                        InnerExceptionMessage = e.InnerException != null ? e.InnerException.Message : "",
-                        errorMessage
-                    });
+                    _logger.LogError(e, "Request failed");
 
                     return new HttpResponse
                     {

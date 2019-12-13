@@ -1,37 +1,22 @@
 using System;
 using System.Threading.Tasks;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Models;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.AuthUtils;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 
-namespace IdentityGateway.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
 {
     [Route("v1/settings"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     [Authorize("ReadAll")]
-    public class UserSettingsController : ControllerBase
+    public class UserSettingsController : Controller
     {
         private UserSettingsContainer _container;
 
         public UserSettingsController(UserSettingsContainer container)
         {
             _container = container;
-        }
-
-        private string ClaimsUserId
-        {
-            get
-            {
-                try
-                {
-                    return HttpContext.Request.GetCurrentUserObjectId();
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("A request was sent to an API endpoint that requires a userId, but the userId was not passed through the url nor was it available in the user Claims.", e);
-                }
-            }
         }
 
         /// <summary>
@@ -41,7 +26,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [HttpGet("all")]
         public async Task<UserSettingsListModel> UserClaimsGetAllAsync()
         {
-            return await this.GetAllAsync(this.ClaimsUserId);
+            return await this.GetAllAsync(this.GetClaimsUserId());
         }
 
         /// <summary>
@@ -67,7 +52,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [HttpGet("{setting}")]
         public async Task<UserSettingsModel> UserClaimsGetAsync(string setting)
         {
-            return await this.GetAsync(this.ClaimsUserId, setting);
+            return await this.GetAsync(this.GetClaimsUserId(), setting);
         }
 
         /// <summary>
@@ -97,7 +82,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserSettingsModel> UserClaimsPostAsync(string setting, string value)
         {
-            return await this.PostAsync(this.ClaimsUserId, setting, value);
+            return await this.PostAsync(this.GetClaimsUserId(), setting, value);
         }
 
         /// <summary>
@@ -130,7 +115,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserSettingsModel> UserClaimsPutAsync(string setting, string value)
         {
-            return await this.PutAsync(this.ClaimsUserId, setting, value);
+            return await this.PutAsync(this.GetClaimsUserId(), setting, value);
         }
 
         /// <summary>
@@ -162,7 +147,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserSettingsModel> UserClaimsDeleteAsync(string setting)
         {
-            return await this.DeleteAsync(this.ClaimsUserId, setting);
+            return await this.DeleteAsync(this.GetClaimsUserId(), setting);
         }
 
         /// <summary>

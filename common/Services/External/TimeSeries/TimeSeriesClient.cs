@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
@@ -17,7 +17,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
     public class TimeSeriesClient : ITimeSeriesClient
     {
         private readonly IHttpClient httpClient;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         private AuthenticationResult token;
 
@@ -59,10 +59,10 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         public TimeSeriesClient(
             IHttpClient httpClient,
             ITimeSeriesClientConfig config,
-            ILogger log)
+            ILogger<TimeSeriesClient> logger)
         {
             this.httpClient = httpClient;
-            this.log = log;
+            _logger = logger;
             this.authority = config.TimeSeriesAuthority;
             this.applicationId = config.ActiveDirectoryAppId;
             this.applicationSecret = config.ActiveDirectoryAppSecret;
@@ -78,7 +78,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         /// that the fqdn provided can reach Time Series Insights.
         /// Returns a tuple with the status [bool isAvailable, string message].
         /// </summary>
-        public async Task<StatusResultServiceModel> PingAsync()
+        public async Task<StatusResultServiceModel> StatusAsync()
         {
             var result = new StatusResultServiceModel(false, "TimeSeries check failed");
 
@@ -110,7 +110,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             }
             catch (Exception e)
             {
-                this.log.Error(result.Message, () => new { e });
+                _logger.LogError(e, result.Message);
             }
             return result;
         }
@@ -134,8 +134,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             request.SetContent(
                 this.PrepareInput(from, to, order, skip, limit, deviceIds));
 
-            var msg = "Making Query to Time Series: Uri" + request.Uri + " Body: " + request.Content;
-            this.log.Info(msg, () => new { request.Uri, request.Content });
+            _logger.LogInformation("Making query to time series at URI {requestUri} with body {requestContent}", request.Uri, request.Content);
 
             var response = await this.httpClient.PostAsync(request);
             var messages = JsonConvert.DeserializeObject<ValueListApiModel>(response.Content);

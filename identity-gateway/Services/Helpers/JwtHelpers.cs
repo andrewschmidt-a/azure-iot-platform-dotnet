@@ -4,13 +4,13 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 
-namespace IdentityGateway.Services.Helpers
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 {
     public class JwtHelpers : IJwtHelpers
     {

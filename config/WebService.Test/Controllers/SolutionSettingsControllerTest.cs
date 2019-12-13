@@ -3,24 +3,24 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.Actions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.Config.Services;
+using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Platform.IoT.Config.Services.Models.Actions;
+using Mmm.Platform.IoT.Config.Services.Runtime;
+using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
 
-namespace Config.WebService.Test.Controllers
+namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class SolutionControllerTest
     {
         private readonly Mock<IStorage> mockStorage;
         private readonly Mock<IActions> mockActions;
-        private readonly Mock<ILogger> mockLogger;
+        private readonly Mock<ILogger<SolutionSettingsController>> _logger;
         private readonly Mock<IAzureResourceManagerClient> mockResourceManagementClient;
         private readonly SolutionSettingsController controller;
         private readonly Random rand;
@@ -29,7 +29,7 @@ namespace Config.WebService.Test.Controllers
         {
             this.mockStorage = new Mock<IStorage>();
             this.mockActions = new Mock<IActions>();
-            this.mockLogger = new Mock<ILogger>();
+            _logger = new Mock<ILogger<SolutionSettingsController>>();
             this.mockResourceManagementClient = new Mock<IAzureResourceManagerClient>();
             this.controller = new SolutionSettingsController(
                 this.mockStorage.Object,
@@ -227,7 +227,7 @@ namespace Config.WebService.Test.Controllers
                 this.controller.ControllerContext.HttpContext = mockContext.Object;
 
                 var config = new ServicesConfig();
-                var action = new EmailActionSettings(this.mockResourceManagementClient.Object, config, this.mockLogger.Object);
+                var action = new EmailActionSettings(this.mockResourceManagementClient.Object, config, new Mock<ILogger<EmailActionSettings>>().Object);
                 var actionsList = new List<IActionSettings>
                 {
                     action

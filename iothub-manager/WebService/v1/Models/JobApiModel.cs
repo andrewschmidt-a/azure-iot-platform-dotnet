@@ -3,10 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Models
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class JobApiModel
     {

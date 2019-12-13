@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Models
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 {
     public class RuleListApiModel
     {

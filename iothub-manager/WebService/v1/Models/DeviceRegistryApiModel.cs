@@ -2,11 +2,11 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Models
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class DeviceRegistryApiModel
     {

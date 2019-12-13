@@ -3,6 +3,7 @@
 import { stringify } from 'query-string';
 import Config from 'app.config';
 import { HttpClient } from 'utilities/httpClient';
+import { AlertingService } from 'services';
 import {
   toActiveAlertsModel,
   toAlertForRuleModel,
@@ -14,6 +15,7 @@ import {
   toStatusModel,
   toTelemetryRequestModel
 } from './models';
+import { Alert } from '@microsoft/azure-iot-ux-fluent-controls';
 
 const ENDPOINT = Config.serviceUrls.telemetry;
 
@@ -34,6 +36,11 @@ export class TelemetryService {
 
   /** creates a new rule */
   static createRule(rule) {
+    if (!AlertingService.tenantHasAlerting())
+    {
+      // Add alerting to this tenant if alerting does not already exist
+      AlertingService.addAlerting();
+    }
     return HttpClient.post(`${ENDPOINT}rules`, rule)
       .map(toRuleModel);
   }

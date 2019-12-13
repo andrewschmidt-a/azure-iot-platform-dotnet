@@ -1,31 +1,30 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.TenantManager.Services;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
+namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {
     [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
-    public class TenantReadyController : ControllerBase
+    public class TenantReadyController : Controller
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ITenantContainer _tenantContainer;
-        private readonly ILogger _log;
+        private readonly ILogger _logger;
 
-        public TenantReadyController(IHttpContextAccessor httpContextAccessor, ITenantContainer tenantContainer, ILogger log)
+        public TenantReadyController(ITenantContainer tenantContainer, ILogger<TenantReadyController> log)
         {
-            this._httpContextAccessor = httpContextAccessor;
             this._tenantContainer = tenantContainer;
-            this._log = log;
+            _logger = log;
         }
 
-        // GET api/tenantready/<tenantId>
-        [HttpGet("{tenantId}")]
-        public async Task<bool> GetAsync(string tenantId)
+        [HttpGet("")]
+        public async Task<bool> GetAsync()
         {
-            return await this._tenantContainer.TenantIsReadyAsync(tenantId);
+            return await this._tenantContainer.TenantIsReadyAsync(this.GetTenantId());
         }
     }
 }

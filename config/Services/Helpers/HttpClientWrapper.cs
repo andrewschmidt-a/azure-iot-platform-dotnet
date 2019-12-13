@@ -4,12 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
+namespace Mmm.Platform.IoT.Config.Services.Helpers
 {
     public interface IHttpClientWrapper
     {
@@ -21,16 +21,16 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
 
     public class HttpClientWrapper : IHttpClientWrapper
     {
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private readonly IHttpClient client;
         private Dictionary<string, string> headers;
 
         public HttpClientWrapper(
-            ILogger logger,
+            ILogger<HttpClientWrapper> logger,
             IHttpClient client,
             Dictionary<string, string> headers = null)
         {
-            this.log = logger;
+            _logger = logger;
             this.client = client;
             this.headers = headers;
             if (this.headers == null)
@@ -64,7 +64,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
             }
             catch (Exception e)
             {
-                this.log.Error("Request failed", () => new { uri, e });
+                _logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to load {description}");
             }
 
@@ -75,7 +75,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                this.log.Error("Request failed", () => new { uri, response.StatusCode, response.Content });
+                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to load {description}");
             }
 
@@ -85,7 +85,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
             }
             catch (Exception e)
             {
-                this.log.Error($"Could not parse result from {uri}: {e.Message}", () => { });
+                _logger.LogError($"Could not parse result from {uri}: {e.Message}");
                 throw new ExternalDependencyException($"Could not parse result from {uri}");
             }
         }
@@ -119,13 +119,13 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
             }
             catch (Exception e)
             {
-                this.log.Error("Request failed", () => new { uri, e });
+                _logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to post {description}");
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                this.log.Error("Request failed", () => new { uri, response.StatusCode, response.Content });
+                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to post {description}");
             }
         }
@@ -160,13 +160,13 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
             }
             catch (Exception e)
             {
-                this.log.Error("Request failed", () => new { uri, e });
+                _logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to put {description}");
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                this.log.Error("Request failed", () => new { uri, response.StatusCode, response.Content });
+                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to put {description}");
             }
         }

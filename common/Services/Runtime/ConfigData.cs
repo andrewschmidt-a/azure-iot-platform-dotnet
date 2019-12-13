@@ -6,30 +6,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
-using Mmm.Platform.IoT.Common.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 
 namespace Mmm.Platform.IoT.Common.Services.Runtime
 {
     public class ConfigData : IConfigData
     {
-        private readonly IConfigurationRoot configuration;
-        private readonly ILogger log;
+        private IConfiguration configuration;
+        private readonly ILogger _logger;
 
         // Key Vault
-        private KeyVault keyVault;
+        private readonly KeyVault keyVault;
 
         // Constants
-        private const string CLIENT_ID = "Global:AzureActiveDirectory:aadAppId";
-        private const string CLIENT_SECRET = "Global:AzureActiveDirectory:aadAppSecret";
-        private const string KEY_VAULT_NAME = "Global:KeyVault:name";
-        private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
+        private const string GLOBAL_KEY = "Global:";
         private const string ALLOWED_ACTION_KEY = "Global:Permissions";
+
+        private const string AAD_KEY = GLOBAL_KEY + "AzureActiveDirectory:"; 
+        private const string CLIENT_ID = AAD_KEY + "aadAppId";
+        private const string CLIENT_SECRET = AAD_KEY + "aadAppSecret";
+        private const string CLIENT_TENANT = AAD_KEY + "aadTenantId";
+
+        private const string KEY_VAULT_NAME = GLOBAL_KEY + "KeyVault:name";
+
+        private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
 
         private readonly List<string> appConfigKeys = new List<string>
         {
             "Actions",
+            "AsaManagerService",
             "ConfigService",
             "ConfigService:Actions",
             "ExternalDependencies",
@@ -54,12 +60,73 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
             "TelemetryService:TimeSeries"
         };
 
-        public ConfigData(ILogger logger)
+        public ConfigData() : this(null, null)
         {
-            this.log = logger;
+        }
 
-            // More info about configuration at
-            // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/configuration
+        public ConfigData(ILogger<ConfigData> logger, KeyVault kv)
+        {
+            _logger = logger;
+            InitializeConfiguration();
+            keyVault = kv;
+            SetUpKeyVault();
+        }
+
+        public string AppConfigurationConnectionString
+        {
+            get
+            {
+                return this.GetString(APP_CONFIGURATION);
+            }
+        }
+
+        public Dictionary<string, List<string>> UserPermissions
+        {
+            get
+            {
+                Dictionary<string, List<string>> permissions = new Dictionary<string, List<string>>();
+                foreach (var roleSection in this.configuration.GetSection(ALLOWED_ACTION_KEY).GetChildren())
+                {
+                    permissions.Add(roleSection.Key, roleSection.GetChildren().Select(t => t.Key).ToList());
+                }
+                return permissions;
+            }
+        }
+
+        public string AadAppId
+        {
+            get
+            {
+                return this.GetString(CLIENT_ID);
+            }
+        }
+
+        public string AadAppSecret
+        {
+            get
+            {
+                return this.GetString(CLIENT_SECRET);
+            }
+        }
+
+        public string AadTenantId
+        {
+            get
+            {
+                return this.GetString(CLIENT_TENANT);
+            }
+        }
+
+        public string KeyVaultName
+        {
+            get
+            {
+                return this.GetString(KEY_VAULT_NAME);
+            }
+        }
+
+        private void InitializeConfiguration()
+        {
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder
 #if DEBUG
@@ -67,24 +134,9 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
 #endif
             .AddEnvironmentVariables();
 
-            // build configuration with environment variables
             var preConfig = configurationBuilder.Build();
-            // Add app config settings to the configuration builder
             configurationBuilder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
-            this.configuration = configurationBuilder.Build();
-            // Set up Key Vault
-            this.SetUpKeyVault();
-        }
-
-        public Dictionary<string, List<string>> GetUserPermissions()
-        {
-            Dictionary<string, List<string>> permissions = new Dictionary<string, List<string>>();
-            foreach (var roleSection in this.configuration.GetSection(ALLOWED_ACTION_KEY).GetChildren())
-            {
-                permissions.Add(roleSection.Key, roleSection.GetChildren().Select(t => t.Key).ToList());
-            }
-
-            return permissions;
+            configuration = configurationBuilder.Build();
         }
 
         public string GetString(string key, string defaultValue = "")
@@ -121,16 +173,22 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
 
         private void SetUpKeyVault()
         {
+            if (keyVault == null)
+            {
+                return;
+            }
+
             var clientId = this.GetEnvironmentVariable(CLIENT_ID, string.Empty);
             var clientSecret = this.GetEnvironmentVariable(CLIENT_SECRET, string.Empty);
             var keyVaultName = this.GetEnvironmentVariable(KEY_VAULT_NAME, string.Empty);
-            if (String.IsNullOrEmpty(clientId) || String.IsNullOrEmpty(clientSecret) || String.IsNullOrEmpty(keyVaultName))
+            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(clientSecret) || string.IsNullOrEmpty(keyVaultName))
             {
                 throw new Exception("One of the required key vault keys was not configured correctly.");
             }
 
-            // Initailize key vault
-            this.keyVault = new KeyVault(keyVaultName, clientId, clientSecret, this.log);
+            keyVault.ClientId = clientId;
+            keyVault.Name = keyVaultName;
+            keyVault.ClientSecret = clientSecret;
         }
 
         private string GetSecrets(string key, string defaultValue = "")
@@ -142,17 +200,16 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
             // If secrets are not found locally, search in Key-Vault
             if (string.IsNullOrEmpty(value))
             {
-                log.Warn($"Value for secret {key} not found in local env. " +
-                    $" Trying to get the secret from KeyVault.", () => { });
-                value = this.keyVault.GetSecret(key);
+                _logger?.LogWarning("Value for secret {key} not found in local env. Trying to get the secret from KeyVault.", key);
+                value = this.keyVault?.GetSecret(key);
             }
 
             return !string.IsNullOrEmpty(value) ? value : defaultValue;
         }
 
-        public string GetSecretsFromKeyVault(string key)
+        private string GetSecretsFromKeyVault(string key)
         {
-            return this.keyVault.GetSecret(key);
+            return this.keyVault?.GetSecret(key);
         }
 
         private string GetLocalVariables(string key, string defaultValue = "")
@@ -205,7 +262,7 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
             if (keys.Length > 0)
             {
                 var varsNotFound = keys.Aggregate(", ", (current, k) => current + k);
-                this.log.Error("Environment variables not found", () => new { varsNotFound });
+                _logger?.LogError("Environment variables not found: {environmentVariables}", varsNotFound);
                 throw new InvalidConfigurationException("Environment variables not found: " + varsNotFound);
             }
         }
@@ -239,7 +296,7 @@ namespace Mmm.Platform.IoT.Common.Services.Runtime
                 value = keys.Aggregate(value, (current, k) => current.Replace("${?" + k + "}", string.Empty));
 
                 var varsNotFound = keys.Aggregate(", ", (current, k) => current + k);
-                this.log.Warn("Environment variables not found", () => new { varsNotFound });
+                _logger?.LogWarning("Environment variables not found: {environmentVariables}", varsNotFound);
 
                 notFound = true;
             }

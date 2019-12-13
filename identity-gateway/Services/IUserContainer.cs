@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace IdentityGateway.Services
+namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public interface IUserContainer<TModel, UInput>
     {

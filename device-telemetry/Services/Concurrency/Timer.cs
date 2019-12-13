@@ -2,9 +2,9 @@
 
 using System;
 using System.Threading;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Concurrency
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
 {
     public interface ITimer
     {
@@ -17,14 +17,14 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Concurrency
 
     public class Timer : ITimer
     {
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         private System.Threading.Timer timer;
         private int frequency;
 
-        public Timer(ILogger logger)
+        public Timer(ILogger<Timer> logger)
         {
-            this.log = logger;
+            _logger = logger;
             this.frequency = 0;
         }
 
@@ -53,7 +53,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Concurrency
         {
             if (this.timer == null)
             {
-                this.log.Error("The timer is not initialized", () => { });
+                _logger.LogError("The timer is not initialized");
                 throw new TimerNotInitializedException();
             }
 

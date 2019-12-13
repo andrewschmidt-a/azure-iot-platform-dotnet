@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Xunit;
 
-namespace Services.Test
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class QueryBuilderTest
     {

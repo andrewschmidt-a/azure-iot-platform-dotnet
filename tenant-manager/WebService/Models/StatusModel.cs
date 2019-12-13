@@ -3,11 +3,10 @@
 using System;
 using System.Collections.Generic;
 using Mmm.Platform.IoT.Common.Services.Models;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Runtime;
 using Newtonsoft.Json;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Models
+namespace Mmm.Platform.IoT.TenantManager.WebService.Models
 {
     public sealed class StatusModel
     {

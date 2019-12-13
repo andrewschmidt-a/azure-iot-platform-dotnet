@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
+namespace Mmm.Platform.IoT.TenantManager.Services.External
 {
     public class DeviceGroupsConfigClient : IDeviceGroupsConfigClient
     {
@@ -35,7 +35,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
             try
             {
                 string url = this.RequestUrl("status/");
-                var result = await this._requestHelper.ProcessApiModelRequestAsync<StatusServiceModel>(HttpMethod.Get, url);
+                var result = await this._requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, url);
                 if (result == null || result.Status == null || !result.Status.IsHealthy)
                 {
                     // bad status
@@ -64,7 +64,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.External
                 Conditions = new List<DeviceGroupConditionModel>()
             };
             string url = this.RequestUrl("devicegroups/");
-            return await this._requestHelper.ProcessApiModelRequestAsync(HttpMethod.Post, url, defaultGroup, tenantId);
+            return await this._requestHelper.ProcessRequestAsync(HttpMethod.Post, url, defaultGroup, tenantId);
         }
     }
 }

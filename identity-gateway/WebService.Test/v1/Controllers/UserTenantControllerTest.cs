@@ -6,20 +6,20 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
-using IdentityGateway.WebService.v1.Controllers;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.AuthUtils;
+using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Xunit;
 
-namespace WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
     public class UserTenantControllerTest
     {
@@ -210,10 +210,6 @@ namespace WebService.Test.v1.Controllers
 
         private void SetupDefaultBehaviors()
         {
-            mockHttpContext.SetupAllProperties();
-            mockHttpRequest.Setup(m => m.HttpContext).Returns(mockHttpContext.Object);
-            mockHttpRequest.Setup(m => m.Host).Returns(someHost);
-            mockHttpContext.Setup(m => m.Request).Returns(mockHttpRequest.Object);
             mockUserTenantContainer.Setup(m => m.GetAllAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(someUserTenantList);
             mockUserTenantContainer.Setup(m => m.GetAllUsersAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(someUserTenantList);
             mockUserTenantContainer.Setup(m => m.GetAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(someUserTenant);
@@ -225,12 +221,20 @@ namespace WebService.Test.v1.Controllers
             someSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", someTenant.ToString()) });
             mockJwtHelper.Setup(m => m.MintToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<DateTime>())).Returns(someSecurityToken);
             mockSendGridClient.Setup(m => m.SendEmailAsync(It.IsAny<SendGridMessage>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Response(HttpStatusCode.OK, new StringContent(""), null));
+            mockHttpRequest.Setup(m => m.HttpContext).Returns(mockHttpContext.Object);
+            mockHttpRequest.Setup(m => m.Host).Returns(someHost);
+            mockHttpContext.Setup(m => m.Request).Returns(mockHttpRequest.Object);
             contextItems = new Dictionary<object, object>
             {
-                { RequestExtension.ContextKeyUserClaims, new List<Claim> { new Claim(RequestExtension.UserObjectIdClaimType, someSub) } },
-                { RequestExtension.ContextKeyTenantId, someTenantId }
+                {
+                    RequestExtension.ContextKeyUserClaims, 
+                    new List<Claim> { new Claim(RequestExtension.UserObjectIdClaimType, someSub) }
+                },
+                {
+                    RequestExtension.ContextKeyTenantId, someTenantId
+                }
             };
-            mockHttpContext.Object.Items = contextItems;
+            mockHttpContext.Setup(m => m.Items).Returns(contextItems);
         }
     }
 }

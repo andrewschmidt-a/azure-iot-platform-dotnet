@@ -5,10 +5,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS restore
 WORKDIR /src
 COPY Directory.Build.props .
-COPY common/AuthUtils/AuthUtils.csproj common/AuthUtils/
-COPY common/AppConfiguration/AppConfiguration.csproj common/AppConfiguration/
 COPY common/Services/Services.csproj common/Services/
-COPY common/WebService/WebService.csproj common/WebService/
 COPY iothub-manager/Services/Services.csproj iothub-manager/Services/
 COPY iothub-manager/WebService/WebService.csproj iothub-manager/WebService/
 RUN dotnet restore iothub-manager/WebService/WebService.csproj
@@ -26,4 +23,4 @@ RUN dotnet publish WebService.csproj \
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Microsoft.Azure.IoTSolutions.IotHubManager.WebService.dll"]
+ENTRYPOINT ["dotnet", "Mmm.Platform.IoT.IoTHubManager.WebService.dll"]

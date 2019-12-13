@@ -49,7 +49,7 @@ function createWebhook($webhook, $runbookName, $expDate, $secretName) {
 
 function addModulefromGallery($moduleName){
     # import AzureRM.Storage from PS Gallery
-    $galleryRepoUri = (find-module -Name AzureRM.Storage).RepositorySourceLocation
+    $galleryRepoUri = (find-module -Name $moduleName).RepositorySourceLocation
     $moduleUri = '{0}{1}' -f $galleryRepoUri, [string]::Concat('/package/',$moduleName)
     Write-Output "Importing $moduleName from $moduleUri"
     New-AzureRmAutomationModule -ResourceGroupName $resourceGroup `
@@ -57,7 +57,7 @@ function addModulefromGallery($moduleName){
                                 -Name $moduleName `
                                 -ContentLink $moduleUri
 
-    Write-Output "Module $moduleName added to Automation Acct .."
+    Write-Output "Module $moduleName added to Automation Account."
 }
 
 function addtoKeyvault($webookUri, $secretName ){
@@ -66,17 +66,37 @@ function addtoKeyvault($webookUri, $secretName ){
 }
 
 # import modules from PS Gallery
-Write-Output "Adding modules to Automation Acct .."
-addModulefromGallery -moduleName "AzureRM.Storage"
+Write-Output "Adding modules to Automation Account."
 addModulefromGallery -moduleName "Az.Accounts"
+Start-Sleep -Seconds 15
+addModulefromGallery -moduleName "Az.AppConfiguration"
+Start-Sleep -Seconds 15
+addModulefromGallery -moduleName "Az.Automation"
+Start-Sleep -Seconds 15
+addModulefromGallery -moduleName "Az.Accounts"
+Start-Sleep -Seconds 30
+addModulefromGallery -moduleName "Az.IotHub"
+Start-Sleep -seconds 30
+addModulefromGallery -moduleName "Az.DeviceProvisioningServices"
+Start-Sleep -Seconds 15
+addModulefromGallery -moduleName "Az.Resources"
+Start-Sleep -Seconds 15
+addModulefromGallery -moduleName "Az.Storage"
+Start-Sleep -Seconds 30
+addModulefromGallery -moduleName "Az.StreamAnalytics"
+Start-Sleep -Seconds 120
+addModulefromGallery -moduleName "AzTable"
 
 # import the runbook with code with the Path specified
 Write-Output "Importing modules to Automation Acct .."
 importRunbook -runbookName "CreateIoTHubTenant" -filepath "$scriptFolder\CreateIoTHub.ps1" 
 importRunbook -runbookName "DeleteIoTHubTenant" -filepath "$scriptFolder\DeleteIoTHub.ps1"
+importRunbook -runbookName "CreateStreamAnalyticsJob" -filepath "$scriptFolder\CreateSAJob.ps1"
+importRunbook -runbookName "DeleteStreamAnalyticsJob" -filepath "$scriptFolder\DeleteSAJob.ps1"
 
 # create the webhook and store to the Keyvault
 createWebhook -webhook "CreateIotHub" -runbookName "CreateIoTHubTenant" -expDate $expDate -secretName "createIotHubWebHookUrl"
 createWebhook -webhook "DeleteIotHub" -runbookName "DeleteIoTHubTenant" -expDate $expDate -secretName "deleteIotHubWebHookUrl"
-
+createWebhook -webhook "CreateSAJob" -runbookName "CreateStreamAnalyticsJob" -expDate $expDate -secretName "createSAJobWebHookUrl"
+createWebhook -webhook "DeleteSAJob" -runbookName "DeleteStreamAnalyticsJob" -expDate $expDate -secretName "deleteSAJobWebHookUrl"
 # end 

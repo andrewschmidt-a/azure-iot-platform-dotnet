@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace DeviceTelemetry.Services.Test
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class ActionConverterTest
     {

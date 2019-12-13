@@ -1,0 +1,25 @@
+# 
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - asa-manager/
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: AzureCLI@1
+  inputs:
+    azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      #az aks use-dev-spaces -g rg-crslbbiot-odin-dev -n aks-dev-spaces-odin -s default
+      #azds up -d
+      ls # placeholder
+    workingDirectory: 'asa-manager/WebService'
+    

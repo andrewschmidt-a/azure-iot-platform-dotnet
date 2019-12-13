@@ -6,6 +6,7 @@ parameters:
   appConfigName: ''
   keyVaultName: ''
   userObjId: ''
+  defaultSASKeyName: ''
   SendGridApiKey: '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'
 
 steps:
@@ -50,6 +51,8 @@ steps:
       cosmosDBConnection="AccountEndpoint=$cosmosDBUri;AccountKey=$cosmosDBAuthKey;"
       eventhubNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhub| cut -d "/" -f1| awk -F "\"" '{print $4}')
       ehQueueAuthRule='iothubroutes'
+      evAccessKeyName=${{ parameters.defaultSASKeyName }}
+      evAccessPolicyKey=$(az eventhubs namespace authorization-rule keys list -n $evAccessKeyName -g $rg --namespace-name $eventhubNamespace --query primaryKey -o tsv)
       lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace| grep name |grep lifecycle| awk -F "\"" '{print $4}'| cut -d "/" -f1)
       lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
       telemetryEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace| grep name |grep telemetry| awk -F "\"" '{print $4}'| cut -d "/" -f1)
@@ -58,9 +61,10 @@ steps:
       twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
       mapsacct=$(az maps account list --resource-group $rg| grep name | grep map | awk -F "\"" '{print $4}')
       mapskey=$(az maps account keys list --name $mapsacct --resource-group $rg | grep primaryKey | awk -F "\"" '{print $4}'| head -1)
-      az keyvault secret set --vault-name $kVaultName --name 'documentDBAuthKey' --value $cosmosDBAuthKey
-      az keyvault secret set --vault-name $kVaultName --name 'documentDBEndpoint' --value $cosmosDBUri
-      az keyvault secret set --vault-name $kVaultName --name 'documentDBConnectionString' --value $cosmosDBConnection
+      az keyvault secret set --vault-name $kVaultName --name 'documentDbAuthKey' --value $cosmosDBAuthKey
+      az keyvault secret set --vault-name $kVaultName --name 'documentDbEndpoint' --value $cosmosDBUri
+      az keyvault secret set --vault-name $kVaultName --name 'documentDbConnectionString' --value $cosmosDBConnection
+      az keyvault secret set --vault-name $kVaultName --name 'eventHubAccessPolicyKey' --value $evAccessPolicyKey
       az keyvault secret set --vault-name $kVaultName --name 'sendGridAPIKey' --value ${{ parameters.SendGridApiKey }}
       az keyvault secret set --vault-name $kVaultName --name 'ApplicationId' --value $servicePrincipalId
       az keyvault secret set --vault-name $kVaultName --name 'ClientSecret' --value $servicePrincipalKey

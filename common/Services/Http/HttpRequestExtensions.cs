@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
      * This class is a Extension of HttpRequest class which is used by StorageAdapterClientTest
      * to validate the URL and data model using overloaded "Check" methods
      * </summary>     */
-    internal static class HttpRequestExtensions
+    public static class HttpRequestExtensions
     {
         public static bool Check(this IHttpRequest request, string uri)
         {

@@ -2,11 +2,11 @@
 
 using System;
 using System.IO;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.Common.WebService.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Runtime
 {
     public interface IConfig
     {
@@ -29,7 +29,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
 
         private const string COSMOSDB_KEY = GLOBAL_KEY + "CosmosDb:"; // Prefix
-        private const string COSMOSDB_CONNSTRING_KEY = COSMOSDB_KEY + "documentDbConnectionString"; //Global
         private const string COSMOSDB_RUS_KEY = COSMOSDB_KEY + "RUs";
 
         private const string TIME_SERIES_KEY = APPLICATION_KEY + "TimeSeries:";
@@ -39,11 +38,6 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
         private const string TIME_SERIES_EXPLORER_URL = TIME_SERIES_KEY + "explorerUrl";
         private const string TIME_SERIES_API_VERSION = TIME_SERIES_KEY + "apiVersion";
         private const string TIME_SERIES_TIMEOUT = TIME_SERIES_KEY + "timeout";
-
-        private const string AAD_KEY = GLOBAL_KEY + "AzureActiveDirectory:";
-        private const string AAD_TENANT = AAD_KEY + "aadTenantId";
-        private const string AAD_APP_ID = AAD_KEY + "aadAppId";
-        private const string AAD_APP_SECRET = AAD_KEY + "aadAppSecret";
 
         private const string MESSAGES_DB_KEY = "TelemetryService:Messages:";
         private const string MESSAGES_DB_DATABASE_KEY = MESSAGES_DB_KEY + "database";
@@ -61,6 +55,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
         private const string USER_MANAGEMENT_URL_KEY = EXT_DEPENDENCIES_KEY + "authWebServiceUrl";
         private const string DIAGNOSTICS_URL_KEY = EXT_DEPENDENCIES_KEY + "diagnosticsWebServiceUrl";
         private const string DIAGNOSTICS_MAX_LOG_RETRIES = EXT_DEPENDENCIES_KEY + "diagnosticsMaxLogRetries";
+        private const string ASA_MANAGER_API_URL_KEY = EXT_DEPENDENCIES_KEY + "asamanagerwebserviceurl";
 
         private const string CLIENT_AUTH_KEY = GLOBAL_KEY + "ClientAuth:";
         private const string CORS_WHITELIST_KEY = CLIENT_AUTH_KEY + "corsWhitelist";
@@ -77,10 +72,12 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
         private const string ACTIONS_EVENTHUB_NAME = ACTIONS_KEY + "actionsEventHubName";
         private const string ACTIONS_EVENTHUB_CONNSTRING = ACTIONS_KEY + "actionsEventHubConnectionString";
         private const string ACTIONS_LOGICAPP_ENDPOINTURL = ACTIONS_KEY + "logicAppEndpointUrl";
-        private const string ACTIONS_AZUREBLOB_CONNSTRING = GLOBAL_KEY + "StorageAccountConnectionStringKeyVaultSecret";
         private const string ACTIONS_AZUREBLOB_CONTAINER = ACTIONS_KEY + "storageContainer";
         private const string SOLUTION_URL = ACTIONS_KEY + "solutionWebsiteUrl";
         private const string TEMPLATE_FOLDER = ACTIONS_KEY + "templateFolder";
+
+        private const string COSMOSDB_CONNSTRING_KEY = "documentDbConnectionString";
+        private const string STORAGE_ACCOUNT_CONNECTION_STRING = "storageAccountConnectionString";
 
         public int Port { get; }
         public IServicesConfig ServicesConfig { get; }
@@ -92,6 +89,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
 
             this.ServicesConfig = new ServicesConfig
             {
+                AsaManagerApiUrl = configData.GetString(ASA_MANAGER_API_URL_KEY),
                 MessagesConfig = new StorageConfig(
                     configData.GetString(MESSAGES_DB_DATABASE_KEY)),
                 AlarmsConfig = new AlarmsConfig(
@@ -99,7 +97,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
                     configData.GetString(ALARMS_DB_COLLECTION_KEY),
                     configData.GetInt(ALARMS_DB_MAX_DELETE_RETRIES)),
                 StorageType = configData.GetString(MESSAGES_STORAGE_TYPE),
-                CosmosDbConnString = configData.GetString(COSMOSDB_CONNSTRING_KEY),
+                CosmosDbConnectionString = configData.GetString(COSMOSDB_CONNSTRING_KEY),
                 CosmosDbThroughput = configData.GetInt(COSMOSDB_RUS_KEY),
                 StorageAdapterApiUrl = configData.GetString(STORAGE_ADAPTER_API_URL_KEY),
                 StorageAdapterApiTimeout = configData.GetInt(STORAGE_ADAPTER_API_TIMEOUT_KEY),
@@ -110,20 +108,20 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime
                 TimeSeriesExplorerUrl = configData.GetString(TIME_SERIES_EXPLORER_URL),
                 TimeSertiesApiVersion = configData.GetString(TIME_SERIES_API_VERSION),
                 TimeSeriesTimeout = configData.GetString(TIME_SERIES_TIMEOUT),
-                ActiveDirectoryTenant = configData.GetString(AAD_TENANT),
-                ActiveDirectoryAppId = configData.GetString(AAD_APP_ID),
-                ActiveDirectoryAppSecret = configData.GetString(AAD_APP_SECRET),
                 DiagnosticsApiUrl = configData.GetString(DIAGNOSTICS_URL_KEY),
                 DiagnosticsMaxLogRetries = configData.GetInt(DIAGNOSTICS_MAX_LOG_RETRIES),
                 ActionsEventHubConnectionString = configData.GetString(ACTIONS_EVENTHUB_CONNSTRING),
                 ActionsEventHubName = configData.GetString(ACTIONS_EVENTHUB_NAME),
                 LogicAppEndpointUrl = configData.GetString(ACTIONS_LOGICAPP_ENDPOINTURL),
-                BlobStorageConnectionString = configData.GetSecretsFromKeyVault(configData.GetString(ACTIONS_AZUREBLOB_CONNSTRING)),
+                BlobStorageConnectionString = configData.GetString(STORAGE_ACCOUNT_CONNECTION_STRING),
                 ActionsBlobStorageContainer = configData.GetString(ACTIONS_AZUREBLOB_CONTAINER),
                 SolutionUrl = configData.GetString(SOLUTION_URL),
                 TemplateFolder = AppContext.BaseDirectory + Path.DirectorySeparatorChar + configData.GetString(TEMPLATE_FOLDER),
-                UserPermissions = configData.GetUserPermissions(),
-                ApplicationConfigurationConnectionString = configData.GetString(APP_CONFIG_KEY)
+                UserPermissions = configData.UserPermissions,
+                ApplicationConfigurationConnectionString = configData.AppConfigurationConnectionString,
+                ActiveDirectoryTenant = configData.AadTenantId,
+                ActiveDirectoryAppId = configData.AadAppId,
+                ActiveDirectoryAppSecret = configData.AadAppSecret
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

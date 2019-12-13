@@ -2,14 +2,13 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Models;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.WebService.v1;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using Mmm.Platform.IoT.DeviceTelemetry.Services;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
 {
     [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public sealed class RulesController : Controller

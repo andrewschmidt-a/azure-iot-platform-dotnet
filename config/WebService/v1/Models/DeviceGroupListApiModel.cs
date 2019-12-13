@@ -2,11 +2,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
-using Mmm.Platform.IoT.Common.WebService.v1;
+using Mmm.Platform.IoT.Config.Services.Models;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Models
+namespace Mmm.Platform.IoT.Config.WebService.v1.Models
 {
     public class DeviceGroupListApiModel
     {

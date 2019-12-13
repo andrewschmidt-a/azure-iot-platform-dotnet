@@ -4,16 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers.Helpers;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Models;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.WebService.v1.Exceptions;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using Mmm.Platform.IoT.DeviceTelemetry.Services;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers.Helpers;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
 {
     [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AlarmsByRuleController : Controller
@@ -22,16 +22,16 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
 
         private readonly IAlarms alarmService;
         private readonly IRules ruleService;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         public AlarmsByRuleController(
             IAlarms alarmService,
             IRules ruleService,
-            ILogger logger)
+            ILogger<AlarmsByRuleController> logger)
         {
             this.alarmService = alarmService;
             this.ruleService = ruleService;
-            this.log = logger;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -131,7 +131,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
              */
             if (deviceIds.Length > DEVICE_LIMIT)
             {
-                this.log.Warn("The client requested too many devices", () => new { deviceIds.Length });
+                _logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
                 throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
             }
 
@@ -169,7 +169,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
              */
             if (deviceIds.Length > DEVICE_LIMIT)
             {
-                this.log.Warn("The client requested too many devices", () => new { deviceIds.Length });
+                _logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
                 throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
             }
 

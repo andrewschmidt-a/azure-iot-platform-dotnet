@@ -4,4 +4,4 @@ cd /app/
 
 cd webservice
 
-dotnet Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.dll
+dotnet Mmm.Platform.IoT.StorageAdapter.WebService.dll

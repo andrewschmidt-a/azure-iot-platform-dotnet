@@ -10,6 +10,7 @@ trigger:
   paths:
     include:
     - device-telemetry/
+    - common/
 
 pr:
   branches:
@@ -18,6 +19,7 @@ pr:
   paths: 
     include:
     - device-telemetry/
+    - common/
 
 stages:
 - template: templates/build-service.yml

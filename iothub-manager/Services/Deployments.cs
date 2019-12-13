@@ -6,18 +6,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using static Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.DeviceStatusQueries;
+using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
+namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
     public interface IDeployments
     {
@@ -53,13 +53,13 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         private const string DEVICE_ID_KEY = "DeviceId";
         private const string EDGE_MANIFEST_SCHEMA = "schemaVersion";
 
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         private ITenantConnectionHelper _tenantHelper;
 
         public Deployments(
             IAppConfigClientConfig config,
-            ILogger logger,
+            ILogger<Deployments> logger,
             IHttpContextAccessor httpContextAccessor)
         {
             if (config == null)
@@ -69,7 +69,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
             this._tenantHelper = new TenantConnectionHelper(httpContextAccessor, config);
 
-            this.log = logger;
+            _logger = logger;
         }
 
         public Deployments(ITenantConnectionHelper _tenantHelper)
@@ -281,7 +281,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             }
             catch (Exception ex)
             {
-                this.log.Error($"Error getting status of devices in query {query}", () => new { ex.Message });
+                _logger.LogError(ex, "Error getting status of devices in query {query}", query);
             }
 
             return deviceIds;

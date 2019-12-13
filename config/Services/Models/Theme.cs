@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Models
+namespace Mmm.Platform.IoT.Config.Services.Models
 {
     public class Theme
     {

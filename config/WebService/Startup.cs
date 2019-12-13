@@ -5,16 +5,12 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.WebService.Auth;
-using Mmm.Platform.IoT.Common.WebService.Runtime;
-using ILogger = Mmm.Platform.IoT.Common.Services.Diagnostics.ILogger;
+using Mmm.Platform.IoT.Common.Services.Auth;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
+namespace Mmm.Platform.IoT.Config.WebService
 {
     public class Startup
     {
@@ -45,28 +41,12 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
 
             // Setup (not enabling yet) CORS 
             services.AddCors();
-            //services.AddIoTTokenValidator(new IoTTokenValidatorOptions
-            //{
-            //    Authority = "https://aziotidentity3m.centralus.cloudapp.azure.com"
-            //});
-
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(options =>
-            //    {
-            //        options.Authority = "https://aziotidentity3m.centralus.cloudapp.azure.com";
-            //        options.Audience = "IoTPlatform";
-            //        options.RequireHttpsMetadata = false;
-            //        options.EventsType = typeof(CustomJwtBearerEvents);
-            //    });
 
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
 
             // Prepare DI container
             this.ApplicationContainer = new DependencyResolution().Setup(services);
-
-            // Print some useful information at bootstrap time
-            this.PrintBootstrapInfo(this.ApplicationContainer);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
@@ -100,12 +80,6 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService
             //app.UseAuthentication();
 
             app.UseMvc();
-        }
-
-        private void PrintBootstrapInfo(IContainer container)
-        {
-            var log = container.Resolve<ILogger>();
-            log.Info("Web service started", () => new { Uptime.ProcessId });
         }
     }
 }

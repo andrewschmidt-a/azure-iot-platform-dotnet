@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services</AssemblyName>
-    <RootNamespace>Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services</RootNamespace>
+    <AssemblyName>Mmm.Platform.IoT.DeviceTelemetry.Services</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,10 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\common\AppConfiguration\AppConfiguration.csproj" />
-    <ProjectReference Include="..\..\common\AuthUtils\AuthUtils.csproj" />
     <ProjectReference Include="..\..\common\Services\Services.csproj" />
-    <ProjectReference Include="..\..\common\WebService\WebService.csproj" />
   </ItemGroup>
 
   <ItemGroup>

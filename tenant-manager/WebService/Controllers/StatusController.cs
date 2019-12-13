@@ -4,11 +4,11 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Models;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.TenantManager.WebService.Models;
+using Mmm.Platform.IoT.TenantManager.WebService.Runtime;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
+namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {
     [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public sealed class StatusController : ControllerBase

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Microsoft.Extensions.Configuration;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Models;
 
-namespace IdentityGateway.Services
+namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public class StatusService : IStatusService
     {
@@ -32,7 +32,7 @@ namespace IdentityGateway.Services
 
             // Check connection to Table Storage
             // TODO: Add check of settings table as well
-            var storageResult = await this._userTenantContainer.PingAsync();
+            var storageResult = await this._userTenantContainer.StatusAsync();
             SetServiceStatus("TableStorage", storageResult, result, errors);
 
             // Check Azure B2C instance

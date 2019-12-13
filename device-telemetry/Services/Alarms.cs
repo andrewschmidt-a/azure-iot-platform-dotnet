@@ -8,16 +8,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Mmm.Platform.IoT.Common.AuthUtils;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
     public interface IAlarms
     {
@@ -55,7 +54,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 
     public class Alarms : IAlarms
     {
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private readonly IStorageClient storageClient;
         private readonly IServicesConfig _config;
         private readonly IHttpContextAccessor _httpContextAccessor;
@@ -92,13 +91,13 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
         public Alarms(
             IServicesConfig config,
             IStorageClient storageClient,
-            ILogger logger,
+            ILogger<Alarms> logger,
             IHttpContextAccessor contextAccessor,
             IAppConfigurationHelper appConfigurationHelper)
         {
             this.storageClient = storageClient;
             this.databaseName = config.AlarmsConfig.StorageConfig.CosmosDbDatabase;
-            this.log = logger;
+            _logger = logger;
             this.maxDeleteRetryCount = config.AlarmsConfig.MaxDeleteRetries;
             this._config = config;
             this._httpContextAccessor = contextAccessor;
@@ -130,7 +129,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 limit,
                 devices, DEVICE_ID_KEY);
 
-            this.log.Debug("Created Alarm Query", () => new { sql });
+            _logger.LogDebug("Created alarm query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -173,7 +172,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 limit,
                 devices, DEVICE_ID_KEY);
 
-            this.log.Debug("Created Alarm By Rule Query", () => new { sql });
+            _logger.LogDebug("Created alarm by rule query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -289,7 +288,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             catch (AggregateException aggregateException)
             {
                 Exception inner = aggregateException.InnerExceptions[0];
-                this.log.Error("Failed to delete alarm", () => new { inner });
+                _logger.LogError(inner, "Failed to delete alarm");
                 throw inner;
             }
         }
@@ -329,11 +328,11 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
 
                     if (retryCount >= this.maxDeleteRetryCount)
                     {
-                        this.log.Error("Failed to delete alarm", () => new { id, e });
+                        _logger.LogError(e, "Failed to delete alarm {id}", id);
                         throw new ExternalDependencyException(e.Message);
                     }
 
-                    this.log.Warn("Exception on delete alarm", () => new { id, e });
+                    _logger.LogWarning(e, "Exception on delete alarm {id}", id);
                     Thread.Sleep(retryTimeSpan);
                 }
             }

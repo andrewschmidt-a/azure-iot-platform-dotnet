@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.DeviceTelemetry.Services;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.Helpers;
@@ -16,12 +16,12 @@ using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
 
-namespace DeviceTelemetry.Services.Test
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class AlarmsTest
     {
         private readonly Mock<IStorageClient> storageClient;
-        private readonly Mock<ILogger> logger;
+        private readonly Mock<ILogger<Alarms>> _logger;
         private readonly IAlarms alarms;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly Mock<IAppConfigurationHelper> appConfigHelper;
@@ -43,8 +43,8 @@ namespace DeviceTelemetry.Services.Test
             this.appConfigHelper.Setup(t => t.GetValue($"{TENANT_INFO_KEY}:{TENANT_ID}:{TELEMETRY_COLLECTION_KEY}")).Returns("collection");
 
 
-            this.logger = new Mock<ILogger>();
-            this.alarms = new Alarms(servicesConfig, this.storageClient.Object, this.logger.Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
+            _logger = new Mock<ILogger<Alarms>>();
+            this.alarms = new Alarms(servicesConfig, this.storageClient.Object, _logger.Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
         }
 
         /**
@@ -74,9 +74,6 @@ namespace DeviceTelemetry.Services.Test
             {
                 this.storageClient.Verify(x => x.DeleteDocumentAsync("database", "collection", ids[i]), Times.Once);
             }
-
-            this.logger.Verify(l => l.Error(It.IsAny<string>(), It.IsAny<Func<object>>()), Times.Never);
-            this.logger.Verify(l => l.Warn(It.IsAny<string>(), It.IsAny<Func<object>>()), Times.Never);
         }
 
         /**
@@ -104,9 +101,6 @@ namespace DeviceTelemetry.Services.Test
 
             // Assert
             this.storageClient.Verify(x => x.DeleteDocumentAsync("database", "collection", ids[0]), Times.Exactly(2));
-
-            this.logger.Verify(l => l.Error(It.IsAny<string>(), It.IsAny<Func<object>>()), Times.Never);
-            this.logger.Verify(l => l.Warn(It.IsAny<string>(), It.IsAny<Func<object>>()), Times.Once);
         }
 
         /**
@@ -137,9 +131,6 @@ namespace DeviceTelemetry.Services.Test
 
             // Assert
             this.storageClient.Verify(x => x.DeleteDocumentAsync("database", "collection", ids[0]), Times.Exactly(3));
-
-            this.logger.Verify(l => l.Error(It.IsAny<string>(), It.IsAny<Func<object>>()), Times.Once);
-            this.logger.Verify(l => l.Warn(It.IsAny<string>(), It.IsAny<Func<object>>()), Times.Exactly(2));
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

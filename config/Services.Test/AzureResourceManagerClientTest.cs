@@ -2,8 +2,8 @@
 
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.Http;
@@ -11,7 +11,7 @@ using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
 
-namespace Config.Services.Test
+namespace Mmm.Platform.IoT.Config.Services.Test
 {
     public class AzureResourceManagerClientTest
     {

@@ -1,16 +1,16 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
+using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 
-namespace IdentityGateway.Services.Runtime
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Runtime
 {
-    public interface IServicesConfig : IUserManagementClientConfig, IAuthMiddlewareConfig
+    public interface IServicesConfig : IUserManagementClientConfig, IAuthMiddlewareConfig, ITableStorageClientConfig
     {
         string PrivateKey { get; }
         string PublicKey { get; }
-        string StorageAccountConnectionString { get; }
         string AzureB2CBaseUri { get; }
         string Port { get; }
         string SendGridAPIKey { get; }

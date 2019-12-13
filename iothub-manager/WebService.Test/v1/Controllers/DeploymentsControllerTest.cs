@@ -4,16 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Controllers;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers;
+using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
 
-namespace WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 {
     public class DeploymentsControllerTest
     {

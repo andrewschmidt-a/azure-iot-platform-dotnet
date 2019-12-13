@@ -1,11 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.WebService.v1.Models;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.External
+namespace Mmm.Platform.IoT.Config.Services.External
 {
     public class RuleApiModel
     {

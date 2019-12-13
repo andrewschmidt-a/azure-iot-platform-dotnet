@@ -3,7 +3,7 @@
 using System;
 using Microsoft.Azure.Documents;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Models
 {
     public class Alarm
     {

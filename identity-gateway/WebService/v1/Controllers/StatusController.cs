@@ -1,12 +1,11 @@
 ﻿using System.Threading.Tasks;
-using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Runtime;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
-using WebService.Models;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.WebService.Models;
 
-namespace IdentityGateway.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
 {
     [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public sealed class StatusController : Controller

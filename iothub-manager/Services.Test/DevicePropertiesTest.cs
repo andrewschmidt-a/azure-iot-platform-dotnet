@@ -4,17 +4,17 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Diagnostics;
+using Mmm.Platform.IoT.IoTHubManager.Services;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace IoTHubManager.Services.Test
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 {
     public class DevicePropertiesTest
     {
@@ -29,7 +29,7 @@ namespace IoTHubManager.Services.Test
             var cache = new DeviceProperties(
                 mockStorageAdapterClient.Object,
                 new ServicesConfig(),
-                new Logger("UnitTest", LogLevel.Debug),
+                new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
             var cacheValue = new DevicePropertyServiceModel
@@ -60,7 +60,7 @@ namespace IoTHubManager.Services.Test
             var cache = new DeviceProperties(
                 mockStorageAdapterClient.Object,
                 new ServicesConfig(),
-                new Logger("UnitTest", LogLevel.Debug),
+                new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
             var oldCacheValue = new DevicePropertyServiceModel
@@ -108,7 +108,7 @@ namespace IoTHubManager.Services.Test
                 {
                     DevicePropertiesTTL = 60
                 },
-                new Logger("UnitTest", LogLevel.Debug),
+                new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
             mockStorageAdapterClient
@@ -152,7 +152,7 @@ namespace IoTHubManager.Services.Test
                     DevicePropertiesTTL = 10,
                     DevicePropertiesRebuildTimeout = 300
                 },
-                new Logger("UnitTest", LogLevel.Debug),
+                new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
             mockStorageAdapterClient
@@ -195,7 +195,7 @@ namespace IoTHubManager.Services.Test
                     DevicePropertiesWhiteList = "tags.*, reported.Type, reported.Config.*",
                     DevicePropertiesTTL = 3600
                 },
-                new Logger("UnitTest", LogLevel.Debug),
+                new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
             var etagOld = this.rand.NextString();

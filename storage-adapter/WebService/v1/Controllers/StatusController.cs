@@ -2,13 +2,12 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.Runtime;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.WebService.v1;
-using Mmm.Platform.IoT.Common.WebService.v1.Filters;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.StorageAdapter.WebService.Runtime;
+using Mmm.Platform.IoT.StorageAdapter.WebService.v1.Models;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
 {
     [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public sealed class StatusController : Controller

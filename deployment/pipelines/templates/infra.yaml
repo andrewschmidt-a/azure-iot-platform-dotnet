@@ -20,6 +20,7 @@ parameters:
   omsWorkspaceName: 'loganalyticsws'
   eventHubName: 'eventhub'
   mapsName: 'maps'
+  defaultSASKeyName: "RootManageSharedAccessKey"
   applicationCode: ''
   deployEnvironment: ''
   
@@ -112,6 +113,7 @@ jobs:
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
       userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
+      defaultSASKeyName: ${{ parameters.defaultSASKeyName }}
       
 ## Create Private/Public Key Pair for Identity Gateway 
   - template: infra/identitygateway.yaml

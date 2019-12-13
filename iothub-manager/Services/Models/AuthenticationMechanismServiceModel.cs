@@ -3,7 +3,7 @@
 using System;
 using Microsoft.Azure.Devices;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class AuthenticationMechanismServiceModel
     {
@@ -15,16 +15,16 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
         {
             switch (azureModel.Type)
             {
-                case Azure.Devices.AuthenticationType.Sas:
+                case Microsoft.Azure.Devices.AuthenticationType.Sas:
                     this.PrimaryKey = azureModel.SymmetricKey.PrimaryKey;
                     this.SecondaryKey = azureModel.SymmetricKey.SecondaryKey;
                     break;
-                case Azure.Devices.AuthenticationType.SelfSigned:
+                case Microsoft.Azure.Devices.AuthenticationType.SelfSigned:
                     this.AuthenticationType = AuthenticationType.SelfSigned;
                     this.PrimaryThumbprint = azureModel.X509Thumbprint.PrimaryThumbprint;
                     this.SecondaryThumbprint = azureModel.X509Thumbprint.SecondaryThumbprint;
                     break;
-                case Azure.Devices.AuthenticationType.CertificateAuthority:
+                case Microsoft.Azure.Devices.AuthenticationType.CertificateAuthority:
                     this.AuthenticationType = AuthenticationType.CertificateAuthority;
                     this.PrimaryThumbprint = azureModel.X509Thumbprint.PrimaryThumbprint;
                     this.SecondaryThumbprint = azureModel.X509Thumbprint.SecondaryThumbprint;
@@ -58,7 +58,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
                         SecondaryKey = this.SecondaryKey
                     };
 
-                    auth.Type = Azure.Devices.AuthenticationType.Sas;
+                    auth.Type = Microsoft.Azure.Devices.AuthenticationType.Sas;
 
                     break;
                 }
@@ -70,7 +70,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
                         SecondaryThumbprint = this.SecondaryThumbprint
                     };
 
-                    auth.Type = Azure.Devices.AuthenticationType.SelfSigned;
+                    auth.Type = Microsoft.Azure.Devices.AuthenticationType.SelfSigned;
 
                     break;
                 }
@@ -82,7 +82,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
                         SecondaryThumbprint = this.SecondaryThumbprint
                     };
 
-                    auth.Type = Azure.Devices.AuthenticationType.CertificateAuthority;
+                    auth.Type = Microsoft.Azure.Devices.AuthenticationType.CertificateAuthority;
 
                     break;
                 }

@@ -5,11 +5,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.WebService.Auth;
+using Mmm.Platform.IoT.Common.Services.Auth;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService
+namespace Mmm.Platform.IoT.TenantManager.WebService
 {
     public class Startup
     {
@@ -42,7 +41,7 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         [Obsolete]
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -54,8 +53,6 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
                 c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
                 c.RoutePrefix = string.Empty;
             });
-
-            loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
 
             // Check for Authorization header before dispatching requests
             app.UseMiddleware<AuthMiddleware>();

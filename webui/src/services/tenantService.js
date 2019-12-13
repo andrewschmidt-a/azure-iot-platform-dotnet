@@ -18,13 +18,13 @@ export class TenantService {
   }
 
   /** Delete a tenant */
-  static deleteTenant(id) {
-    return HttpClient.delete(`${TENANT_MANAGER_ENDPOINT}tenant/${id}`);
+  static deleteTenant() {
+    return HttpClient.delete(`${TENANT_MANAGER_ENDPOINT}tenant`);
   }
 
   /** Returns whether a tenant is ready or not */
-  static tenantIsDeployed(tenantGuid) {
-    return HttpClient.get(`${TENANT_MANAGER_ENDPOINT}tenantready/${tenantGuid}`);
+  static tenantIsDeployed() {
+    return HttpClient.get(`${TENANT_MANAGER_ENDPOINT}tenantready`);
   }
 
   /** Returns the display value for the tenantGuid */
@@ -32,7 +32,4 @@ export class TenantService {
     // TODO: Add tenant name setting here in place of this generic value ~ Joe Bethke
     return `tenant#${tenantGuid.substring(0, 5)}`;
   }
-
-  /** Returns information about a tenant */
-
 }

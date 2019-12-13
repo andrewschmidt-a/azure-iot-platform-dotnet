@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Azure.Cosmos.Table;
 using TestStack.Dossier;
 using TestStack.Dossier.EquivalenceClasses;
 
-namespace Services.Test.Helpers.Builders
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Test.Helpers.Builders
 {
     public class DynamicTableEntityBuilder : TestDataBuilder<DynamicTableEntity, DynamicTableEntityBuilder>
     {

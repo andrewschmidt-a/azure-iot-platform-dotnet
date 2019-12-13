@@ -6,7 +6,7 @@ using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     /// <summary>This class is used to lock, write or release a document in  CosmosDB</summary>
     public class StorageWriteLock<T> where T : class, new()
