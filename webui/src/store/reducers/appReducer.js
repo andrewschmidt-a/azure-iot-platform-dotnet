@@ -9,7 +9,7 @@ import { createSelector } from 'reselect';
 import update from 'immutability-helper';
 
 import Config from 'app.config';
-import { AuthService, ConfigService, GitHubService, DiagnosticsService, TelemetryService } from 'services';
+import { AuthService, ConfigService, GitHubService, DiagnosticsService, TelemetryService, TenantService } from 'services';
 import {
   createAction,
   createReducerScenario,
@@ -24,8 +24,13 @@ import {
 } from 'store/utilities';
 import { svgs, compareByProperty } from 'utilities';
 import { toSinglePropertyDiagnosticsModel } from 'services/models';
+import { stat } from 'fs';
 
 // ========================= Epics - START
+const HandleErrorAlerting = (fromAction) => (error) => {
+  console.log(error)
+  Observable.of(error).map(handleError(fromAction));
+};
 const handleError = fromAction => error =>
   Observable.of(redux.actions.registerError(fromAction.type, { error, fromAction }));
 
@@ -40,7 +45,8 @@ export const epics = createEpicScenario({
       epics.actions.fetchReleaseInformation(),
       epics.actions.fetchSolutionSettings(),
       epics.actions.fetchTelemetryStatus(),
-      epics.actions.fetchActionSettings()
+      epics.actions.fetchActionSettings(),
+      epics.actions.fetchAlerting()
     ]
   },
 
@@ -72,6 +78,16 @@ export const epics = createEpicScenario({
         .catch(handleError(fromAction))
   },
 
+  /** Get the Alerting Status */
+  fetchAlerting: {
+    type: 'APP_ALERTING_FETCH',
+    epic: (fromAction, store) => 
+      
+      TenantService.getAlertingStatus(true)
+        .map(toActionCreator(redux.actions.updateAlerting, fromAction))
+        .catch(handleError(fromAction))
+    
+  },
   /** Get solution settings */
   fetchSolutionSettings: {
     type: 'APP_FETCH_SOLUTION_SETTINGS',
@@ -158,7 +174,14 @@ export const epics = createEpicScenario({
         .map(toActionCreator(redux.actions.updateLogo, fromAction))
         .catch(handleError(fromAction))
   },
-
+  /** Update alerting */
+  updateAlerting: {
+    type: 'APP_UPDATE_ALERTING',
+    epic: fromAction =>
+      Observable.of(fromAction.payload)
+        .map(toActionCreator(redux.actions.updateAlerting, fromAction))
+        .catch(handleError(fromAction))
+  },
   /** Get the current release version and release notes link from GitHub */
   fetchReleaseInformation: {
     type: 'APP_FETCH_RELEASE_INFO',
@@ -242,7 +265,11 @@ const initialState = {
   applicationPermissionsAssigned: undefined,
   actionPollingTimeout: undefined,
   sessionId: moment().utc().unix(),
-  currentWindow: ''
+  currentWindow: '',
+  alerting:{
+    jobState: "Not Enabled",
+    isActive: false
+  }
 };
 
 const updateUserReducer = (state, { payload, fromAction }) => {
@@ -254,6 +281,16 @@ const updateUserReducer = (state, { payload, fromAction }) => {
       availableTenants: { $set: new Set(payload.availableTenants) },
       tenant: { $set: payload.tenant },
       token: { $set: payload.token }
+    },
+    ...setPending(fromAction.type, false)
+  });
+};
+
+const updateAlertingReducer = (state, { payload, fromAction }) => {
+  return update(state, {
+    alerting: {
+      jobState: { $set: payload.jobState },
+      isActive: { $set: payload.isActive }
     },
     ...setPending(fromAction.type, false)
   });
@@ -352,11 +389,13 @@ const fetchableTypes = [
   epics.actionTypes.fetchActionSettings,
   epics.actionTypes.pollActionSettings,
   epics.actionTypes.fetchSolutionSettings,
-  epics.actionTypes.fetchTelemetryStatus
+  epics.actionTypes.fetchTelemetryStatus,
+  epics.actionTypes.fetchAlerting
 ];
 
 export const redux = createReducerScenario({
   updateUser: { type: 'APP_USER_UPDATE', reducer: updateUserReducer },
+  updateAlerting: { type: 'APP_ALERTING_UPDATE', reducer: updateAlertingReducer },
   updateTelemetryProperties: { type: 'APP_UPDATE_TELEMETRY_STATUS', reducer: updateTelemetryPropertiesReducer },
   updateDeviceGroups: { type: 'APP_DEVICE_GROUP_UPDATE', reducer: updateDeviceGroupsReducer },
   deleteDeviceGroups: { type: 'APP_DEVICE_GROUP_DELETE', reducer: deleteDeviceGroupsReducer },
@@ -397,6 +436,7 @@ export const getSolutionSettingsError = state =>
   getError(getAppReducer(state), epics.actionTypes.fetchSolutionSettings);
 export const getSolutionSettingsPendingStatus = state =>
   getPending(getAppReducer(state), epics.actionTypes.fetchSolutionSettings);
+export const getAlerting = state => getAppReducer(state).alerting
 export const getDeviceGroups = createSelector(
   getDeviceGroupEntities,
   deviceGroups => Object.keys(deviceGroups).map(id => deviceGroups[id])

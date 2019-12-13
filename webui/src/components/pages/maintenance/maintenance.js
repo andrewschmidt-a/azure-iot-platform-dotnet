@@ -193,6 +193,7 @@ export class Maintenance extends Component {
 
   render() {
     const {
+      alerting,
       rulesEntities,
       deviceEntities,
       deviceGroups,
@@ -240,6 +241,7 @@ export class Maintenance extends Component {
     });
 
     const generalProps = {
+      alerting,
       t,
       history,
       refreshData: this.getData,
@@ -293,6 +295,7 @@ export class Maintenance extends Component {
               deviceEntities={deviceEntities}
               fetchRules={this.props.fetchRules} />
           } />
+        }
         <Route exact path={'/maintenance/job/:id'}
           render={(routeProps) =>
             <JobDetailsContainer
@@ -301,7 +304,7 @@ export class Maintenance extends Component {
               {...routeProps}
               deviceEntities={deviceEntities} />
           } />
-        <Redirect to="/maintenance/notifications" />
+        <Redirect to="/maintenance/jobs" />
       </Switch>
     );
   }

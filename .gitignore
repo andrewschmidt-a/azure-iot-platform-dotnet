@@ -466,3 +466,5 @@ bld/
 
 
 # Overrides
+**/lcov.info
+webui/build

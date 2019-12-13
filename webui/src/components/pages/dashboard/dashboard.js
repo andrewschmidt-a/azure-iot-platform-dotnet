@@ -278,6 +278,7 @@ export class Dashboard extends Component {
 
   render() {
     const {
+      alerting,
       theme,
       timeInterval,
       timeSeriesExplorerUrl,
@@ -402,6 +403,7 @@ export class Dashboard extends Component {
                 offlineDeviceCount={offlineDeviceCount}
                 isPending={analyticsIsPending || devicesIsPending}
                 error={deviceGroupError || devicesError || analyticsError}
+                alerting = {alerting}
                 t={t} />
             </Cell>
             <Cell className="col-5">
