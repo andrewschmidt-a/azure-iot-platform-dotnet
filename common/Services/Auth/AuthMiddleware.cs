@@ -57,7 +57,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
         private bool tokenValidationInitialized;
         private readonly IUserManagementClient userManagementClient;
         private readonly IAuthMiddlewareConfig authMiddlewareConfig;
-        private readonly List<string> allowedUrls = new List<string>() { "/v1/status", "/.well-known/openid-configuration" };
+        private readonly List<string> allowedUrls = new List<string>() { "/v1/status", "/.well-known/openid-configuration", "/connect" };
 
         public AuthMiddleware(
             RequestDelegate requestDelegate,
