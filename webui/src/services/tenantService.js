@@ -1,6 +1,6 @@
 import Config from 'app.config';
 import { HttpClient } from 'utilities/httpClient';
-import { toTenantModel } from './models';
+import { toTenantModel, toAlertingStatusModel } from './models';
 
 const IDENTITY_GATEWAY_ENDPOINT = Config.serviceUrls.identityGateway;
 const TENANT_MANAGER_ENDPOINT = Config.serviceUrls.tenantManager;
@@ -31,5 +31,32 @@ export class TenantService {
   static processDisplayValue(tenantGuid) {
     // TODO: Add tenant name setting here in place of this generic value ~ Joe Bethke
     return `tenant#${tenantGuid.substring(0, 5)}`;
+  }
+
+  /** Returns the status of the alerting feature */
+  static getAlertingStatus(createIfNotExists = false) {
+    return HttpClient.get(`${TENANT_MANAGER_ENDPOINT}alerting?createIfNotExists=${createIfNotExists}`)
+    .map(toAlertingStatusModel)
+  }
+  
+  /** Enables the alerting feature */
+  static alertingEnable() {
+    return HttpClient.post(`${TENANT_MANAGER_ENDPOINT}alerting`)
+    .map(toAlertingStatusModel);
+  }
+  
+  /** Disables the alerting feature */
+  static alertingDisable() {
+    return HttpClient.delete(`${TENANT_MANAGER_ENDPOINT}alerting`).map(toAlertingStatusModel);
+  }
+  
+  /** Starts the alerting feature */
+  static alertingStart() {
+    return HttpClient.post(`${TENANT_MANAGER_ENDPOINT}alerting/start`).map(toAlertingStatusModel);
+  }
+  
+  /** Starts the alerting feature */
+  static alertingStop() {
+    return HttpClient.post(`${TENANT_MANAGER_ENDPOINT}alerting/stop`).map(toAlertingStatusModel);
   }
 }

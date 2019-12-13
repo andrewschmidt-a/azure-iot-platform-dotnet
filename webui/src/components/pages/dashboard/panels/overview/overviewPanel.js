@@ -18,6 +18,10 @@ import {
   PanelError
 } from 'components/pages/dashboard/panel';
 
+import {
+  getAlerting
+} from 'store/reducers/appReducer';
+
 import './overviewPanel.scss';
 
 export class OverviewPanel extends Component {
@@ -29,6 +33,7 @@ export class OverviewPanel extends Component {
 
   render() {
     const {
+      alerting,
       t,
       error,
       isPending,
@@ -57,6 +62,7 @@ export class OverviewPanel extends Component {
         <PanelContent className="device-stats-container">
           <div className="stat-header">{deviceGroupName}</div>
           <StatGroup className="stats-group">
+            { alerting.jobState == "Running" &&
             <StatProperty
               className="stat-property"
               value={renderUndefined(openCriticalCount)}
@@ -64,6 +70,8 @@ export class OverviewPanel extends Component {
               svg={svgs.critical}
               size="medium"
               svgClassName="severity-critical" />
+            }
+            { alerting.jobState == "Running" &&
             <StatProperty
               className="stat-property"
               value={renderUndefined(openWarningCount)}
@@ -71,6 +79,7 @@ export class OverviewPanel extends Component {
               svg={svgs.warning}
               size="medium"
               svgClassName="severity-warning" />
+            }
             <StatProperty
               className="stat-property"
               value={renderUndefined(total)}
