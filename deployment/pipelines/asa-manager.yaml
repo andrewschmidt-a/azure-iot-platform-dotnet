@@ -1,5 +1,20 @@
-trigger: none
-pr: none 
+trigger:
+  branches:
+    include:
+    - master 
+  paths:
+    include:
+    - config/
+    - common/
+
+pr:
+  branches:
+    include:
+    - master
+  paths: 
+    include:
+    - config/
+    - common/
 
 stages:
 - template: 'templates/service-deploy-env.yaml'
