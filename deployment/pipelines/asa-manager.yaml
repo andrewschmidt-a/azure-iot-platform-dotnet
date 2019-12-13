@@ -4,7 +4,7 @@ trigger:
     - master 
   paths:
     include:
-    - config/
+    - asa-manager/
     - common/
 
 pr:
@@ -13,7 +13,7 @@ pr:
     - master
   paths: 
     include:
-    - config/
+    - asa-manager/
     - common/
 
 stages:
