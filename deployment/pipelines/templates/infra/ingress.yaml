@@ -27,6 +27,7 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     scriptLocation: 'inlineScript'
     inlineScript: |-
+      helm repo update
       n=0
       until [ $n -ge 5 ]
       do
