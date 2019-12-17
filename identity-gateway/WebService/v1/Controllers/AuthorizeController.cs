@@ -21,23 +21,44 @@ using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 {
+    public interface IAuthenticationContext
+    {
+        Task<AuthenticationResult> AcquireTokenAsync(string resource, ClientCredential clientCredential);
+    }
+    public class MyAuthenticationContext : IAuthenticationContext
+    {
+        private readonly AuthenticationContext authContext;
+
+        public MyAuthenticationContext(AuthenticationContext authContext)
+        {
+            this.authContext = authContext;
+        }
+        public Task<AuthenticationResult> AcquireTokenAsync(string resource, ClientCredential clientCredential)
+        {
+            return authContext.AcquireTokenAsync(resource, clientCredential);
+        }
+    }
+
     [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AuthorizeController : Controller
     {
         private IServicesConfig _config;
         private IJwtHelpers _jwtHelper;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
+        private IAuthenticationContext _authenticationContext;
 
         private UserTenantContainer _userTenantContainer;
         private UserSettingsContainer _userSettingsContainer;
 
-        public AuthorizeController(IServicesConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJwtHelpers jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration)
+
+        public AuthorizeController(IServicesConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJwtHelpers jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration, IAuthenticationContext authenticationContext)
         {
             this._config = config;
             this._userTenantContainer = userTenantContainer;
             this._userSettingsContainer = userSettingsContainer;
             this._jwtHelper = jwtHelper;
             this._openIdProviderConfiguration = openIdProviderConfiguration;
+            this._authenticationContext = authenticationContext;
         }
 
         // GET: connect/authorize
@@ -71,21 +92,18 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             return Redirect(uri.Uri.ToString());
         }
 
-        // GET: connect/authorize
+        // POST: connect/token
         [HttpPost]
         [Route("connect/token")]
         public async Task<IActionResult> PostTokenAsync(
             [FromBody] ClientCredentialInput input)
         {
-            string authorityUri = "https://login.microsoftonline.com/facac3c4-e2a5-4257-af76-205c8a821ddb";
             string resourceUri = "https://graph.microsoft.com/";
             ClientCredential clientCredential = new ClientCredential(input.client_id, input.client_secret);
 
-            AuthenticationContext authContext = new AuthenticationContext(authorityUri);
-
             try
             {
-                AuthenticationResult token = await authContext.AcquireTokenAsync(resourceUri, clientCredential);
+                AuthenticationResult token = await _authenticationContext.AcquireTokenAsync(resourceUri, clientCredential);
             }
             catch(Exception e)
             {

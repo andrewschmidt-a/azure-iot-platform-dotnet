@@ -3,12 +3,14 @@
 using System;
 using System.Reflection;
 using Autofac;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.Controllers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Mmm.Platform.IoT.IdentityGateway.WebService.Runtime;
@@ -17,6 +19,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {
     public class DependencyResolution : DependencyResolutionBase
     {
+
+        const string authorityUri = "https://login.microsoftonline.com/facac3c4-e2a5-4257-af76-205c8a821ddb";
         protected override void SetupCustomRules(ContainerBuilder builder)
         {
             // Auto-wire additional assemblies
@@ -32,7 +36,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
             builder.RegisterType<CorsSetup>().As<ICorsSetup>().SingleInstance();
 
             builder.RegisterType<JwtHelpers>().As<IJwtHelpers>().InstancePerDependency();
+
+            builder.Register(context => new AuthenticationContext(authorityUri));
+            builder.RegisterType<MyAuthenticationContext>().As<IAuthenticationContext>();
             builder.RegisterType<TableStorageClient>().As<ITableStorageClient>().SingleInstance();
+
         }
 
         // Prepare the OpenId Connect configuration manager, responsibile
