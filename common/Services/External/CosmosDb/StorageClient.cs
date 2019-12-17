@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using Index = Microsoft.Azure.Documents.Index;
 
 namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 {

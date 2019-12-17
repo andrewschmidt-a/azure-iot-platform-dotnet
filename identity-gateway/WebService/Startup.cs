@@ -37,7 +37,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
         public IContainer ApplicationContainer { get; private set; }
 
         // Invoked by `Program.cs`
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -81,7 +81,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -95,7 +95,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
             });
 
             app.UseMiddleware<AuthMiddleware>();
-            app.UseMvc();
         }
     }
 }

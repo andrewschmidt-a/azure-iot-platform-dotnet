@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Mmm.Platform.IoT.Common.Services.Auth;
 
@@ -21,7 +22,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
         public IContainer ApplicationContainer { get; private set; }
 
         // Invoked by `Program.cs`
-        public Startup(IHostingEnvironment env)
+        public Startup(IWebHostEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -59,9 +60,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
         // method above. Use this method to add middleware.
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             ICorsSetup corsSetup,
-            IApplicationLifetime appLifetime)
+            IHostApplicationLifetime appLifetime)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -81,7 +82,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
             // see: https://docs.microsoft.com/en-us/aspnet/core/security/cors
             corsSetup.UseMiddleware(app);
 
-            app.UseMvc();
 
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.

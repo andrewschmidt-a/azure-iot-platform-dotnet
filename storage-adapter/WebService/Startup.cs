@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
 using Mmm.Platform.IoT.Common.Services.Auth;
+using Microsoft.Extensions.Hosting;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService
 {
@@ -39,8 +40,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
 
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
-            IApplicationLifetime appLifetime)
+            IWebHostEnvironment env,
+            IHostApplicationLifetime appLifetime)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -54,7 +55,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
             });
 
             app.UseMiddleware<ClientToClientAuthMiddleware>();
-            app.UseMvc();
 
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.

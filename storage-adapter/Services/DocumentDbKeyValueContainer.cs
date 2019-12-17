@@ -17,6 +17,7 @@ using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
+using Index = Microsoft.Azure.Documents.Index;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services
 {

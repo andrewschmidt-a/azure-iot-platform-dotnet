@@ -20,7 +20,7 @@ namespace Mmm.Platform.IoT.Common.Services
             ConfigureLogging(builder);
             builder.UseDefaultServiceProvider((context, options) =>
             {
-                options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
+                options.ValidateScopes = context.HostingEnvironment.EnvironmentName == EnvironmentName.Development;
             });
             builder.UseKestrel(options => { options.AddServerHeader = false; });
             builder.UseIISIntegration();
@@ -43,7 +43,7 @@ namespace Mmm.Platform.IoT.Common.Services
                 var env = hostingContext.HostingEnvironment;
                 var configurationBuilder = new ConfigurationBuilder();
 
-                if (env.IsEnvironment(EnvironmentName.Development) || env.IsEnvironment(EnvironmentName.Qa))
+                if (env.EnvironmentName == EnvironmentName.Development || env.EnvironmentName == EnvironmentName.Qa)
                 {
                     var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
                     if (appAssembly != null)
