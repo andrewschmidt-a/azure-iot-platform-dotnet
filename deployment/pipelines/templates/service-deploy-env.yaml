@@ -102,3 +102,23 @@ stages:
         aksName: crsliot-aks-wkbnch
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
+
+- stage: DeployCHIMDev
+  dependsOn:
+  - DeployCRSLQA
+  displayName: Deploy To CHIM Dev
+  jobs:
+  - template: approval.yaml
+    parameters:
+      environment: IoT_CHIM_Environment_DEV
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: service-deploy.yaml
+      parameters:
+        serviceConnection: '3M-ACTAIR01-CHIMSMART-Dev'
+        resourceGroup: rg-iot-chim-dev
+        aksName: chimiot-aks-dev
+        chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}
