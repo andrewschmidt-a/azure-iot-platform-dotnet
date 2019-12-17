@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace IdentityGateway.Services.Models
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class Invitation
     {

@@ -5,18 +5,18 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Exceptions;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
-using IdentityGateway.Services.Runtime;
-using IdentityGateway.WebService.v1.Filters;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace IdentityGateway.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 {
     [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AuthorizeController : Controller
@@ -50,7 +50,7 @@ namespace IdentityGateway.Controllers
             }
 
             Guid validatedGuid = Guid.Empty;
-			
+
             // if is not null we want to validate that it is a guid, Otherwise it will pick a tenant for the user
             if (tenant != null && !Guid.TryParse(tenant, out validatedGuid))
             {
@@ -111,7 +111,7 @@ namespace IdentityGateway.Controllers
                 throw new NoAuthorizationException("The given token could not be read or validated.");
             }
 
-            if(jwt?.Claims?.Count(c => c.Type == "sub") == 0)
+            if (jwt?.Claims?.Count(c => c.Type == "sub") == 0)
             {
                 throw new NoAuthorizationException("Not allowed access. No User Claims");
             }

@@ -1,11 +1,12 @@
 ﻿using System;
-using Microsoft.Azure.Devices;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.Auth;
+using Microsoft.Azure.Devices;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     public interface ITenantConnectionHelper
     {
@@ -28,14 +29,13 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"A valid tenant Id was not included in the Claim. "+ ex);
+                    throw new Exception($"A valid tenant Id was not included in the Claim. " + ex);
                 }
             }
         }
 
         private IAppConfigurationHelper appConfig;
         private IHttpContextAccessor _httpContextAccessor;
-        private IServicesConfig _config;
 
         private const string TENANT_KEY = "tenant:";
         private const string IOTHUBCONNECTION_KEY = ":iotHubConnectionString";
@@ -45,11 +45,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
         /// </summary>
         /// <param name="appConfigConnection">Connection string for app config</param>
         /// <returns></returns>
-        public TenantConnectionHelper(IHttpContextAccessor httpContextAccessor, IServicesConfig config)
+        public TenantConnectionHelper(IHttpContextAccessor httpContextAccessor, IAppConfigClientConfig config)
         {
             this._httpContextAccessor = httpContextAccessor;
-            this.appConfig = new AppConfigurationHelper(config.AppConfigConnection);
-            this._config = config;
+            this.appConfig = new AppConfigurationHelper(config);
         }
 
         public TenantConnectionHelper()
@@ -62,7 +61,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
         /// <returns>iothub connection string</returns>
         public string getIoTHubConnectionString()
         {
-            return appConfig.GetValue(TENANT_KEY+ tenantName + IOTHUBCONNECTION_KEY);
+            return appConfig.GetValue(TENANT_KEY + tenantName + IOTHUBCONNECTION_KEY);
         }
 
         public string getIoTHubName()
@@ -105,10 +104,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
         {
             JobClient job = null;
 
-            IoTHubConnectionHelper.CreateUsingHubConnectionString(getIoTHubConnectionString(),conn =>
-            {
-                job = JobClient.CreateFromConnectionString(conn);
-            });
+            IoTHubConnectionHelper.CreateUsingHubConnectionString(getIoTHubConnectionString(), conn =>
+             {
+                 job = JobClient.CreateFromConnectionString(conn);
+             });
             if (job == null)
             {
                 throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionString.");

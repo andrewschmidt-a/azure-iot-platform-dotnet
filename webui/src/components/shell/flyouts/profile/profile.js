@@ -88,7 +88,7 @@ export const Profile = (props) => {
                               ?
                               <Protected permission={permissions.deleteTenant}>
                                 <Btn className="delete-tenant-button" primary={true} onClick=
-                                  {() => deleteTenantThenSwitch(currentTenant, idx != 0 ? tenants[idx - 1].id : tenants[idx + 1].id)}>
+                                  {() => deleteTenantThenSwitch(idx != 0 ? tenants[idx - 1].id : tenants[idx + 1].id)}>
                                   {t('profileFlyout.tenants.deleteTenant')}
                                 </Btn>
                               </Protected>

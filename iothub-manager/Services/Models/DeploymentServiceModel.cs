@@ -2,10 +2,9 @@
 
 using System;
 using Microsoft.Azure.Devices;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
+using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class DeploymentServiceModel
     {
@@ -16,7 +15,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
         public string DeviceGroupId { get; set; }
         public string DeviceGroupName { get; set; }
         public string DeviceGroupQuery { get; set; }
-        public string Name {get; set; }
+        public string Name { get; set; }
         public string PackageContent { get; set; }
         public string PackageName { get; set; }
         public int Priority { get; set; }
@@ -87,12 +86,14 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
     }
 
     // Sync these variables with PackageType in Config 
-    public enum PackageType {
+    public enum PackageType
+    {
         EdgeManifest,
         DeviceConfiguration
     }
 
-    public enum ConfigType {
+    public enum ConfigType
+    {
         Firmware
     }
 }

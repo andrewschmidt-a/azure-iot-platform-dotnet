@@ -1,14 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
 using System.Net.Http;
-using Microsoft.AspNetCore.Http;
+using System.Threading.Tasks;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Microsoft.Extensions.Configuration;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Models;
 
-namespace IdentityGateway.Services
+namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public class StatusService : IStatusService
     {
@@ -18,7 +17,7 @@ namespace IdentityGateway.Services
 
         public UserTenantContainer _userTenantContainer;
         public UserSettingsContainer _userSettingsContainer;
-        
+
         public StatusService(IConfiguration config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer)
         {
             this._config = config;
@@ -26,14 +25,14 @@ namespace IdentityGateway.Services
             this._userSettingsContainer = userSettingsContainer;
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync()
+        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();
 
             // Check connection to Table Storage
             // TODO: Add check of settings table as well
-            var storageResult = await this._userTenantContainer.PingAsync();
+            var storageResult = await this._userTenantContainer.StatusAsync();
             SetServiceStatus("TableStorage", storageResult, result, errors);
 
             // Check Azure B2C instance

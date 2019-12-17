@@ -5,21 +5,23 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
+using Mmm.Platform.IoT.Common.Services.Auth;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService
+namespace Mmm.Platform.IoT.TenantManager.WebService
 {
     public class Startup
     {
 
         public IConfiguration Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; } 
+        public IContainer ApplicationContainer { get; private set; }
 
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
 #if DEBUG
-                .AddIniFile("appsettings.ini", optional: false, reloadOnChange: true)
+                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
 #endif
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
@@ -27,30 +29,34 @@ namespace MMM.Azure.IoTSolutions.TenantManager.WebService
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Tenant Manager API", Version = "v1" });
+            });
+
             services.AddMvc().AddControllersAsServices();
-
-            this.ApplicationContainer = DependencyResolution.Setup(services);
-
+            this.ApplicationContainer = new DependencyResolution().Setup(services);
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        [Obsolete]
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
             {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+                c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
+                c.RoutePrefix = string.Empty;
+            });
 
             // Check for Authorization header before dispatching requests
             app.UseMiddleware<AuthMiddleware>();
 
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

@@ -1,13 +1,14 @@
 using System.Threading.Tasks;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 
-namespace IdentityGateway.Services
+namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
-    public abstract class UserContainer
+    public abstract class UserContainer : IStatusOperation
     {
         // injections
-        protected ITableHelper _tableHelper;
+        protected ITableStorageClient _tableStorageClient;
 
         // abstracts
         public abstract string TableName { get; }
@@ -16,14 +17,14 @@ namespace IdentityGateway.Services
         {
         }
 
-        public UserContainer(ITableHelper tableHelper)
+        public UserContainer(ITableStorageClient tableStorageClient)
         {
-            this._tableHelper = tableHelper;
+            this._tableStorageClient = tableStorageClient;
         }
 
-        public async Task<StatusResultServiceModel> PingAsync()
+        public async Task<StatusResultServiceModel> StatusAsync()
         {
-            await this._tableHelper.GetTableAsync(this.TableName);
+            await this._tableStorageClient.GetTableAsync(this.TableName);
             return new StatusResultServiceModel(true, "Alive and Well!");
         }
     }

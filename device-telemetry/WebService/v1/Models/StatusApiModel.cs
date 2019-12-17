@@ -2,12 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Runtime;
 using Newtonsoft.Json;
 
 // TODO: complete - https://github.com/Azure/device-simulation-dotnet/issues/82
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Models
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 {
     public sealed class StatusApiModel
     {

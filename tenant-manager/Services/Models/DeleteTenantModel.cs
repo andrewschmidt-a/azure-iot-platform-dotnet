@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
+namespace Mmm.Platform.IoT.TenantManager.Services.Models
 {
     public class DeleteTenantModel
     {
@@ -9,14 +9,14 @@ namespace MMM.Azure.IoTSolutions.TenantManager.Services.Models
         public bool EnsuredDeployment;
         public Dictionary<string, bool> DeletionRecord;
 
-        public DeleteTenantModel (string tenantGuid, Dictionary<string, bool> deletionRecord, bool ensuredDeployment)
+        public DeleteTenantModel() { }
+
+        public DeleteTenantModel(string tenantGuid, Dictionary<string, bool> deletionRecord, bool ensuredDeployment)
         {
             this.TenantId = tenantGuid;
             this.EnsuredDeployment = ensuredDeployment;
             this.DeletionRecord = deletionRecord;
         }
-
-        public DeleteTenantModel () { }
 
         public bool fullyDeleted
         {

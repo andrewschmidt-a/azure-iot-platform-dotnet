@@ -2,17 +2,17 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Azure.Devices;
+using Mmm.Platform.IoT.IoTHubManager.Services;
+using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
-using System.Threading.Tasks;
-using IoTHubManager.Services.Test.helpers;
-using Microsoft.Azure.Devices;
-using System.Linq;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
 
-namespace IoTHubManager.Services.Test
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 {
     public class DeploymentsTest
     {
@@ -25,13 +25,11 @@ namespace IoTHubManager.Services.Test
         private const string DEPLOYMENT_GROUP_ID_LABEL = "DeviceGroupId";
         private const string DEPLOYMENT_GROUP_NAME_LABEL = "DeviceGroupName";
         private const string DEPLOYMENT_PACKAGE_NAME_LABEL = "PackageName";
-        private string PACKAGE_TYPE_LABEL  = "Type";
+        private string PACKAGE_TYPE_LABEL = "Type";
         private const string CONFIG_TYPE_LABEL = "ConfigType";
         private const string RM_CREATED_LABEL = "RMDeployment";
         private const string RESOURCE_NOT_FOUND_EXCEPTION =
-            "Microsoft.Azure.IoTSolutions.IotHubManager.Services." +
-            "Exceptions.ResourceNotSupportedException, Microsoft.Azure." + 
-            "IoTSolutions.IotHubManager.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
+            "Mmm.Platform.IoT.Common.Services.Exceptions.ResourceNotSupportedException, Mmm.Platform.IoT.Common.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
 
         private const string TEST_EDGE_PACKAGE_JSON =
                 @"{
@@ -202,7 +200,8 @@ namespace IoTHubManager.Services.Test
                     { PACKAGE_TYPE_LABEL , PackageType.EdgeManifest.ToString() },
                     { DEPLOYMENT_GROUP_ID_LABEL, deviceGroupId },
                     { RM_CREATED_LABEL, bool.TrueString },
-                }, Priority = priority
+                },
+                Priority = priority
             };
 
             this.registry.Setup(r => r.AddConfigurationAsync(It.Is<Configuration>(c =>
@@ -293,7 +292,7 @@ namespace IoTHubManager.Services.Test
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId, true);
             var deviceStatuses = returnedDeployment.DeploymentMetrics.DeviceStatuses;
-            Assert.Equal(3, deviceStatuses.Count); 
+            Assert.Equal(3, deviceStatuses.Count);
 
             //Assert
             returnedDeployment = await this.deployments.GetAsync(deploymentId);
@@ -308,7 +307,7 @@ namespace IoTHubManager.Services.Test
         [InlineData(false, true, true)]
         [InlineData(true, false)]
         [InlineData(true, false, true)]
-        public async Task GetDeploymentTypeTest(bool isEdgeContent, bool addLabel, bool isEdgeLabel=false)
+        public async Task GetDeploymentTypeTest(bool isEdgeContent, bool addLabel, bool isEdgeLabel = false)
         {
             // Arrange
             var content = new ConfigurationContent()
@@ -321,7 +320,7 @@ namespace IoTHubManager.Services.Test
 
             if (addLabel)
             {
-                label = isEdgeLabel ? PackageType.EdgeManifest.ToString() : 
+                label = isEdgeLabel ? PackageType.EdgeManifest.ToString() :
                     PackageType.DeviceConfiguration.ToString();
             }
 
@@ -384,7 +383,7 @@ namespace IoTHubManager.Services.Test
             };
 
             var label = isEdgeDeployment ? PackageType.EdgeManifest.ToString() : PackageType.DeviceConfiguration.ToString();
-            
+
             var Firmware = "Firmware";
 
             var configuration = new Configuration("test-config")
@@ -495,14 +494,15 @@ namespace IoTHubManager.Services.Test
 
         private Configuration CreateConfiguration(int idx, bool addCreatedByRmLabel)
         {
-            var conf = new Configuration("test-config"+idx)
+            var conf = new Configuration("test-config" + idx)
             {
                 Labels = new Dictionary<string, string>()
                 {
                     { PACKAGE_TYPE_LABEL , PackageType.EdgeManifest.ToString() },
                     { DEPLOYMENT_NAME_LABEL, "deployment" + idx },
                     { DEPLOYMENT_GROUP_ID_LABEL, "dvcGroupId" + idx }
-                }, Priority = 10
+                },
+                Priority = 10
             };
 
             if (addCreatedByRmLabel)

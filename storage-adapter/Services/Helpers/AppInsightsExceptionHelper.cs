@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Text;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Helpers
+namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
 {
     public static class AppInsightsExceptionHelper
     {

@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     internal class IoTHubConnectionHelper
     {

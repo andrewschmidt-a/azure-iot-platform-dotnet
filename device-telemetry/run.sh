@@ -4,4 +4,4 @@ cd /app/
 
 cd webservice
 
-dotnet Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.dll
+dotnet Mmm.Platform.IoT.DeviceTelemetry.WebService.dll

@@ -22,6 +22,6 @@ stages:
         repository: 'azureiot3m/${{ parameters.service }}'
         command: 'buildAndPush'
         dockerfile: '$(Build.SourcesDirectory)/${{ parameters.service }}${{ parameters.dockerFile }}'
-        buildContext: '$(Build.SourcesDirectory)/${{ parameters.service }}${{ parameters.context }}'
+        buildContext: '$(Build.SourcesDirectory)${{ parameters.context }}'
         tags: |
           ${{ parameters.tag }}

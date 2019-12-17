@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Azure.Cosmos.Table;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Test.Helpers.Builders;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
-using Services.Test.Helpers;
-using Services.Test.Helpers.Builders;
 using TestStack.Dossier;
 using TestStack.Dossier.Lists;
 using Xunit;
 
-namespace Services.Test
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
 {
     public class UserTenantContainerTest
     {
         private UserTenantContainer userTenantContainer;
-        private Mock<ITableHelper> mockTableHelper;
+        private Mock<ITableStorageClient> mockTableStorageClient;
         private const int dynamicTableEntityCount = 100;
         private Random random = new Random();
         private UserTenantInput someUserTenantInput = Builder<UserTenantInput>.CreateNew().Build();
@@ -29,8 +28,8 @@ namespace Services.Test
 
         public UserTenantContainerTest()
         {
-            InitializeSystemUnderTest();
-            SetupDefaultBehaviors();
+            mockTableStorageClient = new Mock<ITableStorageClient> { DefaultValue = DefaultValue.Mock };
+            userTenantContainer = new UserTenantContainer(mockTableStorageClient.Object);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -45,8 +44,25 @@ namespace Services.Test
                 .Set(dte => dte.PartitionKey, someUserTenantInput.UserId)
                 .BuildList();
 
+            mockTableStorageClient
+                .Setup(m => m.QueryAsync(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<TableQuery<UserTenantModel>>(),
+                    It.Is<CancellationToken>(t => t == default(CancellationToken))))
+                .ReturnsAsync(dynamicTableEntities
+                    .Where(dte => dte.PartitionKey == someUserTenantInput.UserId)
+                    .Select(e => new UserTenantModel(e))
+                    .ToList());
+
             // Act
             var result = await userTenantContainer.GetAllAsync(someUserTenantInput);
+
+            mockTableStorageClient
+                .Verify(m => m.QueryAsync(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<TableQuery<UserTenantModel>>(),
+                    It.Is<CancellationToken>(t => t == default(CancellationToken))),
+                Times.Once);
 
             // Assert
             Assert.Equal("gettenants", result.batchMethod.ToLowerInvariant());
@@ -69,6 +85,13 @@ namespace Services.Test
             // Act
             var result = await userTenantContainer.GetAllAsync(someUserTenantInput);
 
+            mockTableStorageClient
+                .Verify(m => m.QueryAsync(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<TableQuery<UserTenantModel>>(),
+                    It.Is<CancellationToken>(t => t == default(CancellationToken))),
+                Times.Once);
+
             // Assert
             Assert.Equal("gettenants", result.batchMethod.ToLowerInvariant());
             Assert.NotNull(result.models);
@@ -83,6 +106,13 @@ namespace Services.Test
 
             // Act
             var result = await userTenantContainer.GetAllAsync(someUserTenantInput);
+
+            mockTableStorageClient
+                .Verify(m => m.QueryAsync(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<TableQuery<UserTenantModel>>(),
+                    It.Is<CancellationToken>(t => t == default(CancellationToken))),
+                Times.Once);
 
             // Assert
             Assert.Equal("gettenants", result.batchMethod.ToLowerInvariant());
@@ -106,6 +136,13 @@ namespace Services.Test
             // Act
             var result = await userTenantContainer.GetAsync(someUserTenantInput);
 
+            mockTableStorageClient
+                .Verify(m => m.RetrieveAsync<UserTenantModel>(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()),
+                Times.Once);
+
             // Assert
             AssertUserTenantMatchesInput(result);
         }
@@ -114,10 +151,22 @@ namespace Services.Test
         public async void GetReturnsEmptyUserTenant()
         {
             // Arrange
-            SetupEmptyGetOnTableHelper();
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserTenantModel>(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync((UserTenantModel)null);
 
             // Act
             var result = await userTenantContainer.GetAsync(someUserTenantInput);
+
+            mockTableStorageClient
+                .Verify(m => m.RetrieveAsync<UserTenantModel>(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()),
+                Times.Once);
 
             // Assert
             Assert.Null(result);
@@ -127,10 +176,34 @@ namespace Services.Test
         public async void CreateReturnsExpectedUserTenant()
         {
             // Arrange
-            SetupEmptyGetOnTableHelper();
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserTenantModel>(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync((UserTenantModel)null);
+
+            mockTableStorageClient
+                .Setup(m => m.InsertAsync(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.Is<UserTenantModel>(t => t.TenantId == someUserTenantInput.Tenant && t.UserId == someUserTenantInput.UserId)))
+                .ReturnsAsync(new UserTenantModel(someUserTenantInput));
 
             // Act
             var result = await userTenantContainer.CreateAsync(someUserTenantInput);
+
+            mockTableStorageClient
+                .Verify(m => m.RetrieveAsync<UserTenantModel>(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()),
+                Times.Once);
+
+            mockTableStorageClient
+                .Verify(m => m.InsertAsync(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.Is<UserTenantModel>(u => u.TenantId == someUserTenantInput.Tenant && u.UserId == someUserTenantInput.UserId)),
+                Times.Once);
 
             // Assert
             AssertUserTenantMatchesInput(result);
@@ -140,11 +213,36 @@ namespace Services.Test
         public async void CreateHandlesNullUserIdAndReturnsExpectedUserTenant()
         {
             // Arrange
-            SetupEmptyGetOnTableHelper();
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserTenantModel>(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync((UserTenantModel)null);
+
             someUserTenantInput.UserId = null;
+
+            mockTableStorageClient
+                .Setup(m => m.InsertAsync(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.Is<UserTenantModel>(u => u.TenantId == someUserTenantInput.Tenant)))
+                .ReturnsAsync(new UserTenantModel(someUserTenantInput));
 
             // Act
             var result = await userTenantContainer.CreateAsync(someUserTenantInput);
+
+            mockTableStorageClient
+                .Verify(m => m.RetrieveAsync<UserTenantModel>(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()),
+                Times.Once);
+
+            mockTableStorageClient
+                .Verify(m => m.InsertAsync(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.Is<UserTenantModel>(u => u.TenantId == someUserTenantInput.Tenant && u.UserId == someUserTenantInput.UserId)),
+                Times.Once);
 
             // Assert
             AssertUserTenantMatchesInput(result);
@@ -154,7 +252,12 @@ namespace Services.Test
         public async void CreateThrowsWhenUserTenantAlreadyExist()
         {
             // Arrange
-            SetupSuccessfulGetOnTableHelper();
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserTenantModel>(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync(new UserTenantModel(someUserTenantInput));
 
             // Act
             Func<Task> a = async () => await userTenantContainer.CreateAsync(someUserTenantInput);
@@ -199,7 +302,12 @@ namespace Services.Test
         public async void DeleteReturnsExpectedUserTenant()
         {
             // Arrange
-            SetupSuccessfulGetOnTableHelper();
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserTenantModel>(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync(new UserTenantModel(someUserTenantInput));
 
             // Act
             var result = await userTenantContainer.DeleteAsync(someUserTenantInput);
@@ -212,7 +320,12 @@ namespace Services.Test
         public async void DeleteThrowsWhenUserTenantDoesNotExist()
         {
             // Arrange
-            SetupEmptyGetOnTableHelper();
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserTenantModel>(
+                    It.Is<String>(n => n == userTenantContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync((UserTenantModel)null);
 
             // Act
             Func<Task> a = async () => await userTenantContainer.DeleteAsync(someUserTenantInput);
@@ -240,51 +353,6 @@ namespace Services.Test
             Assert.Equal("delete", result.batchMethod.ToLowerInvariant());
             Assert.NotNull(result.models);
             Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.models.Count);
-        }
-
-        private void InitializeSystemUnderTest()
-        {
-            mockTableHelper = new Mock<ITableHelper> { DefaultValue = DefaultValue.Mock };
-            userTenantContainer = new UserTenantContainer(mockTableHelper.Object);
-        }
-
-        private void SetupDefaultBehaviors()
-        {
-            mockTableHelper.Setup(m => m.QueryAsync(userTenantContainer.TableName, It.IsAny<TableQuery>(), null))
-                .ReturnsAsync((string tableName, TableQuery query, TableContinuationToken token) => QueryAsync(tableName, query, token));
-            mockTableHelper.Setup(m => m.ExecuteOperationAsync(userTenantContainer.TableName, It.Is<TableOperation>(to => to.OperationType == TableOperationType.Retrieve)))
-                .ReturnsAsync((string tableName, TableOperation operation) => ExecuteRetrieveOperationAsync(tableName, operation));
-            mockTableHelper.Setup(m => m.ExecuteOperationAsync(userTenantContainer.TableName, It.Is<TableOperation>(to => to.OperationType == TableOperationType.Insert || to.OperationType == TableOperationType.Replace || to.OperationType == TableOperationType.InsertOrReplace || to.OperationType == TableOperationType.Delete || to.OperationType == TableOperationType.InsertOrMerge || to.OperationType == TableOperationType.Merge)))
-                .ReturnsAsync((string tableName, TableOperation operation) => ExecuteInsertOrReplaceOrDeleteOrMergeOperationAsync(tableName, operation));
-        }
-
-        private TableQuerySegment QueryAsync(string tableName, TableQuery query, TableContinuationToken token)
-        {
-            var matchingDynamicTableEntities = dynamicTableEntities.Where(dte => dte.PartitionKey == someUserTenantInput.UserId).ToList();
-            var tableQuerySegment = TypeHelpers.CreateInstance<TableQuerySegment>(matchingDynamicTableEntities);
-            return tableQuerySegment;
-        }
-
-        private TableResult ExecuteRetrieveOperationAsync(string tableName, TableOperation operation)
-        {
-            var operationPartitionKey = operation.GetPropertyValue("PartitionKey") as string;
-            var operationRowKey = operation.GetPropertyValue("RowKey") as string;
-            return new TableResult { Result = new UserTenantModel(dynamicTableEntities.FirstOrDefault(dte => dte.PartitionKey == operationPartitionKey && dte.RowKey == operationRowKey)) };
-        }
-
-        private TableResult ExecuteInsertOrReplaceOrDeleteOrMergeOperationAsync(string tableName, TableOperation operation)
-        {
-            return new TableResult { Result = new UserTenantModel(operation.Entity.PartitionKey, operation.Entity.RowKey, (operation.Entity as UserTenantModel).Roles) };
-        }
-
-        private void SetupEmptyGetOnTableHelper()
-        {
-            mockTableHelper.Setup(m => m.ExecuteOperationAsync(userTenantContainer.TableName, It.Is<TableOperation>(to => to.OperationType == TableOperationType.Retrieve))).ReturnsAsync(new TableResult { Result = null });
-        }
-
-        private void SetupSuccessfulGetOnTableHelper()
-        {
-            mockTableHelper.Setup(m => m.ExecuteOperationAsync(userTenantContainer.TableName, It.Is<TableOperation>(to => to.OperationType == TableOperationType.Retrieve))).ReturnsAsync(new TableResult { Result = new UserTenantModel() });
         }
 
         private void AssertUserTenantMatchesInput(UserTenantModel userTenant)

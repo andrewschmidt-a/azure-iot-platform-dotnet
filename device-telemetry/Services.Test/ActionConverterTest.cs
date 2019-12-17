@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Actions;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
 
-namespace DeviceTelemetry.Services.Test
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class ActionConverterTest
     {
@@ -24,7 +24,7 @@ namespace DeviceTelemetry.Services.Test
         {
             // Arrange
 
-            const string SAMPLE_JSON = "[{\"Type\":\"Email\"," + 
+            const string SAMPLE_JSON = "[{\"Type\":\"Email\"," +
                                  "\"Parameters\":{\"Notes\":\"" + PARAM_NOTES +
                                  "\",\"Subject\":\"" + PARAM_SUBJECT +
                                  "\",\"Recipients\":[\"" + PARAM_RECIPIENTS + "\"]}}]";

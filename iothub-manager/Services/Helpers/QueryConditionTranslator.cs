@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     static class QueryConditionTranslator
     {

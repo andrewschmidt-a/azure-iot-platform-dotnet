@@ -1,10 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Auth;
+using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Runtime;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.Runtime
 {
     public interface IConfig
     {
@@ -25,7 +26,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
         private const string APPLICATION_KEY = "IothubManagerService:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
         private const string IOTHUB_CONNSTRING_KEY = APPLICATION_KEY + "iotHubConnectionString"; // we will not need this as iot is tenant based
-        private const string DEVICE_PROPERTIES_KEY = APPLICATION_KEY + "DevicePropertiesCache:"; 
+        private const string DEVICE_PROPERTIES_KEY = APPLICATION_KEY + "DevicePropertiesCache:";
         private const string DEVICE_PROPERTIES_WHITELIST_KEY = DEVICE_PROPERTIES_KEY + "whitelist";
         private const string DEVICE_PROPERTIES_TTL_KEY = DEVICE_PROPERTIES_KEY + "TTL";
         private const string DEVICE_PROPERTIES_REBUILD_TIMEOUT_KEY = DEVICE_PROPERTIES_KEY + "rebuildTimeout";
@@ -81,8 +82,8 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.Runtime
                 DevicePropertiesRebuildTimeout = configData.GetInt(DEVICE_PROPERTIES_REBUILD_TIMEOUT_KEY),
                 StorageAdapterApiUrl = configData.GetString(STORAGE_ADAPTER_URL_KEY),
                 UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
-                AppConfigConnection = configData.GetString(APPCONFIG_CONNSTRING_KEY),
-                UserPermissions = configData.GetUserPermissions()
+                ApplicationConfigurationConnectionString = configData.AppConfigurationConnectionString,
+                UserPermissions = configData.UserPermissions
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

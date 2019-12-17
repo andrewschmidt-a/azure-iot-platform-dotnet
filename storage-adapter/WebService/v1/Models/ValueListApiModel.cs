@@ -2,10 +2,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
+using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.v1.Models
+namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Models
 {
     public class ValueListApiModel
     {

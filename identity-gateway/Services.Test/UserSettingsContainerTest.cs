@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Helpers;
-using IdentityGateway.Services.Models;
-using Microsoft.WindowsAzure.Storage;
-using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.Azure.Cosmos.Table;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Test.Helpers.Builders;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using Services.Test.Helpers;
-using Services.Test.Helpers.Builders;
 using TestStack.Dossier;
 using TestStack.Dossier.Lists;
 using Xunit;
 
-namespace Services.Test
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
 {
     public class UserSettingsContainerTest
     {
         private UserSettingsContainer userSettingsContainer;
-        private Mock<ITableHelper> mockTableHelper;
+        private Mock<ITableStorageClient> mockTableStorageClient;
         private const int dynamicTableEntityCount = 100;
         private Random random = new Random();
         private UserSettingsInput someUserSettingsInput = Builder<UserSettingsInput>.CreateNew().Build();
@@ -27,8 +26,8 @@ namespace Services.Test
 
         public UserSettingsContainerTest()
         {
-            InitializeSystemUnderTest();
-            SetupDefaultBehaviors();
+            this.mockTableStorageClient = new Mock<ITableStorageClient> { DefaultValue = DefaultValue.Mock };
+            this.userSettingsContainer = new UserSettingsContainer(mockTableStorageClient.Object);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -43,8 +42,25 @@ namespace Services.Test
                 .Set(dte => dte.PartitionKey, someUserSettingsInput.UserId)
                 .BuildList();
 
+            mockTableStorageClient
+                .Setup(m => m.QueryAsync(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<TableQuery<UserSettingsModel>>(),
+                    It.Is<CancellationToken>(t => t == default(CancellationToken))))
+                .ReturnsAsync(dynamicTableEntities
+                    .Where(dte => dte.PartitionKey == someUserSettingsInput.UserId)
+                    .Select(e => new UserSettingsModel(e))
+                    .ToList());
+
             // Act
             var result = await userSettingsContainer.GetAllAsync(someUserSettingsInput);
+
+            mockTableStorageClient
+                .Verify(m => m.QueryAsync(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<TableQuery<UserSettingsModel>>(),
+                    It.Is<CancellationToken>(t => t == default(CancellationToken))),
+                Times.Once);
 
             // Assert
             Assert.Equal("get", result.batchMethod.ToLowerInvariant());
@@ -58,8 +74,25 @@ namespace Services.Test
             // Arrange
             dynamicTableEntities = new List<DynamicTableEntity>();
 
+            mockTableStorageClient
+                .Setup(m => m.QueryAsync(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<TableQuery<UserSettingsModel>>(),
+                    It.Is<CancellationToken>(t => t == default(CancellationToken))))
+                .ReturnsAsync(dynamicTableEntities
+                    .Where(dte => dte.PartitionKey == someUserSettingsInput.UserId)
+                    .Select(e => new UserSettingsModel(e))
+                    .ToList());
+
             // Act
             var result = await userSettingsContainer.GetAllAsync(someUserSettingsInput);
+
+            mockTableStorageClient
+                .Verify(m => m.QueryAsync(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<TableQuery<UserSettingsModel>>(),
+                    It.Is<CancellationToken>(t => t == default(CancellationToken))),
+                Times.Once);
 
             // Assert
             Assert.Equal("get", result.batchMethod.ToLowerInvariant());
@@ -80,8 +113,29 @@ namespace Services.Test
                 .Set(dte => dte.RowKey, someUserSettingsInput.SettingKey)
                 .BuildList();
 
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserSettingsModel>(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync((string tableName, string partitionKey, string rowKey) => 
+                {
+                    return new UserSettingsModel(
+                        dynamicTableEntities.FirstOrDefault(dte => 
+                        {
+                            return dte.PartitionKey == partitionKey && dte.RowKey == rowKey;
+                        }));
+                });
+
             // Act
             var result = await userSettingsContainer.GetAsync(someUserSettingsInput);
+
+            mockTableStorageClient
+                .Verify(m => m.RetrieveAsync<ITableEntity>(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()),
+                Times.Once);
 
             // Assert
             AssertUserSettingsMatchesInput(result);
@@ -100,10 +154,22 @@ namespace Services.Test
         public async void GetReturnsEmptyUserSettings()
         {
             // Arrange
-            SetupEmptyGetOnTableHelper();
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserSettingsModel>(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync((UserSettingsModel)null);
 
             // Act
             var result = await userSettingsContainer.GetAsync(someUserSettingsInput);
+
+            mockTableStorageClient
+                .Verify(m => m.RetrieveAsync<UserSettingsModel>(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()),
+                Times.Once);
 
             // Assert
             Assert.Null(result);
@@ -112,11 +178,36 @@ namespace Services.Test
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void CreateReturnsExpectedUserSettings()
         {
-            // Arrange
-            SetupEmptyGetOnTableHelper();
+            // mock intial check to see if setting already exists during CreateAsync
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserSettingsModel>(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync((UserSettingsModel)null);
+            
+            // mock call to insert new setting
+            mockTableStorageClient
+                .Setup(m => m.InsertAsync(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.Is<UserSettingsModel>(u => u.PartitionKey == someUserSettingsInput.UserId && u.RowKey == someUserSettingsInput.SettingKey && u.Value == someUserSettingsInput.Value)))
+                .ReturnsAsync(new UserSettingsModel(someUserSettingsInput));
 
             // Act
             var result = await userSettingsContainer.CreateAsync(someUserSettingsInput);
+
+            mockTableStorageClient
+                .Verify(m => m.RetrieveAsync<UserSettingsModel>(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()),
+                Times.Once);
+
+            mockTableStorageClient
+                .Verify(m => m.InsertAsync(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.Is<UserSettingsModel>(u => u.PartitionKey == someUserSettingsInput.UserId && u.RowKey == someUserSettingsInput.SettingKey && u.Value == someUserSettingsInput.Value)),
+                Times.Once);
 
             // Assert
             AssertUserSettingsMatchesInput(result);
@@ -126,7 +217,14 @@ namespace Services.Test
         public async void CreateThrowsWhenUserSettingsAlreadyExist()
         {
             // Arrange
-            SetupSuccessfulGetOnTableHelper();
+            // mock the initial check to see if setting already exists
+            // no need to mock the Insert call as the exception should be thrown before it is invoked
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserSettingsModel>(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync(new UserSettingsModel());
 
             // Act
             Func<Task> a = async () => await userSettingsContainer.CreateAsync(someUserSettingsInput);
@@ -139,8 +237,20 @@ namespace Services.Test
         public async void UpdateReturnsExpectedUserSettings()
         {
             // Arrange
+            mockTableStorageClient
+                .Setup(m => m.InsertOrReplaceAsync(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.Is<UserSettingsModel>(u => u.PartitionKey == someUserSettingsInput.UserId && u.RowKey == someUserSettingsInput.SettingKey && u.Value == someUserSettingsInput.Value)))
+                .ReturnsAsync(new UserSettingsModel(someUserSettingsInput));
+
             // Act
             var result = await userSettingsContainer.UpdateAsync(someUserSettingsInput);
+
+            mockTableStorageClient
+                .Verify(m => m.InsertOrReplaceAsync(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.Is<UserSettingsModel>(u => u.PartitionKey == someUserSettingsInput.UserId && u.RowKey == someUserSettingsInput.SettingKey && u.Value == someUserSettingsInput.Value)),
+                Times.Once);
 
             // Assert
             AssertUserSettingsMatchesInput(result);
@@ -150,10 +260,34 @@ namespace Services.Test
         public async void DeleteReturnsExpectedUserSettings()
         {
             // Arrange
-            SetupSuccessfulGetOnTableHelper();
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserSettingsModel>(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync(new UserSettingsModel(someUserSettingsInput));
+            
+            mockTableStorageClient
+                .Setup(m => m.DeleteAsync(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.Is<UserSettingsModel>(u => u.PartitionKey == someUserSettingsInput.UserId && u.RowKey == someUserSettingsInput.SettingKey && u.Value == someUserSettingsInput.Value)))
+                .ReturnsAsync(new UserSettingsModel(someUserSettingsInput));
 
             // Act
             var result = await userSettingsContainer.DeleteAsync(someUserSettingsInput);
+
+            mockTableStorageClient
+                .Verify(m => m.RetrieveAsync<UserSettingsModel>(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()),
+                Times.Once);
+        
+            mockTableStorageClient
+                .Verify(m => m.DeleteAsync(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.Is<UserSettingsModel>(u => u.PartitionKey == someUserSettingsInput.UserId && u.RowKey == someUserSettingsInput.SettingKey && u.Value == someUserSettingsInput.Value)),
+                Times.Once);
 
             // Assert
             AssertUserSettingsMatchesInput(result);
@@ -163,58 +297,18 @@ namespace Services.Test
         public async void DeleteThrowsWhenUserSettingsDoesNotExist()
         {
             // Arrange
-            SetupEmptyGetOnTableHelper();
+            mockTableStorageClient
+                .Setup(m => m.RetrieveAsync<UserSettingsModel>(
+                    It.Is<String>(n => n == userSettingsContainer.TableName),
+                    It.IsAny<String>(),
+                    It.IsAny<String>()))
+                .ReturnsAsync((UserSettingsModel)null);
 
             // Act
             Func<Task> a = async () => await userSettingsContainer.DeleteAsync(someUserSettingsInput);
 
             // Assert
             await Assert.ThrowsAsync<StorageException>(a);
-        }
-
-        private void InitializeSystemUnderTest()
-        {
-            mockTableHelper = new Mock<ITableHelper> { DefaultValue = DefaultValue.Mock };
-            userSettingsContainer = new UserSettingsContainer(mockTableHelper.Object);
-        }
-
-        private void SetupDefaultBehaviors()
-        {
-            mockTableHelper.Setup(m => m.QueryAsync(userSettingsContainer.TableName, It.IsAny<TableQuery>(), null))
-                .ReturnsAsync((string tableName, TableQuery query, TableContinuationToken token) => QueryAsync(tableName, query, token));
-            mockTableHelper.Setup(m => m.ExecuteOperationAsync(userSettingsContainer.TableName, It.Is<TableOperation>(to => to.OperationType == TableOperationType.Retrieve)))
-                .ReturnsAsync((string tableName, TableOperation operation) => ExecuteRetrieveOperationAsync(tableName, operation));
-            mockTableHelper.Setup(m => m.ExecuteOperationAsync(userSettingsContainer.TableName, It.Is<TableOperation>(to => to.OperationType == TableOperationType.Insert || to.OperationType == TableOperationType.Replace || to.OperationType == TableOperationType.InsertOrReplace || to.OperationType == TableOperationType.Delete)))
-                .ReturnsAsync((string tableName, TableOperation operation) => ExecuteInsertOrReplaceOrDeleteOperationAsync(tableName, operation));
-        }
-
-        private TableQuerySegment QueryAsync(string tableName, TableQuery query, TableContinuationToken token)
-        {
-            var matchingDynamicTableEntities = dynamicTableEntities.Where(dte => dte.PartitionKey == someUserSettingsInput.UserId).ToList();
-            var tableQuerySegment = TypeHelpers.CreateInstance<TableQuerySegment>(matchingDynamicTableEntities);
-            return tableQuerySegment;
-        }
-
-        private TableResult ExecuteRetrieveOperationAsync(string tableName, TableOperation operation)
-        {
-            var operationPartitionKey = operation.GetPropertyValue("PartitionKey") as string;
-            var operationRowKey = operation.GetPropertyValue("RowKey") as string;
-            return new TableResult { Result = new UserSettingsModel(dynamicTableEntities.FirstOrDefault(dte => dte.PartitionKey == operationPartitionKey && dte.RowKey == operationRowKey)) };
-        }
-
-        private TableResult ExecuteInsertOrReplaceOrDeleteOperationAsync(string tableName, TableOperation operation)
-        {
-            return new TableResult { Result = new UserSettingsModel(operation.Entity.PartitionKey, operation.Entity.RowKey, (operation.Entity as UserSettingsModel).Value) };
-        }
-
-        private void SetupEmptyGetOnTableHelper()
-        {
-            mockTableHelper.Setup(m => m.ExecuteOperationAsync(userSettingsContainer.TableName, It.Is<TableOperation>(to => to.OperationType == TableOperationType.Retrieve))).ReturnsAsync(new TableResult { Result = null });
-        }
-
-        private void SetupSuccessfulGetOnTableHelper()
-        {
-            mockTableHelper.Setup(m => m.ExecuteOperationAsync(userSettingsContainer.TableName, It.Is<TableOperation>(to => to.OperationType == TableOperationType.Retrieve))).ReturnsAsync(new TableResult { Result = new UserSettingsModel() });
         }
     }
 }

@@ -4,5 +4,5 @@ cd /app/
 
 #Can add environment variables here
 
-cd webservice && dotnet Microsoft.Azure.IoTSolutions.IotHubManager.WebService.dll && \
+cd webservice && dotnet Mmm.Platform.IoT.IoTHubManager.WebService.dll && \
     fg

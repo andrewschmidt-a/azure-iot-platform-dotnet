@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.Actions
+namespace Mmm.Platform.IoT.Config.Services.Models.Actions
 {
     public enum ActionType
     {

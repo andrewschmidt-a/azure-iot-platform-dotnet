@@ -1,16 +1,17 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Http;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Models;
-using Microsoft.Azure.IoTSolutions.StorageAdapter.Services.Runtime;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
+namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
     class StatusService : IStatusService
     {
@@ -18,33 +19,33 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
         private const string AUTH_NAME = "Auth";
 
         private readonly int timeoutMS = 10000;
-        private readonly ILogger _log;
+        private readonly ILogger _logger;
         private readonly IHttpClient _httpClient;
         private readonly IKeyValueContainer _keyValueContainer;
         private readonly IServicesConfig _servicesConfig;
 
         public StatusService(
-            ILogger logger,
+            ILogger<StatusService> logger,
             IHttpClient httpClient,
             IKeyValueContainer keyValueContainer,
             IServicesConfig servicesConfig
             )
         {
-            this._log = logger;
+            _logger = logger;
             this._keyValueContainer = keyValueContainer;
             this._servicesConfig = servicesConfig;
             this._httpClient = httpClient;
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync()
+        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();
 
             // Check connection to CosmosDb
-            var storageResult = await this._keyValueContainer.PingAsync();
+            var storageResult = await this._keyValueContainer.StatusAsync();
             SetServiceStatus("Storage", storageResult, result, errors);
-            
+
             if (this._servicesConfig.AuthRequired)
             {
                 // Check access to Auth
@@ -56,13 +57,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             }
 
             result.Properties.Add("StorageType", this._servicesConfig.StorageType);
-            this._log.Info(
-                "Service status request",
-                () => new
-                {
-                    Healthy = result.Status.IsHealthy,
-                    result.Status.Message
-                });
+            _logger.LogInformation("Service status request {result}", result);
 
             if (errors.Count > 0)
             {
@@ -104,7 +99,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
             }
             catch (Exception e)
             {
-                this._log.Error(result.Message, () => new { e });
+                _logger.LogError(e, result.Message);
             }
 
             return result;
@@ -123,7 +118,7 @@ namespace Microsoft.Azure.IoTSolutions.StorageAdapter.Services
                 request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
             }
 
-            this._log.Debug("Prepare Request", () => new { request });
+            _logger.LogDebug("Prepare request {request}", request);
 
             return request;
         }

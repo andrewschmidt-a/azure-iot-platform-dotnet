@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace IdentityGateway.Services.Helpers
+namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 {
     public interface IJwtHelpers
     {

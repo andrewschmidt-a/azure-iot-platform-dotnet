@@ -3,15 +3,15 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers.Helpers;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Exceptions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Filters;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Models;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.DeviceTelemetry.Services;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers.Helpers;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
 {
     [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public sealed class MessagesController : Controller
@@ -19,14 +19,14 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
         private const int DEVICE_LIMIT = 1000;
 
         private readonly IMessages messageService;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         public MessagesController(
             IMessages messageService,
-            ILogger logger)
+            ILogger<MessagesController> logger)
         {
             this.messageService = messageService;
-            this.log = logger;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -79,7 +79,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers
             // limit for the IN clause.
             if (deviceIds.Length > DEVICE_LIMIT)
             {
-                this.log.Warn("The client requested too many devices: {}", () => new { deviceIds.Length });
+                _logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
                 throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
             }
 

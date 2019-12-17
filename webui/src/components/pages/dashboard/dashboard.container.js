@@ -12,7 +12,8 @@ import {
   getDeviceGroupError,
   getTheme,
   getTimeInterval,
-  getTimeSeriesExplorerUrl
+  getTimeSeriesExplorerUrl,
+  getAlerting
 } from 'store/reducers/appReducer';
 import {
   epics as rulesEpics,
@@ -31,6 +32,7 @@ import { Dashboard } from './dashboard';
 
 const mapStateToProps = state => ({
   activeDeviceGroup: getActiveDeviceGroup(state),
+  alerting: getAlerting(state),
   azureMapsKey: getAzureMapsKey(state),
   azureMapsKeyError: getSolutionSettingsError(state),
   azureMapsKeyIsPending: getSolutionSettingsPendingStatus(state),

@@ -2,10 +2,10 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using static Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.DeviceStatusQueries;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Models
+namespace Mmm.Platform.IoT.Config.Services.Models
 {
     public class FirmwareStatusQueries
     {

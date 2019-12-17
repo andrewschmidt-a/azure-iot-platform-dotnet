@@ -11,6 +11,7 @@ import { ApplicationSettingsContainer } from './applicationSettings.container';
 import { toDiagnosticsModel, toSinglePropertyDiagnosticsModel } from 'services/models';
 
 import './settings.scss';
+import { TenantService } from 'services';
 
 const Section = Flyout.Section;
 
@@ -26,7 +27,8 @@ export class Settings extends LinkedComponent {
       applicationName: '',
       loading: false,
       toggledSimulation: false,
-      madeLogoUpdate: false
+      madeLogoUpdate: false,
+      alerting: props.alerting
     };
 
     const { t } = this.props;
@@ -92,6 +94,41 @@ export class Settings extends LinkedComponent {
       });
     this.props.toggleSimulationStatus(etag, value);
   }
+  onAlertingStatusChange = ( value ) => {
+    var getStatus = (retry) => {
+      TenantService.getAlertingStatus().subscribe((statusModel) => {
+        if(statusModel.jobState == "Starting" || statusModel.jobState == "Stopping" ){
+          setTimeout(function () {
+              getStatus(retry - 1);
+          }, 2000);
+        }else{
+          changeStatus(statusModel)
+        }
+      })
+    }
+
+    var changeStatus = (statusModel) => {
+      console.log(statusModel)
+      this.setState({
+        alerting: statusModel
+      },
+        () => {
+          this.props.logEvent(toSinglePropertyDiagnosticsModel('Settings_Alerting', value?'isStarted': 'isStopped', statusModel));
+        });
+      this.props.updateAlerting(statusModel)
+      if(statusModel.jobState == "Starting" || statusModel.jobState == "Stopping"){
+        getStatus(40);
+      }
+      
+    }
+    
+    if(value){
+      TenantService.alertingStart().subscribe(changeStatus)
+    }else{
+      TenantService.alertingStop().subscribe(changeStatus)
+    }
+  }
+
 
   onThemeChange = (nextTheme) => {
     this.props.logEvent(toSinglePropertyDiagnosticsModel('Settings_ThemeChanged', 'nextTheme', nextTheme));
@@ -144,6 +181,7 @@ export class Settings extends LinkedComponent {
       t,
       theme,
       version,
+      alerting,
       releaseNotesUrl,
       isSimulationEnabled,
       simulationToggleError,
@@ -221,6 +259,28 @@ export class Settings extends LinkedComponent {
               <Section.Header>{t('settingsFlyout.version', { version })}</Section.Header>
               <Section.Content className="release-notes">
                 <a href={releaseNotesUrl} target="_blank" rel="noopener noreferrer">{t('settingsFlyout.viewRelNotes')}</a>
+              </Section.Content>
+            </Section.Container>
+            <Section.Container collapsable={false} className="app-alerting">
+              <Section.Header>{t('settingsFlyout.alerting')}: {this.state.alerting.jobState}</Section.Header>
+              <Section.Content className="release-notes">
+                {t('settingsFlyout.alertingDescription')}
+                <br></br>
+                <br></br>
+                <Toggle
+                        className="alerting-toggle-button"
+                        name={t('settingsFlyout.alertingToggle')}
+                        attr={{
+                          button: {
+                            'aria-label': t('settingsFlyout.alertingToggle'),
+                            'type': 'button'
+                          }
+                        }}
+                        on={this.state.alerting.jobState == "Running" || this.state.alerting.jobState == "Starting"}
+                        disabled={this.state.alerting.jobState == "Not Enabled" || this.state.alerting.jobState == "Starting" || this.state.alerting.jobState == "Stopping"}
+                        onChange={this.onAlertingStatusChange}
+                        onLabel={t('settingsFlyout.stop')}
+                        offLabel={t('settingsFlyout.start')} />
               </Section.Content>
             </Section.Container>
             <Section.Container className="simulation-toggle-container">

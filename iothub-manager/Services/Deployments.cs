@@ -6,17 +6,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
+using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using static Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.DeviceStatusQueries;
+using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
+namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
     public interface IDeployments
     {
@@ -52,23 +53,23 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         private const string DEVICE_ID_KEY = "DeviceId";
         private const string EDGE_MANIFEST_SCHEMA = "schemaVersion";
 
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         private ITenantConnectionHelper _tenantHelper;
 
         public Deployments(
-            IServicesConfig _config,
-            ILogger logger, 
+            IAppConfigClientConfig config,
+            ILogger<Deployments> logger,
             IHttpContextAccessor httpContextAccessor)
         {
-            if (_config == null)
+            if (config == null)
             {
                 throw new ArgumentNullException("config");
             }
 
-            this._tenantHelper = new TenantConnectionHelper(httpContextAccessor, _config);
+            this._tenantHelper = new TenantConnectionHelper(httpContextAccessor, config);
 
-            this.log = logger;
+            _logger = logger;
         }
 
         public Deployments(ITenantConnectionHelper _tenantHelper)
@@ -102,7 +103,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 throw new ArgumentNullException(PACKAGE_CONTENT_PARAM);
             }
 
-            if (model.PackageType.Equals(PackageType.DeviceConfiguration) 
+            if (model.PackageType.Equals(PackageType.DeviceConfiguration)
                 && string.IsNullOrEmpty(model.ConfigType))
             {
                 throw new ArgumentNullException(CONFIG_TYPE_PARAM);
@@ -136,7 +137,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 throw new ResourceNotFoundException($"No deployments found for {_tenantHelper.getIoTHubName()} hub.");
             }
 
-            List<DeploymentServiceModel> serviceModelDeployments = 
+            List<DeploymentServiceModel> serviceModelDeployments =
                 deployments.Where(this.CheckIfDeploymentWasMadeByRM)
                            .Select(config => new DeploymentServiceModel(config))
                            .OrderBy(conf => conf.Name)
@@ -189,7 +190,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         /// <returns></returns>
         public async Task DeleteAsync(string deploymentId)
         {
-            if(string.IsNullOrEmpty(deploymentId))
+            if (string.IsNullOrEmpty(deploymentId))
             {
                 throw new ArgumentNullException(nameof(deploymentId));
             }
@@ -280,14 +281,14 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             }
             catch (Exception ex)
             {
-                this.log.Error($"Error getting status of devices in query {query}", () => new { ex.Message });
+                _logger.LogError(ex, "Error getting status of devices in query {query}", query);
             }
 
             return deviceIds;
         }
 
         private IDictionary<DeploymentStatus, long> CalculateDeviceMetrics(
-            IDictionary<string, 
+            IDictionary<string,
             DeploymentStatus> deviceStatuses)
         {
             if (deviceStatuses == null)

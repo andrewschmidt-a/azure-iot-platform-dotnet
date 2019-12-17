@@ -2,10 +2,10 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Filters;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.Config.Services;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
 {
     [Route(Version.PATH), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class UserSettingsController : Controller

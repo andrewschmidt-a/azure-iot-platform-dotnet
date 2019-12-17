@@ -1,20 +1,20 @@
 // Copyright (c) Microsoft. All rights reserved.
 
+
 using System;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
-using Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Controllers;
+using Mmm.Platform.IoT.Config.Services;
+using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using Config.WebService.Test.helpers;
 using Xunit;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
 
-namespace Config.WebService.Test.Controllers
+namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class PackageControllerTest
     {
@@ -39,7 +39,7 @@ namespace Config.WebService.Test.Controllers
         [InlineData("BAD_TYPE", "filename", true, true)]
         public async Task PostAsyncExceptionVerificationTest(string type, string filename,
                                                              bool isValidFileProvided, bool expectException,
-                                                             bool shouldHaveConfig=false)
+                                                             bool shouldHaveConfig = false)
         {
             // Arrange
             IFormFile file = null;
@@ -50,11 +50,12 @@ namespace Config.WebService.Test.Controllers
             }
 
             Enum.TryParse(type, out PackageType pckgType);
-            
+
             this.mockStorage.Setup(x => x.AddPackageAsync(
                                     It.Is<PackageServiceModel>(p => p.PackageType.ToString().Equals(type) &&
                                                         p.Name.Equals(filename))))
-                            .ReturnsAsync(new PackageServiceModel() {
+                            .ReturnsAsync(new PackageServiceModel()
+                            {
                                 Name = filename,
                                 PackageType = pckgType
                             });
@@ -124,16 +125,16 @@ namespace Config.WebService.Test.Controllers
             const string content = "{}";
             string dateCreated = DateTime.UtcNow.ToString(DATE_FORMAT);
 
-            int[] idx = new int[] {0, 1, 2};
+            int[] idx = new int[] { 0, 1, 2 };
             var packages = idx.Select(i => new PackageServiceModel()
-                                     {
-                                         Id = id + i,
-                                         Name = name + i,
-                                         Content = content + i,
-                                         PackageType = type,
-                                         ConfigType = config + i,
-                                         DateCreated = dateCreated
-                                     }).ToList();
+            {
+                Id = id + i,
+                Name = name + i,
+                Content = content + i,
+                PackageType = type,
+                ConfigType = config + i,
+                DateCreated = dateCreated
+            }).ToList();
 
             this.mockStorage
                 .Setup(x => x.GetAllPackagesAsync())
@@ -192,7 +193,7 @@ namespace Config.WebService.Test.Controllers
             // Assert
             this.mockStorage.Verify(x => x.GetFilteredPackagesAsync(
                     PackageType.DeviceConfiguration.ToString(),
-                    ConfigType.Firmware.ToString()), 
+                    ConfigType.Firmware.ToString()),
                     Times.Once);
         }
 
@@ -208,7 +209,7 @@ namespace Config.WebService.Test.Controllers
             writer.Write(package);
             writer.Flush();
             stream.Position = 0;
-            
+
             return new FormFile(stream, 0, package.Length, "file", filename);
         }
     }

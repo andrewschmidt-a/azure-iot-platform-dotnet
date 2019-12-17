@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Models.Actions
+namespace Mmm.Platform.IoT.Config.Services.Models.Actions
 {
     public interface IActionSettings
     {

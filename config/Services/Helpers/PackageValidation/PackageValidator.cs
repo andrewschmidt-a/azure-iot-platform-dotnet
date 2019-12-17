@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers.PackageValidation
+namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
 {
     public interface IPackageValidator
     {

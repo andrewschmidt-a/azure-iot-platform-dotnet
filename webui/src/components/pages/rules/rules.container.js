@@ -15,11 +15,13 @@ import {
   epics as appEpics,
   redux as appRedux,
   getDeviceGroups,
-  getApplicationPermissionsAssigned
+  getApplicationPermissionsAssigned,
+  getAlerting
 } from 'store/reducers/appReducer';
 
 // Pass the devices status
 const mapStateToProps = state => ({
+  alerting: getAlerting(state),
   rules: getRules(state),
   entities: getEntities(state),
   error: getRulesError(state),

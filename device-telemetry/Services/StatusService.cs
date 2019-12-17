@@ -1,20 +1,22 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.TimeSeries;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
-    class StatusService : IStatusService
+    public class StatusService : IStatusService
     {
         private const string STORAGE_TYPE_KEY = "StorageType";
         private const string TIME_SERIES_KEY = "tsi";
@@ -27,17 +29,17 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly IHttpClient httpClient;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private readonly IServicesConfig servicesConfig;
 
         public StatusService(
-            ILogger logger,
+            ILogger<StatusService> logger,
             IStorageClient storageClient,
             ITimeSeriesClient timeSeriesClient,
             IHttpClient httpClient,
             IServicesConfig servicesConfig)
         {
-            this.log = logger;
+            _logger = logger;
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
             this.httpClient = httpClient;
@@ -55,6 +57,12 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             string diagnosticsName = "Diagnostics";
             string authName = "Auth";
             string timeSeriesName = "TimeSeries";
+            string asaManagerName = "AsaManager";
+
+            var asaManagerResult = await this.PingServiceAsync(
+                asaManagerName,
+                this.servicesConfig.AsaManagerApiUrl);
+            SetServiceStatus(asaManagerName, asaManagerResult, result, errors);
 
             // Check access to StorageAdapter
             var storageAdapterResult = await this.PingServiceAsync(
@@ -86,7 +94,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 StringComparison.OrdinalIgnoreCase))
             {
                 // Check connection to Time Series Insights
-                var timeSeriesResult = await this.timeSeriesClient.PingAsync();
+                var timeSeriesResult = await this.timeSeriesClient.StatusAsync();
                 SetServiceStatus(timeSeriesName, timeSeriesResult, result, errors);
 
                 // Add Time Series Insights explorer url
@@ -99,7 +107,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             }
 
             // Check access to Storage
-            var storageResult = await this.storageClient.PingAsync();
+            var storageResult = await this.storageClient.StatusAsync();
             SetServiceStatus(storageName, storageResult, result, errors);
 
             if (errors.Count > 0)
@@ -110,13 +118,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             result.Properties.Add("DiagnosticsEndpointUrl", this.servicesConfig?.DiagnosticsApiUrl);
             result.Properties.Add("StorageAdapterApiUrl", this.servicesConfig?.StorageAdapterApiUrl);
 
-            this.log.Info(
-                "Service status request",
-                () => new
-                {
-                    Healthy = result.Status.IsHealthy,
-                    result.Status.Message
-                });
+            _logger.LogInformation("Service status request {result}", result);
 
             return result;
         }
@@ -154,7 +156,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
             }
             catch (Exception e)
             {
-                this.log.Error(result.Message, () => new { e });
+                _logger.LogError(e, result.Message);
             }
 
             return result;
@@ -174,7 +176,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services
                 request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
             }
 
-            this.log.Debug("Prepare Request", () => new { request });
+            _logger.LogDebug("Prepare request {request}", request);
 
             return request;
         }

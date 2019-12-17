@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
+using Mmm.Platform.IoT.Config.Services.External;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Models
+namespace Mmm.Platform.IoT.Config.Services.Models
 {
     public class Template
     {

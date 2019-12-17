@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Filters;
-using Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Models;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.IoTHubManager.Services;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers
 {
-    [Route(Version.PATH + "/[controller]"), ExceptionsFilter]
+    [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class JobsController : Controller
     {
         private readonly IJobs jobs;
