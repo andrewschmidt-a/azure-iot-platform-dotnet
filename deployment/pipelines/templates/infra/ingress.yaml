@@ -32,7 +32,7 @@ steps:
       n=0
       until [ $n -ge 5 ]
       do
-        az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }}
+        az aks get-credentials -n ${{ parameters.aksName }} -g ${{ parameters.resourceGroup }} 
         # Use Helm to deploy an NGINX ingress controller
         helm upgrade ingress-controller stable/nginx-ingress \
             --install \
