@@ -122,6 +122,19 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
 
+## Deploys Function Apps
+  - template: infra/functions.yaml
+    parameters:
+      serviceConnection: ${{ parameters.serviceConnection }}
+      resourceGroup: ${{ parameters.resourceGroup }}
+      functionApp1Name: ${{ parameters.applicationCode }}-devicetwinfuncapp-${{ parameters.deployEnvironment }}
+      functionApp2Name: ${{ parameters.applicationCode }}-appconfigfuncapp-${{ parameters.deployEnvironment }}
+      appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
+      keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      location: ${{ parameters.location }}
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }} 
+
 ## Deploys App Config
   - template: infra/appconfig.yaml
     parameters:
@@ -129,21 +142,10 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
-      location: ${{ parameters.location }}
-
-## Deploys Function Apps
-  - template: infra/functions.yaml
-    parameters:
-      serviceConnection: ${{ parameters.serviceConnection }}
-      resourceGroup: ${{ parameters.resourceGroup }}
-      functionApp1Name: ${{ parameters.applicationCode }}-deviceproperties-${{ parameters.deployEnvironment }}
-      functionApp2Name: ${{ parameters.applicationCode }}-hubmessaging-${{ parameters.deployEnvironment }}
-      functionApp3Name: ${{ parameters.applicationCode }}-appconfig-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
-      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }} 
-      
+
 ## Deploys Automation Account, Runbook, webhook
 - job: automationacct 
   displayName: Create Automation Acct

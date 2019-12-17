@@ -6,7 +6,7 @@ stages:
 # Pirate ninja test env
 - stage: DeployCRSLDevPN
   dependsOn: []
-  displayName: Deploy To CRSL - rg-pirate-ninja-test1
+  displayName: Deploy To CRSL
   jobs:
   - template: approval.yaml
     parameters:
@@ -24,9 +24,9 @@ stages:
         releaseName: ${{parameters.service}}
         
 # Second Pirate ninja test env
-- stage: DeployCRSLDevPNTwo
+- stage: DeployCRSLDevPN
   dependsOn: []
-  displayName: Deploy To CRSL - rg-pirate-ninja-deployment
+  displayName: Deploy To CRSL
   jobs:
   - template: approval.yaml
     parameters:
@@ -45,7 +45,7 @@ stages:
         
 - stage: DeployCRSLDev
   dependsOn: []
-  displayName: Deploy To CRSL - rg-crslbbiot-odin-dev
+  displayName: Deploy To CRSL Dev
   jobs:
   - template: approval.yaml
     parameters:
@@ -65,7 +65,7 @@ stages:
 - stage: DeployCRSLQA
   dependsOn:
   - DeployCRSLDev
-  displayName: Deploy To CRSL QA - rg-iot-crsl-qa
+  displayName: Deploy To CRSL QA
   jobs:
   - template: approval.yaml
     parameters:
@@ -86,7 +86,7 @@ stages:
 - stage: DeployCRSLWkBnch
   dependsOn:
   - DeployCRSLQA
-  displayName: Deploy To CRSL Work Bench - rg-iot-crsl-wkbnch
+  displayName: Deploy To CRSL Work Bench
   jobs:
   - template: approval.yaml
     parameters:
@@ -100,5 +100,25 @@ stages:
         serviceConnection: '3M-CRSLAD19-BBIoTP-Prod'
         resourceGroup: rg-iot-crsl-wkbnch
         aksName: crsliot-aks-wkbnch
+        chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}
+
+- stage: DeployCHIMDev
+  dependsOn:
+  - DeployCRSLQA
+  displayName: Deploy To CHIM Dev
+  jobs:
+  - template: approval.yaml
+    parameters:
+      environment: IoT_CHIM_Environment_DEV
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: service-deploy.yaml
+      parameters:
+        serviceConnection: '3M-ACTAIR01-CHIMSMART-Dev'
+        resourceGroup: rg-iot-chim-dev
+        aksName: chimiot-aks-dev
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}

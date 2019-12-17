@@ -73,8 +73,6 @@ addModulefromGallery -moduleName "Az.AppConfiguration"
 Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.Automation"
 Start-Sleep -Seconds 15
-addModulefromGallery -moduleName "Az.Accounts"
-Start-Sleep -Seconds 30
 addModulefromGallery -moduleName "Az.IotHub"
 Start-Sleep -seconds 30
 addModulefromGallery -moduleName "Az.DeviceProvisioningServices"

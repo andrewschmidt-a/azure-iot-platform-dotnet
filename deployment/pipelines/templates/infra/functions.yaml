@@ -4,14 +4,29 @@ parameters:
   resourceGroup: ''
   functionApp1Name: ''
   functionApp2Name: ''
-  functionApp3Name: ''
   storageAccountName: ''
   location: ''
   appConfigName: ''
+  appInsightsName: ''
   
 steps:
 
-## Deploy ARM Resource -- Deploy AppConfig controller Function App
+## Deploy ARM Resource - DeviceTwinFunctionApp 
+- task: AzureResourceGroupDeployment@2
+  displayName: "Create Azure function App: DeviceTwinFunctionApp"
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: ${{ parameters.resourceGroup }}
+    location: '${{ parameters.location }}'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
+    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp1Name }} -appInsightsName ${{ parameters.appInsightsName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet -funcVersion ~1'
+    deploymentMode: 'Incremental'
+    addSpnToEnvironment: true
+
+## Deploy ARM Resource -- AppConfig controller FunctionApp
 - task: AzureResourceGroupDeployment@2
   displayName: "Create Azure function App: AppConfigController"
   inputs:
@@ -22,39 +37,7 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
     csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionApp3Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
-    deploymentMode: 'Incremental'
-    addSpnToEnvironment: true
-
-## TODO -- Get Trigger binding information CLI probally. Event Hub based
-## Deploy ARM Resource
-- task: AzureResourceGroupDeployment@2
-  displayName: "Create Azure function App: deviceproperties"
-  inputs:
-    azureSubscription: ${{ parameters.serviceConnection }}
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: ${{ parameters.resourceGroup }}
-    location: '${{ parameters.location }}'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
-    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionApp1Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
-    deploymentMode: 'Incremental'
-    addSpnToEnvironment: true
-
-## Deploy ARM Resource -- Deploy Device Properties Function App (talk to Swami)
-## Function has been created with ver 1.0 in Odin env, here both the functions created with ver 2.0
-- task: AzureResourceGroupDeployment@2
-  displayName: "Create Azure function App: hubmessaging"
-  inputs:
-    azureSubscription: ${{ parameters.serviceConnection }}
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: ${{ parameters.resourceGroup }}
-    location: '${{ parameters.location }}'  
-    templateLocation: 'Linked artifact'
-    csmFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/templates/functions.json'
-    csmParametersFile: '$(System.DefaultWorkingDirectory)/deployment/ARM/parameters/functions.json'
-    overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet'
+    overrideParameters: '-functionAppName ${{ parameters.functionApp2Name }} -appInsightsName ${{ parameters.appInsightsName }} -storageAccountName ${{ parameters.storageAccountName }} -runtime dotnet -funcVersion ~2'
     deploymentMode: 'Incremental'
     addSpnToEnvironment: true
 
@@ -64,30 +47,24 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     scriptLocation: 'inlineScript'
     inlineScript: |-
-      devicepropertiesfn=${{ parameters.functionApp1Name }}
-      messagingfnapp=${{ parameters.functionApp2Name }}
-      appConfigfn=${{ parameters.functionApp3Name }}
+      devicetwinPropfn=${{ parameters.functionApp1Name }}
       kVaultName=${{ parameters.keyVaultName }}
       cosmosDbConn=$(az keyvault secret show --name "documentDBConnectionString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       lifecycleEvConn=$(az keyvault secret show --name "lifecycleEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       telemetryEvConn=$(az keyvault secret show --name "telemetryEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       twinchangeEvConn=$(az keyvault secret show --name "twinChangeEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
-      az functionapp config appsettings set --name $messagingfnapp \
-        --settings "CosmosDbConnectionString"="$cosmosDbConn" \
-          "CosmosDbDatabaseName"="iot" \
-          "EventHubLifecycle"="$lifecycleEvConn" \
+      az functionapp config appsettings set --name $devicetwinPropfn \
+        --settings "CosmosConnection"="$cosmosDbConn" \
+          "DeviceOperationsDB"="iot" \
           "EventHubTelemetry"="$telemetryEvConn" \
-          "EventHubTwinChange"="$twinchangeEvConn" \
-        --resource-group ${{ parameters.resourceGroup }}
-      az functionapp config appsettings set --name $devicepropertiesfn \
-        --settings "ConsumerGroup"="lifecyclecg" \
-          "ConsumerGroupTC"="twinchangecg" \
-          "CosmosConnection"="$cosmosDbConn" \
+          "DeviceCG"="messagingfunctions" \
+          "DPCacheCG"="dpcache" \
           "CosmosDB"="pcs-storage" \
           "CosmosDBRus"="400" \
           "EventHubLifecycle"="$lifecycleEvConn" \
           "EventHubName"="lifecycle" \
-          "EventHubNameTC"="twin-change" \
+          "EventHubNameTwinChange"="twin-change" \
+          "TelemetryEventHubName"="telemetry" \
           "EventHubTwinChange"="$twinchangeEvConn" \
           "WhiteList"="tags.*,reported.*, reported.Protocol, reported.SupportedMethods, reported.DeviceMethodStatus, reported.FirmwareUpdateStatus" \
         --resource-group ${{ parameters.resourceGroup }}

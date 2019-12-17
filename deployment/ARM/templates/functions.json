@@ -55,6 +55,12 @@
                 "description": "the pricing tier"
             }
         },
+        "appInsightsName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Application Insight"
+            }
+        },
         "appInsightsLocation": {
             "minLength": 2,
             "type": "string",
@@ -104,7 +110,6 @@
     "variables": {
         "apiVersion": "2016-02-03",
         "location": "[resourceGroup().location]",
-        "applicationInsightName": "[parameters('functionAppName')]",
         "storageVersion": "2016-01-01"
     },
     "resources": [
@@ -172,11 +177,11 @@
                         },
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('functionAppName')), '2015-05-01').InstrumentationKey]"
+                            "value": "[reference(resourceId('microsoft.insights/components/', parameters('appInsightsName')), '2015-05-01').InstrumentationKey]"
                         },
                         {
                             "name": "WEBSITE_CONTENTSHARE",
-                            "value": "[parameters('functionAppName')]"
+                            "value": "[toLower(parameters('functionAppName'))]"
                         },
                         {
                             "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
@@ -187,23 +192,21 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', parameters('functionAppName'))]",
-                "[resourceId('Microsoft.Insights/components', parameters('functionAppName'))]"
+                "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]"
             ],
             "resources": []
         },
         {
             "type": "Microsoft.Insights/components",
-            "name": "[parameters('functionAppName')]",
+            "name": "[parameters('appInsightsName')]",
             "location": "[parameters('appInsightsLocation')]",
             "apiVersion": "2014-04-01",
-            "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', parameters('functionAppName'))]"
-            ],
+            "dependsOn": [],
             "tags": {
-                "displayName": "[parameters('functionAppName')]"
+                "displayName": "[parameters('appInsightsName')]"
             },
             "properties": {
-                "applicationId": "[parameters('functionAppName')]"
+                "applicationId": "[parameters('appInsightsName')]"
             }
         }
     ],

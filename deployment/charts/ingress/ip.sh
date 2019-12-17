@@ -2,6 +2,7 @@
 az aks get-credentials -n $1 -g $2
 # Public IP address of your ingress controller
 n=1
+IP=""
 until [ $n -ge 6 ]
 do
   IP=$(kubectl get service -l app=nginx-ingress -l component=controller --namespace ingress-basic -o json | jq -r .items[0].status.loadBalancer.ingress[0].ip)

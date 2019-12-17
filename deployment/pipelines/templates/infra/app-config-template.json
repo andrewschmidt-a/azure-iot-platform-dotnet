@@ -61,22 +61,6 @@
         "CosmosDb": {
             "rus": "400"
         },
-        "KeyVault": {
-            "name": "OVERWRITTEN_IN_DEPLOYMENT",
-            "newName": "key-vault-odin"
-        },
-        "Logging": {
-            "includescopes": "true",
-            "loglevel": [
-                "Microsoft",
-                "=",
-                "\"Warning\""
-            ]
-        },
-        "StorageAccount": {
-            "name": "functiondefinition",
-            "key": ""
-        },
         "Permissions": {
             "admin": {
                 "AcquireToken": "",
@@ -100,6 +84,7 @@
                 "UpdateRules": "",
                 "UpdateSIMManagement": "",
                 "UserManage": "",
+                "DeleteTenant": ""
                 "EnableAlerting": "",
                 "DisableAlerting": ""
             },
@@ -120,6 +105,23 @@
             "whitelist": "tags.*,reported.Protocol,reported.SupportedMethods,reported.FirmwareUpdateStatus"
         },
         "webserviceport": "80"
+    },
+    "KeyVault": {
+        "aadappid": "",
+        "aadappsecret": "",
+        "name": "OVERWRITTEN_IN_DEPLOYMENT",
+        "newName": "OVERWRITTEN_IN_DEPLOYMENT"
+    },
+    "Logging": {
+        "includescopes": "true",
+        "loglevel": [
+            "Microsoft",
+            "=",
+            "\"Warning\""
+        ]
+    },
+    "StorageAccount": {
+        "name": ""
     },
     "StorageAdapter": {
         "documentdbrus": "400",
@@ -169,7 +171,11 @@
         "twinChangeEventHubConnString": "",
         "twinChangeFunctionName": "twin-change-processor",
         "twinChangeFunctionUri": "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net",
-        "webserviceport": 80,
+        "createIotHubWebHookName": "CreateIotHub",
+        "deleteIotHubWebHookName": "DeleteIotHub",
+        "createSAWebHookName": "CreateSAJob",
+        "deleteSAWebHookName": "DeleteSAJob",
+        "webserviceport": 80
         "streamAnalyticsDatabaseId": "pcs-iothub-stream"
     }
 }
