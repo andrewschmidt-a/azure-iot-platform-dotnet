@@ -19,7 +19,7 @@ steps:
     namespace: 'default'
     command: 'init'
     upgradeTiller: false
-    waitForExecution: false
+    waitForExecution: true
     
 - task: AzureCLI@1
   displayName: "CLI: install ingress-controller"
