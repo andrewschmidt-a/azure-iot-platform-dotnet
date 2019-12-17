@@ -77,6 +77,24 @@ stages:
       applicationCode: crsliot
       deployEnvironment: wkbnch      
       
+- stage: DeployCHIMDev
+  dependsOn: 
+  - DeployCRSLWkBnch
+  #- DeployCRSLQA
+  displayName: Deploy To CRSL WorkBench
+  jobs:
+  - template: templates/approval.yaml
+    parameters:
+      environment: IoT_CHIM_Environment_DEV
+  - template: templates/infra.yaml
+    parameters:
+      serviceConnection: '3M-ACTAIR01-CHIMSMART-Dev'
+      resourceGroup: rg-iot-chim-dev
+      location: centralus
+      environment: IoT_CHIM_Environment_DEV
+      subscriptionId: 28299656-8110-4dc4-a33f-82a6cc3d05c2
+      applicationCode: chimiot
+      deployEnvironment: dev   
 # PSD
 - stage: DeployPSD
   dependsOn: []
