@@ -78,10 +78,9 @@ stages:
       deployEnvironment: wkbnch      
       
 - stage: DeployCHIMDev
-  dependsOn: 
-  - DeployCRSLWkBnch
+  dependsOn: []
   #- DeployCRSLQA
-  displayName: Deploy To CRSL WorkBench
+  displayName: Deploy To CHIM Dev
   jobs:
   - template: templates/approval.yaml
     parameters:
