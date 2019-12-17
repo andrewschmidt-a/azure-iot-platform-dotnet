@@ -30,14 +30,7 @@ stages:
       inputs:
         azureSubscription: $(azureSubscription)
         scriptLocation: 'inlineScript'
-        inlineScript: |
-          az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s default/$(devSpace) -y
-          az aks get-credentials -g $(resourceGroup) -n $(aksCluster)
-
-    - task: KubectlInstaller@0
-      displayName: Install kubectl
-      inputs:
-        kubectlVersion: 'latest'
+        inlineScript: az aks use-dev-spaces -g $(resourceGroup) -n $(aksCluster) -s $(devSpace) -y
 
     - task: AzureCLI@1
       displayName: Load app config connection string and add it as a Kubernetes secret
@@ -50,6 +43,14 @@ stages:
 
 - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
   jobs:
+  - template: standUpServiceIfChangedTemplate.yaml
+    parameters:
+      service: asa-manager
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
   - template: standUpServiceIfChangedTemplate.yaml
     parameters:
       service: config
@@ -92,6 +93,14 @@ stages:
       
 - stage: Test_Services_that_Changed
   jobs:
+  - template: testServiceIfChangedTemplate.yaml
+    parameters:
+      service: asa-manager
+      azureSubscription: ${{variables.azureSubscription}}
+      resourceGroup: ${{variables.resourceGroup}}
+      aksCluster: ${{variables.aksCluster}}
+      devSpace: ${{variables.devSpace}}
+
   - template: testServiceIfChangedTemplate.yaml
     parameters:
       service: config

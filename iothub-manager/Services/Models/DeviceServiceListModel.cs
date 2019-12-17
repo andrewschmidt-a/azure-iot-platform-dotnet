@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class DeviceServiceListModel
     {

@@ -69,7 +69,10 @@
     "CreateDeployments": "Create deployments",
     "DeleteDeployments": "Delete deployments",
     "InviteUsers": "Invite users",
-    "DeleteUsers": "Delete users"
+    "DeleteUsers": "Delete users",
+    "DeleteTenant": "Delete tenant",
+    "EnableAlerting": "Enable alerting",
+    "DisableAlerting": "Disable alerting"
   },
   "protected": {
     "permissionDenied": "Permission {{permission}} is denied."
@@ -81,6 +84,7 @@
     "closeTitle": "Close"
   },
   "settingsFlyout": {
+    "alerting": "Advanced Alerting",
     "title": "System settings",
     "version": "Version {{version}}",
     "viewRelNotes": "View release notes",
@@ -94,11 +98,15 @@
     "flowing": "Flowing",
     "optInButton": "Diagnostics",
     "simulationToggle": "Simulation",
+    "alertingToggle": "Start/Stop Alerting",
     "start": "Start",
     "stop": "Stop",
     "stopped": "Stopped",
+    "enable": "Enable",
+    "disable": "Disable",
     "simulationData": "Simulation data",
     "loading": "Loading",
+    "alertingDescription": "Start or stop advanced alerting. Stopping alerting will minimize the cost of the solution. Rules and alerts will both be deactivated if alerting is turned off.",
     "simulationDescription": "Start or stop simulation of devices. Stopping device simulation will minimize the cost of the solution; no simulated telemetry will be sent to your IoT Hub and alerts will not be generated for simulated devices.",
     "toggleError": "Error updating simulation status",
     "setLogoError": "Error updating logo",
@@ -243,7 +251,7 @@
         "cancel": "Cancel",
         "validation": {
           "required": "Is required",
-          "invalidEmail": "Invalid email provided"
+          "invalid": "Invalid email provided"
         },
         "summaryHeader": "Summary",
         "pending": "Deleting devices... ",

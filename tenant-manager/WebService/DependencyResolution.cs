@@ -1,120 +1,73 @@
+using System;
 using System.Reflection;
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Http;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Runtime;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Helpers;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Runtime;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
+using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.TenantManager.Services.Helpers;
+using Mmm.Platform.IoT.TenantManager.Services.Runtime;
+using Mmm.Platform.IoT.TenantManager.WebService.Runtime;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService
+namespace Mmm.Platform.IoT.TenantManager.WebService
 {
-    public class DependencyResolution
+    public class DependencyResolution : DependencyResolutionBase
     {
-        /// <summary>
-        /// Autofac configuration. Find more information here:
-        /// @see http://docs.autofac.org/en/latest/integration/aspnetcore.html
-        /// </summary>
-        public static IContainer Setup(IServiceCollection services)
+        protected override void SetupCustomRules(ContainerBuilder builder)
         {
-            var builder = new ContainerBuilder();
-
-            builder.Populate(services);
-
-            AutowireAssemblies(builder);
-            SetupCustomRules(builder);
-
-            var container = builder.Build();
-            RegisterFactory(container);
-
-            return container;
-        }
-
-        /// <summary>
-        /// Autowire interfaces to classes from all the assemblies, to avoid
-        /// manual configuration. Note that autowiring works only for interfaces
-        /// with just one implementation.
-        /// @see http://autofac.readthedocs.io/en/latest/register/scanning.html
-        /// </summary>
-        private static void AutowireAssemblies(ContainerBuilder builder)
-        {
-            var assembly = Assembly.GetEntryAssembly();
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
-
             // Auto-wire additional assemblies
-            assembly = typeof(IServicesConfig).GetTypeInfo().Assembly;
+            var assembly = typeof(IServicesConfig).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
+
+            builder.Register(context => new Config(context.Resolve<ConfigData>())).As<IConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IConfig>().ClientAuthConfig).As<IClientAuthConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IConfig>().ServicesConfig).As<IServicesConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<IStorageClientConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<IAppConfigClientConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<IUserManagementClientConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<IAuthMiddlewareConfig>().SingleInstance();
+            builder.Register(context => context.Resolve<IServicesConfig>()).As<ITableStorageClientConfig>().SingleInstance();
+            builder.Register(context => GetOpenIdConnectManager(context.Resolve<IConfig>())).As<IConfigurationManager<OpenIdConnectConfiguration>>().SingleInstance();
+            builder.RegisterType<CorsSetup>().As<ICorsSetup>().SingleInstance();
+            // Add helper dependency types first
+            builder.RegisterType<TokenHelper>().As<ITokenHelper>().SingleInstance();
+
+            builder.RegisterType<StorageClient>().As<IStorageClient>().SingleInstance();
+            builder.RegisterType<AppConfigurationHelper>().As<IAppConfigurationHelper>().SingleInstance();
+            builder.RegisterType<RunbookHelper>().As<IRunbookHelper>().SingleInstance();
+            builder.RegisterType<StreamAnalyticsHelper>().As<IStreamAnalyticsHelper>().SingleInstance();
+            builder.RegisterType<TableStorageClient>().As<ITableStorageClient>().SingleInstance();
         }
 
-        /// <summary>Setup Custom rules overriding autowired ones.</summary>
-        private static void SetupCustomRules(ContainerBuilder builder)
+        // Prepare the OpenId Connect configuration manager, responsibile
+        // for retrieving the JWT signing keys and cache them in memory.
+        // See: https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4
+        private static IConfigurationManager<OpenIdConnectConfiguration> GetOpenIdConnectManager(IConfig config)
         {
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
-
-            // Make sure the configuration is read only once.
-            IConfig config = new Config(new ConfigData(new Logger(Uptime.ProcessId, LogLevel.Info)));
-            builder.RegisterInstance(config).As<IConfig>().SingleInstance();
-
-            // Service configuration is generated by the entry point, so we
-            // prepare the instance here.
-            builder.RegisterInstance(config.ServicesConfig).As<IServicesConfig>().SingleInstance();
-
-            // Instantiate only one logger
-            var logger = new Logger(Uptime.ProcessId, LogLevel.Debug);
-            builder.RegisterInstance(logger).As<ILogger>().SingleInstance();
-
-            // Add helpers
-            var tokenHelper = new TokenHelper(config.ServicesConfig);
-            builder.RegisterInstance(new TenantRunbookHelper(config.ServicesConfig, tokenHelper)).As<TenantRunbookHelper>().SingleInstance();
-            builder.RegisterInstance(new CosmosHelper(config.ServicesConfig)).As<CosmosHelper>().SingleInstance();
-            builder.RegisterInstance(new TableStorageHelper(config.ServicesConfig)).As<TableStorageHelper>().SingleInstance();
-            builder.RegisterType<ExternalRequestHelper>().As<IExternalRequestHelper>().SingleInstance();
-
-            // Auth and CORS setup
-            Auth.Startup.SetupDependencies(builder, config);
-        }
-
-        private static void RegisterFactory(IContainer container)
-        {
-            Factory.RegisterContainer(container);
-        }
-
-        /// <summary>
-        /// Provide factory pattern for dependencies that are instantiated
-        /// multiple times during the application lifetime.
-        /// How to use:
-        /// <code>
-        /// class MyClass : IMyClass {
-        ///     public MyClass(DependencyInjection.IFactory factory) {
-        ///         this.factory = factory;
-        ///     }
-        ///     public SomeMethod() {
-        ///         var instance1 = this.factory.Resolve<ISomething>();
-        ///         var instance2 = this.factory.Resolve<ISomething>();
-        ///         var instance3 = this.factory.Resolve<ISomething>();
-        ///     }
-        /// }
-        /// </code>
-        /// </summary>
-        public interface IFactory
-        {
-            T Resolve<T>();
-        }
-
-        public class Factory : IFactory
-        {
-            private static IContainer container;
-
-            public static void RegisterContainer(IContainer c)
+            // Avoid starting the real OpenId Connect manager if not needed, which would
+            // start throwing errors when attempting to fetch certificates.
+            if (!config.ClientAuthConfig.AuthRequired)
             {
-                container = c;
+                return new StaticConfigurationManager<OpenIdConnectConfiguration>(
+                    new OpenIdConnectConfiguration());
             }
 
-            public T Resolve<T>()
+            return new ConfigurationManager<OpenIdConnectConfiguration>(
+                config.ClientAuthConfig.JwtIssuer + "/.well-known/openid-configuration",
+                new OpenIdConnectConfigurationRetriever())
             {
-                return container.Resolve<T>();
-            }
+                // How often the list of keys in memory is refreshed. Default is 24 hours.
+                AutomaticRefreshInterval = TimeSpan.FromHours(6),
+
+                // The minimum time between retrievals, in the event that a retrieval
+                // failed, or that a refresh is explicitly requested. Default is 30 seconds.
+                RefreshInterval = TimeSpan.FromMinutes(1)
+            };
         }
     }
 }

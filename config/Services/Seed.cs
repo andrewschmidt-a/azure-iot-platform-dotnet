@@ -6,15 +6,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
+using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Platform.IoT.Config.Services.Helpers;
+using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Platform.IoT.Config.Services.Runtime;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
+namespace Mmm.Platform.IoT.Config.Services
 {
     public interface ISeed
     {
@@ -34,7 +36,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
         private readonly IStorageAdapterClient storageClient;
         private readonly IDeviceSimulationClient simulationClient;
         private readonly IDeviceTelemetryClient telemetryClient;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
 
         public Seed(
             IServicesConfig config,
@@ -43,7 +45,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
             IStorageAdapterClient storageClient,
             IDeviceSimulationClient simulationClient,
             IDeviceTelemetryClient telemetryClient,
-            ILogger logger)
+            ILogger<Seed> logger)
         {
             this.config = config;
             this.mutex = mutex;
@@ -51,7 +53,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
             this.storageClient = storageClient;
             this.simulationClient = simulationClient;
             this.telemetryClient = telemetryClient;
-            this.log = logger;
+            _logger = logger;
         }
 
         public async Task TrySeedAsync()
@@ -63,23 +65,23 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
 
             if (!await this.mutex.EnterAsync(SEED_COLLECTION_ID, MUTEX_KEY, this.mutexTimeout))
             {
-                this.log.Info("Seed skipped (conflict)", () => { });
+                _logger.LogInformation("Seed skipped (conflict)");
                 return;
             }
 
             if (await this.CheckCompletedFlagAsync())
             {
-                this.log.Info("Seed skipped (completed)", () => { });
+                _logger.LogInformation("Seed skipped (completed)");
                 return;
             }
 
-            this.log.Info("Seed begin", () => { });
+            _logger.LogInformation("Seed begin");
             try
             {
                 await this.SeedAsync();
-                this.log.Info("Seed end", () => { });
+                _logger.LogInformation("Seed end");
                 await this.SetCompletedFlagAsync();
-                this.log.Info("Seed completed flag set", () => { });
+                _logger.LogInformation("Seed completed flag set");
             }
             finally
             {
@@ -124,19 +126,19 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
 
             if (template.Groups.Select(g => g.Id).Distinct().Count() != template.Groups.Count())
             {
-                this.log.Warn("Found duplicated group ID", () => new { template.Groups });
+                _logger.LogWarning("Found duplicated group ID {groups}", template.Groups);
             }
 
             if (template.Rules.Select(r => r.Id).Distinct().Count() != template.Rules.Count())
             {
-                this.log.Warn("Found duplicated rule ID", () => new { template.Rules });
+                _logger.LogWarning("Found duplicated rule ID {rules}", template.Rules);
             }
 
             var groupIds = new HashSet<string>(template.Groups.Select(g => g.Id));
             var rulesWithInvalidGroupId = template.Rules.Where(r => !groupIds.Contains(r.GroupId));
             if (rulesWithInvalidGroupId.Any())
             {
-                this.log.Warn("Invalid group ID found in rules", () => new { rulesWithInvalidGroupId });
+                _logger.LogWarning("Invalid group ID found in rules {rules}", rulesWithInvalidGroupId);
             }
 
             foreach (var group in template.Groups)
@@ -147,7 +149,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
                 }
                 catch (Exception ex)
                 {
-                    this.log.Error($"Failed to seed default group {group.DisplayName}", () => new { group, ex.Message });
+                    _logger.LogError(ex, "Failed to seed default group {group}", group);
                     throw;
                 }
             }
@@ -160,7 +162,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
                 }
                 catch (Exception ex)
                 {
-                    this.log.Error($"Failed to seed default rule {rule.Description}", () => new { rule, ex.Message });
+                    _logger.LogError(ex, "Failed to seed default rule {rule}", rule);
                     throw;
                 }
             }
@@ -177,7 +179,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
 
                 if (simulationModel != null)
                 {
-                    this.log.Info("Skip seed simulation since there is already one simulation", () => new { simulationModel });
+                    _logger.LogInformation("Skip seed simulation since there is already one simulation {simulationModel}", simulationModel);
                 }
                 else
                 {
@@ -191,7 +193,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services
             }
             catch (Exception ex)
             {
-                this.log.Error("Failed to seed default simulations", () => new { ex.Message });
+                _logger.LogError(ex, "Failed to seed default simulations");
                 throw;
             }
         }

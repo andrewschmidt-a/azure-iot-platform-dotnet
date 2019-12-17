@@ -39,7 +39,7 @@
                 "type": "coreclr",
                 "request": "launch",
                 //"preLaunchTask": "build-auth",
-                "program": "${workspaceRoot}/auth/WebService/bin/Release/netcoreapp2.0/Microsoft.Azure.IoTSolutions.Auth.WebService.dll",
+                "program": "${workspaceRoot}/auth/WebService/bin/Release/netcoreapp2.0/Mmm.Platform.IoT.Auth.WebService.dll",
                 "args": [],
                 "cwd": "${workspaceRoot}/auth/WebService/bin/Release/netcoreapp2.0",
                 // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
@@ -92,7 +92,7 @@
                 "type": "coreclr",
                 "request": "launch",
                 //"preLaunchTask": "build-asamanager",
-                "program": "${workspaceRoot}/asa-manager/WebService/bin/Release/netcoreapp2.0/Microsoft.Azure.IoTSolutions.AsaManager.WebService.dll",
+                "program": "${workspaceRoot}/asa-manager/WebService/bin/Release/netcoreapp2.0/Mmm.Platform.IoT.AsaManager.WebService.dll",
                 "args": [],
                 "cwd": "${workspaceRoot}/asa-manager/WebService/bin/Release/netcoreapp2.0",
                 // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
@@ -144,7 +144,7 @@
                 "type": "coreclr",
                 "request": "launch",
                 //"preLaunchTask": "build-telemetry",
-                "program": "${workspaceRoot}/device-telemetry/WebService/bin/Release/netcoreapp2.0/Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.dll",
+                "program": "${workspaceRoot}/device-telemetry/WebService/bin/Release/netcoreapp2.0/Mmm.Platform.IoT.DeviceTelemetry.WebService.dll",
                 "args": [],
                 "cwd": "${workspaceRoot}/device-telemetry/WebService/bin/Release/netcoreapp2.0",
                 // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
@@ -190,7 +190,7 @@
                 "type": "coreclr",
                 "request": "launch",
                 //"preLaunchTask": "build-iothubmanager",
-                "program": "${workspaceRoot}/iothub-manager/WebService/bin/Release/netcoreapp2.0/Microsoft.Azure.IoTSolutions.IotHubManager.WebService.dll",
+                "program": "${workspaceRoot}/iothub-manager/WebService/bin/Release/netcoreapp2.0/Mmm.Platform.IoT.IoTHubManager.WebService.dll",
                 "args": [],
                 "cwd": "${workspaceRoot}/iothub-manager/WebService/bin/Release/netcoreapp2.0",
                 // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
@@ -239,7 +239,7 @@
                 "type": "coreclr",
                 "request": "launch",
                 "preLaunchTask":"device-simulation-launch" ,
-                "program": "${workspaceRoot}/config/WebService/bin/Release/netcoreapp2.0/Microsoft.Azure.IoTSolutions.UIConfig.WebService.dll",
+                "program": "${workspaceRoot}/config/WebService/bin/Release/netcoreapp2.0/Mmm.Platform.IoT.Config.WebService.dll",
                 "args": [],
                 "cwd": "${workspaceRoot}/config/WebService/bin/Release/netcoreapp2.0",
                 // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
@@ -284,7 +284,7 @@
                 "type": "coreclr",
                 "request": "launch",
                 //"preLaunchTask": "build-storageadapter",
-                "program": "${workspaceRoot}/storage-adapter/WebService/bin/Release/netcoreapp2.0/Microsoft.Azure.IoTSolutions.StorageAdapter.WebService.dll",
+                "program": "${workspaceRoot}/storage-adapter/WebService/bin/Release/netcoreapp2.0/Mmm.Platform.IoT.StorageAdapter.WebService.dll",
                 "args": [],
                 "cwd": "${workspaceRoot}/storage-adapter/WebService/bin/Release/netcoreapp2.0",
                 // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window

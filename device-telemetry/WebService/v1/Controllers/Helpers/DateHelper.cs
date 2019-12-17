@@ -3,7 +3,7 @@
 using System;
 using System.Xml;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.WebService.v1.Controllers.Helpers
+namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers.Helpers
 {
     public static class DateHelper
     {

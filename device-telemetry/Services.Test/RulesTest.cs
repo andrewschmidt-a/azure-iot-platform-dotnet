@@ -5,30 +5,28 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models.Actions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.StorageAdapter;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.StorageAdapter;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
-using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
-using HttpRequest = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpRequest;
-using HttpResponse = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpResponse;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
+using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
+using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
 
-namespace DeviceTelemetry.Services.Test
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class RulesTest
     {
         private readonly Mock<IStorageAdapterClient> storageAdapter;
-        private readonly Mock<ILogger> logger;
+        private readonly Mock<IAsaManagerClient> asaManager;
+        private readonly Mock<ILogger<Rules>> _logger;
         private readonly IServicesConfig servicesConfig;
         private readonly Mock<IRules> rulesMock;
         private readonly Mock<IAlarms> alarms;
@@ -44,7 +42,8 @@ namespace DeviceTelemetry.Services.Test
         public RulesTest()
         {
             this.storageAdapter = new Mock<IStorageAdapterClient>();
-            this.logger = new Mock<ILogger>();
+            this.asaManager = new Mock<IAsaManagerClient>();
+            this._logger = new Mock<ILogger<Rules>>();
             this.servicesConfig = new ServicesConfig
             {
                 DiagnosticsApiUrl = "http://localhost:9006/v1",
@@ -54,12 +53,13 @@ namespace DeviceTelemetry.Services.Test
             this.alarms = new Mock<IAlarms>();
             this.httpClientMock = new Mock<IHttpClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
-            this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.servicesConfig, this.logger.Object, this.httpContextAccessor.Object);
+            this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.servicesConfig, new Mock<ILogger<DiagnosticsClient>>().Object, this.httpContextAccessor.Object);
 
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
                 {{"TenantID", TENANT_ID}});
+            this.asaManager.Setup(t => t.BeginConversionAsync(It.IsAny<string>())).ReturnsAsync(new BeginConversionApiModel());
 
-            this.rules = new Rules(this.storageAdapter.Object, this.logger.Object, this.alarms.Object, this.diagnosticsClient);
+            this.rules = new Rules(this.storageAdapter.Object, this.asaManager.Object, this._logger.Object, this.alarms.Object, this.diagnosticsClient);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -112,7 +112,12 @@ namespace DeviceTelemetry.Services.Test
             await this.rules.DeleteAsync("id");
 
             this.storageAdapter.Verify(x => x.GetAsync(It.IsAny<string>(), "id"), Times.Once);
-            this.storageAdapter.Verify(x => x.UpsertAsync(It.IsAny<string>(), "id", It.IsAny<string>(), "123"), Times.Once);
+            this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), "id", It.IsAny<string>(), "123"), Times.Once);
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Once);
         }
 
         /**
@@ -134,7 +139,12 @@ namespace DeviceTelemetry.Services.Test
             await this.rules.DeleteAsync("id");
 
             this.storageAdapter.Verify(x => x.GetAsync(It.IsAny<string>(), "id"), Times.Once);
-            this.storageAdapter.Verify(x => x.UpsertAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Never);
         }
 
         /**
@@ -158,7 +168,12 @@ namespace DeviceTelemetry.Services.Test
             await this.rules.DeleteAsync("id");
 
             this.storageAdapter.Verify(x => x.GetAsync(It.IsAny<string>(), "id"), Times.Once);
-            this.storageAdapter.Verify(x => x.UpsertAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Never);
         }
 
 
@@ -183,7 +198,12 @@ namespace DeviceTelemetry.Services.Test
             await Assert.ThrowsAsync<Exception>(async () => await this.rules.DeleteAsync("id"));
 
             this.storageAdapter.Verify(x => x.GetAsync(It.IsAny<string>(), "id"), Times.Once);
-            this.storageAdapter.Verify(x => x.UpsertAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Never);
         }
 
         /**
@@ -207,7 +227,12 @@ namespace DeviceTelemetry.Services.Test
 
             // Assert
             this.storageAdapter.Verify(x => x.GetAsync(It.IsAny<string>(), "id"), Times.Once);
-            this.storageAdapter.Verify(x => x.UpsertAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Never);
         }
 
         /**
@@ -308,7 +333,7 @@ namespace DeviceTelemetry.Services.Test
                 .Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .Throws(new ResourceNotFoundException());
 
-            this.storageAdapter.Setup(x => x.UpsertAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            this.storageAdapter.Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(result));
 
             // Act
@@ -362,6 +387,7 @@ namespace DeviceTelemetry.Services.Test
         {
             // Arrange
             ValueListApiModel fakeRules = new ValueListApiModel();
+            fakeRules.Items = new List<ValueApiModel>();
             fakeRules.Items.Add(this.CreateFakeRule("rule1"));
             fakeRules.Items.Add(this.CreateFakeRule("rule2"));
             this.storageAdapter.Setup(x => x.GetAllAsync(It.IsAny<string>())).Returns(Task.FromResult(fakeRules));
@@ -382,6 +408,11 @@ namespace DeviceTelemetry.Services.Test
             // Assert
             this.storageAdapter.Verify(x => x.GetAllAsync(It.IsAny<string>()), Times.Once);
             this.httpClientMock.Verify(x => x.PostAsync(It.IsAny<HttpRequest>()), Times.Exactly(2));
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Once);
         }
 
 
@@ -390,6 +421,7 @@ namespace DeviceTelemetry.Services.Test
         {
             // Arrange
             ValueListApiModel fakeRules = new ValueListApiModel();
+            fakeRules.Items = new List<ValueApiModel>();
             fakeRules.Items.Add(this.CreateFakeRule("rule1"));
             fakeRules.Items.Add(this.CreateFakeRule("rule2"));
             this.storageAdapter.Setup(x => x.GetAllAsync(It.IsAny<string>())).Returns(Task.FromResult(fakeRules));
@@ -413,6 +445,11 @@ namespace DeviceTelemetry.Services.Test
             // Assert
             this.storageAdapter.Verify(x => x.GetAllAsync(It.IsAny<string>()), Times.Once);
             this.httpClientMock.Verify(x => x.PostAsync(It.IsAny<HttpRequest>()), Times.Exactly(4));
+
+            this.asaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                    Times.Once);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]

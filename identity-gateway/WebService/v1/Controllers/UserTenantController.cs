@@ -1,25 +1,23 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using IdentityGateway.Services;
-using IdentityGateway.Services.Models;
-using IdentityGateway.WebService.v1.Filters;
-using IdentityGateway.AuthUtils;
-using Newtonsoft.Json;
-using System;
-using IdentityGateway.Services.Runtime;
+﻿using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
-using IdentityGateway.Services.Helpers;
-using SendGrid.Helpers.Mail;
-using SendGrid;
 using System.Linq;
-using WebService;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Newtonsoft.Json;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
-namespace IdentityGateway.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
 {
     [Route("v1/tenants"), TypeFilter(typeof(ExceptionsFilterAttribute))]
-    public class UserTenantController : ControllerBase
+    public class UserTenantController : Controller
     {
         private UserTenantContainer _container;
         private IJwtHelpers _jwtHelper;
@@ -30,41 +28,6 @@ namespace IdentityGateway.WebService.v1.Controllers
             this._container = container;
             this._jwtHelper = jwtHelper;
             this._sendGridClientFactory = sendGridClientFactory;
-        }
-
-        private string ClaimsUserId
-        {
-            get
-            {
-                try
-                {
-                    return HttpContext.Request.GetCurrentUserObjectId();
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("A request was sent to an API endpoint that requires a userId, but the userId was not passed through the url nor was it available in the user Claims.", e);
-                }
-            }
-        }
-
-        private string TenantId
-        {
-            get
-            {
-                try
-                {
-                    string tenantId = HttpContext.Request.GetTenant();
-                    if (String.IsNullOrEmpty(tenantId))
-                    {
-                        throw new Exception("The TenantId was not attached in the user claims or request headers.");
-                    }
-                    return tenantId;
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Unable to get the tenantId.", e);
-                }
-            }
         }
 
         /// <summary>
@@ -79,7 +42,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 UserId = null,
-                Tenant = this.TenantId
+                Tenant = this.GetTenantId()
             };
             return await this._container.GetAllUsersAsync(input);
         }
@@ -91,9 +54,9 @@ namespace IdentityGateway.WebService.v1.Controllers
         [HttpGet("all")]
         public async Task<UserTenantListModel> UserClaimsGetAllTenantsForUserAsync()
         {
-            return await this.GetAllTenantsForUserAsync(this.ClaimsUserId);
+            return await this.GetAllTenantsForUserAsync(this.GetClaimsUserId());
         }
-        
+
         /// <summary>
         /// Get all tenants for a user
         /// </summary>
@@ -118,7 +81,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("ReadAll")]
         public async Task<UserTenantModel> UserClaimsGetAsync()
         {
-            return await this.GetAsync(this.ClaimsUserId);
+            return await this.GetAsync(this.GetClaimsUserId());
         }
 
         /// <summary>
@@ -134,7 +97,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 UserId = userId,
-                Tenant = this.TenantId
+                Tenant = this.GetTenantId()
             };
             return await this._container.GetAsync(input);
         }
@@ -148,7 +111,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserTenantModel> UserClaimsPostAsync([FromBody] UserTenantModel model)
         {
-            return await this.PostAsync(this.ClaimsUserId, model);
+            return await this.PostAsync(this.GetClaimsUserId(), model);
         }
 
         /// <summary>
@@ -162,7 +125,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 UserId = userId,
-                Tenant = this.TenantId,
+                Tenant = this.GetTenantId(),
                 Roles = model.Roles
             };
             return await this._container.CreateAsync(input);
@@ -176,7 +139,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserTenantModel> UserClaimsPutAsync([FromBody] UserTenantModel update)
         {
-            return await this.PutAsync(this.ClaimsUserId, update);
+            return await this.PutAsync(this.GetClaimsUserId(), update);
         }
 
         /// <summary>
@@ -190,7 +153,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 UserId = userId,
-                Tenant = this.TenantId,
+                Tenant = this.GetTenantId(),
                 Roles = update.Roles
             };
             return await this._container.UpdateAsync(input);
@@ -204,7 +167,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         [Authorize("UserManage")]
         public async Task<UserTenantModel> UserClaimsDeleteAsync()
         {
-            return await this.DeleteAsync(this.ClaimsUserId);
+            return await this.DeleteAsync(this.GetClaimsUserId());
         }
 
         /// <summary>
@@ -219,7 +182,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 UserId = userId,
-                Tenant = this.TenantId
+                Tenant = this.GetTenantId()
             };
             return await this._container.DeleteAsync(input);
         }
@@ -233,7 +196,7 @@ namespace IdentityGateway.WebService.v1.Controllers
         {
             UserTenantInput input = new UserTenantInput
             {
-                Tenant = this.TenantId
+                Tenant = this.GetTenantId()
             };
             return await this._container.DeleteAllAsync(input);
         }
@@ -250,7 +213,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 UserId = Guid.NewGuid().ToString(),
-                Tenant = this.TenantId,
+                Tenant = this.GetTenantId(),
                 Roles = JsonConvert.SerializeObject(new List<string>() { invitation.role }),
                 Name = invitation.email_address,
                 Type = "Invited"
@@ -259,7 +222,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             List<Claim> claims = new List<Claim>()
             {
                 new Claim("role", invitation.role),
-                new Claim("tenant", this.TenantId),
+                new Claim("tenant", this.GetTenantId()),
                 new Claim("userId", input.UserId)
             };
 
@@ -288,7 +251,7 @@ namespace IdentityGateway.WebService.v1.Controllers
             Uri uri = new Uri(forwardedFor ?? "https://" + HttpContext.Request.Host.ToString());
             string link = uri.Host + "#invite=" + inviteToken;
             msg.AddContent(MimeType.Text, "Click here to join the tenant: ");
-            msg.AddContent(MimeType.Html, "<a href=\""+ link + "\">"+link+"</a>");
+            msg.AddContent(MimeType.Html, "<a href=\"" + link + "\">" + link + "</a>");
 
             var client = _sendGridClientFactory.CreateSendGridClient();
             var response = await client.SendEmailAsync(msg);

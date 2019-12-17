@@ -66,13 +66,15 @@ function addtoKeyvault($webookUri, $secretName ){
 }
 
 # import modules from PS Gallery
-Write-Output "Adding modules to Automation Acct .."
+Write-Output "Adding modules to Automation Account."
 addModulefromGallery -moduleName "Az.Accounts"
 Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.AppConfiguration"
 Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.Automation"
 Start-Sleep -Seconds 15
+addModulefromGallery -moduleName "Az.IotHub"
+Start-Sleep -seconds 30
 addModulefromGallery -moduleName "Az.DeviceProvisioningServices"
 Start-Sleep -Seconds 15
 addModulefromGallery -moduleName "Az.Resources"
@@ -88,9 +90,11 @@ Write-Output "Importing modules to Automation Acct .."
 importRunbook -runbookName "CreateIoTHubTenant" -filepath "$scriptFolder\CreateIoTHub.ps1" 
 importRunbook -runbookName "DeleteIoTHubTenant" -filepath "$scriptFolder\DeleteIoTHub.ps1"
 importRunbook -runbookName "CreateStreamAnalyticsJob" -filepath "$scriptFolder\CreateSAJob.ps1"
+importRunbook -runbookName "DeleteStreamAnalyticsJob" -filepath "$scriptFolder\DeleteSAJob.ps1"
 
 # create the webhook and store to the Keyvault
 createWebhook -webhook "CreateIotHub" -runbookName "CreateIoTHubTenant" -expDate $expDate -secretName "createIotHubWebHookUrl"
 createWebhook -webhook "DeleteIotHub" -runbookName "DeleteIoTHubTenant" -expDate $expDate -secretName "deleteIotHubWebHookUrl"
-createWebhook -webhook "CreateSAJob" -runbookName "CreateStreamAnalyticsJob" -expDate $expDate -secretName "CreateSAJobWebHookUrl"
+createWebhook -webhook "CreateSAJob" -runbookName "CreateStreamAnalyticsJob" -expDate $expDate -secretName "createSAJobWebHookUrl"
+createWebhook -webhook "DeleteSAJob" -runbookName "DeleteStreamAnalyticsJob" -expDate $expDate -secretName "deleteSAJobWebHookUrl"
 # end 

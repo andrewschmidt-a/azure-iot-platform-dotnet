@@ -14,7 +14,8 @@ import {
   setLogoPendingStatus,
   getDiagnosticsOptIn,
   getSolutionSettingsError,
-  getSolutionSettingsPendingStatus
+  getSolutionSettingsPendingStatus,
+  getAlerting
 } from 'store/reducers/appReducer';
 import {
   isSimulationEnabled,
@@ -33,6 +34,7 @@ const mapStateToProps = state => ({
   version: getVersion(state),
   logo: getLogo(state),
   name: getName(state),
+  alerting: getAlerting(state),
   isDefaultLogo: isDefaultLogo(state),
   releaseNotesUrl: getReleaseNotes(state),
   isSimulationEnabled: isSimulationEnabled(state),
@@ -54,7 +56,8 @@ const mapDispatchToProps = dispatch => ({
   updateLogo: (logo, headers) => dispatch(appEpics.actions.updateLogo({logo, headers})),
   getSimulationStatus: () => dispatch(simulationEpics.actions.fetchSimulationStatus()),
   toggleSimulationStatus: (etag, enabled) => dispatch(simulationEpics.actions.toggleSimulationStatus({etag, enabled})),
-  logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel))
+  logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel)),
+  updateAlerting: alerting => dispatch(appEpics.actions.updateAlerting(alerting))
 });
 
 export const SettingsContainer = withNamespaces()(connect(mapStateToProps, mapDispatchToProps)(Settings));

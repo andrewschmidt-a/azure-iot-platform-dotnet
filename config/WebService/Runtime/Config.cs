@@ -1,14 +1,11 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.Auth;
-using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Platform.IoT.Config.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services.Runtime;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
+namespace Mmm.Platform.IoT.Config.WebService.Runtime
 {
     public interface IConfig
     {
@@ -37,6 +34,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
         private const string DEVICE_SIMULATION_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "deviceSimulationWebServiceUrl";
         private const string TELEMETRY_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "telemetryWebServiceUrl";
         private const string USER_MANAGEMENT_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "authWebServiceUrl";
+        private const string ASA_MANAGER_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "asamanagerwebserviceurl";
 
         private const string DEVICE_SIMULATION_KEY = "DeviceSimulationService:";
         private const string TELEMETRY_KEY = "TelemetryService:";
@@ -69,6 +67,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
 
             this.ServicesConfig = new ServicesConfig
             {
+                AsaManagerApiUrl = configData.GetString(ASA_MANAGER_URL_KEY),
                 StorageAdapterApiUrl = configData.GetString(STORAGE_ADAPTER_URL_KEY),
                 DeviceSimulationApiUrl = configData.GetString(DEVICE_SIMULATION_URL_KEY),
                 TelemetryApiUrl = configData.GetString(TELEMETRY_URL_KEY),
@@ -81,7 +80,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.Runtime
                 SubscriptionId = configData.GetString(SUBSCRIPTION_ID_KEY),
                 ManagementApiVersion = configData.GetString(MANAGEMENT_API_VERSION_KEY),
                 ArmEndpointUrl = configData.GetString(ARM_ENDPOINT_URL_KEY),
-                UserPermissions = configData.GetUserPermissions()
+                UserPermissions = configData.UserPermissions
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

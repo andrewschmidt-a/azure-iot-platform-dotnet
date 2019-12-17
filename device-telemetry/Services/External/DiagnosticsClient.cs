@@ -6,48 +6,47 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.Auth;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Newtonsoft.Json;
-using HttpRequest = Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http.HttpRequest;
+using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
 {
-    public interface IDiagnosticsClient
+    public interface IDiagnosticsClient : IStatusOperation
     {
         bool CanLogToDiagnostics { get; }
 
         Task LogEventAsync(string eventName);
 
         Task LogEventAsync(string eventName, Dictionary<string, object> eventProperties);
-
-        Task<Tuple<bool, string>> PingAsync();
     }
 
     public class DiagnosticsClient : IDiagnosticsClient
     {
         public bool CanLogToDiagnostics { get; }
-        
+
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string TENANT_ID = "TenantID";
         private readonly IHttpClient httpClient;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string serviceUrl;
         private readonly int maxRetries;
         private const int RETRY_SLEEP_MS = 500;
 
-        public DiagnosticsClient(IHttpClient httpClient, IServicesConfig config, ILogger logger, IHttpContextAccessor contextAccessor)
+        public DiagnosticsClient(IHttpClient httpClient, IServicesConfig config, ILogger<DiagnosticsClient> logger, IHttpContextAccessor contextAccessor)
         {
             this.httpClient = httpClient;
-            this.log = logger;
+            _logger = logger;
             this.serviceUrl = config.DiagnosticsApiUrl;
             this.maxRetries = config.DiagnosticsMaxLogRetries;
             if (string.IsNullOrEmpty(this.serviceUrl))
             {
-                this.log.Error("Cannot log to diagnostics service, diagnostics url not provided", () => { });
+                _logger.LogError("Cannot log to diagnostics service, diagnostics url not provided");
                 this.CanLogToDiagnostics = false;
             }
             else
@@ -77,7 +76,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
             try
             {
                 request.SetUriFromString($"{this.serviceUrl}/diagnosticsevents");
-                
+
                 string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
                 request.Headers.Add(TENANT_HEADER, tenantId);
                 DiagnosticsRequestModel model = new DiagnosticsRequestModel
@@ -90,7 +89,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
             }
             catch (Exception e)
             {
-                this.log.Warn("Cannot log to diagnostics service, diagnostics url not provided", () => new { e.Message });
+                _logger.LogWarning(e, "Cannot log to diagnostics service, diagnostics url not provided");
             }
         }
 
@@ -106,7 +105,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
                         retries++;
-                        this.LogAndSleepOnFailure(retries, response.Content);
+                        LogAndSleepOnFailure(retries, response.Content);
                     }
                     else
                     {
@@ -116,7 +115,7 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
                 catch (Exception e)
                 {
                     retries++;
-                    this.LogAndSleepOnFailure(retries, e.Message);
+                    LogAndSleepOnFailure(retries, e.Message);
                 }
             }
         }
@@ -126,17 +125,17 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
             if (retries < this.maxRetries)
             {
                 int retriesLeft = this.maxRetries - retries;
-                string logString = $"Failed to log to diagnostics, {retriesLeft} retries remaining";
-                this.log.Warn(logString, () => new { errorMessage });
+                string logString = $"";
+                _logger.LogWarning("Failed to log to diagnostics: {errorMessage}. {retriesLeft} retries remaining", errorMessage, retriesLeft);
                 Thread.Sleep(RETRY_SLEEP_MS);
             }
             else
             {
-                this.log.Error("Failed to log to diagnostics, reached max retries and will not log", () => new { errorMessage });
+                _logger.LogError("Failed to log to diagnostics: {errorMessage}. Reached max retries and will not log.", errorMessage);
             }
         }
 
-        public async Task<Tuple<bool, string>> PingAsync()
+        public async Task<StatusResultServiceModel> StatusAsync()
         {
             var isHealthy = false;
             var message = "Diagnostics check failed";
@@ -161,10 +160,10 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.External
             }
             catch (Exception e)
             {
-                this.log.Error(message, () => new { e });
+                _logger.LogError(e, message);
             }
 
-            return new Tuple<bool, string>(isHealthy, message);
+            return new StatusResultServiceModel(isHealthy, message);
         }
     }
 }

@@ -9,17 +9,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Extensions;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
+using Mmm.Platform.IoT.IoTHubManager.Services.Extensions;
+using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
 using Microsoft.Extensions.Configuration;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using AuthenticationType = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models.AuthenticationType;
+using AuthenticationType = Mmm.Platform.IoT.IoTHubManager.Services.Models.AuthenticationType;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
+namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
     public delegate Task<DevicePropertyServiceModel> DevicePropertyDelegate(DevicePropertyServiceModel model);
     public interface IDevices
@@ -45,7 +46,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         private ITenantConnectionHelper _tenantHelper;
 
         public Devices(
-            IServicesConfig _config, 
+            IServicesConfig _config,
             IHttpContextAccessor httpContextAccessor)
         {
             if (_config == null)
@@ -58,7 +59,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         //used for testing
         public Devices(ITenantConnectionHelper _tenantHelper, string ioTHubHostName)
         {
-            this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper "+ioTHubHostName);
+            this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper " + ioTHubHostName);
         }
 
         // Ping the registry to see if the connection is healthy
@@ -109,7 +110,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                                                                   _tenantHelper.getIoTHubName(),
                                                                   connectedEdgeDevices.ContainsKey(azureTwin.DeviceId))),
                                                                   twins.ContinuationToken);
-            
+
             return resultModel;
         }
 

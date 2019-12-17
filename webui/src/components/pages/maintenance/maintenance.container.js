@@ -9,6 +9,7 @@ import {
   getTheme,
   getTimeInterval,
   getDeviceGroups,
+  getAlerting
 } from 'store/reducers/appReducer';
 import {
   epics as rulesEpics,
@@ -25,6 +26,7 @@ import {
 
 // Pass the devices status
 const mapStateToProps = state => ({
+  alerting: getAlerting(state),
   deviceEntities: getDeviceEntities(state),
   deviceLastUpdated: getDevicesLastUpdated(state),
   devicesIsPending: getDevicesPendingStatus(state),

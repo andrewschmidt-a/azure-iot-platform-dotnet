@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.Azure.Devices;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
+using Mmm.Platform.IoT.Config.Services.Models;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.WebService.v1.Helpers
+namespace Mmm.Platform.IoT.Config.WebService.v1.Helpers
 {
     public class PackagesHelper
     {

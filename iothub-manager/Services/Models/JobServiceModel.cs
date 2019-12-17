@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.Devices;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class JobServiceModel
     {
@@ -51,8 +51,8 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
 
             switch (jobResponse.Type)
             {
-                case Azure.Devices.JobType.ScheduleDeviceMethod:
-                case Azure.Devices.JobType.ScheduleUpdateTwin:
+                case Microsoft.Azure.Devices.JobType.ScheduleDeviceMethod:
+                case Microsoft.Azure.Devices.JobType.ScheduleUpdateTwin:
                     this.Type = (JobType)jobResponse.Type;
                     break;
                 default:
@@ -62,17 +62,17 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
 
             switch (jobResponse.Status)
             {
-                case Azure.Devices.JobStatus.Completed:
-                case Azure.Devices.JobStatus.Failed:
-                case Azure.Devices.JobStatus.Cancelled:
+                case Microsoft.Azure.Devices.JobStatus.Completed:
+                case Microsoft.Azure.Devices.JobStatus.Failed:
+                case Microsoft.Azure.Devices.JobStatus.Cancelled:
                     // If job is complete return end time
                     this.EndTimeUtc = jobResponse.EndTimeUtc;
                     this.Status = (JobStatus)jobResponse.Status;
                     break;
-                case Azure.Devices.JobStatus.Enqueued:
-                case Azure.Devices.JobStatus.Queued:
-                case Azure.Devices.JobStatus.Running:
-                case Azure.Devices.JobStatus.Scheduled:
+                case Microsoft.Azure.Devices.JobStatus.Enqueued:
+                case Microsoft.Azure.Devices.JobStatus.Queued:
+                case Microsoft.Azure.Devices.JobStatus.Running:
+                case Microsoft.Azure.Devices.JobStatus.Scheduled:
                     // IoT Hub will return a date of 12/30/9999 if job hasn't completed yet
                     this.EndTimeUtc = null;
                     this.Status = (JobStatus)jobResponse.Status;
@@ -103,7 +103,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
             this.Devices = deviceJobs?.Select(j => new DeviceJobServiceModel(j));
         }
 
-        public static Azure.Devices.JobType? ToJobTypeAzureModel(JobType? jobType)
+        public static Microsoft.Azure.Devices.JobType? ToJobTypeAzureModel(JobType? jobType)
         {
             if (!jobType.HasValue)
             {
@@ -114,13 +114,13 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
             {
                 case JobType.ScheduleDeviceMethod:
                 case JobType.ScheduleUpdateTwin:
-                    return (Azure.Devices.JobType)jobType.Value;
+                    return (Microsoft.Azure.Devices.JobType)jobType.Value;
                 default:
-                    return (Azure.Devices.JobType)JobType.Unknown;
+                    return (Microsoft.Azure.Devices.JobType)JobType.Unknown;
             }
         }
 
-        public static Azure.Devices.JobStatus? ToJobStatusAzureModel(JobStatus? jobStatus)
+        public static Microsoft.Azure.Devices.JobStatus? ToJobStatusAzureModel(JobStatus? jobStatus)
         {
             if (!jobStatus.HasValue)
             {
@@ -136,15 +136,15 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
                 case JobStatus.Cancelled:
                 case JobStatus.Scheduled:
                 case JobStatus.Queued:
-                    return (Azure.Devices.JobStatus)jobStatus.Value;
+                    return (Microsoft.Azure.Devices.JobStatus)jobStatus.Value;
                 default:
-                    return Azure.Devices.JobStatus.Unknown;
+                    return Microsoft.Azure.Devices.JobStatus.Unknown;
             }
         }
     }
 
     /// <summary>
-    /// refer to Microsoft.Azure.Devices.JobType
+    /// refer to Microsoft.Microsoft.Azure.Devices.JobType
     /// </summary>
     public enum JobType
     {
@@ -154,7 +154,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
     }
 
     /// <summary>
-    /// refer to Microsoft.Azure.Devices.JobStatus
+    /// refer to Microsoft.Microsoft.Azure.Devices.JobStatus
     /// </summary>
     public enum JobStatus
     {

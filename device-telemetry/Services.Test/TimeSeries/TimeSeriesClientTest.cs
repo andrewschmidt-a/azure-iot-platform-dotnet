@@ -1,33 +1,33 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.TimeSeries;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
 
-namespace DeviceTelemetry.Services.Test.TimeSeries
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesClientTest
     {
-        private readonly Mock<ILogger> logger;
+        private readonly Mock<ILogger<TimeSeriesClient>> _logger;
         private readonly Mock<IHttpClient> httpClient;
         private Mock<IServicesConfig> servicesConfig;
-        private  TimeSeriesClient client;
+        private TimeSeriesClient client;
 
         public TimeSeriesClientTest()
         {
-            this.logger = new Mock<ILogger>();
+            _logger = new Mock<ILogger<TimeSeriesClient>>();
             this.servicesConfig = new Mock<IServicesConfig>();
             this.httpClient = new Mock<IHttpClient>();
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.servicesConfig.Object,
-                this.logger.Object);
+                _logger.Object);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -48,7 +48,7 @@ namespace DeviceTelemetry.Services.Test.TimeSeries
             this.SetupClientWithNullConfigValues();
 
             // Act
-            var result = await this.client.PingAsync();
+            var result = await this.client.StatusAsync();
 
             // Assert
             Assert.False(result.IsHealthy);
@@ -59,7 +59,7 @@ namespace DeviceTelemetry.Services.Test.TimeSeries
         public async Task QueryThrows_IfInvalidAuthParams()
         {
             // Arrange
-           this.SetupClientWithConfigValues();
+            this.SetupClientWithConfigValues();
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidConfigurationException>(() =>
@@ -72,7 +72,7 @@ namespace DeviceTelemetry.Services.Test.TimeSeries
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.servicesConfig.Object,
-                this.logger.Object);
+                _logger.Object);
         }
 
         private void SetupClientWithConfigValues()
@@ -89,7 +89,7 @@ namespace DeviceTelemetry.Services.Test.TimeSeries
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.servicesConfig.Object,
-                this.logger.Object);
+                _logger.Object);
         }
     }
 }

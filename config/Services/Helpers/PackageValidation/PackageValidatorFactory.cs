@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Models;
+using Mmm.Platform.IoT.Config.Services.Models;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers.PackageValidation
+namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
 {
 
     public static class PackageValidatorFactory

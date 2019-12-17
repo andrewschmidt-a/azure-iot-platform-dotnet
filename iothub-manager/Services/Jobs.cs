@@ -5,19 +5,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Extensions;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.External;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
-using DeviceJobStatus = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models.DeviceJobStatus;
-using JobStatus = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models.JobStatus;
-using JobType = Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models.JobType;
+using Mmm.Platform.IoT.IoTHubManager.Services.Extensions;
+using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
+using DeviceJobStatus = Mmm.Platform.IoT.IoTHubManager.Services.Models.DeviceJobStatus;
+using JobStatus = Mmm.Platform.IoT.IoTHubManager.Services.Models.JobStatus;
+using JobType = Mmm.Platform.IoT.IoTHubManager.Services.Models.JobType;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
+namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
     public interface IJobs
     {

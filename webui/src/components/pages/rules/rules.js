@@ -90,6 +90,7 @@ export class Rules extends Component {
 
   render() {
     const {
+      alerting,
       t,
       rules,
       error,
@@ -109,6 +110,8 @@ export class Rules extends Component {
     };
     return (
       <ComponentArray>
+        
+      { alerting.jobState == "Running" && 
         <ContextMenu>
           <ContextMenuAlign left={true}>
             <DeviceGroupDropdown />
@@ -128,12 +131,22 @@ export class Rules extends Component {
             <RefreshBar refresh={fetchRules} time={lastUpdated} isPending={isPending} t={t} />
           </ContextMenuAlign>
         </ContextMenu>
+      }
+      { alerting.jobState == "Running" && 
         <PageContent className="rules-container">
           <PageTitle titleValue={t('rules.title')} />
           {!!error && <AjaxError t={t} error={error} />}
           {!error && <RulesGrid {...gridProps} />}
           {this.state.openFlyoutName === 'newRule' && <NewRuleFlyout t={t} onClose={this.closeFlyout} logEvent={logEvent} />}
         </PageContent>
+      }
+      
+      { alerting.jobState !== "Running" && 
+        <center>
+          <h1>Alerting must be turned on to use Rules</h1>
+          <h2>You may turn this feature on by clicking the settings menu (gear icon) at the top right of the screen</h2>
+        </center>
+      } 
       </ComponentArray>
     );
   }

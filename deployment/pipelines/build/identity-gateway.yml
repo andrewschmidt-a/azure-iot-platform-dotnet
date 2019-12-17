@@ -10,6 +10,7 @@ trigger:
   paths:
     include:
     - identity-gateway/
+    - common/
 
 pr:
   branches:
@@ -18,6 +19,7 @@ pr:
   paths: 
     include:
     - identity-gateway/
+    - common/
 
 stages:
 - template: templates/build-service.yml

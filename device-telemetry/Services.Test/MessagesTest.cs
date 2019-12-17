@@ -4,20 +4,19 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Models;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.CosmosDB;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Storage.TimeSeries;
+using Mmm.Platform.IoT.DeviceTelemetry.Services;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json.Linq;
-using DeviceTelemetry.Services.Test.helpers;
 using Xunit;
 
-namespace DeviceTelemetry.Services.Test
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class MessagesTest
     {
@@ -26,7 +25,7 @@ namespace DeviceTelemetry.Services.Test
 
         private readonly Mock<IStorageClient> storageClient;
         private readonly Mock<ITimeSeriesClient> timeSeriesClient;
-        private readonly Mock<ILogger> logger;
+        private readonly Mock<ILogger<Messages>> _logger;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly Mock<IAppConfigurationHelper> appConfigHelper;
         private readonly IMessages messages;
@@ -38,29 +37,29 @@ namespace DeviceTelemetry.Services.Test
                 MessagesConfig = new StorageConfig("database"),
                 StorageType = "tsi"
             };
-            this.storageClient = new Mock<IStorageClient>();
-            this.timeSeriesClient = new Mock<ITimeSeriesClient>();
-            this.httpContextAccessor = new Mock<IHttpContextAccessor>();
-            this.appConfigHelper = new Mock<IAppConfigurationHelper>();
-            this.logger = new Mock<ILogger>();
-            this.messages = new Messages(
+            storageClient = new Mock<IStorageClient>();
+            timeSeriesClient = new Mock<ITimeSeriesClient>();
+            httpContextAccessor = new Mock<IHttpContextAccessor>();
+            appConfigHelper = new Mock<IAppConfigurationHelper>();
+            _logger = new Mock<ILogger<Messages>>();
+            messages = new Messages(
                 servicesConfig,
-                this.storageClient.Object,
-                this.timeSeriesClient.Object,
-                this.logger.Object,
-                this.httpContextAccessor.Object,
-                this.appConfigHelper.Object);
+                storageClient.Object,
+                timeSeriesClient.Object,
+                _logger.Object,
+                httpContextAccessor.Object,
+                appConfigHelper.Object);
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task InitialListIsEmptyAsync()
         {
             // Arrange
-            this.ThereAreNoMessagesInStorage();
+            ThereAreNoMessagesInStorage();
             var devices = new string[] { "device1" };
 
             // Act
-            var list = await this.messages.ListAsync(null, null, "asc", SKIP, LIMIT, devices);
+            var list = await messages.ListAsync(null, null, "asc", SKIP, LIMIT, devices);
 
             // Assert
             Assert.Empty(list.Messages);
@@ -71,11 +70,11 @@ namespace DeviceTelemetry.Services.Test
         public async Task GetListWithValuesAsync()
         {
             // Arrange
-            this.ThereAreSomeMessagesInStorage();
+            ThereAreSomeMessagesInStorage();
             var devices = new string[] { "device1" };
 
             // Act
-            var list = await this.messages.ListAsync(null, null, "asc", SKIP, LIMIT, devices);
+            var list = await messages.ListAsync(null, null, "asc", SKIP, LIMIT, devices);
 
             // Assert
             Assert.NotEmpty(list.Messages);
@@ -94,12 +93,12 @@ namespace DeviceTelemetry.Services.Test
             };
 
             // Act & Assert
-            await Assert.ThrowsAsync<InvalidInputException>(async () => await this.messages.ListAsync(null, null, xssString, 0, LIMIT, xssList.ToArray()));
+            await Assert.ThrowsAsync<InvalidInputException>(async () => await messages.ListAsync(null, null, xssString, 0, LIMIT, xssList.ToArray()));
         }
 
         private void ThereAreNoMessagesInStorage()
         {
-            this.timeSeriesClient.Setup(x => x.QueryEventsAsync(null, null, It.IsAny<string>(), SKIP, LIMIT, It.IsAny<string[]>()))
+            timeSeriesClient.Setup(x => x.QueryEventsAsync(null, null, It.IsAny<string>(), SKIP, LIMIT, It.IsAny<string[]>()))
                 .ReturnsAsync(new MessageList());
         }
 
@@ -120,7 +119,7 @@ namespace DeviceTelemetry.Services.Test
             sampleProperties.Add("data.sample_unit");
             sampleProperties.Add("data.sample_speed");
 
-            this.timeSeriesClient.Setup(x => x.QueryEventsAsync(null, null, It.IsAny<string>(), SKIP, LIMIT, It.IsAny<string[]>()))
+            timeSeriesClient.Setup(x => x.QueryEventsAsync(null, null, It.IsAny<string>(), SKIP, LIMIT, It.IsAny<string[]>()))
                 .ReturnsAsync(new MessageList(sampleMessages, sampleProperties));
         }
     }

@@ -3,30 +3,21 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime
 {
-    public interface IServicesConfig
+    public interface IServicesConfig : IAppConfigClientConfig, IStorageClientConfig, ITimeSeriesClientConfig, IUserManagementClientConfig, IStorageAdapterClientConfig, IAuthMiddlewareConfig, IAsaManagerClientConfig
     {
-        string StorageAdapterApiUrl { get; set; }
-        int StorageAdapterApiTimeout { get; set; }
-        string UserManagementApiUrl { get; }
         StorageConfig MessagesConfig { get; set; }
         AlarmsConfig AlarmsConfig { get; set; }
         string StorageType { get; set; }
-        Uri CosmosDbUri { get; }
-        string CosmosDbKey { get; }
-        int CosmosDbThroughput { get; set; }
-        string TimeSeriesFqdn { get; }
-        string TimeSeriesAuthority { get; }
-        string TimeSeriesAudience { get; }
-        string TimeSeriesExplorerUrl { get; }
-        string TimeSertiesApiVersion { get; }
-        string TimeSeriesTimeout { get; }
-        string ActiveDirectoryTenant { get; }
-        string ActiveDirectoryAppId { get; }
-        string ActiveDirectoryAppSecret { get; }
         string DiagnosticsApiUrl { get; }
         int DiagnosticsMaxLogRetries { get; }
         string ActionsEventHubConnectionString { get; }
@@ -36,12 +27,12 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         string LogicAppEndpointUrl { get; }
         string SolutionUrl { get; }
         string TemplateFolder { get; }
-        Dictionary<string, List<string>> UserPermissions { get; }
-        string ApplicationConfigurationConnectionString { get; }
     }
 
     public class ServicesConfig : IServicesConfig
     {
+        public string AsaManagerApiUrl { get; set; }
+
         public string StorageAdapterApiUrl { get; set; }
 
         public int StorageAdapterApiTimeout { get; set; }
@@ -54,38 +45,13 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
 
         public string StorageType { get; set; }
 
-        public Uri CosmosDbUri { get; set; }
-
-        public string CosmosDbKey { get; set; }
-
         public int CosmosDbThroughput { get; set; }
 
         public string DiagnosticsApiUrl { get; set; }
 
         public int DiagnosticsMaxLogRetries { get; set; }
 
-        public string CosmosDbConnString
-        {
-            set
-            {
-                var match = Regex.Match(value,
-                    @"^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$");
-
-                Uri endpoint;
-
-                if (!match.Success ||
-                    !Uri.TryCreate(match.Groups["endpoint"].Value,
-                        UriKind.RelativeOrAbsolute,
-                        out endpoint))
-                {
-                    var message = "Invalid connection string for CosmosDB";
-                    throw new InvalidConfigurationException(message);
-                }
-
-                this.CosmosDbUri = endpoint;
-                this.CosmosDbKey = match.Groups["key"].Value;
-            }
-        }
+        public string CosmosDbConnectionString { get; set; }
 
         public string TimeSeriesFqdn { get; set; }
 
@@ -116,11 +82,11 @@ namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Runtime
         public string LogicAppEndpointUrl { get; set; }
 
         public string SolutionUrl { get; set; }
-        
+
         public string TemplateFolder { get; set; }
-        
+
         public Dictionary<string, List<string>> UserPermissions { get; set; }
-        
+
         public string ApplicationConfigurationConnectionString { get; set; }
     }
 }

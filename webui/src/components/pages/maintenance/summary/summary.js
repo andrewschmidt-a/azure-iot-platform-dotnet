@@ -58,12 +58,15 @@ export class Summary extends Component {
       <PageContent className="maintenance-container summary-container">
         <PageTitle titleValue={this.props.t('maintenance.title')} />
         <StatSection className="summary-stat-container">
+          {this.props.alerting.jobState == "Running" && 
           <StatGroup>
             <StatProperty
               value={renderUndefined(this.props.alertCount)}
               label={this.props.t('maintenance.openAlerts')}
               size="large" />
           </StatGroup>
+          }
+          {this.props.alerting.jobState == "Running" && 
           <StatGroup>
             <StatProperty
               value={renderUndefined(this.props.criticalAlertCount)}
@@ -76,6 +79,7 @@ export class Summary extends Component {
               svg={svgs.warning}
               svgClassName="stat-warning" />
           </StatGroup>
+          }
           <StatGroup>
             <StatProperty
               value={renderUndefined(this.props.failedJobsCount)}
@@ -92,12 +96,18 @@ export class Summary extends Component {
           </StatGroup>
         </StatSection>
         <div className="tab-container">
-          <NavLink to={'/maintenance/notifications'} className="tab" activeClassName="active" onClick={this.tabClickHandler.bind(this, 'AlertsTab')}>{this.props.t('maintenance.notifications')}</NavLink>
+          
+          {this.props.alerting.jobState == "Running"  && 
+            <NavLink to={'/maintenance/notifications'} className="tab" activeClassName="active" onClick={this.tabClickHandler.bind(this, 'AlertsTab')}>{this.props.t('maintenance.notifications')}</NavLink>
+          }
           <NavLink to={'/maintenance/jobs'} className="tab" activeClassName="active" onClick={this.tabClickHandler.bind(this, 'JobsTab')}>{this.props.t('maintenance.jobs')}</NavLink>
         </div>
         <div className="grid-container">
           <Switch>
+            
+        {this.props.alerting.jobState == "Running"  && 
             <Route exact path={'/maintenance/notifications'} render={() => <Notifications {...this.props} {...this.props.alertProps} />} />
+        }
             <Route exact path={'/maintenance/jobs'} render={() => <Jobs {...this.props} {...this.props.jobProps} />} />
           </Switch>
         </div>

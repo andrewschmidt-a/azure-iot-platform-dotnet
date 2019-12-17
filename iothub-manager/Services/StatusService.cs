@@ -1,16 +1,17 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Http;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
+using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
+namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
     class StatusService : IStatusService
     {
@@ -19,17 +20,17 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
         private readonly IDevices devices;
         private readonly IHttpClient httpClient;
-        private readonly ILogger log;
+        private readonly ILogger _logger;
         private readonly IServicesConfig servicesConfig;
 
         public StatusService(
-            ILogger logger,
+            ILogger<StatusService> logger,
             IHttpClient httpClient,
             IDevices devices,
             IServicesConfig servicesConfig
             )
         {
-            this.log = logger;
+            _logger = logger;
             this.httpClient = httpClient;
             this.devices = devices;
             this.servicesConfig = servicesConfig;
@@ -73,16 +74,10 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             {
                 result.Status.Message = string.Join("; ", errors);
             }
-            
+
             result.Properties.Add("StorageAdapterApiUrl", this.servicesConfig?.StorageAdapterApiUrl);
 
-            this.log.Info(
-                "Service status request",
-                () => new
-                {
-                    Healthy = result.Status.IsHealthy,
-                    result.Status.Message
-                });
+            _logger.LogInformation("Service status request {result}", result);
 
             return result;
         }
@@ -102,7 +97,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
 
             result.Dependencies.Add(dependencyName, serviceResult);
         }
-        
+
         private async Task<StatusResultServiceModel> PingServiceAsync(string serviceName, string serviceURL)
         {
             var result = new StatusResultServiceModel(false, $"{serviceName} check failed");
@@ -121,7 +116,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             }
             catch (Exception e)
             {
-                this.log.Error(result.Message, () => new { e });
+                _logger.LogError(e, result.Message);
             }
 
             return result;
@@ -141,7 +136,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
             }
 
-            this.log.Debug("Prepare Request", () => new { request });
+            _logger.LogDebug("Prepare request {request}", request);
 
             return request;
         }
@@ -149,7 +144,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         // Check whether the configuration contains a connection string
         private bool IsHubConnectionStringConfigured()
         {
-            var cs = this.servicesConfig?.AppConfigConnection?.ToLowerInvariant().Trim();
+            var cs = this.servicesConfig?.ApplicationConfigurationConnectionString?.ToLowerInvariant().Trim();
             return (!string.IsNullOrEmpty(cs)
                     && cs.Contains("hostname=")
                     && cs.Contains("sharedaccesskeyname=")

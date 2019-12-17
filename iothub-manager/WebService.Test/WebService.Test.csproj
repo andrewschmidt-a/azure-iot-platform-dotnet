@@ -1,23 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <AssemblyName>Mmm.Platform.IoT.IoTHubManager.WebService.Test</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="InjectModuleInitializer" Version="1.5.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-    <PackageReference Include="Moq" Version="4.7.145" />
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
-    <PackageReference Include="Xunit.SkippableFact" Version="1.3.3" />
-    <PackageReference Include="coverlet.msbuild" Version="2.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0-preview-20191115-01" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\common\TestHelpers\TestHelpers.csproj" />
     <ProjectReference Include="..\WebService\WebService.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="appsettings.ini">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>

@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Models
+namespace Mmm.Platform.IoT.Config.Services.Models
 {
     public class Logo
     {
@@ -33,7 +33,7 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Models
             };
         }
 
-        /* Converts image from base 64 string to byte array */
+        /* Converts image from base 64 string to byte array */   
         public byte[] ConvertImageToBytes()
         {
             return Convert.FromBase64String(this.Image);

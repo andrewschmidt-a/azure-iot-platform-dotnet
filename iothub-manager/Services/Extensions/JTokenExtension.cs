@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Extensions
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Extensions
 {
     public static class JTokenExtension
     {

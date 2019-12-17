@@ -1,6 +1,6 @@
-using IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 
-namespace IdentityGateway.Services
+namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public class UserTenantInput : IUserInput<UserTenantModel>
     {

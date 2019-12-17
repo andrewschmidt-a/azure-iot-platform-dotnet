@@ -1,7 +1,7 @@
-﻿using IdentityGateway.Services.Runtime;
+﻿using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using SendGrid;
 
-namespace WebService
+namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {
     public class SendGridClientFactory : ISendGridClientFactory
     {

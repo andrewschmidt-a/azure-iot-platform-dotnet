@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class DevicePropertyServiceModel
     {

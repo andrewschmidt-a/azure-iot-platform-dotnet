@@ -2,7 +2,7 @@
 
 using System;
 
-namespace Microsoft.Azure.IoTSolutions.DeviceTelemetry.Services.Concurrency
+namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
 {
     public class TimerNotInitializedException : Exception
     {

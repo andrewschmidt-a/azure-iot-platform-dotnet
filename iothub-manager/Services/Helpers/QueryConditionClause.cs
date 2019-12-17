@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers
+namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     internal class QueryConditionClause
     {

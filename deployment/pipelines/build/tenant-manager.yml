@@ -10,6 +10,7 @@ trigger:
   paths:
     include:
     - tenant-manager/
+    - common/
 
 pr:
   branches:
@@ -18,6 +19,7 @@ pr:
   paths: 
     include:
     - tenant-manager/
+    - common/
 
 stages:
 - template: templates/build-service.yml

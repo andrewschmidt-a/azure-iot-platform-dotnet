@@ -4,15 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.External;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Helpers;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Models;
-using Microsoft.Azure.IoTSolutions.IotHubManager.Services.Runtime;
+using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
 
-namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
+namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
     public interface IDeviceProperties
     {
@@ -34,23 +34,23 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
     /// </remarks>
     public class DeviceProperties : IDeviceProperties
     {
-        private readonly IStorageAdapterClient storageClient;
-        private readonly IDevices devices;
-        private readonly ILogger log;
+        public readonly IStorageAdapterClient storageClient;
+        public readonly IDevices devices;
+        public readonly ILogger _logger;
         /// Hardcoded in appsettings.ini
-        private readonly string whitelist;
+        public readonly string whitelist;
         /// Hardcoded in appsettings.ini
-        private readonly long ttl;
+        public readonly long ttl;
         /// Hardcoded in appsettings.ini
-        private readonly long rebuildTimeout;
-        private readonly TimeSpan serviceQueryInterval = TimeSpan.FromSeconds(10);
-        internal const string CACHE_COLLECTION_ID = "device-twin-properties";
-        internal const string CACHE_KEY = "cache";
+        public readonly long rebuildTimeout;
+        public readonly TimeSpan serviceQueryInterval = TimeSpan.FromSeconds(10);
+        public const string CACHE_COLLECTION_ID = "device-twin-properties";
+        public const string CACHE_KEY = "cache";
 
-        private const string WHITELIST_TAG_PREFIX = "tags.";
-        private const string WHITELIST_REPORTED_PREFIX = "reported.";
-        private const string TAG_PREFIX = "Tags.";
-        private const string REPORTED_PREFIX = "Properties.Reported.";
+        public const string WHITELIST_TAG_PREFIX = "tags.";
+        public const string WHITELIST_REPORTED_PREFIX = "reported.";
+        public const string TAG_PREFIX = "Tags.";
+        public const string REPORTED_PREFIX = "Properties.Reported.";
 
         private DateTime DevicePropertiesLastUpdated;
 
@@ -59,11 +59,11 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         /// </summary>
         public DeviceProperties(IStorageAdapterClient storageClient,
             IServicesConfig config,
-            ILogger logger,
+            ILogger<DeviceProperties> logger,
             IDevices devices)
         {
             this.storageClient = storageClient;
-            this.log = logger;
+            _logger = logger;
             this.whitelist = config.DevicePropertiesWhiteList;
             this.ttl = config.DevicePropertiesTTL;
             this.rebuildTimeout = config.DevicePropertiesRebuildTimeout;
@@ -82,8 +82,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             }
             catch (ResourceNotFoundException)
             {
-                this.log.Debug($"Cache get: cache {CACHE_COLLECTION_ID}:{CACHE_KEY} was not found",
-                    () => { });
+                _logger.LogDebug($"Cache get: cache {CACHE_COLLECTION_ID}:{CACHE_KEY} was not found");
             }
             catch (Exception e)
             {
@@ -129,7 +128,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 var locked = await @lock.TryLockAsync();
                 if (locked == null)
                 {
-                    this.log.Warn("Cache rebuilding: lock failed due to conflict. Retry soon", () => { });
+                    _logger.LogWarning("Cache rebuilding: lock failed due to conflict. Retry soon");
                     continue;
                 }
 
@@ -147,16 +146,14 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 }
                 catch (Exception)
                 {
-                    this.log.Warn(
-                        $"Some underlying service is not ready. Retry after {this.serviceQueryInterval}",
-                        () => { });
+                    _logger.LogWarning("Some underlying service is not ready. Retry after {interval}.", this.serviceQueryInterval);
                     try
                     {
                         await @lock.ReleaseAsync();
                     }
                     catch (Exception e)
                     {
-                        log.Error("Cache rebuilding: Unable to release lock", () => e);
+                        _logger.LogError(e, "Cache rebuilding: Unable to release lock");
                     }
                     await Task.Delay(this.serviceQueryInterval);
                     continue;
@@ -179,9 +176,9 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 }
                 catch (Exception e)
                 {
-                    log.Error("Cache rebuilding: Unable to write and release lock", () => e);
+                    _logger.LogError(e, "Cache rebuilding: Unable to write and release lock");
                 }
-                this.log.Warn("Cache rebuilding: write failed due to conflict. Retry soon", () => { });
+                _logger.LogWarning("Cache rebuilding: write failed due to conflict. Retry soon");
             }
         }
 
@@ -205,8 +202,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 }
                 catch (ResourceNotFoundException)
                 {
-                    this.log.Info($"Cache updating: cache {CACHE_COLLECTION_ID}:{CACHE_KEY} was not found",
-                        () => { });
+                    _logger.LogInformation($"Cache updating: cache {CACHE_COLLECTION_ID}:{CACHE_KEY} was not found");
                 }
 
                 if (model != null)
@@ -247,11 +243,11 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
                 }
                 catch (ConflictingResourceException)
                 {
-                    this.log.Info("Cache updating: failed due to conflict. Retry soon", () => { });
+                    _logger.LogInformation("Cache updating: failed due to conflict. Retry soon");
                 }
                 catch (Exception e)
                 {
-                    this.log.Info("Cache updating: failed", () => e);
+                    _logger.LogInformation(e, "Cache updating: failed");
                     throw new Exception("Cache updating: failed");
                 }
             }
@@ -398,13 +394,13 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
         {
             if (force)
             {
-                this.log.Info("Cache will be rebuilt due to the force flag", () => { });
+                _logger.LogInformation("Cache will be rebuilt due to the force flag");
                 return true;
             }
 
             if (valueApiModel == null)
             {
-                this.log.Info("Cache will be rebuilt since no cache was found", () => { });
+                _logger.LogInformation("Cache will be rebuilt since no cache was found");
                 return true;
             }
             DevicePropertyServiceModel cacheValue = new DevicePropertyServiceModel();
@@ -416,7 +412,7 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             }
             catch
             {
-                this.log.Info("DeviceProperties will be rebuilt because the last one is broken.", () => { });
+                _logger.LogInformation("DeviceProperties will be rebuilt because the last one is broken.");
                 return true;
             }
 
@@ -424,13 +420,12 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             {
                 if (timstamp.AddSeconds(this.rebuildTimeout) < DateTimeOffset.UtcNow)
                 {
-                    this.log.Debug("Cache will be rebuilt because last rebuilding had timedout", () => { });
+                    _logger.LogDebug("Cache will be rebuilt because last rebuilding had timedout");
                     return true;
                 }
                 else
                 {
-                    this.log.Debug
-                        ("Cache rebuilding skipped because it is being rebuilt by other instance", () => { });
+                    _logger.LogDebug("Cache rebuilding skipped because it is being rebuilt by other instance");
                     return false;
                 }
             }
@@ -438,18 +433,18 @@ namespace Microsoft.Azure.IoTSolutions.IotHubManager.Services
             {
                 if (cacheValue.IsNullOrEmpty())
                 {
-                    this.log.Info("Cache will be rebuilt since it is empty", () => { });
+                    _logger.LogInformation("Cache will be rebuilt since it is empty");
                     return true;
                 }
 
                 if (timstamp.AddSeconds(this.ttl) < DateTimeOffset.UtcNow)
                 {
-                    this.log.Info("Cache will be rebuilt because it has expired", () => { });
+                    _logger.LogInformation("Cache will be rebuilt because it has expired");
                     return true;
                 }
                 else
                 {
-                    this.log.Debug("Cache rebuilding skipped because it has not expired", () => { });
+                    _logger.LogDebug("Cache rebuilding skipped because it has not expired");
                     return false;
                 }
             }

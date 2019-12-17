@@ -1,66 +1,63 @@
-﻿﻿using System;
+using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.IoTSolutions.Auth;
-using MMM.Azure.IoTSolutions.TenantManager.Services;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Models;
-using MMM.Azure.IoTSolutions.TenantManager.WebService.Filters;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.TenantManager.Services;
+using Mmm.Platform.IoT.TenantManager.Services.Models;
 using Newtonsoft.Json;
-using MMM.Azure.IoTSolutions.TenantManager.Services.Diagnostics;
 
-namespace MMM.Azure.IoTSolutions.TenantManager.WebService.Controllers
+namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {
     [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
-    public class TenantController : ControllerBase
+    public class TenantController : Controller
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ITenantContainer _tenantContainer;
-        private readonly ILogger _log;
+        private readonly ILogger _logger;
 
-        public TenantController(IHttpContextAccessor httpContextAccessor, ITenantContainer tenantContainer, ILogger log)
+        public TenantController(ITenantContainer tenantContainer, ILogger<TenantController> log)
         {
-            this._httpContextAccessor = httpContextAccessor;
             this._tenantContainer = tenantContainer;
-            this._log = log;
+            this._logger = log;
         }
 
         // POST api/tenant
         [HttpPost]
-        public async Task<string> PostAsync()
+        public async Task<CreateTenantModel> PostAsync()
         {
             /* Creates a new tenant */
             // Generate new tenant Id
             string tenantGuid = Guid.NewGuid().ToString();
+            string userId = this.GetClaimsUserId();
             try
             {
-                var response = await this._tenantContainer.CreateTenantAsync(tenantGuid);
-                return JsonConvert.SerializeObject(response);
+                return await this._tenantContainer.CreateTenantAsync(tenantGuid, userId);
             }
             catch (Exception e)
             {
                 // If there is an error while creating the new tenant - delete all of the created tenant resources
                 // this may not be able to delete iot hub - due to the long running process
-                var deleteResponse = await this._tenantContainer.DeleteTenantAsync(tenantGuid, false);
-                this._log.Info("The Tenant was unable to be created properly. To ensure the failed tenant does not consume resources, some of its resources were deleted after creation failed.", () => new {deleteResponse});
+                var deleteResponse = await this._tenantContainer.DeleteTenantAsync(tenantGuid, userId, false);
+                _logger.LogInformation("The Tenant was unable to be created properly. To ensure the failed tenant does not consume resources, some of its resources were deleted after creation failed. {response}", deleteResponse);
                 throw e;
             }
         }
 
         // GET api/tenant/<tenantId>
-        [HttpGet("{tenantId}")]
+        [HttpGet("")]
         [Authorize("ReadAll")]
-        public async Task<TenantModel> GetAsync(string tenantId)
+        public async Task<TenantModel> GetAsync()
         {
-            return await this._tenantContainer.GetTenantAsync(tenantId);
+            return await this._tenantContainer.GetTenantAsync(this.GetTenantId());
         }
 
-        [HttpDelete("{tenantId}")]
+        [HttpDelete("")]
         [Authorize("DeleteTenant")]
-        public async Task<string> DeleteAsync(string tenantId)
+        public async Task<DeleteTenantModel> DeleteAsync([FromQuery] bool ensureFullyDeployed = true)
         {
-            var response = await this._tenantContainer.DeleteTenantAsync(tenantId);
-            return JsonConvert.SerializeObject(response);
+            return await this._tenantContainer.DeleteTenantAsync(this.GetTenantId(), this.GetClaimsUserId(), ensureFullyDeployed);
         }
     }
 }

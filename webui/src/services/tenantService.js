@@ -1,6 +1,6 @@
 import Config from 'app.config';
 import { HttpClient } from 'utilities/httpClient';
-import { toTenantModel } from './models';
+import { toTenantModel, toAlertingStatusModel } from './models';
 
 const IDENTITY_GATEWAY_ENDPOINT = Config.serviceUrls.identityGateway;
 const TENANT_MANAGER_ENDPOINT = Config.serviceUrls.tenantManager;
@@ -18,13 +18,13 @@ export class TenantService {
   }
 
   /** Delete a tenant */
-  static deleteTenant(id) {
-    return HttpClient.delete(`${TENANT_MANAGER_ENDPOINT}tenant/${id}`);
+  static deleteTenant() {
+    return HttpClient.delete(`${TENANT_MANAGER_ENDPOINT}tenant`);
   }
 
   /** Returns whether a tenant is ready or not */
-  static tenantIsDeployed(tenantGuid) {
-    return HttpClient.get(`${TENANT_MANAGER_ENDPOINT}tenantready/${tenantGuid}`);
+  static tenantIsDeployed() {
+    return HttpClient.get(`${TENANT_MANAGER_ENDPOINT}tenantready`);
   }
 
   /** Returns the display value for the tenantGuid */
@@ -33,6 +33,30 @@ export class TenantService {
     return `tenant#${tenantGuid.substring(0, 5)}`;
   }
 
-  /** Returns information about a tenant */
-
+  /** Returns the status of the alerting feature */
+  static getAlertingStatus(createIfNotExists = false) {
+    return HttpClient.get(`${TENANT_MANAGER_ENDPOINT}alerting?createIfNotExists=${createIfNotExists}`)
+    .map(toAlertingStatusModel)
+  }
+  
+  /** Enables the alerting feature */
+  static alertingEnable() {
+    return HttpClient.post(`${TENANT_MANAGER_ENDPOINT}alerting`)
+    .map(toAlertingStatusModel);
+  }
+  
+  /** Disables the alerting feature */
+  static alertingDisable() {
+    return HttpClient.delete(`${TENANT_MANAGER_ENDPOINT}alerting`).map(toAlertingStatusModel);
+  }
+  
+  /** Starts the alerting feature */
+  static alertingStart() {
+    return HttpClient.post(`${TENANT_MANAGER_ENDPOINT}alerting/start`).map(toAlertingStatusModel);
+  }
+  
+  /** Starts the alerting feature */
+  static alertingStop() {
+    return HttpClient.post(`${TENANT_MANAGER_ENDPOINT}alerting/stop`).map(toAlertingStatusModel);
+  }
 }

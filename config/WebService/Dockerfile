@@ -1,24 +1,26 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:2.2 AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-alpine AS base
 WORKDIR /app
 EXPOSE 80
 
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS restore
 WORKDIR /src
-COPY ["./Directory.Build.props", "/src/"]
-COPY ["AppConfiguration/AppConfiguration.csproj", "AppConfiguration/"]
-COPY ["AuthUtils/AuthUtils.csproj", "AuthUtils/"]
-COPY ["Services/Services.csproj", "Services/"]
-COPY ["WebService/WebService.csproj", "WebService/"]
+COPY Directory.Build.props .
+COPY common/Services/Services.csproj common/Services/
+COPY config/Services/Services.csproj config/Services/
+COPY config/WebService/WebService.csproj config/WebService/
+RUN dotnet restore config/WebService/WebService.csproj
+COPY common common
+COPY config config
 
-RUN dotnet restore "WebService/WebService.csproj"
-COPY . .
-WORKDIR "/src/WebService"
-RUN dotnet build "WebService.csproj" -c Release -o /app
-
-FROM build AS publish
-RUN dotnet publish "WebService.csproj" -c Release -o /app
+FROM restore AS publish
+WORKDIR /src/config/WebService
+RUN dotnet publish WebService.csproj \
+--output /app \
+--configuration Release \
+--no-restore \
+--no-dependencies
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Microsoft.Azure.IoTSolutions.UIConfig.WebService.dll"]
+ENTRYPOINT ["dotnet", "Mmm.Platform.IoT.Config.WebService.dll"]

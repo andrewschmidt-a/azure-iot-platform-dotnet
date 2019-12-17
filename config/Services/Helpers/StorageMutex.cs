@@ -2,11 +2,12 @@
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Diagnostics;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.Exceptions;
-using Microsoft.Azure.IoTSolutions.UIConfig.Services.External;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 
-namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
+namespace Mmm.Platform.IoT.Config.Services.Helpers
 {
     public interface IStorageMutex
     {
@@ -18,14 +19,14 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
     {
         private const string LAST_MODIFIED_KEY = "$modified";
         private readonly IStorageAdapterClient storageClient;
-        private readonly ILogger logger;
+        private readonly ILogger _logger;
 
         public StorageMutex(
             IStorageAdapterClient storageClient,
-            ILogger logger)
+            ILogger<StorageMutex> logger)
         {
             this.storageClient = storageClient;
-            this.logger = logger;
+            _logger = logger;
         }
 
         public async Task<bool> EnterAsync(string collectionId, string key, TimeSpan timeout)
@@ -46,13 +47,13 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
                         if (model.Metadata.ContainsKey(LAST_MODIFIED_KEY) && DateTimeOffset.TryParse(model.Metadata[LAST_MODIFIED_KEY], out var lastModified))
                         {
                             // Timestamp retrieved successfully, nothing to do
-                            this.logger.Info($"Mutex {collectionId}.{key} was occupied. Last modified = {lastModified}", () => { });
+                            _logger.LogInformation($"Mutex {collectionId}.{key} was occupied. Last modified = {lastModified}");
                         }
                         else
                         {
                             // Treat it as timeout if the timestamp could not be retrieved
                             lastModified = DateTimeOffset.MinValue;
-                            this.logger.Info("Mutex {collectionId}.{key} was occupied. Last modified could not be retrieved", () => { });
+                            _logger.LogInformation("Mutex {collectionId}.{key} was occupied. Last modified could not be retrieved");
                         }
 
                         if (DateTimeOffset.UtcNow < lastModified + timeout)
@@ -62,13 +63,13 @@ namespace Microsoft.Azure.IoTSolutions.UIConfig.Services.Helpers
                     }
                     else
                     {
-                        this.logger.Info($"Mutex {collectionId}.{key} was NOT occupied", () => { });
+                        _logger.LogInformation($"Mutex {collectionId}.{key} was NOT occupied");
                     }
                 }
                 catch (ResourceNotFoundException)
                 {
                     // Mutex is not initialized, treat it as released
-                    this.logger.Info($"Mutex {collectionId}.{key} was not found", () => { });
+                    _logger.LogInformation($"Mutex {collectionId}.{key} was not found");
                 }
 
                 try
