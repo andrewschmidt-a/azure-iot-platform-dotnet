@@ -84,7 +84,7 @@
                 "UpdateRules": "",
                 "UpdateSIMManagement": "",
                 "UserManage": "",
-                "DeleteTenant": ""
+                "DeleteTenant": "",
                 "EnableAlerting": "",
                 "DisableAlerting": ""
             },
@@ -175,7 +175,7 @@
         "deleteIotHubWebHookName": "DeleteIotHub",
         "createSAWebHookName": "CreateSAJob",
         "deleteSAWebHookName": "DeleteSAJob",
-        "webserviceport": 80
+        "webserviceport": 80,
         "streamAnalyticsDatabaseId": "pcs-iothub-stream"
     }
 }
