@@ -14,7 +14,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Runtime
         string AzureB2CBaseUri { get; }
         string Port { get; }
         string SendGridAPIKey { get; }
-        string TenantId { get; set; }
+        string AadTenantId { get; set; }
     }
 
     public class ServicesConfig : IServicesConfig
@@ -24,7 +24,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Runtime
         public Dictionary<string, List<string>> UserPermissions { get; set; }
         public string StorageAccountConnectionString { get; set; }
         public string AzureB2CBaseUri { get; set; }
-        public string TenantId { get; set; }
+        public string AadTenantId { get; set; }
         public string Port { get; set; }
         public string SendGridAPIKey { get; set; }
         public string UserManagementApiUrl { get; set; }

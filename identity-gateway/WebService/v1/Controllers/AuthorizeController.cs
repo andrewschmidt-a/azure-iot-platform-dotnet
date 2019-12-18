@@ -21,24 +21,6 @@ using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 {
-    public interface IAuthenticationContext
-    {
-        Task<AuthenticationResult> AcquireTokenAsync(string resource, ClientCredential clientCredential);
-    }
-    public class AuthenticationContext : IAuthenticationContext
-    {
-        private readonly Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext authContext;
-
-        public AuthenticationContext(IServicesConfig _config)
-        {
-            this.authContext = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext("https://login.microsoftonline.com/"+_config.TenantId);
-        }
-        public Task<AuthenticationResult> AcquireTokenAsync(string resource, ClientCredential clientCredential)
-        {
-            return authContext.AcquireTokenAsync(resource, clientCredential);
-        }
-    }
-
     [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AuthorizeController : Controller
     {

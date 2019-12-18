@@ -3,7 +3,7 @@
 using System;
 using System.Reflection;
 using Autofac;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Mmm.Platform.IoT.Common.Services;
@@ -37,7 +37,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
 
             builder.RegisterType<JwtHelpers>().As<IJwtHelpers>().InstancePerDependency();
 
-            builder.RegisterType<Controllers.AuthenticationContext>().As<IAuthenticationContext>();
+            builder.RegisterType<AuthenticationContext>().As<IAuthenticationContext>();
             builder.RegisterType<TableStorageClient>().As<ITableStorageClient>().SingleInstance();
 
         }
