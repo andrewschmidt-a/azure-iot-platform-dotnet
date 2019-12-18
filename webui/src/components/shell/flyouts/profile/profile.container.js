@@ -29,7 +29,7 @@ function deleteTenantFlow(switchId) {
       },
       error => {
         console.log(error);
-        alert("Unable to delete this tenant. You may not have the correct permissions, or it may not be fully deployed yet.")
+        alert("Unable to delete this tenant. It may not be fully deployed yet.")
       },
     );
 }

@@ -90,6 +90,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                     $"Cache get: unable to get device-twin-properties cache", e);
             }
 
+            if (String.IsNullOrEmpty(response?.Data))
+            {
+                throw new Exception($"StorageAdapter did not return any data for {CACHE_COLLECTION_ID}:{CACHE_KEY}. The DeviceProperties cache has not been created for this tenant yet.");
+            }
+
             DevicePropertyServiceModel properties = new DevicePropertyServiceModel();
             try
             {
@@ -99,6 +104,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             {
                 throw new InvalidInputException("Unable to deserialize deviceProperties from CosmosDB", e);
             }
+
             List<string> result = new List<string>();
             foreach (string tag in properties.Tags)
             {

@@ -74,12 +74,3 @@ steps:
       az keyvault secret set --vault-name $kVaultName --name 'twinChangeEventHubConnString' --value $twinchangeEvConn
       az keyvault secret set --vault-name $kVaultName --name 'azureMapsKey' --value $mapskey
     addSpnToEnvironment: true
-- task: AzureCLI@1
-  displayName: Add Keyvault Name to App Config
-  inputs:
-    azureSubscription: ${{ parameters.serviceConnection }}
-    scriptLocation: 'inlineScript'
-    inlineScript: |-
-      az appconfig kv set --key KeyVault:name --value ${{ parameters.keyVaultName }} --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key Global:KeyVault:name --value ${{ parameters.keyVaultName }} --name ${{ parameters.appConfigName }} --yes
-    addSpnToEnvironment: true

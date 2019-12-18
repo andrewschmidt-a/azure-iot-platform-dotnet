@@ -65,8 +65,7 @@ if ([string]::IsNullOrEmpty($cosmosDbAccountKey)){
 }
 
 if ([string]::IsNullOrEmpty($iotHubAccessKey)){
-    Write-Output "IothubConnectionKey is empty, getting it from Iothub"
-    $iotHubAccessKey =(Get-AzIotHubKey -ResourceGroupName $resourceGroup -Name $iothubName -KeyName "iothubowner").PrimaryKey
+    Write-Output "IothubConnectionKey is empty"
 }
 
 $SAjobDefinition = @"
@@ -614,47 +613,19 @@ function addConsumerGroup($iotHubName){
     Write-Output "Consumer Group added to the Iothub $iotHubName"
 }
 
-# for future use, adding it for now..
-function checkCosmosDatabase(){
-    $databaseResourceType = "Microsoft.DocumentDb/databaseAccounts/apis/databases"
-    $databaseResourceName = $cosmosDbAccountName + "/sql/" + $cosmosDbDatabaseId
-    $apiVersion = "2015-04-08"
-    $databaseProperties = @{ "resource"=@{ "id"=$cosmosDbDatabaseId }} 
-    #check if the database exists
-    try {
-        Get-AzResource -ResourceType $databaseResourceType `
-                       -Name $databaseResourceName `
-                       -ResourceGroupName $resourceGroup `
-                       -ApiVersion $apiVersion
-
-        Write-Output "database $cosmosDbDatabaseId exists." 
-        
-    }
-    catch {
-        Write-Error -Message $_.Exception
-        throw $_.Exception        
-    }
-    # create in case it does not exist
-    New-AzResource -ResourceType $databaseResourceType `
-                    -ApiVersion $apiVersion `
-                    -ResourceGroupName $resourceGroup `
-                    -Name $databaseResourceName `
-                    -PropertyObject $databaseProperties
-}
-
 # create cosmos collection 
 function createCosmosCollection($tenantId){
+    #$databaseResourceType = "Microsoft.DocumentDb/databaseAccounts/apis/databases"
+    #$databaseResourceName = $databaseAcctName + "/sql/" + $cosmosdbName
     $containerResourceType = "Microsoft.DocumentDb/databaseAccounts/apis/databases/containers"
     $containerName = "alarms-$tenantId"
     $apiVersion = "2015-04-08"
     $containerResourceName = $cosmosDbAccountName + "/sql/" + $cosmosDbDatabaseId + "/" + $containerName
-                   
     New-AzResource -ResourceType $containerResourceType `
                    -ApiVersion $apiVersion `
                    -ResourceGroupName $resourceGroup `
                    -Name $containerResourceName `
                    -PropertyObject $containerProperties -Force
-
     Write-Output "Collection $containerName created for Tenant $tenantId"
 }
 

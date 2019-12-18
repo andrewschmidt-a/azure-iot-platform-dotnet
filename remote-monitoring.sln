@@ -85,7 +85,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "asa-manager\Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "asa-manager\WebService\WebService.csproj", "{6128A222-D7FC-4A69-8378-2C27358A1135}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Test", "asa-manager\Services.Test\Services.Test.csproj", "{BE4D193E-E146-4CE9-8C1F-721940D8F70A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "asa-manager\Services.Test\Services.Test.csproj", "{BE4D193E-E146-4CE9-8C1F-721940D8F70A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
