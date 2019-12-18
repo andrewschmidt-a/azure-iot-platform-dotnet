@@ -44,6 +44,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Runtime
         private const string PRIVATE_KEY_KEY = "identityGatewayPrivateKey";
 
         private const string AZURE_B2C_BASE_URI = GLOBAL_KEY + "AzureB2CBaseUri";
+        private const string AAD_TENANT_ID = GLOBAL_KEY + "AzureActiveDirectory:aadtenantid";
         private const string STORAGE_CONNECTION_STRING_KEY = "storageAccountConnectionString";
         private const string SEND_GRID_API_KEY = "sendGridAPIKey";
 
@@ -65,6 +66,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Runtime
                 Port = configData.GetString(PORT_KEY),
                 SendGridAPIKey = configData.GetString(SEND_GRID_API_KEY),
                 UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
+                TenantId = configData.GetString(AAD_TENANT_ID),
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

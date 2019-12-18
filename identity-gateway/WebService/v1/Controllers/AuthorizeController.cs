@@ -25,13 +25,13 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
     {
         Task<AuthenticationResult> AcquireTokenAsync(string resource, ClientCredential clientCredential);
     }
-    public class MyAuthenticationContext : IAuthenticationContext
+    public class AuthenticationContext : IAuthenticationContext
     {
-        private readonly AuthenticationContext authContext;
+        private readonly Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext authContext;
 
-        public MyAuthenticationContext(AuthenticationContext authContext)
+        public AuthenticationContext(IServicesConfig _config)
         {
-            this.authContext = authContext;
+            this.authContext = new Microsoft.IdentityModel.Clients.ActiveDirectory.AuthenticationContext("https://login.microsoftonline.com/"+_config.TenantId);
         }
         public Task<AuthenticationResult> AcquireTokenAsync(string resource, ClientCredential clientCredential)
         {
@@ -111,7 +111,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             }
 
             // if successful, then mint token
-
             var jwtHandler = new JwtSecurityTokenHandler();
             var claims = new List<Claim>();
             claims.Add(new Claim("client_id", input.client_id));
@@ -119,7 +118,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             claims.Add(new Claim("name", "Client Credentials"));
 
             string tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(claims, input.tenant, "IoTPlatform", null));
-
 
             return StatusCode(200, tokenString);
         }

@@ -37,8 +37,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
 
             builder.RegisterType<JwtHelpers>().As<IJwtHelpers>().InstancePerDependency();
 
-            builder.Register(context => new AuthenticationContext(authorityUri));
-            builder.RegisterType<MyAuthenticationContext>().As<IAuthenticationContext>();
+            builder.RegisterType<Controllers.AuthenticationContext>().As<IAuthenticationContext>();
             builder.RegisterType<TableStorageClient>().As<ITableStorageClient>().SingleInstance();
 
         }
