@@ -19,8 +19,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {
     public class DependencyResolution : DependencyResolutionBase
     {
-
-        const string authorityUri = "https://login.microsoftonline.com/facac3c4-e2a5-4257-af76-205c8a821ddb";
         protected override void SetupCustomRules(ContainerBuilder builder)
         {
             // Auto-wire additional assemblies
