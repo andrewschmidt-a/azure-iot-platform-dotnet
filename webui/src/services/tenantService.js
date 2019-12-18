@@ -23,8 +23,8 @@ export class TenantService {
   }
 
   /** Returns whether a tenant is ready or not */
-  static tenantIsDeployed() {
-    return HttpClient.get(`${TENANT_MANAGER_ENDPOINT}tenantready`);
+  static tenantIsDeployed(tenantId) {
+    return HttpClient.get(`${TENANT_MANAGER_ENDPOINT}tenantready/${tenantId}`);
   }
 
   /** Returns the display value for the tenantGuid */
