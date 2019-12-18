@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.IdentityGateway.Services;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.WebService.Models;
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -24,17 +27,20 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
         private IServicesConfig _config;
         private IJwtHelpers _jwtHelper;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
+        private IAuthenticationContext _authenticationContext;
 
         private UserTenantContainer _userTenantContainer;
         private UserSettingsContainer _userSettingsContainer;
 
-        public AuthorizeController(IServicesConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJwtHelpers jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration)
+
+        public AuthorizeController(IServicesConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJwtHelpers jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration, IAuthenticationContext authenticationContext)
         {
             this._config = config;
             this._userTenantContainer = userTenantContainer;
             this._userSettingsContainer = userSettingsContainer;
             this._jwtHelper = jwtHelper;
             this._openIdProviderConfiguration = openIdProviderConfiguration;
+            this._authenticationContext = authenticationContext;
         }
 
         // GET: connect/authorize
@@ -68,6 +74,35 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             return Redirect(uri.Uri.ToString());
         }
 
+        // POST: connect/token
+        [HttpPost]
+        [Route("connect/token")]
+        public async Task<IActionResult> PostTokenAsync(
+            [FromBody] ClientCredentialInput input)
+        {
+            string resourceUri = "https://graph.microsoft.com/";
+            ClientCredential clientCredential = new ClientCredential(input.client_id, input.client_secret);
+
+            try
+            {
+                AuthenticationResult token = await _authenticationContext.AcquireTokenAsync(resourceUri, clientCredential);
+            }
+            catch(Exception e)
+            {
+                return StatusCode(401, e.Message);
+            }
+
+            // if successful, then mint token
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var claims = new List<Claim>();
+            claims.Add(new Claim("client_id", input.client_id));
+            claims.Add(new Claim("sub", input.client_id));
+            claims.Add(new Claim("name", "Client Credentials"));
+
+            string tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(claims, input.tenant, "IoTPlatform", null));
+
+            return StatusCode(200, tokenString);
+        }
         // GET: connect/authorize
         /// <summary>
         /// This is a pass-through auth gateway so there is no need to officially end session.

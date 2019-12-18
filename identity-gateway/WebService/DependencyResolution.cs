@@ -3,12 +3,14 @@
 using System;
 using System.Reflection;
 using Autofac;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.IdentityGateway.Controllers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Mmm.Platform.IoT.IdentityGateway.WebService.Runtime;
@@ -32,7 +34,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
             builder.RegisterType<CorsSetup>().As<ICorsSetup>().SingleInstance();
 
             builder.RegisterType<JwtHelpers>().As<IJwtHelpers>().InstancePerDependency();
+
+            builder.RegisterType<AuthenticationContext>().As<IAuthenticationContext>();
             builder.RegisterType<TableStorageClient>().As<ITableStorageClient>().SingleInstance();
+
         }
 
         // Prepare the OpenId Connect configuration manager, responsibile

@@ -65,6 +65,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Runtime
                 Port = configData.GetString(PORT_KEY),
                 SendGridAPIKey = configData.GetString(SEND_GRID_API_KEY),
                 UserManagementApiUrl = configData.GetString(USER_MANAGEMENT_URL_KEY),
+                AadTenantId = configData.AadTenantId,
             };
 
             this.ClientAuthConfig = new ClientAuthConfig

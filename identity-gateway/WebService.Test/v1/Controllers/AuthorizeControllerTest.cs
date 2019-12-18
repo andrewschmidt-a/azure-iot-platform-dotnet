@@ -16,6 +16,8 @@ using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Mmm.Platform.IoT.IdentityGateway.WebService.Models;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
@@ -36,6 +38,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
         private const string someUri = "http://azureb2caseuri.com";
         private Mock<IServicesConfig> mockServicesConfig;
         private Mock<IJwtHelpers> mockJwtHelper;
+        private Mock<IAuthenticationContext> mockAuthContext;
         private JwtSecurityToken someSecurityToken;
         public static readonly string ValidAuthHeader = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
         private Mock<IOpenIdProviderConfiguration> mockOpenIdProviderConfiguration;
@@ -205,8 +208,39 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             var objectResult = await authorizeController.PostAsync(ValidAuthHeader, availableTenant.ToString()) as ObjectResult;
 
             // Assert
-            Assert.Equal(objectResult.StatusCode, StatusCodes.Status200OK);
+            Assert.Equal(StatusCodes.Status200OK, objectResult.StatusCode);
         }
+
+        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+#pragma warning disable xUnit1026
+        public async Task ErrorInClientCredentialsAuthentication()
+#pragma warning restore xUnit1026
+        {
+            // Arrange
+            mockAuthContext.Setup(m => m.AcquireTokenAsync(It.IsAny<string>(), It.IsAny<ClientCredential>())).Throws(new Exception("Authentication Failed!"));
+
+            // Act
+            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F", tenant = someTenant.ToString() }) as ObjectResult;
+
+            // Assert
+            Assert.Equal(StatusCodes.Status401Unauthorized, result.StatusCode);
+        }
+
+        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        public async Task SuccessClientCredentialsAuthentication()
+        {
+            // Arrange
+            mockAuthContext.Setup(m => m.AcquireTokenAsync(It.IsAny<string>(), It.IsAny<ClientCredential>())).Returns(Task.FromResult<AuthenticationResult>(null));
+            mockJwtHelper.Setup(m => m.GetIdentityToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new JwtSecurityToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"));
+
+            // Act
+            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F", tenant = someTenant.ToString() }) as ObjectResult;
+
+            // Assert
+            Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
+            Assert.IsType<string>(result.Value);
+        }
+
 
         private void InitializeController()
         {
@@ -214,9 +248,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             mockUserTenantContainer = new Mock<UserTenantContainer>();
             mockUserSettingsContainer = new Mock<IUserContainer<UserSettingsModel, UserSettingsInput>>();
             mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
+            mockAuthContext = new Mock<IAuthenticationContext> { DefaultValue = DefaultValue.Mock };
             mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
             mockOpenIdProviderConfiguration = new Mock<IOpenIdProviderConfiguration> { DefaultValue = DefaultValue.Mock };
-            authorizeController = new AuthorizeController(mockServicesConfig.Object, mockUserTenantContainer.Object, mockUserSettingsContainer.Object as UserSettingsContainer, mockJwtHelper.Object, mockOpenIdProviderConfiguration.Object)
+            authorizeController = new AuthorizeController(mockServicesConfig.Object, mockUserTenantContainer.Object, mockUserSettingsContainer.Object as UserSettingsContainer, mockJwtHelper.Object, mockOpenIdProviderConfiguration.Object, mockAuthContext.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
