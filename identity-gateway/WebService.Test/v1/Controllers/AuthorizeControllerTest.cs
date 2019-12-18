@@ -227,9 +227,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
         }
 
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-#pragma warning disable xUnit1026
         public async Task SuccessClientCredentialsAuthentication()
-#pragma warning restore xUnit1026
         {
             // Arrange
             mockAuthContext.Setup(m => m.AcquireTokenAsync(It.IsAny<string>(), It.IsAny<ClientCredential>())).Returns(Task.FromResult<AuthenticationResult>(null));
