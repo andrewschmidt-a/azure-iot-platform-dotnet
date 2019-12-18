@@ -21,10 +21,10 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
             _logger = log;
         }
 
-        [HttpGet("")]
-        public async Task<bool> GetAsync()
+        [HttpGet("{tenantId}")]
+        public async Task<bool> GetAsync(string tenantId)
         {
-            return await this._tenantContainer.TenantIsReadyAsync(this.GetTenantId());
+            return await this._tenantContainer.TenantIsReadyAsync(tenantId);
         }
     }
 }
