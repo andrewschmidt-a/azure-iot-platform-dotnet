@@ -8,13 +8,14 @@ using Mmm.Platform.IoT.AsaManager.Services.Exceptions;
 using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
 using Mmm.Platform.IoT.AsaManager.Services.Models;
 using Mmm.Platform.IoT.AsaManager.Services.Models.Rules;
+using Mmm.Platform.IoT.AsaManager.Services.Test.Helpers;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Services.Test
+namespace Mmm.Platform.IoT.AsaManager.Services.Test
 {
     public class RulesConverterTest 
     {
@@ -23,41 +24,20 @@ namespace Services.Test
         private Mock<ILogger<RulesConverter>> mockLog;
         private RulesConverter converter;
         private readonly Random rand;
+        private CreateEntityHelper entityHelper;
 
-        public RulesConverterTest () {
+        public RulesConverterTest()
+        {
             this.mockBlobStorageClient = new Mock<IBlobStorageClient> ();
             this.mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
             this.mockLog = new Mock<ILogger<RulesConverter>>();
             this.rand = new Random();
+            this.entityHelper = new CreateEntityHelper(this.rand);
 
             this.converter = new RulesConverter(
                 this.mockBlobStorageClient.Object,
                 this.mockStorageAdapterClient.Object,
                 this.mockLog.Object);
-        }
-
-        public ValueApiModel CreateRule()
-        {
-            RuleDataModel data = new RuleDataModel
-            {
-                Conditions = new List<ConditionModel>(),
-                Actions = new List<IActionModel>(),
-                Enabled = true,
-                Deleted = false,
-                TimePeriod = 60000,  // a value from timePeriodMap, a field of the RuleReferenceDatModel
-                Name = this.rand.NextString(),
-                Description = this.rand.NextString(),
-                GroupId = this.rand.NextString(),
-                Severity = this.rand.NextString(),
-                Calculation = this.rand.NextString()
-            };
-
-            return new ValueApiModel
-            {
-                Key = this.rand.NextString(),
-                ETag = this.rand.NextString(),
-                Data = JsonConvert.SerializeObject(data)
-            };
         }
 
         [Fact]
@@ -66,8 +46,8 @@ namespace Services.Test
             string tenantId = this.rand.NextString();
             List<ValueApiModel> rulesList = new List<ValueApiModel>
             {
-                this.CreateRule(),
-                this.CreateRule()
+                this.entityHelper.CreateRule(),
+                this.entityHelper.CreateRule()
             };
             ValueListApiModel rules = new ValueListApiModel
             {

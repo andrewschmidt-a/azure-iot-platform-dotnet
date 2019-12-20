@@ -38,14 +38,14 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 
         [HttpGet]
         [Authorize("ReadAll")]
-        public async Task<StreamAnalyticsJobModel> GetAlertingAsync([FromQuery] bool createIfNotExists = true)
+        public async Task<StreamAnalyticsJobModel> GetAlertingAsync([FromQuery] bool createIfNotExists = false)
         {
             string tenantId = this.GetTenantId();
             StreamAnalyticsJobModel model = await this._alertingContainer.GetAlertingAsync(tenantId);
             if (!this._alertingContainer.SaJobExists(model) && createIfNotExists)
             {
                 // If the tenant does not have an sa job, start creating it
-                _logger.LogInformation("The tenant does not already have alerting enabled and the createIfNotExists parameter was set to true (default). Creating a stream analytics job now. TenantId: {tenantId}", tenantId);
+                _logger.LogInformation("The tenant does not already have alerting enabled and the createIfNotExists parameter was set to true. Creating a stream analytics job now. TenantId: {tenantId}", tenantId);
                 return await this._alertingContainer.AddAlertingAsync(tenantId);
             }
             else

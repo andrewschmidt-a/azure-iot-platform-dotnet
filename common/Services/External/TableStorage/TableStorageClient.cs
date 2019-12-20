@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
         {
             try
             {
-                await client.GetServiceStatsAsync();
+                await this.client.ListTablesSegmentedAsync(default(TableContinuationToken));
                 // If the call above does not fail then return a healthy status
                 return new StatusResultServiceModel(true, "Alive and well!");
             }
