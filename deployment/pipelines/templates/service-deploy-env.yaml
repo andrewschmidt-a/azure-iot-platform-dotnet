@@ -43,7 +43,6 @@ stages:
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
 
-        
 - stage: DeployCRSLWkBnch
   dependsOn:
   - DeployCRSLQA
@@ -81,5 +80,25 @@ stages:
         serviceConnection: '3M-ACTAIR01-CHIMSMART-Dev'
         resourceGroup: rg-iot-chim-dev
         aksName: chimiot-aks-dev
+        chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}
+
+- stage: DeployPSDDev
+  dependsOn:
+  - DeployCRSLQA
+  displayName: Deploy To PSD Dev
+  jobs:
+  - template: approval.yaml
+    parameters:
+      environment: IoT_PSD_Environment_DEV
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: service-deploy.yaml
+      parameters:
+        serviceConnection: '3M-PSD-Dev'
+        resourceGroup: rg-iot-psd-dev
+        aksName: psdiot-aks-dev
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
