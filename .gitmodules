@@ -4,6 +4,3 @@
 [submodule "azure-iot-appconfig-function"]
 	path = azure-iot-appconfig-function
 	url = git@github.mmm.com:MMM/azure-iot-appconfig-function.git
-[submodule "json-to-poco"]
-	path = json-to-poco
-	url = git@github.mmm.com:MMM/json-to-poco.git
