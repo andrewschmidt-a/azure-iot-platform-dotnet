@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Mmm.Platform.IoT.Common.Services.Auth;
 
@@ -22,7 +21,7 @@ namespace Mmm.Platform.IoT.Config.WebService
         public IContainer ApplicationContainer { get; private set; }
 
         // Invoked by `Program.cs`
-        public Startup(IWebHostEnvironment env)
+        public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath);
@@ -57,9 +56,9 @@ namespace Mmm.Platform.IoT.Config.WebService
         // method above. Use this method to add middleware.
         public void Configure(
             IApplicationBuilder app,
-            IWebHostEnvironment env,
+            IHostingEnvironment env,
             ICorsSetup corsSetup,
-            IHostApplicationLifetime appLifetime)
+            IApplicationLifetime appLifetime)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -80,6 +79,7 @@ namespace Mmm.Platform.IoT.Config.WebService
             corsSetup.UseMiddleware(app);
             //app.UseAuthentication();
 
+            app.UseMvc();
         }
     }
 }

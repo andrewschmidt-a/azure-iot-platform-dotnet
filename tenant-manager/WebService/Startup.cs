@@ -16,7 +16,7 @@ namespace Mmm.Platform.IoT.TenantManager.WebService
         public IConfiguration Configuration { get; }
         public IContainer ApplicationContainer { get; private set; }
 
-        public Startup(IWebHostEnvironment env)
+        public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.TenantManager.WebService
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         [Obsolete]
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -57,6 +57,7 @@ namespace Mmm.Platform.IoT.TenantManager.WebService
             // Check for Authorization header before dispatching requests
             app.UseMiddleware<AuthMiddleware>();
 
+            app.UseMvc();
         }
     }
 }
