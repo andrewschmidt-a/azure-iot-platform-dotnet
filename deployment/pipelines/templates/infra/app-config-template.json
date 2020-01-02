@@ -8,10 +8,7 @@
         "templatefolder": "./data/"
     },
     "AsaManagerService": {
-        "webserviceport": 80
-    },
-    "IdentityGatewayService": {
-        "webserviceport": 80
+        "webserviceport": "80"
     },
     "ConfigService": {
         "Actions": {
@@ -27,16 +24,17 @@
         "webserviceport": "80"
     },
     "ExternalDependencies": {
+        "asamanagerwebserviceurl": "http://asa-manager:80/v1",
         "authWebServiceUrl": "http://identity-gateway:80/v1",
+        "configwebserviceurl": "http://config:80/v1",
         "devicesimulationwebserviceurl": "http://device-simulation:80/v1",
         "diagnosticsmaxlogretries": "3",
         "diagnosticswebserviceurl": "http://diagnostics:80/v1",
         "identitygatewaywebserviceurl": "http://identity-gateway:80/v1",
+		"iothubmanagerwebserviceurl": "http://iothub-manager:80/v1",
         "storageadapterwebservicetimeout": "10000",
         "storageadapterwebserviceurl": "http://storage-adapter:80/v1",
-        "telemetryWebServiceUrl": "http://device-telemetry:80/v1",
-        "configwebserviceurl": "http://config:80/v1",
-        "asamanagerwebserviceurl": "http://asa-manager:80/v1"
+        "telemetryWebServiceUrl": "http://device-telemetry:80/v1"
     },
     "Global": {
         "AuthRequired": "false",
@@ -59,7 +57,11 @@
             "authtype": "JWT"
         },
         "CosmosDb": {
+            "accountName": "",
             "rus": "400"
+        },
+        "KeyVault": {
+            "name": "OVERWRITTEN_IN_DEPLOYMENT"
         },
         "Permissions": {
             "admin": {
@@ -77,26 +79,31 @@
                 "DeletePackages": "",
                 "DeleteRules": "",
                 "DeleteTenant": "",
+                "DisableAlerting": "",
+                "EnableAlerting": "",
                 "ReadAll": "",
                 "UpdateAlarms": "",
                 "UpdateDeviceGroups": "",
                 "UpdateDevices": "",
                 "UpdateRules": "",
                 "UpdateSIMManagement": "",
-                "UserManage": "",
-                "DeleteTenant": "",
-                "EnableAlerting": "",
-                "DisableAlerting": ""
+                "UserManage": ""
             },
             "readOnly": {
                 "ReadAll": ""
             }
+        },
+        "StorageAccount": {
+            "name": ""
         },
         "StorageAccountConnectionStringKeyVaultSecret": "storageAccountConnectionString",
         "developmentMode": "true",
         "location": "centralus",
         "resourceGroup": "rg-crslbbiot-odin-dev",
         "subscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"
+    },
+    "IdentityGatewayService": {
+        "webserviceport": "80"
     },
     "IothubManagerService": {
         "DevicePropertiesCache": {
@@ -105,23 +112,6 @@
             "whitelist": "tags.*,reported.Protocol,reported.SupportedMethods,reported.FirmwareUpdateStatus"
         },
         "webserviceport": "80"
-    },
-    "KeyVault": {
-        "aadappid": "",
-        "aadappsecret": "",
-        "name": "OVERWRITTEN_IN_DEPLOYMENT",
-        "newName": "OVERWRITTEN_IN_DEPLOYMENT"
-    },
-    "Logging": {
-        "includescopes": "true",
-        "loglevel": [
-            "Microsoft",
-            "=",
-            "\"Warning\""
-        ]
-    },
-    "StorageAccount": {
-        "name": ""
     },
     "StorageAdapter": {
         "documentdbrus": "400",
@@ -153,29 +143,24 @@
         "webserviceport": "80"
     },
     "TenantManagerService": {
-        "StorageAdaptorDb": "pcs-storage",
-        "automationAccountName": "automation-odin",
-        "cosmosAccount": "cosmos-odin-mt-poc",
-        "cosmosConnectionSetting": "cosmos-odin-mt-poc_DOCUMENTDB",
-        "databaseName": "iot",
-        "eventHubNamespaceName": "",
+        "EventHubNamespaceName": "",
+        "automationAccountName": "",
+        "createIotHubWebHookName": "CreateIotHub",
+        "createSAWebHookName": "CreateSAJob",
+        "deleteIotHubWebHookName": "DeleteIotHub",
+        "deleteSAWebHookName": "DeleteSAJob",
         "lifecycleEventHubConnString": "",
         "lifecycleFunctionName": "lifecycle-processor",
-        "lifecycleFunctionUri": "https://lifecycle-processor-odin-mt-poc.scm.azurewebsites.net",
-        "setAppConfigEndpoint": "https://appconfigcontrollerpoc.azurewebsites.net/api/SetAppConfigKey",
-        "setAppConfigFunction": "https://appconfigcontrollerpoc.azurewebsites.net/api/SetAppConfigKey",
+        "lifecycleFunctionUri": "",
+        "setAppConfigEndpoint": "",
+        "setAppConfigFunction": "",
         "tableName": "tenant",
         "telemetryEventHubConnString": "",
         "telemetryFunctionName": "telemetry-processor",
-        "telemetryFunctionUri": "https://telemetry-processor-odin-mt-poc.scm.azurewebsites.net",
+        "telemetryFunctionUri": "",
         "twinChangeEventHubConnString": "",
         "twinChangeFunctionName": "twin-change-processor",
-        "twinChangeFunctionUri": "https://twin-change-processor-odin-mt-poc.scm.azurewebsites.net",
-        "createIotHubWebHookName": "CreateIotHub",
-        "deleteIotHubWebHookName": "DeleteIotHub",
-        "createSAWebHookName": "CreateSAJob",
-        "deleteSAWebHookName": "DeleteSAJob",
-        "webserviceport": 80,
-        "streamAnalyticsDatabaseId": "pcs-iothub-stream"
+        "twinChangeFunctionUri": "",
+        "webserviceport": "80"
     }
 }

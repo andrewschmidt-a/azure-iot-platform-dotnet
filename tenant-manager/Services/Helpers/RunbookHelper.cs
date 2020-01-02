@@ -17,8 +17,11 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public class RunbookHelper : IRunbookHelper
     {
+        private const string SA_JOB_DATABASE_ID = "pcs-iothub-stream";
+
         private string iotHubConnectionStringKeyFormat = "tenant:{0}:iotHubConnectionString";
         private Regex iotHubKeyRegexMatch = new Regex(@"(?<=SharedAccessKey=)[^;]*");
+        private Regex storageAccountKeyRegexMatch = new Regex(@"(?<=AccountKey=)[^;]*");
 
         // injection variables
         private readonly IServicesConfig _config;
@@ -47,6 +50,18 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             return new AutomationManagementClient(credentials);
         }
 
+        private string GetRegexMatch(string matchString, Regex expression)
+        {
+
+            Match match = expression.Match(matchString);
+            string value = match.Value;
+            if (String.IsNullOrEmpty(value))
+            {
+                throw new Exception($"Unable to match a value from string {matchString} for the given regular expression {expression.ToString()}");
+            }
+            return value;
+        }
+
         private string GetIotHubKey(string tenantId, string iotHubName)
         {
             try
@@ -57,18 +72,23 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 {
                     throw new Exception($"The iotHubConnectionString returned by app config for the key {appConfigKey} returned a null value.");
                 }
-
-                Match iotHubKeyMatch = this.iotHubKeyRegexMatch.Match(iotHubConnectionString);
-                string iotHubKey = iotHubKeyMatch.Value;
-                if (String.IsNullOrEmpty(iotHubKey))
-                {
-                    throw new Exception("Unable to parse the iotHub connection string for the SharedAccessKey value.");
-                }
-                return iotHubKey;
+                return this.GetRegexMatch(iotHubConnectionString, this.iotHubKeyRegexMatch);
             }
             catch (Exception e)
             {
                 throw new IotHubKeyException($"Unable to get the iothub SharedAccessKey for tenant {tenantId}", e);
+            }
+        }
+
+        private string GetStorageAccountKey(string connectionString)
+        {
+            try
+            {
+                return this.GetRegexMatch(connectionString, this.storageAccountKeyRegexMatch);
+            }
+            catch (Exception e)
+            {
+                throw new StorageAccountKeyException("Unable to get the Storage Account Key from the connection string. The connection string may not be configured correctly.", e);
             }
         }
 
@@ -118,6 +138,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         public async Task<HttpResponseMessage> CreateAlerting(string tenantId, string saJobName, string iotHubName)
         {
             string iotHubKey = this.GetIotHubKey(tenantId, iotHubName);
+            string storageAccountKey = this.GetStorageAccountKey(this._config.StorageAccountConnectionString);
 
             var requestBody = new
             {
@@ -127,14 +148,14 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 subscriptionId = this._config.SubscriptionId,
                 saJobName = saJobName,
                 storageAccountName = this._config.StorageAccountName,
-                storageAccountKey = this._config.StorageAccountKey,
+                storageAccountKey = storageAccountKey,
                 eventHubNamespaceName = this._config.EventHubNamespaceName,
                 eventHubAccessPolicyKey = this._config.EventHubAccessPolicyKey,
                 iotHubName = iotHubName,
                 iotHubAccessKey = iotHubKey,
                 cosmosDbAccountName = this._config.CosmosDbAccount,
                 cosmosDbAccountKey = this._config.CosmosDbKey,
-                cosmosDbDatabaseId = this._config.StreamAnalyticsDatabaseId
+                cosmosDbDatabaseId = SA_JOB_DATABASE_ID
             };
 
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");

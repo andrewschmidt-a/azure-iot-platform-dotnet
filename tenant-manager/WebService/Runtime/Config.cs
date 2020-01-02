@@ -42,7 +42,9 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Runtime
 
         private const string GLOBAL_STORAGE_KEY = GLOBAL_KEY + "StorageAccount:";
         private const string STORAGE_ACCOUNT_NAME = GLOBAL_STORAGE_KEY + "name";
-        private const string STORAGE_ACCOUNT_KEY = GLOBAL_STORAGE_KEY + "key";
+
+        private const string GLOBAL_COSMOS_KEY = GLOBAL_KEY + "CosmosDb:";
+        private const string COSMOS_DB_ACCOUNT_KEY = GLOBAL_COSMOS_KEY + "accountName";
 
         private const string APPLICATION_KEY = "TenantManagerService:";
         private const string PORT_KEY = APPLICATION_KEY + "webservicePort";
@@ -51,16 +53,12 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Runtime
         private const string LIFECYCLE_CONNECTION_STRING_KEY = APPLICATION_KEY + "lifecycleEventHubConnString";
         private const string TWIN_CHANGE_CONNECTION_STRING_KEY = APPLICATION_KEY + "twinChangeEventHubConnString";
         private const string EVENTHUB_NAMESPACE_NAME_KEY = APPLICATION_KEY + "eventHubNamespaceName";
-        private const string COSMOS_DB_ACCOUNT_KEY = APPLICATION_KEY + "cosmosAccount";
         private const string APP_CONFIG_ENDPOINT_KEY = APPLICATION_KEY + "setAppConfigEndpoint";
         private const string TENANT_MANAGER_DB_ID_KEY = APPLICATION_KEY + "databaseName";
-        private const string STREAM_ANALYTICS_DB_ID_KEY = APPLICATION_KEY + "streamAnalyticsCosmosDbDatabseId";
 
         private const string EXTERNAL_DEPENDENCIES_KEY = "ExternalDependencies:";
         private const string IDENTITY_GATEWAY_WEBSERVICE_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "identitygatewaywebserviceurl";
         private const string CONFIG_WEBSERVICE_URL_KEY = EXTERNAL_DEPENDENCIES_KEY + "configwebserviceurl";
-
-        private const string STORAGE_ADAPTER_DB_ID_KEY = "StorageAdapter:documentDb";
 
         // env/globalsecrets
         private const string APPCONFIG_CONNSTRING_KEY = "PCS_APPLICATION_CONFIGURATION";
@@ -103,12 +101,8 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Runtime
                 CosmosDbConnectionString = configData.GetString(COSMOS_DB_CONNECTION_STRING),
                 CosmosDbAccount = configData.GetString(COSMOS_DB_ACCOUNT_KEY),
                 CosmosDbKey = configData.GetString(COSMOS_DB_KEY),
-                TenantManagerDatabaseId = configData.GetString(TENANT_MANAGER_DB_ID_KEY),
-                StorageAdapterDatabseId = configData.GetString(STORAGE_ADAPTER_DB_ID_KEY),
-                StreamAnalyticsDatabaseId = configData.GetString(STREAM_ANALYTICS_DB_ID_KEY),
                 StorageAccountConnectionString = configData.GetString(STORAGE_ACCOUNT_CONNECTIN_STRING_KEY),
                 StorageAccountName = configData.GetString(STORAGE_ACCOUNT_NAME),
-                StorageAccountKey = configData.GetString(STORAGE_ACCOUNT_KEY),
                 IdentityGatewayWebServiceUrl = configData.GetString(IDENTITY_GATEWAY_WEBSERVICE_URL_KEY),
                 ConfigWebServiceUrl = configData.GetString(CONFIG_WEBSERVICE_URL_KEY),
                 UserPermissions = configData.UserPermissions,

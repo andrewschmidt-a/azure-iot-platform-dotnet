@@ -16,6 +16,10 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class TenantContainer : ITenantContainer
     {
+        // database ids for various collecitons
+        private const string IOT_DATABASE_ID = "iot";
+        private const string STORAGE_ADAPTER_DATABASE_ID = "pcs-storage";
+
         // table storage table ids
         private const string TENANT_TABLE_ID = "tenant";
         private const string USER_TABLE_ID = "user";
@@ -28,7 +32,13 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         private string dpsNameFormat = "dps-{0}";  // format with a guid
         private string streamAnalyticsNameFormat = "sa-{0}";  // format with a guide
         private string appConfigCollectionKeyFormat = "tenant:{0}:{1}-collection";  // format with a guid and collection name
-        private List<string> tenantCollections = new List<string> { "telemetry", "twin-change", "lifecycle", "pcs" };
+        private Dictionary<string, string> tenantCollections = new Dictionary<string, string>
+        {
+            { "telemetry", IOT_DATABASE_ID },
+            { "twin-change", IOT_DATABASE_ID },
+            { "lifecycle", IOT_DATABASE_ID },
+            { "pcs", STORAGE_ADAPTER_DATABASE_ID }
+        };
 
         public readonly IServicesConfig _config;
         public readonly ILogger _logger;
@@ -136,7 +146,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // Write tenant info cosmos db collection name to app config
             try
             {
-                foreach (string collection in this.tenantCollections)
+                foreach (string collection in this.tenantCollections.Keys)
                 {
                     string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
                     string collectionId = $"{collection}-{tenantId}";
@@ -276,26 +286,24 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
 
             // Delete collections
-            string dbIdTms = this._config.TenantManagerDatabaseId;
-            string dbIdStorage = this._config.StorageAdapterDatabseId;
-            foreach (string collection in this.tenantCollections)
+            foreach (KeyValuePair<string, string> collectionInfo in this.tenantCollections)
             {
-                // pcs colleciton uses a different database than the other collections
-                string databaseId = collection == "pcs" ? dbIdStorage : dbIdTms;
-                string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
+                string collection = collectionInfo.Key;
+                string databaseId = collectionInfo.Value;
+                string collectionAppConfigKey = String.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
                 string collectionId = "";
                 try
                 {
-                    collectionId = this._appConfigHelper.GetValue(collectionKey);
+                    collectionId = this._appConfigHelper.GetValue(collectionAppConfigKey);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogInformation(e, "Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantId}", collectionKey, tenantId);
+                    _logger.LogInformation(e, "Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantId}", collectionAppConfigKey, tenantId);
                 }
 
                 if (String.IsNullOrEmpty(collectionId))
                 {
-                    _logger.LogInformation("The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection", collectionKey, tenantId);
+                    _logger.LogInformation("The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection", collectionAppConfigKey, tenantId);
                     // Currently, the assumption for an unknown collection id is that it has been deleted.
                     // We can come to this conclusion by assuming that the app config key containing the collection id was already deleted.
                     // TODO: Determine a more explicit outcome for this scenario - jrb
@@ -323,11 +331,11 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 try
                 {
                     // now that we have the collection Id, delete the key from app config
-                    await this._appConfigHelper.DeleteKeyAsync(collectionKey);
+                    await this._appConfigHelper.DeleteKeyAsync(collectionAppConfigKey);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogInformation(e, "Unable to delete {collectionKey} from App Config", collectionKey, tenantId);
+                    _logger.LogInformation(e, "Unable to delete {collectionKey} from App Config", collectionAppConfigKey, tenantId);
                 }
             }
 

@@ -104,6 +104,7 @@ steps:
       # set the keys
       az appconfig kv set --key Global:instrumentationKey --value $appInsightKey --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:ClientAuth:JWT:authissuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:CosmosDb:accountName --value $cosmosDbAccountName --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:cosmosDbEndpoint --value $cosmosDbEndpoint --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:cosmosDbToken --value $cosmosDbAuthKey --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:documentDBConnectionString --value $cosmosDbConnection --name ${{ parameters.appConfigName }} --yes
@@ -115,5 +116,5 @@ steps:
       az appconfig kv set --key TenantManagerService:twinChangeFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:telemetryFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:lifecycleFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
-
+      az appconfig kv set --key TenantManagerService:eventHubNamespaceName --value $evNamespace --name ${{ parameters.appConfigName }} --yes
     addSpnToEnvironment: true

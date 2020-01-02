@@ -26,11 +26,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Runtime
         string AppConfigEndpoint { get; set; }
         string CosmosDbAccount { get; set; }
         string CosmosDbKey { get; set; }
-        string StreamAnalyticsDatabaseId { get; set; }
-        string TenantManagerDatabaseId { get; set; }
-        string StorageAdapterDatabseId { get; set; }
         string StorageAccountName { get; set; }
-        string StorageAccountKey { get; set; }
         string CreateIotHubRunbookUrl { get; set; }
         string DeleteIotHubRunbookUrl { get; set; }
         string CreateStreamAnalyticsRunbookUrl { get; set; }
@@ -61,12 +57,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Runtime
         public string CosmosDbKey { get; set; }
         public string CosmosDbConnectionString { get; set; }
         public int CosmosDbThroughput { get; set; }
-        public string StreamAnalyticsDatabaseId { get; set; }
-        public string TenantManagerDatabaseId { get; set; }
-        public string StorageAdapterDatabseId { get; set; }
         public string StorageAccountConnectionString { get; set; }
         public string StorageAccountName { get; set; }
-        public string StorageAccountKey { get; set; }
         public string CreateIotHubRunbookUrl { get; set; }
         public string DeleteIotHubRunbookUrl { get; set; }
         public string CreateStreamAnalyticsRunbookUrl { get; set; }
