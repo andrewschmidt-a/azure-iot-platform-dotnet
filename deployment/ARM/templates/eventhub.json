@@ -160,7 +160,7 @@
                         },
                         {
                             "apiVersion": "2017-04-01",
-                            "name": "messagingfunctions",
+                            "name": "devicestream",
                             "type": "consumergroups",
                             "dependsOn": [
                                 "lifecycle"
@@ -169,7 +169,7 @@
                         },
                         {
                             "apiVersion": "2017-04-01",
-                            "name": "dpcache",
+                            "name": "devicepropertiescache",
                             "type": "consumergroups",
                             "dependsOn": [
                                 "lifecycle"
@@ -220,7 +220,7 @@
                         },
                         {
                             "apiVersion": "2017-04-01",
-                            "name": "messagingfunctions",
+                            "name": "devicestream",
                             "type": "consumergroups",
                             "dependsOn": [
                                 "telemetry"
@@ -258,7 +258,7 @@
                         },
                         {
                             "apiVersion": "2017-04-01",
-                            "name": "dpcache",
+                            "name": "devicepropertiescache",
                             "type": "consumergroups",
                             "dependsOn": [
                                 "twin-change"
@@ -267,7 +267,7 @@
                         },
                         {
                             "apiVersion": "2017-04-01",
-                            "name": "messagingfunctions",
+                            "name": "devicestream",
                             "type": "consumergroups",
                             "dependsOn": [
                                 "twin-change"
