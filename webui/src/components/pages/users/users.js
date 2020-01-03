@@ -48,6 +48,10 @@ export class Users extends Component {
     this.setState({ openFlyoutName: 'new-user' });
     this.props.logEvent(toDiagnosticsModel('Users_NewClick', {}));
   }
+  openNewSPFlyout = () => {
+    this.setState({ openFlyoutName: 'new-sp' });
+    this.props.logEvent(toDiagnosticsModel('ServicePrincipal_NewClick', {}));
+  }
 
   onContextMenuChange = contextBtns => this.setState({
     contextBtns,
@@ -95,6 +99,9 @@ export class Users extends Component {
             {this.state.contextBtns}
             <Protected permission={permissions.inviteUsers}>
               <Btn svg={svgs.plus} onClick={this.openNewUserFlyout}>{t('users.flyouts.new.contextMenuName')}</Btn>
+            </Protected>
+            <Protected permission={permissions.inviteUsers}>
+              <Btn svg={svgs.plus} onClick={this.openNewSPFlyout}>{t('users.flyouts.new.addServicePrincipal')}</Btn>
             </Protected>
             <RefreshBar refresh={fetchUsers} time={lastUpdated} isPending={isPending} t={t} />
           </ContextMenuAlign>
