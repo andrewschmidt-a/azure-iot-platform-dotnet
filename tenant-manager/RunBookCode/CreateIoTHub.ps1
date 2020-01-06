@@ -192,6 +192,7 @@ $table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $tableNa
 $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
 if ($row.RowKey -and $row.PartionKey)
 {
+    # If the rowkey and partition key are non-empty values, the row exists.
     # If the row exists, fill in the fields related to the IoT Hub
     $row.IsIotHubDeployed = $true
     $row.IotHubName = $data.iotHubName
