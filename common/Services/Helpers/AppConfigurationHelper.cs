@@ -17,7 +17,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
 
         public AppConfigurationHelper(AppConfig config)
         {
-            this.client = new ConfigurationClient(config.PCS_APPLICATION_CONFIGURATION);
+            this.client = new ConfigurationClient(config.AppConfigurationConnectionString);
         }
 
         public AppConfigurationHelper(string applicationConfigurationConnectionString)

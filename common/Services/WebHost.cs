@@ -60,7 +60,7 @@ namespace Mmm.Platform.IoT.Common.Services
 
                 var initialAppConfig = new AppConfig(configurationBuilder);
                 configurationBuilder = new ConfigurationBuilder();
-                configurationBuilder.AddAzureAppConfiguration(initialAppConfig.PCS_APPLICATION_CONFIGURATION);
+                configurationBuilder.AddAzureAppConfiguration(initialAppConfig.AppConfigurationConnectionString);
                 var azureAppConfigConfig = new AppConfig(configurationBuilder);
                 config.AddConfiguration(azureAppConfigConfig.Configuration);
                 config.AddAzureKeyVault(

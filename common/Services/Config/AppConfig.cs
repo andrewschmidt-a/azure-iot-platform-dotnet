@@ -17,6 +17,6 @@ namespace Mmm.Platform.IoT.Common.Services.Config
         }
 
         public IConfiguration Configuration { get; private set; }
-        public string PCS_APPLICATION_CONFIGURATION { get; set; }
+        public string AppConfigurationConnectionString { get; set; }
     }
 }
