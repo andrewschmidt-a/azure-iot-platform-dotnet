@@ -24,8 +24,7 @@ $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
 
 # Authenticate with the service principle
 $connectionName = "AzureRunAsConnection"
-try
-{
+try {
     $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName
 
     "Logging in to Azure..."
