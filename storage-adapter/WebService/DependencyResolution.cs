@@ -15,7 +15,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
         protected override void SetupCustomRules(ContainerBuilder builder)
         {
             // Auto-wire additional assemblies
-            var assembly = typeof(IStatusService).GetTypeInfo().Assembly;
+            var assembly = typeof(StatusService).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly);
 
             // By default Autofac uses a request lifetime, creating new objects
@@ -24,6 +24,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
             builder.RegisterType<DocumentDbKeyValueContainer>().As<IKeyValueContainer>().SingleInstance();
             builder.RegisterType<DocumentClientFactory>().As<IFactory<IDocumentClient>>().SingleInstance();
             builder.RegisterType<DocumentClientExceptionChecker>().As<IExceptionChecker>().SingleInstance();
+            builder.RegisterType<StatusService>().As<IStatusService>();
         }
     }
 }
