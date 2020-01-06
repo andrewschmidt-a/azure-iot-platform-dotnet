@@ -192,15 +192,7 @@ $table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $tableNa
 $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
 $row.IsIotHubDeployed = $true
 $row.IotHubName = $data.iotHubName
-# column IotHubConnectionString will not exist in the Tenant table, so it needs to be added at very first tenant created in the table
-$ifexists = ($row | Get-Member -Name "IotHubConnectionString")
-if ([string]::IsNullOrEmpty($ifexists)){
-    $row | Add-Member -Name "IotHubConnectionString" -Value $connectionString -Type NoteProperty
-}
-else {
-    $row.IotHubConnectionString = $connectionString
-}
 $row | Update-AzTableRow -Table $table
 
-Write-Output "IotHubConnectionString updated for tenant $($data.tenantId) in tenant table"
+Write-Output "IotHubName and IsIotHubDeployed updated for tenant $($data.tenantId) in tenant table"
 Write-Output "Finished creating a new IotHub for the Tenant"
