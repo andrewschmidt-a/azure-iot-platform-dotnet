@@ -15,8 +15,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
         protected override void SetupCustomRules(ContainerBuilder builder)
         {
             // Auto-wire additional assemblies
-            var assembly = this.GetType().GetTypeInfo().Assembly;
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
+            var assembly = typeof(IStatusService).GetTypeInfo().Assembly;
+            builder.RegisterAssemblyTypes(assembly);
 
             // By default Autofac uses a request lifetime, creating new objects
             // for each request, which is good to reduce the risk of memory
