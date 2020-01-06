@@ -190,7 +190,7 @@ $storageAccount = $data.storageAccount
 $tableName = "tenant"
 $table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $tableName -storageAccountName $storageAccount
 $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
-if ($row.RowKey -or $row.PartionKey)
+if ($row.RowKey -and $row.PartionKey)
 {
     # If the row exists, fill in the fields related to the IoT Hub
     $row.IsIotHubDeployed = $true
