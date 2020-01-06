@@ -13,6 +13,7 @@ COPY common common
 COPY storage-adapter storage-adapter
 
 FROM restore AS publish
+ARG AppConfigurationConnectionString=
 WORKDIR /src/storage-adapter/WebService
 RUN dotnet publish WebService.csproj \
 --output /app \
