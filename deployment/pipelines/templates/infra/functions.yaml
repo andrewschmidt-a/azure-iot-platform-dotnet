@@ -64,5 +64,5 @@ steps:
           "CosmosDbRus"="400" \
           "DeviceStreamDatabaseId"="iot" \
           "DevicePropertiesCacheDatabaseId"="pcs-storage" \
-          "WhiteList"="tags.* \reported.* \ reported.Protocol \ reported.SupportedMethods \ reported.DeviceMethodStatus \ reported.FirmwareUpdateStatus"
+          "WhiteList"="tags.*,reported.*,reported.Protocol,reported.SupportedMethods,reported.DeviceMethodStatus,reported.FirmwareUpdateStatus" \
         --resource-group ${{ parameters.resourceGroup }}
