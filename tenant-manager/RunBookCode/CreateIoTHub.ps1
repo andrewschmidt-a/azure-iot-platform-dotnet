@@ -190,9 +190,19 @@ $storageAccount = $data.storageAccount
 $tableName = "tenant"
 $table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $tableName -storageAccountName $storageAccount
 $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
-$row.IsIotHubDeployed = $true
-$row.IotHubName = $data.iotHubName
-$row | Update-AzTableRow -Table $table
-
-Write-Output "IotHubName and IsIotHubDeployed updated for tenant $($data.tenantId) in tenant table"
-Write-Output "Finished creating a new IotHub for the Tenant"
+if ($row.RowKey -or $row.PartionKey)
+{
+    # If the row exists, fill in the fields related to the IoT Hub
+    $row.IsIotHubDeployed = $true
+    $row.IotHubName = $data.iotHubName
+    $row | Update-AzTableRow -Table $table
+    Write-Output "IotHubName and IsIotHubDeployed updated for tenant $($data.tenantId) in tenant table"
+    Write-Output "Finished creating a new IotHub for the Tenant"
+}
+else
+{
+    # If the row does not exist, there is a problem with the tenant, it is likely was deleted or cleaned up before this runbook could complete.
+    # Write some information related to this problem.
+    Write-Error "No Table Storage row exists for $($data.tenantId) in the tenant table. The row may have been deleted before the IoT Hub could be fully deployed.";
+    Write-Output "Finished creating a new IotHub, however Table Storage could not be updated. This tenant may be in a failing state, or may already be deleted.";
+}
