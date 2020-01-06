@@ -54,17 +54,15 @@ steps:
       telemetryEvConn=$(az keyvault secret show --name "telemetryEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       twinchangeEvConn=$(az keyvault secret show --name "twinChangeEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       az functionapp config appsettings set --name $devicetwinPropfn \
-        --settings "CosmosConnection"="$cosmosDbConn" \
-          "DeviceOperationsDB"="iot" \
-          "EventHubTelemetry"="$telemetryEvConn" \
-          "DeviceCG"="messagingfunctions" \
-          "DPCacheCG"="dpcache" \
-          "CosmosDB"="pcs-storage" \
-          "CosmosDBRus"="400" \
-          "EventHubLifecycle"="$lifecycleEvConn" \
-          "EventHubName"="lifecycle" \
-          "EventHubNameTwinChange"="twin-change" \
-          "TelemetryEventHubName"="telemetry" \
-          "EventHubTwinChange"="$twinchangeEvConn" \
-          "WhiteList"="tags.*,reported.*, reported.Protocol, reported.SupportedMethods, reported.DeviceMethodStatus, reported.FirmwareUpdateStatus" \
+        --settings \
+          "CosmosDbConnectionString"="$cosmosDbConn" \
+          "TelemetryEventHubConnectionString"="$telemetryEvConn" \
+          "LifecycleEventHubConnectionString"="$lifecycleEvConn" \
+          "TwinChangeEventHubConnectionString"="$twinchangeEvConn" \
+          "DevicePropertiesCacheConsumerGroup"="devicepropertiescache" \
+          "DeviceStreamConsumerGroup"="devicestream" \
+          "CosmosDbRus"="400" \
+          "DeviceStreamDatabaseId"="iot" \
+          "DevicePropertiesCacheDatabaseId"="pcs-storage" \
+          "WhiteList"="tags.*,reported.*,reported.Protocol,reported.SupportedMethods,reported.DeviceMethodStatus,reported.FirmwareUpdateStatus" \
         --resource-group ${{ parameters.resourceGroup }}
