@@ -688,6 +688,11 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID),
                         It.Is<string>(s => s == groupId)),
                     Times.Once);
+
+            this.mockAsaManager
+                .Verify(x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID)),
+                    Times.Once);
         }
 
         private async Task<Logo> SetLogoHelper(Logo logo, string oldImage, string oldName, string oldType, bool isDefault)
@@ -719,11 +724,6 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         It.Is<string>(s => s == Storage.LOGO_KEY),
                         It.Is<string>(s => s == JsonConvert.SerializeObject(logo)),
                         It.Is<string>(s => s == "*")),
-                    Times.Once);
-
-            this.mockAsaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID)),
                     Times.Once);
 
             return result;
