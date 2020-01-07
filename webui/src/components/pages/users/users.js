@@ -17,7 +17,7 @@ import {
   SearchInput
 } from 'components/shared';
 import { UserNewContainer } from './flyouts/userNew';
-import { UserNewSPContainer } from './flyouts/userNewSP/userNewSP.container';
+import { UserNewSPContainer } from './flyouts/userNewServicePrincipal/userNewServicePrincipal.container';
 import { svgs } from 'utilities';
 
 import './users.scss';

@@ -2,4 +2,4 @@
 
 export * from './userDelete';
 export * from './userNew';
-export * from './userNewSP';
+export * from './userNewServicePrincipal';

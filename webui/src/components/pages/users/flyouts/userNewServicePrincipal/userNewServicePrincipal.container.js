@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
-import { UserNewSP } from './userNewSP';
+import { UserNewSP } from './userNewServicePrincipal';
 import {
   epics as usersEpics,
   redux as usersRedux
