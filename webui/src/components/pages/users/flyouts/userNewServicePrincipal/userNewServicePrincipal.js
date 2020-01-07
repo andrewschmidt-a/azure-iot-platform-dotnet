@@ -35,7 +35,7 @@ import {
   Svg
 } from 'components/shared';
 
-import './userNewSP.scss';
+import './userNewServicePrincipal.scss';
 import Config from 'app.config';
 import {Policies} from 'utilities'
 
