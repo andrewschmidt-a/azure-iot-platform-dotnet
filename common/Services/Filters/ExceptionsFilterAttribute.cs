@@ -50,7 +50,8 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             {
                 context.Result = this.GetResponse(HttpStatusCode.InternalServerError, context.Exception);
             }
-            else if (context.Exception is NotAuthorizedException)
+            else if (context.Exception is NotAuthorizedException
+                     || context.Exception is NoAuthorizationException)
             {
                 context.Result = this.GetResponse(HttpStatusCode.Forbidden, context.Exception);
             }
