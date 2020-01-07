@@ -43,8 +43,8 @@ export class IdentityGatewayService {
   static addSP(appid, role) {
 
     return HttpClient.post(`${ENDPOINT}tenants/${appid}`, {
-      "PartitionKey": "",
-      "RowKey": "",
+      "PartitionKey": "", // placeholder not used
+      "RowKey": "",  // placeholder not used
       "Roles": `['${role}']`,
       "Type": "Client Credentials"
     })
