@@ -5,27 +5,23 @@ using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
 using Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager;
-using Mmm.Platform.IoT.AsaManager.Services.Runtime;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.AsaManager.Services
 {
     public class StatusService : IStatusService
     {
         private readonly ILogger _logger;
-        private IServicesConfig _config;
-
         private Dictionary<string, IStatusOperation> dependencies;
 
         public StatusService(
-            IServicesConfig config,
             ILogger<StatusService> logger,
             IIotHubManagerClient iotHubManager,
             IBlobStorageClient blobStorageClient,
             IStorageAdapterClient storageAdapterClient)
         {
             _logger = logger;
-            this._config = config;
 
             this.dependencies = new Dictionary<string, IStatusOperation>
             {
