@@ -185,6 +185,7 @@ namespace Mmm.Platform.IoT.Config.Services
         {
             var value = JsonConvert.SerializeObject(input, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             var response = await this._client.UpdateAsync(DEVICE_GROUP_COLLECTION_ID, id, value, etag);
+            await this._asaManager.BeginConversionAsync(DEVICE_GROUP_COLLECTION_ID);
             return this.CreateGroupServiceModel(response);
         }
 
