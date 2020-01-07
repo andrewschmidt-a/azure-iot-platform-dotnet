@@ -24,8 +24,7 @@ $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
 
 # Authenticate with the service principle
 $connectionName = "AzureRunAsConnection"
-try
-{
+try {
     $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName
 
     "Logging in to Azure..."
@@ -37,11 +36,10 @@ try
     "Logged in."
 }
 catch {
-    if (!$servicePrincipalConnection)
-    {
+    if (!$servicePrincipalConnection) {
         $ErrorMessage = "Connection $connectionName not found."
         throw $ErrorMessage
-    } else{
+    } else {
         Write-Error -Message $_.Exception
         throw $_.Exception
     }
@@ -190,17 +188,16 @@ $storageAccount = $data.storageAccount
 $tableName = "tenant"
 $table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $tableName -storageAccountName $storageAccount
 $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
-$row.IsIotHubDeployed = $true
-$row.IotHubName = $data.iotHubName
-# column IotHubConnectionString will not exist in the Tenant table, so it needs to be added at very first tenant created in the table
-$ifexists = ($row | Get-Member -Name "IotHubConnectionString")
-if ([string]::IsNullOrEmpty($ifexists)){
-    $row | Add-Member -Name "IotHubConnectionString" -Value $connectionString -Type NoteProperty
+if ($row.RowKey -and $row.PartitionKey) {
+    # If the rowkey and partition key are non-empty values, the row exists.
+    # If the row exists, fill in the fields related to the IoT Hub
+    $row.IsIotHubDeployed = $true
+    $row.IotHubName = $data.iotHubName
+    $row | Update-AzTableRow -Table $table
+    Write-Output "IotHubName and IsIotHubDeployed updated for tenant $($data.tenantId) in tenant table"
+    Write-Output "Finished creating a new IotHub for the Tenant"
+} else {
+    # If the row does not exist, there is a problem with the tenant, it most liekly was deleted or cleaned up before this runbook could complete.
+    Write-Error "No Table Storage row exists for $($data.tenantId) in the tenant table. The row may have been deleted before the IoT Hub could be fully deployed.";
+    Write-Output "Finished creating a new IotHub, however Table Storage could not be updated. This tenant may be in a failing state, or may already be deleted.";
 }
-else {
-    $row.IotHubConnectionString = $connectionString
-}
-$row | Update-AzTableRow -Table $table
-
-Write-Output "IotHubConnectionString updated for tenant $($data.tenantId) in tenant table"
-Write-Output "Finished creating a new IotHub for the Tenant"
