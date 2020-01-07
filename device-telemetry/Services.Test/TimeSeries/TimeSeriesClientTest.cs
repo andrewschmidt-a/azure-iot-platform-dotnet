@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Http;
@@ -16,17 +16,17 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
     {
         private readonly Mock<ILogger<TimeSeriesClient>> _logger;
         private readonly Mock<IHttpClient> httpClient;
-        private Mock<IServicesConfig> servicesConfig;
+        private Mock<AppConfig> config;
         private TimeSeriesClient client;
 
         public TimeSeriesClientTest()
         {
             _logger = new Mock<ILogger<TimeSeriesClient>>();
-            this.servicesConfig = new Mock<IServicesConfig>();
+            this.config = new Mock<AppConfig>();
             this.httpClient = new Mock<IHttpClient>();
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
-                this.servicesConfig.Object,
+                this.config.Object,
                 _logger.Object);
         }
 
@@ -68,27 +68,27 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
 
         private void SetupClientWithNullConfigValues()
         {
-            this.servicesConfig = new Mock<IServicesConfig>();
+            this.config = new Mock<AppConfig>();
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
-                this.servicesConfig.Object,
+                this.config.Object,
                 _logger.Object);
         }
 
         private void SetupClientWithConfigValues()
         {
-            this.servicesConfig.Setup(f => f.TimeSeriesFqdn).Returns("test123");
-            this.servicesConfig.Setup(f => f.TimeSeriesAudience).Returns("test123");
-            this.servicesConfig.Setup(f => f.TimeSertiesApiVersion).Returns("2016-12-12-test");
-            this.servicesConfig.Setup(f => f.TimeSeriesTimeout).Returns("PT20S");
-            this.servicesConfig.Setup(f => f.ActiveDirectoryTenant).Returns("test123");
-            this.servicesConfig.Setup(f => f.ActiveDirectoryAppId).Returns("test123");
-            this.servicesConfig.Setup(f => f.ActiveDirectoryAppSecret).Returns("test123");
-            this.servicesConfig.Setup(f => f.TimeSeriesAuthority).Returns("https://login.testing.net/");
+            this.config.Setup(f => f.TelemetryService.TimeSeries.TsiDataAccessFqdn).Returns("test123");
+            this.config.Setup(f => f.TelemetryService.TimeSeries.Audience).Returns("test123");
+            this.config.Setup(f => f.TelemetryService.TimeSeries.ApiVersion).Returns("2016-12-12-test");
+            this.config.Setup(f => f.TelemetryService.TimeSeries.Timeout).Returns("PT20S");
+            this.config.Setup(f => f.Global.AzureActiveDirectory.AadTenantId).Returns("test123");
+            this.config.Setup(f => f.Global.AzureActiveDirectory.AadAppId).Returns("test123");
+            this.config.Setup(f => f.Global.AzureActiveDirectory.AadAppSecret).Returns("test123");
+            this.config.Setup(f => f.TelemetryService.TimeSeries.Authority).Returns("https://login.testing.net/");
 
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
-                this.servicesConfig.Object,
+                this.config.Object,
                 _logger.Object);
         }
     }

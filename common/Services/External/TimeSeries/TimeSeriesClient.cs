@@ -11,6 +11,7 @@ using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 {
@@ -58,19 +59,19 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 
         public TimeSeriesClient(
             IHttpClient httpClient,
-            ITimeSeriesClientConfig config,
+            AppConfig config,
             ILogger<TimeSeriesClient> logger)
         {
             this.httpClient = httpClient;
             _logger = logger;
-            this.authority = config.TimeSeriesAuthority;
-            this.applicationId = config.ActiveDirectoryAppId;
-            this.applicationSecret = config.ActiveDirectoryAppSecret;
-            this.tenant = config.ActiveDirectoryTenant;
-            this.fqdn = config.TimeSeriesFqdn;
-            this.host = config.TimeSeriesAudience;
-            this.apiVersion = config.TimeSertiesApiVersion;
-            this.timeout = config.TimeSeriesTimeout;
+            this.authority = config.TelemetryService.TimeSeries.Authority;
+            this.applicationId = config.Global.AzureActiveDirectory.AadAppId;
+            this.applicationSecret = config.Global.AzureActiveDirectory.AadAppSecret;
+            this.tenant = config.Global.AzureActiveDirectory.AadTenantId;
+            this.fqdn = config.TelemetryService.TimeSeries.TsiDataAccessFqdn;
+            this.host = config.TelemetryService.TimeSeries.Audience;
+            this.apiVersion = config.TelemetryService.TimeSeries.ApiVersion;
+            this.timeout = config.TelemetryService.TimeSeries.Timeout;
         }
 
         /// <summary>

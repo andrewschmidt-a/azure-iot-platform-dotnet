@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 {
@@ -26,7 +27,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
         private DocumentClient client;
 
         public StorageClient(
-            IStorageClientConfig config,
+            AppConfig config,
             ILogger<StorageClient> logger)
         {
             this.SetValuesFromConfig(config);
@@ -34,16 +35,16 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             this.client = this.GetDocumentClient();
         }
 
-        private void SetValuesFromConfig(IStorageClientConfig config)
+        private void SetValuesFromConfig(AppConfig config)
         {
-            if (String.IsNullOrEmpty(config.CosmosDbConnectionString))
+            if (String.IsNullOrEmpty(config.Global.CosmosDb.DocumentDbConnectionString))
             {
                 throw new ArgumentNullException("The CosmosDbConnectionString in the IStorageClientConfig was null or empty. The StorageClient cannot be created with an empty connection string.");
             }
 
             try
             {
-                Match match = Regex.Match(config.CosmosDbConnectionString, CONNECTION_STRING_VALUE_REGEX);
+                Match match = Regex.Match(config.Global.CosmosDb.DocumentDbConnectionString, CONNECTION_STRING_VALUE_REGEX);
 
                 // Get the storage uri from the regular expression match
                 Uri storageUriEndpoint;
@@ -67,7 +68,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
 
             // handling exceptions is not necessary here - the value can be left null if not configured.
-            this.storageThroughput = config.CosmosDbThroughput;
+            this.storageThroughput = config.Global.CosmosDb.Rus;
         }
 
         public async Task DeleteCollectionAsync(

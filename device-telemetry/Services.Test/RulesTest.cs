@@ -6,7 +6,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
@@ -19,6 +18,7 @@ using Newtonsoft.Json;
 using Xunit;
 using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
 using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private readonly Mock<IStorageAdapterClient> storageAdapter;
         private readonly Mock<IAsaManagerClient> asaManager;
         private readonly Mock<ILogger<Rules>> _logger;
-        private readonly IServicesConfig servicesConfig;
+        private readonly AppConfig config;
         private readonly Mock<IRules> rulesMock;
         private readonly Mock<IAlarms> alarms;
         private readonly Mock<IHttpClient> httpClientMock;
@@ -44,16 +44,19 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.storageAdapter = new Mock<IStorageAdapterClient>();
             this.asaManager = new Mock<IAsaManagerClient>();
             this._logger = new Mock<ILogger<Rules>>();
-            this.servicesConfig = new ServicesConfig
+            this.config = new AppConfig
             {
-                DiagnosticsApiUrl = "http://localhost:9006/v1",
-                DiagnosticsMaxLogRetries = 3
+                ExternalDependencies = new ExternalDependenciesConfig
+                {
+                    DiagnosticsWebServiceUrl = "http://localhost:9006/v1",
+                    DiagnosticsMaxLogRetries = 3
+                }
             };
             this.rulesMock = new Mock<IRules>();
             this.alarms = new Mock<IAlarms>();
             this.httpClientMock = new Mock<IHttpClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
-            this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.servicesConfig, new Mock<ILogger<DiagnosticsClient>>().Object, this.httpContextAccessor.Object);
+            this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.config, new Mock<ILogger<DiagnosticsClient>>().Object, this.httpContextAccessor.Object);
 
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
                 {{"TenantID", TENANT_ID}});

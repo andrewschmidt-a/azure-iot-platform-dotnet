@@ -10,11 +10,6 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
     {
         private ConfigurationClient client;
 
-        public AppConfigurationHelper(IAppConfigClientConfig config)
-        {
-            this.client = new ConfigurationClient(config.ApplicationConfigurationConnectionString);
-        }
-
         public AppConfigurationHelper(AppConfig config)
         {
             this.client = new ConfigurationClient(config.AppConfigurationConnectionString);

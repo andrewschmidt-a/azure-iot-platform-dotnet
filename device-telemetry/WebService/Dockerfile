@@ -13,6 +13,7 @@ COPY common common
 COPY device-telemetry device-telemetry
 
 FROM restore AS publish
+ARG AppConfigurationConnectionString=
 WORKDIR /src/device-telemetry/WebService
 RUN dotnet publish WebService.csproj \
 --output /app \

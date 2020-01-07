@@ -10,11 +10,11 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
@@ -56,7 +56,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
     {
         private readonly ILogger _logger;
         private readonly IStorageClient storageClient;
-        private readonly IServicesConfig _config;
+        private readonly AppConfig config;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IAppConfigurationHelper _appConfigurationHelper;
 
@@ -89,17 +89,17 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         }
 
         public Alarms(
-            IServicesConfig config,
+            AppConfig config,
             IStorageClient storageClient,
             ILogger<Alarms> logger,
             IHttpContextAccessor contextAccessor,
             IAppConfigurationHelper appConfigurationHelper)
         {
             this.storageClient = storageClient;
-            this.databaseName = config.AlarmsConfig.StorageConfig.CosmosDbDatabase;
+            this.databaseName = config.TelemetryService.Alarms.Database;
             _logger = logger;
-            this.maxDeleteRetryCount = config.AlarmsConfig.MaxDeleteRetries;
-            this._config = config;
+            this.maxDeleteRetryCount = config.TelemetryService.Alarms.MaxDeleteRetries;
+            this.config = config;
             this._httpContextAccessor = contextAccessor;
             this._appConfigurationHelper = appConfigurationHelper;
 
