@@ -9,7 +9,7 @@
   <PropertyGroup>
     <KeyVaultName>key-vault-odin-kyle</KeyVaultName>
     <ConfigClassFileBuilderOutputPath>Config</ConfigClassFileBuilderOutputPath>
-    <ConfigClassFileBuilderGeneratedFileNameSuffix>.Generated$(DefaultLanguageSourceExtension)</ConfigClassFileBuilderGeneratedFileNameSuffix>
+    <ConfigClassFileBuilderGeneratedFileNameSuffix>.Generated.cs</ConfigClassFileBuilderGeneratedFileNameSuffix>
     <ConfigClassFileBuilderGeneratedCodeNamespace>$(RootNamespace).Config</ConfigClassFileBuilderGeneratedCodeNamespace>
     <DefaultLogLevel>Information</DefaultLogLevel>
   </PropertyGroup>
