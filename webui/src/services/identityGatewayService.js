@@ -39,7 +39,7 @@ export class IdentityGatewayService {
     .map(t=> toUserTenantModel([t]));
   }
 
-  /** Invite a new User */
+  /** Add a new Service Principal */
   static addSP(appid, role) {
 
     return HttpClient.post(`${ENDPOINT}tenants/${appid}`, {
