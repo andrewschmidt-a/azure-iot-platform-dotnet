@@ -246,7 +246,7 @@
           "apply": "Send invite",
           "applySuccess": "user successfully invited!"
         },
-        "sp": {
+        "servicePrincipal": {
           "label":"Service principal app id",
           "apply": "Add",
           "applySuccess": "Added service principal"

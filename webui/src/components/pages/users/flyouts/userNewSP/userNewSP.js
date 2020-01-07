@@ -44,7 +44,7 @@ const guid = x => x.match(isGuidRegex);
 const stringToInt = x => x === '' || x === '-' ? x : int(x);
 
 const userOptions = {
-  labelName: 'users.flyouts.new.sp.label',
+  labelName: 'users.flyouts.new.servicePrincipal.label',
   user: {
     labelName: 'users.flyouts.new.user.user',
     value: false
@@ -158,7 +158,7 @@ export class UserNewSP extends LinkedComponent {
     if (isPending) {
       return t('users.flyouts.new.pending');
     } else if (changesApplied) {
-      return t('users.flyouts.new.sp.applySuccess');
+      return t('users.flyouts.new.servicePrincipal.applySuccess');
     } else {
       return t('users.flyouts.new.affected');
     }
@@ -207,7 +207,7 @@ export class UserNewSP extends LinkedComponent {
             {
               !changesApplied &&
               <BtnToolbar>
-                <Btn primary={true} disabled={isPending || !this.formIsValid()} type="submit">{t('users.flyouts.new.sp.apply')}</Btn>
+                <Btn primary={true} disabled={isPending || !this.formIsValid()} type="submit">{t('users.flyouts.new.servicePrincipal.apply')}</Btn>
                 <Btn svg={svgs.cancelX} onClick={() => this.onFlyoutClose('Users_CancelClick')}>{t('users.flyouts.new.cancel')}</Btn>
               </BtnToolbar>
             }
