@@ -3,18 +3,18 @@
 import React from 'react';
 import update from 'immutability-helper';
 
-import { IdentityGatewayService } from 'services';
+import { IdentityGatewayService } from './node_modules/services';
 import {
   permissions,
   toDiagnosticsModel
-} from 'services/models';
+} from './node_modules/services/models';
 import {
   copyToClipboard,
   int,
   LinkedComponent,
   svgs,
   Validator
-} from 'utilities';
+} from './node_modules/utilities';
 import {
   AjaxError,
   Btn,
@@ -33,11 +33,11 @@ import {
   SummaryCount,
   SummarySection,
   Svg
-} from 'components/shared';
+} from './node_modules/components/shared';
 
 import './userNewServicePrincipal.scss';
-import Config from 'app.config';
-import {Policies} from 'utilities'
+import Config from './node_modules/app.config';
+import {Policies} from './node_modules/utilities'
 
 const isGuidRegex = /^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$/;
 const guid = x => x.match(isGuidRegex);

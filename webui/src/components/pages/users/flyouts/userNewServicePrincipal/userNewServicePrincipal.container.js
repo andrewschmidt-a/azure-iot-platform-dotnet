@@ -2,7 +2,7 @@
 
 import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
-import { UserNewSP } from './userNewServicePrincipal';
+import { UserNewServicePrincipal } from './userNewServicePrincipal';
 import {
   epics as usersEpics,
   redux as usersRedux
@@ -22,4 +22,4 @@ const mapDispatchToProps = dispatch => ({
   logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel))
 });
 
-export const UserNewSPContainer = withNamespaces()(connect(mapStateToProps, mapDispatchToProps)(UserNewSP));
+export const UserNewServicePrincipalContainer = withNamespaces()(connect(mapStateToProps, mapDispatchToProps)(UserNewServicePrincipal));
