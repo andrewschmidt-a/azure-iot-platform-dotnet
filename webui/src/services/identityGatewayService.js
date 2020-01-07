@@ -46,7 +46,8 @@ export class IdentityGatewayService {
       "PartitionKey": "", // placeholder not used
       "RowKey": "",  // placeholder not used
       "Roles": `['${role}']`,
-      "Type": "Client Credentials"
+      "Type": "Client Credentials",
+      "Name": appid
     })
     .map(t=> toUserTenantModel([t]));
   }

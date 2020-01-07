@@ -31,8 +31,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
             this.PartitionKey = input.UserId;
             this.RowKey = input.Tenant;
             this.Roles = input.Roles;
-            this.Name = !string.IsNullOrEmpty(input.Name) ? input.Name : this.PartitionKey;
-            this.Type = !string.IsNullOrEmpty(input.Type) ? input.Type : "Member";
+            this.Name = input.Name;
+            this.Type = input.Type;
         }
 
         public UserTenantModel(DynamicTableEntity tableEntity)
