@@ -239,9 +239,17 @@
     "flyouts":{
       "new": {
         "contextMenuName": "New user",
+        "addServicePrincipal": "Add Service Principal",
         "title": "Invite users",
         "user": {
-          "label":"Email Address"
+          "label":"Email Address",
+          "apply": "Send invite",
+          "applySuccess": "user successfully invited!"
+        },
+        "sp": {
+          "label":"Service principal app id",
+          "apply": "Add",
+          "applySuccess": "Added service principal"
         },
         "roles": {
           "hint": "Select user role",
@@ -251,11 +259,11 @@
         "cancel": "Cancel",
         "validation": {
           "required": "Is required",
-          "invalid": "Invalid email provided"
+          "invalid": "Invalid email provided",
+          "invalidGuid": "Invalid Guid"
         },
         "summaryHeader": "Summary",
         "pending": "Deleting devices... ",
-        "applySuccess": "user successfully invited!",
         "close": "Close"
       },
       "delete": {

@@ -97,7 +97,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             var claims = new List<Claim>();
             claims.Add(new Claim("client_id", input.client_id));
             claims.Add(new Claim("sub", input.client_id));
-            claims.Add(new Claim("name", "Client Credentials"));
+            claims.Add(new Claim("name", input.client_id));
+            claims.Add(new Claim("type", "Client Credentials"));
 
             string tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(claims, input.tenant, "IoTPlatform", null));
 

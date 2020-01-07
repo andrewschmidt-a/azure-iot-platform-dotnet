@@ -38,4 +38,16 @@ export class IdentityGatewayService {
     })
     .map(t=> toUserTenantModel([t]));
   }
+
+  /** Invite a new User */
+  static addSP(appid, role) {
+
+    return HttpClient.post(`${ENDPOINT}tenants/${appid}`, {
+      "PartitionKey": "",
+      "RowKey": "",
+      "Roles": `['${role}']`,
+      "Type": "Client Credentials"
+    })
+    .map(t=> toUserTenantModel([t]));
+  }
 }

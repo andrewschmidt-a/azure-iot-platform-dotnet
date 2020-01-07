@@ -17,6 +17,7 @@ import {
   SearchInput
 } from 'components/shared';
 import { UserNewContainer } from './flyouts/userNew';
+import { UserNewSPContainer } from './flyouts/userNewSP/userNewSP.container';
 import { svgs } from 'utilities';
 
 import './users.scss';
@@ -84,6 +85,7 @@ export class Users extends Component {
       t: this.props.t
     };
     const newUserFlyoutOpen = this.state.openFlyoutName === 'new-user';
+    const newSPFlyoutOpen = this.state.openFlyoutName === 'new-sp';
 
     const error = userGroupError || userError;
 
@@ -111,6 +113,7 @@ export class Users extends Component {
           {!!error && <AjaxError t={t} error={error} />}
           {!error && <UsersGridContainer {...gridProps} />}
           {newUserFlyoutOpen && <UserNewContainer onClose={this.closeFlyout} />}
+          {newSPFlyoutOpen && <UserNewSPContainer onClose={this.closeFlyout} />}
         </PageContent>
       </ComponentArray>
     );
