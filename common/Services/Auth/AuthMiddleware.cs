@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -12,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.External;
 
 namespace Mmm.Platform.IoT.Common.Services.Auth
@@ -50,31 +49,28 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
         private readonly RequestDelegate requestDelegate;
         private readonly IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan;
-        private readonly IClientAuthConfig config;
+        private readonly AppConfig config;
         private readonly ILogger _logger;
         private TokenValidationParameters tokenValidationParams;
         private readonly bool authRequired;
         private bool tokenValidationInitialized;
         private readonly IUserManagementClient userManagementClient;
-        private readonly IAuthMiddlewareConfig authMiddlewareConfig;
         private readonly List<string> allowedUrls = new List<string>() { "/v1/status", "/api/status", "/.well-known/openid-configuration", "/connect" };
 
         public AuthMiddleware(
             RequestDelegate requestDelegate,
             IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan,
-            IClientAuthConfig config,
+            AppConfig config,
             IUserManagementClient userManagementClient,
-            ILogger<AuthMiddleware> logger,
-            IAuthMiddlewareConfig authMiddlewareConfig)
+            ILogger<AuthMiddleware> logger)
         {
             this.requestDelegate = requestDelegate;
             this.openIdCfgMan = openIdCfgMan;
             this.config = config;
             _logger = logger;
-            this.authRequired = config.AuthRequired;
+            this.authRequired = config.Global.AuthRequired;
             this.tokenValidationInitialized = false;
             this.userManagementClient = userManagementClient;
-            this.authMiddlewareConfig = authMiddlewareConfig;
 
             // This will show in development mode, or in case auth is turned off
             if (!this.authRequired)
@@ -105,7 +101,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             var token = string.Empty;
 
             // Store this setting to skip validating authorization in the controller if enabled
-            context.Request.SetAuthRequired(this.config.AuthRequired);
+            context.Request.SetAuthRequired(config.Global.AuthRequired);
 
             context.Request.SetExternalRequest(true);
 
@@ -188,7 +184,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                 var jwtToken = new JwtSecurityToken(token);
 
                 // Validate the signature algorithm
-                if (this.config.JwtAllowedAlgos.Contains(jwtToken.SignatureAlgorithm))
+                if (config.Global.ClientAuth.Jwt.AllowedAlgorithms.Contains(jwtToken.SignatureAlgorithm))
                 {
                     // Store the user info in the request context, so the authorization
                     // header doesn't need to be parse again later in the User controller.
@@ -203,14 +199,20 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                     {
                         foreach (string role in roles)
                         {
-                            allowedActions.AddRange(this.authMiddlewareConfig.UserPermissions[role]);
-                        }
+                            if (!Permissions.Roles.ContainsKey(role))
+                            {
+                                _logger.LogWarning("Role claim specifies a role '{role}' that does not exist", role);
+                                continue;
+                            }
 
+                            allowedActions.AddRange(Permissions.Roles[role]);
+                        }
                     }
                     else
                     {
                         _logger.LogWarning("JWT token doesn't include any role claims.");
                     }
+
                     //DISBABLED RBAC -- adding all access 
                     context.Request.SetCurrentUserAllowedActions(allowedActions);
 
@@ -260,15 +262,15 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
                     // Validate the token issuer
                     ValidateIssuer = true,
-                    ValidIssuer = this.config.JwtIssuer,
+                    ValidIssuer = config.Global.ClientAuth.Jwt.AuthIssuer,
 
                     // Validate the token audience
                     ValidateAudience = false,
-                    ValidAudience = this.config.JwtAudience,
+                    ValidAudience = config.Global.ClientAuth.Jwt.Audience,
 
                     // Validate token lifetime
                     ValidateLifetime = true,
-                    ClockSkew = this.config.JwtClockSkew
+                    ClockSkew = new TimeSpan(0, 0, config.Global.ClientAuth.Jwt.ClockSkewSeconds)
                 };
 
                 this.tokenValidationInitialized = true;

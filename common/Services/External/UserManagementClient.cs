@@ -9,6 +9,7 @@ using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Common.Services.External
 {
@@ -18,11 +19,9 @@ namespace Mmm.Platform.IoT.Common.Services.External
         private readonly string serviceUri;
         private const string DEFAULT_USER_ID = "default";
 
-        public UserManagementClient(
-            IUserManagementClientConfig userManagementClientConfig,
-            IExternalRequestHelper requestHelper)
+        public UserManagementClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
-            this.serviceUri = userManagementClientConfig.UserManagementApiUrl;
+            this.serviceUri = config.ExternalDependencies.AuthWebServiceUrl;
             this._requestHelper = requestHelper;
         }
 

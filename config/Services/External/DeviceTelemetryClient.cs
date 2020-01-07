@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.Config.Services.Helpers;
-using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services.External
 {
@@ -24,11 +24,11 @@ namespace Mmm.Platform.IoT.Config.Services.External
         private const string TENANT_ID = "TenantID";
         public DeviceTelemetryClient(
             IHttpClientWrapper httpClient,
-            IServicesConfig config,
+            AppConfig config,
             IHttpContextAccessor httpContextAccessor)
         {
             this.httpClient = httpClient;
-            this.serviceUri = config.TelemetryApiUrl;
+            this.serviceUri = config.ExternalDependencies.TelemetryWebServiceUrl;
             this._httpContextAccessor = httpContextAccessor;
         }
 

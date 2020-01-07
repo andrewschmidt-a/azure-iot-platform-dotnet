@@ -1,5 +1,6 @@
 using System.Net.Http;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
 
@@ -10,9 +11,9 @@ namespace Mmm.Platform.IoT.Common.Services.External.AsaManager
         private readonly string serviceUrl;
         private readonly IExternalRequestHelper _requestHelper;
 
-        public AsaManagerClient(IAsaManagerClientConfig config, IExternalRequestHelper requestHelper)
+        public AsaManagerClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
-            this.serviceUrl = config.AsaManagerApiUrl;
+            this.serviceUrl = config.ExternalDependencies.AsaManagerWebServiceUrl;
             this._requestHelper = requestHelper;
         }
 

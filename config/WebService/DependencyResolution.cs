@@ -7,15 +7,11 @@ using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Auth;
-using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Config.Services;
 using Mmm.Platform.IoT.Config.Services.Models.Actions;
 using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Runtime;
-using Mmm.Platform.IoT.Config.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.WebService
 {
@@ -24,17 +20,10 @@ namespace Mmm.Platform.IoT.Config.WebService
         protected override void SetupCustomRules(ContainerBuilder builder)
         {
             // Auto-wire additional assemblies
-            var assembly = typeof(IServicesConfig).GetTypeInfo().Assembly;
+            var assembly = typeof(StatusService).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
 
-            builder.Register(context => new Runtime.Config(context.Resolve<ConfigData>())).As<IConfig>().SingleInstance();
-            builder.Register(context => context.Resolve<IConfig>().ClientAuthConfig).As<IClientAuthConfig>().SingleInstance();
-            builder.Register(context => context.Resolve<IConfig>().ServicesConfig).As<IServicesConfig>().SingleInstance();
-            builder.Register(context => context.Resolve<IServicesConfig>()).As<IStorageAdapterClientConfig>().SingleInstance();
-            builder.Register(context => context.Resolve<IServicesConfig>()).As<IAuthMiddlewareConfig>().SingleInstance();
-            builder.Register(context => context.Resolve<IServicesConfig>()).As<IUserManagementClientConfig>().SingleInstance();
-            builder.Register(context => context.Resolve<IServicesConfig>()).As<IAsaManagerClientConfig>().SingleInstance();
-            builder.Register(context => GetOpenIdConnectManager(context.Resolve<IConfig>())).As<IConfigurationManager<OpenIdConnectConfiguration>>().SingleInstance();
+            builder.Register(context => GetOpenIdConnectManager(context.Resolve<AppConfig>())).As<IConfigurationManager<OpenIdConnectConfiguration>>().SingleInstance();
             builder.RegisterType<CorsSetup>().As<ICorsSetup>().SingleInstance();
 
             // By default Autofac uses a request lifetime, creating new objects
@@ -45,23 +34,24 @@ namespace Mmm.Platform.IoT.Config.WebService
             builder.RegisterType<AzureResourceManagerClient>().As<IAzureResourceManagerClient>().SingleInstance();
             builder.RegisterType<EmailActionSettings>().As<EmailActionSettings>().SingleInstance();
             builder.RegisterType<Actions>().As<IActions>().SingleInstance();
+            builder.RegisterType<StatusService>().As<IStatusService>();
         }
 
         // Prepare the OpenId Connect configuration manager, responsibile
         // for retrieving the JWT signing keys and cache them in memory.
         // See: https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4
-        private static IConfigurationManager<OpenIdConnectConfiguration> GetOpenIdConnectManager(IConfig config)
+        private static IConfigurationManager<OpenIdConnectConfiguration> GetOpenIdConnectManager(AppConfig config)
         {
             // Avoid starting the real OpenId Connect manager if not needed, which would
             // start throwing errors when attempting to fetch certificates.
-            if (!config.ClientAuthConfig.AuthRequired)
+            if (!config.Global.AuthRequired)
             {
                 return new StaticConfigurationManager<OpenIdConnectConfiguration>(
                     new OpenIdConnectConfiguration());
             }
 
             return new ConfigurationManager<OpenIdConnectConfiguration>(
-                config.ClientAuthConfig.JwtIssuer + "/.well-known/openid-configuration",
+                config.Global.ClientAuth.Jwt.AuthIssuer + "/.well-known/openid-configuration",
                 new OpenIdConnectConfigurationRetriever())
             {
                 // How often the list of keys in memory is refreshed. Default is 24 hours.

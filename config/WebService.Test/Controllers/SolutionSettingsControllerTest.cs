@@ -7,12 +7,12 @@ using Mmm.Platform.IoT.Config.Services;
 using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Models;
 using Mmm.Platform.IoT.Config.Services.Models.Actions;
-using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
@@ -226,7 +226,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             {
                 this.controller.ControllerContext.HttpContext = mockContext.Object;
 
-                var config = new ServicesConfig();
+                var config = new AppConfig();
                 var action = new EmailActionSettings(this.mockResourceManagementClient.Object, config, new Mock<ILogger<EmailActionSettings>>().Object);
                 var actionsList = new List<IActionSettings>
                 {

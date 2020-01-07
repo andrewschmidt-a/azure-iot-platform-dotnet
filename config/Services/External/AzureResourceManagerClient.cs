@@ -3,10 +3,10 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services.External
 {
@@ -19,11 +19,11 @@ namespace Mmm.Platform.IoT.Config.Services.External
     {
         private readonly IHttpClient httpClient;
         private readonly IUserManagementClient userManagementClient;
-        private readonly IServicesConfig config;
+        private readonly AppConfig config;
 
         public AzureResourceManagerClient(
             IHttpClient httpClient,
-            IServicesConfig config,
+            AppConfig config,
             IUserManagementClient userManagementClient)
         {
             this.httpClient = httpClient;
@@ -33,21 +33,21 @@ namespace Mmm.Platform.IoT.Config.Services.External
 
         public async Task<bool> IsOffice365EnabledAsync()
         {
-            if (string.IsNullOrEmpty(this.config.SubscriptionId) ||
-                string.IsNullOrEmpty(this.config.ResourceGroup) ||
-                string.IsNullOrEmpty(this.config.ArmEndpointUrl))
+            if (string.IsNullOrEmpty(config.ConfigService.ConfigServiceActions.SubscriptionId) ||
+                string.IsNullOrEmpty(config.ConfigService.ConfigServiceActions.SolutionName) ||
+                string.IsNullOrEmpty(config.ConfigService.ConfigServiceActions.ArmEndpointUrl))
             {
                 throw new InvalidConfigurationException("Subscription Id, Resource Group, and Arm Endpoint Url must be specified" +
                                                         "in the environment variable configuration for this " +
                                                         "solution in order to use this API.");
             }
 
-            var logicAppTestConnectionUri = this.config.ArmEndpointUrl +
-                                               $"/subscriptions/{this.config.SubscriptionId}/" +
-                                               $"resourceGroups/{this.config.ResourceGroup}/" +
+            var logicAppTestConnectionUri = config.ConfigService.ConfigServiceActions.ArmEndpointUrl +
+                                               $"/subscriptions/{config.ConfigService.ConfigServiceActions.SubscriptionId}/" +
+                                               $"resourceGroups/{config.ConfigService.ConfigServiceActions.SolutionName}/" +
                                                "providers/Microsoft.Web/connections/" +
                                                "office365-connector/extensions/proxy/testconnection?" +
-                                               $"api-version={this.config.ManagementApiVersion}";
+                                               $"api-version={config.ConfigService.ConfigServiceActions.ManagementApiVersion}";
 
             var request = await this.CreateRequest(logicAppTestConnectionUri);
 

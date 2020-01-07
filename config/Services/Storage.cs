@@ -8,13 +8,13 @@ using Microsoft.Azure.Devices;
 using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation;
 using Mmm.Platform.IoT.Config.Services.Models;
-using Mmm.Platform.IoT.Config.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services
 {
@@ -44,7 +44,7 @@ namespace Mmm.Platform.IoT.Config.Services
     {
         private readonly IStorageAdapterClient _client;
         private readonly IAsaManagerClient _asaManager;
-        private readonly IServicesConfig _config;
+        private readonly AppConfig config;
         private readonly ILogger _logger;
 
         public const string SOLUTION_COLLECTION_ID = "solution-settings";
@@ -60,12 +60,12 @@ namespace Mmm.Platform.IoT.Config.Services
         public Storage(
             IStorageAdapterClient client,
             IAsaManagerClient asaManager,
-            IServicesConfig config,
+            AppConfig config,
             ILogger<Storage> logger)
         {
             this._client = client;
             this._asaManager = asaManager;
-            this._config = config;
+            this.config = config;
             this._logger = logger;
         }
 
@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.Config.Services
         {
             if (theme[AZURE_MAPS_KEY] == null)
             {
-                theme[AZURE_MAPS_KEY] = this._config.AzureMapsKey;
+                theme[AZURE_MAPS_KEY] = config.ConfigService.AzureMapsKey;
             }
         }
 

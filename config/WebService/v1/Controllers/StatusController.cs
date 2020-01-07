@@ -3,8 +3,8 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.Config.WebService.Runtime;
 using Mmm.Platform.IoT.Config.WebService.v1.Models;
 
 namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
@@ -12,10 +12,10 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
     [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public sealed class StatusController : Controller
     {
-        private readonly IConfig config;
+        private readonly AppConfig config;
         private readonly IStatusService statusService;
 
-        public StatusController(IConfig config, IStatusService statusService)
+        public StatusController(AppConfig config, IStatusService statusService)
         {
             this.config = config;
             this.statusService = statusService;
@@ -26,8 +26,8 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
         {
             var result = new StatusApiModel(await this.statusService.GetStatusAsync(false));
 
-            result.Properties.Add("AuthRequired", this.config.ClientAuthConfig?.AuthRequired.ToString());
-            result.Properties.Add("Port", this.config.Port.ToString());
+            result.Properties.Add("AuthRequired", config.Global.ClientAuth?.AuthRequired.ToString());
+            result.Properties.Add("Port", config.ConfigService.WebServicePort.ToString());
             return result;
         }
         [HttpGet("ping")]

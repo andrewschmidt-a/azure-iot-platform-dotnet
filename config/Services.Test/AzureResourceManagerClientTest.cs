@@ -3,13 +3,13 @@
 using System.Net;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services.Test
 {
@@ -33,12 +33,18 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             this.mockUserManagementClient = new Mock<IUserManagementClient>();
             this.client = new AzureResourceManagerClient(
                 this.mockHttpClient.Object,
-                new ServicesConfig
+                new AppConfig
                 {
-                    SubscriptionId = MOCK_SUBSCRIPTION_ID,
-                    ResourceGroup = MOCK_RESOURCE_GROUP,
-                    ArmEndpointUrl = MOCK_ARM_ENDPOINT_URL,
-                    ManagementApiVersion = MOCK_API_VERSION
+                    ConfigService = new ConfigServiceConfig
+                    {
+                        ConfigServiceActions = new ConfigServiceActionsConfig
+                        {
+                            SubscriptionId = MOCK_SUBSCRIPTION_ID,
+                            SolutionName = MOCK_RESOURCE_GROUP,
+                            ArmEndpointUrl = MOCK_ARM_ENDPOINT_URL,
+                            ManagementApiVersion = MOCK_API_VERSION
+                        }
+                    }
                 },
                 this.mockUserManagementClient.Object);
 

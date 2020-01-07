@@ -5,18 +5,17 @@ using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.Common.Services.Auth
 {
     public class CorsSetup : ICorsSetup
     {
-        private readonly IClientAuthConfig config;
+        private readonly AppConfig config;
         private readonly ILogger _logger;
 
-        public CorsSetup(
-            IClientAuthConfig config,
-            ILogger<CorsSetup> logger)
+        public CorsSetup(AppConfig config, ILogger<CorsSetup> logger)
         {
             this.config = config;
             _logger = logger;
@@ -24,7 +23,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
         public void UseMiddleware(IApplicationBuilder app)
         {
-            if (this.config.CorsEnabled)
+            if (config.Global.ClientAuth.CorsEnabled)
             {
                 _logger.LogWarning("CORS is enabled");
                 app.UseCors(this.BuildCorsPolicy);
@@ -40,16 +39,16 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             CorsWhitelistModel model;
             try
             {
-                model = JsonConvert.DeserializeObject<CorsWhitelistModel>(this.config.CorsWhitelist);
+                model = JsonConvert.DeserializeObject<CorsWhitelistModel>(config.Global.ClientAuth.CorsWhitelist);
                 if (model == null)
                 {
-                    _logger.LogError("Ignoring invalid CORS whitelist: '{whitelist}'", config.CorsWhitelist);
+                    _logger.LogError("Ignoring invalid CORS whitelist: '{whitelist}'", config.Global.ClientAuth.CorsWhitelist);
                     return;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Ignoring invalid CORS whitelist: '{whitelist}'", config.CorsWhitelist);
+                _logger.LogError(ex, "Ignoring invalid CORS whitelist: '{whitelist}'", config.Global.ClientAuth.CorsWhitelist);
                 return;
             }
 

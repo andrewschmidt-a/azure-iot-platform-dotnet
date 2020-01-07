@@ -4,20 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Config.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services
 {
-    class StatusService : IStatusService
+    public class StatusService : IStatusService
     {
         private readonly ILogger _logger;
         private readonly IHttpClient httpClient;
-        private readonly IServicesConfig servicesConfig;
+        private readonly AppConfig config;
         private readonly int timeoutMS = 10000;
 
         private const bool ALLOW_INSECURE_SSL_SERVER = true;
@@ -25,11 +25,11 @@ namespace Mmm.Platform.IoT.Config.Services
         public StatusService(
             ILogger<StatusService> logger,
             IHttpClient httpClient,
-            IServicesConfig servicesConfig)
+            AppConfig config)
         {
             _logger = logger;
             this.httpClient = httpClient;
-            this.servicesConfig = servicesConfig;
+            this.config = config;
         }
 
         public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
@@ -44,19 +44,19 @@ namespace Mmm.Platform.IoT.Config.Services
 
             var asaManagerResult = await this.PingServiceAsync(
                 asaManagerName,
-                this.servicesConfig.AsaManagerApiUrl);
+                config.ExternalDependencies.AsaManagerWebServiceUrl);
             SetServiceStatus(asaManagerName, asaManagerResult, result, errors);
 
             // Check access to StorageAdapter
             var storageAdapterResult = await this.PingServiceAsync(
                 storageAdapterName,
-                this.servicesConfig.StorageAdapterApiUrl);
+                config.ExternalDependencies.StorageAdapterWebServiceUrl);
             SetServiceStatus(storageAdapterName, storageAdapterResult, result, errors);
 
             // Check access to Device Telemetry
             var deviceTelemetryResult = await this.PingServiceAsync(
                 deviceTelemetryName,
-                this.servicesConfig.TelemetryApiUrl);
+                config.ExternalDependencies.TelemetryWebServiceUrl);
             SetServiceStatus(deviceTelemetryName, deviceTelemetryResult, result, errors);
 
             // Check access to DeviceSimulation
@@ -65,23 +65,23 @@ namespace Mmm.Platform.IoT.Config.Services
              * using the new 'Status' model */
             var deviceSimulationResult = await this.PingSimulationAsync(
                 deviceSimulationName,
-                this.servicesConfig.DeviceSimulationApiUrl);
+                config.ExternalDependencies.DeviceSimulationWebServiceUrl);
 
             // Andrew Schmidt -- disabling until we stand up simulation
             // SetServiceStatus(deviceSimulationName, deviceSimulationResult, result, errors);
 
             var authResult = await this.PingServiceAsync(
                 authName,
-                this.servicesConfig.UserManagementApiUrl);
+                config.ExternalDependencies.AuthWebServiceUrl);
             SetServiceStatus(authName, authResult, result, errors);
 
             // Add properties
-            result.Properties.Add("DeviceSimulationApiUrl", this.servicesConfig?.DeviceSimulationApiUrl);
-            result.Properties.Add("StorageAdapterApiUrl", this.servicesConfig?.StorageAdapterApiUrl);
-            result.Properties.Add("UserManagementApiUrl", this.servicesConfig?.UserManagementApiUrl);
-            result.Properties.Add("TelemetryApiUrl", this.servicesConfig?.TelemetryApiUrl);
-            result.Properties.Add("SeedTemplate", this.servicesConfig?.SeedTemplate);
-            result.Properties.Add("SolutionType", this.servicesConfig?.SolutionType);
+            result.Properties.Add("DeviceSimulationApiUrl", config?.ExternalDependencies.DeviceSimulationWebServiceUrl);
+            result.Properties.Add("StorageAdapterApiUrl", config?.ExternalDependencies.StorageAdapterWebServiceUrl);
+            result.Properties.Add("UserManagementApiUrl", config?.ExternalDependencies.AuthWebServiceUrl);
+            result.Properties.Add("TelemetryApiUrl", config?.ExternalDependencies.TelemetryWebServiceUrl);
+            result.Properties.Add("SeedTemplate", config?.ConfigService.SeedTemplate);
+            result.Properties.Add("SolutionType", config?.ConfigService.SolutionType);
 
             _logger.LogInformation("Service status request {result}", result);
 

@@ -63,36 +63,6 @@
         "KeyVault": {
             "name": "OVERWRITTEN_IN_DEPLOYMENT"
         },
-        "Permissions": {
-            "Admin": {
-                "AcquireToken": "",
-                "CreateDeployments": "",
-                "CreateDeviceGroups": "",
-                "CreateDevices": "",
-                "CreateJobs": "",
-                "CreatePackages": "",
-                "CreateRules": "",
-                "DeleteAlarms": "",
-                "DeleteDeployments": "",
-                "DeleteDeviceGroups": "",
-                "DeleteDevices": "",
-                "DeletePackages": "",
-                "DeleteRules": "",
-                "DeleteTenant": "",
-                "DisableAlerting": "",
-                "EnableAlerting": "",
-                "ReadAll": "",
-                "UpdateAlarms": "",
-                "UpdateDeviceGroups": "",
-                "UpdateDevices": "",
-                "UpdateRules": "",
-                "UpdateSIMManagement": "",
-                "UserManage": ""
-            },
-            "ReadOnly": {
-                "ReadAll": ""
-            }
-        },
         "StorageAccount": {
             "name": ""
         },
