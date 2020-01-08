@@ -5,7 +5,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
 {
     public class InputValidator
     {
-        private const string INVALID_CHARACTER = @"[^A-Za-z0-9:;.!,_\-* ]";
+        private const string INVALID_CHARACTER = @"[^A-Za-z0-9:;.!,_\-*@ ]";
 
         // Check illegal characters in input
         public static void Validate(string input)
