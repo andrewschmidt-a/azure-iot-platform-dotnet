@@ -16,7 +16,7 @@ _get_configuration() {
 }
 modify_webui_config() {
 
-  value=$(_get_configuration "Global:ClientAuth:AuthRequired" | sed 's/"//g' )
+  value=$(_get_configuration "Global:AuthRequired" | sed 's/"//g' )
   sed -i 's/authEnabled.*/authEnabled: '$value',/g' /app/webui-config.js
   echo "Set AuthEnabled"
 

@@ -44,7 +44,7 @@ namespace Mmm.Platform.IoT.Common.Services
                 result.Status.Message = string.Join("; ", errors);
             }
 
-            result.Properties.Add("AuthRequired", config.Global.ClientAuth.AuthRequired.ToString());
+            result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
             result.Properties.Add("Port", config.DeviceTelemetryService.Port.ToString());
 
             return result;

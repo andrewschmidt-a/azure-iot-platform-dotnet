@@ -117,7 +117,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             result.Properties.Add("DiagnosticsEndpointUrl", this.config?.ExternalDependencies.DiagnosticsServiceUrl);
             result.Properties.Add("StorageAdapterApiUrl", this.config?.ExternalDependencies.StorageAdapterServiceUrl);
-            result.Properties.Add("AuthRequired", config.Global.ClientAuth.AuthRequired.ToString());
+            result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
             result.Properties.Add("Port", config.DeviceTelemetryService.Port.ToString());
 
             _logger.LogInformation("Service status request {result}", result);

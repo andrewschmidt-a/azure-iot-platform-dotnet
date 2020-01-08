@@ -57,7 +57,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 
             SetServiceStatus("AzureB2C", azureB2CResult, result, errors);
             
-            result.Properties.Add("AuthRequired", config.Global.ClientAuth.AuthRequired.ToString());
+            result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
             result.Properties.Add("Port", config.DeviceTelemetryService.Port.ToString());
 
             if (errors.Count > 0)
