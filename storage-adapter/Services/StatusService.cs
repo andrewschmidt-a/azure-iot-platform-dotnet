@@ -37,7 +37,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             _httpClient = httpClient;
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
+        public async Task<StatusServiceModel> GetStatusAsync()
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();
@@ -46,7 +46,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             var storageResult = await this._keyValueContainer.StatusAsync();
             SetServiceStatus("Storage", storageResult, result, errors);
 
-            if (this.config.Global.AuthRequired)
+            if (config.Global.AuthRequired)
             {
                 // Check access to Auth
                 var authResult = await this.PingServiceAsync(
@@ -57,6 +57,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
 
             result.Properties.Add("StorageType", config.StorageAdapterService.StorageType);
+            result.Properties.Add("AuthRequired", config.Global.ClientAuth.AuthRequired.ToString());
+            result.Properties.Add("Port", config.DeviceTelemetryService.Port.ToString());
+            
             _logger.LogInformation("Service status request {result}", result);
 
             if (errors.Count > 0)

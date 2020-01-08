@@ -1,38 +1,35 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models;
+using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers
 {
-    [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
-    public sealed class StatusController : Controller
+    [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    public sealed class StatusController : ControllerBase
     {
-        private readonly AppConfig config;
         private readonly IStatusService statusService;
 
-        public StatusController(AppConfig config, IStatusService statusService)
+        public StatusController(IStatusService statusService)
         {
             this.statusService = statusService;
-            this.config = config;
         }
 
         [HttpGet]
         public async Task<StatusApiModel> GetAsync()
         {
-            bool authRequired = config.Global.ClientAuth.AuthRequired;
-            var serviceStatus = await this.statusService.GetStatusAsync(authRequired);
-            var result = new StatusApiModel(serviceStatus);
-
-            result.Properties.Add("AuthRequired", authRequired.ToString());
-            result.Properties.Add("Port", config.IotHubManagerService.Port.ToString());
-            return result;
+            try
+            {
+                return new StatusApiModel(await this.statusService.GetStatusAsync());
+            }
+            catch (Exception e)
+            {
+                throw new Exception("An error occurred while attempting to get the service status", e);
+            }
         }
-
+        
         [HttpGet("ping")]
         public IActionResult Ping()
         {

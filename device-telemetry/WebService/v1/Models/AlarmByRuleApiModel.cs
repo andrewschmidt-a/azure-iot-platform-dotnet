@@ -46,8 +46,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 
             this.Metadata = new Dictionary<string, string>
             {
-                { "$type", $"AlarmByRule;" + Version.NUMBER },
-                { "$uri", "/" + Version.PATH + "/alarmsbyrule/" + this.Rule.Id }
+                { "$type", $"AlarmByRule;1" },
+                { "$uri", "/" + "v1/alarmsbyrule/" + this.Rule.Id }
             };
         }
 
@@ -70,8 +70,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 
             this.Metadata = new Dictionary<string, string>
             {
-                { "$type", $"AlarmByRule;" + Version.NUMBER },
-                { "$uri", "/" + Version.PATH + "/alarmsbyrule/" + this.Rule.Id }
+                { "$type", $"AlarmByRule;1" },
+                { "$uri", "/" + "v1/alarmsbyrule/" + this.Rule.Id }
             };
         }
     }

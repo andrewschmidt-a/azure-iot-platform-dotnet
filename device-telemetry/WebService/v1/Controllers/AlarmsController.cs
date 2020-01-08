@@ -32,7 +32,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Version.PATH + "/[controller]")]
+        [HttpGet("v1/[controller]")]
         [Authorize("ReadAll")]
         public async Task<AlarmListApiModel> ListAsync(
             [FromQuery] string from,
@@ -51,7 +51,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
             return await this.ListHelperAsync(from, to, order, skip, limit, deviceIds);
         }
 
-        [HttpPost(Version.PATH + "/[controller]")]
+        [HttpPost("v1/[controller]")]
         [Authorize("ReadAll")]
         public async Task<AlarmListApiModel> PostAsync([FromBody] QueryApiModel body)
         {
@@ -68,7 +68,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
                 deviceIds);
         }
 
-        [HttpGet(Version.PATH + "/[controller]/{id}")]
+        [HttpGet("v1/[controller]/{id}")]
         [Authorize("ReadAll")]
         public async Task<AlarmApiModel> GetAsync([FromRoute] string id)
         {
@@ -76,7 +76,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
             return new AlarmApiModel(alarm);
         }
 
-        [HttpPatch(Version.PATH + "/[controller]/{id}")]
+        [HttpPatch("v1/[controller]/{id}")]
         [Authorize("UpdateAlarms")]
         public async Task<AlarmApiModel> PatchAsync(
             [FromRoute] string id,
@@ -96,7 +96,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
             return new AlarmApiModel(alarm);
         }
 
-        [HttpDelete(Version.PATH + "/[controller]/{id}")]
+        [HttpDelete("v1/[controller]/{id}")]
         [Authorize("DeleteAlarms")]
         public async Task DeleteAsync([FromRoute] string id)
         {
@@ -108,7 +108,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
             await this.alarmService.DeleteAsync(id);
         }
 
-        [HttpPost(Version.PATH + "/[controller]!delete")]
+        [HttpPost("v1/[controller]!delete")]
         [Authorize("DeleteAlarms")]
         public void Delete([FromBody] AlarmIdListApiModel alarmList)
         {

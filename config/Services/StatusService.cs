@@ -32,7 +32,7 @@ namespace Mmm.Platform.IoT.Config.Services
             this.config = config;
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
+        public async Task<StatusServiceModel> GetStatusAsync()
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();
@@ -82,6 +82,8 @@ namespace Mmm.Platform.IoT.Config.Services
             result.Properties.Add("TelemetryApiUrl", config?.ExternalDependencies.TelemetryServiceUrl);
             result.Properties.Add("SeedTemplate", config?.ConfigService.SeedTemplate);
             result.Properties.Add("SolutionType", config?.ConfigService.SolutionType);
+            result.Properties.Add("AuthRequired", config.Global.ClientAuth.AuthRequired.ToString());
+            result.Properties.Add("Port", config.DeviceTelemetryService.Port.ToString());
 
             _logger.LogInformation("Service status request {result}", result);
 

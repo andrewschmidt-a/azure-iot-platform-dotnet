@@ -1,20 +1,20 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Newtonsoft.Json;
 
-// TODO: complete - https://github.com/Azure/device-simulation-dotnet/issues/82
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
+namespace Mmm.Platform.IoT.Common.Services.Models
 {
+    /// <summary>
+    /// Model for retrieving the status of API    
+    /// /// </summary>
     public sealed class StatusApiModel
     {
         private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
 
         [JsonProperty(PropertyName = "Name", Order = 10)]
-        public string Name => "DeviceTelemetry";
+        public string Name => "AsaManager";
 
         [JsonProperty(PropertyName = "Status", Order = 20)]
         public StatusResultApiModel Status { get; set; }
@@ -47,8 +47,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
         [JsonProperty(PropertyName = "$metadata", Order = 1000)]
         public Dictionary<string, string> Metadata => new Dictionary<string, string>
         {
-            { "$type", "Status;" + Version.NUMBER },
-            { "$uri", "/" + Version.PATH + "/status" }
+            { "$type", "Status;" + "0" },
+            { "$uri", "/status" }
         };
 
         public StatusApiModel(StatusServiceModel model)

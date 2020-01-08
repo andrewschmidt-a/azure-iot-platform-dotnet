@@ -10,7 +10,7 @@ using Mmm.Platform.IoT.Common.Services.Wrappers;
 
 namespace Mmm.Platform.IoT.AsaManager.WebService.v1.Controllers
 {
-    [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class RulesController : Controller
     {
         private readonly RulesConverter _ruleConverter;

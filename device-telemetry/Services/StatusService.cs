@@ -46,7 +46,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             this.config = config;
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
+        public async Task<StatusServiceModel> GetStatusAsync()
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();
@@ -70,7 +70,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 this.config.ExternalDependencies.StorageAdapterServiceUrl);
             SetServiceStatus(storageAdapterName, storageAdapterResult, result, errors);
 
-            if (authRequired)
+            if (config.Global.AuthRequired)
             {
                 // Check access to Auth
                 var authResult = await this.PingServiceAsync(
@@ -117,6 +117,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             result.Properties.Add("DiagnosticsEndpointUrl", this.config?.ExternalDependencies.DiagnosticsServiceUrl);
             result.Properties.Add("StorageAdapterApiUrl", this.config?.ExternalDependencies.StorageAdapterServiceUrl);
+            result.Properties.Add("AuthRequired", config.Global.ClientAuth.AuthRequired.ToString());
+            result.Properties.Add("Port", config.DeviceTelemetryService.Port.ToString());
 
             _logger.LogInformation("Service status request {result}", result);
 

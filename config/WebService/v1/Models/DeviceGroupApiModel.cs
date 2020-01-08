@@ -36,8 +36,8 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
 
             this.Metadata = new Dictionary<string, string>
             {
-                { "$type", $"DeviceGroup;{Version.NUMBER}" },
-                { "$url", $"/{Version.PATH}/devicegroups/{model.Id}" }
+                { "$type", $"DeviceGroup;1" },
+                { "$url", $"/v1/devicegroups/{model.Id}" }
             };
         }
 

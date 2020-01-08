@@ -14,8 +14,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
         [JsonProperty(PropertyName = "$metadata", Order = 1000)]
         public Dictionary<string, string> Metadata => new Dictionary<string, string>
         {
-            { "$type", $"Alarms;" + Version.NUMBER },
-            { "$uri", "/" + Version.PATH + "/alarms" }
+            { "$type", $"Alarms;1" },
+            { "$uri", "/" + "v1/alarms" }
         };
 
         public AlarmListApiModel(List<Alarm> alarms)

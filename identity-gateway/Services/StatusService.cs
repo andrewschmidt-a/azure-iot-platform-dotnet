@@ -6,26 +6,25 @@ using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Microsoft.Extensions.Configuration;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public class StatusService : IStatusService
     {
-        const string AzureB2CBaseUri = "Global:AzureB2CBaseUri";
-
-        private IConfiguration _config;
+        private AppConfig config;
 
         public UserTenantContainer _userTenantContainer;
         public UserSettingsContainer _userSettingsContainer;
 
-        public StatusService(IConfiguration config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer)
+        public StatusService(AppConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer)
         {
-            this._config = config;
+            this.config = config;
             this._userTenantContainer = userTenantContainer;
             this._userSettingsContainer = userSettingsContainer;
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
+        public async Task<StatusServiceModel> GetStatusAsync()
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();
@@ -40,7 +39,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 
             try
             {
-                string authUri = this._config[AzureB2CBaseUri];
+                string authUri = config.Global.AzureB2cBaseUri;
                 HttpClient client = new HttpClient();
                 var response = await client.GetAsync(authUri);
                 string responseMessage = "Alive and Well.";
@@ -57,6 +56,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             }
 
             SetServiceStatus("AzureB2C", azureB2CResult, result, errors);
+            
+            result.Properties.Add("AuthRequired", config.Global.ClientAuth.AuthRequired.ToString());
+            result.Properties.Add("Port", config.DeviceTelemetryService.Port.ToString());
 
             if (errors.Count > 0)
             {

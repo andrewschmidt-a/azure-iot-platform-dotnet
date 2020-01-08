@@ -23,8 +23,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
             Items = model;
             this.Metadata = new Dictionary<string, string>
             {
-                { "$type", $"DevicePropertyList;{Version.NUMBER}" },
-                { "$url", $"/{Version.PATH}/deviceproperties" }
+                { "$type", $"DevicePropertyList;1" },
+                { "$url", $"/v1/deviceproperties" }
             };
         }
     }

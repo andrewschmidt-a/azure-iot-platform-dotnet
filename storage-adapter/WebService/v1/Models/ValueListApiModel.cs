@@ -21,8 +21,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Models
 
             this.Metadata = new Dictionary<string, string>
             {
-                { "$type", $"ValueList;{Version.NUMBER}" },
-                { "$uri", $"/{Version.PATH}/collections/{collectionId}/values" }
+                { "$type", $"ValueList;1" },
+                { "$uri", $"/v1/collections/{collectionId}/values" }
             };
         }
     }
