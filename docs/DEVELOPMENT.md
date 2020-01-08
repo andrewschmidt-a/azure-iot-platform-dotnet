@@ -1,27 +1,40 @@
-Azure IoT Hub setup
-===================
+# Prerequisites
+* .NET Core SDK version 2.2
+* Azure CLI
 
-To work on Remote Monitoring you will need to setup some dependencies
-first:
+Ensure the `dotnet` and `az` binaries are available in a terminal
 
-* Azure IoT Hub
-* CosmosDb SQL (DocumentDb)
+# One-Time Setup
+Set the `AppConfigurationConnectionString` user secret by running the following in a terminal:
+```
+dotnet user-secrets set AppConfigurationConnectionString (az appconfig credential list --name app-config-odin -g rg-crslbbiot-odin-dev --query "[?name=='Primary'].connectionString | [0]")
+```
+And then enumerate secrets:
+```
+dotnet user-secrets list --project ./common/Services/Services.csproj
+AppConfigurationConnectionString = ...
+```
+# Building
+## Build all services
+```
+dotnet build remote-monitoring.sln
+```
+## Build an individual service
+```
+dotnet build ./<service-name>/<service-name>.sln
+```
+E.g., to build the Storage Adapter service:
+```
+dotnet build ./storage-adapter/storage-adapter.sln
+```
 
-Azure IoT Hub setup
-===================
-
-The project includes some Bash scripts to help you with this setup:
-
-* Create new IoT Hub: `./scripts/iothub/create-hub.sh`
-* List existing hubs: `./scripts/iothub/list-hubs.sh`
-* Show IoT Hub details (e.g. keys): `./scripts/iothub/show-hub.sh`
-
-and in case you had multiple Azure subscriptions:
-
-* Show subscriptions list: `./scripts/iothub/list-subscriptions.sh`
-* Change current subscription: `./scripts/iothub/select-subscription.sh`
-
-CosmosDb SQL (DocumentDb)
-=========================
-
-To setup CosmosDb you will need to use the Azure Portal.
+# Running
+## Run all services
+Use Azure DevSpaces (TODO: document this)
+## Run an individual service
+The simplest is to use `dotnet run` to spin up a service on a random port on localhost:
+```
+dotnet run --project ./<service-name>/WebService/WebService.csproj
+```
+# Debugging
+Use either Visual Studio or Visual Studio Code

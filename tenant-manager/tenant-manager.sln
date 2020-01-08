@@ -90,17 +90,4 @@ Global
         {0A47EDE3-1AB7-4D7A-8D41-B3EDF69AE170} = {368A52C5-8C52-49FD-AF0B-ECFC61A55CAC}
         {716C1217-55CA-47FF-9F51-C8AE0D3A9D4A} = {368A52C5-8C52-49FD-AF0B-ECFC61A55CAC}
     EndGlobalSection
-    GlobalSection(ExtensibilityGlobals) = postSolution
-        SolutionGuid = {50996CA0-392E-4C68-AD96-3EA3129DE474}
-    EndGlobalSection
-    GlobalSection(MonoDevelopProperties) = preSolution
-        Policies = $0
-        $0.DotNetNamingPolicy = $1
-        $0.TextStylePolicy = $2
-        $2.inheritsSet = null
-        $2.scope = text/x-csharp
-        $0.CSharpFormattingPolicy = $3
-        $3.scope = text/x-csharp
-        $0.VersionControlPolicy = $4
-    EndGlobalSection
 EndGlobal
