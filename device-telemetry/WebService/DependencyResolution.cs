@@ -2,7 +2,6 @@ using System.Reflection;
 using Autofac;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.DeviceTelemetry.Services;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 {
@@ -12,8 +11,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
         {
             var assembly = typeof(StatusService).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
-            builder.RegisterType<DiagnosticsClient>().As<IDiagnosticsClient>().SingleInstance();
-            builder.RegisterType<StatusService>().As<IStatusService>();
         }
     }
 }

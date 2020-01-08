@@ -11,10 +11,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
         {
             var assembly = typeof(StatusService).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
-            builder.RegisterType<Services.Devices>().As<IDevices>().SingleInstance();
-            builder.RegisterType<DeviceService>().As<IDeviceService>().SingleInstance();
-            builder.RegisterType<Jobs>().As<IJobs>().SingleInstance();
-            builder.RegisterType<DeviceProperties>().As<IDeviceProperties>().SingleInstance();
         }
     }
 }
