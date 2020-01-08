@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers
         {
             try
             {
-                return new StatusApiModel(await this.statusService.GetStatusAsync());
+                return new StatusApiModel(await this.statusService.GetStatusAsync(), "IoTHub Manager");
             }
             catch (Exception e)
             {

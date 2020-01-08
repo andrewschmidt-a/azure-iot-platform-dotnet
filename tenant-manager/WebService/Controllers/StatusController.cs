@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.v1.Controllers
         {
             try
             {
-                return new StatusApiModel(await this.statusService.GetStatusAsync());
+                return new StatusApiModel(await this.statusService.GetStatusAsync(), "Tenant Manager");
             }
             catch (Exception e)
             {

@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
         {
             try
             {
-                return new StatusApiModel(await this.statusService.GetStatusAsync());
+                return new StatusApiModel(await this.statusService.GetStatusAsync(), "Device Telemetry");
             }
             catch (Exception e)
             {

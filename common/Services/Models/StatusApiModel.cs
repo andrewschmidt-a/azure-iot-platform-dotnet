@@ -14,7 +14,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
 
         [JsonProperty(PropertyName = "Name", Order = 10)]
-        public string Name => "AsaManager";
+        public string Name { get; set; }
 
         [JsonProperty(PropertyName = "Status", Order = 20)]
         public StatusResultApiModel Status { get; set; }
@@ -51,10 +51,11 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             { "$uri", "/status" }
         };
 
-        public StatusApiModel(StatusServiceModel model)
+        public StatusApiModel(StatusServiceModel model, string name)
         {
-            this.Status = new StatusResultApiModel(model.Status);
-            this.Dependencies = new Dictionary<string, StatusResultApiModel>();
+            Status = new StatusResultApiModel(model.Status);
+            Dependencies = new Dictionary<string, StatusResultApiModel>();
+            Name = name;
             foreach (KeyValuePair<string, StatusResultServiceModel> pair in model.Dependencies)
             {
                 this.Dependencies.Add(pair.Key, new StatusResultApiModel(pair.Value));

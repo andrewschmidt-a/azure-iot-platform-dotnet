@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.AsaManager.WebService.v1.Controllers
         {
             try
             {
-                return new StatusApiModel(await this.statusService.GetStatusAsync());
+                return new StatusApiModel(await this.statusService.GetStatusAsync(), "ASA Manager");
             }
             catch (Exception e)
             {
