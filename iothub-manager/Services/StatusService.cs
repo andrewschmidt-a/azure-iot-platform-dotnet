@@ -77,7 +77,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
             result.Properties.Add("StorageAdapterApiUrl", config?.ExternalDependencies.StorageAdapterServiceUrl);
             result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
-            result.Properties.Add("Port", config.DeviceTelemetryService.Port.ToString());
+            result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
             
             _logger.LogInformation("Service status request {result}", result);
 
