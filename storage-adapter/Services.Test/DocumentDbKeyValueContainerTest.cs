@@ -56,20 +56,15 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             //Mock service returns dummy data
 
 
-            var mockServicesConfig = new AppConfig();
+            var config = new AppConfig();
             this.mockContainer = new Mock<DocumentDbKeyValueContainer>(
                 new MockFactory<IDocumentClient>(this.mockClient),
                 new MockExceptionChecker(),
-<<<<<<< HEAD
-                mockAppConfig.Object,
-                mockServicesConfig.Object,
-=======
-                mockServicesConfig,
+                config,
                 mockAppConfigHelper.Object,
->>>>>>> refactor: introduce common configuration and use it in StorageAdapter
                 new Mock<ILogger<DocumentDbKeyValueContainer>>().Object,
                 this.mockContextAccessor.Object);
-            mockServicesConfig.StorageAdapterService = new StorageAdapterServiceConfig{ DocumentDbRus = 400 };
+            config.StorageAdapterService = new StorageAdapterServiceConfig{ DocumentDbRus = 400 };
             mockAppConfigHelper.Setup(m => m.GetValue(It.IsAny<string>())).Returns(MOCK_COLL_ID);
             this.mockContainer.Setup(t => t.DocumentDbDatabaseId)
                 .Returns(MOCK_DB_ID);
