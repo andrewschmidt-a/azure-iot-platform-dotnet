@@ -36,7 +36,6 @@ namespace Mmm.Platform.IoT.Common.Services
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
             AutowireAssemblies(builder);
             builder.RegisterType<KeyVault>();
-            builder.RegisterType<ConfigData>();
             builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().InstancePerDependency();
             builder.RegisterType<UserManagementClient>().As<IUserManagementClient>().SingleInstance();
             builder.RegisterType<AppConfigurationHelper>().As<IAppConfigurationHelper>().SingleInstance();

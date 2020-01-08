@@ -8,6 +8,7 @@ using Mmm.Platform.IoT.AsaManager.Services.Exceptions;
 using Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager;
 using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
 using Mmm.Platform.IoT.AsaManager.Services.Test.Helpers;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
@@ -20,7 +21,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
     {
         private const string MOCK_API_URL = "http://iothub:80/v1";
 
-        private Mock<IIotHubManagerClientConfig> mockConfig;
+        private Mock<AppConfig> mockConfig;
         private Mock<IExternalRequestHelper> mockRequestHelper;
         private IIotHubManagerClient client;
         private Random rand;
@@ -28,9 +29,9 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 
         public IothubmanagerclientTest()
         {
-            this.mockConfig = new Mock<IIotHubManagerClientConfig>();
+            this.mockConfig = new Mock<AppConfig>();
             this.mockConfig
-                .Setup(c => c.IotHubManagerApiUrl)
+                .Setup(c => c.ExternalDependencies.IotHubManagerServiceUrl)
                 .Returns(MOCK_API_URL);
 
             this.mockRequestHelper = new Mock<IExternalRequestHelper>();

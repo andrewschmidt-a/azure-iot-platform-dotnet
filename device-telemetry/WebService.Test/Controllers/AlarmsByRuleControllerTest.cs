@@ -50,7 +50,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
 
         public AlarmsByRuleControllerTest()
         {
-            ConfigData configData = new ConfigData();
             Mock<IStorageAdapterClient> storageAdapterClient = new Mock<IStorageAdapterClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             _logger = new Mock<ILogger<AlarmsByRuleController>>();
