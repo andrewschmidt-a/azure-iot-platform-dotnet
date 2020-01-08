@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -14,27 +12,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
 {
     public class Startup
     {
-        // Initialized in `Startup`
-        public IConfigurationRoot Configuration { get; }
-
-        // Initialized in `ConfigureServices`
+        public IConfiguration Configuration { get; }
         public IContainer ApplicationContainer { get; private set; }
 
-        // Invoked by `Program.cs`
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-#if DEBUG
-                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
-#endif
-                ;
-            this.Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        // This is where you register dependencies, add services to the
-        // container. This method is called by the runtime, before the
-        // Configure method below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -55,8 +40,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        // This method is called by the runtime, after the ConfigureServices
-        // method above. Use this method to add middleware.
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,

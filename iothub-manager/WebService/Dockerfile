@@ -13,6 +13,7 @@ COPY common common
 COPY iothub-manager iothub-manager
 
 FROM restore AS publish
+ARG AppConfigurationConnectionString=
 WORKDIR /src/iothub-manager/WebService
 RUN dotnet publish WebService.csproj \
 --output /app \

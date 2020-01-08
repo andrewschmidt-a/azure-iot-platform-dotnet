@@ -1,10 +1,10 @@
 ﻿using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
@@ -45,7 +45,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
         /// </summary>
         /// <param name="appConfigConnection">Connection string for app config</param>
         /// <returns></returns>
-        public TenantConnectionHelper(IHttpContextAccessor httpContextAccessor, IAppConfigClientConfig config)
+        public TenantConnectionHelper(IHttpContextAccessor httpContextAccessor, AppConfig config)
         {
             this._httpContextAccessor = httpContextAccessor;
             this.appConfig = new AppConfigurationHelper(config);

@@ -4,9 +4,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
@@ -19,7 +19,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
     {
         private ServiceClient serviceClient;
 
-        public DeviceService(IServicesConfig config, IHttpContextAccessor httpContextAccessor)
+        public DeviceService(AppConfig config, IHttpContextAccessor httpContextAccessor)
         {
             if (config == null)
             {

@@ -12,13 +12,13 @@ using Microsoft.Azure.Devices.Shared;
 using Mmm.Platform.IoT.IoTHubManager.Services.Extensions;
 using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
 using Microsoft.Extensions.Configuration;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using AuthenticationType = Mmm.Platform.IoT.IoTHubManager.Services.Models.AuthenticationType;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
@@ -46,14 +46,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private ITenantConnectionHelper _tenantHelper;
 
         public Devices(
-            IServicesConfig _config,
+            AppConfig config,
             IHttpContextAccessor httpContextAccessor)
         {
-            if (_config == null)
+            if (config == null)
             {
                 throw new ArgumentNullException("config");
             }
-            _tenantHelper = new TenantConnectionHelper(httpContextAccessor, _config);
+            _tenantHelper = new TenantConnectionHelper(httpContextAccessor, config);
 
         }
         //used for testing

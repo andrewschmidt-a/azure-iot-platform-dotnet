@@ -6,13 +6,13 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.IoTHubManager.Services;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 {
@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var cache = new DeviceProperties(
                 mockStorageAdapterClient.Object,
-                new ServicesConfig(),
+                new AppConfig(),
                 new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var cache = new DeviceProperties(
                 mockStorageAdapterClient.Object,
-                new ServicesConfig(),
+                new AppConfig(),
                 new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
@@ -104,9 +104,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var cache = new DeviceProperties(
                 mockStorageAdapterClient.Object,
-                new ServicesConfig
+                new AppConfig
                 {
-                    DevicePropertiesTTL = 60
+                    IotHubManagerService = new IotHubManagerServiceConfig
+                    {
+                        DevicePropertiesCache = new DevicePropertiesCacheConfig
+                        {
+                            Ttl = 60
+                        }
+                    }
                 },
                 new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
@@ -147,10 +153,16 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var cache = new DeviceProperties(
                 mockStorageAdapterClient.Object,
-                new ServicesConfig
+                new AppConfig
                 {
-                    DevicePropertiesTTL = 10,
-                    DevicePropertiesRebuildTimeout = 300
+                    IotHubManagerService = new IotHubManagerServiceConfig
+                    {
+                        DevicePropertiesCache = new DevicePropertiesCacheConfig
+                        {
+                            Ttl = 60,
+                            RebuildTimeout = 300
+                        }
+                    }
                 },
                 new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
@@ -190,10 +202,16 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var cache = new DeviceProperties(
                 mockStorageAdapterClient.Object,
-                new ServicesConfig
+                new AppConfig
                 {
-                    DevicePropertiesWhiteList = "tags.*, reported.Type, reported.Config.*",
-                    DevicePropertiesTTL = 3600
+                    IotHubManagerService = new IotHubManagerServiceConfig
+                    {
+                        DevicePropertiesCache = new DevicePropertiesCacheConfig
+                        {
+                            Whitelist = "tags.*, reported.Type, reported.Config.*",
+                            Ttl = 3600
+                        }
+                    }
                 },
                 new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);

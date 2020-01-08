@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
 using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
@@ -16,6 +15,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
@@ -58,7 +58,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private ITenantConnectionHelper _tenantHelper;
 
         public Deployments(
-            IAppConfigClientConfig config,
+            AppConfig config,
             ILogger<Deployments> logger,
             IHttpContextAccessor httpContextAccessor)
         {
