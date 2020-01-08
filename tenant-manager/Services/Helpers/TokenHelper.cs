@@ -1,25 +1,25 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public class TokenHelper : ITokenHelper
     {
-        private IServicesConfig _config;
+        private AppConfig config;
 
-        public TokenHelper(IServicesConfig config)
+        public TokenHelper(AppConfig config)
         {
-            this._config = config;
+            this.config = config;
         }
         
         public async Task<string> GetTokenAsync()
         {
-            string keyVaultAppId = this._config.AzureActiveDirectoryAppId;
-            string aadTenantId = this._config.AzureActiveDirectoryTenant;
-            string keyVaultAppKey = this._config.AzureActiveDirectoryAppKey;
+            string keyVaultAppId = config.Global.AzureActiveDirectory.AppId;
+            string aadTenantId = config.Global.AzureActiveDirectory.TenantId;
+            string keyVaultAppKey = config.Global.AzureActiveDirectory.AppSecret;
 
             // Retrieve a token from Azure AD using the application id and password.
             try

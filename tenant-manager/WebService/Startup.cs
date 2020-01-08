@@ -12,19 +12,12 @@ namespace Mmm.Platform.IoT.TenantManager.WebService
 {
     public class Startup
     {
-
         public IConfiguration Configuration { get; }
         public IContainer ApplicationContainer { get; private set; }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-#if DEBUG
-                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
-#endif
-                .AddEnvironmentVariables();
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -39,7 +32,6 @@ namespace Mmm.Platform.IoT.TenantManager.WebService
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         [Obsolete]
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {

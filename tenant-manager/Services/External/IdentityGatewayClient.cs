@@ -1,11 +1,11 @@
 using System;
 using System.Net.Http;
 using Mmm.Platform.IoT.TenantManager.Services.Models;
-using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.External
 {
@@ -14,9 +14,9 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
         private readonly IExternalRequestHelper _requestHelper;
         private readonly string serviceUri;
 
-        public IdentityGatewayClient(IServicesConfig config, IExternalRequestHelper requestHelper)
+        public IdentityGatewayClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
-            this.serviceUri = config.IdentityGatewayWebServiceUrl;
+            this.serviceUri = config.ExternalDependencies.IdentityGatewayServiceUrl;
             this._requestHelper = requestHelper;
         }
 

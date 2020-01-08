@@ -4,19 +4,19 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.TenantManager.WebService.Models;
-using Mmm.Platform.IoT.TenantManager.WebService.Runtime;
 
 namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {
     [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public sealed class StatusController : ControllerBase
     {
-        private readonly IConfig config;
+        private readonly AppConfig config;
         private readonly IStatusService statusService;
 
-        public StatusController(IConfig config, IStatusService statusService)
+        public StatusController(AppConfig config, IStatusService statusService)
         {
             this.config = config;
             this.statusService = statusService;
@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
             try
             {
                 var result = new StatusModel(await this.statusService.GetStatusAsync(false));
-                result.Properties.Add("Port", this.config.Port.ToString());
+                result.Properties.Add("Port", this.config.TenantManagerService.Port.ToString());
                 return result;
             }
             catch (Exception e)
