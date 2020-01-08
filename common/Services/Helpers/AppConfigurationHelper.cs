@@ -3,12 +3,14 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Azure.Data.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.Common.Services.Helpers
 {
     public class AppConfigurationHelper : IAppConfigurationHelper
     {
         private ConfigurationClient client;
+        private Dictionary<string, AppConfigCacheValue> _cache = new Dictionary<string, AppConfigCacheValue>();
 
         public AppConfigurationHelper(AppConfig config)
         {
@@ -58,8 +60,23 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             string value = "";
             try
             {
-                ConfigurationSetting setting = this.client.GetConfigurationSetting(key);
-                value = setting.Value;
+                if (this._cache.ContainsKey(key) && this._cache[key].ExpirationTime > DateTime.UtcNow)
+                {
+                    value = this._cache[key].Value.Value; // get string from configuration setting
+                }
+                else
+                {
+                    ConfigurationSetting setting = this.client.GetConfigurationSetting(key);
+                    value = setting.Value;
+                    if (this._cache.ContainsKey(key))
+                    {
+                        this._cache[key] = new AppConfigCacheValue(setting);
+                    }
+                    else
+                    {
+                        this._cache.Add(key, new AppConfigCacheValue(setting));
+                    }
+                }
             }
             catch (Exception e)
             {
