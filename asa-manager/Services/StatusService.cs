@@ -6,7 +6,6 @@ using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
 using Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.AsaManager.Services
 {
