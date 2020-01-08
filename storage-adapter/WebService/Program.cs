@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Mmm.Platform.IoT.Common.Services;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService

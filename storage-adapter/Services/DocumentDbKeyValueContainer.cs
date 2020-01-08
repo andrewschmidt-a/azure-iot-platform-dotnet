@@ -233,7 +233,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         private void SetClientOptions()
         {
             this.client = this._clientFactory.Create();
-            this.docDbRUs = _appConfig.StorageAdapter.DocumentDbRus;
+            this.docDbRUs = _appConfig.StorageAdapterService.DocumentDbRus;
             this.docDbOptions = this.GetDocDbOptions();
         }
 

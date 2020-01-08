@@ -69,7 +69,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
 >>>>>>> refactor: introduce common configuration and use it in StorageAdapter
                 new Mock<ILogger<DocumentDbKeyValueContainer>>().Object,
                 this.mockContextAccessor.Object);
-            mockServicesConfig.StorageAdapter = new StorageAdapterConfig{ DocumentDbRus = 400 };
+            mockServicesConfig.StorageAdapterService = new StorageAdapterServiceConfig{ DocumentDbRus = 400 };
             mockAppConfigHelper.Setup(m => m.GetValue(It.IsAny<string>())).Returns(MOCK_COLL_ID);
             this.mockContainer.Setup(t => t.DocumentDbDatabaseId)
                 .Returns(MOCK_DB_ID);

@@ -22,17 +22,17 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         private readonly ILogger _logger;
         private readonly IHttpClient _httpClient;
         private readonly IKeyValueContainer _keyValueContainer;
-        private readonly AppConfig _appConfig;
+        private readonly AppConfig config;
 
         public StatusService(
             ILogger<StatusService> logger,
             IHttpClient httpClient,
             IKeyValueContainer keyValueContainer,
-            AppConfig appConfig
+            AppConfig config
             )
         {
             _logger = logger;
-            _appConfig = appConfig;
+            this.config = config;
             _keyValueContainer = keyValueContainer;
             _httpClient = httpClient;
         }
@@ -46,17 +46,17 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             var storageResult = await this._keyValueContainer.StatusAsync();
             SetServiceStatus("Storage", storageResult, result, errors);
 
-            if (this._appConfig.Global.AuthRequired)
+            if (this.config.Global.AuthRequired)
             {
                 // Check access to Auth
                 var authResult = await this.PingServiceAsync(
                     AUTH_NAME,
-                    _appConfig.ExternalDependencies.AuthWebServiceUrl);
+                    config.ExternalDependencies.AuthServiceUrl);
                 SetServiceStatus(AUTH_NAME, authResult, result, errors);
-                result.Properties.Add("UserManagementApiUrl", _appConfig.ExternalDependencies.AuthWebServiceUrl);
+                result.Properties.Add("UserManagementApiUrl", config.ExternalDependencies.AuthServiceUrl);
             }
 
-            result.Properties.Add("StorageType", _appConfig.StorageAdapter.StorageType);
+            result.Properties.Add("StorageType", config.StorageAdapterService.StorageType);
             _logger.LogInformation("Service status request {result}", result);
 
             if (errors.Count > 0)
