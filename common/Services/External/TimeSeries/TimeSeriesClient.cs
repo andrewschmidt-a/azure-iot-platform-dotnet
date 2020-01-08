@@ -64,14 +64,14 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         {
             this.httpClient = httpClient;
             _logger = logger;
-            this.authority = config.TelemetryService.TimeSeries.Authority;
-            this.applicationId = config.Global.AzureActiveDirectory.AadAppId;
-            this.applicationSecret = config.Global.AzureActiveDirectory.AadAppSecret;
-            this.tenant = config.Global.AzureActiveDirectory.AadTenantId;
-            this.fqdn = config.TelemetryService.TimeSeries.TsiDataAccessFqdn;
-            this.host = config.TelemetryService.TimeSeries.Audience;
-            this.apiVersion = config.TelemetryService.TimeSeries.ApiVersion;
-            this.timeout = config.TelemetryService.TimeSeries.Timeout;
+            this.authority = config.DeviceTelemetryService.TimeSeries.Authority;
+            this.applicationId = config.Global.AzureActiveDirectory.AppId;
+            this.applicationSecret = config.Global.AzureActiveDirectory.AppSecret;
+            this.tenant = config.Global.AzureActiveDirectory.TenantId;
+            this.fqdn = config.DeviceTelemetryService.TimeSeries.TsiDataAccessFqdn;
+            this.host = config.DeviceTelemetryService.TimeSeries.Audience;
+            this.apiVersion = config.DeviceTelemetryService.TimeSeries.ApiVersion;
+            this.timeout = config.DeviceTelemetryService.TimeSeries.Timeout;
         }
 
         /// <summary>

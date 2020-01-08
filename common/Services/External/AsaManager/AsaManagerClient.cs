@@ -13,7 +13,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.AsaManager
 
         public AsaManagerClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
-            this.serviceUrl = config.ExternalDependencies.AsaManagerWebServiceUrl;
+            this.serviceUrl = config.ExternalDependencies.AsaManagerServiceUrl;
             this._requestHelper = requestHelper;
         }
 

@@ -13,6 +13,7 @@ COPY common common
 COPY identity-gateway identity-gateway
 
 FROM restore AS publish
+ARG AppConfigurationConnectionString=
 WORKDIR /src/identity-gateway/WebService
 RUN dotnet publish WebService.csproj \
 --output /app \

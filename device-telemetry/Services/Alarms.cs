@@ -96,9 +96,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             IAppConfigurationHelper appConfigurationHelper)
         {
             this.storageClient = storageClient;
-            this.databaseName = config.TelemetryService.Alarms.Database;
+            this.databaseName = config.DeviceTelemetryService.Alarms.Database;
             _logger = logger;
-            this.maxDeleteRetryCount = config.TelemetryService.Alarms.MaxDeleteRetries;
+            this.maxDeleteRetryCount = config.DeviceTelemetryService.Alarms.MaxDeleteRetries;
             this.config = config;
             this._httpContextAccessor = contextAccessor;
             this._appConfigurationHelper = appConfigurationHelper;

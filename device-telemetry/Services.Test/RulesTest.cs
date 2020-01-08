@@ -48,7 +48,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 ExternalDependencies = new ExternalDependenciesConfig
                 {
-                    DiagnosticsWebServiceUrl = "http://localhost:9006/v1",
+                    DiagnosticsServiceUrl = "http://localhost:9006/v1",
                     DiagnosticsMaxLogRetries = 3
                 }
             };

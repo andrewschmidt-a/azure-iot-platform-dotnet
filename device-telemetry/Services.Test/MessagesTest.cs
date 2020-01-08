@@ -34,7 +34,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         {
             var servicesConfig = new AppConfig()
             {
-                TelemetryService = new TelemetryServiceConfig
+                DeviceTelemetryService = new DeviceTelemetryServiceConfig
                 {
                     Messages = new MessagesConfig
                     {

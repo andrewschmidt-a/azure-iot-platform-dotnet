@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
             var result = new StatusApiModel(await this.statusService.GetStatusAsync(false));
 
             result.Properties.Add("AuthRequired", config.Global.ClientAuth?.AuthRequired.ToString());
-            result.Properties.Add("Port", config.ConfigService.WebServicePort.ToString());
+            result.Properties.Add("Port", config.ConfigService.Port.ToString());
             return result;
         }
         [HttpGet("ping")]

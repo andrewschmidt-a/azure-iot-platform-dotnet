@@ -61,13 +61,13 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             var asaManagerResult = await this.PingServiceAsync(
                 asaManagerName,
-                this.config.ExternalDependencies.AsaManagerWebServiceUrl);
+                this.config.ExternalDependencies.AsaManagerServiceUrl);
             SetServiceStatus(asaManagerName, asaManagerResult, result, errors);
 
             // Check access to StorageAdapter
             var storageAdapterResult = await this.PingServiceAsync(
                 storageAdapterName,
-                this.config.ExternalDependencies.StorageAdapterWebServiceUrl);
+                this.config.ExternalDependencies.StorageAdapterServiceUrl);
             SetServiceStatus(storageAdapterName, storageAdapterResult, result, errors);
 
             if (authRequired)
@@ -75,21 +75,21 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 // Check access to Auth
                 var authResult = await this.PingServiceAsync(
                     authName,
-                    this.config.ExternalDependencies.AuthWebServiceUrl);
+                    this.config.ExternalDependencies.AuthServiceUrl);
                 SetServiceStatus(authName, authResult, result, errors);
-                result.Properties.Add("UserManagementApiUrl", this.config?.ExternalDependencies.AuthWebServiceUrl);
+                result.Properties.Add("UserManagementApiUrl", this.config?.ExternalDependencies.AuthServiceUrl);
             }
 
             // Check access to Diagnostics
             var diagnosticsResult = await this.PingServiceAsync(
                 diagnosticsName,
-                this.config.ExternalDependencies.DiagnosticsWebServiceUrl);
+                this.config.ExternalDependencies.DiagnosticsServiceUrl);
             // Note: Overall simulation service status is independent of diagnostics service
             // Hence not using SetServiceStatus on diagnosticsResult
             result.Dependencies.Add(diagnosticsName, diagnosticsResult);
 
             // Add Time Series Dependencies if needed
-            if (this.config.TelemetryService.Messages.TelemetryStorageType.Equals(
+            if (this.config.DeviceTelemetryService.Messages.TelemetryStorageType.Equals(
                 TIME_SERIES_KEY,
                 StringComparison.OrdinalIgnoreCase))
             {
@@ -98,11 +98,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 SetServiceStatus(timeSeriesName, timeSeriesResult, result, errors);
 
                 // Add Time Series Insights explorer url
-                var timeSeriesFqdn = this.config.TelemetryService.TimeSeries.TsiDataAccessFqdn;
+                var timeSeriesFqdn = this.config.DeviceTelemetryService.TimeSeries.TsiDataAccessFqdn;
                 var environmentId = timeSeriesFqdn.Substring(0, timeSeriesFqdn.IndexOf(TIME_SERIES_EXPLORER_URL_SEPARATOR_CHAR));
-                explorerUrl = this.config.TelemetryService.TimeSeries.ExplorerUrl +
+                explorerUrl = this.config.DeviceTelemetryService.TimeSeries.ExplorerUrl +
                     "?environmentId=" + environmentId +
-                    "&tid=" + this.config.Global.AzureActiveDirectory.AadTenantId;
+                    "&tid=" + this.config.Global.AzureActiveDirectory.TenantId;
                 result.Properties.Add(TIME_SERIES_EXPLORER_URL_KEY, explorerUrl);
             }
 
@@ -115,8 +115,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 result.Status.Message = string.Join("; ", errors);
             }
 
-            result.Properties.Add("DiagnosticsEndpointUrl", this.config?.ExternalDependencies.DiagnosticsWebServiceUrl);
-            result.Properties.Add("StorageAdapterApiUrl", this.config?.ExternalDependencies.StorageAdapterWebServiceUrl);
+            result.Properties.Add("DiagnosticsEndpointUrl", this.config?.ExternalDependencies.DiagnosticsServiceUrl);
+            result.Properties.Add("StorageAdapterApiUrl", this.config?.ExternalDependencies.StorageAdapterServiceUrl);
 
             _logger.LogInformation("Service status request {result}", result);
 

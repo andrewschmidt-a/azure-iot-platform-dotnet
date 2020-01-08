@@ -19,7 +19,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager
 
         public IotHubManagerClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
-            this.apiUrl = config.ExternalDependencies.IotHubManagerWebServiceUrl;
+            this.apiUrl = config.ExternalDependencies.IotHubManagerServiceUrl;
             this._requestHelper = requestHelper;
         }
 

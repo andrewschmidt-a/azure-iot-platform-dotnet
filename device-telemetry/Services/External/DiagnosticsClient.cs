@@ -42,7 +42,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
         {
             this.httpClient = httpClient;
             _logger = logger;
-            this.serviceUrl = config.ExternalDependencies.DiagnosticsWebServiceUrl;
+            this.serviceUrl = config.ExternalDependencies.DiagnosticsServiceUrl;
             this.maxRetries = config.ExternalDependencies.DiagnosticsMaxLogRetries;
             if (string.IsNullOrEmpty(this.serviceUrl))
             {

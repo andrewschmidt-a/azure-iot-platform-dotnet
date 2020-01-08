@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.IdentityGateway.WebService.Runtime;
+using Mmm.Platform.IoT.Common.Services;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {
@@ -9,16 +7,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
     {
         public static void Main(string[] args)
         {
-            var config = new Config(new ConfigData());
-            var host = new WebHostBuilder()
-                .UseUrls("http://*:" + config.Port)
-                .UseKestrel(options => { options.AddServerHeader = false; })
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .ConfigureLogging(builder => builder.AddConsole())
-                .Build();
-
-            host.Run();
+                BuildWebHost(args).Run();
         }
+
+        public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+                .Build();
     }
 }

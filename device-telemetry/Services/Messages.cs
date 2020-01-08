@@ -68,10 +68,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         {
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
-            this.timeSeriesEnabled = config.TelemetryService.Messages.TelemetryStorageType.Equals(
+            this.timeSeriesEnabled = config.DeviceTelemetryService.Messages.TelemetryStorageType.Equals(
                 TSI_STORAGE_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
             this.documentClient = storageClient.GetDocumentClient();
-            this.databaseName = config.TelemetryService.Messages.Database;
+            this.databaseName = config.DeviceTelemetryService.Messages.Database;
             _logger = logger;
             this.config = config;
             this._httpContextAccessor = contextAccessor;

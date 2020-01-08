@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
@@ -12,9 +13,9 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
         private readonly CloudStorageAccount storageAccount;
         private CloudTableClient client;
 
-        public TableStorageClient(ITableStorageClientConfig config)
+        public TableStorageClient(AppConfig config)
         {
-            this.storageAccount = CloudStorageAccount.Parse(config.StorageAccountConnectionString);
+            this.storageAccount = CloudStorageAccount.Parse(config.Global.StorageAccountConnectionString);
             this.client = this.storageAccount.CreateCloudTableClient();
         }
 

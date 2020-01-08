@@ -32,7 +32,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
 
             this.httpClient = httpClient;
 
-            this.serviceUri = config.ExternalDependencies.DeviceSimulationWebServiceUrl;
+            this.serviceUri = config.ExternalDependencies.DeviceSimulationServiceUrl;
             this._httpContextAccessor = httpContextAccessor;
         }
 

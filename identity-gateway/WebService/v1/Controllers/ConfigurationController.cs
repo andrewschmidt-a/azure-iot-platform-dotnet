@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -13,14 +13,14 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
     [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ConfigurationController : Controller
     {
-        private IServicesConfig _config;
+        private AppConfig config;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
         private readonly IRsaHelpers _rsaHelpers;
         public const string ContentType = "application/json";
 
-        public ConfigurationController(IServicesConfig config, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
+        public ConfigurationController(AppConfig config, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
         {
-            _config = config;
+            this.config = config;
             _openIdProviderConfiguration = openIdProviderConfiguration;
             _rsaHelpers = rsaHelpers;
         }
@@ -61,7 +61,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
         {
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.ContractResolver = new LowercaseContractResolver();
-            return new ContentResult() { Content = JsonConvert.SerializeObject(_rsaHelpers.GetJsonWebKey(_config.PublicKey), serializerSettings), ContentType = ContentType, StatusCode = StatusCodes.Status200OK };
+            return new ContentResult() { Content = JsonConvert.SerializeObject(_rsaHelpers.GetJsonWebKey(config.IdentityGatewayService.PublicKey), serializerSettings), ContentType = ContentType, StatusCode = StatusCodes.Status200OK };
         }
     }
 }

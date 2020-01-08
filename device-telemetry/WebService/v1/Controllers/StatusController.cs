@@ -29,7 +29,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
             var result = new StatusApiModel(serviceStatus);
 
             result.Properties.Add("AuthRequired", authRequired.ToString());
-            result.Properties.Add("Port", this.config.TelemetryService.WebServicePort.ToString());
+            result.Properties.Add("Port", this.config.DeviceTelemetryService.Port.ToString());
             return result;
         }
 

@@ -1,20 +1,20 @@
-﻿using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
+﻿using Mmm.Platform.IoT.Common.Services.Config;
 using SendGrid;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {
     public class SendGridClientFactory : ISendGridClientFactory
     {
-        private readonly IServicesConfig _servicesConfig;
+        private readonly AppConfig config;
 
-        public SendGridClientFactory(IServicesConfig servicesConfig)
+        public SendGridClientFactory(AppConfig config)
         {
-            this._servicesConfig = servicesConfig;
+            this.config = config;
         }
 
         public ISendGridClient CreateSendGridClient()
         {
-            return new SendGridClient(_servicesConfig.SendGridAPIKey);
+            return new SendGridClient(config.IdentityGatewayService.SendGridApiKey);
         }
     }
 }

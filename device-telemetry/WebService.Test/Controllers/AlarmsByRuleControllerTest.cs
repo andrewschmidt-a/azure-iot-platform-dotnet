@@ -58,13 +58,13 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
             this.asaManager = new Mock<IAsaManagerClient>();
             var config = new AppConfig();
             this.storage = new StorageClient(config, new Mock<ILogger<StorageClient>>().Object);
-            this.storage.CreateCollectionIfNotExistsAsync(config.TelemetryService.Alarms.Database, "");
+            this.storage.CreateCollectionIfNotExistsAsync(config.DeviceTelemetryService.Alarms.Database, "");
 
             this.sampleAlarms = this.getSampleAlarms();
             foreach (Alarm sampleAlarm in this.sampleAlarms)
             {
                 this.storage.UpsertDocumentAsync(
-                    config.TelemetryService.Alarms.Database,
+                    config.DeviceTelemetryService.Alarms.Database,
                     "",
                     this.AlarmToDocument(sampleAlarm));
             }

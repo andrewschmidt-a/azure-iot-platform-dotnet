@@ -21,7 +21,7 @@ namespace Mmm.Platform.IoT.Common.Services.External
 
         public UserManagementClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
-            this.serviceUri = config.ExternalDependencies.AuthWebServiceUrl;
+            this.serviceUri = config.ExternalDependencies.AuthServiceUrl;
             this._requestHelper = requestHelper;
         }
 

@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution", "solution", "{82
 		CONTRIBUTING.md = CONTRIBUTING.md
 		LICENSE = LICENSE
 		README.md = README.md
-		telemetry.sln.DotSettings = telemetry.sln.DotSettings
+		device-telemetry.sln.DotSettings = device-telemetry.sln.DotSettings
 		version = version
 	EndProjectSection
 EndProject

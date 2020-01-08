@@ -77,14 +77,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
 
         private void SetupClientWithConfigValues()
         {
-            this.config.Setup(f => f.TelemetryService.TimeSeries.TsiDataAccessFqdn).Returns("test123");
-            this.config.Setup(f => f.TelemetryService.TimeSeries.Audience).Returns("test123");
-            this.config.Setup(f => f.TelemetryService.TimeSeries.ApiVersion).Returns("2016-12-12-test");
-            this.config.Setup(f => f.TelemetryService.TimeSeries.Timeout).Returns("PT20S");
-            this.config.Setup(f => f.Global.AzureActiveDirectory.AadTenantId).Returns("test123");
-            this.config.Setup(f => f.Global.AzureActiveDirectory.AadAppId).Returns("test123");
-            this.config.Setup(f => f.Global.AzureActiveDirectory.AadAppSecret).Returns("test123");
-            this.config.Setup(f => f.TelemetryService.TimeSeries.Authority).Returns("https://login.testing.net/");
+            this.config.Setup(f => f.DeviceTelemetryService.TimeSeries.TsiDataAccessFqdn).Returns("test123");
+            this.config.Setup(f => f.DeviceTelemetryService.TimeSeries.Audience).Returns("test123");
+            this.config.Setup(f => f.DeviceTelemetryService.TimeSeries.ApiVersion).Returns("2016-12-12-test");
+            this.config.Setup(f => f.DeviceTelemetryService.TimeSeries.Timeout).Returns("PT20S");
+            this.config.Setup(f => f.Global.AzureActiveDirectory.TenantId).Returns("test123");
+            this.config.Setup(f => f.Global.AzureActiveDirectory.AppId).Returns("test123");
+            this.config.Setup(f => f.Global.AzureActiveDirectory.AppSecret).Returns("test123");
+            this.config.Setup(f => f.DeviceTelemetryService.TimeSeries.Authority).Returns("https://login.testing.net/");
 
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,

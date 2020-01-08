@@ -48,7 +48,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
             this.mockConfig = new Mock<AppConfig>();
             this.mockConfig
-                .Setup(x => x.ExternalDependencies.StorageAdapterWebServiceUrl)
+                .Setup(x => x.ExternalDependencies.StorageAdapterServiceUrl)
                 .Returns(MOCK_SERVICE_URI);
 
             this.client = new StorageAdapterClient(

@@ -44,19 +44,19 @@ namespace Mmm.Platform.IoT.Config.Services
 
             var asaManagerResult = await this.PingServiceAsync(
                 asaManagerName,
-                config.ExternalDependencies.AsaManagerWebServiceUrl);
+                config.ExternalDependencies.AsaManagerServiceUrl);
             SetServiceStatus(asaManagerName, asaManagerResult, result, errors);
 
             // Check access to StorageAdapter
             var storageAdapterResult = await this.PingServiceAsync(
                 storageAdapterName,
-                config.ExternalDependencies.StorageAdapterWebServiceUrl);
+                config.ExternalDependencies.StorageAdapterServiceUrl);
             SetServiceStatus(storageAdapterName, storageAdapterResult, result, errors);
 
             // Check access to Device Telemetry
             var deviceTelemetryResult = await this.PingServiceAsync(
                 deviceTelemetryName,
-                config.ExternalDependencies.TelemetryWebServiceUrl);
+                config.ExternalDependencies.TelemetryServiceUrl);
             SetServiceStatus(deviceTelemetryName, deviceTelemetryResult, result, errors);
 
             // Check access to DeviceSimulation
@@ -65,21 +65,21 @@ namespace Mmm.Platform.IoT.Config.Services
              * using the new 'Status' model */
             var deviceSimulationResult = await this.PingSimulationAsync(
                 deviceSimulationName,
-                config.ExternalDependencies.DeviceSimulationWebServiceUrl);
+                config.ExternalDependencies.DeviceSimulationServiceUrl);
 
             // Andrew Schmidt -- disabling until we stand up simulation
             // SetServiceStatus(deviceSimulationName, deviceSimulationResult, result, errors);
 
             var authResult = await this.PingServiceAsync(
                 authName,
-                config.ExternalDependencies.AuthWebServiceUrl);
+                config.ExternalDependencies.AuthServiceUrl);
             SetServiceStatus(authName, authResult, result, errors);
 
             // Add properties
-            result.Properties.Add("DeviceSimulationApiUrl", config?.ExternalDependencies.DeviceSimulationWebServiceUrl);
-            result.Properties.Add("StorageAdapterApiUrl", config?.ExternalDependencies.StorageAdapterWebServiceUrl);
-            result.Properties.Add("UserManagementApiUrl", config?.ExternalDependencies.AuthWebServiceUrl);
-            result.Properties.Add("TelemetryApiUrl", config?.ExternalDependencies.TelemetryWebServiceUrl);
+            result.Properties.Add("DeviceSimulationApiUrl", config?.ExternalDependencies.DeviceSimulationServiceUrl);
+            result.Properties.Add("StorageAdapterApiUrl", config?.ExternalDependencies.StorageAdapterServiceUrl);
+            result.Properties.Add("UserManagementApiUrl", config?.ExternalDependencies.AuthServiceUrl);
+            result.Properties.Add("TelemetryApiUrl", config?.ExternalDependencies.TelemetryServiceUrl);
             result.Properties.Add("SeedTemplate", config?.ConfigService.SeedTemplate);
             result.Properties.Add("SolutionType", config?.ConfigService.SolutionType);
 

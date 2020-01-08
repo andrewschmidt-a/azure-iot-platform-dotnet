@@ -20,6 +20,7 @@ using Mmm.Platform.IoT.Common.Services.Auth;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 
 namespace Mmm.Platform.IoT.Common.Services
 {
@@ -48,6 +49,7 @@ namespace Mmm.Platform.IoT.Common.Services
             builder.RegisterType<StorageClient>().As<IStorageClient>().SingleInstance();
             builder.RegisterType<AsaManagerClient>().As<IAsaManagerClient>().SingleInstance();
             builder.RegisterType<TimeSeriesClient>().As<ITimeSeriesClient>().SingleInstance();
+            builder.RegisterType<TableStorageClient>().As<ITableStorageClient>().SingleInstance();
             SetupCustomRules(builder);
             var container = builder.Build();
             Factory.RegisterContainer(container);

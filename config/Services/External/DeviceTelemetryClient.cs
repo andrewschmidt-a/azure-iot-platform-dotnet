@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
             IHttpContextAccessor httpContextAccessor)
         {
             this.httpClient = httpClient;
-            this.serviceUri = config.ExternalDependencies.TelemetryWebServiceUrl;
+            this.serviceUri = config.ExternalDependencies.TelemetryServiceUrl;
             this._httpContextAccessor = httpContextAccessor;
         }
 

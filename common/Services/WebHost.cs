@@ -65,8 +65,8 @@ namespace Mmm.Platform.IoT.Common.Services
                 config.AddConfiguration(azureAppConfigConfig.Configuration);
                 config.AddAzureKeyVault(
                     $"https://{azureAppConfigConfig.Global.KeyVault.Name}.vault.azure.net/",
-                    azureAppConfigConfig.Global.AzureActiveDirectory.AadAppId,
-                    azureAppConfigConfig.Global.AzureActiveDirectory.AadAppSecret);
+                    azureAppConfigConfig.Global.AzureActiveDirectory.AppId,
+                    azureAppConfigConfig.Global.AzureActiveDirectory.AppSecret);
                 config.AddConfiguration(initialAppConfig.Configuration);
             });
         }
