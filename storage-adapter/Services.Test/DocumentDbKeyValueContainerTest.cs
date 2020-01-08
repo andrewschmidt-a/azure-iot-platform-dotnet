@@ -62,8 +62,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockContainer = new Mock<DocumentDbKeyValueContainer>(
                 new MockFactory<IDocumentClient>(this.mockClient),
                 new MockExceptionChecker(),
-                mockServicesConfig.Object,
                 mockAppConfig.Object,
+                mockServicesConfig.Object,
                 new Mock<ILogger<DocumentDbKeyValueContainer>>().Object,
                 this.mockContextAccessor.Object);
 
