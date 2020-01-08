@@ -23,7 +23,7 @@ install:
       # For more information see https://aka.ms/devspaces/routing
       - $(spacePrefix)$(rootSpacePrefix)webui$(hostSuffix)
     secretsRef:
-      - PCS_APPLICATION_CONFIGURATION
+      - AppConfigurationConnectionString
 
 configurations:
   develop:

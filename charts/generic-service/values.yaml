@@ -44,7 +44,7 @@ secrets: {}
   #   mypassword: password
 
 secretsRef: 
-  - PCS_APPLICATION_CONFIGURATION
+  - AppConfigurationConnectionString
   # list of global secrets to pull in
   # - secret1
   # - secret2
