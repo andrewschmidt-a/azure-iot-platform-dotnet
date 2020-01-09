@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var cache = new DeviceProperties(
                 mockStorageAdapterClient.Object,
-                new AppConfig(),
+                new Mock<AppConfig> { DefaultValue = DefaultValue.Mock }.Object,
                 new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var cache = new DeviceProperties(
                 mockStorageAdapterClient.Object,
-                new AppConfig(),
+                new Mock<AppConfig> { DefaultValue = DefaultValue.Mock }.Object,
                 new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
