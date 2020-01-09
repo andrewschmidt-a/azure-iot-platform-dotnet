@@ -7,21 +7,41 @@ parameters:
   service: ''  # required
   dockerFile: '/Dockerfile' # Most services require modification
   context: '' # Never should need changing, just added it in case
+  appConfigurationName: 'app-config-odin-kyle'
+  resourceGroup: 'rg-crslbbiot-odin-dev'
 
 stages:
 - stage: Build
   displayName: Build image
-  jobs:  
+  jobs:
   - job: Build
+    pool:
+        vmImage: 'ubuntu-latest'
     displayName: Build
     steps:
+    - task: AzureCLI@1
+      inputs:
+        azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+            appConfigurationConnectionString=`az appconfig credential list --name ${{parameters.appConfigurationName}} -g ${{parameters.resourceGroup}} --query "[?name=='Primary'].connectionString | [0]"`
+            echo "##vso[task.setvariable variable=appConfigurationConnectionString]$appConfigurationConnectionString"
     - task: Docker@2
       displayName: Build an image
       inputs:
         containerRegistry: 'OdinDockerHub'
         repository: 'azureiot3m/${{ parameters.service }}'
-        command: 'buildAndPush'
+        command: 'build'
         dockerfile: '$(Build.SourcesDirectory)/${{ parameters.service }}${{ parameters.dockerFile }}'
         buildContext: '$(Build.SourcesDirectory)${{ parameters.context }}'
-        tags: |
-          ${{ parameters.tag }}
+        tags: ${{ parameters.tag }}
+        arguments: --build-arg AppConfigurationConnectionString="$(appConfigurationConnectionString)"
+    - task: Docker@2
+      displayName: Push the image
+      inputs:
+        containerRegistry: 'OdinDockerHub'
+        repository: 'azureiot3m/${{ parameters.service }}'
+        command: 'push'
+        dockerfile: '$(Build.SourcesDirectory)/${{ parameters.service }}${{ parameters.dockerFile }}'
+        buildContext: '$(Build.SourcesDirectory)${{ parameters.context }}'
+        tags: ${{ parameters.tag }}
