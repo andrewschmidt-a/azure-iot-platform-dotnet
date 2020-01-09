@@ -5,15 +5,40 @@
 Ensure the `dotnet` and `az` binaries are available in a terminal
 
 # One-Time Setup
-Set the `AppConfigurationConnectionString` user secret by running the following in a terminal:
+Ensure the `AppConfigurationConnectionString` is set before building. This can be done in one of two ways:
+
+1. Set an environment variable
+1. Use `dotnet user-secrets`
+
+Either way, you will need to choose an Azure App Configuration instance and make note of its `<name>` and `<resource-group>` for use in the steps below.
+
+## Set an environment variable
+### Windows
+In a PowerShell shell:
 ```
-dotnet user-secrets set AppConfigurationConnectionString (az appconfig credential list --name app-config-odin -g rg-crslbbiot-odin-dev --query "[?name=='Primary'].connectionString | [0]")
+[System.Environment]::SetEnvironmentVariable('AppConfigurationConnectionString', (az appconfig credential list --name <name> --resource-group <resource-group> --query "[?name=='Primary'].connectionString | [0]" --output tsv), 'User')
 ```
-And then enumerate secrets:
+
+### Non-Windows
+Set the `AppConfigurationConnectionString` environment variable in the Bash configuration file of your choice.
+
+## Use dotnet user-secrets
+After setting the user secret below, you can check that it is set properly as follows:
 ```
 dotnet user-secrets list --project ./common/Services/Services.csproj
-AppConfigurationConnectionString = ...
 ```
+### Windows
+In a PowerShell shell:
+```
+dotnet user-secrets set --project ./common/Services/Services.csproj AppConfigurationConnectionString (az appconfig credential list --name <name> --resource-group <resource-group> --query "[?name=='Primary'].connectionString | [0]" --output tsv)
+```
+
+### Non-Windows
+In a Bash shell:
+```
+dotnet user-secrets set --project ./common/Services/Services.csproj AppConfigurationConnectionString `az appconfig credential list --name <name> --resource-group <resource-group> --query "[?name=='Primary'].connectionString | [0]" --output tsv`
+```
+
 # Building
 ## Build all services
 ```
