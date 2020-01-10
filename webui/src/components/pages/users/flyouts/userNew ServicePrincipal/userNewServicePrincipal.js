@@ -3,18 +3,18 @@
 import React from 'react';
 import update from 'immutability-helper';
 
-import { IdentityGatewayService } from 'services';
+import { IdentityGatewayService } from './node_modules/services';
 import {
   permissions,
   toDiagnosticsModel
-} from 'services/models';
+} from './node_modules/services/models';
 import {
   copyToClipboard,
   int,
   LinkedComponent,
   svgs,
   Validator
-} from 'utilities';
+} from './node_modules/utilities';
 import {
   AjaxError,
   Btn,
@@ -33,18 +33,18 @@ import {
   SummaryCount,
   SummarySection,
   Svg
-} from 'components/shared';
+} from './node_modules/components/shared';
 
-import './userNew.scss';
-import Config from 'app.config';
-import {Policies} from 'utilities'
+import './userNewServicePrincipal.scss';
+import Config from './node_modules/app.config';
+import {Policies} from './node_modules/utilities'
 
-const isEmailRegex = /^(?:[a-z0-9A-Z!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9A-Z!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])$/;
-const emailAddress = x => x.match(isEmailRegex);
+const isGuidRegex = /^(\{{0,1}([0-9a-fA-F]){8}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){4}-([0-9a-fA-F]){12}\}{0,1})$/;
+const guid = x => x.match(isGuidRegex);
 const stringToInt = x => x === '' || x === '-' ? x : int(x);
 
 const userOptions = {
-  labelName: 'users.flyouts.new.user.label',
+  labelName: 'users.flyouts.new.servicePrincipal.label',
   user: {
     labelName: 'users.flyouts.new.user.user',
     value: false
@@ -63,7 +63,7 @@ const userRolesOptions = Policies.map(p => {
 });
 
 
-export class UserNew extends LinkedComponent {
+export class UserNewServicePrincipal extends LinkedComponent {
   constructor(props) {
     super(props);
 
@@ -73,7 +73,7 @@ export class UserNew extends LinkedComponent {
       successCount: 0,
       changesApplied: false,
       formData: {
-        email: "",
+        appid: "",
         role: ""
       },
       provisionedUser: {}
@@ -82,9 +82,9 @@ export class UserNew extends LinkedComponent {
     // Linked components
     this.formDataLink = this.linkTo('formData');
 
-    this.emailLink = this.formDataLink.forkTo('email')
+    this.appLink = this.formDataLink.forkTo('appid')
       .check(Validator.notEmpty, () => this.props.t('users.flyouts.new.validation.required'))
-      .check(emailAddress, () => this.props.t('users.flyouts.new.validation.invalid'))
+      .check(guid, () => this.props.t('users.flyouts.new.validation.invalidGuid'))
 
 
     this.roleLink = this.formDataLink.forkTo('role')
@@ -106,7 +106,7 @@ export class UserNew extends LinkedComponent {
 
   formIsValid() {
     return [
-      this.emailLink,
+      this.appLink,
       this.roleLink
     ].every(link => !link.error);
   }
@@ -136,7 +136,7 @@ export class UserNew extends LinkedComponent {
     if (this.formIsValid()) {
       this.setState({ isPending: true, error: null });
 
-      IdentityGatewayService.invite(this.state.formData.email, this.state.formData.role)
+      IdentityGatewayService.addSP(this.state.formData.appid, this.state.formData.role)
       .subscribe(
         function(user){
           this.setState({ successCount: this.state.successCount + 1 })
@@ -146,7 +146,7 @@ export class UserNew extends LinkedComponent {
         () => this.setState({ isPending: false, changesApplied: true, confirmStatus: false }) // On Completed
       );
 
-      this.props.logEvent(toDiagnosticsModel('Users_InviteClick', formData));
+      this.props.logEvent(toDiagnosticsModel('Users_SPAddClick', formData));
 
     }
   }
@@ -158,7 +158,7 @@ export class UserNew extends LinkedComponent {
     if (isPending) {
       return t('users.flyouts.new.pending');
     } else if (changesApplied) {
-      return t('users.flyouts.new.user.applySuccess');
+      return t('users.flyouts.new.servicePrincipal.applySuccess');
     } else {
       return t('users.flyouts.new.affected');
     }
@@ -187,7 +187,7 @@ export class UserNew extends LinkedComponent {
             <div className="users-new-content">
               <FormGroup>
                 <FormLabel>{t(userOptions.labelName)}</FormLabel>
-                <FormControl link={this.emailLink} type="text" onChange={this.formControlChange} />
+                <FormControl link={this.appLink} type="text" onChange={this.formControlChange} />
               </FormGroup>
 
               <FormGroup>
@@ -207,7 +207,7 @@ export class UserNew extends LinkedComponent {
             {
               !changesApplied &&
               <BtnToolbar>
-                <Btn primary={true} disabled={isPending || !this.formIsValid()} type="submit">{t('users.flyouts.new.user.apply')}</Btn>
+                <Btn primary={true} disabled={isPending || !this.formIsValid()} type="submit">{t('users.flyouts.new.servicePrincipal.apply')}</Btn>
                 <Btn svg={svgs.cancelX} onClick={() => this.onFlyoutClose('Users_CancelClick')}>{t('users.flyouts.new.cancel')}</Btn>
               </BtnToolbar>
             }

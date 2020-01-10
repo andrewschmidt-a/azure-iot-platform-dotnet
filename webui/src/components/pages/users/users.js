@@ -17,6 +17,7 @@ import {
   SearchInput
 } from 'components/shared';
 import { UserNewContainer } from './flyouts/userNew';
+import { UserNewServicePrincipalContainer } from './flyouts/userNewServicePrincipal/userNewServicePrincipal.container';
 import { svgs } from 'utilities';
 
 import './users.scss';
@@ -47,6 +48,10 @@ export class Users extends Component {
   openNewUserFlyout = () => {
     this.setState({ openFlyoutName: 'new-user' });
     this.props.logEvent(toDiagnosticsModel('Users_NewClick', {}));
+  }
+  openNewServicePrincipalFlyout = () => {
+    this.setState({ openFlyoutName: 'new-sp' });
+    this.props.logEvent(toDiagnosticsModel('ServicePrincipal_NewClick', {}));
   }
 
   onContextMenuChange = contextBtns => this.setState({
@@ -80,6 +85,7 @@ export class Users extends Component {
       t: this.props.t
     };
     const newUserFlyoutOpen = this.state.openFlyoutName === 'new-user';
+    const newServicePrincipalFlyoutOpen = this.state.openFlyoutName === 'new-sp';
 
     const error = userGroupError || userError;
 
@@ -96,6 +102,9 @@ export class Users extends Component {
             <Protected permission={permissions.inviteUsers}>
               <Btn svg={svgs.plus} onClick={this.openNewUserFlyout}>{t('users.flyouts.new.contextMenuName')}</Btn>
             </Protected>
+            <Protected permission={permissions.inviteUsers}>
+              <Btn svg={svgs.plus} onClick={this.openNewServicePrincipalFlyout}>{t('users.flyouts.new.addServicePrincipal')}</Btn>
+            </Protected>
             <RefreshBar refresh={fetchUsers} time={lastUpdated} isPending={isPending} t={t} />
           </ContextMenuAlign>
         </ContextMenu>
@@ -104,6 +113,7 @@ export class Users extends Component {
           {!!error && <AjaxError t={t} error={error} />}
           {!error && <UsersGridContainer {...gridProps} />}
           {newUserFlyoutOpen && <UserNewContainer onClose={this.closeFlyout} />}
+          {newServicePrincipalFlyoutOpen && <UserNewServicePrincipalContainer onClose={this.closeFlyout} />}
         </PageContent>
       </ComponentArray>
     );
