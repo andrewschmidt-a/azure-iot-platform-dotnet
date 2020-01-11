@@ -13,12 +13,12 @@ namespace Mmm.Platform.IoT.AsaManager.WebService.v1.Controllers
     [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class RulesController : Controller
     {
-        private readonly RulesConverter _ruleConverter;
+        private readonly IConverter _ruleConverter;
         private readonly IKeyGenerator _keyGenerator;
         private readonly ILogger _logger;
 
         public RulesController(
-            RulesConverter ruleConverter,
+            IConverter ruleConverter,
             IKeyGenerator keyGenerator,
             ILogger<RulesController> logger)
         {
