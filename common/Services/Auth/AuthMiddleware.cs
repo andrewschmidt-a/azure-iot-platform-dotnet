@@ -190,31 +190,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                     // header doesn't need to be parse again later in the User controller.
                     context.Request.SetCurrentUserClaims(jwtToken.Claims);
 
-                    // Store the user allowed actions in the request context to validate
-                    // authorization later in the controller.
-                    var userObjectId = context.Request.GetCurrentUserObjectId();
-                    var roles = context.Request.GetCurrentUserRoleClaim().ToList();
-                    List<string> allowedActions = new List<string>();
-                    if (roles.Any())
-                    {
-                        foreach (string role in roles)
-                        {
-                            if (!Permissions.Roles.ContainsKey(role))
-                            {
-                                _logger.LogWarning("Role claim specifies a role '{role}' that does not exist", role);
-                                continue;
-                            }
-
-                            allowedActions.AddRange(Permissions.Roles[role]);
-                        }
-                    }
-                    else
-                    {
-                        _logger.LogWarning("JWT token doesn't include any role claims.");
-                    }
-
-                    //DISBABLED RBAC -- adding all access 
-                    context.Request.SetCurrentUserAllowedActions(allowedActions);
+                    AddAllowedActionsToRequestContext(context);
 
                     //Set Tenant Information
                     context.Request.SetTenant();
@@ -230,6 +206,31 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             }
 
             return false;
+        }
+
+        private void AddAllowedActionsToRequestContext(HttpContext context)
+        {
+            var roles = context.Request.GetCurrentUserRoleClaim().ToList();
+            if (!roles.Any())
+            {
+                _logger.LogWarning("JWT token doesn't include any role claims.");
+                context.Request.SetCurrentUserAllowedActions(new string[] { });
+                return;
+            }
+
+            var allowedActions = new List<string>();
+            foreach (string role in roles)
+            {
+                if (!Permissions.Roles.ContainsKey(role))
+                {
+                    _logger.LogWarning("Role claim specifies a role '{role}' that does not exist", role);
+                    continue;
+                }
+
+                allowedActions.AddRange(Permissions.Roles[role]);
+            }
+
+            context.Request.SetCurrentUserAllowedActions(allowedActions);
         }
 
         private async Task<bool> InitializeTokenValidationAsync(CancellationToken token)
