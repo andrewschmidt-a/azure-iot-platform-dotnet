@@ -18,12 +18,12 @@ namespace Mmm.Platform.IoT.Config.Services
     {
         private readonly IAzureResourceManagerClient resourceManagerClient;
         private readonly ILogger _logger;
-        private readonly EmailActionSettings _emailActionSettings;
+        private readonly IActionSettings _emailActionSettings;
 
         public Actions(
             IAzureResourceManagerClient resourceManagerClient,
             ILogger<Actions> logger,
-            EmailActionSettings emailActionSettings)
+            IActionSettings emailActionSettings)
         {
             this.resourceManagerClient = resourceManagerClient;
             _logger = logger;
