@@ -7,12 +7,10 @@ namespace Mmm.Platform.IoT.AsaManager.WebService
     {
         public static void Main(string[] args)
         {
-                BuildWebHost(args).Run();
+            var builder = WebHost.CreateDefaultBuilder(args);
+            builder.UseStartup<Startup>();
+            var host = builder.Build();
+            host.Run();
         }
-
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
     }
 }
