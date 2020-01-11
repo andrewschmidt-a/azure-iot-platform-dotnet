@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 
 namespace Mmm.Platform.IoT.Common.Services.Auth
 {
     public static class Permissions
     {
-        public static readonly IReadOnlyDictionary<string, IEnumerable<string>> Roles = new Dictionary<string, IEnumerable<string>>
+        public static readonly IReadOnlyDictionary<string, IEnumerable<string>> Roles = new Dictionary<string, IEnumerable<string>>(StringComparer.OrdinalIgnoreCase)
         {
             {
                 "Admin", new List<string>
