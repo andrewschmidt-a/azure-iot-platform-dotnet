@@ -32,7 +32,9 @@ namespace Mmm.Platform.IoT.Common.Services
             builder.ConfigureLogging(logging =>
             {
                 logging.ClearProviders();
-                logging.SetMinimumLevel(LogLevel.Trace);
+                logging.AddConsole();
+                logging.AddDebug();
+                logging.SetMinimumLevel(LogLevel.Debug);
             });
         }
 
