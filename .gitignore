@@ -173,7 +173,7 @@ bld/
 #wwwroot/
 
 # Visual studio code
-.vscode/chrome
+.vscode
 # MSTest test Results
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
