@@ -7,7 +7,7 @@ using Newtonsoft.Json.Schema;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers
 {
-    class RuleTemplateValidator
+    public class RuleTemplateValidator
     {
         public static bool IsValid(string pathToTemplate)
         {

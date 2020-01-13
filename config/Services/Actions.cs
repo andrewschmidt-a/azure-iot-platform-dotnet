@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Models.Actions;
@@ -9,11 +7,6 @@ using System.Threading.Tasks;
 
 namespace Mmm.Platform.IoT.Config.Services
 {
-    public interface IActions
-    {
-        Task<List<IActionSettings>> GetListAsync();
-    }
-
     public class Actions : IActions
     {
         private readonly IAzureResourceManagerClient resourceManagerClient;

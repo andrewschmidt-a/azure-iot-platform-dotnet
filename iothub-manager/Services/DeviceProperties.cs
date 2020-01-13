@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,16 +12,6 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
-    public interface IDeviceProperties
-    {
-        Task<List<string>> GetListAsync();
-
-        Task<DevicePropertyServiceModel> UpdateListAsync(
-            DevicePropertyServiceModel devicePropertyServiceModel);
-
-        Task<bool> TryRecreateListAsync(bool force = false);
-    }
-
     /// <summary>  
     /// This class creates/reads cache of deviceProperties in/from CosmosDB.
     /// </summary> 

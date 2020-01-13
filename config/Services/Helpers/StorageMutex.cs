@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
@@ -9,12 +7,6 @@ using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 
 namespace Mmm.Platform.IoT.Config.Services.Helpers
 {
-    public interface IStorageMutex
-    {
-        Task<bool> EnterAsync(string collectionId, string key, TimeSpan timeout);
-        Task LeaveAsync(string collectionId, string key);
-    }
-
     public class StorageMutex : IStorageMutex
     {
         private const string LAST_MODIFIED_KEY = "$modified";

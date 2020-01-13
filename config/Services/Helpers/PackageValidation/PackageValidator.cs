@@ -1,18 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
 {
-    public interface IPackageValidator
-    {
-        JObject ParsePackageContent(string package);
-        Boolean Validate();
-    }
-
     public abstract class PackageValidator : IPackageValidator
     {
         JObject IPackageValidator.ParsePackageContent(string package)

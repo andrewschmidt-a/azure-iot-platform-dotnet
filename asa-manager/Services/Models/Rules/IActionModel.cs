@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 using System.Collections.Generic;
 using Mmm.Platform.IoT.AsaManager.Services.JsonConverters;
 using Newtonsoft.Json;
@@ -17,10 +15,5 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         // Dictionary should always be initialized as a case-insensitive dictionary
         [JsonProperty("Parameters")]
         IDictionary<string, object> Parameters { get; set; }
-    }
-
-    public enum ActionType
-    {
-        Email
     }
 }

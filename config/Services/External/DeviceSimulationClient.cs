@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.Config.Services.Helpers;
@@ -9,12 +7,6 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services.External
 {
-    public interface IDeviceSimulationClient
-    {
-        Task<SimulationApiModel> GetDefaultSimulationAsync();
-        Task UpdateSimulationAsync(SimulationApiModel model);
-    }
-
     public class DeviceSimulationClient : IDeviceSimulationClient
     {
         private const int DEFAULT_SIMULATION_ID = 1;

@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
@@ -10,11 +8,6 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services.External
 {
-    public interface IAzureResourceManagerClient
-    {
-        Task<bool> IsOffice365EnabledAsync();
-    }
-
     public class AzureResourceManagerClient : IAzureResourceManagerClient
     {
         private readonly IHttpClient httpClient;

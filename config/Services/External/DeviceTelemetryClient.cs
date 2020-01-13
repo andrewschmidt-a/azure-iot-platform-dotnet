@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.Config.Services.Helpers;
@@ -9,11 +7,6 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services.External
 {
-    public interface IDeviceTelemetryClient
-    {
-        Task UpdateRuleAsync(RuleApiModel rule, string etag);
-    }
-
     public class DeviceTelemetryClient : IDeviceTelemetryClient
     {
         private readonly IHttpClientWrapper httpClient;

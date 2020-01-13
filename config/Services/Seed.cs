@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,11 +15,6 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services
 {
-    public interface ISeed
-    {
-        Task TrySeedAsync();
-    }
-
     public class Seed : ISeed
     {
         private const string SEED_COLLECTION_ID = "solution-settings";

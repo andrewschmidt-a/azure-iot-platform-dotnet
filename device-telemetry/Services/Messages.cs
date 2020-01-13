@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -16,17 +14,6 @@ using Newtonsoft.Json.Linq;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
-    public interface IMessages
-    {
-        Task<MessageList> ListAsync(
-            DateTimeOffset? from,
-            DateTimeOffset? to,
-            string order,
-            int skip,
-            int limit,
-            string[] devices);
-    }
-
     public class Messages : IMessages
     {
         private const string DATA_PROPERTY_NAME = "data";

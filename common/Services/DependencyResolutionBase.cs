@@ -12,7 +12,6 @@ using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.Common.Services.Config;
-using KeyVault = Mmm.Platform.IoT.Common.Services.Runtime.KeyVault;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
@@ -35,7 +34,6 @@ namespace Mmm.Platform.IoT.Common.Services
             builder.Populate(services);
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
             AutowireAssemblies(builder);
-            builder.RegisterType<KeyVault>();
             builder.RegisterType<UserManagementClient>().As<IUserManagementClient>().SingleInstance();
             builder.RegisterType<AppConfigurationHelper>().As<IAppConfigurationHelper>().SingleInstance();
             builder.RegisterType<StorageAdapterClient>().As<IStorageAdapterClient>().SingleInstance();
