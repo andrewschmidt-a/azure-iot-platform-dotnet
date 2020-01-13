@@ -163,8 +163,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         {
             this.registry = new Mock<RegistryManager>();
             tenantHelper = new Mock<ITenantConnectionHelper>();
-            tenantHelper.Setup(e => e.getIoTHubName()).Returns(this.ioTHubHostName);
-            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+            tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
+            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             MockIdentity.mockClaims("one");
             this.deployments = new Deployments(tenantHelper.Object);
@@ -213,7 +213,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     c.Labels[RM_CREATED_LABEL] == bool.TrueString)))
                 .ReturnsAsync(newConfig);
 
-            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             if (string.IsNullOrEmpty(expectedException))
@@ -241,7 +241,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             this.registry.Setup(r => r.GetConfigurationAsync(It.IsAny<string>()))
                 .ReturnsAsync(configuration);
-            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act & Assert
             await Assert.ThrowsAsync(Type.GetType(RESOURCE_NOT_FOUND_EXCEPTION),
@@ -262,7 +262,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
 
             this.registry.Setup(r => r.GetConfigurationsAsync(20)).ReturnsAsync(configurations);
-            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployments = await this.deployments.ListAsync();
@@ -288,7 +288,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             IQuery queryResult = new ResultQuery(3);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(queryResult);
 
-            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId, true);
             var deviceStatuses = returnedDeployment.DeploymentMetrics.DeviceStatuses;
@@ -341,7 +341,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             this.registry.Setup(r => r.GetConfigurationAsync(deploymentId)).ReturnsAsync(configuration);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(new ResultQuery(0));
 
-            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId);
 
@@ -402,7 +402,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var deploymentId = configuration.Id;
             this.registry.Setup(r => r.GetConfigurationAsync(deploymentId)).ReturnsAsync(configuration);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(new ResultQuery(0));
-            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId);
@@ -456,7 +456,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     c.Labels[RM_CREATED_LABEL] == bool.TrueString)))
                 .ReturnsAsync(newConfig);
 
-            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var createdDeployment = await this.deployments.CreateAsync(depModel);
@@ -482,7 +482,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             this.registry.Setup(r => r.GetConfigurationsAsync(20))
                 .ReturnsAsync(configurations);
-            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registry.Object);
+            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployments = await this.deployments.ListAsync();

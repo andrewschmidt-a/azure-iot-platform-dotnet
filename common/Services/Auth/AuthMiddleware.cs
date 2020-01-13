@@ -50,7 +50,8 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
         private readonly RequestDelegate requestDelegate;
         private readonly IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan;
         private readonly AppConfig config;
-        private readonly ILogger _logger;
+        private readonly ILogger<AuthMiddleware> logger;
+        private readonly ILoggerFactory loggerFactory;
         private TokenValidationParameters tokenValidationParams;
         private readonly bool authRequired;
         private bool tokenValidationInitialized;
@@ -62,12 +63,14 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan,
             AppConfig config,
             IUserManagementClient userManagementClient,
-            ILogger<AuthMiddleware> logger)
+            ILogger<AuthMiddleware> logger,
+            ILoggerFactory loggerFactory)
         {
             this.requestDelegate = requestDelegate;
             this.openIdCfgMan = openIdCfgMan;
             this.config = config;
-            _logger = logger;
+            this.logger = logger;
+            this.loggerFactory = loggerFactory;
             this.authRequired = config.Global.AuthRequired;
             this.tokenValidationInitialized = false;
             this.userManagementClient = userManagementClient;
@@ -75,13 +78,13 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             // This will show in development mode, or in case auth is turned off
             if (!this.authRequired)
             {
-                _logger.LogWarning("### AUTHENTICATION IS DISABLED! ###");
-                _logger.LogWarning("### AUTHENTICATION IS DISABLED! ###");
-                _logger.LogWarning("### AUTHENTICATION IS DISABLED! ###");
+                this.logger.LogWarning("### AUTHENTICATION IS DISABLED! ###");
+                this.logger.LogWarning("### AUTHENTICATION IS DISABLED! ###");
+                this.logger.LogWarning("### AUTHENTICATION IS DISABLED! ###");
             }
             else
             {
-                _logger.LogInformation("Auth config is {config}", config);
+                this.logger.LogInformation("Auth config is {config}", config);
 
                 this.InitializeTokenValidationAsync(CancellationToken.None).Wait();
             }
@@ -90,9 +93,9 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             // TODO ~devis: remove this approach and use the service to service authentication
             // https://github.com/Azure/pcs-auth-dotnet/issues/18
             // https://github.com/Azure/azure-iot-pcs-remote-monitoring-dotnet/issues/11
-            _logger.LogWarning("### Service to service authentication is not available in public preview ###");
-            _logger.LogWarning("### Service to service authentication is not available in public preview ###");
-            _logger.LogWarning("### Service to service authentication is not available in public preview ###");
+            this.logger.LogWarning("### Service to service authentication is not available in public preview ###");
+            this.logger.LogWarning("### Service to service authentication is not available in public preview ###");
+            this.logger.LogWarning("### Service to service authentication is not available in public preview ###");
         }
 
         public Task Invoke(HttpContext context)
@@ -119,16 +122,16 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                 // https://github.com/Azure/azure-iot-pcs-remote-monitoring-dotnet/issues/11
 
                 // Call the next delegate/middleware in the pipeline
-                _logger.LogDebug("Skipping auth for service to service request");
+                logger.LogDebug("Skipping auth for service to service request");
                 context.Request.SetExternalRequest(false);
-                context.Request.SetTenant();
+                context.Request.SetTenant(loggerFactory.CreateLogger(typeof(RequestExtension)));
                 return this.requestDelegate(context);
             }
 
             if (!this.authRequired)
             {
                 // Call the next delegate/middleware in the pipeline
-                _logger.LogDebug("Skipping auth (auth disabled)");
+                logger.LogDebug("Skipping auth (auth disabled)");
                 return this.requestDelegate(context);
             }
 
@@ -146,7 +149,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             }
             else
             {
-                _logger.LogError("Authorization header not found");
+                logger.LogError("Authorization header not found");
             }
 
             if (header != null && header.StartsWith(AUTH_HEADER_PREFIX))
@@ -155,7 +158,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             }
             else
             {
-                _logger.LogError("Authorization header prefix not found");
+                logger.LogError("Authorization header prefix not found");
             }
 
             if (this.ValidateToken(token, context) || !this.authRequired)
@@ -164,7 +167,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                 return this.requestDelegate(context);
             }
 
-            _logger.LogWarning("Authentication required");
+            logger.LogWarning("Authentication required");
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             context.Response.Headers["Content-Type"] = "application/json";
             context.Response.WriteAsync(ERROR401);
@@ -174,7 +177,11 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
         private bool ValidateToken(string token, HttpContext context)
         {
-            if (string.IsNullOrEmpty(token)) return false;
+            if (string.IsNullOrEmpty(token))
+            {
+                logger.LogDebug("Token is not valid because it is null or empty");
+                return false;
+            }
 
             try
             {
@@ -193,16 +200,16 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                     AddAllowedActionsToRequestContext(context);
 
                     //Set Tenant Information
-                    context.Request.SetTenant();
+                    context.Request.SetTenant(loggerFactory.CreateLogger(typeof(RequestExtension)));
 
                     return true;
                 }
 
-                _logger.LogError("JWT token signature algorithm '{signatureAlgorithm}' is not allowed.", jwtToken.SignatureAlgorithm);
+                logger.LogError("JWT token signature algorithm '{signatureAlgorithm}' is not allowed.", jwtToken.SignatureAlgorithm);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to validate JWT token");
+                logger.LogError(e, "Failed to validate JWT token");
             }
 
             return false;
@@ -213,7 +220,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             var roles = context.Request.GetCurrentUserRoleClaim().ToList();
             if (!roles.Any())
             {
-                _logger.LogWarning("JWT token doesn't include any role claims.");
+                logger.LogWarning("JWT token doesn't include any role claims.");
                 context.Request.SetCurrentUserAllowedActions(new string[] { });
                 return;
             }
@@ -223,7 +230,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             {
                 if (!Permissions.Roles.ContainsKey(role))
                 {
-                    _logger.LogWarning("Role claim specifies a role '{role}' that does not exist", role);
+                    logger.LogWarning("Role claim specifies a role '{role}' that does not exist", role);
                     continue;
                 }
 
@@ -239,7 +246,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
             try
             {
-                _logger.LogInformation("Initializing OpenID configuration");
+                logger.LogInformation("Initializing OpenID configuration");
                 var openIdConfig = await this.openIdCfgMan.GetConfigurationAsync(token);
 
                 //Attempted to do it myself still issue with SSL
@@ -278,7 +285,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Failed to setup OpenId Connect");
+                logger.LogError(e, "Failed to setup OpenId Connect");
             }
 
             return this.tokenValidationInitialized;

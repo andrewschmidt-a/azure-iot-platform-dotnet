@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.AsaManager.WebService
         {
             foreach (var registration in ApplicationContainer.ComponentRegistry.Registrations)
             {
-                logger.LogTrace("Type {type} is registered in dependency injection container", registration.Activator.ToString());
+                logger.LogDebug("Type {type} is registered in dependency injection container", registration.Activator.ToString());
             }
         }
 

@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,27 +10,12 @@ using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
 using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
-    public interface IDeployments
-    {
-        Task<DeploymentServiceModel> CreateAsync(DeploymentServiceModel model);
-        Task<DeploymentServiceListModel> ListAsync();
-        Task<DeploymentServiceModel> GetAsync(string id, bool includeDeviceStatus);
-        Task DeleteAsync(string deploymentId);
-    }
-
-    [JsonConverter(typeof(StringEnumConverter))]
-    public enum DeploymentStatus
-    {
-        Pending, Succeeded, Failed, Unknown
-    }
-
     public class Deployments : IDeployments
     {
         private const int MAX_DEPLOYMENTS = 20;
@@ -57,17 +40,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
         private ITenantConnectionHelper _tenantHelper;
 
-        public Deployments(
-            AppConfig config,
-            ILogger<Deployments> logger,
-            IHttpContextAccessor httpContextAccessor)
+        public Deployments(AppConfig config, ILogger<Deployments> logger, ITenantConnectionHelper tenantConnectionHelper)
         {
             if (config == null)
             {
                 throw new ArgumentNullException("config");
             }
 
-            this._tenantHelper = new TenantConnectionHelper(httpContextAccessor, config);
+            this._tenantHelper = tenantConnectionHelper;
 
             _logger = logger;
         }
@@ -119,7 +99,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             var configuration = ConfigurationsHelper.ToHubConfiguration(model);
             // TODO: Add specific exception handling when exception types are exposed
             // https://github.com/Azure/azure-iot-sdk-csharp/issues/649
-            return new DeploymentServiceModel(await _tenantHelper.getRegistry().AddConfigurationAsync(configuration));
+            return new DeploymentServiceModel(await _tenantHelper.GetRegistry().AddConfigurationAsync(configuration));
         }
 
         /// <summary>
@@ -130,11 +110,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         public async Task<DeploymentServiceListModel> ListAsync()
         {
             // TODO: Currently they only support 20 deployments
-            var deployments = await _tenantHelper.getRegistry().GetConfigurationsAsync(MAX_DEPLOYMENTS);
+            var deployments = await _tenantHelper.GetRegistry().GetConfigurationsAsync(MAX_DEPLOYMENTS);
 
             if (deployments == null)
             {
-                throw new ResourceNotFoundException($"No deployments found for {_tenantHelper.getIoTHubName()} hub.");
+                throw new ResourceNotFoundException($"No deployments found for {_tenantHelper.GetIotHubName()} hub.");
             }
 
             List<DeploymentServiceModel> serviceModelDeployments =
@@ -159,7 +139,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            var deployment = await _tenantHelper.getRegistry().GetConfigurationAsync(deploymentId);
+            var deployment = await _tenantHelper.GetRegistry().GetConfigurationAsync(deploymentId);
 
             if (deployment == null)
             {
@@ -195,7 +175,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            await _tenantHelper.getRegistry().RemoveConfigurationAsync(deploymentId);
+            await _tenantHelper.GetRegistry().RemoveConfigurationAsync(deploymentId);
         }
 
         private bool CheckIfDeploymentWasMadeByRM(Configuration conf)
@@ -263,7 +243,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private HashSet<string> GetDevicesInQuery(string hubQuery, string deploymentId)
         {
             var query = string.Format(hubQuery, deploymentId);
-            var queryResponse = _tenantHelper.getRegistry().CreateQuery(query);
+            var queryResponse = _tenantHelper.GetRegistry().CreateQuery(query);
             var deviceIds = new HashSet<string>();
 
             try

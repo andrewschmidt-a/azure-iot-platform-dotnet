@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,35 +16,6 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
-    public interface IJobs
-    {
-        Task<IEnumerable<JobServiceModel>> GetJobsAsync(
-            JobType? jobType,
-            JobStatus? jobStatus,
-            int? pageSize,
-            string queryFrom,
-            string queryTo);
-
-        Task<JobServiceModel> GetJobsAsync(
-            string jobId,
-            bool? includeDeviceDetails,
-            DeviceJobStatus? deviceJobStatus);
-
-        Task<JobServiceModel> ScheduleDeviceMethodAsync(
-            string jobId,
-            string queryCondition,
-            MethodParameterServiceModel parameter,
-            DateTimeOffset startTimeUtc,
-            long maxExecutionTimeInSeconds);
-
-        Task<JobServiceModel> ScheduleTwinUpdateAsync(
-            string jobId,
-            string queryCondition,
-            TwinServiceModel twin,
-            DateTimeOffset startTimeUtc,
-            long maxExecutionTimeInSeconds);
-    }
-
     public class Jobs : IJobs
     {
         private IDeviceProperties _deviceProperties;
@@ -55,13 +24,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private const string DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}' and devices.jobs.status = '{1}'";
         private ITenantConnectionHelper tenantHelper;
 
-        public Jobs(AppConfig config, IDeviceProperties _deviceProperties, IHttpContextAccessor httpContextAccessor)
+        public Jobs(AppConfig config, IDeviceProperties _deviceProperties, ITenantConnectionHelper tenantConnectionHelper)
         {
             if (config == null)
             {
                 throw new ArgumentNullException("config");
             }
-            tenantHelper = new TenantConnectionHelper(httpContextAccessor, config);
+
+            tenantHelper = tenantConnectionHelper;
 
             this._deviceProperties = _deviceProperties;
 
@@ -112,7 +82,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 string.Format(DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT, jobId, deviceJobStatus.Value.ToString().ToLower()) :
                 string.Format(DEVICE_DETAILS_QUERY_FORMAT, jobId);
 
-            var query = tenantHelper.getRegistry().CreateQuery(queryString);
+            var query = tenantHelper.GetRegistry().CreateQuery(queryString);
 
             var deviceJobs = new List<DeviceJob>();
             while (query.HasMoreResults)

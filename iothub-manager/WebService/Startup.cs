@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Mmm.Platform.IoT.Common.Services.Auth;
 
@@ -34,18 +35,29 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
             services.AddMvc().AddControllersAsServices();
 
             // Prepare DI container
+            services.AddHttpContextAccessor();
             this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
+        private void LogDependencyInjectionContainerRegistrations(ILogger logger)
+        {
+            foreach (var registration in ApplicationContainer.ComponentRegistry.Registrations)
+            {
+                logger.LogDebug("Type {type} is registered in dependency injection container", registration.Activator.ToString());
+            }
+        }
+
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
             ICorsSetup corsSetup,
-            IApplicationLifetime appLifetime)
+            IApplicationLifetime appLifetime,
+            ILogger<Startup> logger)
         {
+            LogDependencyInjectionContainerRegistrations(logger);
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
