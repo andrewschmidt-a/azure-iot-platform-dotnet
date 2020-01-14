@@ -1,3 +1,10 @@
+// -----------------------------------------------------------------------
+// <copyright file="BlobStorageClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// Licensed under the MIT license. See the LICENSE file in the project root for full license information.
+// </copyright>
+// -----------------------------------------------------------------------
+
 using System;
 using System.IO;
 using System.Threading.Tasks;
