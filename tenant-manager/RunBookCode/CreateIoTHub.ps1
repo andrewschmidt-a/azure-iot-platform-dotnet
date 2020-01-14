@@ -62,7 +62,6 @@ $iotHubTemplate = @"
     "capacity":1
   },
     "properties": {
-        "state": "Active",
         "routing":{  
             "enrichments":[  
                 {  
@@ -148,6 +147,8 @@ $iotHubUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)
 # Create IoT Hub using Azure REST API
 $result = (Invoke-RestMethod -Method Put -Headers $requestheader -Uri $iotHubUri -Body $iotHubTemplate)
 
+Write-Output $iotHubTemplate
+
 # Wait for IoT Hub to be created
 $tries = 0
 while (($result.properties.state -ne "Active") -and ($tries -lt 30)) {
@@ -188,6 +189,8 @@ $storageAccount = $data.storageAccount
 $tableName = "tenant"
 $table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $tableName -storageAccountName $storageAccount
 $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
+Write-Output "$($row.RowKey)"
+Write-Output "$($row.PartitionKey)"
 if ($row.RowKey -and $row.PartitionKey) {
     # If the rowkey and partition key are non-empty values, the row exists.
     # If the row exists, fill in the fields related to the IoT Hub
