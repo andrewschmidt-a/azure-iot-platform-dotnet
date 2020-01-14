@@ -7,7 +7,7 @@
 
   <!-- Configure the JsonToPoco pre-build tool -->
   <PropertyGroup>
-    <KeyVaultName>key-vault-odin-kyle</KeyVaultName>
+    <KeyVaultName>key-vault-odin</KeyVaultName>
     <ConfigClassFileBuilderOutputPath>Config</ConfigClassFileBuilderOutputPath>
     <ConfigClassFileBuilderGeneratedFileNameSuffix>.Generated.cs</ConfigClassFileBuilderGeneratedFileNameSuffix>
     <ConfigClassFileBuilderGeneratedCodeNamespace>$(RootNamespace).Config</ConfigClassFileBuilderGeneratedCodeNamespace>

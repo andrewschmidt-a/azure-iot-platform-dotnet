@@ -7,7 +7,7 @@ parameters:
   service: ''  # required
   dockerFile: '/Dockerfile' # Most services require modification
   context: '' # Never should need changing, just added it in case
-  appConfigurationName: 'app-config-odin-kyle'
+  appConfigurationName: 'app-config-odin'
   resourceGroup: 'rg-crslbbiot-odin-dev'
 
 stages:
