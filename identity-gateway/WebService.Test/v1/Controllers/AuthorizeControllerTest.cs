@@ -220,7 +220,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             mockAuthContext.Setup(m => m.AcquireTokenAsync(It.IsAny<string>(), It.IsAny<ClientCredential>())).Throws(new Exception("Authentication Failed!"));
 
             // Act
-            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F", tenant = someTenant.ToString() }) as ObjectResult;
+            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F" }) as ObjectResult;
 
             // Assert
             Assert.Equal(StatusCodes.Status401Unauthorized, result.StatusCode);
@@ -234,7 +234,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             mockJwtHelper.Setup(m => m.GetIdentityToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new JwtSecurityToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"));
 
             // Act
-            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F", tenant = someTenant.ToString() }) as ObjectResult;
+            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F" }) as ObjectResult;
 
             // Assert
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
