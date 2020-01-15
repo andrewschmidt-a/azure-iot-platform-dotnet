@@ -15,29 +15,16 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 {
     public class Startup
     {
-        // Initialized in `Startup`
-        public IConfigurationRoot Configuration { get; }
-
-        // Initialized in `ConfigureServices`
+        public IConfiguration Configuration { get; }
         public IContainer ApplicationContainer { get; private set; }
         private readonly CancellationTokenSource agentsRunState;
 
-        // Invoked by `Program.cs`
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-#if DEBUG
-                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
-#endif
-                ;
-            this.Configuration = builder.Build();
+            Configuration = configuration;
             this.agentsRunState = new CancellationTokenSource();
         }
 
-        // This is where you register dependencies, add services to the
-        // container. This method is called by the runtime, before the
-        // Configure method below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -52,7 +39,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             services.AddMvc().AddControllersAsServices();
 
             // Prepare DI container
-            this.ApplicationContainer = new DependencyResolution().Setup(services);
+            services.AddHttpContextAccessor();
+            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
@@ -85,7 +73,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             corsSetup.UseMiddleware(app);
 
             app.UseMvc();
-
+            
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());

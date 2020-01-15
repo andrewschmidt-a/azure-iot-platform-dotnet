@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services.Models.Actions
 {
@@ -17,7 +17,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
         private const string APP_PERMISSIONS_KEY = "ApplicationPermissionsAssigned";
 
         private readonly IAzureResourceManagerClient resourceManagerClient;
-        private readonly IServicesConfig servicesConfig;
+        private readonly AppConfig config;
         private readonly ILogger _logger;
 
         public ActionType Type { get; }
@@ -28,11 +28,11 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
         // to retrieve all settings due to async call to logic app
         public EmailActionSettings(
             IAzureResourceManagerClient resourceManagerClient,
-            IServicesConfig servicesConfig,
+            AppConfig config,
             ILogger<EmailActionSettings> logger)
         {
             this.resourceManagerClient = resourceManagerClient;
-            this.servicesConfig = servicesConfig;
+            this.config = config;
             _logger = logger;
 
             this.Type = ActionType.Email;
@@ -63,7 +63,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
 
             // Get Url for Office 365 Logic App Connector setup in portal
             // for display on the webui for one-time setup.
-            this.Settings.Add(OFFICE365_CONNECTOR_URL_KEY, this.servicesConfig.Office365LogicAppUrl);
+            this.Settings.Add(OFFICE365_CONNECTOR_URL_KEY, config.ConfigService.ConfigServiceActions.Office365ConnectionUrl);
 
             _logger.LogDebug("Email action settings retrieved: {settings}. Email setup status: {status}", office365IsEnabled, Settings);
         }

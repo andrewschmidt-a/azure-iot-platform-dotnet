@@ -5,10 +5,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 {
@@ -16,16 +16,16 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
     {
         private UserTenantContainer _userTenantContainer;
         private UserSettingsContainer _userSettingsContainer;
-        private IServicesConfig _config;
+        private AppConfig config;
         private IHttpContextAccessor _httpContextAccessor;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
         private readonly IRsaHelpers _rsaHelpers;
 
-        public JwtHelpers(UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IServicesConfig config, IHttpContextAccessor httpContextAccessor, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
+        public JwtHelpers(UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, AppConfig config, IHttpContextAccessor httpContextAccessor, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
         {
             _userTenantContainer = userTenantContainer;
             _userSettingsContainer = userSettingsContainer;
-            _config = config;
+            this.config = config;
             _httpContextAccessor = httpContextAccessor;
             _openIdProviderConfiguration = openIdProviderConfiguration;
             _rsaHelpers = rsaHelpers;
@@ -125,7 +125,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
             // Create Security key  using private key above:
             // not that latest version of JWT using Microsoft namespace instead of System
             var securityKey =
-                new RsaSecurityKey(_rsaHelpers.DecodeRsa(_config.PrivateKey));
+                new RsaSecurityKey(_rsaHelpers.DecodeRsa(config.IdentityGatewayService.PrivateKey));
 
             // Also note that securityKey length should be >256b
             // so you have to make sure that your private key has a proper length
@@ -156,7 +156,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 // Validate the token signature
                 RequireSignedTokens = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKeys = _rsaHelpers.GetJsonWebKey(this._config.PublicKey).Keys,
+                IssuerSigningKeys = _rsaHelpers.GetJsonWebKey(config.IdentityGatewayService.PublicKey).Keys,
 
                 // Validate the token issuer
                 ValidateIssuer = false,

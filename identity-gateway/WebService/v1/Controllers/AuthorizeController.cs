@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.IdentityGateway.Services;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Mmm.Platform.IoT.IdentityGateway.WebService.Models;
 using Newtonsoft.Json;
 
@@ -24,7 +24,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
     [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AuthorizeController : Controller
     {
-        private IServicesConfig _config;
+        private AppConfig config;
         private IJwtHelpers _jwtHelper;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
         private IAuthenticationContext _authenticationContext;
@@ -33,9 +33,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
         private UserSettingsContainer _userSettingsContainer;
 
 
-        public AuthorizeController(IServicesConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJwtHelpers jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration, IAuthenticationContext authenticationContext)
+        public AuthorizeController(AppConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJwtHelpers jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration, IAuthenticationContext authenticationContext)
         {
-            this._config = config;
+            this.config = config;
             this._userTenantContainer = userTenantContainer;
             this._userSettingsContainer = userSettingsContainer;
             this._jwtHelper = jwtHelper;
@@ -63,7 +63,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 throw new Exception("Tenant is not valid!");
             }
 
-            var uri = new UriBuilder(this._config.AzureB2CBaseUri);
+            var uri = new UriBuilder(this.config.Global.AzureB2cBaseUri);
 
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
@@ -97,9 +97,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             var claims = new List<Claim>();
             claims.Add(new Claim("client_id", input.client_id));
             claims.Add(new Claim("sub", input.client_id));
-            claims.Add(new Claim("name", "Client Credentials"));
+            claims.Add(new Claim("name", input.client_id));
+            claims.Add(new Claim("type", "Client Credentials"));
 
-            string tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(claims, input.tenant, "IoTPlatform", null));
+            string tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(claims, input.scope, "IoTPlatform", null));
 
             return StatusCode(200, tokenString);
         }

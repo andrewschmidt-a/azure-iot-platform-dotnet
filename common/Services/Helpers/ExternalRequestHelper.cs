@@ -181,13 +181,13 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             switch (response.StatusCode)
             {
                 case HttpStatusCode.NotFound:
-                    throw new ResourceNotFoundException($"{response.Content}, request URL = {request.Uri}");
+                    throw new ResourceNotFoundException(response.Content);
 
                 case HttpStatusCode.Conflict:
-                    throw new ConflictingResourceException($"{response.Content}, request URL = {request.Uri}");
+                    throw new ConflictingResourceException(response.Content);
 
                 default:
-                    throw new HttpRequestException($"Http request failed, status code = {response.StatusCode}, content = {response.Content}, request URL = {request.Uri}");
+                    throw new HttpRequestException(response.Content);
             }
         }
     }

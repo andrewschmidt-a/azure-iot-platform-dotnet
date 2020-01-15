@@ -4,9 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Config.Services;
 using Mmm.Platform.IoT.Config.Services.Models;
-using Mmm.Platform.IoT.Config.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
@@ -16,6 +14,7 @@ using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services.Test
 {
@@ -145,9 +144,12 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             this.storage = new Storage(
                 this.mockClient.Object,
                 this.mockAsaManager.Object,
-                new ServicesConfig
+                new AppConfig
                 {
-                    AzureMapsKey = this.azureMapsKey
+                    ConfigService = new ConfigServiceConfig
+                    {
+                        AzureMapsKey = azureMapsKey
+                    }
                 },
                 new Mock<ILogger<Storage>>().Object);
         }

@@ -26,4 +26,8 @@ install:
 configurations:
   develop:
     build:
+      dockerfile: Dockerfile.develop
       useGitIgnore: true
+      args:
+        BUILD_CONFIGURATION: ${BUILD_CONFIGURATION:-Debug}
+        AppConfigurationConnectionString: ${secret.globalsecrets.AppConfigurationConnectionString}

@@ -13,6 +13,7 @@ COPY common common
 COPY tenant-manager tenant-manager
 
 FROM restore AS publish
+ARG AppConfigurationConnectionString=
 WORKDIR /src/tenant-manager/WebService
 RUN dotnet publish WebService.csproj \
 --output /app \

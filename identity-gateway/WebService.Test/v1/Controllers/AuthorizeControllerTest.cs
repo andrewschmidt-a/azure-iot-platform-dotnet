@@ -8,7 +8,6 @@ using Mmm.Platform.IoT.IdentityGateway.Controllers;
 using Mmm.Platform.IoT.IdentityGateway.Services;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.Services.Runtime;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
@@ -18,6 +17,7 @@ using Newtonsoft.Json.Linq;
 using Xunit;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Mmm.Platform.IoT.IdentityGateway.WebService.Models;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
@@ -36,7 +36,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
         private string invite = "someInvite";
         private const string somePublicKey = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAryQICCl6NZ5gDKrnSztO\r\n3Hy8PEUcuyvg/ikC+VcIo2SFFSf18a3IMYldIugqqqZCs4/4uVW3sbdLs/6PfgdX\r\n7O9D22ZiFWHPYA2k2N744MNiCD1UE+tJyllUhSblK48bn+v1oZHCM0nYQ2NqUkvS\r\nj+hwUU3RiWl7x3D2s9wSdNt7XUtW05a/FXehsPSiJfKvHJJnGOX0BgTvkLnkAOTd\r\nOrUZ/wK69Dzu4IvrN4vs9Nes8vbwPa/ddZEzGR0cQMt0JBkhk9kU/qwqUseP1QRJ\r\n5I1jR4g8aYPL/ke9K35PxZWuDp3U0UPAZ3PjFAh+5T+fc7gzCs9dPzSHloruU+gl\r\nFQIDAQAB\r\n-----END PUBLIC KEY-----";
         private const string someUri = "http://azureb2caseuri.com";
-        private Mock<IServicesConfig> mockServicesConfig;
+        private Mock<AppConfig> mockAppConfig;
         private Mock<IJwtHelpers> mockJwtHelper;
         private Mock<IAuthenticationContext> mockAuthContext;
         private JwtSecurityToken someSecurityToken;
@@ -220,7 +220,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             mockAuthContext.Setup(m => m.AcquireTokenAsync(It.IsAny<string>(), It.IsAny<ClientCredential>())).Throws(new Exception("Authentication Failed!"));
 
             // Act
-            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F", tenant = someTenant.ToString() }) as ObjectResult;
+            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F" }) as ObjectResult;
 
             // Assert
             Assert.Equal(StatusCodes.Status401Unauthorized, result.StatusCode);
@@ -234,7 +234,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             mockJwtHelper.Setup(m => m.GetIdentityToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new JwtSecurityToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"));
 
             // Act
-            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F", tenant = someTenant.ToString() }) as ObjectResult;
+            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F" }) as ObjectResult;
 
             // Assert
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
@@ -244,14 +244,14 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 
         private void InitializeController()
         {
-            mockServicesConfig = new Mock<IServicesConfig> { DefaultValue = DefaultValue.Mock };
+            mockAppConfig = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
             mockUserTenantContainer = new Mock<UserTenantContainer>();
             mockUserSettingsContainer = new Mock<IUserContainer<UserSettingsModel, UserSettingsInput>>();
             mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
             mockAuthContext = new Mock<IAuthenticationContext> { DefaultValue = DefaultValue.Mock };
             mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
             mockOpenIdProviderConfiguration = new Mock<IOpenIdProviderConfiguration> { DefaultValue = DefaultValue.Mock };
-            authorizeController = new AuthorizeController(mockServicesConfig.Object, mockUserTenantContainer.Object, mockUserSettingsContainer.Object as UserSettingsContainer, mockJwtHelper.Object, mockOpenIdProviderConfiguration.Object, mockAuthContext.Object)
+            authorizeController = new AuthorizeController(mockAppConfig.Object, mockUserTenantContainer.Object, mockUserSettingsContainer.Object as UserSettingsContainer, mockJwtHelper.Object, mockOpenIdProviderConfiguration.Object, mockAuthContext.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -262,8 +262,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 
         private void SetupDefaultBehaviors()
         {
-            mockServicesConfig.Setup(m => m.AzureB2CBaseUri).Returns(someUri);
-            mockServicesConfig.Setup(m => m.PublicKey).Returns(somePublicKey);
+            mockAppConfig.Setup(m => m.Global.AzureB2cBaseUri).Returns(someUri);
+            mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(somePublicKey);
             someSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", someTenant.ToString()) });
             mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out someSecurityToken)).Returns(true);
             mockOpenIdProviderConfiguration.Setup(m => m.issuer).Returns(someIssuer);

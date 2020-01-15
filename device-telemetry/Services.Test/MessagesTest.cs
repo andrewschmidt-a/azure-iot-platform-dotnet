@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.DeviceTelemetry.Services;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
@@ -15,6 +14,7 @@ using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
@@ -32,10 +32,16 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 
         public MessagesTest()
         {
-            var servicesConfig = new ServicesConfig()
+            var servicesConfig = new AppConfig()
             {
-                MessagesConfig = new StorageConfig("database"),
-                StorageType = "tsi"
+                DeviceTelemetryService = new DeviceTelemetryServiceConfig
+                {
+                    Messages = new MessagesConfig
+                    {
+                        Database = "database",
+                        TelemetryStorageType = "tsi"
+                    }
+                }
             };
             storageClient = new Mock<IStorageClient>();
             timeSeriesClient = new Mock<ITimeSeriesClient>();

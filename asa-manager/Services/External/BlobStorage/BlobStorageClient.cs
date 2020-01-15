@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage
@@ -10,9 +11,9 @@ namespace Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage
     {
         private readonly BlobServiceClient client;
 
-        public BlobStorageClient(IBlobStorageClientConfig config)
+        public BlobStorageClient(AppConfig config)
         {
-            this.client = new BlobServiceClient(config.StorageAccountConnectionString);
+            this.client = new BlobServiceClient(config.Global.StorageAccountConnectionString);
         }
 
         public async Task<StatusResultServiceModel> StatusAsync()

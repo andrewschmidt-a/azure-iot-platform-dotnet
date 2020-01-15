@@ -1,12 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Mmm.Platform.IoT.Config.Services.Models;
 
 namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
 {
-
     public static class PackageValidatorFactory
     {
         private static Dictionary<ConfigType, IPackageValidator> validatorMapping =

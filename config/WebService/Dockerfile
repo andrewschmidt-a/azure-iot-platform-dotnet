@@ -13,6 +13,7 @@ COPY common common
 COPY config config
 
 FROM restore AS publish
+ARG AppConfigurationConnectionString=
 WORKDIR /src/config/WebService
 RUN dotnet publish WebService.csproj \
 --output /app \

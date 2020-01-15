@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -19,34 +17,6 @@ using Newtonsoft.Json.Linq;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
-    public interface IRules
-    {
-        Task CreateFromTemplateAsync(string template);
-
-        Task DeleteAsync(string id);
-
-        Task<Rule> GetAsync(string id);
-
-        Task<List<Rule>> GetListAsync(
-            string order,
-            int skip,
-            int limit,
-            string groupId,
-            bool includeDeleted);
-
-        Task<List<AlarmCountByRule>> GetAlarmCountForListAsync(
-            DateTimeOffset? from,
-            DateTimeOffset? to,
-            string order,
-            int skip,
-            int limit,
-            string[] devices);
-
-        Task<Rule> CreateAsync(Rule rule);
-
-        Task<Rule> UpsertIfNotDeletedAsync(Rule rule);
-    }
-
     public class Rules : IRules
     {
         private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";

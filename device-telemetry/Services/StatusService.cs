@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
@@ -13,6 +12,7 @@ using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
@@ -30,23 +30,23 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly IHttpClient httpClient;
         private readonly ILogger _logger;
-        private readonly IServicesConfig servicesConfig;
+        private readonly AppConfig config;
 
         public StatusService(
             ILogger<StatusService> logger,
             IStorageClient storageClient,
             ITimeSeriesClient timeSeriesClient,
             IHttpClient httpClient,
-            IServicesConfig servicesConfig)
+            AppConfig config)
         {
             _logger = logger;
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
             this.httpClient = httpClient;
-            this.servicesConfig = servicesConfig;
+            this.config = config;
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
+        public async Task<StatusServiceModel> GetStatusAsync()
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();
@@ -61,35 +61,35 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             var asaManagerResult = await this.PingServiceAsync(
                 asaManagerName,
-                this.servicesConfig.AsaManagerApiUrl);
+                this.config.ExternalDependencies.AsaManagerServiceUrl);
             SetServiceStatus(asaManagerName, asaManagerResult, result, errors);
 
             // Check access to StorageAdapter
             var storageAdapterResult = await this.PingServiceAsync(
                 storageAdapterName,
-                this.servicesConfig.StorageAdapterApiUrl);
+                this.config.ExternalDependencies.StorageAdapterServiceUrl);
             SetServiceStatus(storageAdapterName, storageAdapterResult, result, errors);
 
-            if (authRequired)
+            if (config.Global.AuthRequired)
             {
                 // Check access to Auth
                 var authResult = await this.PingServiceAsync(
                     authName,
-                    this.servicesConfig.UserManagementApiUrl);
+                    this.config.ExternalDependencies.AuthServiceUrl);
                 SetServiceStatus(authName, authResult, result, errors);
-                result.Properties.Add("UserManagementApiUrl", this.servicesConfig?.UserManagementApiUrl);
+                result.Properties.Add("UserManagementApiUrl", this.config?.ExternalDependencies.AuthServiceUrl);
             }
 
             // Check access to Diagnostics
             var diagnosticsResult = await this.PingServiceAsync(
                 diagnosticsName,
-                this.servicesConfig.DiagnosticsApiUrl);
+                this.config.ExternalDependencies.DiagnosticsServiceUrl);
             // Note: Overall simulation service status is independent of diagnostics service
             // Hence not using SetServiceStatus on diagnosticsResult
             result.Dependencies.Add(diagnosticsName, diagnosticsResult);
 
             // Add Time Series Dependencies if needed
-            if (this.servicesConfig.StorageType.Equals(
+            if (this.config.DeviceTelemetryService.Messages.TelemetryStorageType.Equals(
                 TIME_SERIES_KEY,
                 StringComparison.OrdinalIgnoreCase))
             {
@@ -98,11 +98,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 SetServiceStatus(timeSeriesName, timeSeriesResult, result, errors);
 
                 // Add Time Series Insights explorer url
-                var timeSeriesFqdn = this.servicesConfig.TimeSeriesFqdn;
+                var timeSeriesFqdn = this.config.DeviceTelemetryService.TimeSeries.TsiDataAccessFqdn;
                 var environmentId = timeSeriesFqdn.Substring(0, timeSeriesFqdn.IndexOf(TIME_SERIES_EXPLORER_URL_SEPARATOR_CHAR));
-                explorerUrl = this.servicesConfig.TimeSeriesExplorerUrl +
+                explorerUrl = this.config.DeviceTelemetryService.TimeSeries.ExplorerUrl +
                     "?environmentId=" + environmentId +
-                    "&tid=" + this.servicesConfig.ActiveDirectoryTenant;
+                    "&tid=" + this.config.Global.AzureActiveDirectory.TenantId;
                 result.Properties.Add(TIME_SERIES_EXPLORER_URL_KEY, explorerUrl);
             }
 
@@ -115,8 +115,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 result.Status.Message = string.Join("; ", errors);
             }
 
-            result.Properties.Add("DiagnosticsEndpointUrl", this.servicesConfig?.DiagnosticsApiUrl);
-            result.Properties.Add("StorageAdapterApiUrl", this.servicesConfig?.StorageAdapterApiUrl);
+            result.Properties.Add("DiagnosticsEndpointUrl", this.config?.ExternalDependencies.DiagnosticsServiceUrl);
+            result.Properties.Add("StorageAdapterApiUrl", this.config?.ExternalDependencies.StorageAdapterServiceUrl);
+            result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
+            result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
 
             _logger.LogInformation("Service status request {result}", result);
 

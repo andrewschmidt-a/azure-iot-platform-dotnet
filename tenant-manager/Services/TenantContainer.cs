@@ -10,7 +10,6 @@ using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.TenantManager.Services.External;
 using Mmm.Platform.IoT.TenantManager.Services.Helpers;
 using Mmm.Platform.IoT.TenantManager.Services.Models;
-using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 
 namespace Mmm.Platform.IoT.TenantManager.Services
 {
@@ -40,7 +39,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             { "pcs", STORAGE_ADAPTER_DATABASE_ID }
         };
 
-        public readonly IServicesConfig _config;
         public readonly ILogger _logger;
         public readonly IIdentityGatewayClient _identityClient;
         public readonly IDeviceGroupsConfigClient _deviceGroupClient;
@@ -50,7 +48,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         public readonly IAppConfigurationHelper _appConfigHelper;
 
         public TenantContainer(
-            IServicesConfig config,
             IHttpContextAccessor httpContextAccessor,
             ILogger<TenantContainer> log,
             IRunbookHelper RunbookHelper,
@@ -60,7 +57,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             IDeviceGroupsConfigClient deviceGroupConfigClient,
             IAppConfigurationHelper appConfigHelper)
         {
-            this._config = config;
             _logger = log;
             this._runbookHelper = RunbookHelper;
             this._cosmosClient = cosmosClient;

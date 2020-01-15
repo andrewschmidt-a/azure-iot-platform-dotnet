@@ -9,6 +9,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
     {
         public string client_id { get; set; }
         public string client_secret { get; set; }
-        public string tenant { get; set; }
+        public string scope { get; set; }
     }
 }

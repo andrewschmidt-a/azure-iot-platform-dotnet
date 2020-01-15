@@ -13,6 +13,7 @@ COPY common common
 COPY asa-manager asa-manager
 
 FROM restore AS publish
+ARG AppConfigurationConnectionString=
 WORKDIR /src/asa-manager/WebService
 RUN dotnet publish WebService.csproj \
 --output /app \

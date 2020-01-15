@@ -126,7 +126,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
             {
                 UserId = userId,
                 Tenant = this.GetTenantId(),
-                Roles = model.Roles
+                Roles = model.Roles,
+                Name = model.Name,
+                Type = model.Type
             };
             return await this._container.CreateAsync(input);
         }

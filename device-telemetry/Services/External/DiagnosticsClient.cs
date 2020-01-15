@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
@@ -8,23 +6,14 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Newtonsoft.Json;
 using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
 {
-    public interface IDiagnosticsClient : IStatusOperation
-    {
-        bool CanLogToDiagnostics { get; }
-
-        Task LogEventAsync(string eventName);
-
-        Task LogEventAsync(string eventName, Dictionary<string, object> eventProperties);
-    }
-
     public class DiagnosticsClient : IDiagnosticsClient
     {
         public bool CanLogToDiagnostics { get; }
@@ -38,12 +27,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
         private readonly int maxRetries;
         private const int RETRY_SLEEP_MS = 500;
 
-        public DiagnosticsClient(IHttpClient httpClient, IServicesConfig config, ILogger<DiagnosticsClient> logger, IHttpContextAccessor contextAccessor)
+        public DiagnosticsClient(IHttpClient httpClient, AppConfig config, ILogger<DiagnosticsClient> logger, IHttpContextAccessor contextAccessor)
         {
             this.httpClient = httpClient;
             _logger = logger;
-            this.serviceUrl = config.DiagnosticsApiUrl;
-            this.maxRetries = config.DiagnosticsMaxLogRetries;
+            this.serviceUrl = config.ExternalDependencies.DiagnosticsServiceUrl;
+            this.maxRetries = config.ExternalDependencies.DiagnosticsMaxLogRetries;
             if (string.IsNullOrEmpty(this.serviceUrl))
             {
                 _logger.LogError("Cannot log to diagnostics service, diagnostics url not provided");

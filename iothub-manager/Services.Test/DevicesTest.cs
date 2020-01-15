@@ -31,8 +31,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             tenantHelper = new Mock<ITenantConnectionHelper>();
 
 
-            tenantHelper.Setup(e => e.getIoTHubName()).Returns(this.ioTHubHostName);
-            tenantHelper.Setup(e => e.getRegistry()).Returns(this.registryMock.Object);
+            tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
+            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registryMock.Object);
 
             MockIdentity.mockClaims("one");
 

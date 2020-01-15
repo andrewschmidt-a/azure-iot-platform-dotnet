@@ -37,9 +37,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
         [JsonProperty(PropertyName = "$metadata")]
         public Dictionary<string, string> Metadata => new Dictionary<string, string>
         {
-            { "$type", "Device;" + Version.NUMBER },
-            { "$uri", "/" + Version.PATH + "/devices/" + this.Id },
-            { "$twin_uri", "/" + Version.PATH + "/devices/" + this.Id + "/twin" }
+            { "$type", "Device;1" },
+            { "$uri", "/" + "v1/devices/" + this.Id },
+            { "$twin_uri", "/" + "v1/devices/" + this.Id + "/twin" }
         };
 
         [JsonProperty(PropertyName = "Properties", NullValueHandling = NullValueHandling.Ignore)]

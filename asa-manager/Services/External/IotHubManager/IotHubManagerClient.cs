@@ -8,6 +8,7 @@ using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
 using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager
 {
@@ -16,9 +17,9 @@ namespace Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager
         private readonly IExternalRequestHelper _requestHelper;
         private readonly string apiUrl;
 
-        public IotHubManagerClient(IIotHubManagerClientConfig config, IExternalRequestHelper requestHelper)
+        public IotHubManagerClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
-            this.apiUrl = config.IotHubManagerApiUrl;
+            this.apiUrl = config.ExternalDependencies.IotHubManagerServiceUrl;
             this._requestHelper = requestHelper;
         }
 

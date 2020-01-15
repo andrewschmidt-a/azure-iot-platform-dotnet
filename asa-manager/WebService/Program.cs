@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Platform.IoT.Common.Services;
 
 namespace Mmm.Platform.IoT.AsaManager.WebService
 {
@@ -8,15 +7,9 @@ namespace Mmm.Platform.IoT.AsaManager.WebService
     {
         public static void Main(string[] args)
         {
-            var config = new Runtime.Config(new ConfigData());
-            var host = new WebHostBuilder()
-                .UseUrls("http://*:" + config.Port)
-                .UseKestrel(options => { options.AddServerHeader = false; })
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .ConfigureLogging(builder => builder.AddConsole())
-                .Build();
-
+            var builder = WebHost.CreateDefaultBuilder(args);
+            builder.UseStartup<Startup>();
+            var host = builder.Build();
             host.Run();
         }
     }

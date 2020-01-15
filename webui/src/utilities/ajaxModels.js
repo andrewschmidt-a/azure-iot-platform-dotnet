@@ -22,7 +22,9 @@ export class AjaxError {
     // For general application errors, figure out a more detailed message if possible.
     // In dotNet, the ExceptionMessage may contain JSON that can be further parsed.
     if (this.status >= 500 && this.errorMessage) {
-      this.errorMessage = ((JSON.parse(this.errorMessage) || {}).Message) || this.errorMessage;
+      if (!(typeof this.errorMessage == "string")) {
+        this.errorMessage = ((JSON.parse(this.errorMessage) || {}).Message);
+      }
     }
   }
 

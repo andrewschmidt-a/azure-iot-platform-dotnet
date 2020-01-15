@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -9,20 +7,14 @@ using System.Threading.Tasks;
 using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Helpers;
 using Mmm.Platform.IoT.Config.Services.Models;
-using Mmm.Platform.IoT.Config.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services
 {
-    public interface ISeed
-    {
-        Task TrySeedAsync();
-    }
-
     public class Seed : ISeed
     {
         private const string SEED_COLLECTION_ID = "solution-settings";
@@ -30,7 +22,7 @@ namespace Mmm.Platform.IoT.Config.Services
         private const string COMPLETED_FLAG_KEY = "seedCompleted";
         private readonly TimeSpan mutexTimeout = TimeSpan.FromMinutes(5);
 
-        private readonly IServicesConfig config;
+        private readonly AppConfig config;
         private readonly IStorageMutex mutex;
         private readonly IStorage storage;
         private readonly IStorageAdapterClient storageClient;
@@ -39,7 +31,7 @@ namespace Mmm.Platform.IoT.Config.Services
         private readonly ILogger _logger;
 
         public Seed(
-            IServicesConfig config,
+            AppConfig config,
             IStorageMutex mutex,
             IStorage storage,
             IStorageAdapterClient storageClient,
@@ -58,7 +50,7 @@ namespace Mmm.Platform.IoT.Config.Services
 
         public async Task TrySeedAsync()
         {
-            if (string.IsNullOrEmpty(this.config.SeedTemplate))
+            if (string.IsNullOrEmpty(config.ConfigService.SeedTemplate))
             {
                 return;
             }
@@ -109,7 +101,7 @@ namespace Mmm.Platform.IoT.Config.Services
 
         private async Task SeedAsync()
         {
-            if (this.config.SolutionType.StartsWith("devicesimulation", StringComparison.OrdinalIgnoreCase))
+            if (config.ConfigService.SolutionType.StartsWith("devicesimulation", StringComparison.OrdinalIgnoreCase))
             {
                 await this.SeedSimulationAsync();
             }
@@ -122,7 +114,7 @@ namespace Mmm.Platform.IoT.Config.Services
         // Seed single template for Remote Monitoring solution
         private async Task SeedSingleTemplateAsync()
         {
-            var template = this.GetSeedContent(this.config.SeedTemplate);
+            var template = this.GetSeedContent(config.ConfigService.SeedTemplate);
 
             if (template.Groups.Select(g => g.Id).Distinct().Count() != template.Groups.Count())
             {
@@ -183,7 +175,7 @@ namespace Mmm.Platform.IoT.Config.Services
                 }
                 else
                 {
-                    var template = this.GetSeedContent(this.config.SeedTemplate);
+                    var template = this.GetSeedContent(config.ConfigService.SeedTemplate);
 
                     foreach (var simulation in template.Simulations)
                     {

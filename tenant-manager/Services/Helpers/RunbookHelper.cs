@@ -5,13 +5,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
-using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 using Mmm.Platform.IoT.TenantManager.Services.Exceptions;
 using Microsoft.Azure;
 using Microsoft.Azure.Management.Automation;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
@@ -24,16 +24,16 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         private Regex storageAccountKeyRegexMatch = new Regex(@"(?<=AccountKey=)[^;]*");
 
         // injection variables
-        private readonly IServicesConfig _config;
+        private readonly AppConfig config;
         private readonly ITokenHelper _tokenHelper;
         private readonly IAppConfigurationHelper _appConfigHelper;
 
         public HttpClient httpClient;
 
-        public RunbookHelper(IServicesConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
+        public RunbookHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
         {
             this._tokenHelper = tokenHelper;
-            this._config = config;
+            this.config = config;
             this._appConfigHelper = appConfigHelper;
 
             this.httpClient = new HttpClient();
@@ -46,7 +46,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         private async Task<AutomationManagementClient> GetAutomationClientAsync()
         {
             string authToken = await this._tokenHelper.GetTokenAsync();
-            TokenCloudCredentials credentials = new TokenCloudCredentials(this._config.SubscriptionId, authToken);
+            TokenCloudCredentials credentials = new TokenCloudCredentials(config.Global.SubscriptionId, authToken);
             return new AutomationManagementClient(credentials);
         }
 
@@ -111,7 +111,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 try
                 {
                     var automationClient = await this.GetAutomationClientAsync();
-                    var webHookResponse = await automationClient.Webhooks.GetAsync(this._config.ResourceGroup, this._config.AutomationAccountName, webHook);
+                    var webHookResponse = await automationClient.Webhooks.GetAsync(config.Global.ResourceGroup, config.TenantManagerService.AutomationAccountName, webHook);
                     if (!webHookResponse.Webhook.Properties.IsEnabled)
                     {
                         unhealthyMessage += $"{webHook} is not enabled.\n";
@@ -127,39 +127,39 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 
         public async Task<HttpResponseMessage> CreateIotHub(string tenantId, string iotHubName, string dpsName)
         {
-            return await this.TriggerIotHubRunbook(this._config.CreateIotHubRunbookUrl, tenantId, iotHubName, dpsName);
+            return await this.TriggerIotHubRunbook(config.TenantManagerService.CreateIotHubWebHookUrl, tenantId, iotHubName, dpsName);
         }
 
         public async Task<HttpResponseMessage> DeleteIotHub(string tenantId, string iotHubName, string dpsName)
         {
-            return await this.TriggerIotHubRunbook(this._config.DeleteIotHubRunbookUrl, tenantId, iotHubName, dpsName);
+            return await this.TriggerIotHubRunbook(config.TenantManagerService.DeleteIotHubWebHookUrl, tenantId, iotHubName, dpsName);
         }
 
         public async Task<HttpResponseMessage> CreateAlerting(string tenantId, string saJobName, string iotHubName)
         {
             string iotHubKey = this.GetIotHubKey(tenantId, iotHubName);
-            string storageAccountKey = this.GetStorageAccountKey(this._config.StorageAccountConnectionString);
+            string storageAccountKey = this.GetStorageAccountKey(config.Global.StorageAccountConnectionString);
 
             var requestBody = new
             {
                 tenantId = tenantId,
-                location = this._config.Location,
-                resourceGroup = this._config.ResourceGroup,
-                subscriptionId = this._config.SubscriptionId,
+                location = config.Global.Location,
+                resourceGroup = config.Global.ResourceGroup,
+                subscriptionId = config.Global.SubscriptionId,
                 saJobName = saJobName,
-                storageAccountName = this._config.StorageAccountName,
+                storageAccountName = config.Global.StorageAccount.Name,
                 storageAccountKey = storageAccountKey,
-                eventHubNamespaceName = this._config.EventHubNamespaceName,
-                eventHubAccessPolicyKey = this._config.EventHubAccessPolicyKey,
+                eventHubNamespaceName = config.TenantManagerService.EventHubNamespaceName,
+                eventHubAccessPolicyKey = config.TenantManagerService.EventHubAccessPolicyKey,
                 iotHubName = iotHubName,
                 iotHubAccessKey = iotHubKey,
-                cosmosDbAccountName = this._config.CosmosDbAccount,
-                cosmosDbAccountKey = this._config.CosmosDbKey,
+                cosmosDbAccountName = config.Global.CosmosDb.AccountName,
+                cosmosDbAccountKey = config.Global.CosmosDb.DocumentDbAuthKey,
                 cosmosDbDatabaseId = SA_JOB_DATABASE_ID
             };
 
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-            return await this.TriggerRunbook(this._config.CreateStreamAnalyticsRunbookUrl, bodyContent);
+            return await this.TriggerRunbook(config.TenantManagerService.CreateSaJobWebHookUrl, bodyContent);
         }
 
         public async Task<HttpResponseMessage> DeleteAlerting(string tenantId, string saJobName)
@@ -167,13 +167,13 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             var requestBody = new
             {
                 tenantId = tenantId,
-                resourceGroup = this._config.ResourceGroup,
-                subscriptionId = this._config.SubscriptionId,
+                resourceGroup = config.Global.ResourceGroup,
+                subscriptionId = config.Global.SubscriptionId,
                 saJobName = saJobName,
             };
 
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
-            return await this.TriggerRunbook(this._config.DeleteStreamAnalyticsRunbookUrl, bodyContent);
+            return await this.TriggerRunbook(config.TenantManagerService.DeleteSaJobWebHookUrl, bodyContent);
         }
 
         /// <summary>
@@ -193,16 +193,16 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 iotHubName = iotHubName,
                 dpsName = dpsName,
                 token = await this._tokenHelper.GetTokenAsync(),
-                resourceGroup = this._config.ResourceGroup,
-                location = this._config.Location,
-                subscriptionId = this._config.SubscriptionId,
+                resourceGroup = config.Global.ResourceGroup,
+                location = config.Global.Location,
+                subscriptionId = config.Global.SubscriptionId,
                 // Event Hub Connection Strings for setting up IoT Hub Routing
-                telemetryEventHubConnString = this._config.TelemetryEventHubConnectionString,
-                twinChangeEventHubConnString = this._config.TwinChangeEventHubConnectionString,
-                lifecycleEventHubConnString = this._config.LifecycleEventHubConnectionString,
-                appConfigConnectionString = this._config.ApplicationConfigurationConnectionString,
-                setAppConfigEndpoint = this._config.AppConfigEndpoint,
-                storageAccount = this._config.StorageAccountName
+                telemetryEventHubConnString = config.TenantManagerService.TelemetryEventHubConnectionString,
+                twinChangeEventHubConnString = config.TenantManagerService.TwinChangeEventHubConnectionString,
+                lifecycleEventHubConnString = config.TenantManagerService.LifecycleEventHubConnectionString,
+                appConfigConnectionString = config.AppConfigurationConnectionString,
+                setAppConfigEndpoint = config.TenantManagerService.SetAppConfigEndpoint,
+                storageAccount = config.Global.StorageAccount.Name
             };
 
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");

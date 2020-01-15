@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -8,25 +6,14 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Newtonsoft.Json.Linq;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
-    public interface IMessages
-    {
-        Task<MessageList> ListAsync(
-            DateTimeOffset? from,
-            DateTimeOffset? to,
-            string order,
-            int skip,
-            int limit,
-            string[] devices);
-    }
-
     public class Messages : IMessages
     {
         private const string DATA_PROPERTY_NAME = "data";
@@ -41,7 +28,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly ILogger _logger;
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
-        private readonly IServicesConfig _config;
+        private readonly AppConfig config;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IAppConfigurationHelper _appConfigurationHelper;
 
@@ -59,7 +46,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         }
 
         public Messages(
-            IServicesConfig config,
+            AppConfig config,
             IStorageClient storageClient,
             ITimeSeriesClient timeSeriesClient,
             ILogger<Messages> logger,
@@ -68,12 +55,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         {
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
-            this.timeSeriesEnabled = config.StorageType.Equals(
+            this.timeSeriesEnabled = config.DeviceTelemetryService.Messages.TelemetryStorageType.Equals(
                 TSI_STORAGE_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
             this.documentClient = storageClient.GetDocumentClient();
-            this.databaseName = config.MessagesConfig.CosmosDbDatabase;
+            this.databaseName = config.DeviceTelemetryService.Messages.Database;
             _logger = logger;
-            this._config = config;
+            this.config = config;
             this._httpContextAccessor = contextAccessor;
             this._appConfigurationHelper = appConfigurationHelper;
         }

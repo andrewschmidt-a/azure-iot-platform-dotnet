@@ -4,16 +4,16 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
-    class StatusService : IStatusService
+    public class StatusService : IStatusService
     {
         private const bool ALLOW_INSECURE_SSL_SERVER = true;
         private readonly int timeoutMS = 10000;
@@ -21,22 +21,22 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private readonly IDevices devices;
         private readonly IHttpClient httpClient;
         private readonly ILogger _logger;
-        private readonly IServicesConfig servicesConfig;
+        private readonly AppConfig config;
 
         public StatusService(
             ILogger<StatusService> logger,
             IHttpClient httpClient,
             IDevices devices,
-            IServicesConfig servicesConfig
+            AppConfig config
             )
         {
             _logger = logger;
             this.httpClient = httpClient;
             this.devices = devices;
-            this.servicesConfig = servicesConfig;
+            this.config = config;
         }
 
-        public async Task<StatusServiceModel> GetStatusAsync(bool authRequired)
+        public async Task<StatusServiceModel> GetStatusAsync()
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();
@@ -48,17 +48,17 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             // Check access to StorageAdapter
             var storageAdapterResult = await this.PingServiceAsync(
                 storageAdapterName,
-                this.servicesConfig.StorageAdapterApiUrl);
+                config.ExternalDependencies.StorageAdapterServiceUrl);
             SetServiceStatus(storageAdapterName, storageAdapterResult, result, errors);
 
-            if (authRequired)
+            if (config.Global.AuthRequired)
             {
                 // Check access to Auth
                 var authResult = await this.PingServiceAsync(
                     authName,
-                    this.servicesConfig.UserManagementApiUrl);
+                    config.ExternalDependencies.AuthServiceUrl);
                 SetServiceStatus(authName, authResult, result, errors);
-                result.Properties.Add("UserManagementApiUrl", this.servicesConfig?.UserManagementApiUrl);
+                result.Properties.Add("UserManagementApiUrl", config?.ExternalDependencies.AuthServiceUrl);
             }
 
             // Preprovisioned IoT hub status
@@ -75,8 +75,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 result.Status.Message = string.Join("; ", errors);
             }
 
-            result.Properties.Add("StorageAdapterApiUrl", this.servicesConfig?.StorageAdapterApiUrl);
-
+            result.Properties.Add("StorageAdapterApiUrl", config?.ExternalDependencies.StorageAdapterServiceUrl);
+            result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
+            result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
+            
             _logger.LogInformation("Service status request {result}", result);
 
             return result;
@@ -144,7 +146,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         // Check whether the configuration contains a connection string
         private bool IsHubConnectionStringConfigured()
         {
-            var cs = this.servicesConfig?.ApplicationConfigurationConnectionString?.ToLowerInvariant().Trim();
+            var cs = config?.AppConfigurationConnectionString?.ToLowerInvariant().Trim();
             return (!string.IsNullOrEmpty(cs)
                     && cs.Contains("hostname=")
                     && cs.Contains("sharedaccesskeyname=")

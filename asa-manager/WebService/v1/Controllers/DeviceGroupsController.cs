@@ -10,15 +10,15 @@ using Mmm.Platform.IoT.Common.Services.Wrappers;
 
 namespace Mmm.Platform.IoT.AsaManager.WebService.v1.Controllers
 {
-    [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class DeviceGroupsController : Controller
     {
-        private readonly DeviceGroupsConverter _devicegroupConverter;
+        private readonly IConverter _devicegroupConverter;
         private readonly IKeyGenerator _keyGenerator;
         private readonly ILogger _logger;
 
         public DeviceGroupsController(
-            DeviceGroupsConverter devicegroupConverter,
+            IConverter devicegroupConverter,
             IKeyGenerator keyGenerator,
             ILogger<DeviceGroupsController> logger)
         {
@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.AsaManager.WebService.v1.Controllers
             this._logger = logger;
         }
 
-        public void Forget(Task task, string operationId)
+        private void Forget(Task task, string operationId)
         {
             task.ContinueWith(
                 t => { this._logger.LogError(t.Exception, "An exception occurred during the background conversion. OperationId {operationId}", operationId); },

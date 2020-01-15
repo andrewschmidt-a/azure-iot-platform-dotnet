@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Mmm.Platform.IoT.DeviceTelemetry.Services;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
@@ -15,6 +14,7 @@ using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
@@ -31,9 +31,17 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private const string TENANT_ID = "test_tenant";
         public AlarmsTest()
         {
-            var servicesConfig = new ServicesConfig
+            var servicesConfig = new AppConfig
             {
-                AlarmsConfig = new AlarmsConfig("database", "collection", 3)
+                DeviceTelemetryService = new DeviceTelemetryServiceConfig
+                {
+                    Alarms = new AlarmsConfig
+                    {
+                        Database = "database",
+                        Collection = "collection",
+                        MaxDeleteRetries = 3
+                    }
+                }
             };
             this.storageClient = new Mock<IStorageClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();

@@ -3,6 +3,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
 
@@ -19,10 +20,10 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
         private readonly int timeout;
         private readonly IExternalRequestHelper _requestHelper;
 
-        public StorageAdapterClient(IStorageAdapterClientConfig storageAdapterClientConfig, IExternalRequestHelper requestHelper)
+        public StorageAdapterClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
-            this.serviceUri = storageAdapterClientConfig.StorageAdapterApiUrl;
-            this.timeout = storageAdapterClientConfig.StorageAdapterApiTimeout;
+            this.serviceUri = config.ExternalDependencies.StorageAdapterServiceUrl;
+            this.timeout = config.ExternalDependencies.StorageAdapterServiceTimeout;
             this._requestHelper = requestHelper;
         }
 

@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Mmm.Platform.IoT.Common.Services.Auth;
 
@@ -12,27 +14,14 @@ namespace Mmm.Platform.IoT.AsaManager.WebService
 {
     public class Startup
     {
-        // Initialized in `Startup`
-        public IConfigurationRoot Configuration { get; }
-
-        // Initialized in `ConfigureServices`
+        public IConfiguration Configuration { get; }
         public IContainer ApplicationContainer { get; private set; }
 
-        // Invoked by `Program.cs`
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-#if DEBUG
-                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
-#endif
-                ;
-            this.Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        // This is where you register dependencies, add services to the
-        // container. This method is called by the runtime, before the
-        // Configure method below.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -42,19 +31,25 @@ namespace Mmm.Platform.IoT.AsaManager.WebService
 
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
-            this.ApplicationContainer = new DependencyResolution().Setup(services);
+            services.AddHttpContextAccessor();
+            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        // This method is called by the runtime, after the ConfigureServices
-        // method above. Use this method to add middleware.
-        public void Configure(
-            IApplicationBuilder app,
-            IHostingEnvironment env,
-            IApplicationLifetime appLifetime)
+        private void LogDependencyInjectionContainerRegistrations(ILogger logger)
         {
+            foreach (var registration in ApplicationContainer.ComponentRegistry.Registrations)
+            {
+                logger.LogDebug("Type {type} is registered in dependency injection container", registration.Activator.ToString());
+            }
+        }
+
+        public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
+        {
+            LogDependencyInjectionContainerRegistrations(logger);
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 

@@ -6,22 +6,22 @@ using Microsoft.Azure.Management.StreamAnalytics;
 using Microsoft.Azure.Management.StreamAnalytics.Models;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 using Microsoft.Rest.Azure;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public class StreamAnalyticsHelper : IStreamAnalyticsHelper
     {
-        private readonly IServicesConfig _config;
+        private readonly AppConfig config;
         private readonly ITokenHelper _tokenHelper;
 
         private delegate Task<T> JobOperationDelegate<T>(string rg, string saJobName);
 
-        public StreamAnalyticsHelper(IServicesConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
+        public StreamAnalyticsHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
         {
-            this._config = config;
+            this.config = config;
             this._tokenHelper = tokenHelper;
         }
 
@@ -46,7 +46,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 TokenCredentials credentials = new TokenCredentials(authToken);
                 StreamAnalyticsManagementClient client = new StreamAnalyticsManagementClient(credentials)
                 {
-                    SubscriptionId = this._config.SubscriptionId
+                    SubscriptionId = config.Global.SubscriptionId
                 };
                 return client;
             }
@@ -67,7 +67,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             StreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
-                return await client.StreamingJobs.GetAsync(this._config.ResourceGroup, saJobName);
+                return await client.StreamingJobs.GetAsync(config.Global.ResourceGroup, saJobName);
             }
             catch (CloudException ce)
             {
@@ -98,7 +98,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             StreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
-                await client.StreamingJobs.BeginStartAsync(this._config.ResourceGroup, saJobName);
+                await client.StreamingJobs.BeginStartAsync(config.Global.ResourceGroup, saJobName);
             }
             catch (Exception e)
             {
@@ -111,7 +111,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             StreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
-                await client.StreamingJobs.BeginStopAsync(this._config.ResourceGroup, saJobName);
+                await client.StreamingJobs.BeginStopAsync(config.Global.ResourceGroup, saJobName);
             }
             catch (Exception e)
             {

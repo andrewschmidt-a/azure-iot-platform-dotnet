@@ -158,7 +158,7 @@ export class UserNew extends LinkedComponent {
     if (isPending) {
       return t('users.flyouts.new.pending');
     } else if (changesApplied) {
-      return t('users.flyouts.new.applySuccess');
+      return t('users.flyouts.new.user.applySuccess');
     } else {
       return t('users.flyouts.new.affected');
     }
@@ -207,7 +207,7 @@ export class UserNew extends LinkedComponent {
             {
               !changesApplied &&
               <BtnToolbar>
-                <Btn primary={true} disabled={isPending || !this.formIsValid()} type="submit">{t('users.flyouts.new.apply')}</Btn>
+                <Btn primary={true} disabled={isPending || !this.formIsValid()} type="submit">{t('users.flyouts.new.user.apply')}</Btn>
                 <Btn svg={svgs.cancelX} onClick={() => this.onFlyoutClose('Users_CancelClick')}>{t('users.flyouts.new.cancel')}</Btn>
               </BtnToolbar>
             }

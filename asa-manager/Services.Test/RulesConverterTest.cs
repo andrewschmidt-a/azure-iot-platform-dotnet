@@ -9,6 +9,7 @@ using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
 using Mmm.Platform.IoT.AsaManager.Services.Models;
 using Mmm.Platform.IoT.AsaManager.Services.Models.Rules;
 using Mmm.Platform.IoT.AsaManager.Services.Test.Helpers;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
@@ -99,7 +100,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 
             Func<Task> conversion = async () => await this.converter.ConvertAsync(tenantId);
 
-            await Assert.ThrowsAsync<EmptyEntitesException>(conversion);
+            await Assert.ThrowsAsync<ResourceNotFoundException>(conversion);
         }
     }
 }

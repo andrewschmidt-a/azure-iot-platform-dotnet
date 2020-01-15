@@ -17,7 +17,7 @@ module.exports = {
                 "UpdateRules",
                 "DeleteRules",
                 "CreateJobs",
-                "UpdateSIMManagement",
+                "UpdateSimManagement",
                 "AcquireToken",
                 "CreateDeployments",
                 "DeleteDeployments",

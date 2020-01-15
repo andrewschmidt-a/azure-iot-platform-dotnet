@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
@@ -12,8 +13,6 @@ using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.DeviceTelemetry.Services;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Runtime;
-using Mmm.Platform.IoT.DeviceTelemetry.WebService.Runtime;
 using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers;
 using Moq;
 using Xunit;
@@ -51,29 +50,25 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
 
         public AlarmsByRuleControllerTest()
         {
-            ConfigData configData = new ConfigData();
-            Config config = new Config(configData);
-            IServicesConfig servicesConfig = config.ServicesConfig;
             Mock<IStorageAdapterClient> storageAdapterClient = new Mock<IStorageAdapterClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             _logger = new Mock<ILogger<AlarmsByRuleController>>();
             this.appConfigHelper = new Mock<IAppConfigurationHelper>();
             this.asaManager = new Mock<IAsaManagerClient>();
-
-            this.storage = new StorageClient(servicesConfig, new Mock<ILogger<StorageClient>>().Object);
-            string dbName = servicesConfig.AlarmsConfig.StorageConfig.CosmosDbDatabase;
-            this.storage.CreateCollectionIfNotExistsAsync(dbName, "");
+            var config = new AppConfig();
+            this.storage = new StorageClient(config, new Mock<ILogger<StorageClient>>().Object);
+            this.storage.CreateCollectionIfNotExistsAsync(config.DeviceTelemetryService.Alarms.Database, "");
 
             this.sampleAlarms = this.getSampleAlarms();
             foreach (Alarm sampleAlarm in this.sampleAlarms)
             {
                 this.storage.UpsertDocumentAsync(
-                    dbName,
+                    config.DeviceTelemetryService.Alarms.Database,
                     "",
                     this.AlarmToDocument(sampleAlarm));
             }
 
-            Alarms alarmService = new Alarms(servicesConfig, this.storage, new Mock<ILogger<Alarms>>().Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
+            Alarms alarmService = new Alarms(config, this.storage, new Mock<ILogger<Alarms>>().Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
             Rules rulesService = new Rules(storageAdapterClient.Object, this.asaManager.Object, new Mock<ILogger<Rules>>().Object, alarmService, new Mock<IDiagnosticsClient>().Object);
             this.controller = new AlarmsByRuleController(alarmService, rulesService, this._logger.Object);
         }

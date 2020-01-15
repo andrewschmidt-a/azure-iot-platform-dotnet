@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Azure.Data.AppConfiguration;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.Common.Services.Helpers
@@ -11,14 +12,9 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
         private ConfigurationClient client;
         private Dictionary<string, AppConfigCacheValue> _cache = new Dictionary<string, AppConfigCacheValue>();
 
-        public AppConfigurationHelper(IAppConfigClientConfig config)
+        public AppConfigurationHelper(AppConfig config)
         {
-            this.client = new ConfigurationClient(config.ApplicationConfigurationConnectionString);
-        }
-
-        public AppConfigurationHelper(string applicationConfigurationConnectionString)
-        {
-            this.client = new ConfigurationClient(applicationConfigurationConnectionString);
+            this.client = new ConfigurationClient(config.AppConfigurationConnectionString);
         }
 
         /// <summary>

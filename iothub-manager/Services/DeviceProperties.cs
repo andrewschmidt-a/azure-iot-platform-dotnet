@@ -1,29 +1,17 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.Services.Runtime;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
-    public interface IDeviceProperties
-    {
-        Task<List<string>> GetListAsync();
-
-        Task<DevicePropertyServiceModel> UpdateListAsync(
-            DevicePropertyServiceModel devicePropertyServiceModel);
-
-        Task<bool> TryRecreateListAsync(bool force = false);
-    }
-
     /// <summary>  
     /// This class creates/reads cache of deviceProperties in/from CosmosDB.
     /// </summary> 
@@ -58,15 +46,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         /// The constructor.
         /// </summary>
         public DeviceProperties(IStorageAdapterClient storageClient,
-            IServicesConfig config,
+            AppConfig config,
             ILogger<DeviceProperties> logger,
             IDevices devices)
         {
             this.storageClient = storageClient;
             _logger = logger;
-            this.whitelist = config.DevicePropertiesWhiteList;
-            this.ttl = config.DevicePropertiesTTL;
-            this.rebuildTimeout = config.DevicePropertiesRebuildTimeout;
+            this.whitelist = config.IotHubManagerService.DevicePropertiesCache.Whitelist;
+            this.ttl = config.IotHubManagerService.DevicePropertiesCache.Ttl;
+            this.rebuildTimeout = config.IotHubManagerService.DevicePropertiesCache.RebuildTimeout;
             this.devices = devices;
         }
 

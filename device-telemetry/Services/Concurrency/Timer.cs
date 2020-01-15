@@ -1,20 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
 {
-    public interface ITimer
-    {
-        ITimer Start();
-        ITimer StartIn(TimeSpan delay);
-        void Stop();
-        ITimer Setup(Action<object> action, object context, TimeSpan frequency);
-        ITimer Setup(Action<object> action, object context, int frequency);
-    }
-
     public class Timer : ITimer
     {
         private readonly ILogger _logger;

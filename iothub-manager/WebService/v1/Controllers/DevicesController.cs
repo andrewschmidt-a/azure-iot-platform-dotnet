@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services.Filters;
@@ -9,7 +7,7 @@ using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers
 {
-    [Route(Version.PATH + "/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class DevicesController : Controller
     {
         const string CONTINUATION_TOKEN_NAME = "x-ms-continuation";

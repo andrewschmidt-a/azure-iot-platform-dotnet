@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -9,11 +7,6 @@ using Mmm.Platform.IoT.Common.Services.Http;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
-    public interface IHttpClientWrapper
-    {
-        Task PostAsync(string uri, string description, object content = null);
-    }
-
     public class HttpClientWrapper : IHttpClientWrapper
     {
         private readonly ILogger _logger;

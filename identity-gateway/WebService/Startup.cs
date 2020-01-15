@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -8,51 +7,20 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Auth;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.IdentityGateway.Services;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {
     public class Startup
     {
-        private const string CORS_CONFIG_KEY = "Global:ClientAuth:CORSWhiteList";
-        private const string CORS_POLICY_NAME = "identityCORS";
-        private const string APP_CONFIGURATION = "PCS_APPLICATION_CONFIGURATION";
-
-        private readonly List<string> appConfigKeys = new List<string>
-        {
-            "Global",
-            "Global:KeyVault",
-            "Global:AzureActiveDirectory",
-            "Global:ClientAuth"
-        };
-
-        // Initialized in `Startup`
-        public IConfigurationRoot Configuration { get; }
-        // Initialized in `ConfigureServices`
+        public IConfiguration Configuration { get; }
         public IContainer ApplicationContainer { get; private set; }
 
-        // Invoked by `Program.cs`
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-#if DEBUG
-                .AddIniFile("appsettings.ini", optional: true, reloadOnChange: true)
-#endif
-                .AddEnvironmentVariables();
-            // build configuration with environment variables
-            var preConfig = builder.Build();
-            // Add app config settings to the configuration builder
-            builder.Add(new AppConfigurationSource(preConfig[APP_CONFIGURATION], this.appConfigKeys));
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -63,24 +31,14 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
 
-            services.AddSingleton<UserSettingsContainer>();
-            services.AddSingleton<UserTenantContainer>();
-            services.AddSingleton<IConfiguration>(Configuration);
-            services.AddSingleton<IStatusService, StatusService>();
-            services.AddSingleton<ITableStorageClient>();
-            services.AddSingleton<IRsaHelpers, RsaHelpers>();
-
-            services.AddTransient<IOpenIdProviderConfiguration, OpenIdProviderConfiguration>();
-            services.AddTransient<ISendGridClientFactory, SendGridClientFactory>();
-
             // Prepare DI container
-            this.ApplicationContainer = new DependencyResolution().Setup(services);
+            services.AddHttpContextAccessor();
+            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.

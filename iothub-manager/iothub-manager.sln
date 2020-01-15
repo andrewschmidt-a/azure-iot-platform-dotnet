@@ -19,87 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "Services.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService.Test", "WebService.Test\WebService.Test.csproj", "{43C9B9D2-C5F3-4816-B1B8-CC7C4B86DFAA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution", "solution", "{CBCD98A4-ABDE-4937-B03A-33582B737466}"
-	ProjectSection(SolutionItems) = preProject
-		.gitattributes = .gitattributes
-		.gitignore = .gitignore
-		.travis.yml = .travis.yml
-		CONTRIBUTING.md = CONTRIBUTING.md
-		iothub-manager.sln.DotSettings = iothub-manager.sln.DotSettings
-		LICENSE = LICENSE
-		README.md = README.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{B8F0DF3A-380C-470D-AF31-077225B66A41}"
-	ProjectSection(SolutionItems) = preProject
-		scripts\.functions.sh = scripts\.functions.sh
-		scripts\build = scripts\build
-		scripts\build.cmd = scripts\build.cmd
-		scripts\clean-up = scripts\clean-up
-		scripts\clean-up.cmd = scripts\clean-up.cmd
-		scripts\compile = scripts\compile
-		scripts\compile.cmd = scripts\compile.cmd
-		scripts\env-vars-check = scripts\env-vars-check
-		scripts\env-vars-check.cmd = scripts\env-vars-check.cmd
-		scripts\env-vars-setup = scripts\env-vars-setup
-		scripts\env-vars-setup.cmd = scripts\env-vars-setup.cmd
-		scripts\run = scripts\run
-		scripts\run.cmd = scripts\run.cmd
-		scripts\travis = scripts\travis
-		scripts\travis.cmd = scripts\travis.cmd
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "git", "git", "{EDC1BD26-3C5B-4A84-86A7-2FA0534B68A3}"
-	ProjectSection(SolutionItems) = preProject
-		scripts\git\.functions.sh = scripts\git\.functions.sh
-		scripts\git\fix-perms.sh = scripts\git\fix-perms.sh
-		scripts\git\pre-commit-runner-no-sandbox.sh = scripts\git\pre-commit-runner-no-sandbox.sh
-		scripts\git\pre-commit-runner-with-sandbox.sh = scripts\git\pre-commit-runner-with-sandbox.sh
-		scripts\git\pre-commit.sh = scripts\git\pre-commit.sh
-		scripts\git\setup = scripts\git\setup
-		scripts\git\setup.cmd = scripts\git\setup.cmd
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{4D5636DA-6246-4F6E-A903-B3184767EFBF}"
-	ProjectSection(SolutionItems) = preProject
-		scripts\docker\.dockerignore = scripts\docker\.dockerignore
-		scripts\docker\build = scripts\docker\build
-		scripts\docker\build.cmd = scripts\docker\build.cmd
-		scripts\docker\docker-compose.yml = scripts\docker\docker-compose.yml
-		scripts\docker\Dockerfile = scripts\docker\Dockerfile
-		scripts\docker\publish = scripts\docker\publish
-		scripts\docker\publish.cmd = scripts\docker\publish.cmd
-		scripts\docker\run = scripts\docker\run
-		scripts\docker\run.cmd = scripts\docker\run.cmd
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "content", "content", "{585F4D53-2816-4B8C-9150-139F6D7DBD09}"
-	ProjectSection(SolutionItems) = preProject
-		scripts\docker\content\run.sh = scripts\docker\content\run.sh
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iothub", "iothub", "{5282A591-2402-424E-9013-976A652AE5AC}"
-	ProjectSection(SolutionItems) = preProject
-		scripts\iothub\.functions.sh = scripts\iothub\.functions.sh
-		scripts\iothub\create-hub.sh = scripts\iothub\create-hub.sh
-		scripts\iothub\list-hubs.sh = scripts\iothub\list-hubs.sh
-		scripts\iothub\list-subscriptions.sh = scripts\iothub\list-subscriptions.sh
-		scripts\iothub\select-subscription.sh = scripts\iothub\select-subscription.sh
-		scripts\iothub\show-hub.sh = scripts\iothub\show-hub.sh
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{06A10CA3-99F0-411A-B649-7E1EDF5A06E8}"
-	ProjectSection(SolutionItems) = preProject
-		.github\CODEOWNERS = .github\CODEOWNERS
-		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
-		.github\PULL_REQUEST_TEMPLATE.md = .github\PULL_REQUEST_TEMPLATE.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{EAD5B7FB-8ACD-402F-97A4-5B87CDE6DD82}"
-	ProjectSection(SolutionItems) = preProject
-		docs\API_SPECS_DEVICE_PROPERTIES.md = docs\API_SPECS_DEVICE_PROPERTIES.md
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,15 +93,5 @@ Global
 		{22C69357-542E-4A43-B031-4D8867BA3E42} = {368A52C5-8C52-49FD-AF0B-ECFC61A55CAC}
 		{0A47EDE3-1AB7-4D7A-8D41-B3EDF69AE170} = {368A52C5-8C52-49FD-AF0B-ECFC61A55CAC}
 		{716C1217-55CA-47FF-9F51-C8AE0D3A9D4A} = {368A52C5-8C52-49FD-AF0B-ECFC61A55CAC}
-		{B8F0DF3A-380C-470D-AF31-077225B66A41} = {CBCD98A4-ABDE-4937-B03A-33582B737466}
-		{EDC1BD26-3C5B-4A84-86A7-2FA0534B68A3} = {B8F0DF3A-380C-470D-AF31-077225B66A41}
-		{4D5636DA-6246-4F6E-A903-B3184767EFBF} = {B8F0DF3A-380C-470D-AF31-077225B66A41}
-		{585F4D53-2816-4B8C-9150-139F6D7DBD09} = {4D5636DA-6246-4F6E-A903-B3184767EFBF}
-		{5282A591-2402-424E-9013-976A652AE5AC} = {B8F0DF3A-380C-470D-AF31-077225B66A41}
-		{06A10CA3-99F0-411A-B649-7E1EDF5A06E8} = {CBCD98A4-ABDE-4937-B03A-33582B737466}
-		{EAD5B7FB-8ACD-402F-97A4-5B87CDE6DD82} = {CBCD98A4-ABDE-4937-B03A-33582B737466}
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D44EB2FD-F930-491E-881C-01C7F44919E4}
 	EndGlobalSection
 EndGlobal

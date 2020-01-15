@@ -4,6 +4,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <UserSecretsId>dacb9904-60b9-40ee-94bd-747694b2cef9</UserSecretsId>
   </PropertyGroup>
 
 </Project>

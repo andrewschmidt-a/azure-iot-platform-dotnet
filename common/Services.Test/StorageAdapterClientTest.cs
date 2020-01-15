@@ -16,6 +16,7 @@ using Moq;
 using Newtonsoft.Json;
 using Xunit;
 using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Common.Services.Test
 {
@@ -27,7 +28,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
         private readonly Mock<IHttpClient> mockHttpClient;
         private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
         private readonly Mock<ExternalRequestHelper> mockRequestHelper;
-        private readonly Mock<IStorageAdapterClientConfig> mockConfig;
+        private readonly Mock<AppConfig> mockConfig;
         private readonly StorageAdapterClient client;
         private readonly Random rand;
 
@@ -45,9 +46,9 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 this.mockHttpClient.Object,
                 this.mockHttpContextAccessor.Object);
 
-            this.mockConfig = new Mock<IStorageAdapterClientConfig>();
+            this.mockConfig = new Mock<AppConfig>();
             this.mockConfig
-                .Setup(x => x.StorageAdapterApiUrl)
+                .Setup(x => x.ExternalDependencies.StorageAdapterServiceUrl)
                 .Returns(MOCK_SERVICE_URI);
 
             this.client = new StorageAdapterClient(

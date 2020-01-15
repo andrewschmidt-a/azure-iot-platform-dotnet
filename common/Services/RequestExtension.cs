@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace Mmm.Platform.IoT.Common.Services
 {
@@ -107,29 +108,38 @@ namespace Mmm.Platform.IoT.Common.Services
             return request.HttpContext.Items[ContextKeyTenantId] as string;
         }
 
-        public static void SetTenant(this HttpRequest request)
+        public static void SetTenant(this HttpRequest request, ILogger logger)
         {
             string tenantId = null;
             if (IsExternalRequest(request))
             {
-                if (GetCurrentUserClaims(request).Any(t => t.Type == ClaimKeyTenantId))
+                logger.LogDebug("Request is external");
+                var currentUserClaims = GetCurrentUserClaims(request);
+                logger.LogDebug("Request contains {claimCount} claims: {claimKeys}", currentUserClaims?.Count(), string.Join(", ", currentUserClaims?.Select(claim => claim.Type)));
+                if (currentUserClaims.Any(t => t.Type == ClaimKeyTenantId))
                 {
                     tenantId = GetCurrentUserClaims(request).First(t => t.Type == ClaimKeyTenantId).Value;
+                    logger.LogDebug("Setting tenant ID to {tenantId} from claim {claimType}", tenantId, ClaimKeyTenantId);
                 }
                 else
                 {
                     tenantId = null;
+                    logger.LogDebug("Setting tenant ID to null because claim {claimType} was not found", ClaimKeyTenantId);
                 }
             }
             else
             {
+                logger.LogDebug("Request is internal");
+                logger.LogDebug("Request contains {headerCount} headers: {headerNames}", request.Headers.Count, string.Join(", ", request.Headers.Keys));
                 if (request.Headers.ContainsKey(HeaderKeyTenantId))
                 {
                     tenantId = request.Headers[HeaderKeyTenantId];
+                    logger.LogDebug("Setting tenant ID to {tenantId} from header {headerName}", tenantId, HeaderKeyTenantId);
                 }
                 else
                 {
                     tenantId = null;
+                    logger.LogDebug("Setting tenant ID to null because header {headerName} was not found", HeaderKeyTenantId);
                 }
             }
 

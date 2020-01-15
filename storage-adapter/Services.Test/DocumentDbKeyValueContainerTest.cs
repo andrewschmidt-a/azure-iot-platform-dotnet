@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
-using Mmm.Platform.IoT.StorageAdapter.Services.Runtime;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.TestHelpers;
@@ -54,19 +54,18 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             Mock<IAppConfigurationHelper> mockAppConfigHelper = new Mock<IAppConfigurationHelper>();
 
             //Mock service returns dummy data
-            Mock<IServicesConfig> mockServicesConfig = new Mock<IServicesConfig>();
-            mockServicesConfig.Setup(t => t.DocumentDbRUs).Returns(400);
 
-            Mock<IAppConfigurationHelper> mockAppConfig = new Mock<IAppConfigurationHelper>();
 
+            var config = new AppConfig();
             this.mockContainer = new Mock<DocumentDbKeyValueContainer>(
                 new MockFactory<IDocumentClient>(this.mockClient),
                 new MockExceptionChecker(),
-                mockAppConfig.Object,
-                mockServicesConfig.Object,
+                config,
+                mockAppConfigHelper.Object,
                 new Mock<ILogger<DocumentDbKeyValueContainer>>().Object,
                 this.mockContextAccessor.Object);
-
+            config.StorageAdapterService = new StorageAdapterServiceConfig{ DocumentDbRus = 400 };
+            mockAppConfigHelper.Setup(m => m.GetValue(It.IsAny<string>())).Returns(MOCK_COLL_ID);
             this.mockContainer.Setup(t => t.DocumentDbDatabaseId)
                 .Returns(MOCK_DB_ID);
             this.mockContainer.Setup(t => t.DocumentDbCollectionId)

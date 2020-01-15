@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.TenantManager.Services.Models;
-using Mmm.Platform.IoT.TenantManager.Services.Runtime;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.External
 {
@@ -15,9 +15,9 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
         private readonly IExternalRequestHelper _requestHelper;
         private readonly string serviceUri;
 
-        public DeviceGroupsConfigClient(IServicesConfig config, IExternalRequestHelper requestHelper)
+        public DeviceGroupsConfigClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
-            this.serviceUri = config.ConfigWebServiceUrl;
+            this.serviceUri = config.ExternalDependencies.ConfigServiceUrl;
             this._requestHelper = requestHelper;
         }
 
