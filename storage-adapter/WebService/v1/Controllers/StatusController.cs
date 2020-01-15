@@ -35,11 +35,5 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
         {
             return new StatusCodeResult(200);
         }
-
-        [HttpGet("ping")]
-        public IActionResult Ping()
-        {
-            return new StatusCodeResult(200);
-        }
     }
 }
