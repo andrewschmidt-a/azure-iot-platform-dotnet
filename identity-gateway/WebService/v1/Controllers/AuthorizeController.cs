@@ -92,6 +92,17 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 return StatusCode(401, e.Message);
             }
 
+            UserTenantInput tenantInput = new UserTenantInput
+            {
+                UserId = input.client_id
+            };
+            UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
+            if(tenantsModel.models.Count == 0){
+                throw new Exception("Not granted access to any tenants");
+            }
+
+
+
             // if successful, then mint token
             var jwtHandler = new JwtSecurityTokenHandler();
             var claims = new List<Claim>();
