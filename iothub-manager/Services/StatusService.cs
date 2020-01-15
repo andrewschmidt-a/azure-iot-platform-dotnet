@@ -10,30 +10,28 @@ using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
-    public class StatusService : IStatusService
+    public class StatusService : StatusServiceBase
     {
-        private const bool ALLOW_INSECURE_SSL_SERVER = true;
-        private readonly int timeoutMS = 10000;
-
-        private readonly IDevices devices;
-        private readonly IHttpClient httpClient;
-        private readonly ILogger _logger;
-        private readonly AppConfig config;
+        public override IDictionary<string, IStatusOperation> dependencies { get; set; }
 
         public StatusService(
-            ILogger<StatusService> logger,
-            IHttpClient httpClient,
-            IDevices devices,
-            AppConfig config
-            )
+            AppConfig config,
+            IStorageAdapterClient storageAdapter,
+            IUserManagementClient userManagement,
+            IDevices devices) :
+            base(config)
         {
-            _logger = logger;
-            this.httpClient = httpClient;
-            this.devices = devices;
-            this.config = config;
+            this.dependencies = new Dictionary<string, IStatusOperation>
+            {
+                { "Storage Adapter", storageAdapter },
+                { "User Management", userManagement },
+                { "Devices", devices}
+            };
         }
 
         public async Task<StatusServiceModel> GetStatusAsync()

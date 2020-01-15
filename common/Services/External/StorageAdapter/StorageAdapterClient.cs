@@ -9,41 +9,21 @@ using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
 {
-    public class StorageAdapterClient : IStorageAdapterClient
+    public class StorageAdapterClient : ExternalServiceClient, IStorageAdapterClient
     {
-        private const bool ALLOW_INSECURE_SSL_SERVER = true;
-        private const string TENANT_HEADER = "ApplicationTenantID";
-        private const string TENANT_ID = "TenantID";
-        private const string AZDS_ROUTE_KEY = "azds-route-as";
-
-        private readonly string serviceUri;
         private readonly int timeout;
-        private readonly IExternalRequestHelper _requestHelper;
 
-        public StorageAdapterClient(AppConfig config, IExternalRequestHelper requestHelper)
+        public StorageAdapterClient(
+            AppConfig config,
+            IExternalRequestHelper requestHelper) :
+            base(config.ExternalDependencies.AsaManagerServiceUrl, requestHelper)
         {
-            this.serviceUri = config.ExternalDependencies.StorageAdapterServiceUrl;
             this.timeout = config.ExternalDependencies.StorageAdapterServiceTimeout;
-            this._requestHelper = requestHelper;
         }
 
         public string RequestUrl(string path)
         {
             return $"{this.serviceUri}/{path}";
-        }
-
-        public async Task<StatusResultServiceModel> StatusAsync()
-        {
-            try
-            {
-                string url = this.RequestUrl("status/");
-                var result = await this._requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, url);
-                return result.Status;
-            }
-            catch (Exception e)
-            {
-                return new StatusResultServiceModel(false, $"Unable to get Storage Adapter Status: {e.Message}");
-            }
         }
 
         public async Task<ValueApiModel> CreateAsync(string collectionId, string value)

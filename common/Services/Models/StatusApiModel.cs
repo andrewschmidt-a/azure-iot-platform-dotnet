@@ -38,7 +38,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 
         /// <summary>A property bag with details about the service</summary>
         [JsonProperty(PropertyName = "Properties", Order = 70)]
-        public Dictionary<string, string> Properties { get; set; }
+        public StatusServicePropertiesModel Properties { get; set; }
 
         /// <summary>A property bag with details about the internal dependencies</summary>
         [JsonProperty(PropertyName = "Dependencies", Order = 80)]
