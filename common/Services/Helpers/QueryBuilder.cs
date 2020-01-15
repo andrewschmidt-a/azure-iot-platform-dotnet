@@ -12,7 +12,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
 {
     public class QueryBuilder
     {
-        private const string INVALID_CHARACTER = @"[^A-Za-z0-9:;.,_\-]";
+        private const string INVALID_CHARACTER = @"[^A-Za-z0-9:;.,_\-@]";
 
         public static SqlQuerySpec GetDocumentsSql(
             string schemaName,
