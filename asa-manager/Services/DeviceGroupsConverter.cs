@@ -5,12 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.AsaManager.Services.Exceptions;
 using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
 using Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager;
 using Mmm.Platform.IoT.AsaManager.Services.Models;
 using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 
 namespace Mmm.Platform.IoT.AsaManager.Services
 {
@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             if (deviceGroups.Items.Count() == 0 || deviceGroups == null)
             {
                 _logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
-                throw new EmptyEntitesException("No entities were receieved from storage adapter to convert to rules.");
+                throw new ResourceNotFoundException("No entities were receieved from storage adapter to convert to rules.");
             }
 
             DeviceGroupListModel deviceGroupModels = new DeviceGroupListModel();
@@ -69,7 +69,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 }
                 if (items.Count() == 0)
                 {
-                    throw new Exception("No device groups were able to be converted to the proper rule reference data model.");
+                    throw new ResourceNotSupportedException("No device groups were able to be converted to the proper rule reference data model.");
                 }
                 deviceGroupModels.Items = items;
             }
@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             {
                 string groups = $"[{String.Join(", ", deviceGroupModels.Items.Select(group => group.Id))}]";
                 _logger.LogError("No Devices were found for any {entity}. OperationId: {operationId}. TenantId: {tenantId}\n{deviceGroups}", this.Entity, operationId, tenantId, groups);
-                throw new EmptyEntitesException($"No Devices were found for any {this.Entity}.");
+                throw new ResourceNotFoundException($"No Devices were found for any {this.Entity}.");
             }
 
             string fileContent = null;

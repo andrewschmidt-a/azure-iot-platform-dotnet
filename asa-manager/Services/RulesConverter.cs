@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.AsaManager.Services.Exceptions;
 using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
 using Mmm.Platform.IoT.AsaManager.Services.Models;
 using Mmm.Platform.IoT.AsaManager.Services.Models.Rules;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 
 namespace Mmm.Platform.IoT.AsaManager.Services
 {
@@ -39,7 +39,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             if (rules.Items.Count() == 0 || rules == null)
             {
                 _logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
-                throw new EmptyEntitesException("No entities were receieved from storage adapter to convert to rules.");
+                throw new ResourceNotFoundException("No entities were receieved from storage adapter to convert to rules.");
             }
 
             List<RuleReferenceDataModel> jsonRulesList = new List<RuleReferenceDataModel>();
@@ -62,7 +62,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 }
                 if (jsonRulesList.Count() == 0)
                 {
-                    throw new Exception("No rules were able to be converted to the proper rule reference data model.");
+                    throw new ResourceNotSupportedException("No rules were able to be converted to the proper rule reference data model.");
                 }
             }
             catch (Exception e)
