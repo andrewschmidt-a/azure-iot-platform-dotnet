@@ -39,6 +39,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             services.AddMvc().AddControllersAsServices();
 
             // Prepare DI container
+            services.AddHttpContextAccessor();
             this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
 
             // Create the IServiceProvider based on the container
