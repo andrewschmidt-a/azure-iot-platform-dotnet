@@ -94,11 +94,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 
             UserTenantInput tenantInput = new UserTenantInput
             {
-                UserId = input.client_id
+                UserId = input.client_id,
+                Tenant = input.scope
             };
             UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
             if(tenantsModel.models.Count == 0){
-                throw new Exception("Not granted access to any tenants");
+                throw new Exception("Not granted access to that tenant");
             }
 
 
