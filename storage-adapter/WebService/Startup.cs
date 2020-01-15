@@ -29,6 +29,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
 
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
+            services.AddHttpContextAccessor();
             this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
 
             // Create the IServiceProvider based on the container
