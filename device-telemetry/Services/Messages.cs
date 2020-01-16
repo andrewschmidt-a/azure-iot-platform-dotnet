@@ -7,6 +7,7 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Helpers;
@@ -30,7 +31,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly AppConfig config;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private IAppConfigurationClient _appConfigurationClient;
+        private readonly IAppConfigurationClient _appConfigurationClient;
 
         private readonly bool timeSeriesEnabled;
         private readonly DocumentClient documentClient;

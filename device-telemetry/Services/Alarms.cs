@@ -11,7 +11,7 @@ using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services
@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly IStorageClient storageClient;
         private readonly AppConfig config;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private IAppConfigurationClient _appConfigurationClient;
+        private readonly IAppConfigurationClient _appConfigurationClient;
 
         private readonly string databaseName;
         private readonly int maxDeleteRetryCount;
