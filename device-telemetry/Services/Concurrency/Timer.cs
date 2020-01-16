@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
 {
-    public class Timer : ITimer
+    public class Timer : ITimer, IDisposable
     {
         private readonly ILogger _logger;
 
@@ -54,6 +54,26 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
         {
             this.timer?.Change(Timeout.Infinite, Timeout.Infinite);
             this.timer?.Dispose();
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Stop();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

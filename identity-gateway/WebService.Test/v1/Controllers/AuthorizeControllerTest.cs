@@ -21,7 +21,7 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
-    public class AuthorizeControllerTest
+    public class AuthorizeControllerTest : IDisposable
     {
         private Mock<IUserContainer<UserSettingsModel, UserSettingsInput>> mockUserSettingsContainer;
         private Mock<UserTenantContainer> mockUserTenantContainer;
@@ -267,6 +267,26 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             someSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", someTenant.ToString()) });
             mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out someSecurityToken)).Returns(true);
             mockOpenIdProviderConfiguration.Setup(m => m.issuer).Returns(someIssuer);
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    authorizeController.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.IdentityGateway.Services;
@@ -13,7 +14,7 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
-    public class UserSettingsControllerTest
+    public class UserSettingsControllerTest : IDisposable
     {
         private Mock<UserSettingsContainer> mockUserSettingsContainer;
         private UserSettingsController userSettingsController;
@@ -174,6 +175,26 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
                 }
             };
             mockHttpContext.Setup(m => m.Items).Returns(contextItems);
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    userSettingsController.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

@@ -13,16 +13,14 @@ using Mmm.Platform.IoT.Common.Services.Auth;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 {
-    public class Startup
+    public class Startup : IDisposable
     {
         public IConfiguration Configuration { get; }
         public IContainer ApplicationContainer { get; private set; }
-        private readonly CancellationTokenSource agentsRunState;
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            this.agentsRunState = new CancellationTokenSource();
         }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -77,6 +75,26 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+        }
+        
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    ApplicationContainer.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

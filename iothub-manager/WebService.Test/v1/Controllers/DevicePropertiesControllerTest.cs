@@ -15,7 +15,7 @@ using Xunit;
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 {
 
-    public class DevicePropertiesControllerTest
+    public class DevicePropertiesControllerTest : IDisposable
     {
         private readonly DevicePropertiesController devicePropertiesController;
         private readonly Mock<IDeviceProperties> devicePropertiesMock;
@@ -69,6 +69,26 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
                 "property3",
                 "property4"
             };
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    devicePropertiesController.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

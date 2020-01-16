@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
 {
-    public class ValuesControllerTest
+    public class ValuesControllerTest : IDisposable
     {
         private readonly Mock<IKeyValueContainer> mockContainer;
         private readonly Mock<IKeyGenerator> mockGenerator;
@@ -306,6 +306,26 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
 
             await Assert.ThrowsAsync<BadRequestException>(async () =>
                 await this.controller.Delete("collection", new string('a', 256)));
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    controller.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

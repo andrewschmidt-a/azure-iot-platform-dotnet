@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
-    public class DeviceGroupControllerTest
+    public class DeviceGroupControllerTest : IDisposable
     {
         private readonly Mock<IStorage> mockStorage;
         private readonly DeviceGroupController controller;
@@ -242,6 +242,26 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 .Verify(x => x.DeleteDeviceGroupAsync(
                     It.Is<string>(s => s == groupId)),
                     Times.Once);
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    controller.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

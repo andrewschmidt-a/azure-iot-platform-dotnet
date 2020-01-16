@@ -20,7 +20,7 @@ using Alarm = Mmm.Platform.IoT.DeviceTelemetry.Services.Models.Alarm;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
 {
-    class AlarmsByRuleControllerTest
+    class AlarmsByRuleControllerTest : IDisposable
     {
         private AlarmsByRuleController controller;
 
@@ -190,6 +190,26 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
                 "critical",
                 "HVAC temp > 75"
             );
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    controller.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

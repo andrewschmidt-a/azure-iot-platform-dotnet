@@ -15,7 +15,7 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
-    public class RunbookHelper : IRunbookHelper
+    public class RunbookHelper : IRunbookHelper, IDisposable
     {
         private const string SA_JOB_DATABASE_ID = "pcs-iothub-stream";
 
@@ -223,6 +223,26 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             {
                 throw new RunbookTriggerException($"Unable to successfully trigger the requested runbook operation.", e);
             }
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    httpClient.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

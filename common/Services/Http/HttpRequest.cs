@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.Common.Services.Http
 {
-    public class HttpRequest : IHttpRequest
+    public class HttpRequest : IHttpRequest, IDisposable
     {
         private readonly MediaTypeHeaderValue defaultMediaType = new MediaTypeHeaderValue("application/json");
         private readonly Encoding defaultEncoding = new UTF8Encoding();
@@ -106,6 +106,24 @@ namespace Mmm.Platform.IoT.Common.Services.Http
             var content = JsonConvert.SerializeObject(sourceObject, Formatting.None);
             this.requestContent.Content = new StringContent(content, encoding, mediaType.MediaType);
             this.ContentType = mediaType;
+        }
+        private bool disposedValue = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    requestContent.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

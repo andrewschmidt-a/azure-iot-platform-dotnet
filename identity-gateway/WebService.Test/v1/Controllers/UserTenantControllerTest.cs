@@ -21,7 +21,7 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
-    public class UserTenantControllerTest
+    public class UserTenantControllerTest : IDisposable
     {
         private Mock<UserTenantContainer> mockUserTenantContainer;
         private UserTenantController userTenantController;
@@ -235,6 +235,26 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
                 }
             };
             mockHttpContext.Setup(m => m.Items).Returns(contextItems);
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    userTenantController.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

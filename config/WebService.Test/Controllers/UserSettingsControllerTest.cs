@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
-    public class UserSettingsControllerTest
+    public class UserSettingsControllerTest : IDisposable
     {
         private readonly Mock<IStorage> mockStorage;
         private readonly UserSettingsController controller;
@@ -83,6 +83,26 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
         {
             var dynamiceObj = obj as dynamic;
             return dynamiceObj.Name.ToString() == name && dynamiceObj.Description.ToString() == description;
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    controller.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

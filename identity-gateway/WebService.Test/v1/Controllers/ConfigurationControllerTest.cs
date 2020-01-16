@@ -1,4 +1,5 @@
-﻿using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+﻿using System;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +13,7 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
-    public class ConfigurationControllerTest
+    public class ConfigurationControllerTest : IDisposable
     {
         private ConfigurationController configurationController;
         private Mock<HttpContext> mockHttpContext;
@@ -80,6 +81,26 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(somePublicKey);
             mockOpenIdProviderConfiguration.SetupGet(m => m.issuer).Returns(someIssuer);
             mockRsaHelpers.Setup(m => m.GetJsonWebKey(It.IsAny<string>())).Returns(someJwks);
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    configurationController.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

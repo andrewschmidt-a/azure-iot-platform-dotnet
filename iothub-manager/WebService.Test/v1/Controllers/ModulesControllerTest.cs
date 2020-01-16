@@ -1,5 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +15,7 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 {
-    public class ModulesControllerTest
+    public class ModulesControllerTest : IDisposable
     {
         private readonly ModulesController modulesController;
         private readonly Mock<IDevices> devicesMock;
@@ -108,6 +107,23 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
                     { "version", JToken.Parse("'v1'") }
                 }
             };
+        }
+        private bool disposedValue = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    modulesController.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }

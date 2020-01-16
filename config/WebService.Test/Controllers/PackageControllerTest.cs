@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
-    public class PackageControllerTest
+    public class PackageControllerTest : IDisposable
     {
         private readonly Mock<IStorage> mockStorage;
         private readonly PackagesController controller;
@@ -211,6 +211,26 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             stream.Position = 0;
 
             return new FormFile(stream, 0, package.Length, "file", filename);
+        }
+
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    controller.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
         }
     }
 }
