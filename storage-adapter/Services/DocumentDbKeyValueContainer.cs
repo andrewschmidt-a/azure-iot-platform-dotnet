@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
@@ -21,7 +22,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
     {
         private const string COLLECTION_ID_KEY_FORMAT = "tenant:{0}:{1}-collection";
 
-        private readonly IAppConfigurationHelper _appConfigHelper;
+        private readonly IAppConfigurationClient _appConfigClient;
         private readonly AppConfig _appConfig;
         private readonly IExceptionChecker _exceptionChecker;
         private readonly ILogger _logger;
@@ -37,7 +38,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             IStorageClient client,
             IExceptionChecker exceptionChecker,
             AppConfig appConfig,
-            IAppConfigurationHelper appConfigHelper,
+            IAppConfigurationClient appConfigHelper,
             ILogger<DocumentDbKeyValueContainer> logger,
             IHttpContextAccessor httpContextAcessor)
         {
@@ -45,7 +46,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             _client = client;
             _exceptionChecker = exceptionChecker;
             _appConfig = appConfig;
-            _appConfigHelper = appConfigHelper;
+            _appConfigClient = appConfigHelper;
             _logger = logger;
             _httpContextAccessor = httpContextAcessor;
         }
@@ -74,7 +75,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 string key = String.Format(COLLECTION_ID_KEY_FORMAT, this.TenantId, this.DocumentDataType);
                 try
                 {
-                    return this._appConfigHelper.GetValue(key);
+                    return this._appConfigClient.GetValue(key);
                 }
                 catch (Exception ex)
                 {

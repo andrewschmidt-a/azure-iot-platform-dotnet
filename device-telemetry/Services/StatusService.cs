@@ -6,14 +6,15 @@ using System.Net;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services
@@ -28,7 +29,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             ITimeSeriesClient timeSeriesClient,
             IAsaManagerClient asaManager,
             IStorageAdapterClient storageAdapter,
-            IDiagnosticsClient diagnosticsClient) :
+            IDiagnosticsClient diagnosticsClient,
+            IAppConfigurationClient appConfig) :
             base(config)
         {
             this.dependencies = new Dictionary<string, IStatusOperation>
@@ -37,7 +39,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 { "Storage", storageClient },
                 { "Asa Manager", asaManager },
                 { "Time Series", timeSeriesClient },
-                { "Diagnostics", diagnosticsClient }
+                { "Diagnostics", diagnosticsClient },
+                { "App Config", appConfig }
             };
         }
     }

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.Common.Services.Helpers;
@@ -45,7 +46,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         public readonly IRunbookHelper _runbookHelper;
         public readonly IStorageClient _cosmosClient;
         public readonly ITableStorageClient _tableStorageClient;
-        public readonly IAppConfigurationHelper _appConfigHelper;
+        public readonly IAppConfigurationClient _appConfigClient;
 
         public TenantContainer(
             IHttpContextAccessor httpContextAccessor,
@@ -55,7 +56,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             ITableStorageClient tableStorageClient,
             IIdentityGatewayClient identityGatewayClient,
             IDeviceGroupsConfigClient deviceGroupConfigClient,
-            IAppConfigurationHelper appConfigHelper)
+            IAppConfigurationClient appConfigHelper)
         {
             _logger = log;
             this._runbookHelper = RunbookHelper;
@@ -63,7 +64,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             this._tableStorageClient = tableStorageClient;
             this._identityClient = identityGatewayClient;
             this._deviceGroupClient = deviceGroupConfigClient;
-            this._appConfigHelper = appConfigHelper;
+            this._appConfigClient = appConfigHelper;
         }
 
         private string FormatResourceName(string format, string tenantId)
@@ -146,7 +147,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 {
                     string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
                     string collectionId = $"{collection}-{tenantId}";
-                    await this._appConfigHelper.SetValueAsync(collectionKey, collectionId);
+                    await this._appConfigClient.SetValueAsync(collectionKey, collectionId);
                 }
             }
             catch (Exception e)
@@ -290,7 +291,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 string collectionId = "";
                 try
                 {
-                    collectionId = this._appConfigHelper.GetValue(collectionAppConfigKey);
+                    collectionId = this._appConfigClient.GetValue(collectionAppConfigKey);
                 }
                 catch (Exception e)
                 {
@@ -327,7 +328,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 try
                 {
                     // now that we have the collection Id, delete the key from app config
-                    await this._appConfigHelper.DeleteKeyAsync(collectionAppConfigKey);
+                    await this._appConfigClient.DeleteKeyAsync(collectionAppConfigKey);
                 }
                 catch (Exception e)
                 {

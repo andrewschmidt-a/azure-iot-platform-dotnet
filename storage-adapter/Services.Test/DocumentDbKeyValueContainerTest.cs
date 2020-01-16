@@ -16,6 +16,7 @@ using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
 {
@@ -51,7 +52,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                 .Returns(Task.FromResult(new Mock<ResourceResponse<DocumentCollection>>().Object));
 
             // mock a specific tenant
-            Mock<IAppConfigurationHelper> mockAppConfigHelper = new Mock<IAppConfigurationHelper>();
+            Mock<IAppConfigurationClient> mockAppConfigHelper = new Mock<IAppConfigurationClient>();
 
             //Mock service returns dummy data
 

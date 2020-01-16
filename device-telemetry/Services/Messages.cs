@@ -30,7 +30,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly AppConfig config;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private IAppConfigurationHelper _appConfigurationHelper;
+        private IAppConfigurationClient _appConfigurationClient;
 
         private readonly bool timeSeriesEnabled;
         private readonly DocumentClient documentClient;
@@ -40,7 +40,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         {
             get
             {
-                return this._appConfigurationHelper.GetValue(
+                return this._appConfigurationClient.GetValue(
                     $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
             }
         }
@@ -51,7 +51,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             ITimeSeriesClient timeSeriesClient,
             ILogger<Messages> logger,
             IHttpContextAccessor contextAccessor,
-            IAppConfigurationHelper appConfigurationHelper)
+            IAppConfigurationClient appConfigurationClient)
         {
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
@@ -62,7 +62,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             _logger = logger;
             this.config = config;
             this._httpContextAccessor = contextAccessor;
-            this._appConfigurationHelper = appConfigurationHelper;
+            this._appConfigurationClient = appConfigurationClient;
         }
 
         public async Task<MessageList> ListAsync(

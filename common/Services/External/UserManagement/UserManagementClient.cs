@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Config;
 
-namespace Mmm.Platform.IoT.Common.Services.External
+namespace Mmm.Platform.IoT.Common.Services.External.UserManagement
 {
     public class UserManagementClient : ExternalServiceClient, IUserManagementClient
     {

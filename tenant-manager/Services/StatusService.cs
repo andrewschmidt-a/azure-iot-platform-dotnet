@@ -6,6 +6,7 @@ using Mmm.Platform.IoT.TenantManager.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 
 namespace Mmm.Platform.IoT.TenantManager.Services
 {
@@ -20,7 +21,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             IDeviceGroupsConfigClient deviceGroupsConfigClient,
             IStorageClient cosmosClient,
             ITableStorageClient tableStorageClient,
-            IRunbookHelper RunbookHelper) :
+            IRunbookHelper RunbookHelper,
+            IAppConfigurationClient appConfigClient) :
             base(config)
         {
             dependencies = new Dictionary<string, IStatusOperation>
@@ -29,7 +31,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 { "Tenant Runbooks", RunbookHelper },
                 { "Table Storage", tableStorageClient },
                 { "Identity Gateway", identityGatewayClient },
-                { "Config", deviceGroupsConfigClient }
+                { "Config", deviceGroupsConfigClient },
+                { "App Config", appConfigClient }
             };
         }
     }

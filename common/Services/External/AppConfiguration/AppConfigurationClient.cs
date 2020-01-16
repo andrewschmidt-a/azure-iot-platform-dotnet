@@ -5,16 +5,31 @@ using Azure.Data.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+namespace Mmm.Platform.IoT.Common.Services.External.AppConfiguration
 {
-    public class AppConfigurationHelper : IAppConfigurationHelper
+    public class AppConfigurationClient : IAppConfigurationClient
     {
         private ConfigurationClient client;
+        private string statusKey;
         private Dictionary<string, AppConfigCacheValue> _cache = new Dictionary<string, AppConfigCacheValue>();
 
-        public AppConfigurationHelper(AppConfig config)
+        public AppConfigurationClient(AppConfig config, string statusKey = "Global")
         {
             this.client = new ConfigurationClient(config.AppConfigurationConnectionString);
+            this.statusKey = statusKey;
+        }
+
+        public async Task<StatusResultServiceModel> StatusAsync()
+        {
+            try
+            {
+                await this.client.GetConfigurationSettingAsync(this.statusKey);
+                return new StatusResultServiceModel(true, "Alive and well!");
+            }
+            catch (Exception)
+            {
+                return new StatusResultServiceModel(false, $"Unable to retrieve basic key \"{this.statusKey}\" from app config.");
+            }
         }
 
         /// <summary>

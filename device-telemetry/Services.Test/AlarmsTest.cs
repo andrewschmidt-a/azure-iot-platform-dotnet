@@ -15,6 +15,7 @@ using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
@@ -24,7 +25,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private readonly Mock<ILogger<Alarms>> _logger;
         private readonly IAlarms alarms;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
-        private readonly Mock<IAppConfigurationHelper> appConfigHelper;
+        private readonly Mock<IAppConfigurationClient> appConfigHelper;
 
         private const string TENANT_INFO_KEY = "tenant";
         private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
@@ -45,7 +46,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             };
             this.storageClient = new Mock<IStorageClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
-            this.appConfigHelper = new Mock<IAppConfigurationHelper>();
+            this.appConfigHelper = new Mock<IAppConfigurationClient>();
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
                 {{"TenantID", TENANT_ID}});
             this.appConfigHelper.Setup(t => t.GetValue($"{TENANT_INFO_KEY}:{TENANT_ID}:{TELEMETRY_COLLECTION_KEY}")).Returns("collection");
