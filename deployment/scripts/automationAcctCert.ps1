@@ -54,7 +54,7 @@ function Import-Certificate() {
     
     # adding cert password to Keyvault 
     $vaultCertPwd = ConvertTo-SecureString -String $certPassword -AsPlainText -Force
-    Set-AzureKeyVaultSecret -VaultName $KeyVaultName -Name "AutomationCertPassword" -SecretValue $vaultCertPwd
+    Set-AzureKeyVaultSecret -VaultName $KeyVaultName -Name "Global--AutomationCertPassword" -SecretValue $vaultCertPwd
     Write-Host "Cert Password added to Keyvault"
 
     # Populate the ConnectionFieldValues
