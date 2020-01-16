@@ -94,6 +94,23 @@ stages:
       subscriptionId: 28299656-8110-4dc4-a33f-82a6cc3d05c2
       applicationCode: chimiot
       deployEnvironment: dev   
+- stage: DeployCHIMQA
+  dependsOn: []
+  #- DeployCRSLQA
+  displayName: Deploy To CHIM QA
+  jobs:
+  - template: templates/approval.yaml
+    parameters:
+      environment: IoT_CHIM_Environment_QA
+  - template: templates/infra.yaml
+    parameters:
+      serviceConnection: '3M-ACTAIR02-CHIMSMART-QA'
+      resourceGroup: rg-iot-chim-qa
+      location: centralus
+      environment: IoT_CHIM_Environment_QA
+      subscriptionId: 30975220-85e1-4769-8bc1-4542ec8569a0
+      applicationCode: chimiot
+      deployEnvironment: qa  
 # PSD
 - stage: DeployPSDDev
   dependsOn: []
