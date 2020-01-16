@@ -10,6 +10,7 @@ using Mmm.Platform.IoT.Common.Services.Exceptions;
 
 namespace Mmm.Platform.IoT.Common.Services.Filters
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Interface | AttributeTargets.Delegate)]
     public class AuthorizeActionFilterAttribute : Attribute, IAsyncActionFilter
     {
         private readonly string allowedAction;
