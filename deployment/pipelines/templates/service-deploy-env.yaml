@@ -83,6 +83,26 @@ stages:
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
 
+- stage: DeployCHIMQA
+  dependsOn:
+  - DeployCRSLQA
+  displayName: Deploy To CHIM QA
+  jobs:
+  - template: approval.yaml
+    parameters:
+      environment: IoT_CHIM_Environment_QA
+  - job:
+    pool:
+      vmImage: 'ubuntu-16.04'
+    steps:
+    - template: service-deploy.yaml
+      parameters:
+        serviceConnection: 'IoT_CHIM_Environment_QA'
+        resourceGroup: rg-iot-chim-qa
+        aksName: chimiot-aks-qa
+        chartLocation: 'deployment/charts/${{parameters.service}}'
+        releaseName: ${{parameters.service}}
+
 - stage: DeployPSDDev
   dependsOn:
   - DeployCRSLQA
