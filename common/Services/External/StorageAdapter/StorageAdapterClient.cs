@@ -16,7 +16,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
         public StorageAdapterClient(
             AppConfig config,
             IExternalRequestHelper requestHelper) :
-            base(config.ExternalDependencies.AsaManagerServiceUrl, requestHelper)
+            base(config.ExternalDependencies.StorageAdapterServiceUrl, requestHelper)
         {
             this.timeout = config.ExternalDependencies.StorageAdapterServiceTimeout;
         }
