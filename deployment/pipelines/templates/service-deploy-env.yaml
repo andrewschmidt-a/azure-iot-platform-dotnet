@@ -97,7 +97,7 @@ stages:
     steps:
     - template: service-deploy.yaml
       parameters:
-        serviceConnection: 'IoT_CHIM_Environment_QA'
+        serviceConnection: '3M-ACTAIR02-CHIMSMART-QA'
         resourceGroup: rg-iot-chim-qa
         aksName: chimiot-aks-qa
         chartLocation: 'deployment/charts/${{parameters.service}}'
