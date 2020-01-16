@@ -66,20 +66,6 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             }
         }
 
-        public override Task OnExceptionAsync(ExceptionContext context)
-        {
-            try
-            {
-                this.OnException(context);
-            }
-            catch (Exception)
-            {
-                return base.OnExceptionAsync(context);
-            }
-
-            return Task.FromResult(new object());
-        }
-
         private ObjectResult GetResponse(
             HttpStatusCode code,
             Exception e,

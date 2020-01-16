@@ -87,7 +87,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             {
                 AuthenticationResult token = await _authenticationContext.AcquireTokenAsync(resourceUri, clientCredential);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return StatusCode(401, e.Message);
             }
@@ -98,7 +98,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 Tenant = input.scope
             };
             UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
-            if(tenantsModel.models.Count == 0){
+            if (tenantsModel.models.Count == 0){
                 throw new Exception("Not granted access to that tenant");
             }
             
