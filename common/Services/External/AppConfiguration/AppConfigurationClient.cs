@@ -13,10 +13,10 @@ namespace Mmm.Platform.IoT.Common.Services.External.AppConfiguration
         private string statusKey;
         private Dictionary<string, AppConfigCacheValue> _cache = new Dictionary<string, AppConfigCacheValue>();
 
-        public AppConfigurationClient(AppConfig config, string statusKey = "Global")
+        public AppConfigurationClient(AppConfig config)
         {
             this.client = new ConfigurationClient(config.AppConfigurationConnectionString);
-            this.statusKey = statusKey;
+            this.statusKey = config.ExternalDependencies.AppConfigStatusCheck;
         }
 
         public async Task<StatusResultServiceModel> StatusAsync()
@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.AppConfiguration
             }
             catch (Exception)
             {
-                return new StatusResultServiceModel(false, $"Unable to retrieve basic key \"{this.statusKey}\" from app config.");
+                return new StatusResultServiceModel(false, $"Unable to retrieve basic key {this.statusKey} from app config.");
             }
         }
 

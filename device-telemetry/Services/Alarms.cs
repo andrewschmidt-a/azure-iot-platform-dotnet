@@ -13,6 +13,7 @@ using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
