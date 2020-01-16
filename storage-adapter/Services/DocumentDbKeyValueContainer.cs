@@ -3,43 +3,38 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
-using Index = Microsoft.Azure.Documents.Index;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
     public class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
     {
         private const string COLLECTION_ID_KEY_FORMAT = "tenant:{0}:{1}-collection";
+
         private readonly IAppConfigurationHelper _appConfigHelper;
         private readonly AppConfig _appConfig;
-        private readonly IFactory<IDocumentClient> _clientFactory;
         private readonly IExceptionChecker _exceptionChecker;
         private readonly ILogger _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private IStorageClient client;
-        private int docDbRUs;
+        private IStorageClient _client;
+
         private bool disposedValue;
 
         public virtual string DocumentDataType { get { return "pcs"; }}
         public virtual string DocumentDatabaseSuffix { get { return "storage"; }}
 
         public DocumentDbKeyValueContainer(
-            IFactory<IDocumentClient> clientFactory,
+            IStorageClient client,
             IExceptionChecker exceptionChecker,
             AppConfig appConfig,
             IAppConfigurationHelper appConfigHelper,
@@ -47,7 +42,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             IHttpContextAccessor httpContextAcessor)
         {
             disposedValue = false;
-            _clientFactory = clientFactory;
+            _client = client;
             _exceptionChecker = exceptionChecker;
             _appConfig = appConfig;
             _appConfigHelper = appConfigHelper;
@@ -102,7 +97,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             try
             {
                 var docId = DocumentIdHelper.GenerateId(collectionId, key);
-                var response = await this.client.ReadDocumentAsync(this.DocumentDbDatabaseId, this.DocumentDbCollectionId, docId);
+                var response = await this._client.ReadDocumentAsync(this.DocumentDbDatabaseId, this.DocumentDbCollectionId, docId);
                 return new ValueServiceModel(response);
             }
             catch (Exception ex)
@@ -117,7 +112,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 
         public async Task<IEnumerable<ValueServiceModel>> GetAllAsync(string collectionId)
         {
-            var query = await this.client.QueryAllDocumentsAsync(
+            var query = await this._client.QueryAllDocumentsAsync(
                 this.DocumentDbDatabaseId,
                 this.DocumentDbCollectionId);
             return await Task.FromResult(query.Select(doc => new ValueServiceModel(doc)));
@@ -127,7 +122,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             try
             {
-                var response = await this.client.CreateDocumentAsync(
+                var response = await this._client.CreateDocumentAsync(
                     this.DocumentDbDatabaseId,
                     this.DocumentDbCollectionId,
                     new KeyValueDocument(
@@ -150,7 +145,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             try
             {
-                var response = await this.client.UpsertDocumentAsync(
+                var response = await this._client.UpsertDocumentAsync(
                     this.DocumentDbDatabaseId,
                     this.DocumentDbCollectionId,
                     new KeyValueDocument(
@@ -174,30 +169,13 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             try
             {
                 string documentId = DocumentIdHelper.GenerateId(collectionId, key);
-                await this.client.DeleteDocumentAsync(this.DocumentDbDatabaseId, this.DocumentDbCollectionId, documentId);
+                await this._client.DeleteDocumentAsync(this.DocumentDbDatabaseId, this.DocumentDbCollectionId, documentId);
             }
             catch (Exception ex)
             {
                 if (!this._exceptionChecker.IsNotFoundException(ex)) throw;
                 _logger.LogDebug("Key {key} does not exist, nothing to do");
             }
-        }
-
-        private static RequestOptions IfMatch(string etag)
-        {
-            if (etag == "*")
-            {
-                // Match all
-                return null;
-            }
-            return new RequestOptions
-            {
-                AccessCondition = new AccessCondition
-                {
-                    Condition = etag,
-                    Type = AccessConditionType.IfMatch
-                }
-            };
         }
 
         #region IDisposable Support
@@ -208,7 +186,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 if (disposing)
                 {
-                    (this.client as IDisposable)?.Dispose();
+                    (this._client as IDisposable)?.Dispose();
                 }
                 this.disposedValue = true;
             }
