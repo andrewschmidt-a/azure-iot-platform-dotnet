@@ -93,8 +93,8 @@ importRunbook -runbookName "CreateStreamAnalyticsJob" -filepath "$scriptFolder\C
 importRunbook -runbookName "DeleteStreamAnalyticsJob" -filepath "$scriptFolder\DeleteSAJob.ps1"
 
 # create the webhook and store to the Keyvault
-createWebhook -webhook "CreateIotHub" -runbookName "CreateIoTHubTenant" -expDate $expDate -secretName "createIotHubWebHookUrl"
-createWebhook -webhook "DeleteIotHub" -runbookName "DeleteIoTHubTenant" -expDate $expDate -secretName "deleteIotHubWebHookUrl"
-createWebhook -webhook "CreateSAJob" -runbookName "CreateStreamAnalyticsJob" -expDate $expDate -secretName "createSAJobWebHookUrl"
-createWebhook -webhook "DeleteSAJob" -runbookName "DeleteStreamAnalyticsJob" -expDate $expDate -secretName "deleteSAJobWebHookUrl"
+createWebhook -webhook "CreateIotHub" -runbookName "CreateIoTHubTenant" -expDate $expDate -secretName "TenantManagerService--CreateIotHubWebHookUrl"
+createWebhook -webhook "DeleteIotHub" -runbookName "DeleteIoTHubTenant" -expDate $expDate -secretName "TenantManagerService--DeleteIotHubWebHookUrl"
+createWebhook -webhook "CreateSAJob" -runbookName "CreateStreamAnalyticsJob" -expDate $expDate -secretName "TenantManagerService--CreateSaJobWebHookUrl"
+createWebhook -webhook "DeleteSAJob" -runbookName "DeleteStreamAnalyticsJob" -expDate $expDate -secretName "TenantManagerService--DeleteSaJobWebHookUrl"
 # end 

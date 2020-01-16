@@ -11,15 +11,15 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     scriptLocation: 'inlineScript'
     inlineScript: |-
-      key=$(az keyvault secret show --vault-name ${{ parameters.keyVaultName }} -n identityGatewayPrivateKey)
+      key=$(az keyvault secret show --vault-name ${{ parameters.keyVaultName }} -n IdentityGatewayService--PrivateKey)
       if [ -z "$key" ]
       then
             ssh-keygen -b 2048 -t rsa -C "a9my8zz@mmm.com" -f $(System.DefaultWorkingDirectory)/sshkeys -q -N ""
             cat sshkeys > identityGatewayKeys.pem
             ssh-keygen -f sshkeys.pub -e -m pem >> identityGatewayKeys.pem
             ssh-keygen -f sshkeys.pub -e -m pem > identitypub.pem
-            az keyvault secret set --vault-name ${{ parameters.keyVaultName }} --name 'identityGatewayPrivateKey' --file $(System.DefaultWorkingDirectory)/identityGatewayKeys.pem
-            az keyvault secret set --vault-name ${{ parameters.keyVaultName }} --name 'identityGatewayPublicKey' --file $(System.DefaultWorkingDirectory)/identitypub.pem
+            az keyvault secret set --vault-name ${{ parameters.keyVaultName }} --name 'IdentityGatewayService--PrivateKey' --file $(System.DefaultWorkingDirectory)/identityGatewayKeys.pem
+            az keyvault secret set --vault-name ${{ parameters.keyVaultName }} --name 'IdentityGatewayService--PublicKey' --file $(System.DefaultWorkingDirectory)/identitypub.pem
       else
             echo "Identity Key already exists "
       fi
