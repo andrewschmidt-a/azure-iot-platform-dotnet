@@ -16,8 +16,6 @@ namespace Mmm.Platform.IoT.Config.Services
         public override IDictionary<string, IStatusOperation> dependencies { get; set; }
 
         public StatusService(
-            ILogger<StatusService> logger,
-            IHttpClient httpClient,
             AppConfig config,
             IAsaManagerClient asaManager,
             IStorageAdapterClient storageAdapter,
