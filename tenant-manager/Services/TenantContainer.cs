@@ -242,7 +242,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             try
             {
                 IdentityGatewayApiSettingModel lastUsedTenant = await this._identityClient.getSettingsForUserAsync(userId, "LastUsedTenant");
-                if (lastUsedTenant.Value == tenantId) // Value is the tenantId in the model
+                if (lastUsedTenant.Value == tenantId)
                 {
                     // update the LastUsedTenant to some null
                     await this._identityClient.updateSettingsForUserAsync(userId, "LastUsedTenant", "");

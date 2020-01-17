@@ -299,7 +299,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 rule.DateCreated = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
                 rule.DateModified = rule.DateCreated;
             }
-            else // update rule with stored date created
+            else
             {
                 rule.DateCreated = savedRule.DateCreated;
                 rule.DateModified = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
