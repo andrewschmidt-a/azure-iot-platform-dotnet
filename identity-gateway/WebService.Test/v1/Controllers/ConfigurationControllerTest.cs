@@ -35,7 +35,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
         public void GetOpenIdProviderConfigurationReturnsExpectedIssuer()
         {
             // Arrange
-            //Act
+            // Act
             var result = configurationController.GetOpenIdProviderConfiguration() as OkObjectResult;
             var openIdProviderConfiguration = result.Value as IOpenIdProviderConfiguration;
 

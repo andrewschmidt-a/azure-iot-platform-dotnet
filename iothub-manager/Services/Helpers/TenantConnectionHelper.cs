@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             this.logger = logger;
         }
 
-        //Gets the tenant name from the threads current token.
+        // Gets the tenant name from the threads current token.
         private string TenantName
         {
             get

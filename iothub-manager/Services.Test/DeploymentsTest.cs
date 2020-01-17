@@ -294,7 +294,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var deviceStatuses = returnedDeployment.DeploymentMetrics.DeviceStatuses;
             Assert.Equal(3, deviceStatuses.Count);
 
-            //Assert
+            // Assert
             returnedDeployment = await this.deployments.GetAsync(deploymentId);
             deviceStatuses = returnedDeployment.DeploymentMetrics.DeviceStatuses;
             Assert.Null(deviceStatuses);

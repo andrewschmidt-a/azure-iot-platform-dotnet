@@ -115,7 +115,7 @@ namespace Mmm.Platform.IoT.Config.Services
 
         public async Task<Logo> SetLogoAsync(Logo model)
         {
-            //Do not overwrite existing name or image with null
+            // Do not overwrite existing name or image with null
             if (model.Name == null || model.Image == null)
             {
                 Logo current = await this.GetLogoAsync();

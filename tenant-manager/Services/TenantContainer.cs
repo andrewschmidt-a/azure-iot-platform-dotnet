@@ -256,7 +256,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // Gather tenant information
             string iotHubName = this.FormatResourceName(this.iotHubNameFormat, tenantId);
             string dpsName = this.FormatResourceName(this.dpsNameFormat, tenantId);
-            //trigger delete iothub runbook
+            // trigger delete iothub runbook
             try
             {
                 await this._runbookHelper.DeleteIotHub(tenantId, iotHubName, dpsName);

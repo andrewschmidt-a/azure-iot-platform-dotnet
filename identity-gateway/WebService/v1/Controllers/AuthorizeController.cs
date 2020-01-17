@@ -149,7 +149,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 throw new NoAuthorizationException("No Bearer Token Authorization Header was passed.");
             }
 
-            //Extract Bearer token
+            // Extract Bearer token
             string encodedToken = authHeader.Substring("Bearer ".Length).Trim();
             var jwtHandler = new JwtSecurityTokenHandler();
             if (!_jwtHelper.TryValidateToken("IoTPlatform", encodedToken, HttpContext, out JwtSecurityToken jwt))
@@ -241,13 +241,13 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 
             string tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(claims, authState.tenant, originalAudience, null));
 
-            //Build Return Uri
+            // Build Return Uri
             var returnUri = new UriBuilder(authState.returnUrl);
 
             // Need to build Query carefully to not clobber other query items -- just injecting state
-            //var query = HttpUtility.ParseQueryString(returnUri.Query);
-            //query["state"] = HttpUtility.UrlEncode(authState.state);
-            //returnUri.Query = query.ToString();
+            // var query = HttpUtility.ParseQueryString(returnUri.Query);
+            // query["state"] = HttpUtility.UrlEncode(authState.state);
+            // returnUri.Query = query.ToString();
 
             returnUri.Fragment =
                 "id_token=" + tokenString + "&state=" +

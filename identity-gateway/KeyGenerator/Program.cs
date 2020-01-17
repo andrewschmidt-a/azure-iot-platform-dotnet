@@ -18,9 +18,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.KeyGenerator
             string key = "";
             using (var memStream = new MemoryStream())
             {
-                //Generate a public/private key pair.  
+                // Generate a public/private key pair.  
                 RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(2048);
-                //Save the public key information to an RSAParameters structure.  
+                // Save the public key information to an RSAParameters structure.  
                 RSAParameters rsaKeyInfo = rsa.ExportParameters(true);
 
                 AsymmetricCipherKeyPair KeyPair = DotNetUtilities.GetRsaKeyPair(rsaKeyInfo);

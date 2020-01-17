@@ -199,7 +199,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
                     AddAllowedActionsToRequestContext(context);
 
-                    //Set Tenant Information
+                    // Set Tenant Information
                     context.Request.SetTenant(loggerFactory.CreateLogger(typeof(RequestExtension)));
 
                     return true;
@@ -249,17 +249,17 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                 logger.LogInformation("Initializing OpenID configuration");
                 var openIdConfig = await this.openIdCfgMan.GetConfigurationAsync(token);
 
-                //Attempted to do it myself still issue with SSL
-                //HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.config.JwtIssuer+ "/.well-known/openid-configuration/jwks");
-                //request.AutomaticDecompression = DecompressionMethods.GZip;
-                //IdentityKeys
+                // Attempted to do it myself still issue with SSL
+                // HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.config.JwtIssuer+ "/.well-known/openid-configuration/jwks");
+                // request.AutomaticDecompression = DecompressionMethods.GZip;
+                // IdentityKeys
 
-                //using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-                //using (Stream stream = response.GetResponseStream())
-                //using (StreamReader reader = new StreamReader(stream))
-                //{
+                // using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                // using (Stream stream = response.GetResponseStream())
+                // using (StreamReader reader = new StreamReader(stream))
+                // {
                 //    keys = JsonConvert.DeserializeObject<IdentityGatewayKeys>(reader.ReadToEnd());
-                //}
+                // }
 
                 this.tokenValidationParams = new TokenValidationParameters
                 {

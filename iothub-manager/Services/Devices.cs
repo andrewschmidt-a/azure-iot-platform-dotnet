@@ -43,7 +43,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             _tenantHelper = tenantConnectionHelper;
 
         }
-        //used for testing
+        // used for testing
         public Devices(ITenantConnectionHelper _tenantHelper, string ioTHubHostName)
         {
             this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper " + ioTHubHostName);

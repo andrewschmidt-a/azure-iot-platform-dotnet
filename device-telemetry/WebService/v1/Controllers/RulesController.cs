@@ -86,7 +86,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
                 throw new InvalidInputException("Rule not provided in request body.");
             }
 
-            //Ensure the id on the model matches the route
+            // Ensure the id on the model matches the route
             rule.Id = id;
             Rule updatedRule = await this.ruleService.UpsertIfNotDeletedAsync(rule.ToServiceModel());
 

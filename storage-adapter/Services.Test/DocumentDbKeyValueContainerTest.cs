@@ -53,7 +53,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             // mock a specific tenant
             Mock<IAppConfigurationHelper> mockAppConfigHelper = new Mock<IAppConfigurationHelper>();
 
-            //Mock service returns dummy data
+            // Mock service returns dummy data
 
 
             var config = new AppConfig();

@@ -33,7 +33,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 
         public async Task<JwtSecurityToken> GetIdentityToken(List<Claim> claims, string tenant, string audience, DateTime? expiration)
         {
-            //add iat claim
+            // add iat claim
             var timeSinceEpoch = DateTime.UtcNow.ToEpochTime();
             claims.Add(new Claim("iat", timeSinceEpoch.ToString(), ClaimValueTypes.Integer));
 
@@ -46,7 +46,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
             UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
             List<UserTenantModel> tenantList = tenantsModel.models;
 
-            //User did not specify the tenant to log into so get the default or last used
+            // User did not specify the tenant to log into so get the default or last used
             if (String.IsNullOrEmpty(tenant))
             {
                 // authState has no tenant, so we should use either the User's last used tenant, or the first tenant available to them

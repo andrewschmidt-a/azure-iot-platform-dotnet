@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
             client.InstrumentationKey = instrumentationKey;
         }
 
-        //prevent self referencing looping
+        // prevent self referencing looping
         private static JsonSerializerSettings jsonSettings = new JsonSerializerSettings()
         {
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore
