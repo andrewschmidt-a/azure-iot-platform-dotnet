@@ -56,8 +56,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         /// <param name="ioTHubHostName">IoT Hub name</param>
         /// <param name="isConnected">If this is true OR azureDevice.ConnectionState is Connected
         /// then the device is said to be connected.</param>
-        public DeviceServiceModel(Device azureDevice, Twin azureTwin, string ioTHubHostName, bool isConnected) :
-            this(
+        public DeviceServiceModel(Device azureDevice, Twin azureTwin, string ioTHubHostName, bool isConnected)
+            : this(
                 etag: azureDevice.ETag,
                 id: azureDevice.Id,
                 c2DMessageCount: azureDevice.CloudToDeviceMessageCount,
@@ -72,8 +72,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         {
         }
 
-        public DeviceServiceModel(Device azureDevice, Twin azureTwin, string ioTHubHostName) :
-            this(
+        public DeviceServiceModel(Device azureDevice, Twin azureTwin, string ioTHubHostName)
+            : this(
                 azureDevice,
                 azureTwin,
                 ioTHubHostName,
@@ -81,8 +81,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         {
         }
 
-        public DeviceServiceModel(Twin azureTwin, string ioTHubHostName, bool isConnected) :
-            this(
+        public DeviceServiceModel(Twin azureTwin, string ioTHubHostName, bool isConnected)
+            : this(
                 etag: azureTwin.ETag,
                 id: azureTwin.DeviceId,
                 c2DMessageCount: azureTwin.CloudToDeviceMessageCount ?? azureTwin.CloudToDeviceMessageCount ?? 0,

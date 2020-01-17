@@ -90,7 +90,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 {
                     if (twin.Value is JToken)
                     {
-                        result.Add(twin.Key, (JToken) twin.Value);
+                        result.Add(twin.Key, (JToken)twin.Value);
                     }
                     else
                     {
