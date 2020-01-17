@@ -15,7 +15,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             this.Value = value;
             this.ExpirationTime = DateTime.UtcNow.AddHours(1);
         }
-        public AppConfigCacheValue(string key, string value) :  this(new ConfigurationSetting(key, value))
+        public AppConfigCacheValue(string key, string value) : this(new ConfigurationSetting(key, value))
         {
         }
     }

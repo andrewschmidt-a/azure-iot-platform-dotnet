@@ -31,9 +31,9 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         private static readonly Dictionary<long, string> timePeriodMap =
             new Dictionary<long, string>
             {
-                {   60000, ASA_AGGREGATION_WINDOW_TUMBLING_1MIN },
-                {  300000, ASA_AGGREGATION_WINDOW_TUMBLING_5MINS },
-                {  600000, ASA_AGGREGATION_WINDOW_TUMBLING_10MINS },
+                { 60000, ASA_AGGREGATION_WINDOW_TUMBLING_1MIN },
+                { 300000, ASA_AGGREGATION_WINDOW_TUMBLING_5MINS },
+                { 600000, ASA_AGGREGATION_WINDOW_TUMBLING_10MINS },
                 { 1200000, ASA_AGGREGATION_WINDOW_TUMBLING_20MINS },
                 { 1800000, ASA_AGGREGATION_WINDOW_TUMBLING_30MINS },
                 { 3600000, ASA_AGGREGATION_WINDOW_TUMBLING_1HOUR },

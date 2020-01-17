@@ -577,8 +577,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     Name = "Sample 2",
                     Enabled = true,
                     Description = "Sample description 2",
-                    GroupId =  "Prototyping devices",
-                    Severity =  SeverityType.Warning,
+                    GroupId = "Prototyping devices",
+                    Severity = SeverityType.Warning,
                     Conditions = sampleConditions,
                     Actions = sampleActions
                 },
@@ -589,8 +589,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     Enabled = true,
                     Calculation = CalculationType.Instant,
                     Description = "Sample description 2.",
-                    GroupId =  "Chillers",
-                    Severity =  SeverityType.Warning,
+                    GroupId = "Chillers",
+                    Severity = SeverityType.Warning,
                     Conditions = sampleConditions,
                     Actions = sampleActions
                 }
