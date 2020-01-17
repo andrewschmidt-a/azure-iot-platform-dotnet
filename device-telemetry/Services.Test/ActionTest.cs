@@ -54,7 +54,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 { PARAM_SUBJECT_KEY, PARAM_SUBJECT },
                 { PARAM_NOTES_KEY, PARAM_NOTES },
-                { PARAM_RECIPIENTS_KEY, new JArray() { "sampleEmailgmail.com"} }
+                { PARAM_RECIPIENTS_KEY, new JArray() { "sampleEmailgmail.com" } }
             };
 
             // Act and Assert

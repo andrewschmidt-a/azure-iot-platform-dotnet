@@ -330,7 +330,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 {
                     { DEPLOYMENT_NAME_LABEL, string.Empty },
                     { DEPLOYMENT_GROUP_ID_LABEL, string.Empty },
-                    { PACKAGE_TYPE_LABEL, label},
+                    { PACKAGE_TYPE_LABEL, label },
                     { CONFIG_TYPE_LABEL, "CustomConfig" },
                     { RM_CREATED_LABEL, bool.TrueString },
                 },
@@ -392,7 +392,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 {
                     { DEPLOYMENT_NAME_LABEL, string.Empty },
                     { DEPLOYMENT_GROUP_ID_LABEL, string.Empty },
-                    { PACKAGE_TYPE_LABEL, label},
+                    { PACKAGE_TYPE_LABEL, label },
                     { CONFIG_TYPE_LABEL, Firmware },
                     { RM_CREATED_LABEL, bool.TrueString },
                 },

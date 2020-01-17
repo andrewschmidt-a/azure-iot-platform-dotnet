@@ -114,9 +114,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             {
                 DeviceMetrics = new Dictionary<DeploymentStatus, long>()
                 {
-                    { DeploymentStatus.Succeeded, 0},
-                    { DeploymentStatus.Pending, 0},
-                    { DeploymentStatus.Failed, 0}
+                    { DeploymentStatus.Succeeded, 0 },
+                    { DeploymentStatus.Pending, 0 },
+                    { DeploymentStatus.Failed, 0 }
                 }
             };
 
