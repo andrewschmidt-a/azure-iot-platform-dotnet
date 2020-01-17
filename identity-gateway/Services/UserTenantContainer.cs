@@ -71,8 +71,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             if (existingModel != null)
             {
                 // If this record already exists, return it without continuing with the insert operation
-                throw new StorageException
-                (
+                throw new StorageException(
                     $"That UserTenant record already exists with value {existingModel.Roles}." +
                     " Use PUT instead to update this setting instead.");
             }

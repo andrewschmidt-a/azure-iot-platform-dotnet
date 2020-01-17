@@ -129,8 +129,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 
             // Also note that securityKey length should be >256b
             // so you have to make sure that your private key has a proper length
-            var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials
-                (securityKey, SecurityAlgorithms.RsaSha256);
+            var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
 
             JwtSecurityToken token = new JwtSecurityToken(
                 issuer: forwardedFor ?? "https://" + this._httpContextAccessor.HttpContext.Request.Host.ToString() + "/",

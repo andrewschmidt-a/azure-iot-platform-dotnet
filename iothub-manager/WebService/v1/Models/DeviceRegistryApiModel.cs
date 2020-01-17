@@ -122,8 +122,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 
         public DeviceServiceModel ToServiceModel()
         {
-            var twinModel = new TwinServiceModel
-            (
+            var twinModel = new TwinServiceModel(
                 etag: this.TwinEtag,
                 deviceId: this.Id,
                 desiredProperties: this.Properties?.Desired,
@@ -131,8 +130,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                 tags: this.Tags,
                 isSimulated: this.IsSimulated);
 
-            return new DeviceServiceModel
-            (
+            return new DeviceServiceModel(
                 etag: this.DeviceRegistryEtag,
                 id: this.Id,
                 c2DMessageCount: this.C2DMessageCount,

@@ -44,8 +44,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 
         public TwinServiceModel ToServiceModel()
         {
-            return new TwinServiceModel
-            (
+            return new TwinServiceModel(
                 etag: this.ETag,
                 deviceId: this.DeviceId,
                 desiredProperties: this.Properties.Desired,

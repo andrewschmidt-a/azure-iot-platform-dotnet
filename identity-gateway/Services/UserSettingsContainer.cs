@@ -50,8 +50,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             if (existingModel != null)
             {
                 // If this record already exists, return it without continuing with the insert operation
-                throw new StorageException
-                (
+                throw new StorageException(
                     $"That UserSetting already exists with value {existingModel.Value}." +
                     " Use PUT to update this user instead.");
             }

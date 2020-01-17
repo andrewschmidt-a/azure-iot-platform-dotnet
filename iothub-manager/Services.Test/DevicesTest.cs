@@ -205,8 +205,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 AuthenticationType = authType
             };
 
-            DeviceServiceModel model = new DeviceServiceModel
-            (
+            DeviceServiceModel model = new DeviceServiceModel(
                 etag: "etag",
                 id: "deviceId",
                 c2DMessageCount: 0,
