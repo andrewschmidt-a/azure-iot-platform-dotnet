@@ -3,7 +3,7 @@ using Mmm.Platform.IoT.TenantManager.Services.Models;
 
 namespace Mmm.Platform.IoT.TenantManager.Services
 {
-    public interface IAlertingContainer 
+    public interface IAlertingContainer
     {
         Task<StreamAnalyticsJobModel> AddAlertingAsync(string tenantId);
         Task<StreamAnalyticsJobModel> RemoveAlertingAsync(string tenantId);

@@ -58,7 +58,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             result.Properties.Add("StorageType", config.StorageAdapterService.StorageType);
             result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
             result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
-            
+
             _logger.LogInformation("Service status request {result}", result);
 
             if (errors.Count > 0)

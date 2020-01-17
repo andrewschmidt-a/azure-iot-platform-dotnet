@@ -129,7 +129,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             }
         }
 
-        // Replaces DeploymentId, if present, in the custom metrics query 
+        // Replaces DeploymentId, if present, in the custom metrics query
         public static IDictionary<string, string> SubstituteDeploymentIdIfPresent(
             IDictionary<string, string> customMetrics,
             string deploymentId)

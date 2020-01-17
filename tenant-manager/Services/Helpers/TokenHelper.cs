@@ -14,7 +14,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         {
             this.config = config;
         }
-        
+
         public async Task<string> GetTokenAsync()
         {
             string keyVaultAppId = config.Global.AzureActiveDirectory.AppId;

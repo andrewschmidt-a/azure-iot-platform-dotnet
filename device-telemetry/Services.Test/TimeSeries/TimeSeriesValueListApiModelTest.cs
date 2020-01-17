@@ -16,7 +16,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void ConvertsToMessageList_WhenMultipleDeviceTypes()
         {
-            // Arrange 
+            // Arrange
             var events = this.GetTimeSeriesEvents();
 
             // Act
@@ -31,7 +31,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void ConvertsToMessageList_WithSkipValue()
         {
-            // Arrange 
+            // Arrange
             var events = this.GetTimeSeriesEvents();
 
             // Act

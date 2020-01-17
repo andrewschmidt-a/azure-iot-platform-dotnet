@@ -15,7 +15,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups
 
         [JsonProperty("Conditions")]
         public IEnumerable<DeviceGroupConditionModel> Conditions { get; set; }
-        
+
         [JsonProperty("ETag")]
         public string ETag { get; set; }
 

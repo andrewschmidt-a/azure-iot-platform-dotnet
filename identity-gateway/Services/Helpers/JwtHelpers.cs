@@ -71,7 +71,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 }
             }
 
-            // If User not associated with Tenant then dont add claims return token without 
+            // If User not associated with Tenant then dont add claims return token without
             if (tenant != null)
             {
                 UserTenantInput input = new UserTenantInput
@@ -104,7 +104,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
             DateTime expirationDateTime = expiration ?? DateTime.Now.AddDays(30);
             // add all tenants they have access to
             claims.AddRange(tenantList.Select(t => new Claim("available_tenants", t.TenantId)));
-            
+
             // Token to String so you can use it in your client
             var token = this.MintToken(claims, audience, expirationDateTime);
 

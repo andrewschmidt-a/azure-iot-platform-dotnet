@@ -118,10 +118,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
                     It.Is<String>(n => n == userSettingsContainer.TableName),
                     It.IsAny<String>(),
                     It.IsAny<String>()))
-                .ReturnsAsync((string tableName, string partitionKey, string rowKey) => 
+                .ReturnsAsync((string tableName, string partitionKey, string rowKey) =>
                 {
                     return new UserSettingsModel(
-                        dynamicTableEntities.FirstOrDefault(dte => 
+                        dynamicTableEntities.FirstOrDefault(dte =>
                         {
                             return dte.PartitionKey == partitionKey && dte.RowKey == rowKey;
                         }));
@@ -185,7 +185,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
                     It.IsAny<String>(),
                     It.IsAny<String>()))
                 .ReturnsAsync((UserSettingsModel)null);
-            
+
             // mock call to insert new setting
             mockTableStorageClient
                 .Setup(m => m.InsertAsync(
@@ -266,7 +266,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
                     It.IsAny<String>(),
                     It.IsAny<String>()))
                 .ReturnsAsync(new UserSettingsModel(someUserSettingsInput));
-            
+
             mockTableStorageClient
                 .Setup(m => m.DeleteAsync(
                     It.Is<String>(n => n == userSettingsContainer.TableName),
@@ -282,7 +282,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
                     It.IsAny<String>(),
                     It.IsAny<String>()),
                 Times.Once);
-        
+
             mockTableStorageClient
                 .Verify(m => m.DeleteAsync(
                     It.Is<String>(n => n == userSettingsContainer.TableName),

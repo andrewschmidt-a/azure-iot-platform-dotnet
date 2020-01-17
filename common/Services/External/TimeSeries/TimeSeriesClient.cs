@@ -189,7 +189,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         }
 
         /// <summary>
-        /// Creates the request body for the Time Series get events API 
+        /// Creates the request body for the Time Series get events API
         /// </summary>
         private JObject PrepareInput(
             DateTimeOffset? from,

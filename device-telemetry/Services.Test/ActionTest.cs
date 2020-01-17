@@ -37,10 +37,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 { PARAM_RECIPIENTS_KEY, this.emailArray }
             };
 
-            // Act 
+            // Act
             var result = new EmailAction(parameters);
 
-            // Assert 
+            // Assert
             Assert.Equal(ActionType.Email, result.Type);
             Assert.Equal(PARAM_NOTES, result.Parameters[PARAM_NOTES_KEY]);
             Assert.Equal(this.emailArray, result.Parameters[PARAM_RECIPIENTS_KEY]);
@@ -101,10 +101,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 { "rEcipiEnts", this.emailArray }
             };
 
-            // Act 
+            // Act
             var result = new EmailAction(parameters);
 
-            // Assert 
+            // Assert
             Assert.Equal(ActionType.Email, result.Type);
             Assert.Equal(PARAM_NOTES, result.Parameters[PARAM_NOTES_KEY]);
             Assert.Equal(this.emailArray, result.Parameters[PARAM_RECIPIENTS_KEY]);
@@ -120,10 +120,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 { PARAM_RECIPIENTS_KEY, this.emailArray }
             };
 
-            // Act 
+            // Act
             var result = new EmailAction(parameters);
 
-            // Assert 
+            // Assert
             Assert.Equal(ActionType.Email, result.Type);
             Assert.Equal(string.Empty, result.Parameters[PARAM_NOTES_KEY]);
             Assert.Equal(this.emailArray, result.Parameters[PARAM_RECIPIENTS_KEY]);

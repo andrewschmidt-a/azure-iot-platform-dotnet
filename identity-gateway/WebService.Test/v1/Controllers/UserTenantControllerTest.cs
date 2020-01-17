@@ -227,7 +227,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             contextItems = new Dictionary<object, object>
             {
                 {
-                    RequestExtension.ContextKeyUserClaims, 
+                    RequestExtension.ContextKeyUserClaims,
                     new List<Claim> { new Claim(RequestExtension.UserObjectIdClaimType, someSub) }
                 },
                 {

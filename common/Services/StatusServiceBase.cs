@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.Common.Services
                 errors.Add(dependencyName + " check failed");
                 result.Status.IsHealthy = false;
             }
-            
+
             result.Dependencies.Add(dependencyName, serviceResult);
         }
 

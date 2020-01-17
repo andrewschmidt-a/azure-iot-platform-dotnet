@@ -97,7 +97,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                 Priority = this.Priority,
                 PackageType = this.PackageType,
                 ConfigType = this.ConfigType
-                
+
             };
         }
     }

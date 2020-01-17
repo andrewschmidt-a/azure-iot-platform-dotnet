@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
 {
     /// <summary>
-    /// Model for retrieving the status of API    
+    /// Model for retrieving the status of API
     /// /// </summary>
     public sealed class StatusApiModel
     {

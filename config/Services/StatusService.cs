@@ -61,7 +61,7 @@ namespace Mmm.Platform.IoT.Config.Services
 
             // Check access to DeviceSimulation
 
-            /* TODO: Remove PingSimulationAsync and use PingServiceAsync once DeviceSimulation has started 
+            /* TODO: Remove PingSimulationAsync and use PingServiceAsync once DeviceSimulation has started
              * using the new 'Status' model */
             var deviceSimulationResult = await this.PingSimulationAsync(
                 deviceSimulationName,

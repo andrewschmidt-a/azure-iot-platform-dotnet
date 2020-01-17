@@ -71,12 +71,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             corsSetup.UseMiddleware(app);
 
             app.UseMvc();
-            
+
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
         }
-        
+
         private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)

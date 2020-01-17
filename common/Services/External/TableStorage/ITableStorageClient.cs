@@ -10,7 +10,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
     {
         Task<CloudTable> GetTableAsync(
             string tableName);
-            
+
         Task<T> InsertAsync<T>(
             string tableName,
             T entity)
@@ -28,12 +28,12 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
 
         Task<T> RetrieveAsync<T>(
             string tableName,
-            string partitionKey, 
+            string partitionKey,
             string rowKey)
             where T : ITableEntity;
 
         Task<T> DeleteAsync<T>(
-            string tableName, 
+            string tableName,
             T entity)
             where T : ITableEntity;
 

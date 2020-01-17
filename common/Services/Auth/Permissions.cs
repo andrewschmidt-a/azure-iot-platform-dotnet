@@ -36,7 +36,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                 }
             },
             {
-                "ReadOnly", new List<string> 
+                "ReadOnly", new List<string>
                 {
                     "ReadAll"
                 }

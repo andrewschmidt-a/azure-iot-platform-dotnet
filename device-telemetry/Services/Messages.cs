@@ -79,8 +79,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 InputValidator.Validate(device);
             }
 
-            return this.timeSeriesEnabled ? 
-                await this.GetListFromTimeSeriesAsync(from, to, order, skip, limit, devices) : 
+            return this.timeSeriesEnabled ?
+                await this.GetListFromTimeSeriesAsync(from, to, order, skip, limit, devices) :
                 await this.GetListFromCosmosDbAsync(from, to, order, skip, limit, devices);
         }
 

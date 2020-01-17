@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.Config.WebService
                 c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Config API", Version = "v1" });
             });
 
-            // Setup (not enabling yet) CORS 
+            // Setup (not enabling yet) CORS
             services.AddCors();
 
             // Add controllers as services so they'll be resolved.

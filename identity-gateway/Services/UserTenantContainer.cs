@@ -8,12 +8,12 @@ using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
-    public class UserTenantContainer : UserContainer, IUserContainer<UserTenantModel, UserTenantInput> 
+    public class UserTenantContainer : UserContainer, IUserContainer<UserTenantModel, UserTenantInput>
     {
         public UserTenantContainer()
         {
         }
-        
+
         public UserTenantContainer(ITableStorageClient tableStorageClient) : base(tableStorageClient)
         {
         }

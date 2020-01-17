@@ -40,7 +40,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
         }
 
         /// <summary>
-        /// Process an External Dependency Request using the given parameters to create a generic HttpRequest and deserialize the body and response to type T 
+        /// Process an External Dependency Request using the given parameters to create a generic HttpRequest and deserialize the body and response to type T
         /// </summary>
         /// <param name="method"></param>
         /// <param name="url"></param>
@@ -89,7 +89,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
         }
 
         /// <summary>
-        /// Send an HttpRequest using the given HTTP method 
+        /// Send an HttpRequest using the given HTTP method
         /// </summary>
         /// <param name="method"></param>
         /// <param name="request"></param>

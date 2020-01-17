@@ -33,7 +33,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task QueryThrowsInvalidConfiguration_WhenConfigValuesAreNull()
         {
-            // Arrange 
+            // Arrange
             this.SetupClientWithNullConfigValues();
 
             // Act & Assert

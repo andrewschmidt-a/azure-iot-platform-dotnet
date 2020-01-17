@@ -62,7 +62,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpClient
                 .Setup(x => x.SendAsync(It.IsAny<IHttpRequest>(), It.IsAny<HttpMethod>()))
                 .ReturnsAsync(response);
-            
+
             await this.externalRequestHelper.ProcessRequestAsync(method, url);
 
             this.mockHttpClient
@@ -99,7 +99,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                     It.IsAny<IHttpRequest>(),
                     It.IsAny<HttpMethod>()))
                 .ReturnsAsync(response);
-            
+
             ExternalRequestModel processedResponse = await this.externalRequestHelper.ProcessRequestAsync(method, url, content);
 
             this.mockHttpClient

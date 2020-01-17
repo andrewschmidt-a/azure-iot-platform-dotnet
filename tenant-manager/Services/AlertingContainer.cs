@@ -10,7 +10,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
     {
         private const string SA_NAME_FORMAT = "sa-{0}";
 
-        // collection and iothub naming 
+        // collection and iothub naming
         public readonly ITenantContainer _tenantContainer;
         public readonly IStreamAnalyticsHelper _streamAnalyticsHelper;
         public readonly IRunbookHelper _runbookHelper;
@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             return new StreamAnalyticsJobModel
             {
                 TenantId = tenant.TenantId,
-                StreamAnalyticsJobName = saJobName, 
+                StreamAnalyticsJobName = saJobName,
                 IsActive = false,
                 JobState = "Creating"
             };
@@ -72,7 +72,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             return new StreamAnalyticsJobModel
             {
                 TenantId = tenant.TenantId,
-                StreamAnalyticsJobName = tenant.SAJobName, 
+                StreamAnalyticsJobName = tenant.SAJobName,
                 IsActive = false,
                 JobState = "Deleting"
             };
@@ -84,7 +84,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             try
             {
                 var job = await this._streamAnalyticsHelper.GetJobAsync(tenant.SAJobName);
-                return new StreamAnalyticsJobModel 
+                return new StreamAnalyticsJobModel
                 {
                     TenantId = tenant.TenantId,
                     JobState = job.JobState,
@@ -95,7 +95,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             catch (ResourceNotFoundException)
             {
                 // Return a model with null information regarding the stream analytics job if it does not exist
-                return new StreamAnalyticsJobModel 
+                return new StreamAnalyticsJobModel
                 {
                     TenantId = tenant.TenantId,
                     IsActive = false

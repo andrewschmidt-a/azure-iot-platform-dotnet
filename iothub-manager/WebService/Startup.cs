@@ -77,7 +77,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
             corsSetup.UseMiddleware(app);
 
             app.UseMvc();
-            
+
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());

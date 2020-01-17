@@ -29,10 +29,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                                  "\",\"Subject\":\"" + PARAM_SUBJECT +
                                  "\",\"Recipients\":[\"" + PARAM_RECIPIENTS + "\"]}}]";
 
-            // Act 
+            // Act
             var rulesList = JsonConvert.DeserializeObject<List<IAction>>(SAMPLE_JSON);
 
-            // Assert 
+            // Assert
             Assert.NotEmpty(rulesList);
             Assert.Equal(ActionType.Email, rulesList[0].Type);
             Assert.Equal(PARAM_NOTES, rulesList[0].Parameters[PARAM_NOTES_KEY]);

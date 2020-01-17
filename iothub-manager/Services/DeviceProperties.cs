@@ -12,9 +12,9 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
-    /// <summary>  
+    /// <summary>
     /// This class creates/reads cache of deviceProperties in/from CosmosDB.
-    /// </summary> 
+    /// </summary>
     /// <remarks>
     /// This is done to avoid request throttling when deviceProperties are queried directly from IOT-Hub.
     /// This class is called "deviceProperties" even though it deals with both properties
@@ -290,11 +290,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         /// Parse the comma seperated string "whitelist" and create two separate list
         /// One with regex(*) and one without regex(*)
         /// </summary>
-        /// <param name="whitelist">Comma seperated list of deviceTwinName to be 
+        /// <param name="whitelist">Comma seperated list of deviceTwinName to be
         /// whitlisted which is hardcoded in appsettings.ini.</param>
         /// <param name="fullNameWhitelist">An out paramenter which is a list of
         /// deviceTwinName to be whitlisted without regex.</param>
-        /// <param name="prefixWhitelist">An out paramenter which is a list of 
+        /// <param name="prefixWhitelist">An out paramenter which is a list of
         /// deviceTwinName to be whitlisted with regex.</param>
         private static void ParseWhitelist(string whitelist,
             out DeviceTwinName fullNameWhitelist,
@@ -354,7 +354,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             /// <example>
             /// fullNameWhitelist = {Tags = [],
             ///                      ReportedProperties = [
-            ///                         reported.Protocol, 
+            ///                         reported.Protocol,
             ///                         reported.SupportedMethods,
             ///                         reported.DeviceMethodStatus,
             ///                         reported.FirmwareUpdateStatus]
@@ -382,7 +382,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         /// cache's validity
         /// </summary>
         /// <param name="force">A boolean flag to decide if cache needs to be rebuilt.</param>
-        /// <param name="valueApiModel">An existing valueApiModel to check whether or not cache 
+        /// <param name="valueApiModel">An existing valueApiModel to check whether or not cache
         /// has expired</param>
         private bool ShouldCacheRebuild(bool force, ValueApiModel valueApiModel)
         {

@@ -315,7 +315,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             // Assert
             AssertUserTenantMatchesInput(result);
         }
-        
+
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void DeleteThrowsWhenUserTenantDoesNotExist()
         {
@@ -348,7 +348,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
 
             // Act
             var result = await userTenantContainer.DeleteAllAsync(someUserTenantInput);
-            
+
             // Assert
             Assert.Equal("delete", result.batchMethod.ToLowerInvariant());
             Assert.NotNull(result.models);

@@ -29,7 +29,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
                 throw new Exception("An error occurred while attempting to get the service status", e);
             }
         }
-        
+
         [HttpGet("ping")]
         public IActionResult Ping()
         {

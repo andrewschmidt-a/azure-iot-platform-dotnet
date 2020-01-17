@@ -17,7 +17,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 
         [JsonProperty(PropertyName = "SystemMetrics")]
         public IDictionary<string, long> SystemMetrics { get; set; }
-      
+
         [JsonProperty(PropertyName = "CustomMetrics")]
         public IDictionary<string, long> CustomMetrics { get; set; }
 
@@ -34,17 +34,17 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
             if (metricsServiceModel == null) return;
 
             this.CustomMetrics = metricsServiceModel.CustomMetrics;
-            this.SystemMetrics = metricsServiceModel.SystemMetrics != null && metricsServiceModel.SystemMetrics.Count > 0 ? 
+            this.SystemMetrics = metricsServiceModel.SystemMetrics != null && metricsServiceModel.SystemMetrics.Count > 0 ?
                 metricsServiceModel.SystemMetrics : this.SystemMetrics;
             this.DeviceStatuses = metricsServiceModel.DeviceStatuses;
 
             if (metricsServiceModel.DeviceMetrics != null)
             {
-                this.SystemMetrics[SUCCESSFUL_METRICS_KEY] = 
+                this.SystemMetrics[SUCCESSFUL_METRICS_KEY] =
                     metricsServiceModel.DeviceMetrics[DeploymentStatus.Succeeded];
-                this.SystemMetrics[FAILED_METRICS_KEY] = 
+                this.SystemMetrics[FAILED_METRICS_KEY] =
                     metricsServiceModel.DeviceMetrics[DeploymentStatus.Failed];
-                this.SystemMetrics[PENDING_METRICS_KEY] = 
+                this.SystemMetrics[PENDING_METRICS_KEY] =
                     metricsServiceModel.DeviceMetrics[DeploymentStatus.Pending];
             }
 

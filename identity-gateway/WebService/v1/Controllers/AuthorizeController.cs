@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             if (tenantsModel.models.Count == 0) {
                 throw new Exception("Not granted access to that tenant");
             }
-            
+
             // if successful, then mint token
             var jwtHandler = new JwtSecurityTokenHandler();
             var claims = new List<Claim>();

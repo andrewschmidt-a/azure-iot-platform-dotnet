@@ -19,7 +19,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
         {
             Configuration = configuration;
         }
-        
+
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>

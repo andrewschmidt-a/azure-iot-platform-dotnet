@@ -18,7 +18,7 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.AsaManager.Services.Test
 {
-    public class RulesConverterTest 
+    public class RulesConverterTest
     {
         private Mock<IBlobStorageClient> mockBlobStorageClient;
         private Mock<IStorageAdapterClient> mockStorageAdapterClient;
@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
                 .Setup(c => c.GetAllAsync(
                     It.Is<String>(s => s == this.converter.Entity)))
                 .ReturnsAsync(rules);
-            
+
             this.mockBlobStorageClient
                 .Setup(c => c.CreateBlobAsync(
                     It.IsAny<String>(),

@@ -4,5 +4,5 @@ namespace Mmm.Platform.IoT.Common.Services.Test.Models
     {
         public string value { get; set; }
     }
-    
+
 }

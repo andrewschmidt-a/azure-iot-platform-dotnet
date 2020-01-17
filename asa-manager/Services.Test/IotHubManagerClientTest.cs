@@ -36,7 +36,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 
             this.mockRequestHelper = new Mock<IExternalRequestHelper>();
 
-            this.client = new IotHubManagerClient(this.mockConfig.Object, this.mockRequestHelper.Object);            
+            this.client = new IotHubManagerClient(this.mockConfig.Object, this.mockRequestHelper.Object);
             this.rand = new Random();
             this.entityHelper = new CreateEntityHelper(this.rand);
         }
@@ -71,7 +71,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
                         It.Is<String>(url => url.Contains(MOCK_API_URL)),
                         It.Is<String>(s => s == tenantId)),
                     Times.Once);
-            
+
             Assert.Equal(deviceListModel, response);
         }
     }

@@ -96,8 +96,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 authentication: null)
         {
         }
-        
-        
+
+
 
         public Device ToAzureModel(bool ignoreEtag = true)
         {

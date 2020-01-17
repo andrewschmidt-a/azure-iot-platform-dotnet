@@ -73,7 +73,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
             this.controller = new AlarmsByRuleController(alarmService, rulesService, this._logger.Object);
         }
 
-        // Ignoring test. Updating .net core and xunit version wants this class to be public. However, this test fails when the class is made public. 
+        // Ignoring test. Updating .net core and xunit version wants this class to be public. However, this test fails when the class is made public.
         // Created issue https://github.com/Azure/device-telemetry-dotnet/issues/65 to address this better.
         // [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void ProvideAlarmsByRuleResult()

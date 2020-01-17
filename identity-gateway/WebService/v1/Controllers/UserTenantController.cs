@@ -31,7 +31,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
         }
 
         /// <summary>
-        /// Get all users for the current tenant 
+        /// Get all users for the current tenant
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

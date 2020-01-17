@@ -26,7 +26,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         private const string LAST_USED_SETTING_KEY = "LastUsedTenant";
         private const string CREATED_ROLE = "[\"admin\"]";
 
-        // collection and iothub naming 
+        // collection and iothub naming
         private string iotHubNameFormat = "iothub-{0}";  // format with a guid
         private string dpsNameFormat = "dps-{0}";  // format with a guid
         private string streamAnalyticsNameFormat = "sa-{0}";  // format with a guide
@@ -104,7 +104,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // kick off provisioning runbooks
             await this._runbookHelper.CreateIotHub(tenantId, iotHubName, dpsName);
 
-            // Give the requesting user an admin role to the new tenant        
+            // Give the requesting user an admin role to the new tenant
 
             try
             {

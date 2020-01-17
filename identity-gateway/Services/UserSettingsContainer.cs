@@ -33,7 +33,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         /// Get a specific user setting
         /// </summary>
         /// <param name="input">UserSettingsInput with a userId and settingKey</param>
-        /// <returns></returns>        
+        /// <returns></returns>
         public virtual async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
         {
             return await this._tableStorageClient.RetrieveAsync<UserSettingsModel>(this.TableName, input.UserId, input.SettingKey);

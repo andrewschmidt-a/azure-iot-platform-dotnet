@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
 
             this.Settings = new Dictionary<string, object>(
                 actionSettings.Settings,
-                StringComparer.OrdinalIgnoreCase); 
+                StringComparer.OrdinalIgnoreCase);
         }
     }
 }

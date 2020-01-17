@@ -70,7 +70,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                 .Returns(MOCK_DB_ID);
             this.mockContainer.Setup(t => t.DocumentDbCollectionId)
                 .Returns(MOCK_COLL_ID);
-            
+
             this.container = this.mockContainer.Object;
         }
 

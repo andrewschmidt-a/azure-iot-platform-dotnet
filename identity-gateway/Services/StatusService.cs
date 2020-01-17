@@ -56,7 +56,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             }
 
             SetServiceStatus("AzureB2C", azureB2CResult, result, errors);
-            
+
             result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
             result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
 

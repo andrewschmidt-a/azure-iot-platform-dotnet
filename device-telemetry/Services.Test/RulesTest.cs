@@ -274,7 +274,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
         /**
-         * If GetListAsync() is called with includeDeleted = true, verify 
+         * If GetListAsync() is called with includeDeleted = true, verify
          * deleted rules will be returned
          */
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -309,7 +309,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
         /**
-          * If upsert is called with a rule that is not created and a 
+          * If upsert is called with a rule that is not created and a
           * specified Id, it should be created with that Id.
         */
         [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
