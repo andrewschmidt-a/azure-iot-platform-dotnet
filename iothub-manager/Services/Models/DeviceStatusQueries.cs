@@ -75,6 +75,6 @@ namespace Mmm.Platform.IoT.Config.Services.Models
                     out IDictionary<QueryType, string> value) ? value : DefaultDeviceStatusQueries.Queries;
         }
 
-        public enum QueryType { APPLIED, SUCCESSFUL, FAILED };
+        public enum QueryType { APPLIED, SUCCESSFUL, FAILED }
     }
 }
