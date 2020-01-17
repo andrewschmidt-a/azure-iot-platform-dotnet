@@ -45,9 +45,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 var e = Base64UrlEncoder.Encode(KeyParameters.Exponent.ToByteArrayUnsigned());
                 var n = Base64UrlEncoder.Encode(KeyParameters.Modulus.ToByteArrayUnsigned());
                 var dict = new Dictionary<string, string>() {
-                    {"e", e},
-                    {"kty", "RSA"},
-                    {"n", n}
+                    { "e", e},
+                    { "kty", "RSA"},
+                    { "n", n}
                 };
                 var hash = SHA256.Create();
                 Byte[] hashBytes = hash.ComputeHash(System.Text.Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(dict)));

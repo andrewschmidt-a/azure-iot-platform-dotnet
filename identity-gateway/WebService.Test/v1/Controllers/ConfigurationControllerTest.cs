@@ -65,7 +65,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             mockAppConfig = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
             mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
             mockOpenIdProviderConfiguration = new Mock<OpenIdProviderConfiguration> { DefaultValue = DefaultValue.Mock };
-            mockRsaHelpers = new Mock<IRsaHelpers> {DefaultValue = DefaultValue.Mock};
+            mockRsaHelpers = new Mock<IRsaHelpers> { DefaultValue = DefaultValue.Mock };
             configurationController = new ConfigurationController(mockAppConfig.Object, mockOpenIdProviderConfiguration.Object, mockRsaHelpers.Object)
             {
                 ControllerContext = new ControllerContext()

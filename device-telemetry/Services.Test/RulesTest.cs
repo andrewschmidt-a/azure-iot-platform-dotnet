@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.config, new Mock<ILogger<DiagnosticsClient>>().Object, this.httpContextAccessor.Object);
 
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
-                {{"TenantID", TENANT_ID}});
+                { { "TenantID", TENANT_ID } });
             this.asaManager.Setup(t => t.BeginConversionAsync(It.IsAny<string>())).ReturnsAsync(new BeginConversionApiModel());
 
             this.rules = new Rules(this.storageAdapter.Object, this.asaManager.Object, this._logger.Object, this.alarms.Object, this.diagnosticsClient);

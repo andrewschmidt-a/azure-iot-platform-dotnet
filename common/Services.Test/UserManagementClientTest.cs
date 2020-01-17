@@ -37,7 +37,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             this.mockHttpContextAccessor
                 .Setup(t => t.HttpContext.Request.HttpContext.Items)
-                .Returns(new Dictionary<object, object>() {{"TenantID", "test_tenant"}});
+                .Returns(new Dictionary<object, object>() { { "TenantID", "test_tenant" } });
             this.mockHttpContextAccessor
                 .Setup(t => t.HttpContext.Request.Headers)
                 .Returns(new HeaderDictionary() { { AZDS_ROUTE_KEY, "mockDevSpace" } });

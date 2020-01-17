@@ -75,7 +75,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
                 .Setup(c => c.GetListAsync(
                     It.IsAny<IEnumerable<DeviceGroupConditionModel>>(),
                     It.Is<String>(s => s == tenantId)))
-                .ReturnsAsync(new DeviceListModel{Items = new List<DeviceModel>{this.entityHelper.CreateDevice(), this.entityHelper.CreateDevice() }});  // return a device for each device group
+                .ReturnsAsync(new DeviceListModel { Items = new List<DeviceModel> { this.entityHelper.CreateDevice(), this.entityHelper.CreateDevice() } });  // return a device for each device group
 
             ConversionApiModel conversionResponse = await this.converter.ConvertAsync(tenantId);
 
@@ -141,7 +141,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
                 .Setup(c => c.GetListAsync(
                     It.IsAny<IEnumerable<DeviceGroupConditionModel>>(),
                     It.Is<String>(s => s == tenantId)))
-                .ReturnsAsync(new DeviceListModel{Items = new List<DeviceModel>{}});  // return empty device lists, should cause the exception
+                .ReturnsAsync(new DeviceListModel { Items = new List<DeviceModel> { } });  // return empty device lists, should cause the exception
 
             Func<Task> conversion = async () => await this.converter.ConvertAsync(tenantId);
 

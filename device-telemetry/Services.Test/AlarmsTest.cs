@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             this.appConfigHelper = new Mock<IAppConfigurationHelper>();
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
-                {{"TenantID", TENANT_ID}});
+                { { "TenantID", TENANT_ID } });
             this.appConfigHelper.Setup(t => t.GetValue($"{TENANT_INFO_KEY}:{TENANT_ID}:{TELEMETRY_COLLECTION_KEY}")).Returns("collection");
 
 
