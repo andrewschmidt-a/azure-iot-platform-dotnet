@@ -71,8 +71,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             string dependencyName,
             StatusResultServiceModel serviceResult,
             StatusServiceModel result,
-            List<string> errors
-            )
+            List<string> errors)
         {
             if (!serviceResult.IsHealthy)
             {

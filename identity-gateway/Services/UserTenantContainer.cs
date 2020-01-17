@@ -74,8 +74,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                 throw new StorageException
                 (
                     $"That UserTenant record already exists with value {existingModel.Roles}." +
-                    " Use PUT instead to update this setting instead."
-                );
+                    " Use PUT instead to update this setting instead.");
             }
             UserTenantModel user = new UserTenantModel(input);
             return await this._tableStorageClient.InsertAsync(this.TableName, user);

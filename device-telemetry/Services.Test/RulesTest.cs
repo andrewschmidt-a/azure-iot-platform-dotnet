@@ -491,7 +491,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     new EmailAction(
                         new Dictionary<string, object>
                         {
-                            { "recipients", new Newtonsoft.Json.Linq.JArray(){ "sampleEmail@gmail.com", "sampleEmail2@gmail.com" } },
+                            { "recipients", new Newtonsoft.Json.Linq.JArray() { "sampleEmail@gmail.com", "sampleEmail2@gmail.com" } },
                             { "subject", "Test Email" },
                             { "notes", "Test Email Notes." }
                         })
@@ -554,7 +554,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 new EmailAction(
                     new Dictionary<string, object>
                     {
-                        { "recipients", new Newtonsoft.Json.Linq.JArray(){ "sampleEmail@gmail.com", "sampleEmail2@gmail.com" } },
+                        { "recipients", new Newtonsoft.Json.Linq.JArray() { "sampleEmail@gmail.com", "sampleEmail2@gmail.com" } },
                         { "subject", "Test Email" },
                         { "notes", "Test Email Notes." }
                     })

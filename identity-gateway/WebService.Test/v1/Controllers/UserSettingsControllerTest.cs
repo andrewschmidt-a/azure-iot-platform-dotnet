@@ -171,7 +171,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             {
                 {
                     RequestExtension.ContextKeyUserClaims,
-                    new List<Claim> {new Claim(RequestExtension.UserObjectIdClaimType, someSub)}
+                    new List<Claim> {new Claim(RequestExtension.UserObjectIdClaimType, someSub) }
                 }
             };
             mockHttpContext.Setup(m => m.Items).Returns(contextItems);

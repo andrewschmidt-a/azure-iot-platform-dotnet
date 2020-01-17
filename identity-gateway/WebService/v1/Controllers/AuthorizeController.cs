@@ -98,7 +98,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 Tenant = input.scope
             };
             UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
-            if (tenantsModel.models.Count == 0){
+            if (tenantsModel.models.Count == 0) {
                 throw new Exception("Not granted access to that tenant");
             }
             
@@ -135,8 +135,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             var uri = new UriBuilder(post_logout_redirect_uri);
 
             return Redirect(
-                uri.Uri.ToString()
-            );
+                uri.Uri.ToString());
         }
 
         // GET connect/callback

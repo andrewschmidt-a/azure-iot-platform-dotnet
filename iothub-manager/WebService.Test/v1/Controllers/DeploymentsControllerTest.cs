@@ -138,8 +138,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             }
 
             this.deploymentsMock.Setup(x => x.ListAsync()).ReturnsAsync(
-                new DeploymentServiceListModel(deploymentsList)
-            );
+                new DeploymentServiceListModel(deploymentsList));
 
             // Act
             var results = await this.deploymentsController.GetAsync();

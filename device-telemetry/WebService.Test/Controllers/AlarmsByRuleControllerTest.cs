@@ -125,8 +125,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
                 "open",
                 "1",
                 "critical",
-                "HVAC temp > 50"
-            );
+                "HVAC temp > 50");
 
             Alarm alarm2 = new Alarm(
                 null,
@@ -188,8 +187,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
                 "open",
                 "1234",
                 "critical",
-                "HVAC temp > 75"
-            );
+                "HVAC temp > 75");
         }
 
         private bool disposedValue = false;

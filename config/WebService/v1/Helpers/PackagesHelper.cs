@@ -33,7 +33,7 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Helpers
             var package = JsonConvert.DeserializeObject<Configuration>(packageContent);
 
             if (package.Content?.ModulesContent != null &&
-                package.Content?.DeviceContent == null )
+                package.Content?.DeviceContent == null)
             {
                 return true;
             }

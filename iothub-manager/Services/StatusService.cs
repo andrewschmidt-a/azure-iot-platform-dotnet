@@ -27,8 +27,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             ILogger<StatusService> logger,
             IHttpClient httpClient,
             IDevices devices,
-            AppConfig config
-            )
+            AppConfig config)
         {
             _logger = logger;
             this.httpClient = httpClient;
@@ -88,8 +87,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             string dependencyName,
             StatusResultServiceModel serviceResult,
             StatusServiceModel result,
-            List<string> errors
-            )
+            List<string> errors)
         {
             if (!serviceResult.IsHealthy)
             {

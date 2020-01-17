@@ -217,8 +217,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 lastStatusUpdated: DateTime.Now,
                 twin: null,
                 ioTHubHostName: this.ioTHubHostName,
-                authentication: auth
-            );
+                authentication: auth);
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidInputException>(async () =>

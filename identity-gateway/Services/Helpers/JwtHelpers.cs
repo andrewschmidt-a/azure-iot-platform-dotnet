@@ -137,8 +137,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 audience: audience,
                 expires: expirationDateTime.ToUniversalTime(),
                 claims: claims.ToArray(),
-                signingCredentials: credentials
-            );
+                signingCredentials: credentials);
             return token;
         }
 

@@ -857,11 +857,11 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     Items = new List<ValueApiModel>()
                     {
                         new ValueApiModel()
-                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[0])},
+                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[0]) },
                         new ValueApiModel()
-                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[1])},
+                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[1]) },
                         new ValueApiModel()
-                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[2])}
+                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[2]) }
                     }
                 });
 

@@ -232,8 +232,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
                 {
                     { SORT_INPUT_KEY, builtInPropObject },
                     { SORT_ORDER_KEY, order }
-                }
-            );
+                });
 
             JObject topObject = new JObject
             {

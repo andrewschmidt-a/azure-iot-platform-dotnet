@@ -13,8 +13,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 
         Task DeleteCollectionAsync(
             string databaseName,
-            string id
-        );
+            string id);
 
         Task<ResourceResponse<DocumentCollection>> CreateCollectionIfNotExistsAsync(
             string databaseName,

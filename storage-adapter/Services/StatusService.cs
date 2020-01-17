@@ -28,8 +28,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             ILogger<StatusService> logger,
             IHttpClient httpClient,
             IKeyValueContainer keyValueContainer,
-            AppConfig config
-            )
+            AppConfig config)
         {
             _logger = logger;
             this.config = config;
@@ -73,8 +72,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             string dependencyName,
             StatusResultServiceModel serviceResult,
             StatusServiceModel result,
-            List<string> errors
-            )
+            List<string> errors)
         {
             if (!serviceResult.IsHealthy)
             {

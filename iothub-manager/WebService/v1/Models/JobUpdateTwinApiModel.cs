@@ -51,8 +51,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                 desiredProperties: this.Properties.Desired,
                 reportedProperties: this.Properties.Reported,
                 tags: this.Tags,
-                isSimulated: this.IsSimulated
-            );
+                isSimulated: this.IsSimulated);
         }
     }
 }

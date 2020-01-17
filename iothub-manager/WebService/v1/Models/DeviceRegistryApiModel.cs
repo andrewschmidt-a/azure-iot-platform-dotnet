@@ -75,8 +75,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
             this.LastStatusUpdated = device.LastStatusUpdated;
             this.IoTHubHostName = device.IoTHubHostName;
             this.Authentication = new AuthenticationMechanismApiModel(
-                device.Authentication ?? new AuthenticationMechanismServiceModel()
-            );
+                device.Authentication ?? new AuthenticationMechanismServiceModel());
 
             if (device.Twin != null)
             {
@@ -130,8 +129,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                 desiredProperties: this.Properties?.Desired,
                 reportedProperties: this.Properties?.Reported,
                 tags: this.Tags,
-                isSimulated: this.IsSimulated
-            );
+                isSimulated: this.IsSimulated);
 
             return new DeviceServiceModel
             (
@@ -145,8 +143,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                 lastStatusUpdated: this.LastStatusUpdated,
                 twin: twinModel,
                 ioTHubHostName: this.IoTHubHostName,
-                authentication: this.Authentication == null ? null : this.Authentication.ToServiceModel()
-            );
+                authentication: this.Authentication == null ? null : this.Authentication.ToServiceModel());
         }
     }
 }
