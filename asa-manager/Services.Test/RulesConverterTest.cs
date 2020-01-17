@@ -29,7 +29,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 
         public RulesConverterTest()
         {
-            this.mockBlobStorageClient = new Mock<IBlobStorageClient> ();
+            this.mockBlobStorageClient = new Mock<IBlobStorageClient>();
             this.mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
             this.mockLog = new Mock<ILogger<RulesConverter>>();
             this.rand = new Random();

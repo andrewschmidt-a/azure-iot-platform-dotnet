@@ -31,7 +31,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 
         public DeviceGroupsConverterTest()
         {
-            this.mockBlobStorageClient = new Mock<IBlobStorageClient> ();
+            this.mockBlobStorageClient = new Mock<IBlobStorageClient>();
             this.mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
             this.mockIotHubManagerClient = new Mock<IIotHubManagerClient>();
             this.mockLog = new Mock<ILogger<DeviceGroupsConverter>>();
