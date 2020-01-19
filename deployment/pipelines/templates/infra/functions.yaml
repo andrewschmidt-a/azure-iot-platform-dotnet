@@ -49,10 +49,10 @@ steps:
     inlineScript: |-
       devicetwinPropfn=${{ parameters.functionApp1Name }}
       kVaultName=${{ parameters.keyVaultName }}
-      cosmosDbConn=$(az keyvault secret show --name "documentDBConnectionString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
-      lifecycleEvConn=$(az keyvault secret show --name "lifecycleEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
-      telemetryEvConn=$(az keyvault secret show --name "telemetryEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
-      twinchangeEvConn=$(az keyvault secret show --name "twinChangeEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
+      cosmosDbConn=$(az keyvault secret show --name "Global--CosmosDb--DocumentDbConnectionString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
+      lifecycleEvConn=$(az keyvault secret show --name "Global--LifecycleEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
+      telemetryEvConn=$(az keyvault secret show --name "Global--TelemetryEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
+      twinchangeEvConn=$(az keyvault secret show --name "Global--TwinChangeEventHubConnString" --vault-name $kVaultName | grep value | awk -F '\"' '{print $4}')
       az functionapp config appsettings set --name $devicetwinPropfn \
         --settings \
           "CosmosDbConnectionString"="$cosmosDbConn" \

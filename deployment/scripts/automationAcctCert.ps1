@@ -58,7 +58,7 @@ function Import-Certificate() {
     Write-Host "Cert Password added to Keyvault"
 
     # Populate the ConnectionFieldValues
-    $applicationId = (Get-AzureKeyVaultSecret -VaultName $KeyVaultName -Name "ApplicationId").SecretValueText
+    $applicationId = (Get-AzureKeyVaultSecret -VaultName $KeyVaultName -Name "Global--ApplicationId").SecretValueText
     $connectionTypeName = "AzureServicePrincipal"
     $connectionFieldValues = @{ "ApplicationId" = $applicationId; 
                               "TenantId" = $tenantId; 
