@@ -4,31 +4,34 @@ using System.Collections.Generic;
 using Azure.Data.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Models;
+using System.Reflection;
 
 namespace Mmm.Platform.IoT.Common.Services.External.AppConfiguration
 {
     public class AppConfigurationClient : IAppConfigurationClient
     {
+        private readonly AppConfig _config;
         private ConfigurationClient client;
-        private string statusKey;
         private Dictionary<string, AppConfigCacheValue> _cache = new Dictionary<string, AppConfigCacheValue>();
 
         public AppConfigurationClient(AppConfig config)
         {
             this.client = new ConfigurationClient(config.AppConfigurationConnectionString);
-            this.statusKey = config.ExternalDependencies.AppConfigStatusCheck;
+            this._config = config;
         }
 
         public async Task<StatusResultServiceModel> StatusAsync()
         {
+            // Test a key created from one of the configuration variable names
+            string statusKey = this._config.GetType().GetProperties(BindingFlags.Public)[0].Name;
             try
             {
-                await this.client.GetConfigurationSettingAsync(this.statusKey);
+                await this.client.GetConfigurationSettingAsync(statusKey);
                 return new StatusResultServiceModel(true, "Alive and well!");
             }
             catch (Exception)
             {
-                return new StatusResultServiceModel(false, $"Unable to retrieve basic key {this.statusKey} from app config.");
+                return new StatusResultServiceModel(false, $"Unable to retrieve basic key {statusKey} from app config.");
             }
         }
 
