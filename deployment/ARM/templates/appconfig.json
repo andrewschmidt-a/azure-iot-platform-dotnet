@@ -4,7 +4,7 @@
     "parameters": {
         "appConfigName": {
             "type": "string",
-            "defaultValue": "app-config-odin",
+            "defaultValue": "crsliot-appconfig-dev",
             "metadata": {
                 "description": "Name of the App config resoutrce to be created."
             }
