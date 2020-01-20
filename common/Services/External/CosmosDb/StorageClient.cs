@@ -311,8 +311,11 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
             try
             {
-                return await this.client.UpsertDocumentAsync(colUrl, document,
-                    new RequestOptions(), false);
+                return await this.client.UpsertDocumentAsync(
+                    colUrl,
+                    document,
+                    new RequestOptions(),
+                    false);
             }
             catch (Exception e)
             {

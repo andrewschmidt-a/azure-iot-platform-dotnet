@@ -31,8 +31,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
             this.ContinuationToken = twins.ContinuationToken;
             foreach (var t in twins.Items)
             {
-                this.Items.Add(new TwinPropertiesApiModel(t.DesiredProperties, t.ReportedProperties,
-                                                          t.DeviceId, t.ModuleId));
+                this.Items.Add(new TwinPropertiesApiModel(
+                    t.DesiredProperties,
+                    t.ReportedProperties,
+                    t.DeviceId,
+                    t.ModuleId));
             }
         }
     }

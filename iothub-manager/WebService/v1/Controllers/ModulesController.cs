@@ -67,8 +67,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers
             }
 
             var twin = await this.devices.GetModuleTwinAsync(deviceId, moduleId);
-            return new TwinPropertiesApiModel(twin.DesiredProperties, twin.ReportedProperties,
-                                              deviceId, moduleId);
+            return new TwinPropertiesApiModel(
+                twin.DesiredProperties,
+                twin.ReportedProperties,
+                deviceId,
+                moduleId);
         }
     }
 }

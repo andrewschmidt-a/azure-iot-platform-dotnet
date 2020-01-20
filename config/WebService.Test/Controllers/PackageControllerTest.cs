@@ -37,9 +37,12 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
         [InlineData("DeviceConfiguration", "filename", true, false, true)]
         [InlineData("EdgeManifest", "", true, true)]
         [InlineData("BAD_TYPE", "filename", true, true)]
-        public async Task PostAsyncExceptionVerificationTest(string type, string filename,
-                                                             bool isValidFileProvided, bool expectException,
-                                                             bool shouldHaveConfig = false)
+        public async Task PostAsyncExceptionVerificationTest(
+            string type,
+            string filename,
+            bool isValidFileProvided,
+            bool expectException,
+            bool shouldHaveConfig = false)
         {
             // Arrange
             IFormFile file = null;

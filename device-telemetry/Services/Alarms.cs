@@ -85,13 +85,18 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         {
             var sql = QueryBuilder.GetDocumentsSql(
                 ALARM_SCHEMA_KEY,
-                null, null,
-                from, MESSAGE_RECEIVED_KEY,
-                to, MESSAGE_RECEIVED_KEY,
-                order, MESSAGE_RECEIVED_KEY,
+                null,
+                null,
+                from,
+                MESSAGE_RECEIVED_KEY,
+                to,
+                MESSAGE_RECEIVED_KEY,
+                order,
+                MESSAGE_RECEIVED_KEY,
                 skip,
                 limit,
-                devices, DEVICE_ID_KEY);
+                devices,
+                DEVICE_ID_KEY);
 
             _logger.LogDebug("Created alarm query {sql}", sql);
 
@@ -128,13 +133,18 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         {
             var sql = QueryBuilder.GetDocumentsSql(
                 ALARM_SCHEMA_KEY,
-                id, RULE_ID_KEY,
-                from, MESSAGE_RECEIVED_KEY,
-                to, MESSAGE_RECEIVED_KEY,
-                order, MESSAGE_RECEIVED_KEY,
+                id,
+                RULE_ID_KEY,
+                from,
+                MESSAGE_RECEIVED_KEY,
+                to,
+                MESSAGE_RECEIVED_KEY,
+                order,
+                MESSAGE_RECEIVED_KEY,
                 skip,
                 limit,
-                devices, DEVICE_ID_KEY);
+                devices,
+                DEVICE_ID_KEY);
 
             _logger.LogDebug("Created alarm by rule query {sql}", sql);
 
@@ -169,11 +179,16 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             string[] statusList = { ALARM_STATUS_OPEN, ALARM_STATUS_ACKNOWLEDGED };
             var sql = QueryBuilder.GetCountSql(
                 ALARM_SCHEMA_KEY,
-                id, RULE_ID_KEY,
-                from, MESSAGE_RECEIVED_KEY,
-                to, MESSAGE_RECEIVED_KEY,
-                devices, DEVICE_ID_KEY,
-                statusList, STATUS_KEY);
+                id,
+                RULE_ID_KEY,
+                from,
+                MESSAGE_RECEIVED_KEY,
+                to,
+                MESSAGE_RECEIVED_KEY,
+                devices,
+                DEVICE_ID_KEY,
+                statusList,
+                STATUS_KEY);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;

@@ -46,8 +46,13 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
         // GET: connect/authorize
         [HttpGet]
         [Route("connect/authorize")]
-        public IActionResult Get([FromQuery] string redirect_uri, [FromQuery] string state,
-            [FromQuery(Name = "client_id")] string clientId, [FromQuery] string nonce, [FromQuery] string tenant, [FromQuery] string invite)
+        public IActionResult Get(
+            [FromQuery] string redirect_uri,
+            [FromQuery] string state,
+            [FromQuery(Name = "client_id")] string clientId,
+            [FromQuery] string nonce,
+            [FromQuery] string tenant,
+            [FromQuery] string invite)
         {
             // Validate Input
             if (!Uri.IsWellFormedUriString(redirect_uri, UriKind.Absolute))
@@ -181,8 +186,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 
         // GET connect/callback
         [HttpPost("connect/callback")]
-        public async Task<IActionResult> PostAsync([FromForm] string state, [FromForm] string id_token,
-            [FromForm] string error, [FromForm] string error_description)
+        public async Task<IActionResult> PostAsync(
+            [FromForm] string state,
+            [FromForm] string id_token,
+            [FromForm] string error,
+            [FromForm] string error_description)
         {
             if (!String.IsNullOrEmpty(error))
             {

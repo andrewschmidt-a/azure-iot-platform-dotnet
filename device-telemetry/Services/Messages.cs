@@ -107,13 +107,18 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             var sql = QueryBuilder.GetDocumentsSql(
                 "message",
-                null, null,
-                from, "_timeReceived",
-                to, "_timeReceived",
-                order, "_timeReceived",
+                null,
+                null,
+                from,
+                "_timeReceived",
+                to,
+                "_timeReceived",
+                order,
+                "_timeReceived",
                 skip,
                 limit,
-                devices, "deviceId");
+                devices,
+                "deviceId");
 
             _logger.LogDebug("Created message query {sql}", sql);
 

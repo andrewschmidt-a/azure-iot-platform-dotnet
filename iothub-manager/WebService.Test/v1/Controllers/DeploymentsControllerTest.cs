@@ -168,9 +168,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
         [InlineData("depName", "dvcGroupId", "", "pkgContent", 10, true)]
         [InlineData("depName", "dvcGroupId", "dvcQuery", "", 10, true)]
         [InlineData("depName", "dvcGroupId", "dvcQuery", "pkgContent", -1, true)]
-        public async Task PostDeploymentTest(string name, string deviceGroupId,
-                                             string deviceGroupQuery, string packageContent,
-                                             int priority, bool throwsException)
+        public async Task PostDeploymentTest(
+            string name,
+            string deviceGroupId,
+            string deviceGroupQuery,
+            string packageContent,
+            int priority,
+            bool throwsException)
         {
             // Arrange
             var deploymentId = "test-deployment";
@@ -233,9 +237,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("depName", "dvcGroupId", "dvcQuery", "pkgContent", -1)]
-        public async Task PostInvalidDeploymentTest(string name, string deviceGroupId,
-                                             string deviceGroupQuery, string packageContent,
-                                             int priority)
+        public async Task PostInvalidDeploymentTest(
+            string name,
+            string deviceGroupId,
+            string deviceGroupQuery,
+            string packageContent,
+            int priority)
         {
             // Arrange
             var depApiModel = new DeploymentApiModel()

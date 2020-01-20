@@ -177,9 +177,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         [InlineData("depname", "dvcgroupid", "", TEST_EDGE_PACKAGE_JSON, 10, "System.ArgumentNullException")]
         [InlineData("depname", "dvcgroupid", "dvcquery", "", 10, "System.ArgumentNullException")]
         [InlineData("depname", "dvcgroupid", "dvcquery", TEST_EDGE_PACKAGE_JSON, -1, "System.ArgumentOutOfRangeException")]
-        public async Task CreateDeploymentTest(string deploymentName, string deviceGroupId,
-                                               string deviceGroupQuery, string packageContent,
-                                               int priority, string expectedException)
+        public async Task CreateDeploymentTest(
+            string deploymentName,
+            string deviceGroupId,
+            string deviceGroupQuery,
+            string packageContent,
+            int priority,
+            string expectedException)
         {
             // Arrange
             var depModel = new DeploymentServiceModel()

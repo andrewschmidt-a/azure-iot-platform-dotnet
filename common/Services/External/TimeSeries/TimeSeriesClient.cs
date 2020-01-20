@@ -119,7 +119,8 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         public async Task<MessageList> QueryEventsAsync(
             DateTimeOffset? from,
             DateTimeOffset? to,
-            string order, int skip,
+            string order,
+            int skip,
             int limit,
             string[] deviceIds)
         {

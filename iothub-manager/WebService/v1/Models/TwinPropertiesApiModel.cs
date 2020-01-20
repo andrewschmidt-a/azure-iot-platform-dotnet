@@ -31,8 +31,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
         {
         }
 
-        public TwinPropertiesApiModel(Dictionary<string, JToken> desired, Dictionary<string, JToken> reported,
-                                      string deviceId, string moduleId)
+        public TwinPropertiesApiModel(
+            Dictionary<string, JToken> desired,
+            Dictionary<string, JToken> reported,
+            string deviceId,
+            string moduleId)
         {
             this.Desired = desired;
             this.Reported = reported;

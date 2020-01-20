@@ -134,7 +134,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             long maxExecutionTimeInSeconds)
         {
             var result = await tenantHelper.GetJobClient().ScheduleDeviceMethodAsync(
-                jobId, queryCondition,
+                jobId,
+                queryCondition,
                 parameter.ToAzureModel(),
                 startTimeUtc.DateTime,
                 maxExecutionTimeInSeconds);
