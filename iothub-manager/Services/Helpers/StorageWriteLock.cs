@@ -8,8 +8,9 @@ using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
-    /// <summary>This class is used to lock, write or release a document in  CosmosDB</summary>
-    public class StorageWriteLock<T> where T : class, new()
+    public class StorageWriteLock<T>
+        where T : class,
+        new()
     {
         private readonly string collectionId;
         private readonly string key;

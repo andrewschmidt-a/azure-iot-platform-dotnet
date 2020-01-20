@@ -5,7 +5,8 @@ using Moq;
 
 namespace Mmm.Platform.IoT.Common.TestHelpers
 {
-    public class MockFactory<T> : IFactory<T> where T : class
+    public class MockFactory<T> : IFactory<T>
+        where T : class
     {
         private readonly Mock<T> mock;
 

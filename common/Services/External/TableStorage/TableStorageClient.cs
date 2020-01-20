@@ -54,7 +54,8 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
             }
         }
 
-        private async Task<T> ExecuteTableOperationAsync<T>(CloudTable table, TableOperation operation) where T : ITableEntity
+        private async Task<T> ExecuteTableOperationAsync<T>(CloudTable table, TableOperation operation)
+            where T : ITableEntity
         {
             try
             {
@@ -74,35 +75,40 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
             }
         }
 
-        public async Task<T> InsertAsync<T>(string tableName, T entity) where T : ITableEntity
+        public async Task<T> InsertAsync<T>(string tableName, T entity)
+            where T : ITableEntity
         {
             CloudTable table = await this.GetTableAsync(tableName);
             TableOperation insertOperation = TableOperation.Insert(entity);
             return await this.ExecuteTableOperationAsync<T>(table, insertOperation);
         }
 
-        public async Task<T> InsertOrReplaceAsync<T>(string tableName, T entity) where T : ITableEntity
+        public async Task<T> InsertOrReplaceAsync<T>(string tableName, T entity)
+            where T : ITableEntity
         {
             CloudTable table = await this.GetTableAsync(tableName);
             TableOperation insertOrReplaceOperation = TableOperation.InsertOrReplace(entity);
             return await this.ExecuteTableOperationAsync<T>(table, insertOrReplaceOperation);
         }
 
-        public async Task<T> InsertOrMergeAsync<T>(string tableName, T entity) where T : ITableEntity
+        public async Task<T> InsertOrMergeAsync<T>(string tableName, T entity)
+            where T : ITableEntity
         {
             CloudTable table = await this.GetTableAsync(tableName);
             TableOperation insertOrMergeOperation = TableOperation.InsertOrMerge(entity);
             return await this.ExecuteTableOperationAsync<T>(table, insertOrMergeOperation);
         }
 
-        public async Task<T> RetrieveAsync<T>(string tableName, string partitionKey, string rowKey) where T : ITableEntity
+        public async Task<T> RetrieveAsync<T>(string tableName, string partitionKey, string rowKey)
+            where T : ITableEntity
         {
             CloudTable table = await this.GetTableAsync(tableName);
             TableOperation readOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
             return await this.ExecuteTableOperationAsync<T>(table, readOperation);
         }
 
-        public async Task<T> DeleteAsync<T>(string tableName, T entity) where T : ITableEntity
+        public async Task<T> DeleteAsync<T>(string tableName, T entity)
+            where T : ITableEntity
         {
             CloudTable table = await this.GetTableAsync(tableName);
             TableOperation deleteOperation = TableOperation.Delete(entity);
