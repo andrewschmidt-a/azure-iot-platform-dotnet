@@ -50,8 +50,7 @@
     "IotHubManagerServiceUrl": "http://iothub-manager:80/v1",
     "StorageAdapterServiceTimeout": "10000",
     "StorageAdapterServiceUrl": "http://storage-adapter:80/v1",
-    "TelemetryServiceUrl": "http://device-telemetry:80/v1",
-    "AppConfigStatusCheck": "ExternalDependencies:AppConfigStatusCheck"
+    "TelemetryServiceUrl": "http://device-telemetry:80/v1"
   },
   "Global": {
     "AuthRequired": "false",
