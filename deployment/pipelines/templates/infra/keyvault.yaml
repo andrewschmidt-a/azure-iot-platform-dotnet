@@ -69,12 +69,12 @@ steps:
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbConnectionString' --value $cosmosDBConnection
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbEndpoint' --value $cosmosDBUri
       az keyvault secret set --vault-name $kVaultName --name 'Global--InstrumentationKey' --value $appInsightKey
+      az keyvault secret set --vault-name $kVaultName --name 'Global--ServicePrincipalId' --value $servicePrincipalId
       az keyvault secret set --vault-name $kVaultName --name 'Global--StorageAccountConnectionString' --value $blobStorageConnString
-      az keyvault secret set --vault-name $kVaultName --name 'Global--ApplicationId' --value $servicePrincipalId
-      az keyvault secret set --vault-name $kVaultName --name 'Global--ClientSecret' --value $servicePrincipalKey
-      az keyvault secret set --vault-name $kVaultName --name 'Global--LifecycleEventHubConnString' --value $lifecycleEvConn
-      az keyvault secret set --vault-name $kVaultName --name 'Global--TelemetryEventHubConnString' --value $telemetryEvConn
-      az keyvault secret set --vault-name $kVaultName --name 'Global--TwinChangeEventHubConnString' --value $twinchangeEvConn
+      az keyvault secret set --vault-name $kVaultName --name 'Global--ServicePrincipalKey' --value $servicePrincipalKey
+      az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--LifecycleEventHubConnectionString' --value $lifecycleEvConn
+      az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--TelemetryEventHubConnectionString' --value $telemetryEvConn
+      az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--TwinChangeEventHubConnectionString' --value $twinchangeEvConn
       az keyvault secret set --vault-name $kVaultName --name 'IdentityGatewayService--SendGridApiKey' --value ${{ parameters.SendGridApiKey }}
       az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--EventHubAccessPolicyKey' --value $evAccessPolicyKey
     addSpnToEnvironment: true
