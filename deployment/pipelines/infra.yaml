@@ -10,13 +10,13 @@ stages:
   jobs:
   - template: templates/approval.yaml
     parameters:
-      environment: IoT_CRSL_Environment
+      environment: IoT_CRSL_Environment_Dev
   - template: templates/infra.yaml
     parameters:
       serviceConnection: '3M-CRSLAD16-BBIoTP-DEV'
       resourceGroup: rg-iot-crsl-dev
       location: centralus
-      environment: IoT_CRSL_Environment
+      environment: IoT_CRSL_Environment_Dev
       subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
       applicationCode: crsliot
       deployEnvironment: dev
