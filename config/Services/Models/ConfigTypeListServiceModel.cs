@@ -21,7 +21,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
             }
             set
             {
-                Array.ForEach<String>(value, (c => configTypes.Add(c)));
+                Array.ForEach<String>(value, c => configTypes.Add(c));
             }
         }
 

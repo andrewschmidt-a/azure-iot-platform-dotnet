@@ -105,7 +105,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         {
             unchecked
             {
-                var hashCode = (this.Id != null ? this.Id.GetHashCode() : 0);
+                var hashCode = this.Id != null ? this.Id.GetHashCode() : 0;
                 hashCode = (hashCode * 397) ^ (this.Name != null ? this.Name.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (this.Description != null ? this.Description.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ this.Enabled.GetHashCode();

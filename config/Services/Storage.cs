@@ -242,8 +242,7 @@ namespace Mmm.Platform.IoT.Config.Services
 
             var response = await this._client.CreateAsync(PACKAGES_COLLECTION_ID, value);
 
-            if (!(string.IsNullOrEmpty(package.ConfigType))
-                && package.PackageType.Equals(PackageType.DeviceConfiguration))
+            if (!string.IsNullOrEmpty(package.ConfigType) && package.PackageType.Equals(PackageType.DeviceConfiguration))
             {
                 await this.UpdateConfigTypeAsync(package.ConfigType);
             }

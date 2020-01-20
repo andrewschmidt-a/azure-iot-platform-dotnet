@@ -81,7 +81,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
             TenantModel tenant = await this._tableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
-            return (tenant != null && tenant.IsIotHubDeployed);  // True if the tenant's IoTHub is fully deployed, false otherwise
+            return tenant != null && tenant.IsIotHubDeployed;  // True if the tenant's IoTHub is fully deployed, false otherwise
         }
 
         /// <summary>

@@ -94,7 +94,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
                 deploymentLabel = deployment.Labels[ConfigurationsHelper.PACKAGE_TYPE_LABEL];
             }
 
-            if (!(string.IsNullOrEmpty(deploymentLabel)))
+            if (!string.IsNullOrEmpty(deploymentLabel))
             {
                 if (deployment.Labels.Values.Contains(PackageType.EdgeManifest.ToString()))
                 {

@@ -145,10 +145,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private bool IsHubConnectionStringConfigured()
         {
             var cs = config?.AppConfigurationConnectionString?.ToLowerInvariant().Trim();
-            return (!string.IsNullOrEmpty(cs)
+            return !string.IsNullOrEmpty(cs)
                     && cs.Contains("hostname=")
                     && cs.Contains("sharedaccesskeyname=")
-                    && cs.Contains("sharedaccesskey="));
+                    && cs.Contains("sharedaccesskey=");
         }
     }
 }

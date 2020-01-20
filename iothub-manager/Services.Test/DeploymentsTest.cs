@@ -319,7 +319,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var content = new ConfigurationContent()
             {
                 ModulesContent = isEdgeContent ? new Dictionary<string, IDictionary<string, object>>() : null,
-                DeviceContent = !(isEdgeContent) ? new Dictionary<string, object>() : null
+                DeviceContent = !isEdgeContent ? new Dictionary<string, object>() : null
             };
 
             var label = string.Empty;
@@ -385,7 +385,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var content = new ConfigurationContent()
             {
                 ModulesContent = isEdgeDeployment ? new Dictionary<string, IDictionary<string, object>>() : null,
-                DeviceContent = !(isEdgeDeployment) ? new Dictionary<string, object>() : null
+                DeviceContent = !isEdgeDeployment ? new Dictionary<string, object>() : null
             };
 
             var label = isEdgeDeployment ? PackageType.EdgeManifest.ToString() : PackageType.DeviceConfiguration.ToString();

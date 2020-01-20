@@ -19,8 +19,7 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Helpers
             {
                 return true;
             }
-            else if (packageType == PackageType.DeviceConfiguration &&
-                !(IsEdgePackage(packageContent)))
+            else if (packageType == PackageType.DeviceConfiguration && !IsEdgePackage(packageContent))
             {
                 return true;
             }

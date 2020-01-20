@@ -79,8 +79,7 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
                 throw new InvalidInputException($"Provided packageType {packageType} is not valid.");
             }
 
-            if (uploadedPackageType.Equals(PackageType.EdgeManifest) &&
-                !(string.IsNullOrEmpty(configType)))
+            if (uploadedPackageType.Equals(PackageType.EdgeManifest) && !string.IsNullOrEmpty(configType))
             {
                 throw new InvalidInputException($"Package of type EdgeManifest cannot have parameter " +
                     $"configType.");
@@ -102,7 +101,7 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
                 packageContent = await streamReader.ReadToEndAsync();
             }
 
-            if (!(PackagesHelper.VerifyPackageType(packageContent, uploadedPackageType)))
+            if (!PackagesHelper.VerifyPackageType(packageContent, uploadedPackageType))
             {
                 throw new InvalidInputException($@"Package uploaded is invalid. Package contents
                             do not match with the given package type {packageType}.");

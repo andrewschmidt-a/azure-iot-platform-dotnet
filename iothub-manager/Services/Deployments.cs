@@ -206,8 +206,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
             var deviceWithStatus = new Dictionary<string, DeploymentStatus>();
 
-            if (!(ConfigurationsHelper.IsEdgeDeployment(deployment)) &&
-                    !(configType.Equals(ConfigType.Firmware.ToString())))
+            if (!ConfigurationsHelper.IsEdgeDeployment(deployment) && !configType.Equals(ConfigType.Firmware.ToString()))
             {
                 foreach (var devices in appliedDevices)
                 {
