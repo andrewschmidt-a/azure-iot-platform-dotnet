@@ -54,9 +54,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
                 // been given owner permissions to make the isEnabled check. This can be configured
                 // by an owner in the Azure Portal.
                 applicationPermissionsAssigned = false;
-                _logger.LogError(notAuthorizedException, "The application is not authorized and has not been " +
-                               "assigned owner permissions for the subscription. Go to the Azure portal and " +
-                               "assign the application as an owner in order to retrieve the token.");
+                _logger.LogError(notAuthorizedException, "The application is not authorized and has not been assigned owner permissions for the subscription. Go to the Azure portal and assign the application as an owner in order to retrieve the token.");
             }
             this.Settings.Add(IS_ENABLED_KEY, office365IsEnabled);
             this.Settings.Add(APP_PERMISSIONS_KEY, applicationPermissionsAssigned);
