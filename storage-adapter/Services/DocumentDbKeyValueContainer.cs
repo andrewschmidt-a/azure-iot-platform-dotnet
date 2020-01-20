@@ -347,8 +347,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             };
         }
 
-        #region IDisposable Support
-
         private void Dispose(bool disposing)
         {
             if (!this.disposedValue)
@@ -365,7 +363,5 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             this.Dispose(true);
         }
-
-        #endregion
     }
 }

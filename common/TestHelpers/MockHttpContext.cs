@@ -59,7 +59,6 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
 
         public HttpContext Object => this.mockContext.Object;
 
-        #region IDisposable Support
         private bool disposedValue;
 
         private void Dispose(bool disposing)
@@ -80,6 +79,5 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
         {
             this.Dispose(true);
         }
-        #endregion
     }
 }
