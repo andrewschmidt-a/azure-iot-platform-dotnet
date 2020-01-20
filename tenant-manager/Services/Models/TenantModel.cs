@@ -17,8 +17,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
             this.PartitionKey = id.Substring(0, 1);
             this.RowKey = id;
             this.TenantId = id;
-            this.IotHubName = "";
-            this.SAJobName = "";
+            this.IotHubName = string.Empty;
+            this.SAJobName = string.Empty;
             this.IsIotHubDeployed = false;
         }
     }

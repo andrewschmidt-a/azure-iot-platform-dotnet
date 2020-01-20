@@ -16,7 +16,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
         {
             this.PartitionKey = userId;
             this.RowKey = tenantId;
-            this.Roles = "";
+            this.Roles = string.Empty;
         }
 
         public UserTenantModel(string userId, string tenantId, string roles)

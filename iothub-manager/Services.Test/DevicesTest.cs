@@ -82,7 +82,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .Returns(new ResultQuery(numResults));
 
             // Act
-            var queryResult = await this.devices.GetModuleTwinsByQueryAsync("", continuationToken);
+            var queryResult = await this.devices.GetModuleTwinsByQueryAsync(string.Empty, continuationToken);
 
             // Assert
             Assert.Equal("continuationToken", queryResult.ContinuationToken);
@@ -110,7 +110,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .Returns(new ResultQuery(3));
 
             // Act
-            var queryResult = await this.devices.GetModuleTwinsByQueryAsync(query, "");
+            var queryResult = await this.devices.GetModuleTwinsByQueryAsync(query, string.Empty);
 
             // Assert
             Assert.Equal("continuationToken", queryResult.ContinuationToken);
@@ -183,7 +183,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .Returns(new ResultQuery(connectedTwins));
 
             // Act
-            var allDevices = await this.devices.GetListAsync("", "");
+            var allDevices = await this.devices.GetListAsync(string.Empty, string.Empty);
 
             // Assert
             Assert.Equal(4, allDevices.Items.Count);

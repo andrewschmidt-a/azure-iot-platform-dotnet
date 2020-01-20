@@ -37,7 +37,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test.Filters
         {
             // Arrange
             var internalException = new Mock<Exception>();
-            var exception = new Exception("", internalException.Object);
+            var exception = new Exception(string.Empty, internalException.Object);
             internalException.SetupGet(x => x.StackTrace).Returns((string)null);
 
             var context = new ExceptionContext(

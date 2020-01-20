@@ -29,7 +29,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         {
             try
             {
-                string authToken = "";
+                string authToken = string.Empty;
                 try
                 {
                     authToken = await this._tokenHelper.GetTokenAsync();

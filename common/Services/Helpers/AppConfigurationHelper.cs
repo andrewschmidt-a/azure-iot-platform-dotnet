@@ -52,7 +52,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
                 throw new ArgumentNullException("App Config cannot take a null key parameter. The given key was not correctly configured.");
             }
 
-            string value = "";
+            string value = string.Empty;
             try
             {
                 if (this._cache.ContainsKey(key) && this._cache[key].ExpirationTime > DateTime.UtcNow)

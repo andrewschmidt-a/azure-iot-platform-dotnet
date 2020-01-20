@@ -399,7 +399,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             fakeRules.Items.Add(this.CreateFakeRule("rule1"));
             fakeRules.Items.Add(this.CreateFakeRule("rule2"));
             this.storageAdapter.Setup(x => x.GetAllAsync(It.IsAny<string>())).Returns(Task.FromResult(fakeRules));
-            IHttpResponse fakeOkResponse = new HttpResponse(HttpStatusCode.OK, "", null);
+            IHttpResponse fakeOkResponse = new HttpResponse(HttpStatusCode.OK, string.Empty, null);
             this.httpClientMock.Setup(x => x.PostAsync(It.IsAny<HttpRequest>())).ReturnsAsync(fakeOkResponse);
 
             Rule test = new Rule
@@ -436,9 +436,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.storageAdapter.Setup(x => x.GetAllAsync(It.IsAny<string>())).Returns(Task.FromResult(fakeRules));
             this.httpClientMock.SetupSequence(x => x.PostAsync(It.IsAny<HttpRequest>()))
                 .Throws<Exception>()
-                .ReturnsAsync(new HttpResponse(HttpStatusCode.ServiceUnavailable, "", null))
-                .ReturnsAsync(new HttpResponse(HttpStatusCode.OK, "", null))
-                .ReturnsAsync(new HttpResponse(HttpStatusCode.OK, "", null));
+                .ReturnsAsync(new HttpResponse(HttpStatusCode.ServiceUnavailable, string.Empty, null))
+                .ReturnsAsync(new HttpResponse(HttpStatusCode.OK, string.Empty, null))
+                .ReturnsAsync(new HttpResponse(HttpStatusCode.OK, string.Empty, null));
 
             Rule test = new Rule
             {

@@ -245,7 +245,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 if (lastUsedTenant.Value == tenantId)
                 {
                     // update the LastUsedTenant to some null
-                    await this._identityClient.updateSettingsForUserAsync(userId, "LastUsedTenant", "");
+                    await this._identityClient.updateSettingsForUserAsync(userId, "LastUsedTenant", string.Empty);
                 }
             }
             catch (Exception e)
@@ -287,7 +287,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 string collection = collectionInfo.Key;
                 string databaseId = collectionInfo.Value;
                 string collectionAppConfigKey = string.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
-                string collectionId = "";
+                string collectionId = string.Empty;
                 try
                 {
                     collectionId = this._appConfigHelper.GetValue(collectionAppConfigKey);

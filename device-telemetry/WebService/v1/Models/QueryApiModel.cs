@@ -27,8 +27,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 
         public QueryApiModel()
         {
-            this.From = "";
-            this.To = "";
+            this.From = string.Empty;
+            this.To = string.Empty;
             this.Order = null;
             this.Skip = null;
             this.Limit = null;

@@ -21,7 +21,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
             }
 
             // checks for http vs https using _httpContext.Request.IsHttps and creates the url accordingly
-            _host = forwardedFor ?? $"http{(_httpContextAccessor.HttpContext.Request.IsHttps ? "s" : "")}://{_httpContextAccessor.HttpContext.Request.Host.ToString()}";
+            _host = forwardedFor ?? $"http{(_httpContextAccessor.HttpContext.Request.IsHttps ? "s" : string.Empty)}://{_httpContextAccessor.HttpContext.Request.Host.ToString()}";
         }
 
         public virtual string issuer => _host;

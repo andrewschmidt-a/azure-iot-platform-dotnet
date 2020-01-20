@@ -52,7 +52,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         // Ping the registry to see if the connection is healthy
         public async Task<StatusResultServiceModel> PingRegistryAsync()
         {
-            var result = new StatusResultServiceModel(false, "");
+            var result = new StatusResultServiceModel(false, string.Empty);
             try
             {
                 await _tenantHelper.GetRegistry().GetDeviceAsync("healthcheck");
@@ -298,7 +298,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         {
             var connectedEdgeDevices = new HashSet<string>();
 
-            var edgeModules = await this.GetModuleTwinsByQueryAsync(DEVICES_CONNECTED_QUERY, "");
+            var edgeModules = await this.GetModuleTwinsByQueryAsync(DEVICES_CONNECTED_QUERY, string.Empty);
             foreach (var model in edgeModules.Items)
             {
                 connectedEdgeDevices.Add(model.DeviceId);
@@ -315,7 +315,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private async Task<bool> DoesDeviceHaveConnectedModules(string deviceId)
         {
             var query = $"deviceId='{deviceId}' AND {DEVICES_CONNECTED_QUERY}";
-            var edgeModules = await this.GetModuleTwinsByQueryAsync(query, "");
+            var edgeModules = await this.GetModuleTwinsByQueryAsync(query, string.Empty);
             return edgeModules.Items.Any();
         }
 

@@ -60,7 +60,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
                 return this.Parameters[NOTES].ToString();
             }
 
-            return "";
+            return string.Empty;
         }
 
         public string GetSubject()

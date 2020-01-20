@@ -15,7 +15,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.KeyGenerator
         static void Main(string[] args)
         {
 
-            string key = "";
+            string key = string.Empty;
             using (var memStream = new MemoryStream())
             {
                 // Generate a public/private key pair.

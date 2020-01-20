@@ -84,7 +84,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             var result = new StatusResultServiceModel(false, "TimeSeries check failed");
 
             // Acquire an access token.
-            string accessToken = "";
+            string accessToken = string.Empty;
             try
             {
                 accessToken = await this.AcquireAccessTokenAsync();

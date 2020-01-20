@@ -98,7 +98,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         /// <returns>StatusResultServiceModel task</returns>
         public async Task<StatusResultServiceModel> StatusAsync()
         {
-            string unhealthyMessage = "";
+            string unhealthyMessage = string.Empty;
             List<string> webHooks = new List<string>
             {
                 "CreateIotHub",
