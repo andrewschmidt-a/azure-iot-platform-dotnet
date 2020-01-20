@@ -1,6 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
+﻿using System;
 using Microsoft.Azure.Devices;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
@@ -92,23 +90,5 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 
             return auth;
         }
-    }
-
-    public enum AuthenticationType
-    {
-        //
-        // Summary:
-        //     Shared Access Key
-        Sas = 0,
-
-        //
-        // Summary:
-        //     Self-signed certificate
-        SelfSigned = 1,
-
-        //
-        // Summary:
-        //     Certificate Authority
-        CertificateAuthority = 2
     }
 }
