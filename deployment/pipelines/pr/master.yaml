@@ -14,7 +14,7 @@ variables:
   tag: '$(Build.BuildId)' 
   azureSubscription: 3M-CRSLAD16-BBIoTP-Dev
   resourceGroup: rg-iot-crsl-dev
-  aksCluster: aks-dev-spaces-odin
+  aksCluster: crsliot-aks-dev
   devSpace: pr-$(System.PullRequest.PullRequestNumber)-build-$(Build.BuildId) 
 
 
