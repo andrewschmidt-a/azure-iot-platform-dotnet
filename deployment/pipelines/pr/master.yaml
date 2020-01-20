@@ -13,8 +13,8 @@ resources:
 variables:
   tag: '$(Build.BuildId)' 
   azureSubscription: 3M-CRSLAD16-BBIoTP-Dev
-  resourceGroup: rg-crslbbiot-odin-dev
-  aksCluster: aks-dev-spaces-odin
+  resourceGroup: rg-iot-crsl-dev
+  aksCluster: crsliot-aks-dev
   devSpace: pr-$(System.PullRequest.PullRequestNumber)-build-$(Build.BuildId) 
 
 
@@ -38,7 +38,7 @@ stages:
         azureSubscription: $(azureSubscription)
         scriptLocation: 'inlineScript'
         inlineScript: |
-          appConfigurationConnectionString=`az appconfig credential list -o json -n app-config-odin -g rg-crslbbiot-odin-dev | jq -r .[0].connectionString`
+          appConfigurationConnectionString=`az appconfig credential list -o json -n crsliot-appconfig-dev -g rg-iot-crsl-dev | jq -r .[0].connectionString`
           kubectl create secret generic --namespace=$(devSpace) globalsecrets --from-literal=AppConfigurationConnectionString="$appConfigurationConnectionString"
 
 - stage: Stand_Up_Services_that_Changed_in_Dev_Spaces
