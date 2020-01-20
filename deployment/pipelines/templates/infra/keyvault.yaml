@@ -49,7 +49,7 @@ steps:
       blobStorageKey=$(az storage account keys list -g $rg -n $blobStorageAccountName | grep value | head -n1 | awk -F "\"" '{print $4}')
       blobStorageConnString="DefaultEndpointsProtocol=https;AccountName=$blobStorageAccountName;AccountKey=$blobStorageKey;EndpointSuffix=core.windows.net"
       cosmosDbAccountName=$(az cosmosdb list --resource-group $rg | grep name | awk -F "\"" '{print $4}')
-      cosmosDBUri="https://$cosmosDbAccountName.documents.azure.com:443/"
+      cosmosDBUri=$(az cosmosdb show -g $rg -n $cosmosDbAccountName | jq -r ".documentEndpoint")
       cosmosDBAuthKey=$(az cosmosdb list-keys --resource-group $rg --name $cosmosDbAccountName | grep primaryMasterKey | awk -F "\"" '{print $4}')
       cosmosDBConnection="AccountEndpoint=$cosmosDBUri;AccountKey=$cosmosDBAuthKey;"
       eventhubNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhub| cut -d "/" -f1| awk -F "\"" '{print $4}')
@@ -67,6 +67,7 @@ steps:
       az keyvault secret set --vault-name $kVaultName --name 'ConfigService--AzureMapsKey' --value $mapskey
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbAuthKey' --value $cosmosDBAuthKey
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbConnectionString' --value $cosmosDBConnection
+      az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbEndpoint' --value $cosmosDBUri
       az keyvault secret set --vault-name $kVaultName --name 'Global--InstrumentationKey' --value $appInsightKey
       az keyvault secret set --vault-name $kVaultName --name 'Global--StorageAccountConnectionString' --value $blobStorageConnString
       az keyvault secret set --vault-name $kVaultName --name 'Global--ApplicationId' --value $servicePrincipalId
