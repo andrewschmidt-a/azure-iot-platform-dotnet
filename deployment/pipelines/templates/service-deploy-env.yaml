@@ -18,8 +18,8 @@ stages:
     - template: service-deploy.yaml
       parameters:
         serviceConnection: '3M-CRSLAD16-BBIoTP-DEV'
-        resourceGroup: rg-crslbbiot-odin-dev
-        aksName: aks-dev-spaces-odin
+        resourceGroup: rg-iot-crsl-dev
+        aksName: crsliot-aks-dev
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
 
