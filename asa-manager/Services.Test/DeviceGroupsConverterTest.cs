@@ -61,20 +61,20 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 
             this.mockStorageAdapterClient
                 .Setup(c => c.GetAllAsync(
-                    It.Is<String>(s => s == this.converter.Entity)))
+                    It.Is<string>(s => s == this.converter.Entity)))
                 .ReturnsAsync(deviceGroups);
 
             this.mockBlobStorageClient
                 .Setup(c => c.CreateBlobAsync(
-                    It.IsAny<String>(),
-                    It.IsAny<String>(),
-                    It.IsAny<String>()))
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
                 .Returns(Task.CompletedTask);
 
             this.mockIotHubManagerClient
                 .Setup(c => c.GetListAsync(
                     It.IsAny<IEnumerable<DeviceGroupConditionModel>>(),
-                    It.Is<String>(s => s == tenantId)))
+                    It.Is<string>(s => s == tenantId)))
                 .ReturnsAsync(new DeviceListModel { Items = new List<DeviceModel> { this.entityHelper.CreateDevice(), this.entityHelper.CreateDevice() } });  // return a device for each device group
 
             ConversionApiModel conversionResponse = await this.converter.ConvertAsync(tenantId);
@@ -82,20 +82,20 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             this.mockStorageAdapterClient
                 .Verify(
                     c => c.GetAllAsync(
-                        It.Is<String>(s => s == this.converter.Entity)),
+                        It.Is<string>(s => s == this.converter.Entity)),
                     Times.Once);
             this.mockBlobStorageClient
                 .Verify(
                     c => c.CreateBlobAsync(
-                        It.IsAny<String>(),
-                        It.IsAny<String>(),
-                        It.IsAny<String>()),
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<string>()),
                     Times.Once);
             this.mockIotHubManagerClient
                 .Verify(
                     c => c.GetListAsync(
                         It.IsAny<IEnumerable<DeviceGroupConditionModel>>(),
-                        It.Is<String>(s => s == tenantId)),
+                        It.Is<string>(s => s == tenantId)),
                     Times.Exactly(deviceGroups.Items.Count));
 
             Assert.Equal(conversionResponse.Entities, deviceGroups);
@@ -113,7 +113,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 
             this.mockStorageAdapterClient
                 .Setup(c => c.GetAllAsync(
-                    It.Is<String>(s => s == this.converter.Entity)))
+                    It.Is<string>(s => s == this.converter.Entity)))
                 .ReturnsAsync(deviceGroups);
 
             Func<Task> conversion = async () => await this.converter.ConvertAsync(tenantId);
@@ -137,13 +137,13 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 
             this.mockStorageAdapterClient
                 .Setup(c => c.GetAllAsync(
-                    It.Is<String>(s => s == this.converter.Entity)))
+                    It.Is<string>(s => s == this.converter.Entity)))
                 .ReturnsAsync(deviceGroups);
 
             this.mockIotHubManagerClient
                 .Setup(c => c.GetListAsync(
                     It.IsAny<IEnumerable<DeviceGroupConditionModel>>(),
-                    It.Is<String>(s => s == tenantId)))
+                    It.Is<string>(s => s == tenantId)))
                 .ReturnsAsync(new DeviceListModel { Items = new List<DeviceModel> { } });  // return empty device lists, should cause the exception
 
             Func<Task> conversion = async () => await this.converter.ConvertAsync(tenantId);

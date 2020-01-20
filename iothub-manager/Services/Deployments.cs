@@ -199,7 +199,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
 
             deployment.Labels.TryGetValue(ConfigurationsHelper.CONFIG_TYPE_LABEL, out string configType);
-            IDictionary<QueryType, String> Queries = GetQueries(deploymentType, configType);
+            var Queries = GetQueries(deploymentType, configType);
 
             string deploymentId = deployment.Id;
             var appliedDevices = this.GetDevicesInQuery(Queries[QueryType.APPLIED], deploymentId);

@@ -10,18 +10,18 @@ namespace Mmm.Platform.IoT.Config.Services.External
 {
     public class ConfigTypeListServiceModel
     {
-        private HashSet<String> configTypes = new HashSet<String>();
+        private HashSet<string> configTypes = new HashSet<string>();
 
         [JsonProperty("configtypes")]
         public string[] ConfigTypes
         {
             get
             {
-                return configTypes.ToArray<String>();
+                return configTypes.ToArray<string>();
             }
             set
             {
-                Array.ForEach<String>(value, c => configTypes.Add(c));
+                Array.ForEach<string>(value, c => configTypes.Add(c));
             }
         }
 

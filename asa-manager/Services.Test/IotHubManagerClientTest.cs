@@ -59,8 +59,8 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             this.mockRequestHelper
                 .Setup(r => r.ProcessRequestAsync<DeviceListModel>(
                     It.Is<HttpMethod>(m => m == HttpMethod.Get),
-                    It.Is<String>(url => url.Contains(MOCK_API_URL)),
-                    It.Is<String>(s => s == tenantId)))
+                    It.Is<string>(url => url.Contains(MOCK_API_URL)),
+                    It.Is<string>(s => s == tenantId)))
                 .ReturnsAsync(deviceListModel);
 
             DeviceListModel response = await this.client.GetListAsync(conditions, tenantId);
@@ -69,8 +69,8 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
                 .Verify(
                     r => r.ProcessRequestAsync<DeviceListModel>(
                         It.Is<HttpMethod>(m => m == HttpMethod.Get),
-                        It.Is<String>(url => url.Contains(MOCK_API_URL)),
-                        It.Is<String>(s => s == tenantId)),
+                        It.Is<string>(url => url.Contains(MOCK_API_URL)),
+                        It.Is<string>(s => s == tenantId)),
                     Times.Once);
 
             Assert.Equal(deviceListModel, response);

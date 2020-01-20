@@ -68,7 +68,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
         private string FormatResourceName(string format, string tenantId)
         {
-            return String.Format(format, tenantId.Substring(0, 8));
+            return string.Format(format, tenantId.Substring(0, 8));
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 foreach (string collection in this.tenantCollections.Keys)
                 {
-                    string collectionKey = String.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
+                    string collectionKey = string.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
                     string collectionId = $"{collection}-{tenantId}";
                     await this._appConfigHelper.SetValueAsync(collectionKey, collectionId);
                 }
@@ -286,7 +286,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 string collection = collectionInfo.Key;
                 string databaseId = collectionInfo.Value;
-                string collectionAppConfigKey = String.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
+                string collectionAppConfigKey = string.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
                 string collectionId = "";
                 try
                 {
@@ -297,7 +297,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                     _logger.LogInformation(e, "Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantId}", collectionAppConfigKey, tenantId);
                 }
 
-                if (String.IsNullOrEmpty(collectionId))
+                if (string.IsNullOrEmpty(collectionId))
                 {
                     _logger.LogInformation("The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection", collectionAppConfigKey, tenantId);
                     // Currently, the assumption for an unknown collection id is that it has been deleted.

@@ -294,7 +294,7 @@ namespace Mmm.Platform.IoT.Config.Services
             await this._client.UpdateAsync(PACKAGES_COLLECTION_ID, PACKAGES_CONFIG_TYPE_KEY, JsonConvert.SerializeObject(list), "*");
         }
 
-        private Boolean IsValidPackage(PackageServiceModel package)
+        private bool IsValidPackage(PackageServiceModel package)
         {
             IPackageValidator validator = PackageValidatorFactory.GetValidator(
                 package.PackageType,

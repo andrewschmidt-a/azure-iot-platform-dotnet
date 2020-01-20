@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Helpers
             return false;
         }
 
-        public static Boolean IsEdgePackage(string packageContent)
+        public static bool IsEdgePackage(string packageContent)
         {
             var package = JsonConvert.DeserializeObject<Configuration>(packageContent);
 

@@ -37,7 +37,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 
         private void SetValuesFromConfig(AppConfig config)
         {
-            if (String.IsNullOrEmpty(config.Global.CosmosDb.DocumentDbConnectionString))
+            if (string.IsNullOrEmpty(config.Global.CosmosDb.DocumentDbConnectionString))
             {
                 throw new ArgumentNullException("The CosmosDbConnectionString in the IStorageClientConfig was null or empty. The StorageClient cannot be created with an empty connection string.");
             }
@@ -50,14 +50,14 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
                 Uri storageUriEndpoint;
                 Uri.TryCreate(match.Groups["endpoint"].Value, UriKind.RelativeOrAbsolute, out storageUriEndpoint);
                 this.storageUri = storageUriEndpoint;
-                if (String.IsNullOrEmpty(this.storageUri.ToString()))
+                if (string.IsNullOrEmpty(this.storageUri.ToString()))
                 {
                     throw new Exception("The StorageUri dissected from the connection string was null. The connection string may be null or not formatted correctly.");
                 }
 
                 // Get the PrimaryKey from the connection string
                 this.storagePrimaryKey = match.Groups["key"]?.Value;
-                if (String.IsNullOrEmpty(this.storagePrimaryKey))
+                if (string.IsNullOrEmpty(this.storagePrimaryKey))
                 {
                     throw new Exception("The StoragePrimaryKey dissected from the connection string was null. The connection string may be null or not formatted correctly.");
                 }

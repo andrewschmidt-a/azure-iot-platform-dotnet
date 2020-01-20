@@ -70,13 +70,13 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 
         public List<string> GetRecipients()
         {
-            return (List<String>)this.Parameters[RECIPIENTS];
+            return (List<string>)this.Parameters[RECIPIENTS];
         }
 
         /// <summary>
         /// Validates recipient email addresses and converts to a list of email strings
         /// </summary>
-        private List<string> ValidateAndConvertRecipientEmails(Object emails)
+        private List<string> ValidateAndConvertRecipientEmails(object emails)
         {
             List<string> result;
 

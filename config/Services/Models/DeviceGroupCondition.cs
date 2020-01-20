@@ -16,7 +16,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models
         public OperatorType Operator { get; set; }
 
         [JsonProperty("Value")]
-        public Object Value { get; set; }
+        public object Value { get; set; }
     }
 
     public enum OperatorType

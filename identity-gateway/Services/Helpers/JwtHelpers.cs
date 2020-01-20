@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
             List<UserTenantModel> tenantList = tenantsModel.models;
 
             // User did not specify the tenant to log into so get the default or last used
-            if (String.IsNullOrEmpty(tenant))
+            if (string.IsNullOrEmpty(tenant))
             {
                 // authState has no tenant, so we should use either the User's last used tenant, or the first tenant available to them
                 // Create a UserSettingsInput for the purpose of finding the LastUsedTenant setting for this user
@@ -63,7 +63,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                     tenant = lastUsedSetting.Value;
                 }
 
-                if (String.IsNullOrEmpty(tenant) && tenantList.Count > 0)
+                if (string.IsNullOrEmpty(tenant) && tenantList.Count > 0)
                 {
                     tenant =
                         tenantList.First()

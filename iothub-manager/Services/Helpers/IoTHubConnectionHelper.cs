@@ -21,7 +21,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             catch (ArgumentException argumentException)
             {
                 // Format is not correct, for example: missing hostname
-                throw new InvalidConfigurationException($"Invalid service configuration for HubConnectionString. Exception details: {argumentException.Message}");
+                throw new InvalidConfigurationException($"Invalid service configuration for HubConnectionstring. Exception details: {argumentException.Message}");
             }
             catch (FormatException formatException)
             {

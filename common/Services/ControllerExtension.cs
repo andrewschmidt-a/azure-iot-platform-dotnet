@@ -10,7 +10,7 @@ namespace Mmm.Platform.IoT.Common.Services
             try
             {
                 string tenantId = controller.HttpContext.Request.GetTenant();
-                if (String.IsNullOrEmpty(tenantId))
+                if (string.IsNullOrEmpty(tenantId))
                 {
                     throw new Exception("Request Tenant was null or empty.");
                 }

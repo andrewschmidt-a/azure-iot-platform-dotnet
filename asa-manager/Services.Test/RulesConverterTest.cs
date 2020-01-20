@@ -57,14 +57,14 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 
             this.mockStorageAdapterClient
                 .Setup(c => c.GetAllAsync(
-                    It.Is<String>(s => s == this.converter.Entity)))
+                    It.Is<string>(s => s == this.converter.Entity)))
                 .ReturnsAsync(rules);
 
             this.mockBlobStorageClient
                 .Setup(c => c.CreateBlobAsync(
-                    It.IsAny<String>(),
-                    It.IsAny<String>(),
-                    It.IsAny<String>()))
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
                 .Returns(Task.CompletedTask);
 
             ConversionApiModel conversionResponse = await this.converter.ConvertAsync(tenantId);
@@ -72,14 +72,14 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             this.mockStorageAdapterClient
                 .Verify(
                     c => c.GetAllAsync(
-                        It.Is<String>(s => s == this.converter.Entity)),
+                        It.Is<string>(s => s == this.converter.Entity)),
                     Times.Once);
             this.mockBlobStorageClient
                 .Verify(
                     c => c.CreateBlobAsync(
-                        It.IsAny<String>(),
-                        It.IsAny<String>(),
-                        It.IsAny<String>()),
+                        It.IsAny<string>(),
+                        It.IsAny<string>(),
+                        It.IsAny<string>()),
                     Times.Once);
 
             Assert.Equal(conversionResponse.Entities, rules);
@@ -97,7 +97,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 
             this.mockStorageAdapterClient
                 .Setup(c => c.GetAllAsync(
-                    It.Is<String>(s => s == this.converter.Entity)))
+                    It.Is<string>(s => s == this.converter.Entity)))
                 .ReturnsAsync(rules);
 
             Func<Task> conversion = async () => await this.converter.ConvertAsync(tenantId);

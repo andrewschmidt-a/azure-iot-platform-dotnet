@@ -787,7 +787,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
-        public async Task AddADMPackageTest(Boolean isCustomConfigType)
+        public async Task AddADMPackageTest(bool isCustomConfigType)
         {
             // Arrange
             const string collectionId = "packages";
@@ -848,7 +848,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
-        public async Task ListPackagesTest(Boolean isEdgeManifest)
+        public async Task ListPackagesTest(bool isEdgeManifest)
         {
             // Arrange
             const string collectionId = "packages";

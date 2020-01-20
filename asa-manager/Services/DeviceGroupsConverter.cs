@@ -99,7 +99,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             }
             if (deviceMapping.Count() == 0)
             {
-                string groups = $"[{String.Join(", ", deviceGroupModels.Items.Select(group => group.Id))}]";
+                string groups = $"[{string.Join(", ", deviceGroupModels.Items.Select(group => group.Id))}]";
                 _logger.LogError("No Devices were found for any {entity}. OperationId: {operationId}. TenantId: {tenantId}\n{deviceGroups}", this.Entity, operationId, tenantId, groups);
                 throw new ResourceNotFoundException($"No Devices were found for any {this.Entity}.");
             }
@@ -111,9 +111,9 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 // deviceId,groupId
                 // mapping contains devices groups, and a list model of all devices within each device group
                 // create a new csv row for each device and device group combination
-                string fileContentRows = String.Join("\n", deviceMapping.Select(mapping =>
+                string fileContentRows = string.Join("\n", deviceMapping.Select(mapping =>
                 {
-                    return String.Join("\n", mapping.Value.Items.Select(device => $"{device.Id},{mapping.Key.Id}"));
+                    return string.Join("\n", mapping.Value.Items.Select(device => $"{device.Id},{mapping.Key.Id}"));
                 }));
                 // Add the rows and the header together to complete the csv file content
                 fileContent = $"{CSV_HEADER}\n{fileContentRows}";

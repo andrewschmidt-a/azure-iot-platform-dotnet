@@ -42,7 +42,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
         public bool SaJobExists(StreamAnalyticsJobModel saJobModel)
         {
-            return !String.IsNullOrEmpty(saJobModel.StreamAnalyticsJobName) && !String.IsNullOrEmpty(saJobModel.JobState);
+            return !string.IsNullOrEmpty(saJobModel.StreamAnalyticsJobName) && !string.IsNullOrEmpty(saJobModel.JobState);
         }
 
         public async Task<StreamAnalyticsJobModel> AddAlertingAsync(string tenantId)
@@ -54,7 +54,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
 
             TenantModel tenant = await this.GetTenantFromContainerAsync(tenantId);
-            string saJobName = String.Format(SA_NAME_FORMAT, tenantId.Substring(0, 8));
+            string saJobName = string.Format(SA_NAME_FORMAT, tenantId.Substring(0, 8));
             await this._runbookHelper.CreateAlerting(tenantId, saJobName, tenant.IotHubName);
             return new StreamAnalyticsJobModel
             {

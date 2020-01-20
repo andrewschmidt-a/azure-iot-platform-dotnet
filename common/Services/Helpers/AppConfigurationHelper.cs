@@ -25,7 +25,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
         /// <returns>void</returns>
         public async Task SetValueAsync(string key, string value)
         {
-            if (String.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
             {
                 throw new ArgumentNullException("the key parameter must not be null or empty to create a new app config key value pair.");
             }
@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
         /// <returns>The value returned by app config for the given key</returns>
         public string GetValue(string key)
         {
-            if (String.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
             {
                 throw new ArgumentNullException("App Config cannot take a null key parameter. The given key was not correctly configured.");
             }
@@ -78,7 +78,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
                 throw new Exception($"An exception occured while getting the value of {key} from App Config:\n" + e.Message);
             }
 
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 throw new NullReferenceException($"App Config returned a null value for {key}");
             }
@@ -92,7 +92,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
         /// <returns></returns>
         public async Task DeleteKeyAsync(string key)
         {
-            if (String.IsNullOrEmpty(key))
+            if (string.IsNullOrEmpty(key))
             {
                 throw new ArgumentNullException("The key parameter must not be null or empty to delete an app config key value pair.");
             }

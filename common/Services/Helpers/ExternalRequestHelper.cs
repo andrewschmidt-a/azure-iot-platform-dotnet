@@ -121,7 +121,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             var request = new HttpRequest();
             request.SetUriFromString(url);
 
-            if (String.IsNullOrEmpty(tenantId))
+            if (string.IsNullOrEmpty(tenantId))
             {
                 try
                 {
@@ -144,7 +144,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             {
                 try
                 {
-                    var azdsRouteAs = this._httpContextAccessor.HttpContext.Request.Headers.First(p => String.Equals(p.Key, AZDS_ROUTE_KEY, StringComparison.OrdinalIgnoreCase));
+                    var azdsRouteAs = this._httpContextAccessor.HttpContext.Request.Headers.First(p => string.Equals(p.Key, AZDS_ROUTE_KEY, StringComparison.OrdinalIgnoreCase));
                     request.Headers.Add(AZDS_ROUTE_KEY, azdsRouteAs.Value.First());  // azdsRouteAs.Value returns an iterable of strings, take the first
                 }
                 catch (Exception e)

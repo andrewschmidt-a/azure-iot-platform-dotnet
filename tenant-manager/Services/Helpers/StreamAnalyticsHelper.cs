@@ -33,7 +33,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 try
                 {
                     authToken = await this._tokenHelper.GetTokenAsync();
-                    if (String.IsNullOrEmpty(authToken))
+                    if (string.IsNullOrEmpty(authToken))
                     {
                         throw new Exception("Auth Token from tokenHelper returned a null response.");
                     }

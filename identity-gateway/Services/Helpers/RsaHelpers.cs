@@ -50,7 +50,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                     { "n", n }
                 };
                 var hash = SHA256.Create();
-                Byte[] hashBytes = hash.ComputeHash(System.Text.Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(dict)));
+                var hashBytes = hash.ComputeHash(System.Text.Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(dict)));
                 JsonWebKey jsonWebKey = new JsonWebKey()
                 {
                     Kid = Base64UrlEncoder.Encode(hashBytes),

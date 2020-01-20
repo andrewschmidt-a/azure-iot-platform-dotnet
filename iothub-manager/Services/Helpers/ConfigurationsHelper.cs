@@ -57,7 +57,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             configuration.Labels[DEPLOYMENT_NAME_LABEL] = model.Name;
             configuration.Labels[DEPLOYMENT_GROUP_ID_LABEL] = model.DeviceGroupId;
             configuration.Labels[RM_CREATED_LABEL] = bool.TrueString;
-            if (!String.IsNullOrEmpty(model.ConfigType))
+            if (!string.IsNullOrEmpty(model.ConfigType))
             {
                 configuration.Labels[CONFIG_TYPE_LABEL] = model.ConfigType;
             }
@@ -84,7 +84,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             return configuration;
         }
 
-        public static Boolean IsEdgeDeployment(Configuration deployment)
+        public static bool IsEdgeDeployment(Configuration deployment)
         {
             string deploymentLabel = null;
 

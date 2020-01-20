@@ -4,9 +4,9 @@
 
 // Polyfills for cross browser support
 
-if (!String.prototype.startsWith) {
-  String.prototype.startsWith = function (searchString, position) {
-    return this.substr(position || 0, searchString.length) === searchString;
+if (!string.prototype.startsWith) {
+  string.prototype.startsWith = function (searchString, position) {
+    return this.substr(position || 0, searchstring.length) === searchString;
   };
 }
 
@@ -37,8 +37,8 @@ if (!Array.prototype.includes) {
   });
 }
 
-if (!String.prototype.includes) {
-  String.prototype.includes = function (search, start) {
+if (!string.prototype.includes) {
+  string.prototype.includes = function (search, start) {
     'use strict';
     if (typeof start !== 'number') start = 0;
 
@@ -50,8 +50,8 @@ if (!String.prototype.includes) {
   };
 }
 
-if (!String.prototype.endsWith) {
-  String.prototype.endsWith = function (searchStr, Position) {
+if (!string.prototype.endsWith) {
+  string.prototype.endsWith = function (searchStr, Position) {
     if (!(Position < this.length))
       Position = this.length;
     else
@@ -60,18 +60,18 @@ if (!String.prototype.endsWith) {
   };
 }
 
-if (!String.prototype.padStart) {
-  String.prototype.padStart = function padStart(targetLength, padString) {
+if (!string.prototype.padStart) {
+  string.prototype.padStart = function padStart(targetLength, padString) {
     targetLength = targetLength >> 0; //floor if number or convert non-number to 0;
     padString = String(padString || ' ');
     if (this.length > targetLength) {
       return String(this);
     } else {
       targetLength = targetLength - this.length;
-      if (targetLength > padString.length) {
-        padString += padString.repeat(targetLength / padString.length); //append to original to ensure we are longer than needed
+      if (targetLength > padstring.length) {
+        padString += padstring.repeat(targetLength / padstring.length); //append to original to ensure we are longer than needed
       }
-      return padString.slice(0, targetLength) + String(this);
+      return padstring.slice(0, targetLength) + String(this);
     }
   };
 }

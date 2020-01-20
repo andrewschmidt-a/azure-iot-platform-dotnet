@@ -60,7 +60,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             });
             if (currIoTHubHostName == null)
             {
-                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionString.");
+                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionstring.");
             }
             return currIoTHubHostName;
         }
@@ -75,7 +75,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             });
             if (registry == null)
             {
-                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionString.");
+                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionstring.");
             }
             return registry;
         }
@@ -90,7 +90,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
              });
             if (job == null)
             {
-                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionString.");
+                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionstring.");
             }
             return job;
         }

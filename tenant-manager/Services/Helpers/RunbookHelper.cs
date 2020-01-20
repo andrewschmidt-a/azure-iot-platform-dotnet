@@ -55,7 +55,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 
             Match match = expression.Match(matchString);
             string value = match.Value;
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
             {
                 throw new Exception($"Unable to match a value from string {matchString} for the given regular expression {expression.ToString()}");
             }
@@ -66,9 +66,9 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         {
             try
             {
-                string appConfigKey = String.Format(this.iotHubConnectionStringKeyFormat, tenantId);
+                string appConfigKey = string.Format(this.iotHubConnectionStringKeyFormat, tenantId);
                 string iotHubConnectionString = this._appConfigHelper.GetValue(appConfigKey);
-                if (String.IsNullOrEmpty(iotHubConnectionString))
+                if (string.IsNullOrEmpty(iotHubConnectionString))
                 {
                     throw new Exception($"The iotHubConnectionString returned by app config for the key {appConfigKey} returned a null value.");
                 }
@@ -122,7 +122,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                     unhealthyMessage += $"Unable to get status for {webHook}: {e.Message}";
                 }
             }
-            return String.IsNullOrEmpty(unhealthyMessage) ? new StatusResultServiceModel(true, "Alive and well!") : new StatusResultServiceModel(false, unhealthyMessage);
+            return string.IsNullOrEmpty(unhealthyMessage) ? new StatusResultServiceModel(true, "Alive and well!") : new StatusResultServiceModel(false, unhealthyMessage);
         }
 
         public async Task<HttpResponseMessage> CreateIotHub(string tenantId, string iotHubName, string dpsName)
@@ -213,7 +213,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         {
             try
             {
-                if (String.IsNullOrEmpty(webHookUrl))
+                if (string.IsNullOrEmpty(webHookUrl))
                 {
                     throw new Exception($"The given webHookUrl string was null or empty. It may not be configured correctly.");
                 }

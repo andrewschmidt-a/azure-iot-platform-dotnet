@@ -257,7 +257,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             string args = TIME_SERIES_API_VERSION_PREFIX + "=" + this.apiVersion;
             if (queryArgs != null && queryArgs.Any())
             {
-                args += "&" + String.Join("&", queryArgs);
+                args += "&" + string.Join("&", queryArgs);
             }
 
             Uri uri = new UriBuilder("https", this.fqdn)

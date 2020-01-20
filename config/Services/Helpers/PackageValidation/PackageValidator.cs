@@ -19,6 +19,6 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
             }
         }
 
-        public abstract Boolean Validate();
+        public abstract bool Validate();
     }
 }

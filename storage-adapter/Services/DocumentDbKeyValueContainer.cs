@@ -76,7 +76,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             get
             {
                 string tenantId = this.TenantId;
-                string key = String.Format(COLLECTION_ID_KEY_FORMAT, this.TenantId, this.DocumentDataType);
+                string key = string.Format(COLLECTION_ID_KEY_FORMAT, this.TenantId, this.DocumentDataType);
                 try
                 {
                     return this._appConfigHelper.GetValue(key);

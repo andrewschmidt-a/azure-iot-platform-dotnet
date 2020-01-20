@@ -192,7 +192,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             [FromForm] string error,
             [FromForm] string error_description)
         {
-            if (!String.IsNullOrEmpty(error))
+            if (!string.IsNullOrEmpty(error))
             {
                 // If there was an error returned from B2C, throw it as an expcetion
                 throw new Exception($"Azure B2C returned an error: {{{error}: {error_description}}}");
@@ -216,7 +216,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             var claims = jwt.Claims.Where(t => new List<string> { "sub", "name" }.Contains(t.Type)).ToList();
 
             // If theres an invitation token then add user to tenant
-            if (!String.IsNullOrEmpty(authState.invitation))
+            if (!string.IsNullOrEmpty(authState.invitation))
             {
                 var inviteJWT = jwtHandler.ReadJwtToken(authState.invitation);
                 UserTenantInput UserTenant = new UserTenantInput()
@@ -240,7 +240,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 claims.Add(new Claim("email", emailClaim.Value));
             }
 
-            if (!String.IsNullOrEmpty(authState.nonce))
+            if (!string.IsNullOrEmpty(authState.nonce))
             {
                 claims.Add(new Claim("nonce", authState.nonce));
             }

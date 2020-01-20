@@ -6,6 +6,6 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
     public interface IPackageValidator
     {
         JObject ParsePackageContent(string package);
-        Boolean Validate();
+        bool Validate();
     }
 }

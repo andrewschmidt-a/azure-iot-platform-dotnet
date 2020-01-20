@@ -60,7 +60,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 
         }
 
-        private List<String> CreateFakeList()
+        private List<string> CreateFakeList()
         {
             return new List<string>
             {

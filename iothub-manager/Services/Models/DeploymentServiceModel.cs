@@ -66,7 +66,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             }
             else
             {
-                this.ConfigType = String.Empty;
+                this.ConfigType = string.Empty;
             }
 
             this.DeploymentMetrics = new DeploymentMetricsServiceModel(deployment.SystemMetrics, deployment.Metrics);
