@@ -45,7 +45,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         /// <summary>
         /// The constructor.
         /// </summary>
-        public DeviceProperties(IStorageAdapterClient storageClient,
+        public DeviceProperties(
+            IStorageAdapterClient storageClient,
             AppConfig config,
             ILogger<DeviceProperties> logger,
             IDevices devices)
@@ -296,7 +297,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         /// deviceTwinName to be whitlisted without regex.</param>
         /// <param name="prefixWhitelist">An out paramenter which is a list of
         /// deviceTwinName to be whitlisted with regex.</param>
-        private static void ParseWhitelist(string whitelist,
+        private static void ParseWhitelist(
+            string whitelist,
             out DeviceTwinName fullNameWhitelist,
             out DeviceTwinName prefixWhitelist)
         {

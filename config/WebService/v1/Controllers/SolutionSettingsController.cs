@@ -89,7 +89,8 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
                 this.Response.Headers.Add(Logo.NAME_HEADER, model.Name);
             }
             this.Response.Headers.Add(Logo.IS_DEFAULT_HEADER, model.IsDefault.ToString());
-            this.Response.Headers.Add(SolutionSettingsController.ACCESS_CONTROL_EXPOSE_HEADERS,
+            this.Response.Headers.Add(
+                SolutionSettingsController.ACCESS_CONTROL_EXPOSE_HEADERS,
                 Logo.NAME_HEADER + "," + Logo.IS_DEFAULT_HEADER);
             if (model.Image != null)
             {

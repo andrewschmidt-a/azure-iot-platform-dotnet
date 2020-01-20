@@ -22,9 +22,7 @@ namespace Mmm.Platform.IoT.Common.Services.Converters
             return objectType == typeof(IAction);
         }
 
-        public override object ReadJson(JsonReader reader,
-            Type objectType, object existingValue,
-            JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             JObject jsonObject = JObject.Load(reader);
 
@@ -49,8 +47,7 @@ namespace Mmm.Platform.IoT.Common.Services.Converters
             throw new InvalidInputException($"Could not deseriailize action with type {actionType}");
         }
 
-        public override void WriteJson(JsonWriter writer,
-            object value, JsonSerializer serializer)
+        public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             throw new NotImplementedException("Use default implementation for writing to the field.");
         }

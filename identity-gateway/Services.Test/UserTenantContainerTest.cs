@@ -58,11 +58,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             var result = await userTenantContainer.GetAllAsync(someUserTenantInput);
 
             mockTableStorageClient
-                .Verify(m => m.QueryAsync(
-                    It.Is<String>(n => n == userTenantContainer.TableName),
-                    It.IsAny<TableQuery<UserTenantModel>>(),
-                    It.Is<CancellationToken>(t => t == default(CancellationToken))),
-                Times.Once);
+                .Verify(
+                    m => m.QueryAsync(
+                        It.Is<String>(n => n == userTenantContainer.TableName),
+                        It.IsAny<TableQuery<UserTenantModel>>(),
+                        It.Is<CancellationToken>(t => t == default(CancellationToken))),
+                    Times.Once);
 
             // Assert
             Assert.Equal("gettenants", result.batchMethod.ToLowerInvariant());
@@ -86,11 +87,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             var result = await userTenantContainer.GetAllAsync(someUserTenantInput);
 
             mockTableStorageClient
-                .Verify(m => m.QueryAsync(
-                    It.Is<String>(n => n == userTenantContainer.TableName),
-                    It.IsAny<TableQuery<UserTenantModel>>(),
-                    It.Is<CancellationToken>(t => t == default(CancellationToken))),
-                Times.Once);
+                .Verify(
+                    m => m.QueryAsync(
+                        It.Is<String>(n => n == userTenantContainer.TableName),
+                        It.IsAny<TableQuery<UserTenantModel>>(),
+                        It.Is<CancellationToken>(t => t == default(CancellationToken))),
+                    Times.Once);
 
             // Assert
             Assert.Equal("gettenants", result.batchMethod.ToLowerInvariant());
@@ -108,11 +110,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             var result = await userTenantContainer.GetAllAsync(someUserTenantInput);
 
             mockTableStorageClient
-                .Verify(m => m.QueryAsync(
-                    It.Is<String>(n => n == userTenantContainer.TableName),
-                    It.IsAny<TableQuery<UserTenantModel>>(),
-                    It.Is<CancellationToken>(t => t == default(CancellationToken))),
-                Times.Once);
+                .Verify(
+                    m => m.QueryAsync(
+                        It.Is<String>(n => n == userTenantContainer.TableName),
+                        It.IsAny<TableQuery<UserTenantModel>>(),
+                        It.Is<CancellationToken>(t => t == default(CancellationToken))),
+                    Times.Once);
 
             // Assert
             Assert.Equal("gettenants", result.batchMethod.ToLowerInvariant());
@@ -137,11 +140,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             var result = await userTenantContainer.GetAsync(someUserTenantInput);
 
             mockTableStorageClient
-                .Verify(m => m.RetrieveAsync<UserTenantModel>(
-                    It.Is<String>(n => n == userTenantContainer.TableName),
-                    It.IsAny<String>(),
-                    It.IsAny<String>()),
-                Times.Once);
+                .Verify(
+                    m => m.RetrieveAsync<UserTenantModel>(
+                        It.Is<String>(n => n == userTenantContainer.TableName),
+                        It.IsAny<String>(),
+                        It.IsAny<String>()),
+                    Times.Once);
 
             // Assert
             AssertUserTenantMatchesInput(result);
@@ -162,11 +166,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             var result = await userTenantContainer.GetAsync(someUserTenantInput);
 
             mockTableStorageClient
-                .Verify(m => m.RetrieveAsync<UserTenantModel>(
-                    It.Is<String>(n => n == userTenantContainer.TableName),
-                    It.IsAny<String>(),
-                    It.IsAny<String>()),
-                Times.Once);
+                .Verify(
+                    m => m.RetrieveAsync<UserTenantModel>(
+                        It.Is<String>(n => n == userTenantContainer.TableName),
+                        It.IsAny<String>(),
+                        It.IsAny<String>()),
+                    Times.Once);
 
             // Assert
             Assert.Null(result);
@@ -193,17 +198,19 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             var result = await userTenantContainer.CreateAsync(someUserTenantInput);
 
             mockTableStorageClient
-                .Verify(m => m.RetrieveAsync<UserTenantModel>(
-                    It.Is<String>(n => n == userTenantContainer.TableName),
-                    It.IsAny<String>(),
-                    It.IsAny<String>()),
-                Times.Once);
+                .Verify(
+                    m => m.RetrieveAsync<UserTenantModel>(
+                        It.Is<String>(n => n == userTenantContainer.TableName),
+                        It.IsAny<String>(),
+                        It.IsAny<String>()),
+                    Times.Once);
 
             mockTableStorageClient
-                .Verify(m => m.InsertAsync(
-                    It.Is<String>(n => n == userTenantContainer.TableName),
-                    It.Is<UserTenantModel>(u => u.TenantId == someUserTenantInput.Tenant && u.UserId == someUserTenantInput.UserId)),
-                Times.Once);
+                .Verify(
+                    m => m.InsertAsync(
+                        It.Is<String>(n => n == userTenantContainer.TableName),
+                        It.Is<UserTenantModel>(u => u.TenantId == someUserTenantInput.Tenant && u.UserId == someUserTenantInput.UserId)),
+                    Times.Once);
 
             // Assert
             AssertUserTenantMatchesInput(result);
@@ -232,17 +239,19 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             var result = await userTenantContainer.CreateAsync(someUserTenantInput);
 
             mockTableStorageClient
-                .Verify(m => m.RetrieveAsync<UserTenantModel>(
-                    It.Is<String>(n => n == userTenantContainer.TableName),
-                    It.IsAny<String>(),
-                    It.IsAny<String>()),
-                Times.Once);
+                .Verify(
+                    m => m.RetrieveAsync<UserTenantModel>(
+                        It.Is<String>(n => n == userTenantContainer.TableName),
+                        It.IsAny<String>(),
+                        It.IsAny<String>()),
+                    Times.Once);
 
             mockTableStorageClient
-                .Verify(m => m.InsertAsync(
-                    It.Is<String>(n => n == userTenantContainer.TableName),
-                    It.Is<UserTenantModel>(u => u.TenantId == someUserTenantInput.Tenant && u.UserId == someUserTenantInput.UserId)),
-                Times.Once);
+                .Verify(
+                    m => m.InsertAsync(
+                        It.Is<String>(n => n == userTenantContainer.TableName),
+                        It.Is<UserTenantModel>(u => u.TenantId == someUserTenantInput.Tenant && u.UserId == someUserTenantInput.UserId)),
+                    Times.Once);
 
             // Assert
             AssertUserTenantMatchesInput(result);

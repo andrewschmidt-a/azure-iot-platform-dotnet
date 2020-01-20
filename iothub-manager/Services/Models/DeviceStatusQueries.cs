@@ -71,7 +71,8 @@ namespace Mmm.Platform.IoT.Config.Services.Models
                 return EdgeDeviceStatusQueries.Queries;
             }
 
-            return AdmQueryMapping.TryGetValue(configType,
+            return AdmQueryMapping.TryGetValue(
+                configType,
                     out IDictionary<QueryType, string> value) ? value : DefaultDeviceStatusQueries.Queries;
         }
 

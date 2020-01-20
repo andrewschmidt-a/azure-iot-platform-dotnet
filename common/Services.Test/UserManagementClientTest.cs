@@ -79,10 +79,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
             var result = await this.client.GetAllowedActionsAsync(userObjectId, roles);
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/users/{userObjectId}/allowedActions")),
-                    It.Is<HttpMethod>(m => m == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/users/{userObjectId}/allowedActions")),
+                        It.Is<HttpMethod>(m => m == method)),
+                    Times.Once);
 
             Assert.Equal(allowedActions, result);
         }
@@ -164,10 +165,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
             // Assert
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/users/default/token")),
-                    It.Is<HttpMethod>(m => m == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/users/default/token")),
+                        It.Is<HttpMethod>(m => m == method)),
+                    Times.Once);
 
             Assert.Equal(token.AccessToken, result);
         }

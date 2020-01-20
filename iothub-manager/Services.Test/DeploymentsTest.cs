@@ -228,7 +228,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
             else
             {
-                await Assert.ThrowsAsync(Type.GetType(expectedException),
+                await Assert.ThrowsAsync(
+                    Type.GetType(expectedException),
                     async () => await this.deployments.CreateAsync(depModel));
             }
         }
@@ -244,7 +245,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync(Type.GetType(RESOURCE_NOT_FOUND_EXCEPTION),
+            await Assert.ThrowsAsync(
+                Type.GetType(RESOURCE_NOT_FOUND_EXCEPTION),
                     async () => await this.deployments.GetAsync(configuration.Id));
         }
 

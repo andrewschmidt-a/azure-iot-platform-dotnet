@@ -306,8 +306,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             string colId,
             object document)
         {
-            string colUrl = string.Format("/dbs/{0}/colls/{1}",
-                databaseName, colId);
+            string colUrl = string.Format("/dbs/{0}/colls/{1}", databaseName, colId);
 
             await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
             try

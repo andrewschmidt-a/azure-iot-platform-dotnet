@@ -91,7 +91,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
             if (model.Priority < 0)
             {
-                throw new ArgumentOutOfRangeException(PRIORITY_PARAM,
+                throw new ArgumentOutOfRangeException(
+                    PRIORITY_PARAM,
                     model.Priority,
                     "The priority provided should be 0 or greater");
             }

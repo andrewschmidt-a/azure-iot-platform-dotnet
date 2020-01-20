@@ -139,9 +139,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.False(result);
 
             mockStorageAdapterClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
+                        It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
                     Times.Once);
         }
 
@@ -188,7 +189,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.False(result);
 
             mockStorageAdapterClient
-                .Verify(x => x.GetAsync(
+                .Verify(
+                    x => x.GetAsync(
                         It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
                         It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
                     Times.Once);
@@ -281,20 +283,22 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.True(result);
 
             mockStorageAdapterClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
+                        It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
                     Times.Once);
 
             mockDevices
                 .Verify(x => x.GetDeviceTwinNamesAsync(), Times.Once);
 
             mockStorageAdapterClient
-                .Verify(x => x.UpdateAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY),
-                    It.Is<string>(s => Rebuilding(s)),
-                    It.Is<string>(s => s == etagOld)),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
+                        It.Is<string>(s => s == DeviceProperties.CACHE_KEY),
+                        It.Is<string>(s => Rebuilding(s)),
+                        It.Is<string>(s => s == etagOld)),
                     Times.Once);
         }
 

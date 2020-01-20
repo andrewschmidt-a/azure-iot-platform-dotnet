@@ -88,10 +88,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             var result = await this.client.GetAsync(collectionId, key);
 
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}")),
-                        It.Is<HttpMethod>(m => m == method)),
-                    Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                            It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}")),
+                            It.Is<HttpMethod>(m => m == method)),
+                        Times.Once);
 
             Assert.Equal(result.Key, key);
             Assert.Equal(result.Data, data);
@@ -162,10 +163,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
             var result = await this.client.GetAllAsync(collectionId);
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values")),
-                    It.Is<HttpMethod>(m => m == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values")),
+                        It.Is<HttpMethod>(m => m == method)),
+                    Times.Once);
 
             Assert.Equal(result.Items.Count(), models.Length);
             foreach (var item in result.Items)
@@ -205,10 +207,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
             var result = await this.client.CreateAsync(collectionId, data);
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check<ValueApiModel>($"{MOCK_SERVICE_URI}/collections/{collectionId}/values", m => m.Data == data)),
-                    It.Is<HttpMethod>(m => m == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check<ValueApiModel>($"{MOCK_SERVICE_URI}/collections/{collectionId}/values", m => m.Data == data)),
+                        It.Is<HttpMethod>(m => m == method)),
+                    Times.Once);
 
             Assert.Equal(result.Key, key);
             Assert.Equal(result.Data, data);
@@ -245,10 +248,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
             var result = await this.client.UpdateAsync(collectionId, key, data, etagOld);
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check<ValueApiModel>($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}", m => m.Data == data && m.ETag == etagOld)),
-                    It.Is<HttpMethod>(m => m == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check<ValueApiModel>($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}", m => m.Data == data && m.ETag == etagOld)),
+                        It.Is<HttpMethod>(m => m == method)),
+                    Times.Once);
 
             Assert.Equal(result.Key, key);
             Assert.Equal(result.Data, data);
@@ -301,10 +305,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
             await this.client.DeleteAsync(collectionId, key);
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}")),
-                    It.Is<HttpMethod>(m => m == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}")),
+                        It.Is<HttpMethod>(m => m == method)),
+                    Times.Once);
         }
     }
 }

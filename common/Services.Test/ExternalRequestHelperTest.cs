@@ -66,10 +66,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             await this.externalRequestHelper.ProcessRequestAsync(method, url);
 
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check(url)),
-                    It.Is<HttpMethod>(r => r == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check(url)),
+                        It.Is<HttpMethod>(r => r == method)),
+                    Times.Once);
         }
 
 
@@ -103,10 +104,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             ExternalRequestModel processedResponse = await this.externalRequestHelper.ProcessRequestAsync(method, url, content);
 
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check(url)),
-                    It.Is<HttpMethod>(r => r == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check(url)),
+                        It.Is<HttpMethod>(r => r == method)),
+                    Times.Once);
 
             Assert.Equal(processedResponse.value, value);
         }

@@ -140,8 +140,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 
         // GET connect/callback
         [HttpPost("connect/switch/{tenant}")]
-        public async Task<ActionResult> PostAsync([FromHeader(Name = "Authorization")] string authHeader,
-            [FromRoute] string tenant)
+        public async Task<ActionResult> PostAsync([FromHeader(Name = "Authorization")] string authHeader, [FromRoute] string tenant)
         {
             if (authHeader == null || !authHeader.StartsWith("Bearer"))
             {

@@ -232,12 +232,13 @@ namespace Mmm.Platform.IoT.Config.Services
             }
 
             package.DateCreated = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
-            var value = JsonConvert.SerializeObject(package,
-                                                    Formatting.Indented,
-                                                    new JsonSerializerSettings
-                                                    {
-                                                        NullValueHandling = NullValueHandling.Ignore
-                                                    });
+            var value = JsonConvert.SerializeObject(
+                package,
+                Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
 
             var response = await this._client.CreateAsync(PACKAGES_COLLECTION_ID, value);
 

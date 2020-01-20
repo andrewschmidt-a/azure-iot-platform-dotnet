@@ -81,8 +81,9 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             }) as dynamic;
 
             this.mockStorage
-                .Verify(x => x.SetThemeAsync(
-                    It.Is<object>(o => this.CheckTheme(o, name, description))),
+                .Verify(
+                    x => x.SetThemeAsync(
+                        It.Is<object>(o => this.CheckTheme(o, name, description))),
                     Times.Once);
 
             Assert.Equal(result.Name.ToString(), name);
@@ -175,8 +176,9 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 await this.controller.SetLogoAsync();
 
                 this.mockStorage
-                    .Verify(x => x.SetLogoAsync(
-                        It.Is<Logo>(m => m.Image == image && m.Type == type && !m.IsDefault)),
+                    .Verify(
+                        x => x.SetLogoAsync(
+                            It.Is<Logo>(m => m.Image == image && m.Type == type && !m.IsDefault)),
                         Times.Once);
 
                 Assert.Equal(image, mockContext.GetBody());
@@ -207,8 +209,9 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 await this.controller.SetLogoAsync();
 
                 this.mockStorage
-                    .Verify(x => x.SetLogoAsync(
-                        It.Is<Logo>(m => m.Image == image && m.Type == type && m.Name == name && !m.IsDefault)),
+                    .Verify(
+                        x => x.SetLogoAsync(
+                            It.Is<Logo>(m => m.Image == image && m.Type == type && m.Name == name && !m.IsDefault)),
                         Times.Once);
 
                 Assert.Equal(image, mockContext.GetBody());

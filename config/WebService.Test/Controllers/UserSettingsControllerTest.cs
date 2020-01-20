@@ -41,8 +41,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             var result = await this.controller.GetUserSettingAsync(id) as dynamic;
 
             this.mockStorage
-                .Verify(x => x.GetUserSetting(
-                    It.Is<string>(s => s == id)), Times.Once);
+                .Verify(x => x.GetUserSetting(It.Is<string>(s => s == id)), Times.Once);
 
             Assert.Equal(result.Name.ToString(), name);
             Assert.Equal(result.Description.ToString(), description);
@@ -70,7 +69,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             }) as dynamic;
 
             this.mockStorage
-                .Verify(x => x.SetUserSetting(
+                .Verify(
+                    x => x.SetUserSetting(
                         It.Is<string>(s => s == id),
                         It.Is<object>(o => this.CheckTheme(o, name, description))),
                     Times.Once);

@@ -77,8 +77,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 
             this.devicesMock.Setup(x => x.GetModuleTwinsByQueryAsync(query, continuationToken))
                 .ReturnsAsync(twins);
-            this.httpContext.Request.Headers.Add(CONTINUATION_TOKEN_NAME,
-                                                 new StringValues(continuationToken));
+            this.httpContext.Request.Headers.Add(
+                CONTINUATION_TOKEN_NAME,
+                new StringValues(continuationToken));
 
             // Act
             var moduleTwins = await this.modulesController.GetModuleTwinsAsync(query);

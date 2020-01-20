@@ -127,8 +127,9 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             var result = await this.controller.GetAsync(groupId);
 
             this.mockStorage
-                .Verify(x => x.GetDeviceGroupAsync(
-                    It.Is<string>(s => s == groupId)),
+                .Verify(
+                    x => x.GetDeviceGroupAsync(
+                        It.Is<string>(s => s == groupId)),
                     Times.Once);
 
             Assert.Equal(result.DisplayName, displayName);
@@ -169,8 +170,9 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             });
 
             this.mockStorage
-                .Verify(x => x.CreateDeviceGroupAsync(
-                    It.Is<DeviceGroup>(m => m.DisplayName == displayName && m.Conditions.First() == conditions.First())),
+                .Verify(
+                    x => x.CreateDeviceGroupAsync(
+                        It.Is<DeviceGroup>(m => m.DisplayName == displayName && m.Conditions.First() == conditions.First())),
                     Times.Once);
 
             Assert.Equal(result.Id, groupId);
@@ -206,7 +208,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     ETag = etagNew
                 });
 
-            var result = await this.controller.UpdateAsync(groupId,
+            var result = await this.controller.UpdateAsync(
+                groupId,
                 new DeviceGroupApiModel
                 {
                     DisplayName = displayName,
@@ -215,10 +218,11 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 });
 
             this.mockStorage
-                .Verify(x => x.UpdateDeviceGroupAsync(
-                    It.Is<string>(s => s == groupId),
-                    It.Is<DeviceGroup>(m => m.DisplayName == displayName && m.Conditions.First() == conditions.First()),
-                    It.Is<string>(s => s == etagOld)),
+                .Verify(
+                    x => x.UpdateDeviceGroupAsync(
+                        It.Is<string>(s => s == groupId),
+                        It.Is<DeviceGroup>(m => m.DisplayName == displayName && m.Conditions.First() == conditions.First()),
+                        It.Is<string>(s => s == etagOld)),
                     Times.Once);
 
             Assert.Equal(result.Id, groupId);
@@ -239,8 +243,9 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             await this.controller.DeleteAsync(groupId);
 
             this.mockStorage
-                .Verify(x => x.DeleteDeviceGroupAsync(
-                    It.Is<string>(s => s == groupId)),
+                .Verify(
+                    x => x.DeleteDeviceGroupAsync(
+                        It.Is<string>(s => s == groupId)),
                     Times.Once);
         }
 

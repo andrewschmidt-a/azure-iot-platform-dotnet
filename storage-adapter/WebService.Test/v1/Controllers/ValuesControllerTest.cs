@@ -68,7 +68,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
 
             this.mockContainer
-                .Verify(x => x.GetAsync(
+                .Verify(
+                    x => x.GetAsync(
                         It.Is<string>(s => s == collectionId),
                         It.Is<string>(s => s == key)),
                     Times.Once);
@@ -222,7 +223,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(modelOut.Timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
 
             this.mockContainer
-                .Verify(x => x.CreateAsync(
+                .Verify(
+                    x => x.CreateAsync(
                         It.Is<string>(s => s == collectionId),
                         It.Is<string>(s => s == key),
                         It.Is<ValueServiceModel>(m => m.Equals(modelIn))),
@@ -270,7 +272,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(modelOut.Timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
 
             this.mockContainer
-                .Verify(x => x.UpsertAsync(
+                .Verify(
+                    x => x.UpsertAsync(
                         It.Is<string>(s => s == collectionId),
                         It.Is<string>(s => s == key),
                         It.Is<ValueServiceModel>(m => m.Equals(modelIn))),
@@ -292,7 +295,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             await this.controller.Delete(collectionId, key);
 
             this.mockContainer
-                .Verify(x => x.DeleteAsync(
+                .Verify(
+                    x => x.DeleteAsync(
                         It.Is<string>(s => s == collectionId),
                         It.Is<string>(s => s == key)),
                     Times.Once);

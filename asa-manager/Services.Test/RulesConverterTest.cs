@@ -70,11 +70,13 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             ConversionApiModel conversionResponse = await this.converter.ConvertAsync(tenantId);
 
             this.mockStorageAdapterClient
-                .Verify(c => c.GetAllAsync(
+                .Verify(
+                    c => c.GetAllAsync(
                         It.Is<String>(s => s == this.converter.Entity)),
                     Times.Once);
             this.mockBlobStorageClient
-                .Verify(c => c.CreateBlobAsync(
+                .Verify(
+                    c => c.CreateBlobAsync(
                         It.IsAny<String>(),
                         It.IsAny<String>(),
                         It.IsAny<String>()),

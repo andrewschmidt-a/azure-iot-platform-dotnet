@@ -85,18 +85,20 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 query = QueryConditionTranslator.ToQueryString(query);
             }
 
-            var twins = await this.GetTwinByQueryAsync(QUERY_PREFIX,
-                                                       query,
-                                                       continuationToken,
-                                                       MAX_GET_LIST);
+            var twins = await this.GetTwinByQueryAsync(
+                QUERY_PREFIX,
+                query,
+                continuationToken,
+                MAX_GET_LIST);
 
             var connectedEdgeDevices = await this.GetConnectedEdgeDevices(twins.Result);
 
-            var resultModel = new DeviceServiceListModel(twins.Result
-                    .Select(azureTwin => new DeviceServiceModel(azureTwin,
-                                                                  _tenantHelper.GetIotHubName(),
-                                                                  connectedEdgeDevices.ContainsKey(azureTwin.DeviceId))),
-                                                                  twins.ContinuationToken);
+            var resultModel = new DeviceServiceListModel(
+                twins.Result.Select(azureTwin => new DeviceServiceModel(
+                    azureTwin,
+                    _tenantHelper.GetIotHubName(),
+                    connectedEdgeDevices.ContainsKey(azureTwin.DeviceId))),
+                twins.ContinuationToken);
 
             return resultModel;
         }
@@ -224,13 +226,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             return new TwinServiceModel(twin);
         }
 
-        public async Task<TwinServiceListModel> GetModuleTwinsByQueryAsync(string query,
-                                                                           string continuationToken)
+        public async Task<TwinServiceListModel> GetModuleTwinsByQueryAsync(
+            string query,
+            string continuationToken)
         {
-            var twins = await this.GetTwinByQueryAsync(MODULE_QUERY_PREFIX,
-                                                       query,
-                                                       continuationToken,
-                                                       MAX_GET_LIST);
+            var twins = await this.GetTwinByQueryAsync(
+                MODULE_QUERY_PREFIX,
+                query,
+                continuationToken,
+                MAX_GET_LIST);
             var result = twins.Result.Select(twin => new TwinServiceModel(twin)).ToList();
 
             return new TwinServiceListModel(result, twins.ContinuationToken);
@@ -244,8 +248,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         /// <param name="continuationToken">The continuationToken</param>
         /// <param name="numberOfResult">The max result</param>
         /// <returns></returns>
-        private async Task<ResultWithContinuationToken<List<Twin>>> GetTwinByQueryAsync(string queryPrefix,
-            string query, string continuationToken, int numberOfResult)
+        private async Task<ResultWithContinuationToken<List<Twin>>> GetTwinByQueryAsync(
+            string queryPrefix,
+            string query,
+            string continuationToken,
+            int numberOfResult)
         {
             query = string.IsNullOrEmpty(query) ? queryPrefix : $"{queryPrefix} where {query}";
 

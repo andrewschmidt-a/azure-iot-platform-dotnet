@@ -86,23 +86,26 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.True(lockResult.Value);
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY)),
                     Times.Once);
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY)),
                     Times.Once);
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY),
-                    It.Is<string>(s => s == dataLocked),
-                    It.Is<string>(s => s == etagOriginal)),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY),
+                        It.Is<string>(s => s == dataLocked),
+                        It.Is<string>(s => s == etagOriginal)),
                     Times.Once);
 
             this.mockClient
@@ -120,11 +123,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.True(writeResult);
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY),
-                    It.Is<string>(s => s == dataUpdated),
-                    It.Is<string>(s => s == etagLocked)),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY),
+                        It.Is<string>(s => s == dataUpdated),
+                        It.Is<string>(s => s == etagLocked)),
                     Times.Once);
         }
 
@@ -260,23 +264,26 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.True(lockResult.Value);
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY)),
                     Times.Once);
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY)),
                     Times.Once);
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY),
-                    It.Is<string>(s => s == dataLocked),
-                    It.Is<string>(s => s == etagOriginal)),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY),
+                        It.Is<string>(s => s == dataLocked),
+                        It.Is<string>(s => s == etagOriginal)),
                     Times.Once);
 
             this.mockClient
@@ -291,11 +298,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.False(writeResult);
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY),
-                    It.Is<string>(s => s == dataUpdated),
-                    It.Is<string>(s => s == etagLocked)),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY),
+                        It.Is<string>(s => s == dataUpdated),
+                        It.Is<string>(s => s == etagLocked)),
                     Times.Once);
         }
 

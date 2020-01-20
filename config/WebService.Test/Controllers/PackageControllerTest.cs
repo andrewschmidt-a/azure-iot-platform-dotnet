@@ -191,10 +191,11 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                                                     ConfigType.Firmware.ToString());
 
             // Assert
-            this.mockStorage.Verify(x => x.GetFilteredPackagesAsync(
+            this.mockStorage.Verify(
+                x => x.GetFilteredPackagesAsync(
                     PackageType.DeviceConfiguration.ToString(),
                     ConfigType.Firmware.ToString()),
-                    Times.Once);
+                Times.Once);
         }
 
         private FormFile CreateSampleFile(string filename, bool isEdgePackage)

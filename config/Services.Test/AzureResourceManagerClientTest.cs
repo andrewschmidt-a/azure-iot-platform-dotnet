@@ -75,9 +75,10 @@ namespace Mmm.Platform.IoT.Config.Services.Test
 
             // Assert
             this.mockHttpClient
-                .Verify(x => x.GetAsync(
-                    It.Is<IHttpRequest>(r => r.Check(
-                    this.logicAppTestConnectionUrl))), Times.Once);
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<IHttpRequest>(r => r.Check(
+                        this.logicAppTestConnectionUrl))), Times.Once);
 
             Assert.True(result);
         }
@@ -101,9 +102,10 @@ namespace Mmm.Platform.IoT.Config.Services.Test
 
             // Assert
             this.mockHttpClient
-                .Verify(x => x.GetAsync(
-                    It.Is<IHttpRequest>(r => r.Check(
-                    this.logicAppTestConnectionUrl))), Times.Once);
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<IHttpRequest>(r => r.Check(
+                        this.logicAppTestConnectionUrl))), Times.Once);
 
             Assert.False(result);
         }
