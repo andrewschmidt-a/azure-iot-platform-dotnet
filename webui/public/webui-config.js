@@ -7,6 +7,6 @@
 // For more information look at set_env.sh
 var DeploymentConfig = {
   authEnabled: true,
-  issuer: "https://aks-dev-spaces-odin.centralus.cloudapp.azure.com/auth/",
+  issuer: "https://crsliot-aks-dev.centralus.cloudapp.azure.com/auth/",
   developmentMode: false,
 }
