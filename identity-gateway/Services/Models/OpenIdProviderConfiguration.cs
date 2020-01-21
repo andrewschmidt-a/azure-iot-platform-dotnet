@@ -6,28 +6,28 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class OpenIdProviderConfiguration : IOpenIdProviderConfiguration
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly string _host;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly string host;
 
         public OpenIdProviderConfiguration() { }
 
         public OpenIdProviderConfiguration(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor;
+            this.httpContextAccessor = httpContextAccessor;
             string forwardedFor = null;
-            if (_httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].Count > 0)
+            if (httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].Count > 0)
             {
-                forwardedFor = _httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+                forwardedFor = httpContextAccessor.HttpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
             }
 
             // checks for http vs https using _httpContext.Request.IsHttps and creates the url accordingly
-            _host = forwardedFor ?? $"http{(_httpContextAccessor.HttpContext.Request.IsHttps ? "s" : string.Empty)}://{_httpContextAccessor.HttpContext.Request.Host.ToString()}";
+            host = forwardedFor ?? $"http{(httpContextAccessor.HttpContext.Request.IsHttps ? "s" : string.Empty)}://{httpContextAccessor.HttpContext.Request.Host.ToString()}";
         }
 
-        public virtual string Issuer => _host;
-        public virtual string JwksUri => _host + "/.well-known/openid-configuration/jwks";
-        public virtual string AuthorizationEndpoint => _host + "/connect/authorize";
-        public virtual string EndSessionEndpoint => _host + "/connect/logout";
+        public virtual string Issuer => host;
+        public virtual string JwksUri => host + "/.well-known/openid-configuration/jwks";
+        public virtual string AuthorizationEndpoint => host + "/connect/authorize";
+        public virtual string EndSessionEndpoint => host + "/connect/logout";
         public virtual IEnumerable<string> ScopesSupported => new List<string> { "openid", "profile" };
         public virtual IEnumerable<string> ClaimsSupported => new List<string> { "sub", "name", "tenant", "role" };
         public virtual IEnumerable<string> GrantTypesSupported => new List<string> { "implicit" };

@@ -14,12 +14,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
     public class StreamAnalyticsHelper : IStreamAnalyticsHelper
     {
         private readonly AppConfig config;
-        private readonly ITokenHelper _tokenHelper;
+        private readonly ITokenHelper tokenHelper;
 
         public StreamAnalyticsHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
         {
             this.config = config;
-            this._tokenHelper = tokenHelper;
+            this.tokenHelper = tokenHelper;
         }
 
         private delegate Task<T> JobOperationDelegate<T>(string rg, string saJobName);
@@ -94,7 +94,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 string authToken = string.Empty;
                 try
                 {
-                    authToken = await this._tokenHelper.GetTokenAsync();
+                    authToken = await this.tokenHelper.GetTokenAsync();
                     if (string.IsNullOrEmpty(authToken))
                     {
                         throw new Exception("Auth Token from tokenHelper returned a null response.");

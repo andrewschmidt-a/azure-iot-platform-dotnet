@@ -46,7 +46,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         private readonly string apiVersion;
         private readonly string timeout;
         private readonly IHttpClient httpClient;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private AuthenticationResult token;
 
         public TimeSeriesClient(
@@ -55,7 +55,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             ILogger<TimeSeriesClient> logger)
         {
             this.httpClient = httpClient;
-            _logger = logger;
+            this.logger = logger;
             this.authority = config.DeviceTelemetryService.TimeSeries.Authority;
             this.applicationId = config.Global.AzureActiveDirectory.AppId;
             this.applicationSecret = config.Global.AzureActiveDirectory.AppSecret;
@@ -103,7 +103,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             }
             catch (Exception e)
             {
-                _logger.LogError(e, result.Message);
+                logger.LogError(e, result.Message);
             }
             return result;
         }
@@ -128,7 +128,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             request.SetContent(
                 this.PrepareInput(from, to, order, skip, limit, deviceIds));
 
-            _logger.LogInformation("Making query to time series at URI {requestUri} with body {requestContent}", request.Uri, request.Content);
+            logger.LogInformation("Making query to time series at URI {requestUri} with body {requestContent}", request.Uri, request.Content);
 
             var response = await this.httpClient.PostAsync(request);
             var messages = JsonConvert.DeserializeObject<ValueListApiModel>(response.Content);

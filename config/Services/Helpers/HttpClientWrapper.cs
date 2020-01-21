@@ -11,7 +11,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
 {
     public class HttpClientWrapper : IHttpClientWrapper
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly IHttpClient client;
         private Dictionary<string, string> headers;
 
@@ -20,7 +20,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             IHttpClient client,
             Dictionary<string, string> headers = null)
         {
-            _logger = logger;
+            this.logger = logger;
             this.client = client;
             this.headers = headers;
             if (this.headers == null)
@@ -54,7 +54,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Request to URI {uri} failed", uri);
+                logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to load {description}");
             }
 
@@ -65,7 +65,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to load {description}");
             }
 
@@ -75,7 +75,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError($"Could not parse result from {uri}: {e.Message}");
+                logger.LogError($"Could not parse result from {uri}: {e.Message}");
                 throw new ExternalDependencyException($"Could not parse result from {uri}");
             }
         }
@@ -109,13 +109,13 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Request to URI {uri} failed", uri);
+                logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to post {description}");
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to post {description}");
             }
         }
@@ -150,13 +150,13 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Request to URI {uri} failed", uri);
+                logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to put {description}");
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to put {description}");
             }
         }

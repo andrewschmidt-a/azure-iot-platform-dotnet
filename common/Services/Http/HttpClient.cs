@@ -9,11 +9,11 @@ namespace Mmm.Platform.IoT.Common.Services.Http
 {
     public class HttpClient : IHttpClient
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public HttpClient(ILogger<HttpClient> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         public async Task<IHttpResponse> GetAsync(IHttpRequest request)
@@ -67,7 +67,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
                 SetContent(request, httpMethod, httpRequest);
                 SetHeaders(request, httpRequest);
 
-                _logger.LogDebug("Sending {method} request to URI {uri} with options {options}", httpMethod, request.Uri, request.Options);
+                logger.LogDebug("Sending {method} request to URI {uri} with options {options}", httpMethod, request.Uri, request.Options);
 
                 try
                 {
@@ -92,7 +92,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
                         errorMessage += " - " + e.InnerException.Message;
                     }
 
-                    _logger.LogError(e, "Request failed");
+                    logger.LogError(e, "Request failed");
 
                     return new HttpResponse
                     {

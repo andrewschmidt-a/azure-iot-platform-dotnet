@@ -13,19 +13,19 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class TenantReadyController : Controller
     {
-        private readonly ITenantContainer _tenantContainer;
-        private readonly ILogger _logger;
+        private readonly ITenantContainer tenantContainer;
+        private readonly ILogger logger;
 
-        public TenantReadyController(ITenantContainer tenantContainer, ILogger<TenantReadyController> log)
+        public TenantReadyController(ITenantContainer tenantContainer, ILogger<TenantReadyController> logger)
         {
-            this._tenantContainer = tenantContainer;
-            _logger = log;
+            this.tenantContainer = tenantContainer;
+            this.logger = logger;
         }
 
         [HttpGet("{tenantId}")]
         public async Task<bool> GetAsync(string tenantId)
         {
-            return await this._tenantContainer.TenantIsReadyAsync(tenantId);
+            return await this.tenantContainer.TenantIsReadyAsync(tenantId);
         }
     }
 }

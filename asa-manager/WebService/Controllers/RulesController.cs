@@ -13,27 +13,27 @@ namespace Mmm.Platform.IoT.AsaManager.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class RulesController : Controller
     {
-        private readonly IConverter _ruleConverter;
-        private readonly IKeyGenerator _keyGenerator;
-        private readonly ILogger _logger;
+        private readonly IConverter ruleConverter;
+        private readonly IKeyGenerator keyGenerator;
+        private readonly ILogger logger;
 
         public RulesController(
             IConverter ruleConverter,
             IKeyGenerator keyGenerator,
             ILogger<RulesController> logger)
         {
-            this._ruleConverter = ruleConverter;
-            this._keyGenerator = keyGenerator;
-            this._logger = logger;
+            this.ruleConverter = ruleConverter;
+            this.keyGenerator = keyGenerator;
+            this.logger = logger;
         }
 
         [HttpPost("")]
         public BeginConversionApiModel BeginRuleConversion()
         {
             string tenantId = this.GetTenantId();
-            string operationId = this._keyGenerator.Generate();
+            string operationId = this.keyGenerator.Generate();
             // This can be a long running process due to querying of cosmos/iothub - don't wait for it
-            Forget(this._ruleConverter.ConvertAsync(tenantId, operationId), operationId);
+            Forget(this.ruleConverter.ConvertAsync(tenantId, operationId), operationId);
             // Return the operationId of the rule conversion synchronous process
             return new BeginConversionApiModel
             {
@@ -45,7 +45,7 @@ namespace Mmm.Platform.IoT.AsaManager.WebService.Controllers
         private void Forget(Task task, string operationId)
         {
             task.ContinueWith(
-                t => { this._logger.LogError(t.Exception, "An exception occurred during the background conversion. OperationId {operationId}", operationId); },
+                t => { this.logger.LogError(t.Exception, "An exception occurred during the background conversion. OperationId {operationId}", operationId); },
                 TaskContinuationOptions.OnlyOnFaulted);
         }
     }

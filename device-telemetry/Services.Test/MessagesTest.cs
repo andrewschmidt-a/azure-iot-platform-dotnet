@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 
         private readonly Mock<IStorageClient> storageClient;
         private readonly Mock<ITimeSeriesClient> timeSeriesClient;
-        private readonly Mock<ILogger<Messages>> _logger;
+        private readonly Mock<ILogger<Messages>> logger;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly Mock<IAppConfigurationHelper> appConfigHelper;
         private readonly IMessages messages;
@@ -44,12 +44,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             timeSeriesClient = new Mock<ITimeSeriesClient>();
             httpContextAccessor = new Mock<IHttpContextAccessor>();
             appConfigHelper = new Mock<IAppConfigurationHelper>();
-            _logger = new Mock<ILogger<Messages>>();
+            logger = new Mock<ILogger<Messages>>();
             messages = new Messages(
                 servicesConfig,
                 storageClient.Object,
                 timeSeriesClient.Object,
-                _logger.Object,
+                logger.Object,
                 httpContextAccessor.Object,
                 appConfigHelper.Object);
         }

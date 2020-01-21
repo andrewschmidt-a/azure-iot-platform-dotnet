@@ -18,12 +18,12 @@ namespace Mmm.Platform.IoT.Common.Services.Test.Filters
     public class ExceptionsFilterAttributeTest
     {
         private readonly ExceptionsFilterAttribute target;
-        private readonly Mock<ILogger<ExceptionsFilterAttribute>> _logger;
+        private readonly Mock<ILogger<ExceptionsFilterAttribute>> logger;
 
         public ExceptionsFilterAttributeTest()
         {
-            _logger = new Mock<ILogger<ExceptionsFilterAttribute>>();
-            this.target = new ExceptionsFilterAttribute(_logger.Object);
+            logger = new Mock<ILogger<ExceptionsFilterAttribute>>();
+            this.target = new ExceptionsFilterAttribute(logger.Object);
         }
 
         [Fact]

@@ -11,13 +11,13 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
 {
     public class IdentityGatewayClient : IIdentityGatewayClient
     {
-        private readonly IExternalRequestHelper _requestHelper;
+        private readonly IExternalRequestHelper requestHelper;
         private readonly string serviceUri;
 
         public IdentityGatewayClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
             this.serviceUri = config.ExternalDependencies.IdentityGatewayServiceUrl;
-            this._requestHelper = requestHelper;
+            this.requestHelper = requestHelper;
         }
 
         public string RequestUrl(string path)
@@ -34,7 +34,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
             try
             {
                 string url = this.RequestUrl("status/");
-                var result = await this._requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, url);
+                var result = await this.requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, url);
                 if (result == null || result.Status == null || !result.Status.IsHealthy)
                 {
                     // bad status
@@ -66,7 +66,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
         {
             IdentityGatewayApiModel bodyContent = new IdentityGatewayApiModel(Roles);
             string url = this.RequestUrl($"tenants/{userId}");
-            return await this._requestHelper.ProcessRequestAsync(HttpMethod.Post, url, bodyContent, tenantId);
+            return await this.requestHelper.ProcessRequestAsync(HttpMethod.Post, url, bodyContent, tenantId);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
         public async Task<IdentityGatewayApiModel> GetTenantForUserAsync(string userId, string tenantId)
         {
             string url = this.RequestUrl($"tenants/{userId}");
-            return await this._requestHelper.ProcessRequestAsync<IdentityGatewayApiModel>(HttpMethod.Get, url, tenantId);
+            return await this.requestHelper.ProcessRequestAsync<IdentityGatewayApiModel>(HttpMethod.Get, url, tenantId);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
         public async Task<IdentityGatewayApiModel> DeleteTenantForAllUsersAsync(string tenantId)
         {
             string url = this.RequestUrl($"tenants/all");
-            return await this._requestHelper.ProcessRequestAsync<IdentityGatewayApiModel>(HttpMethod.Delete, url, tenantId);
+            return await this.requestHelper.ProcessRequestAsync<IdentityGatewayApiModel>(HttpMethod.Delete, url, tenantId);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
         public async Task<IdentityGatewayApiSettingModel> GetSettingsForUserAsync(string userId, string settingKey)
         {
             string url = this.RequestUrl($"settings/{userId}/{settingKey}");
-            return await this._requestHelper.ProcessRequestAsync<IdentityGatewayApiSettingModel>(HttpMethod.Get, url);
+            return await this.requestHelper.ProcessRequestAsync<IdentityGatewayApiSettingModel>(HttpMethod.Get, url);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
         public async Task<IdentityGatewayApiSettingModel> AddSettingsForUserAsync(string userId, string settingKey, string settingValue)
         {
             string url = this.RequestUrl($"settings/{userId}/{settingKey}/{settingValue}");
-            return await this._requestHelper.ProcessRequestAsync<IdentityGatewayApiSettingModel>(HttpMethod.Post, url);
+            return await this.requestHelper.ProcessRequestAsync<IdentityGatewayApiSettingModel>(HttpMethod.Post, url);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
         public async Task<IdentityGatewayApiSettingModel> UpdateSettingsForUserAsync(string userId, string settingKey, string settingValue)
         {
             string url = this.RequestUrl($"settings/{userId}/{settingKey}/{settingValue}");
-            return await this._requestHelper.ProcessRequestAsync<IdentityGatewayApiSettingModel>(HttpMethod.Put, url);
+            return await this.requestHelper.ProcessRequestAsync<IdentityGatewayApiSettingModel>(HttpMethod.Put, url);
         }
     }
 }

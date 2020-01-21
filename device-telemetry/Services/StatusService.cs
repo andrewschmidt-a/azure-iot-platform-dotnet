@@ -26,7 +26,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly IHttpClient httpClient;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly AppConfig config;
 
         public StatusService(
@@ -36,7 +36,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             IHttpClient httpClient,
             AppConfig config)
         {
-            _logger = logger;
+            this.logger = logger;
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
             this.httpClient = httpClient;
@@ -117,7 +117,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
             result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
 
-            _logger.LogInformation("Service status request {result}", result);
+            logger.LogInformation("Service status request {result}", result);
 
             return result;
         }
@@ -155,7 +155,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, result.Message);
+                logger.LogError(e, result.Message);
             }
 
             return result;
@@ -175,7 +175,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
             }
 
-            _logger.LogDebug("Prepare request {request}", request);
+            logger.LogDebug("Prepare request {request}", request);
 
             return request;
         }

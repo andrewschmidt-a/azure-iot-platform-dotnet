@@ -14,7 +14,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
         private readonly IHttpClientWrapper httpClient;
         private readonly string serviceUri;
 
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
         public DeviceTelemetryClient(
             IHttpClientWrapper httpClient,
             AppConfig config,
@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
         {
             this.httpClient = httpClient;
             this.serviceUri = config.ExternalDependencies.TelemetryServiceUrl;
-            this._httpContextAccessor = httpContextAccessor;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task UpdateRuleAsync(RuleApiModel rule, string etag)
@@ -35,9 +35,9 @@ namespace Mmm.Platform.IoT.Config.Services.External
 
         private void SetHttpClientHeaders()
         {
-            if (this._httpContextAccessor != null && this.httpClient != null)
+            if (this.httpContextAccessor != null && this.httpClient != null)
             {
-                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                string tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
                 this.httpClient.SetHeaders(new Dictionary<string, string> { { TENANT_HEADER, tenantId } });
             }
         }

@@ -15,15 +15,15 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
     public class ConfigurationController : Controller
     {
         public const string ContentType = "application/json";
-        private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
-        private readonly IRsaHelpers _rsaHelpers;
+        private readonly IOpenIdProviderConfiguration openIdProviderConfiguration;
+        private readonly IRsaHelpers rsaHelpers;
         private AppConfig config;
 
         public ConfigurationController(AppConfig config, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
         {
             this.config = config;
-            _openIdProviderConfiguration = openIdProviderConfiguration;
-            _rsaHelpers = rsaHelpers;
+            this.openIdProviderConfiguration = openIdProviderConfiguration;
+            this.rsaHelpers = rsaHelpers;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
         [HttpGet(".well-known/openid-configuration")]
         public IActionResult GetOpenIdProviderConfiguration()
         {
-            return new OkObjectResult(_openIdProviderConfiguration) { ContentTypes = new MediaTypeCollection { ContentType } };
+            return new OkObjectResult(openIdProviderConfiguration) { ContentTypes = new MediaTypeCollection { ContentType } };
         }
 
         // GET api/values
@@ -62,7 +62,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
         {
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.ContractResolver = new LowercaseContractResolver();
-            return new ContentResult() { Content = JsonConvert.SerializeObject(_rsaHelpers.GetJsonWebKey(config.IdentityGatewayService.PublicKey), serializerSettings), ContentType = ContentType, StatusCode = StatusCodes.Status200OK };
+            return new ContentResult() { Content = JsonConvert.SerializeObject(rsaHelpers.GetJsonWebKey(config.IdentityGatewayService.PublicKey), serializerSettings), ContentType = ContentType, StatusCode = StatusCodes.Status200OK };
         }
     }
 }

@@ -16,13 +16,13 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
 
         private readonly string serviceUri;
         private readonly int timeout;
-        private readonly IExternalRequestHelper _requestHelper;
+        private readonly IExternalRequestHelper requestHelper;
 
         public StorageAdapterClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
             this.serviceUri = config.ExternalDependencies.StorageAdapterServiceUrl;
             this.timeout = config.ExternalDependencies.StorageAdapterServiceTimeout;
-            this._requestHelper = requestHelper;
+            this.requestHelper = requestHelper;
         }
 
         public string RequestUrl(string path)
@@ -35,7 +35,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
             try
             {
                 string url = this.RequestUrl("status/");
-                var result = await this._requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, url);
+                var result = await this.requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, url);
                 return result.Status;
             }
             catch (Exception e)
@@ -51,7 +51,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
             {
                 Data = value
             };
-            return await this._requestHelper.ProcessRequestAsync(HttpMethod.Post, url, data);
+            return await this.requestHelper.ProcessRequestAsync(HttpMethod.Post, url, data);
         }
 
         public async Task<ValueApiModel> UpdateAsync(string collectionId, string key, string value, string etag)
@@ -62,25 +62,25 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
                 Data = value,
                 ETag = etag
             };
-            return await this._requestHelper.ProcessRequestAsync(HttpMethod.Put, url, data);
+            return await this.requestHelper.ProcessRequestAsync(HttpMethod.Put, url, data);
         }
 
         public async Task<ValueApiModel> GetAsync(string collectionId, string key)
         {
             string url = this.RequestUrl($"collections/{collectionId}/values/{key}");
-            return await this._requestHelper.ProcessRequestAsync<ValueApiModel>(HttpMethod.Get, url);
+            return await this.requestHelper.ProcessRequestAsync<ValueApiModel>(HttpMethod.Get, url);
         }
 
         public async Task<ValueListApiModel> GetAllAsync(string collectionId)
         {
             string url = this.RequestUrl($"collections/{collectionId}/values");
-            return await this._requestHelper.ProcessRequestAsync<ValueListApiModel>(HttpMethod.Get, url);
+            return await this.requestHelper.ProcessRequestAsync<ValueListApiModel>(HttpMethod.Get, url);
         }
 
         public async Task DeleteAsync(string collectionId, string key)
         {
             string url = this.RequestUrl($"collections/{collectionId}/values/{key}");
-            await this._requestHelper.ProcessRequestAsync(HttpMethod.Delete, url);
+            await this.requestHelper.ProcessRequestAsync(HttpMethod.Delete, url);
         }
     }
 }

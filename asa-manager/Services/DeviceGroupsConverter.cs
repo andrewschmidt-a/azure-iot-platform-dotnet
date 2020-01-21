@@ -16,7 +16,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
     public class DeviceGroupsConverter : Converter, IConverter
     {
         private const string CSV_HEADER = "DeviceId,GroupId";
-        private readonly IIotHubManagerClient _iotHubManager;
+        private readonly IIotHubManagerClient iotHubManager;
 
         public DeviceGroupsConverter(
             IIotHubManagerClient iotHubManager,
@@ -25,7 +25,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             ILogger<DeviceGroupsConverter> log)
                 : base(blobClient, storageAdapterClient, log)
         {
-            this._iotHubManager = iotHubManager;
+            this.iotHubManager = iotHubManager;
         }
 
         public override string Entity { get { return "devicegroups"; } }
@@ -37,16 +37,16 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             ValueListApiModel deviceGroups = null;
             try
             {
-                deviceGroups = await this._storageAdapterClient.GetAllAsync(this.Entity);
+                deviceGroups = await this.storageAdapterClient.GetAllAsync(this.Entity);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
             if (deviceGroups.Items.Count() == 0 || deviceGroups == null)
             {
-                _logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw new ResourceNotFoundException("No entities were receieved from storage adapter to convert to rules.");
             }
 
@@ -64,7 +64,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                     }
                     catch (Exception)
                     {
-                        _logger.LogInformation("Unable to convert a device group to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                        logger.LogInformation("Unable to convert a device group to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                     }
                 }
                 if (items.Count() == 0)
@@ -75,7 +75,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to convert {entity} queried from storage adapter to appropriate data model. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                logger.LogError(e, "Unable to convert {entity} queried from storage adapter to appropriate data model. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
@@ -84,7 +84,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             {
                 try
                 {
-                    DeviceListModel devicesList = await this._iotHubManager.GetListAsync(deviceGroup.Conditions, tenantId);
+                    DeviceListModel devicesList = await this.iotHubManager.GetListAsync(deviceGroup.Conditions, tenantId);
                     if (devicesList.Items.Count() > 0)
                     {
                         deviceMapping.Add(deviceGroup, devicesList);
@@ -94,13 +94,13 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 {
                     // Do not throw an exception here, attempt to query other device groups instead to get as much data as possible
                     // Log all device groups that could not be retreived
-                    _logger.LogError(e, "Unable to get list of devices for devicegroup {deviceGroup} from IotHubManager. OperationId: {operationId}. TenantId: {tenantId}", deviceGroup.Id, operationId, tenantId);
+                    logger.LogError(e, "Unable to get list of devices for devicegroup {deviceGroup} from IotHubManager. OperationId: {operationId}. TenantId: {tenantId}", deviceGroup.Id, operationId, tenantId);
                 }
             }
             if (deviceMapping.Count() == 0)
             {
                 string groups = $"[{string.Join(", ", deviceGroupModels.Items.Select(group => group.Id))}]";
-                _logger.LogError("No Devices were found for any {entity}. OperationId: {operationId}. TenantId: {tenantId}\n{deviceGroups}", this.Entity, operationId, tenantId, groups);
+                logger.LogError("No Devices were found for any {entity}. OperationId: {operationId}. TenantId: {tenantId}\n{deviceGroups}", this.Entity, operationId, tenantId, groups);
                 throw new ResourceNotFoundException($"No Devices were found for any {this.Entity}.");
             }
 
@@ -120,7 +120,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to serialize the {entity} data models for the temporary file content. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                logger.LogError(e, "Unable to serialize the {entity} data models for the temporary file content. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
@@ -133,7 +133,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 Entities = deviceGroups,
                 OperationId = operationId
             };
-            _logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
+            logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
             return conversionResponse;
         }
     }

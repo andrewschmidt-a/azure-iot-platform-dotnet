@@ -17,9 +17,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         private const string AUTH_NAME = "Auth";
 
         private readonly int timeoutMS = 10000;
-        private readonly ILogger _logger;
-        private readonly IHttpClient _httpClient;
-        private readonly IKeyValueContainer _keyValueContainer;
+        private readonly ILogger logger;
+        private readonly IHttpClient httpClient;
+        private readonly IKeyValueContainer keyValueContainer;
         private readonly AppConfig config;
 
         public StatusService(
@@ -28,10 +28,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             IKeyValueContainer keyValueContainer,
             AppConfig config)
         {
-            _logger = logger;
+            this.logger = logger;
             this.config = config;
-            _keyValueContainer = keyValueContainer;
-            _httpClient = httpClient;
+            this.keyValueContainer = keyValueContainer;
+            this.httpClient = httpClient;
         }
 
         public async Task<StatusServiceModel> GetStatusAsync()
@@ -40,7 +40,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             var errors = new List<string>();
 
             // Check connection to CosmosDb
-            var storageResult = await this._keyValueContainer.StatusAsync();
+            var storageResult = await this.keyValueContainer.StatusAsync();
             SetServiceStatus("Storage", storageResult, result, errors);
 
             if (config.Global.AuthRequired)
@@ -57,7 +57,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
             result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
 
-            _logger.LogInformation("Service status request {result}", result);
+            logger.LogInformation("Service status request {result}", result);
 
             if (errors.Count > 0)
             {
@@ -85,7 +85,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             var result = new StatusResultServiceModel(false, $"{serviceName} check failed");
             try
             {
-                var response = await this._httpClient.GetAsync(this.PrepareRequest($"{serviceURL}/status"));
+                var response = await this.httpClient.GetAsync(this.PrepareRequest($"{serviceURL}/status"));
                 if (!response.IsSuccessStatusCode)
                 {
                     result.Message = $"Status code: {response.StatusCode}; Response: {response.Content}";
@@ -98,7 +98,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, result.Message);
+                logger.LogError(e, result.Message);
             }
 
             return result;
@@ -117,7 +117,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
             }
 
-            _logger.LogDebug("Prepare request {request}", request);
+            logger.LogDebug("Prepare request {request}", request);
 
             return request;
         }

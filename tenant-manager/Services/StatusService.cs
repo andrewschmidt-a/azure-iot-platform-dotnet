@@ -11,7 +11,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class StatusService : StatusServiceBase
     {
-        private readonly ILogger<StatusService> _logger;
+        private readonly ILogger<StatusService> logger;
 
         public StatusService(
             AppConfig config,
@@ -23,7 +23,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             IRunbookHelper RunbookHelper)
                 : base(config)
         {
-            _logger = logger;
+            this.logger = logger;
             dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "CosmosDb", cosmosClient },

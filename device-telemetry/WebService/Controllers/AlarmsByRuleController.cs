@@ -21,7 +21,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
 
         private readonly IAlarms alarmService;
         private readonly IRules ruleService;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public AlarmsByRuleController(
             IAlarms alarmService,
@@ -30,7 +30,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
         {
             this.alarmService = alarmService;
             this.ruleService = ruleService;
-            _logger = logger;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -130,7 +130,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
              */
             if (deviceIds.Length > DEVICE_LIMIT)
             {
-                _logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
+                logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
                 throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
             }
 
@@ -168,7 +168,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
              */
             if (deviceIds.Length > DEVICE_LIMIT)
             {
-                _logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
+                logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
                 throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
             }
 

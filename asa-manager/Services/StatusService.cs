@@ -10,7 +10,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
 {
     public class StatusService : StatusServiceBase
     {
-        private readonly ILogger<StatusService> _logger;
+        private readonly ILogger<StatusService> logger;
 
         public StatusService(
             AppConfig config,
@@ -20,7 +20,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             IStorageAdapterClient storageAdapterClient)
                 : base(config)
         {
-            _logger = logger;
+            this.logger = logger;
             dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "Storage Adapter", storageAdapterClient },

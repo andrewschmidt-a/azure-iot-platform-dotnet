@@ -14,7 +14,7 @@ namespace Mmm.Platform.IoT.Config.Services
     public class StatusService : IStatusService
     {
         private const bool ALLOW_INSECURE_SSL_SERVER = true;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly IHttpClient httpClient;
         private readonly AppConfig config;
         private readonly int timeoutMS = 10000;
@@ -25,7 +25,7 @@ namespace Mmm.Platform.IoT.Config.Services
             IHttpClient httpClient,
             AppConfig config)
         {
-            _logger = logger;
+            this.logger = logger;
             this.httpClient = httpClient;
             this.config = config;
         }
@@ -83,7 +83,7 @@ namespace Mmm.Platform.IoT.Config.Services
             result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
             result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
 
-            _logger.LogInformation("Service status request {result}", result);
+            logger.LogInformation("Service status request {result}", result);
 
             if (errors.Count > 0)
             {
@@ -124,7 +124,7 @@ namespace Mmm.Platform.IoT.Config.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, result.Message);
+                logger.LogError(e, result.Message);
             }
 
             return result;
@@ -149,7 +149,7 @@ namespace Mmm.Platform.IoT.Config.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, result.Message);
+                logger.LogError(e, result.Message);
             }
 
             return result;
@@ -169,7 +169,7 @@ namespace Mmm.Platform.IoT.Config.Services
                 request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
             }
 
-            _logger.LogDebug("Prepare request {request}", request);
+            logger.LogDebug("Prepare request {request}", request);
 
             return request;
         }

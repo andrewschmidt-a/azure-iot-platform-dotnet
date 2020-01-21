@@ -14,14 +14,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
         private const string IOTHUBCONNECTION_KEY = ":iotHubConnectionString";
         private readonly IAppConfigurationHelper appConfig;
         private readonly ILogger<TenantConnectionHelper> logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public TenantConnectionHelper(
             IAppConfigurationHelper appConfigurationHelper,
             IHttpContextAccessor httpContextAccessor,
             ILogger<TenantConnectionHelper> logger)
         {
-            this._httpContextAccessor = httpContextAccessor;
+            this.httpContextAccessor = httpContextAccessor;
             this.appConfig = appConfigurationHelper;
             this.logger = logger;
         }
@@ -33,7 +33,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             {
                 try
                 {
-                    return this._httpContextAccessor.HttpContext.Request.GetTenant();
+                    return this.httpContextAccessor.HttpContext.Request.GetTenant();
                 }
                 catch (Exception ex)
                 {

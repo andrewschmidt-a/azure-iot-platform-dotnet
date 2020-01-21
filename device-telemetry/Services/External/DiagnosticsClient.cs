@@ -20,20 +20,20 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
         private const string TENANT_ID = "TenantID";
         private const int RETRY_SLEEP_MS = 500;
         private readonly IHttpClient httpClient;
-        private readonly ILogger _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogger logger;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly string serviceUrl;
         private readonly int maxRetries;
 
         public DiagnosticsClient(IHttpClient httpClient, AppConfig config, ILogger<DiagnosticsClient> logger, IHttpContextAccessor contextAccessor)
         {
             this.httpClient = httpClient;
-            _logger = logger;
+            this.logger = logger;
             this.serviceUrl = config.ExternalDependencies.DiagnosticsServiceUrl;
             this.maxRetries = config.ExternalDependencies.DiagnosticsMaxLogRetries;
             if (string.IsNullOrEmpty(this.serviceUrl))
             {
-                _logger.LogError("Cannot log to diagnostics service, diagnostics url not provided");
+                logger.LogError("Cannot log to diagnostics service, diagnostics url not provided");
                 this.CanLogToDiagnostics = false;
             }
             else
@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
                 this.CanLogToDiagnostics = true;
             }
 
-            this._httpContextAccessor = contextAccessor;
+            this.httpContextAccessor = contextAccessor;
         }
 
         public bool CanLogToDiagnostics { get; }
@@ -66,7 +66,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
             {
                 request.SetUriFromString($"{this.serviceUrl}/diagnosticsevents");
 
-                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                string tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
                 request.Headers.Add(TENANT_HEADER, tenantId);
                 DiagnosticsRequestModel model = new DiagnosticsRequestModel
                 {
@@ -78,7 +78,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
             }
             catch (Exception e)
             {
-                _logger.LogWarning(e, "Cannot log to diagnostics service, diagnostics url not provided");
+                logger.LogWarning(e, "Cannot log to diagnostics service, diagnostics url not provided");
             }
         }
 
@@ -90,7 +90,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
             try
             {
                 request.SetUriFromString($"{this.serviceUrl}/status");
-                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                string tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
                 request.Headers.Add(TENANT_HEADER, tenantId);
                 var response = await this.httpClient.GetAsync(request);
 
@@ -107,7 +107,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
             }
             catch (Exception e)
             {
-                _logger.LogError(e, message);
+                logger.LogError(e, message);
             }
 
             return new StatusResultServiceModel(isHealthy, message);
@@ -146,12 +146,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
             {
                 int retriesLeft = this.maxRetries - retries;
                 string logString = $"";
-                _logger.LogWarning("Failed to log to diagnostics: {errorMessage}. {retriesLeft} retries remaining", errorMessage, retriesLeft);
+                logger.LogWarning("Failed to log to diagnostics: {errorMessage}. {retriesLeft} retries remaining", errorMessage, retriesLeft);
                 Thread.Sleep(RETRY_SLEEP_MS);
             }
             else
             {
-                _logger.LogError("Failed to log to diagnostics: {errorMessage}. Reached max retries and will not log.", errorMessage);
+                logger.LogError("Failed to log to diagnostics: {errorMessage}. Reached max retries and will not log.", errorMessage);
             }
         }
 

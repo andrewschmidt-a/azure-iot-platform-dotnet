@@ -9,19 +9,19 @@ namespace Mmm.Platform.IoT.Common.Services.External
     public class UserManagementClient : IUserManagementClient
     {
         private const string DEFAULT_USER_ID = "default";
-        private readonly IExternalRequestHelper _requestHelper;
+        private readonly IExternalRequestHelper requestHelper;
         private readonly string serviceUri;
 
         public UserManagementClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
             this.serviceUri = config.ExternalDependencies.AuthServiceUrl;
-            this._requestHelper = requestHelper;
+            this.requestHelper = requestHelper;
         }
 
         public async Task<IEnumerable<string>> GetAllowedActionsAsync(string userObjectId, IEnumerable<string> roles)
         {
             string url = $"{this.serviceUri}/users/{userObjectId}/allowedActions";
-            return await this._requestHelper.ProcessRequestAsync<IEnumerable<string>>(HttpMethod.Post, url, roles);
+            return await this.requestHelper.ProcessRequestAsync<IEnumerable<string>>(HttpMethod.Post, url, roles);
         }
 
         public async Task<string> GetTokenAsync()
@@ -30,7 +30,7 @@ namespace Mmm.Platform.IoT.Common.Services.External
             // currently use the user ID information, but if this API is updated in the future, we
             // will need to grab the user ID from the request JWT token and pass in here.
             string url = $"{this.serviceUri}/users/{DEFAULT_USER_ID}/token";
-            TokenApiModel tokenModel = await this._requestHelper.ProcessRequestAsync<TokenApiModel>(HttpMethod.Get, url);
+            TokenApiModel tokenModel = await this.requestHelper.ProcessRequestAsync<TokenApiModel>(HttpMethod.Get, url);
             return tokenModel.AccessToken;
         }
     }

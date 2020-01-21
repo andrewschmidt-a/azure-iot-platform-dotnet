@@ -26,7 +26,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private const int LIMIT = 1000;
         private readonly Mock<IStorageAdapterClient> storageAdapter;
         private readonly Mock<IAsaManagerClient> asaManager;
-        private readonly Mock<ILogger<Rules>> _logger;
+        private readonly Mock<ILogger<Rules>> logger;
         private readonly AppConfig config;
         private readonly Mock<IRules> rulesMock;
         private readonly Mock<IAlarms> alarms;
@@ -39,7 +39,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         {
             this.storageAdapter = new Mock<IStorageAdapterClient>();
             this.asaManager = new Mock<IAsaManagerClient>();
-            this._logger = new Mock<ILogger<Rules>>();
+            this.logger = new Mock<ILogger<Rules>>();
             this.config = new AppConfig
             {
                 ExternalDependencies = new ExternalDependenciesConfig
@@ -58,7 +58,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 { { "TenantID", TENANT_ID } });
             this.asaManager.Setup(t => t.BeginConversionAsync(It.IsAny<string>())).ReturnsAsync(new BeginConversionApiModel());
 
-            this.rules = new Rules(this.storageAdapter.Object, this.asaManager.Object, this._logger.Object, this.alarms.Object, this.diagnosticsClient);
+            this.rules = new Rules(this.storageAdapter.Object, this.asaManager.Object, this.logger.Object, this.alarms.Object, this.diagnosticsClient);
         }
 
         [Fact]

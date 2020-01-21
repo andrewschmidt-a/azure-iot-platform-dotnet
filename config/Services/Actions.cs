@@ -9,8 +9,8 @@ namespace Mmm.Platform.IoT.Config.Services
     public class Actions : IActions
     {
         private readonly IAzureResourceManagerClient resourceManagerClient;
-        private readonly ILogger _logger;
-        private readonly IActionSettings _emailActionSettings;
+        private readonly ILogger logger;
+        private readonly IActionSettings emailActionSettings;
 
         public Actions(
             IAzureResourceManagerClient resourceManagerClient,
@@ -18,15 +18,15 @@ namespace Mmm.Platform.IoT.Config.Services
             IActionSettings emailActionSettings)
         {
             this.resourceManagerClient = resourceManagerClient;
-            _logger = logger;
-            _emailActionSettings = emailActionSettings;
+            this.logger = logger;
+            this.emailActionSettings = emailActionSettings;
         }
 
         public async Task<List<IActionSettings>> GetListAsync()
         {
             var result = new List<IActionSettings>();
-            await _emailActionSettings.InitializeAsync();
-            result.Add(_emailActionSettings);
+            await emailActionSettings.InitializeAsync();
+            result.Add(emailActionSettings);
 
             return result;
         }

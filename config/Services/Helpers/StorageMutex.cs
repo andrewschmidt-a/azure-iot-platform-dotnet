@@ -11,14 +11,14 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
     {
         private const string LAST_MODIFIED_KEY = "$modified";
         private readonly IStorageAdapterClient storageClient;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public StorageMutex(
             IStorageAdapterClient storageClient,
             ILogger<StorageMutex> logger)
         {
             this.storageClient = storageClient;
-            _logger = logger;
+            this.logger = logger;
         }
 
         public async Task<bool> EnterAsync(string collectionId, string key, TimeSpan timeout)
@@ -39,13 +39,13 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
                         if (model.Metadata.ContainsKey(LAST_MODIFIED_KEY) && DateTimeOffset.TryParse(model.Metadata[LAST_MODIFIED_KEY], out var lastModified))
                         {
                             // Timestamp retrieved successfully, nothing to do
-                            _logger.LogInformation($"Mutex {collectionId}.{key} was occupied. Last modified = {lastModified}");
+                            logger.LogInformation($"Mutex {collectionId}.{key} was occupied. Last modified = {lastModified}");
                         }
                         else
                         {
                             // Treat it as timeout if the timestamp could not be retrieved
                             lastModified = DateTimeOffset.MinValue;
-                            _logger.LogInformation("Mutex {collectionId}.{key} was occupied. Last modified could not be retrieved");
+                            logger.LogInformation("Mutex {collectionId}.{key} was occupied. Last modified could not be retrieved");
                         }
 
                         if (DateTimeOffset.UtcNow < lastModified + timeout)
@@ -55,13 +55,13 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
                     }
                     else
                     {
-                        _logger.LogInformation($"Mutex {collectionId}.{key} was NOT occupied");
+                        logger.LogInformation($"Mutex {collectionId}.{key} was NOT occupied");
                     }
                 }
                 catch (ResourceNotFoundException)
                 {
                     // Mutex is not initialized, treat it as released
-                    _logger.LogInformation($"Mutex {collectionId}.{key} was not found");
+                    logger.LogInformation($"Mutex {collectionId}.{key} was not found");
                 }
 
                 try

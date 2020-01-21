@@ -16,18 +16,18 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ValuesController : Controller
     {
-        private readonly IKeyValueContainer _container;
-        private readonly IKeyGenerator _keyGenerator;
-        private readonly ILogger _logger;
+        private readonly IKeyValueContainer container;
+        private readonly IKeyGenerator keyGenerator;
+        private readonly ILogger logger;
 
         public ValuesController(
             IKeyValueContainer container,
             IKeyGenerator keyGenerator,
             ILogger<ValuesController> logger)
         {
-            this._container = container;
-            this._keyGenerator = keyGenerator;
-            this._logger = logger;
+            this.container = container;
+            this.keyGenerator = keyGenerator;
+            this.logger = logger;
         }
 
         [HttpGet("collections/{collectionId}/values/{key}")]
@@ -35,7 +35,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Controllers
         {
             this.EnsureValidId(collectionId, key);
 
-            var result = await this._container.GetAsync(collectionId, key);
+            var result = await this.container.GetAsync(collectionId, key);
 
             return new ValueApiModel(result);
         }
@@ -45,7 +45,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Controllers
         {
             this.EnsureValidId(collectionId);
 
-            var result = await this._container.GetAllAsync(collectionId);
+            var result = await this.container.GetAllAsync(collectionId);
 
             return new ValueListApiModel(result, collectionId);
         }
@@ -58,10 +58,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Controllers
                 throw new InvalidInputException("The request is empty");
             }
 
-            string key = this._keyGenerator.Generate();
+            string key = this.keyGenerator.Generate();
             this.EnsureValidId(collectionId, key);
 
-            var result = await this._container.CreateAsync(collectionId, key, model);
+            var result = await this.container.CreateAsync(collectionId, key, model);
 
             return new ValueApiModel(result);
         }
@@ -76,7 +76,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Controllers
 
             this.EnsureValidId(collectionId, key);
 
-            var result = model.ETag == null ? await this._container.CreateAsync(collectionId, key, model) : await this._container.UpsertAsync(collectionId, key, model);
+            var result = model.ETag == null ? await this.container.CreateAsync(collectionId, key, model) : await this.container.UpsertAsync(collectionId, key, model);
 
             return new ValueApiModel(result);
         }
@@ -86,7 +86,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Controllers
         {
             this.EnsureValidId(collectionId, key);
 
-            await this._container.DeleteAsync(collectionId, key);
+            await this.container.DeleteAsync(collectionId, key);
         }
 
         private void EnsureValidId(string collectionId, string key = "")
@@ -97,13 +97,13 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Controllers
 
             if (!collectionId.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))
             {
-                _logger.LogInformation("Invalid collectionId {collectionId}", collectionId);
+                logger.LogInformation("Invalid collectionId {collectionId}", collectionId);
                 throw new BadRequestException($"Invalid collectionId: '{collectionId}'");
             }
 
             if (key.Any() && !key.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))
             {
-                _logger.LogInformation("Invalid key {key}", key);
+                logger.LogInformation("Invalid key {key}", key);
                 throw new BadRequestException($"Invalid key: '{key}'");
             }
 
@@ -114,7 +114,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Controllers
             string id = DocumentIdHelper.GenerateId(collectionId, key);
             if (id.Length > 255)
             {
-                _logger.LogInformation("The collectionId/Key are too long: '{collectionId}', '{key}', '{id}'", collectionId, key, id);
+                logger.LogInformation("The collectionId/Key are too long: '{collectionId}', '{key}', '{id}'", collectionId, key, id);
                 throw new BadRequestException($"The collectionId/Key are too long: '{collectionId}', '{key}'");
             }
         }

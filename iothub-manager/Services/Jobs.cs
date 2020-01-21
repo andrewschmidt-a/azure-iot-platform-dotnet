@@ -19,19 +19,18 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
     {
         private const string DEVICE_DETAILS_QUERY_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}'";
         private const string DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}' and devices.jobs.status = '{1}'";
-        private IDeviceProperties _deviceProperties;
-        private ITenantConnectionHelper tenantHelper;
+        private IDeviceProperties deviceProperties;
+        private ITenantConnectionHelper tenantConnectionHelper;
 
-        public Jobs(AppConfig config, IDeviceProperties _deviceProperties, ITenantConnectionHelper tenantConnectionHelper)
+        public Jobs(AppConfig config, IDeviceProperties deviceProperties, ITenantConnectionHelper tenantConnectionHelper)
         {
             if (config == null)
             {
                 throw new ArgumentNullException("config");
             }
 
-            tenantHelper = tenantConnectionHelper;
-
-            this._deviceProperties = _deviceProperties;
+            this.tenantConnectionHelper = tenantConnectionHelper;
+            this.deviceProperties = deviceProperties;
 
         }
 
@@ -45,7 +44,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             var from = DateTimeOffsetExtension.Parse(queryFrom, DateTimeOffset.MinValue);
             var to = DateTimeOffsetExtension.Parse(queryTo, DateTimeOffset.MaxValue);
 
-            var query = tenantHelper.GetJobClient().CreateQuery(
+            var query = tenantConnectionHelper.GetJobClient().CreateQuery(
                 JobServiceModel.ToJobTypeAzureModel(jobType),
                 JobServiceModel.ToJobStatusAzureModel(jobStatus),
                 pageSize);
@@ -67,7 +66,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             bool? includeDeviceDetails,
             DeviceJobStatus? deviceJobStatus)
         {
-            var result = await tenantHelper.GetJobClient().GetJobAsync(jobId);
+            var result = await tenantConnectionHelper.GetJobClient().GetJobAsync(jobId);
 
             if (!includeDeviceDetails.HasValue || !includeDeviceDetails.Value)
             {
@@ -80,7 +79,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 string.Format(DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT, jobId, deviceJobStatus.Value.ToString().ToLower()) :
                 string.Format(DEVICE_DETAILS_QUERY_FORMAT, jobId);
 
-            var query = tenantHelper.GetRegistry().CreateQuery(queryString);
+            var query = tenantConnectionHelper.GetRegistry().CreateQuery(queryString);
 
             var deviceJobs = new List<DeviceJob>();
             while (query.HasMoreResults)
@@ -98,7 +97,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             DateTimeOffset startTimeUtc,
             long maxExecutionTimeInSeconds)
         {
-            var result = await tenantHelper.GetJobClient().ScheduleTwinUpdateAsync(
+            var result = await tenantConnectionHelper.GetJobClient().ScheduleTwinUpdateAsync(
                 jobId,
                 queryCondition,
                 twin.ToAzureModel(),
@@ -119,7 +118,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             {
                 model.Reported = new HashSet<string>(reportedRoot.GetAllLeavesPath());
             }
-            var unused = _deviceProperties.UpdateListAsync(model);
+            var unused = deviceProperties.UpdateListAsync(model);
 
             return new JobServiceModel(result);
         }
@@ -131,7 +130,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             DateTimeOffset startTimeUtc,
             long maxExecutionTimeInSeconds)
         {
-            var result = await tenantHelper.GetJobClient().ScheduleDeviceMethodAsync(
+            var result = await tenantConnectionHelper.GetJobClient().ScheduleDeviceMethodAsync(
                 jobId,
                 queryCondition,
                 parameter.ToAzureModel(),

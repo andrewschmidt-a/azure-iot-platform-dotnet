@@ -21,11 +21,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
     {
         public const string STORAGE_COLLECTION = "rules";
         private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
-        private readonly IStorageAdapterClient _storage;
-        private readonly ILogger _logger;
-        private readonly IAsaManagerClient _asaManager;
-        private readonly IAlarms _alarms;
-        private readonly IDiagnosticsClient _diagnosticsClient;
+        private readonly IStorageAdapterClient storage;
+        private readonly ILogger logger;
+        private readonly IAsaManagerClient asaManager;
+        private readonly IAlarms alarms;
+        private readonly IDiagnosticsClient diagnosticsClient;
 
         public Rules(
             IStorageAdapterClient storage,
@@ -34,11 +34,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             IAlarms alarms,
             IDiagnosticsClient diagnosticsClient)
         {
-            this._storage = storage;
-            this._asaManager = asaManager;
-            this._logger = logger;
-            this._alarms = alarms;
-            this._diagnosticsClient = diagnosticsClient;
+            this.storage = storage;
+            this.asaManager = asaManager;
+            this.logger = logger;
+            this.alarms = alarms;
+            this.diagnosticsClient = diagnosticsClient;
         }
 
         public async Task CreateFromTemplateAsync(string template)
@@ -71,12 +71,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             }
             catch (ResourceNotFoundException exception)
             {
-                _logger.LogDebug(exception, "Tried to delete rule {id} which did not exist", id);
+                logger.LogDebug(exception, "Tried to delete rule {id} which did not exist", id);
                 return;
             }
             catch (Exception exception)
             {
-                _logger.LogError(exception, "Error trying to delete rule {id}", id);
+                logger.LogError(exception, "Error trying to delete rule {id}", id);
                 throw exception;
             }
 
@@ -88,12 +88,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             existing.Deleted = true;
 
             var item = JsonConvert.SerializeObject(existing);
-            await this._storage.UpdateAsync(
+            await this.storage.UpdateAsync(
                 STORAGE_COLLECTION,
                 existing.Id,
                 item,
                 existing.ETag);
-            await this._asaManager.BeginConversionAsync(STORAGE_COLLECTION);
+            await this.asaManager.BeginConversionAsync(STORAGE_COLLECTION);
             LogEventAndRuleCountToDiagnostics("Rule_Deleted");
         }
 
@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         {
             InputValidator.Validate(id);
 
-            var item = await this._storage.GetAsync(STORAGE_COLLECTION, id);
+            var item = await this.storage.GetAsync(STORAGE_COLLECTION, id);
             var rule = this.Deserialize(item.Data);
 
             rule.ETag = item.ETag;
@@ -123,7 +123,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 InputValidator.Validate(groupId);
             }
 
-            var data = await this._storage.GetAllAsync(STORAGE_COLLECTION);
+            var data = await this.storage.GetAllAsync(STORAGE_COLLECTION);
             var ruleList = new List<Rule>();
             foreach (var item in data.Items)
             {
@@ -142,7 +142,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 }
                 catch (Exception e)
                 {
-                    _logger.LogDebug(e, "Could not parse result from Key Value Storage");
+                    logger.LogDebug(e, "Could not parse result from Key Value Storage");
                     throw new InvalidDataException(
                         "Could not parse result from Key Value Storage", e);
                 }
@@ -158,7 +158,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             if (skip >= ruleList.Count)
             {
-                _logger.LogDebug("Skip value {skip} greater than size of list returned ({ruleListCount})", skip, ruleList.Count);
+                logger.LogDebug("Skip value {skip} greater than size of list returned ({ruleListCount})", skip, ruleList.Count);
 
                 return new List<Rule>();
             }
@@ -193,7 +193,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             // get open alarm count and most recent alarm for each rule
             foreach (var rule in rulesList)
             {
-                var alarmCount = await this._alarms.GetCountByRuleAsync(
+                var alarmCount = await this.alarms.GetCountByRuleAsync(
                     rule.Id,
                     from,
                     to,
@@ -233,8 +233,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             rule.DateModified = rule.DateCreated;
 
             var item = JsonConvert.SerializeObject(rule);
-            var result = await this._storage.CreateAsync(STORAGE_COLLECTION, item);
-            await this._asaManager.BeginConversionAsync(STORAGE_COLLECTION);
+            var result = await this.storage.CreateAsync(STORAGE_COLLECTION, item);
+            await this.asaManager.BeginConversionAsync(STORAGE_COLLECTION);
 
             Rule newRule = this.Deserialize(result.Data);
             newRule.ETag = result.ETag;
@@ -264,7 +264,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             catch (ResourceNotFoundException e)
             {
                 // Following the pattern of Post should create or update
-                _logger.LogInformation(e, "Rule not found will create new rule for ID {ruleId}", rule.Id);
+                logger.LogInformation(e, "Rule not found will create new rule for ID {ruleId}", rule.Id);
             }
 
             if (savedRule != null && savedRule.Deleted)
@@ -277,15 +277,15 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
         private async void LogEventAndRuleCountToDiagnostics(string eventName)
         {
-            if (this._diagnosticsClient.CanLogToDiagnostics)
+            if (this.diagnosticsClient.CanLogToDiagnostics)
             {
-                await this._diagnosticsClient.LogEventAsync(eventName);
+                await this.diagnosticsClient.LogEventAsync(eventName);
                 int ruleCount = await this.GetRuleCountAsync();
                 var eventProperties = new Dictionary<string, object>
                 {
                     { "Count", ruleCount }
                 };
-                await this._diagnosticsClient.LogEventAsync("Rule_Count", eventProperties);
+                await this.diagnosticsClient.LogEventAsync("Rule_Count", eventProperties);
             }
         }
 
@@ -305,12 +305,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             // Save the updated rule if it exists or create new rule with id
             var item = JsonConvert.SerializeObject(rule);
-            var result = await this._storage.UpdateAsync(
+            var result = await this.storage.UpdateAsync(
                 STORAGE_COLLECTION,
                 rule.Id,
                 item,
                 rule.ETag);
-            await this._asaManager.BeginConversionAsync(STORAGE_COLLECTION);
+            await this.asaManager.BeginConversionAsync(STORAGE_COLLECTION);
 
             Rule updatedRule = this.Deserialize(result.Data);
 
@@ -326,7 +326,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             DateTimeOffset? to,
             string[] devices)
         {
-            var resultList = await this._alarms.ListByRuleAsync(
+            var resultList = await this.alarms.ListByRuleAsync(
                 id,
                 from,
                 to,
@@ -341,7 +341,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             }
             else
             {
-                _logger.LogDebug("Could not retrieve most recent alarm {id}", id);
+                logger.LogDebug("Could not retrieve most recent alarm {id}", id);
                 throw new ExternalDependencyException(
                     "Could not retrieve most recent alarm");
             }
@@ -361,7 +361,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
         private async Task<int> GetRuleCountAsync()
         {
-            ValueListApiModel rules = await this._storage.GetAllAsync(STORAGE_COLLECTION);
+            ValueListApiModel rules = await this.storage.GetAllAsync(STORAGE_COLLECTION);
             int ruleCount = 0;
             foreach (var item in rules.Items)
             {

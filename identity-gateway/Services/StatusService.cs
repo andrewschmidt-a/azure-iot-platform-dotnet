@@ -10,15 +10,15 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public class StatusService : IStatusService
     {
-        public UserTenantContainer _userTenantContainer;
-        public UserSettingsContainer _userSettingsContainer;
+        public UserTenantContainer UserTenantContainer;
+        public UserSettingsContainer UserSettingsContainer;
         private AppConfig config;
 
         public StatusService(AppConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer)
         {
             this.config = config;
-            this._userTenantContainer = userTenantContainer;
-            this._userSettingsContainer = userSettingsContainer;
+            this.UserTenantContainer = userTenantContainer;
+            this.UserSettingsContainer = userSettingsContainer;
         }
 
         public async Task<StatusServiceModel> GetStatusAsync()
@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 
             // Check connection to Table Storage
             // TODO: Add check of settings table as well
-            var storageResult = await this._userTenantContainer.StatusAsync();
+            var storageResult = await this.UserTenantContainer.StatusAsync();
             SetServiceStatus("TableStorage", storageResult, result, errors);
 
             // Check Azure B2C instance

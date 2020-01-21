@@ -21,11 +21,11 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
     /// </summary>
     public class ExceptionsFilterAttribute : ExceptionFilterAttribute
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public ExceptionsFilterAttribute(ILogger<ExceptionsFilterAttribute> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         public override void OnException(ExceptionContext context)
@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             }
             else
             {
-                _logger.LogError(context.Exception, "Unknown exception");
+                logger.LogError(context.Exception, "Unknown exception");
                 base.OnException(context);
             }
         }
@@ -93,7 +93,7 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             result.StatusCode = (int)code;
             result.Formatters.Add(new JsonOutputFormatter(new JsonSerializerSettings(), ArrayPool<char>.Shared));
 
-            _logger.LogError(e, "Status code was {statusCode}", result.StatusCode);
+            logger.LogError(e, "Status code was {statusCode}", result.StatusCode);
 
             return result;
         }

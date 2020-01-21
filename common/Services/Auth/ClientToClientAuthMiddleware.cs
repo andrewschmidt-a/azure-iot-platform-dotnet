@@ -8,13 +8,13 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
     {
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string TENANT_KEY = "TenantID";
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private RequestDelegate requestDelegate;
 
         public ClientToClientAuthMiddleware(RequestDelegate requestDelegate, ILogger<ClientToClientAuthMiddleware> logger)
         {
             this.requestDelegate = requestDelegate;
-            _logger = logger;
+            this.logger = logger;
         }
 
         public Task Invoke(HttpContext context)

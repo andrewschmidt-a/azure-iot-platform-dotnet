@@ -10,19 +10,13 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
     public class AppConfigurationHelper : IAppConfigurationHelper
     {
         private ConfigurationClient client;
-        private Dictionary<string, AppConfigCacheValue> _cache = new Dictionary<string, AppConfigCacheValue>();
+        private Dictionary<string, AppConfigCacheValue> cache = new Dictionary<string, AppConfigCacheValue>();
 
         public AppConfigurationHelper(AppConfig config)
         {
             this.client = new ConfigurationClient(config.AppConfigurationConnectionString);
         }
 
-        /// <summary>
-        /// Create a new App Config key value pair
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns>void</returns>
         public async Task SetValueAsync(string key, string value)
         {
             if (string.IsNullOrEmpty(key))
@@ -55,21 +49,21 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             string value = string.Empty;
             try
             {
-                if (this._cache.ContainsKey(key) && this._cache[key].ExpirationTime > DateTime.UtcNow)
+                if (this.cache.ContainsKey(key) && this.cache[key].ExpirationTime > DateTime.UtcNow)
                 {
-                    value = this._cache[key].Value.Value; // get string from configuration setting
+                    value = this.cache[key].Value.Value; // get string from configuration setting
                 }
                 else
                 {
                     ConfigurationSetting setting = this.client.GetConfigurationSetting(key);
                     value = setting.Value;
-                    if (this._cache.ContainsKey(key))
+                    if (this.cache.ContainsKey(key))
                     {
-                        this._cache[key] = new AppConfigCacheValue(setting);
+                        this.cache[key] = new AppConfigCacheValue(setting);
                     }
                     else
                     {
-                        this._cache.Add(key, new AppConfigCacheValue(setting));
+                        this.cache.Add(key, new AppConfigCacheValue(setting));
                     }
                 }
             }

@@ -19,8 +19,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         public HttpClient HttpClient;
         private const string SA_JOB_DATABASE_ID = "pcs-iothub-stream";
         private readonly AppConfig config;
-        private readonly ITokenHelper _tokenHelper;
-        private readonly IAppConfigurationHelper _appConfigHelper;
+        private readonly ITokenHelper tokenHelper;
+        private readonly IAppConfigurationHelper appConfigHelper;
         private bool disposedValue = false;
         private string iotHubConnectionStringKeyFormat = "tenant:{0}:iotHubConnectionString";
         private Regex iotHubKeyRegexMatch = new Regex(@"(?<=SharedAccessKey=)[^;]*");
@@ -28,9 +28,9 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 
         public RunbookHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
         {
-            this._tokenHelper = tokenHelper;
+            this.tokenHelper = tokenHelper;
             this.config = config;
-            this._appConfigHelper = appConfigHelper;
+            this.appConfigHelper = appConfigHelper;
 
             this.HttpClient = new HttpClient();
         }
@@ -139,7 +139,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 tenantId = tenantId,
                 iotHubName = iotHubName,
                 dpsName = dpsName,
-                token = await this._tokenHelper.GetTokenAsync(),
+                token = await this.tokenHelper.GetTokenAsync(),
                 resourceGroup = config.Global.ResourceGroup,
                 location = config.Global.Location,
                 subscriptionId = config.Global.SubscriptionId,
@@ -174,7 +174,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 
         private async Task<AutomationManagementClient> GetAutomationClientAsync()
         {
-            string authToken = await this._tokenHelper.GetTokenAsync();
+            string authToken = await this.tokenHelper.GetTokenAsync();
             TokenCloudCredentials credentials = new TokenCloudCredentials(config.Global.SubscriptionId, authToken);
             return new AutomationManagementClient(credentials);
         }
@@ -196,7 +196,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             try
             {
                 string appConfigKey = string.Format(this.iotHubConnectionStringKeyFormat, tenantId);
-                string iotHubConnectionString = this._appConfigHelper.GetValue(appConfigKey);
+                string iotHubConnectionString = this.appConfigHelper.GetValue(appConfigKey);
                 if (string.IsNullOrEmpty(iotHubConnectionString))
                 {
                     throw new Exception($"The iotHubConnectionString returned by app config for the key {appConfigKey} returned a null value.");

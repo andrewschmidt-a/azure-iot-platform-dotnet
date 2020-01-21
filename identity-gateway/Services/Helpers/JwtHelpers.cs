@@ -14,21 +14,21 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 {
     public class JwtHelpers : IJwtHelpers
     {
-        private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
-        private readonly IRsaHelpers _rsaHelpers;
-        private UserTenantContainer _userTenantContainer;
-        private UserSettingsContainer _userSettingsContainer;
+        private readonly IOpenIdProviderConfiguration openIdProviderConfiguration;
+        private readonly IRsaHelpers rsaHelpers;
+        private UserTenantContainer userTenantContainer;
+        private UserSettingsContainer userSettingsContainer;
         private AppConfig config;
-        private IHttpContextAccessor _httpContextAccessor;
+        private IHttpContextAccessor httpContextAccessor;
 
         public JwtHelpers(UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, AppConfig config, IHttpContextAccessor httpContextAccessor, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
         {
-            _userTenantContainer = userTenantContainer;
-            _userSettingsContainer = userSettingsContainer;
+            this.userTenantContainer = userTenantContainer;
+            this.userSettingsContainer = userSettingsContainer;
             this.config = config;
-            _httpContextAccessor = httpContextAccessor;
-            _openIdProviderConfiguration = openIdProviderConfiguration;
-            _rsaHelpers = rsaHelpers;
+            this.httpContextAccessor = httpContextAccessor;
+            this.openIdProviderConfiguration = openIdProviderConfiguration;
+            this.rsaHelpers = rsaHelpers;
         }
 
         public async Task<JwtSecurityToken> GetIdentityToken(List<Claim> claims, string tenant, string audience, DateTime? expiration)
@@ -43,7 +43,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
             {
                 UserId = userId
             };
-            UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
+            UserTenantListModel tenantsModel = await this.userTenantContainer.GetAllAsync(tenantInput);
             List<UserTenantModel> tenantList = tenantsModel.Models;
 
             // User did not specify the tenant to log into so get the default or last used
@@ -56,7 +56,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                     UserId = userId,
                     SettingKey = "LastUsedTenant"
                 };
-                UserSettingsModel lastUsedSetting = await this._userSettingsContainer.GetAsync(settingsInput);
+                UserSettingsModel lastUsedSetting = await this.userSettingsContainer.GetAsync(settingsInput);
                 // Has last used tenant and it is in the list
                 if (lastUsedSetting != null && tenantList.Count(t => t.TenantId == lastUsedSetting.Value) > 0)
                 {
@@ -79,7 +79,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                     UserId = userId,
                     Tenant = tenant
                 };
-                UserTenantModel tenantModel = await this._userTenantContainer.GetAsync(input);
+                UserTenantModel tenantModel = await this.userTenantContainer.GetAsync(input);
                 // Add Tenant
                 claims.Add(new Claim("tenant", tenantModel.TenantId));
                 // Add Roles
@@ -93,11 +93,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                     Value = tenant
                 };
                 // Update if name is not the same
-                await this._userSettingsContainer.UpdateAsync(settingsInput);
+                await this.userSettingsContainer.UpdateAsync(settingsInput);
                 if (tenantModel.Name != claims.Where(c => c.Type == "name").First().Value)
                 {
                     input.Name = claims.Where(c => c.Type == "name").First().Value;
-                    await this._userTenantContainer.UpdateAsync(input);
+                    await this.userTenantContainer.UpdateAsync(input);
                 }
             }
 
@@ -116,23 +116,23 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 
             string forwardedFor = null;
             // add issuer with forwarded for address if exists (added by reverse proxy)
-            if (_httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
+            if (httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
             {
-                forwardedFor = _httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value
+                forwardedFor = httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value
                     .First();
             }
 
             // Create Security key  using private key above:
             // not that latest version of JWT using Microsoft namespace instead of System
             var securityKey =
-                new RsaSecurityKey(_rsaHelpers.DecodeRsa(config.IdentityGatewayService.PrivateKey));
+                new RsaSecurityKey(rsaHelpers.DecodeRsa(config.IdentityGatewayService.PrivateKey));
 
             // Also note that securityKey length should be >256b
             // so you have to make sure that your private key has a proper length
             var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
 
             JwtSecurityToken token = new JwtSecurityToken(
-                issuer: forwardedFor ?? "https://" + this._httpContextAccessor.HttpContext.Request.Host.ToString() + "/",
+                issuer: forwardedFor ?? "https://" + this.httpContextAccessor.HttpContext.Request.Host.ToString() + "/",
                 audience: audience,
                 expires: expirationDateTime.ToUniversalTime(),
                 claims: claims.ToArray(),
@@ -154,11 +154,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 // Validate the token signature
                 RequireSignedTokens = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKeys = _rsaHelpers.GetJsonWebKey(config.IdentityGatewayService.PublicKey).Keys,
+                IssuerSigningKeys = rsaHelpers.GetJsonWebKey(config.IdentityGatewayService.PublicKey).Keys,
 
                 // Validate the token issuer
                 ValidateIssuer = false,
-                ValidIssuer = _openIdProviderConfiguration.Issuer,
+                ValidIssuer = openIdProviderConfiguration.Issuer,
 
                 // Validate the token audience
                 ValidateAudience = false,

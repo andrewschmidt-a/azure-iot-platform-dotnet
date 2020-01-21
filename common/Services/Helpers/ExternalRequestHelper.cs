@@ -16,13 +16,13 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string AZDS_ROUTE_KEY = "azds-route-as";
 
-        private readonly IHttpClient _httpClient;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpClient httpClient;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public ExternalRequestHelper(IHttpClient httpClient, IHttpContextAccessor httpContextAccessor)
         {
-            this._httpClient = httpClient;
-            this._httpContextAccessor = httpContextAccessor;
+            this.httpClient = httpClient;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             IHttpResponse response = null;
             try
             {
-                response = await this._httpClient.SendAsync(request, method);
+                response = await this.httpClient.SendAsync(request, method);
             }
             catch (Exception e)
             {
@@ -125,7 +125,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             {
                 try
                 {
-                    tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                    tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
                 }
                 catch (Exception e)
                 {
@@ -140,11 +140,11 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
                 request.Options.AllowInsecureSSLServer = true;
             }
 
-            if (this._httpContextAccessor.HttpContext != null && this._httpContextAccessor.HttpContext.Request.Headers.ContainsKey(AZDS_ROUTE_KEY))
+            if (this.httpContextAccessor.HttpContext != null && this.httpContextAccessor.HttpContext.Request.Headers.ContainsKey(AZDS_ROUTE_KEY))
             {
                 try
                 {
-                    var azdsRouteAs = this._httpContextAccessor.HttpContext.Request.Headers.First(p => string.Equals(p.Key, AZDS_ROUTE_KEY, StringComparison.OrdinalIgnoreCase));
+                    var azdsRouteAs = this.httpContextAccessor.HttpContext.Request.Headers.First(p => string.Equals(p.Key, AZDS_ROUTE_KEY, StringComparison.OrdinalIgnoreCase));
                     request.Headers.Add(AZDS_ROUTE_KEY, azdsRouteAs.Value.First());  // azdsRouteAs.Value returns an iterable of strings, take the first
                 }
                 catch (Exception e)

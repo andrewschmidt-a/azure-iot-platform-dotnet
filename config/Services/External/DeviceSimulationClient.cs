@@ -13,7 +13,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string TENANT_ID = "TenantID";
         private readonly IHttpClientWrapper httpClient;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private readonly string serviceUri;
 
         public DeviceSimulationClient(
@@ -25,7 +25,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
             this.httpClient = httpClient;
 
             this.serviceUri = config.ExternalDependencies.DeviceSimulationServiceUrl;
-            this._httpContextAccessor = httpContextAccessor;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<SimulationApiModel> GetDefaultSimulationAsync()
@@ -42,9 +42,9 @@ namespace Mmm.Platform.IoT.Config.Services.External
 
         private void SetHttpClientHeaders()
         {
-            if (this._httpContextAccessor != null && this.httpClient != null)
+            if (this.httpContextAccessor != null && this.httpClient != null)
             {
-                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                string tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
                 this.httpClient.SetHeaders(new Dictionary<string, string> { { TENANT_HEADER, tenantId } });
             }
         }

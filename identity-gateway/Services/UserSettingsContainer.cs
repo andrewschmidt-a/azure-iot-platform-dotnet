@@ -25,7 +25,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         public virtual async Task<UserSettingsListModel> GetAllAsync(UserSettingsInput input)
         {
             TableQuery<UserSettingsModel> query = new TableQuery<UserSettingsModel>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.UserId));
-            List<UserSettingsModel> result = await this._tableStorageClient.QueryAsync<UserSettingsModel>(this.TableName, query);
+            List<UserSettingsModel> result = await this.tableStorageClient.QueryAsync<UserSettingsModel>(this.TableName, query);
             return new UserSettingsListModel("Get", result);
         }
 
@@ -36,7 +36,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         /// <returns></returns>
         public virtual async Task<UserSettingsModel> GetAsync(UserSettingsInput input)
         {
-            return await this._tableStorageClient.RetrieveAsync<UserSettingsModel>(this.TableName, input.UserId, input.SettingKey);
+            return await this.tableStorageClient.RetrieveAsync<UserSettingsModel>(this.TableName, input.UserId, input.SettingKey);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                     " Use PUT to update this user instead.");
             }
             UserSettingsModel model = new UserSettingsModel(input);
-            return await this._tableStorageClient.InsertAsync(this.TableName, model);
+            return await this.tableStorageClient.InsertAsync(this.TableName, model);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         {
             UserSettingsModel model = new UserSettingsModel(input);
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
-            return await this._tableStorageClient.InsertOrReplaceAsync<UserSettingsModel>(this.TableName, model);
+            return await this.tableStorageClient.InsertOrReplaceAsync<UserSettingsModel>(this.TableName, model);
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             }
 
             model.ETag = "*";  // An ETag is required for deleting - this allows any etag to be used
-            return await this._tableStorageClient.DeleteAsync<UserSettingsModel>(this.TableName, model);
+            return await this.tableStorageClient.DeleteAsync<UserSettingsModel>(this.TableName, model);
         }
     }
 }

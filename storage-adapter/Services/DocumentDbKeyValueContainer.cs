@@ -22,12 +22,12 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
     public class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
     {
         private const string COLLECTION_ID_KEY_FORMAT = "tenant:{0}:{1}-collection";
-        private readonly IAppConfigurationHelper _appConfigHelper;
-        private readonly AppConfig _appConfig;
-        private readonly IFactory<IDocumentClient> _clientFactory;
-        private readonly IExceptionChecker _exceptionChecker;
-        private readonly ILogger _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IAppConfigurationHelper appConfigHelper;
+        private readonly AppConfig appConfig;
+        private readonly IFactory<IDocumentClient> clientFactory;
+        private readonly IExceptionChecker exceptionChecker;
+        private readonly ILogger logger;
+        private readonly IHttpContextAccessor httpContextAccessor;
         private IDocumentClient client;
         private int docDbRUs;
         private RequestOptions docDbOptions;
@@ -39,15 +39,15 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             AppConfig appConfig,
             IAppConfigurationHelper appConfigHelper,
             ILogger<DocumentDbKeyValueContainer> logger,
-            IHttpContextAccessor httpContextAcessor)
+            IHttpContextAccessor httpContextAccessor)
         {
             disposedValue = false;
-            _clientFactory = clientFactory;
-            _exceptionChecker = exceptionChecker;
-            _appConfig = appConfig;
-            _appConfigHelper = appConfigHelper;
-            _logger = logger;
-            _httpContextAccessor = httpContextAcessor;
+            this.clientFactory = clientFactory;
+            this.exceptionChecker = exceptionChecker;
+            this.appConfig = appConfig;
+            this.appConfigHelper = appConfigHelper;
+            this.logger = logger;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public virtual string DocumentDataType { get { return "pcs"; } }
@@ -69,11 +69,11 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 string key = string.Format(COLLECTION_ID_KEY_FORMAT, this.TenantId, this.DocumentDataType);
                 try
                 {
-                    return this._appConfigHelper.GetValue(key);
+                    return this.appConfigHelper.GetValue(key);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Unable to get the CollectionId from App Config. Key: {key}. TenantId: {tenantId}", key, this.TenantId);
+                    logger.LogError(ex, "Unable to get the CollectionId from App Config. Key: {key}. TenantId: {tenantId}", key, this.TenantId);
                     throw;
                 }
             }
@@ -83,7 +83,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             get
             {
-                return this._httpContextAccessor.HttpContext.Request.GetTenant();
+                return this.httpContextAccessor.HttpContext.Request.GetTenant();
             }
         }
 
@@ -116,7 +116,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception e)
             {
-                _logger.LogInformation(e, result.Message);
+                logger.LogInformation(e, result.Message);
             }
 
             return result;
@@ -134,10 +134,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception ex)
             {
-                if (!this._exceptionChecker.IsNotFoundException(ex)) throw;
+                if (!this.exceptionChecker.IsNotFoundException(ex)) throw;
 
                 const string message = "The resource requested doesn't exist.";
-                _logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
+                logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
                 throw new ResourceNotFoundException(message);
             }
         }
@@ -165,10 +165,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception ex)
             {
-                if (!this._exceptionChecker.IsConflictException(ex)) throw;
+                if (!this.exceptionChecker.IsConflictException(ex)) throw;
 
                 const string message = "There is already a value with the key specified.";
-                _logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
+                logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
                 throw new ConflictingResourceException(message);
             }
         }
@@ -187,10 +187,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception ex)
             {
-                if (!this._exceptionChecker.IsPreconditionFailedException(ex)) throw;
+                if (!this.exceptionChecker.IsPreconditionFailedException(ex)) throw;
 
                 const string message = "ETag mismatch: the resource has been updated by another client.";
-                _logger.LogInformation(message + " {collection ID {collectionId}, key {key}, ETag {eTag}", collectionId, key, input.ETag);
+                logger.LogInformation(message + " {collection ID {collectionId}, key {key}, ETag {eTag}", collectionId, key, input.ETag);
                 throw new ConflictingResourceException(message);
             }
         }
@@ -205,9 +205,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception ex)
             {
-                if (!this._exceptionChecker.IsNotFoundException(ex)) throw;
+                if (!this.exceptionChecker.IsNotFoundException(ex)) throw;
 
-                _logger.LogDebug("Key {key} does not exist, nothing to do");
+                logger.LogDebug("Key {key} does not exist, nothing to do");
             }
         }
 
@@ -251,8 +251,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 
         private void SetClientOptions()
         {
-            this.client = this._clientFactory.Create();
-            this.docDbRUs = _appConfig.StorageAdapterService.DocumentDbRus;
+            this.client = this.clientFactory.Create();
+            this.docDbRUs = appConfig.StorageAdapterService.DocumentDbRus;
             this.docDbOptions = this.GetDocDbOptions();
         }
 
@@ -267,7 +267,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 if (e.StatusCode != HttpStatusCode.NotFound)
                 {
-                    _logger.LogError(e, "Error while getting DocumentDb database");
+                    logger.LogError(e, "Error while getting DocumentDb database");
                 }
 
                 await this.CreateDatabaseAsync();
@@ -285,7 +285,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 if (e.StatusCode != HttpStatusCode.NotFound)
                 {
-                    _logger.LogError(e, "Error while getting DocumentDb collection");
+                    logger.LogError(e, "Error while getting DocumentDb collection");
                 }
 
                 await this.CreateCollectionAsync();
@@ -296,7 +296,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             try
             {
-                _logger.LogInformation("Creating DocumentDb database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
+                logger.LogInformation("Creating DocumentDb database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
                 var db = new Database { Id = this.DocumentDbDatabaseId };
                 await this.client.CreateDatabaseAsync(db);
             }
@@ -304,14 +304,14 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 if (e.StatusCode == HttpStatusCode.Conflict)
                 {
-                    _logger.LogWarning("Another process already created the database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
+                    logger.LogWarning("Another process already created the database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
                 }
 
-                _logger.LogError(e, "Error while creating DocumentDb database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
+                logger.LogError(e, "Error while creating DocumentDb database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error while creating DocumentDb database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
+                logger.LogError(e, "Error while creating DocumentDb database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
                 throw;
             }
         }
@@ -320,7 +320,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             try
             {
-                _logger.LogInformation("Creating DocumentDb collection {DocumentDbCollectionId}", DocumentDbCollectionId);
+                logger.LogInformation("Creating DocumentDb collection {DocumentDbCollectionId}", DocumentDbCollectionId);
                 var coll = new DocumentCollection { Id = this.DocumentDbCollectionId };
 
                 var index = Index.Range(DataType.String, -1);
@@ -337,14 +337,14 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 if (e.StatusCode == HttpStatusCode.Conflict)
                 {
-                    _logger.LogWarning("Another process already created the collection {DocumentDbCollectionId}", DocumentDbCollectionId);
+                    logger.LogWarning("Another process already created the collection {DocumentDbCollectionId}", DocumentDbCollectionId);
                 }
 
-                _logger.LogError(e, "Error while creating DocumentDb collection {DocumentDbCollectionId}", DocumentDbCollectionId);
+                logger.LogError(e, "Error while creating DocumentDb collection {DocumentDbCollectionId}", DocumentDbCollectionId);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error while creating DocumentDb collection {DocumentDbCollectionId}", DocumentDbDatabaseId);
+                logger.LogError(e, "Error while creating DocumentDb collection {DocumentDbCollectionId}", DocumentDbDatabaseId);
                 throw;
             }
         }

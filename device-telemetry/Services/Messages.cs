@@ -24,12 +24,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private const string TSI_STORAGE_TYPE_KEY = "tsi";
         private const string TENANT_INFO_KEY = "tenant";
         private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly AppConfig config;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAppConfigurationHelper _appConfigurationHelper;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IAppConfigurationHelper appConfigurationHelper;
         private readonly bool timeSeriesEnabled;
         private readonly DocumentClient documentClient;
         private readonly string databaseName;
@@ -48,18 +48,18 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 TSI_STORAGE_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
             this.documentClient = storageClient.GetDocumentClient();
             this.databaseName = config.DeviceTelemetryService.Messages.Database;
-            _logger = logger;
+            this.logger = logger;
             this.config = config;
-            this._httpContextAccessor = contextAccessor;
-            this._appConfigurationHelper = appConfigurationHelper;
+            this.httpContextAccessor = contextAccessor;
+            this.appConfigurationHelper = appConfigurationHelper;
         }
 
         private string CollectionId
         {
             get
             {
-                return this._appConfigurationHelper.GetValue(
-                    $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
+                return this.appConfigurationHelper.GetValue(
+                    $"{TENANT_INFO_KEY}:{httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
             }
         }
 
@@ -118,7 +118,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 devices,
                 "deviceId");
 
-            _logger.LogDebug("Created message query {sql}", sql);
+            logger.LogDebug("Created message query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;

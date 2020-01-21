@@ -25,21 +25,21 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AuthorizeController : Controller
     {
-        private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
+        private readonly IOpenIdProviderConfiguration openIdProviderConfiguration;
         private AppConfig config;
-        private IJwtHelpers _jwtHelper;
-        private IAuthenticationContext _authenticationContext;
-        private UserTenantContainer _userTenantContainer;
-        private UserSettingsContainer _userSettingsContainer;
+        private IJwtHelpers jwtHelper;
+        private IAuthenticationContext authenticationContext;
+        private UserTenantContainer userTenantContainer;
+        private UserSettingsContainer userSettingsContainer;
 
         public AuthorizeController(AppConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJwtHelpers jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration, IAuthenticationContext authenticationContext)
         {
             this.config = config;
-            this._userTenantContainer = userTenantContainer;
-            this._userSettingsContainer = userSettingsContainer;
-            this._jwtHelper = jwtHelper;
-            this._openIdProviderConfiguration = openIdProviderConfiguration;
-            this._authenticationContext = authenticationContext;
+            this.userTenantContainer = userTenantContainer;
+            this.userSettingsContainer = userSettingsContainer;
+            this.jwtHelper = jwtHelper;
+            this.openIdProviderConfiguration = openIdProviderConfiguration;
+            this.authenticationContext = authenticationContext;
         }
 
         // GET: connect/authorize
@@ -73,7 +73,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             var query = HttpUtility.ParseQueryString(uri.Query);
             query["state"] = JsonConvert.SerializeObject(new AuthState
             { ReturnUrl = redirect_uri, State = state, Tenant = tenant, Nonce = nonce, ClientId = clientId, Invitation = invite });
-            query["redirect_uri"] = _openIdProviderConfiguration.Issuer + "/connect/callback"; // must be https for B2C
+            query["redirect_uri"] = openIdProviderConfiguration.Issuer + "/connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
             return Redirect(uri.Uri.ToString());
         }
@@ -89,7 +89,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 
             try
             {
-                AuthenticationResult token = await _authenticationContext.AcquireTokenAsync(resourceUri, clientCredential);
+                AuthenticationResult token = await authenticationContext.AcquireTokenAsync(resourceUri, clientCredential);
             }
             catch (Exception e)
             {
@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 UserId = input.ClientId,
                 Tenant = input.Scope
             };
-            UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
+            UserTenantListModel tenantsModel = await this.userTenantContainer.GetAllAsync(tenantInput);
             if (tenantsModel.Models.Count == 0) {
                 throw new Exception("Not granted access to that tenant");
             }
@@ -114,7 +114,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             claims.Add(new Claim("name", input.ClientId));
             claims.Add(new Claim("type", "Client Credentials"));
 
-            string tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(claims, input.Scope, "IoTPlatform", null));
+            string tokenString = jwtHandler.WriteToken(await this.jwtHelper.GetIdentityToken(claims, input.Scope, "IoTPlatform", null));
 
             return StatusCode(200, tokenString);
         }
@@ -154,7 +154,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             // Extract Bearer token
             string encodedToken = authHeader.Substring("Bearer ".Length).Trim();
             var jwtHandler = new JwtSecurityTokenHandler();
-            if (!_jwtHelper.TryValidateToken("IoTPlatform", encodedToken, HttpContext, out JwtSecurityToken jwt))
+            if (!jwtHelper.TryValidateToken("IoTPlatform", encodedToken, HttpContext, out JwtSecurityToken jwt))
             {
                 throw new NoAuthorizationException("The given token could not be read or validated.");
             }
@@ -169,11 +169,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 UserId = jwt?.Claims?.Where(c => c.Type == "sub").First()?.Value,
                 Tenant = tenant
             };
-            UserTenantModel tenantResult = await this._userTenantContainer.GetAsync(tenantInput);
+            UserTenantModel tenantResult = await this.userTenantContainer.GetAsync(tenantInput);
             if (tenantResult != null)
             {
                 // Everything checks out so you can mint a new token
-                var tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(jwt.Claims.Where(c => new List<string>() { "sub", "name", "email" }.Contains(c.Type)).ToList(), tenant, jwt.Audiences.First(), jwt.ValidTo));
+                var tokenString = jwtHandler.WriteToken(await this.jwtHelper.GetIdentityToken(jwt.Claims.Where(c => new List<string>() { "sub", "name", "email" }.Contains(c.Type)).ToList(), tenant, jwt.Audiences.First(), jwt.ValidTo));
 
                 return StatusCode(200, tokenString);
             }
@@ -225,11 +225,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                     Roles = JsonConvert.SerializeObject(inviteJWT.Claims.Where(c => c.Type == "role").Select(c => c.Value).ToList()),
                     Type = "Member"
                 };
-                await this._userTenantContainer.UpdateAsync(UserTenant);
+                await this.userTenantContainer.UpdateAsync(UserTenant);
 
                 // Delete placeholder for invite
                 UserTenant.UserId = inviteJWT.Claims.Where(c => c.Type == "userId").First().Value;
-                await this._userTenantContainer.DeleteAsync(UserTenant);
+                await this.userTenantContainer.DeleteAsync(UserTenant);
             }
 
             // Extract first email
@@ -244,7 +244,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 claims.Add(new Claim("nonce", authState.Nonce));
             }
 
-            string tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(claims, authState.Tenant, originalAudience, null));
+            string tokenString = jwtHandler.WriteToken(await this.jwtHelper.GetIdentityToken(claims, authState.Tenant, originalAudience, null));
 
             // Build Return Uri
             var returnUri = new UriBuilder(authState.ReturnUrl);

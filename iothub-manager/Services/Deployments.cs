@@ -34,9 +34,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private const string DEVICE_ID_KEY = "DeviceId";
         private const string EDGE_MANIFEST_SCHEMA = "schemaVersion";
 
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
-        private ITenantConnectionHelper _tenantHelper;
+        private ITenantConnectionHelper tenantHelper;
 
         public Deployments(AppConfig config, ILogger<Deployments> logger, ITenantConnectionHelper tenantConnectionHelper)
         {
@@ -45,14 +45,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 throw new ArgumentNullException("config");
             }
 
-            this._tenantHelper = tenantConnectionHelper;
+            this.tenantHelper = tenantConnectionHelper;
 
-            _logger = logger;
+            this.logger = logger;
         }
 
-        public Deployments(ITenantConnectionHelper _tenantHelper)
+        public Deployments(ITenantConnectionHelper tenantHelper)
         {
-            this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper");
+            this.tenantHelper = tenantHelper ?? throw new ArgumentNullException("tenantHelper");
         }
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             var configuration = ConfigurationsHelper.ToHubConfiguration(model);
             // TODO: Add specific exception handling when exception types are exposed
             // https://github.com/Azure/azure-iot-sdk-csharp/issues/649
-            return new DeploymentServiceModel(await _tenantHelper.GetRegistry().AddConfigurationAsync(configuration));
+            return new DeploymentServiceModel(await tenantHelper.GetRegistry().AddConfigurationAsync(configuration));
         }
 
         /// <summary>
@@ -109,11 +109,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         public async Task<DeploymentServiceListModel> ListAsync()
         {
             // TODO: Currently they only support 20 deployments
-            var deployments = await _tenantHelper.GetRegistry().GetConfigurationsAsync(MAX_DEPLOYMENTS);
+            var deployments = await tenantHelper.GetRegistry().GetConfigurationsAsync(MAX_DEPLOYMENTS);
 
             if (deployments == null)
             {
-                throw new ResourceNotFoundException($"No deployments found for {_tenantHelper.GetIotHubName()} hub.");
+                throw new ResourceNotFoundException($"No deployments found for {tenantHelper.GetIotHubName()} hub.");
             }
 
             List<DeploymentServiceModel> serviceModelDeployments =
@@ -138,7 +138,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            var deployment = await _tenantHelper.GetRegistry().GetConfigurationAsync(deploymentId);
+            var deployment = await tenantHelper.GetRegistry().GetConfigurationAsync(deploymentId);
 
             if (deployment == null)
             {
@@ -147,7 +147,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
             if (!this.CheckIfDeploymentWasMadeByRM(deployment))
             {
-                throw new ResourceNotSupportedException($"Deployment with id {deploymentId}" + @" was 
+                throw new ResourceNotSupportedException($"Deployment with id {deploymentId}" + @" was
                                                         created externally and therefore not supported");
             }
 
@@ -170,7 +170,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            await _tenantHelper.GetRegistry().RemoveConfigurationAsync(deploymentId);
+            await tenantHelper.GetRegistry().RemoveConfigurationAsync(deploymentId);
         }
 
         private bool CheckIfDeploymentWasMadeByRM(Configuration conf)
@@ -237,7 +237,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private HashSet<string> GetDevicesInQuery(string hubQuery, string deploymentId)
         {
             var query = string.Format(hubQuery, deploymentId);
-            var queryResponse = _tenantHelper.GetRegistry().CreateQuery(query);
+            var queryResponse = tenantHelper.GetRegistry().CreateQuery(query);
             var deviceIds = new HashSet<string>();
 
             try
@@ -255,7 +255,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting status of devices in query {query}", query);
+                logger.LogError(ex, "Error getting status of devices in query {query}", query);
             }
 
             return deviceIds;

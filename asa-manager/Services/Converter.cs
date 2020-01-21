@@ -12,20 +12,20 @@ namespace Mmm.Platform.IoT.AsaManager.Services
     public abstract class Converter : IConverter
     {
         public string DateTimeFormat = $"{REFERENCE_DATA_DATE_FORMAT}/{REFERENCE_DATA_TIME_FORMAT}";
-        protected readonly IBlobStorageClient _blobStorageClient;
-        protected readonly IStorageAdapterClient _storageAdapterClient;
-        protected readonly ILogger _logger;
+        protected readonly IBlobStorageClient blobStorageClient;
+        protected readonly IStorageAdapterClient storageAdapterClient;
+        protected readonly ILogger logger;
         private const string REFERENCE_DATA_DATE_FORMAT = "yyyy-MM-dd";
         private const string REFERENCE_DATA_TIME_FORMAT = "HH-mm";
 
         public Converter(
             IBlobStorageClient blobStorageClient,
             IStorageAdapterClient storageAdapterClient,
-            ILogger<Converter> log)
+            ILogger<Converter> logger)
         {
-            this._blobStorageClient = blobStorageClient;
-            this._storageAdapterClient = storageAdapterClient;
-            this._logger = log;
+            this.blobStorageClient = blobStorageClient;
+            this.storageAdapterClient = storageAdapterClient;
+            this.logger = logger;
         }
 
         public abstract string Entity { get; }
@@ -45,7 +45,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
 
             if (string.IsNullOrEmpty(fileContent))
             {
-                _logger.LogError("The temporary file content was null or empty for {entity}. Blank files will not be written to Blob storage. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                logger.LogError("The temporary file content was null or empty for {entity}. Blank files will not be written to Blob storage. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw new BlankFileContentException($"The temporary file content serialized from the converted {this.Entity} queried from storage adapter was null or empty. Empty files will not be written to Blob storage.");
             }
 
@@ -57,18 +57,18 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to convert {entity} to blob storage file format. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                logger.LogError(e, "Unable to convert {entity} to blob storage file format. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw new Exception($"Unable to convert {this.Entity} to blob storage file format.", e);
             }
 
             string blobFilePath = this.GetBlobFilePath();
             try
             {
-                await this._blobStorageClient.CreateBlobAsync(tenantId, tempFilePath, blobFilePath);
+                await this.blobStorageClient.CreateBlobAsync(tenantId, tempFilePath, blobFilePath);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to create {entity} blob for tenant. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                logger.LogError(e, "Unable to create {entity} blob for tenant. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
             }
 
             return blobFilePath;

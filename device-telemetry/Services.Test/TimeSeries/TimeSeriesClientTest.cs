@@ -12,20 +12,20 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesClientTest
     {
-        private readonly Mock<ILogger<TimeSeriesClient>> _logger;
+        private readonly Mock<ILogger<TimeSeriesClient>> logger;
         private readonly Mock<IHttpClient> httpClient;
         private Mock<AppConfig> config;
         private TimeSeriesClient client;
 
         public TimeSeriesClientTest()
         {
-            _logger = new Mock<ILogger<TimeSeriesClient>>();
+            logger = new Mock<ILogger<TimeSeriesClient>>();
             this.config = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
             this.httpClient = new Mock<IHttpClient>();
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.config.Object,
-                _logger.Object);
+                logger.Object);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.config.Object,
-                _logger.Object);
+                logger.Object);
         }
 
         private void SetupClientWithConfigValues()
@@ -90,7 +90,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.config.Object,
-                _logger.Object);
+                logger.Object);
         }
     }
 }

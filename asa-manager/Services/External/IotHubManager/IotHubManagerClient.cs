@@ -13,20 +13,20 @@ namespace Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager
 {
     public class IotHubManagerClient : IIotHubManagerClient
     {
-        private readonly IExternalRequestHelper _requestHelper;
+        private readonly IExternalRequestHelper requestHelper;
         private readonly string apiUrl;
 
         public IotHubManagerClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
             this.apiUrl = config.ExternalDependencies.IotHubManagerServiceUrl;
-            this._requestHelper = requestHelper;
+            this.requestHelper = requestHelper;
         }
 
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             try
             {
-                StatusServiceModel status = await this._requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, $"{apiUrl}/status");
+                StatusServiceModel status = await this.requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, $"{apiUrl}/status");
                 return status.Status;
             }
             catch (Exception)
@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager
             {
                 var query = JsonConvert.SerializeObject(conditions);
                 var url = $"{this.apiUrl}/devices?query={query}";
-                return await this._requestHelper.ProcessRequestAsync<DeviceListModel>(HttpMethod.Get, url, tenantId);
+                return await this.requestHelper.ProcessRequestAsync<DeviceListModel>(HttpMethod.Get, url, tenantId);
             }
             catch (Exception e)
             {

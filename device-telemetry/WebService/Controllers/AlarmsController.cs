@@ -20,14 +20,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
         private const int DELETE_LIMIT = 1000;
 
         private readonly IAlarms alarmService;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public AlarmsController(
             IAlarms alarmService,
             ILogger<AlarmsController> logger)
         {
             this.alarmService = alarmService;
-            _logger = logger;
+            this.logger = logger;
         }
 
         [HttpGet("v1/[controller]")]
@@ -140,7 +140,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
 
             if (deviceIds.Length > DEVICE_LIMIT)
             {
-                _logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
+                logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
                 throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
             }
 

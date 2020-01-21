@@ -20,7 +20,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
         private const string TENANT_ID = "test_tenant";
         private readonly Mock<IStorageClient> storageClient;
-        private readonly Mock<ILogger<Alarms>> _logger;
+        private readonly Mock<ILogger<Alarms>> logger;
         private readonly IAlarms alarms;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly Mock<IAppConfigurationHelper> appConfigHelper;
@@ -47,8 +47,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.appConfigHelper.Setup(t => t.GetValue($"{TENANT_INFO_KEY}:{TENANT_ID}:{TELEMETRY_COLLECTION_KEY}")).Returns("collection");
 
 
-            _logger = new Mock<ILogger<Alarms>>();
-            this.alarms = new Alarms(servicesConfig, this.storageClient.Object, _logger.Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
+            logger = new Mock<ILogger<Alarms>>();
+            this.alarms = new Alarms(servicesConfig, this.storageClient.Object, logger.Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
         }
 
         /**

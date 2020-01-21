@@ -9,14 +9,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     public class HttpClientWrapper : IHttpClientWrapper
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly IHttpClient client;
 
         public HttpClientWrapper(
             ILogger<HttpClientWrapper> logger,
             IHttpClient client)
         {
-            _logger = logger;
+            this.logger = logger;
             this.client = client;
         }
 
@@ -48,13 +48,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Request to URI {uri} failed", uri);
+                logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to post {description}");
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to post {description}");
             }
         }

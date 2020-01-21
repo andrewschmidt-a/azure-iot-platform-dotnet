@@ -18,7 +18,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
     {
         private readonly Mock<IStorage> mockStorage;
         private readonly Mock<IActions> mockActions;
-        private readonly Mock<ILogger<SolutionSettingsController>> _logger;
+        private readonly Mock<ILogger<SolutionSettingsController>> logger;
         private readonly Mock<IAzureResourceManagerClient> mockResourceManagementClient;
         private readonly SolutionSettingsController controller;
         private readonly Random rand;
@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
         {
             this.mockStorage = new Mock<IStorage>();
             this.mockActions = new Mock<IActions>();
-            _logger = new Mock<ILogger<SolutionSettingsController>>();
+            logger = new Mock<ILogger<SolutionSettingsController>>();
             this.mockResourceManagementClient = new Mock<IAzureResourceManagerClient>();
             this.controller = new SolutionSettingsController(
                 this.mockStorage.Object,

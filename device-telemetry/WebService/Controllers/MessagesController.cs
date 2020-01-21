@@ -18,14 +18,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
         private const int DEVICE_LIMIT = 1000;
 
         private readonly IMessages messageService;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public MessagesController(
             IMessages messageService,
             ILogger<MessagesController> logger)
         {
             this.messageService = messageService;
-            _logger = logger;
+            this.logger = logger;
         }
 
         [HttpGet]
@@ -78,7 +78,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
             // limit for the IN clause.
             if (deviceIds.Length > DEVICE_LIMIT)
             {
-                _logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
+                logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
                 throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
             }
 

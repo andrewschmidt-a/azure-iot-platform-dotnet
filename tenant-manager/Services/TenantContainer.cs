@@ -15,13 +15,13 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class TenantContainer : ITenantContainer
     {
-        public readonly ILogger _logger;
-        public readonly IIdentityGatewayClient _identityClient;
-        public readonly IDeviceGroupsConfigClient _deviceGroupClient;
-        public readonly IRunbookHelper _runbookHelper;
-        public readonly IStorageClient _cosmosClient;
-        public readonly ITableStorageClient _tableStorageClient;
-        public readonly IAppConfigurationHelper _appConfigHelper;
+        public readonly ILogger Logger;
+        public readonly IIdentityGatewayClient IdentityClient;
+        public readonly IDeviceGroupsConfigClient DeviceGroupClient;
+        public readonly IRunbookHelper RunbookHelper;
+        public readonly IStorageClient CosmosClient;
+        public readonly ITableStorageClient TableStorageClient;
+        public readonly IAppConfigurationHelper AppConfigHelper;
         private const string IOT_DATABASE_ID = "iot";
         private const string STORAGE_ADAPTER_DATABASE_ID = "pcs-storage";
         private const string TENANT_TABLE_ID = "tenant";
@@ -43,7 +43,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
         public TenantContainer(
             IHttpContextAccessor httpContextAccessor,
-            ILogger<TenantContainer> log,
+            ILogger<TenantContainer> logger,
             IRunbookHelper RunbookHelper,
             IStorageClient cosmosClient,
             ITableStorageClient tableStorageClient,
@@ -51,20 +51,20 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             IDeviceGroupsConfigClient deviceGroupConfigClient,
             IAppConfigurationHelper appConfigHelper)
         {
-            _logger = log;
-            this._runbookHelper = RunbookHelper;
-            this._cosmosClient = cosmosClient;
-            this._tableStorageClient = tableStorageClient;
-            this._identityClient = identityGatewayClient;
-            this._deviceGroupClient = deviceGroupConfigClient;
-            this._appConfigHelper = appConfigHelper;
+            this.Logger = logger;
+            this.RunbookHelper = RunbookHelper;
+            this.CosmosClient = cosmosClient;
+            this.TableStorageClient = tableStorageClient;
+            this.IdentityClient = identityGatewayClient;
+            this.DeviceGroupClient = deviceGroupConfigClient;
+            this.AppConfigHelper = appConfigHelper;
         }
 
         public async Task<bool> TenantIsReadyAsync(string tenantId)
         {
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
-            TenantModel tenant = await this._tableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
+            TenantModel tenant = await this.TableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
             return tenant != null && tenant.IsIotHubDeployed;  // True if the tenant's IoTHub is fully deployed, false otherwise
         }
 
@@ -76,16 +76,16 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantId);
-            await this._tableStorageClient.InsertAsync<TenantModel>(TENANT_TABLE_ID, tenant);
+            await this.TableStorageClient.InsertAsync<TenantModel>(TENANT_TABLE_ID, tenant);
 
             // kick off provisioning runbooks
-            await this._runbookHelper.CreateIotHub(tenantId, iotHubName, dpsName);
+            await this.RunbookHelper.CreateIotHub(tenantId, iotHubName, dpsName);
 
             // Give the requesting user an admin role to the new tenant
 
             try
             {
-                await _identityClient.AddTenantForUserAsync(userId, tenantId, CREATED_ROLE);
+                await IdentityClient.AddTenantForUserAsync(userId, tenantId, CREATED_ROLE);
             }
             catch (Exception e)
             {
@@ -97,7 +97,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             try
             {
-                userSettings = await _identityClient.GetSettingsForUserAsync(userId, LAST_USED_SETTING_KEY);
+                userSettings = await IdentityClient.GetSettingsForUserAsync(userId, LAST_USED_SETTING_KEY);
             }
             catch (Exception e)
             {
@@ -108,7 +108,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 // Set the last used tenant to be this new tenant
                 try
                 {
-                    await _identityClient.AddSettingsForUserAsync(userId, LAST_USED_SETTING_KEY, tenantId);
+                    await IdentityClient.AddSettingsForUserAsync(userId, LAST_USED_SETTING_KEY, tenantId);
                 }
                 catch (Exception e)
                 {
@@ -123,7 +123,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 {
                     string collectionKey = string.Format(this.appConfigCollectionKeyFormat, tenantId, collection);
                     string collectionId = $"{collection}-{tenantId}";
-                    await this._appConfigHelper.SetValueAsync(collectionKey, collectionId);
+                    await this.AppConfigHelper.SetValueAsync(collectionKey, collectionId);
                 }
             }
             catch (Exception e)
@@ -134,7 +134,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             try
             {
-                await this._deviceGroupClient.CreateDefaultDeviceGroupAsync(tenantId);
+                await this.DeviceGroupClient.CreateDefaultDeviceGroupAsync(tenantId);
             }
             catch (Exception e)
             {
@@ -154,7 +154,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             try
             {
                 // Load the tenant from table storage
-                var tenant = await this._tableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, tenantId.Substring(0, 1), tenantId);
+                var tenant = await this.TableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, tenantId.Substring(0, 1), tenantId);
                 return tenant;
             }
             catch (Exception e)
@@ -176,7 +176,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
-            TenantModel tenant = await this._tableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
+            TenantModel tenant = await this.TableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
             if (tenant != null && !tenant.IsIotHubDeployed && ensureFullyDeployed)
             {
                 // If the tenant iothub is not deployed, we should not be able to start the delete process
@@ -186,19 +186,19 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
             else if (tenant == null)
             {
-                _logger.LogInformation("The tenant {tenantId} could not be deleted from Table Storage because it does not exist or was not fully created.", tenantId);
+                Logger.LogInformation("The tenant {tenantId} could not be deleted from Table Storage because it does not exist or was not fully created.", tenantId);
                 deletionRecord["tenantTableStorage"] = true;
             }
             else
             {
                 try
                 {
-                    await this._tableStorageClient.DeleteAsync<TenantModel>(TENANT_TABLE_ID, tenant);
+                    await this.TableStorageClient.DeleteAsync<TenantModel>(TENANT_TABLE_ID, tenant);
                     deletionRecord["tenantTableStorage"] = true;
                 }
                 catch (Exception e)
                 {
-                    _logger.LogInformation(e, "Unable to delete info from table storage for tenant {tenantId}", tenantId);
+                    Logger.LogInformation(e, "Unable to delete info from table storage for tenant {tenantId}", tenantId);
                     deletionRecord["tableStorage"] = false;
                 }
             }
@@ -206,28 +206,28 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // delete the tenant from the user
             try
             {
-                await this._identityClient.DeleteTenantForAllUsersAsync(tenantId);
+                await this.IdentityClient.DeleteTenantForAllUsersAsync(tenantId);
                 deletionRecord["userTableStorage"] = true;
             }
             catch (Exception e)
             {
-                _logger.LogInformation(e, "Unable to delete user-tenant relationships for tenant {tenantId} in the user table.", tenantId);
+                Logger.LogInformation(e, "Unable to delete user-tenant relationships for tenant {tenantId} in the user table.", tenantId);
                 deletionRecord["userTableStorage"] = false;
             }
 
             // update userSettings table LastUsedTenant if necessary
             try
             {
-                IdentityGatewayApiSettingModel lastUsedTenant = await this._identityClient.GetSettingsForUserAsync(userId, "LastUsedTenant");
+                IdentityGatewayApiSettingModel lastUsedTenant = await this.IdentityClient.GetSettingsForUserAsync(userId, "LastUsedTenant");
                 if (lastUsedTenant.Value == tenantId)
                 {
                     // update the LastUsedTenant to some null
-                    await this._identityClient.UpdateSettingsForUserAsync(userId, "LastUsedTenant", string.Empty);
+                    await this.IdentityClient.UpdateSettingsForUserAsync(userId, "LastUsedTenant", string.Empty);
                 }
             }
             catch (Exception e)
             {
-                _logger.LogInformation(e, "Unable to get the user {userId} LastUsedTenant setting, the setting will not be updated.", userId);
+                Logger.LogInformation(e, "Unable to get the user {userId} LastUsedTenant setting, the setting will not be updated.", userId);
             }
 
             // Gather tenant information
@@ -236,12 +236,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // trigger delete iothub runbook
             try
             {
-                await this._runbookHelper.DeleteIotHub(tenantId, iotHubName, dpsName);
+                await this.RunbookHelper.DeleteIotHub(tenantId, iotHubName, dpsName);
                 deletionRecord["iotHub"] = true;
             }
             catch (Exception e)
             {
-                _logger.LogInformation(e, "Unable to successfully trigger Delete IoTHub Runbook for tenant {tenantId}", tenantId);
+                Logger.LogInformation(e, "Unable to successfully trigger Delete IoTHub Runbook for tenant {tenantId}", tenantId);
                 deletionRecord["iotHub"] = false;
             }
 
@@ -249,12 +249,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // trigger delete SA runbook
             try
             {
-                await this._runbookHelper.DeleteAlerting(tenantId, saJobName);
+                await this.RunbookHelper.DeleteAlerting(tenantId, saJobName);
                 deletionRecord["alerting"] = true;
             }
             catch (Exception e)
             {
-                _logger.LogInformation(e, "Unable to successfully trigger Delete Alerting runbook for tenant {tenantId}", tenantId);
+                Logger.LogInformation(e, "Unable to successfully trigger Delete Alerting runbook for tenant {tenantId}", tenantId);
                 deletionRecord["alerting"] = false;
             }
 
@@ -267,16 +267,16 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 string collectionId = string.Empty;
                 try
                 {
-                    collectionId = this._appConfigHelper.GetValue(collectionAppConfigKey);
+                    collectionId = this.AppConfigHelper.GetValue(collectionAppConfigKey);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogInformation(e, "Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantId}", collectionAppConfigKey, tenantId);
+                    Logger.LogInformation(e, "Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantId}", collectionAppConfigKey, tenantId);
                 }
 
                 if (string.IsNullOrEmpty(collectionId))
                 {
-                    _logger.LogInformation("The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection", collectionAppConfigKey, tenantId);
+                    Logger.LogInformation("The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection", collectionAppConfigKey, tenantId);
                     // Currently, the assumption for an unknown collection id is that it has been deleted.
                     // We can come to this conclusion by assuming that the app config key containing the collection id was already deleted.
                     // TODO: Determine a more explicit outcome for this scenario - jrb
@@ -287,28 +287,28 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
                 try
                 {
-                    await this._cosmosClient.DeleteCollectionAsync(databaseId, collectionId);
+                    await this.CosmosClient.DeleteCollectionAsync(databaseId, collectionId);
                     deletionRecord[$"{collection}Collection"] = true;
                 }
                 catch (ResourceNotFoundException e)
                 {
-                    _logger.LogInformation(e, "The {collection} collection for tenant {tenantId} does exist and cannot be deleted.", collectionId, tenantId);
+                    Logger.LogInformation(e, "The {collection} collection for tenant {tenantId} does exist and cannot be deleted.", collectionId, tenantId);
                     deletionRecord[$"{collection}Collection"] = true;
                 }
                 catch (Exception e)
                 {
                     deletionRecord[$"{collection}Collection"] = false;
-                    _logger.LogInformation(e, "An error occurred while deleting the {collection} collection for tenant {tenantId}", collectionId, tenantId);
+                    Logger.LogInformation(e, "An error occurred while deleting the {collection} collection for tenant {tenantId}", collectionId, tenantId);
                 }
 
                 try
                 {
                     // now that we have the collection Id, delete the key from app config
-                    await this._appConfigHelper.DeleteKeyAsync(collectionAppConfigKey);
+                    await this.AppConfigHelper.DeleteKeyAsync(collectionAppConfigKey);
                 }
                 catch (Exception e)
                 {
-                    _logger.LogInformation(e, "Unable to delete {collectionKey} from App Config", collectionAppConfigKey, tenantId);
+                    Logger.LogInformation(e, "Unable to delete {collectionKey} from App Config", collectionAppConfigKey, tenantId);
                 }
             }
 

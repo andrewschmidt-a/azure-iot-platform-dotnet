@@ -20,7 +20,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
 {
     public class AlarmsByRuleControllerTest : IDisposable
     {
-        private readonly Mock<ILogger<AlarmsByRuleController>> _logger;
+        private readonly Mock<ILogger<AlarmsByRuleController>> logger;
         private readonly IStorageClient storage;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly Mock<IAppConfigurationHelper> appConfigHelper;
@@ -45,7 +45,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
         {
             Mock<IStorageAdapterClient> storageAdapterClient = new Mock<IStorageAdapterClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _logger = new Mock<ILogger<AlarmsByRuleController>>();
+            logger = new Mock<ILogger<AlarmsByRuleController>>();
             this.appConfigHelper = new Mock<IAppConfigurationHelper>();
             this.asaManager = new Mock<IAsaManagerClient>();
             var config = new AppConfig();
@@ -63,7 +63,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
 
             Alarms alarmService = new Alarms(config, this.storage, new Mock<ILogger<Alarms>>().Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
             Rules rulesService = new Rules(storageAdapterClient.Object, this.asaManager.Object, new Mock<ILogger<Rules>>().Object, alarmService, new Mock<IDiagnosticsClient>().Object);
-            this.controller = new AlarmsByRuleController(alarmService, rulesService, this._logger.Object);
+            this.controller = new AlarmsByRuleController(alarmService, rulesService, this.logger.Object);
         }
 
         // Ignoring test. Updating .net core and xunit version wants this class to be public. However, this test fails when the class is made public.

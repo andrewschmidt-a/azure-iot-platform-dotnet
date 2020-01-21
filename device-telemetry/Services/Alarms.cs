@@ -28,11 +28,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private const string TENANT_INFO_KEY = "tenant";
         private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
         private const int DOC_QUERY_LIMIT = 1000;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly IStorageClient storageClient;
         private readonly AppConfig config;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAppConfigurationHelper _appConfigurationHelper;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IAppConfigurationHelper appConfigurationHelper;
         private readonly string databaseName;
         private readonly int maxDeleteRetryCount;
 
@@ -45,19 +45,19 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         {
             this.storageClient = storageClient;
             this.databaseName = config.DeviceTelemetryService.Alarms.Database;
-            _logger = logger;
+            this.logger = logger;
             this.maxDeleteRetryCount = config.DeviceTelemetryService.Alarms.MaxDeleteRetries;
             this.config = config;
-            this._httpContextAccessor = contextAccessor;
-            this._appConfigurationHelper = appConfigurationHelper;
+            this.httpContextAccessor = contextAccessor;
+            this.appConfigurationHelper = appConfigurationHelper;
         }
 
         private string CollectionId
         {
             get
             {
-                return this._appConfigurationHelper.GetValue(
-                    $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
+                return this.appConfigurationHelper.GetValue(
+                    $"{TENANT_INFO_KEY}:{httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
             }
         }
 
@@ -90,7 +90,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 devices,
                 DEVICE_ID_KEY);
 
-            _logger.LogDebug("Created alarm query {sql}", sql);
+            logger.LogDebug("Created alarm query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -138,7 +138,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 devices,
                 DEVICE_ID_KEY);
 
-            _logger.LogDebug("Created alarm by rule query {sql}", sql);
+            logger.LogDebug("Created alarm by rule query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -232,7 +232,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             catch (AggregateException aggregateException)
             {
                 Exception inner = aggregateException.InnerExceptions[0];
-                _logger.LogError(inner, "Failed to delete alarm");
+                logger.LogError(inner, "Failed to delete alarm");
                 throw inner;
             }
         }
@@ -272,11 +272,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
                     if (retryCount >= this.maxDeleteRetryCount)
                     {
-                        _logger.LogError(e, "Failed to delete alarm {id}", id);
+                        logger.LogError(e, "Failed to delete alarm {id}", id);
                         throw new ExternalDependencyException(e.Message);
                     }
 
-                    _logger.LogWarning(e, "Exception on delete alarm {id}", id);
+                    logger.LogWarning(e, "Exception on delete alarm {id}", id);
                     Thread.Sleep(retryTimeSpan);
                 }
             }

@@ -6,14 +6,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
 {
     public class Timer : ITimer, IDisposable
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private bool disposedValue = false;
         private System.Threading.Timer timer;
         private int frequency;
 
         public Timer(ILogger<Timer> logger)
         {
-            _logger = logger;
+            this.logger = logger;
             this.frequency = 0;
         }
 
@@ -42,7 +42,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
         {
             if (this.timer == null)
             {
-                _logger.LogError("The timer is not initialized");
+                logger.LogError("The timer is not initialized");
                 throw new TimerNotInitializedException();
             }
 

@@ -11,21 +11,21 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Wrappers
 {
     public class DocumentClientFactory : IFactory<IDocumentClient>
     {
-        private readonly AppConfig _appConfig;
-        private readonly ILogger _logger;
+        private readonly AppConfig appConfig;
+        private readonly ILogger logger;
         private string connectionStringRegex = "^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$";
 
         public DocumentClientFactory(AppConfig appConfig, ILogger<DocumentClientFactory> logger)
         {
-            _appConfig = appConfig;
-            _logger = logger;
+            this.appConfig = appConfig;
+            this.logger = logger;
         }
 
         public IDocumentClient Create()
         {
             try
             {
-                var match = Regex.Match(_appConfig.Global.CosmosDb.DocumentDbConnectionString, this.connectionStringRegex);
+                var match = Regex.Match(appConfig.Global.CosmosDb.DocumentDbConnectionString, this.connectionStringRegex);
                 if (!match.Success)
                 {
                     string message = "Invalid Connection String for CosmosDb";
@@ -38,7 +38,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Wrappers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.Message);
+                logger.LogError(ex.Message);
                 throw;
             }
         }

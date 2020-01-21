@@ -20,15 +20,15 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class UserTenantController : Controller
     {
-        private readonly ISendGridClientFactory _sendGridClientFactory;
-        private UserTenantContainer _container;
-        private IJwtHelpers _jwtHelper;
+        private readonly ISendGridClientFactory sendGridClientFactory;
+        private UserTenantContainer container;
+        private IJwtHelpers jwtHelper;
 
         public UserTenantController(UserTenantContainer container, IJwtHelpers jwtHelper, ISendGridClientFactory sendGridClientFactory)
         {
-            this._container = container;
-            this._jwtHelper = jwtHelper;
-            this._sendGridClientFactory = sendGridClientFactory;
+            this.container = container;
+            this.jwtHelper = jwtHelper;
+            this.sendGridClientFactory = sendGridClientFactory;
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
                 UserId = null,
                 Tenant = this.GetTenantId()
             };
-            return await this._container.GetAllUsersAsync(input);
+            return await this.container.GetAllUsersAsync(input);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             {
                 UserId = userId,
             };
-            return await this._container.GetAllAsync(input);
+            return await this.container.GetAllAsync(input);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
                 UserId = userId,
                 Tenant = this.GetTenantId()
             };
-            return await this._container.GetAsync(input);
+            return await this.container.GetAsync(input);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
                 Name = model.Name,
                 Type = model.Type
             };
-            return await this._container.CreateAsync(input);
+            return await this.container.CreateAsync(input);
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
                 Tenant = this.GetTenantId(),
                 Roles = update.Roles
             };
-            return await this._container.UpdateAsync(input);
+            return await this.container.UpdateAsync(input);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
                 UserId = userId,
                 Tenant = this.GetTenantId()
             };
-            return await this._container.DeleteAsync(input);
+            return await this.container.DeleteAsync(input);
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             {
                 Tenant = this.GetTenantId()
             };
-            return await this._container.DeleteAllAsync(input);
+            return await this.container.DeleteAllAsync(input);
         }
         /// <summary>
         /// Invite the user to join a tenant
@@ -238,7 +238,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             }
 
             var jwtHandler = new JwtSecurityTokenHandler();
-            string inviteToken = jwtHandler.WriteToken(this._jwtHelper.MintToken(claims, "IdentityGateway", DateTime.Now.AddDays(3)));
+            string inviteToken = jwtHandler.WriteToken(this.jwtHelper.MintToken(claims, "IdentityGateway", DateTime.Now.AddDays(3)));
 
             var msg = new SendGridMessage();
 
@@ -256,10 +256,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             msg.AddContent(MimeType.Text, "Click here to join the tenant: ");
             msg.AddContent(MimeType.Html, "<a href=\"" + link + "\">" + link + "</a>");
 
-            var client = _sendGridClientFactory.CreateSendGridClient();
+            var client = sendGridClientFactory.CreateSendGridClient();
             var response = await client.SendEmailAsync(msg);
 
-            return await this._container.CreateAsync(input);
+            return await this.container.CreateAsync(input);
         }
     }
 }

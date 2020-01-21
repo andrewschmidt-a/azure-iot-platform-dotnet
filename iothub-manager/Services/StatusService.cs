@@ -18,7 +18,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
         private readonly IDevices devices;
         private readonly IHttpClient httpClient;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly AppConfig config;
 
         public StatusService(
@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             IDevices devices,
             AppConfig config)
         {
-            _logger = logger;
+            this.logger = logger;
             this.httpClient = httpClient;
             this.devices = devices;
             this.config = config;
@@ -76,7 +76,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
             result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
 
-            _logger.LogInformation("Service status request {result}", result);
+            logger.LogInformation("Service status request {result}", result);
 
             return result;
         }
@@ -114,7 +114,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, result.Message);
+                logger.LogError(e, result.Message);
             }
 
             return result;
@@ -134,7 +134,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
             }
 
-            _logger.LogDebug("Prepare request {request}", request);
+            logger.LogDebug("Prepare request {request}", request);
 
             return request;
         }
