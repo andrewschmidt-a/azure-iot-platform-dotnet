@@ -11,7 +11,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class DevicesController : Controller
     {
-        const string ContinuationTokenName = "x-ms-continuation";
+        private const string ContinuationTokenName = "x-ms-continuation";
         private readonly IDevices devices;
         private readonly IDeviceProperties deviceProperties;
         private readonly IDeviceService deviceService;

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
-    static class QueryConditionTranslator
+    public static class QueryConditionTranslator
     {
         private static readonly Dictionary<string, string> OperatorMap = new Dictionary<string, string>
         {
