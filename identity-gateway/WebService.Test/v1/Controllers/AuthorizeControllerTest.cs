@@ -24,9 +24,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
     public class AuthorizeControllerTest : IDisposable
     {
         public static readonly string ValidAuthHeader = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-        private const string someIssuer = "http://someIssuer";
-        private const string somePublicKey = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAryQICCl6NZ5gDKrnSztO\r\n3Hy8PEUcuyvg/ikC+VcIo2SFFSf18a3IMYldIugqqqZCs4/4uVW3sbdLs/6PfgdX\r\n7O9D22ZiFWHPYA2k2N744MNiCD1UE+tJyllUhSblK48bn+v1oZHCM0nYQ2NqUkvS\r\nj+hwUU3RiWl7x3D2s9wSdNt7XUtW05a/FXehsPSiJfKvHJJnGOX0BgTvkLnkAOTd\r\nOrUZ/wK69Dzu4IvrN4vs9Nes8vbwPa/ddZEzGR0cQMt0JBkhk9kU/qwqUseP1QRJ\r\n5I1jR4g8aYPL/ke9K35PxZWuDp3U0UPAZ3PjFAh+5T+fc7gzCs9dPzSHloruU+gl\r\nFQIDAQAB\r\n-----END PUBLIC KEY-----";
-        private const string someUri = "http://azureb2caseuri.com";
+        private const string SomeIssuer = "http://someIssuer";
+        private const string SomePublicKey = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAryQICCl6NZ5gDKrnSztO\r\n3Hy8PEUcuyvg/ikC+VcIo2SFFSf18a3IMYldIugqqqZCs4/4uVW3sbdLs/6PfgdX\r\n7O9D22ZiFWHPYA2k2N744MNiCD1UE+tJyllUhSblK48bn+v1oZHCM0nYQ2NqUkvS\r\nj+hwUU3RiWl7x3D2s9wSdNt7XUtW05a/FXehsPSiJfKvHJJnGOX0BgTvkLnkAOTd\r\nOrUZ/wK69Dzu4IvrN4vs9Nes8vbwPa/ddZEzGR0cQMt0JBkhk9kU/qwqUseP1QRJ\r\n5I1jR4g8aYPL/ke9K35PxZWuDp3U0UPAZ3PjFAh+5T+fc7gzCs9dPzSHloruU+gl\r\nFQIDAQAB\r\n-----END PUBLIC KEY-----";
+        private const string SomeUri = "http://azureb2caseuri.com";
         private string invite = "someInvite";
         private bool disposedValue = false;
         private Mock<IUserContainer<UserSettingsModel, UserSettingsInput>> mockUserSettingsContainer;
@@ -115,7 +115,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
             Assert.Equal(someTenant, returnedState["tenant"]);
             Assert.Equal(nonce, returnedState["nonce"]);
             Assert.Equal(clientId, returnedState["client_id"]);
-            Assert.Equal($"{someIssuer}/connect/callback", queryStrings["redirect_uri"]);
+            Assert.Equal($"{SomeIssuer}/connect/callback", queryStrings["redirect_uri"]);
             Assert.Equal(invite, returnedState["invitation"]);
         }
 
@@ -291,11 +291,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
 
         private void SetupDefaultBehaviors()
         {
-            mockAppConfig.Setup(m => m.Global.AzureB2cBaseUri).Returns(someUri);
-            mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(somePublicKey);
+            mockAppConfig.Setup(m => m.Global.AzureB2cBaseUri).Returns(SomeUri);
+            mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(SomePublicKey);
             someSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", someTenant.ToString()) });
             mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out someSecurityToken)).Returns(true);
-            mockOpenIdProviderConfiguration.Setup(m => m.Issuer).Returns(someIssuer);
+            mockOpenIdProviderConfiguration.Setup(m => m.Issuer).Returns(SomeIssuer);
         }
     }
 }

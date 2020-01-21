@@ -17,7 +17,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
 {
     public class UserSettingsContainerTest
     {
-        private const int dynamicTableEntityCount = 100;
+        private const int DynamicTableEntityCount = 100;
         private UserSettingsContainer userSettingsContainer;
         private Mock<ITableStorageClient> mockTableStorageClient;
         private Random random = new Random();
@@ -36,10 +36,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         {
             // Arrange
             dynamicTableEntities = DynamicTableEntityBuilder
-                .CreateListOfSize(dynamicTableEntityCount)
+                .CreateListOfSize(DynamicTableEntityCount)
                 .All()
                 .WithRandomValueProperty()
-                .TheLast(random.Next(0, dynamicTableEntityCount))
+                .TheLast(random.Next(0, DynamicTableEntityCount))
                 .Set(dte => dte.PartitionKey, someUserSettingsInput.UserId)
                 .BuildList();
 
@@ -110,7 +110,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         {
             // Arrange
             dynamicTableEntities = DynamicTableEntityBuilder
-                .CreateListOfSize(dynamicTableEntityCount)
+                .CreateListOfSize(DynamicTableEntityCount)
                 .All()
                 .WithRandomValueProperty()
                 .TheLast(1)

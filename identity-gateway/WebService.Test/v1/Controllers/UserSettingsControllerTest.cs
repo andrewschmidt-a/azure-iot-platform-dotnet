@@ -16,10 +16,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
 {
     public class UserSettingsControllerTest : IDisposable
     {
-        private const string someUserId = "someUserId";
-        private const string someSub = "someSub";
-        private const string someSetting = "someSetting";
-        private const string someValue = "someValue";
+        private const string SomeUserId = "someUserId";
+        private const string SomeSub = "someSub";
+        private const string SomeSetting = "someSetting";
+        private const string SomeValue = "someValue";
         private Mock<HttpRequest> mockHttpRequest;
         private bool disposedValue = false;
         private Mock<UserSettingsContainer> mockUserSettingsContainer;
@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.GetAllAsync(someUserId);
+            var result = await userSettingsController.GetAllAsync(SomeUserId);
 
             // Assert
             Assert.Equal(someUserSettingsList, result);
@@ -65,7 +65,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.GetAsync(someUserId, someSetting);
+            var result = await userSettingsController.GetAsync(SomeUserId, SomeSetting);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -77,7 +77,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.UserClaimsGetAsync(someSetting);
+            var result = await userSettingsController.UserClaimsGetAsync(SomeSetting);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -89,7 +89,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.PostAsync(someUserId, someSetting, someValue);
+            var result = await userSettingsController.PostAsync(SomeUserId, SomeSetting, SomeValue);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.UserClaimsPostAsync(someSetting, someValue);
+            var result = await userSettingsController.UserClaimsPostAsync(SomeSetting, SomeValue);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -113,7 +113,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.PutAsync(someUserId, someSetting, someValue);
+            var result = await userSettingsController.PutAsync(SomeUserId, SomeSetting, SomeValue);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -125,7 +125,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.UserClaimsPutAsync(someSetting, someValue);
+            var result = await userSettingsController.UserClaimsPutAsync(SomeSetting, SomeValue);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -137,7 +137,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.DeleteAsync(someUserId, someSetting);
+            var result = await userSettingsController.DeleteAsync(SomeUserId, SomeSetting);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -149,7 +149,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.UserClaimsDeleteAsync(someSetting);
+            var result = await userSettingsController.UserClaimsDeleteAsync(SomeSetting);
 
             // Assert
             Assert.Equal(someUserSettings, result);
@@ -200,7 +200,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
             {
                 {
                     RequestExtension.ContextKeyUserClaims,
-                    new List<Claim> { new Claim(RequestExtension.UserObjectIdClaimType, someSub) }
+                    new List<Claim> { new Claim(RequestExtension.UserObjectIdClaimType, SomeSub) }
                 }
             };
             mockHttpContext.Setup(m => m.Items).Returns(contextItems);

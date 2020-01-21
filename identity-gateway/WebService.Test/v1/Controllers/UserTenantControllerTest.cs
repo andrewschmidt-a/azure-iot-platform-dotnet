@@ -23,10 +23,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
 {
     public class UserTenantControllerTest : IDisposable
     {
-        private const string someUserId = "someUserId";
-        private const string someSub = "someSub";
-        private const string someRole = "someRole";
-        private const string someTenantId = "someTenantId";
+        private const string SomeUserId = "someUserId";
+        private const string SomeSub = "someSub";
+        private const string SomeRole = "someRole";
+        private const string SomeTenantId = "someTenantId";
         private bool disposedValue = false;
         private Mock<UserTenantContainer> mockUserTenantContainer;
         private UserTenantController userTenantController;
@@ -37,7 +37,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         private Mock<IJwtHelpers> mockJwtHelper;
         private Mock<ISendGridClientFactory> mockSendGridClientFactory;
         private Mock<ISendGridClient> mockSendGridClient;
-        private Invitation someInvitation = new Invitation { role = someRole };
+        private Invitation someInvitation = new Invitation { role = SomeRole };
         private JwtSecurityToken someSecurityToken;
         private Guid someTenant = Guid.NewGuid();
         private HostString someHost = new HostString("somehost");
@@ -79,7 +79,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.GetAllTenantsForUserAsync(someUserId);
+            var result = await userTenantController.GetAllTenantsForUserAsync(SomeUserId);
 
             // Assert
             Assert.Equal(someUserTenantList, result);
@@ -103,7 +103,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.GetAsync(someUserId);
+            var result = await userTenantController.GetAsync(SomeUserId);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -115,7 +115,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.PostAsync(someUserId, someUserTenant);
+            var result = await userTenantController.PostAsync(SomeUserId, someUserTenant);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -139,7 +139,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.PutAsync(someUserId, someUserTenant);
+            var result = await userTenantController.PutAsync(SomeUserId, someUserTenant);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -163,7 +163,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.DeleteAsync(someUserId);
+            var result = await userTenantController.DeleteAsync(SomeUserId);
 
             // Assert
             Assert.Equal(someUserTenant, result);
@@ -260,10 +260,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
             {
                 {
                     RequestExtension.ContextKeyUserClaims,
-                    new List<Claim> { new Claim(RequestExtension.UserObjectIdClaimType, someSub) }
+                    new List<Claim> { new Claim(RequestExtension.UserObjectIdClaimType, SomeSub) }
                 },
                 {
-                    RequestExtension.ContextKeyTenantId, someTenantId
+                    RequestExtension.ContextKeyTenantId, SomeTenantId
                 }
             };
             mockHttpContext.Setup(m => m.Items).Returns(contextItems);

@@ -21,7 +21,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
         private const string MOCK_TENANT_ID = "mocktenant";
         private const string MOCK_DB_ID = "pcs-storage";
         private const string MOCK_COLL_ID = "mockcoll";
-        private const string appConfigConnString = "";
+        private const string AppConfigConnString = "";
         private static readonly string mockCollectionLink = $"/dbs/{MOCK_DB_ID}/colls/{MOCK_COLL_ID}";
         private readonly Mock<IDocumentClient> mockClient;
         private readonly Mock<IHttpContextAccessor> mockContextAccessor;

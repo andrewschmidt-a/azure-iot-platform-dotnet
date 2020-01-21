@@ -18,7 +18,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
 {
     public class UserTenantContainerTest
     {
-        private const int dynamicTableEntityCount = 100;
+        private const int DynamicTableEntityCount = 100;
         private UserTenantContainer userTenantContainer;
         private Mock<ITableStorageClient> mockTableStorageClient;
         private Random random = new Random();
@@ -45,10 +45,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         {
             // Arrange
             dynamicTableEntities = DynamicTableEntityBuilder
-                .CreateListOfSize(dynamicTableEntityCount)
+                .CreateListOfSize(DynamicTableEntityCount)
                 .All()
                 .WithRandomRolesProperty()
-                .TheLast(random.Next(0, dynamicTableEntityCount))
+                .TheLast(random.Next(0, DynamicTableEntityCount))
                 .Set(dte => dte.PartitionKey, someUserTenantInput.UserId)
                 .BuildList();
 
@@ -85,10 +85,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         {
             // Arrange
             dynamicTableEntities = DynamicTableEntityBuilder
-                .CreateListOfSize(dynamicTableEntityCount)
+                .CreateListOfSize(DynamicTableEntityCount)
                 .All()
                 .WithRandomRolesProperty()
-                .TheLast(random.Next(0, dynamicTableEntityCount))
+                .TheLast(random.Next(0, DynamicTableEntityCount))
                 .Set(dte => dte.RowKey, someUserTenantInput.Tenant)
                 .BuildList();
 
@@ -139,7 +139,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         {
             // Arrange
             dynamicTableEntities = DynamicTableEntityBuilder
-                .CreateListOfSize(dynamicTableEntityCount)
+                .CreateListOfSize(DynamicTableEntityCount)
                 .All()
                 .WithRandomRolesProperty()
                 .TheLast(1)
@@ -361,10 +361,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         {
             // Arrange
             dynamicTableEntities = DynamicTableEntityBuilder
-                .CreateListOfSize(dynamicTableEntityCount)
+                .CreateListOfSize(DynamicTableEntityCount)
                 .All()
                 .WithRandomRolesProperty()
-                .TheLast(random.Next(0, dynamicTableEntityCount))
+                .TheLast(random.Next(0, DynamicTableEntityCount))
                 .Set(dte => dte.RowKey, someUserTenantInput.Tenant)
                 .BuildList();
 

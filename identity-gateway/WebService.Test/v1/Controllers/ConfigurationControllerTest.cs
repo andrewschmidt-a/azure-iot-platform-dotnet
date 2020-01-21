@@ -15,9 +15,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
 {
     public class ConfigurationControllerTest : IDisposable
     {
-        private const string somePublicKey = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAryQICCl6NZ5gDKrnSztO\r\n3Hy8PEUcuyvg/ikC+VcIo2SFFSf18a3IMYldIugqqqZCs4/4uVW3sbdLs/6PfgdX\r\n7O9D22ZiFWHPYA2k2N744MNiCD1UE+tJyllUhSblK48bn+v1oZHCM0nYQ2NqUkvS\r\nj+hwUU3RiWl7x3D2s9wSdNt7XUtW05a/FXehsPSiJfKvHJJnGOX0BgTvkLnkAOTd\r\nOrUZ/wK69Dzu4IvrN4vs9Nes8vbwPa/ddZEzGR0cQMt0JBkhk9kU/qwqUseP1QRJ\r\n5I1jR4g8aYPL/ke9K35PxZWuDp3U0UPAZ3PjFAh+5T+fc7gzCs9dPzSHloruU+gl\r\nFQIDAQAB\r\n-----END PUBLIC KEY-----";
-        private const string someUri = "http://azureb2caseuri.com";
-        private const string someIssuer = "http://someissuer";
+        private const string SomePublicKey = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAryQICCl6NZ5gDKrnSztO\r\n3Hy8PEUcuyvg/ikC+VcIo2SFFSf18a3IMYldIugqqqZCs4/4uVW3sbdLs/6PfgdX\r\n7O9D22ZiFWHPYA2k2N744MNiCD1UE+tJyllUhSblK48bn+v1oZHCM0nYQ2NqUkvS\r\nj+hwUU3RiWl7x3D2s9wSdNt7XUtW05a/FXehsPSiJfKvHJJnGOX0BgTvkLnkAOTd\r\nOrUZ/wK69Dzu4IvrN4vs9Nes8vbwPa/ddZEzGR0cQMt0JBkhk9kU/qwqUseP1QRJ\r\n5I1jR4g8aYPL/ke9K35PxZWuDp3U0UPAZ3PjFAh+5T+fc7gzCs9dPzSHloruU+gl\r\nFQIDAQAB\r\n-----END PUBLIC KEY-----";
+        private const string SomeUri = "http://azureb2caseuri.com";
+        private const string SomeIssuer = "http://someissuer";
         private bool disposedValue = false;
         private ConfigurationController configurationController;
         private Mock<HttpContext> mockHttpContext;
@@ -42,7 +42,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
             var openIdProviderConfiguration = result.Value as IOpenIdProviderConfiguration;
 
             // Assert
-            Assert.Equal(someIssuer, openIdProviderConfiguration.Issuer);
+            Assert.Equal(SomeIssuer, openIdProviderConfiguration.Issuer);
             Assert.Equal(ConfigurationController.ContentType, result.ContentTypes[0]);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
         }
@@ -98,9 +98,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
 
         private void SetupDefaultBehaviors()
         {
-            mockAppConfig.Setup(m => m.Global.AzureB2cBaseUri).Returns(someUri);
-            mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(somePublicKey);
-            mockOpenIdProviderConfiguration.SetupGet(m => m.Issuer).Returns(someIssuer);
+            mockAppConfig.Setup(m => m.Global.AzureB2cBaseUri).Returns(SomeUri);
+            mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(SomePublicKey);
+            mockOpenIdProviderConfiguration.SetupGet(m => m.Issuer).Returns(SomeIssuer);
             mockRsaHelpers.Setup(m => m.GetJsonWebKey(It.IsAny<string>())).Returns(someJwks);
         }
     }
