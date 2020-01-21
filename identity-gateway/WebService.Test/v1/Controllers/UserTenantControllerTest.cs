@@ -37,7 +37,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         private Mock<IJwtHelpers> mockJwtHelper;
         private Mock<ISendGridClientFactory> mockSendGridClientFactory;
         private Mock<ISendGridClient> mockSendGridClient;
-        private Invitation someInvitation = new Invitation { role = SomeRole };
+        private Invitation someInvitation = new Invitation { Role = SomeRole };
         private JwtSecurityToken someSecurityToken;
         private Guid someTenant = Guid.NewGuid();
         private HostString someHost = new HostString("somehost");

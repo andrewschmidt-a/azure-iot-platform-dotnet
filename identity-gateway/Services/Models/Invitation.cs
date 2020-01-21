@@ -6,7 +6,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class Invitation
     {
-        public string email_address;
-        public string role;
+        public string EmailAddress;
+        public string Role;
     }
 }

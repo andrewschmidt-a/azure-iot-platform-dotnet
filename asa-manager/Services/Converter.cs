@@ -11,7 +11,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
 {
     public abstract class Converter : IConverter
     {
-        public string dateTimeFormat = $"{REFERENCE_DATA_DATE_FORMAT}/{REFERENCE_DATA_TIME_FORMAT}";
+        public string DateTimeFormat = $"{REFERENCE_DATA_DATE_FORMAT}/{REFERENCE_DATA_TIME_FORMAT}";
         protected readonly IBlobStorageClient _blobStorageClient;
         protected readonly IStorageAdapterClient _storageAdapterClient;
         protected readonly ILogger _logger;
@@ -36,7 +36,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
 
         public string GetBlobFilePath()
         {
-            string formattedDateTime = DateTimeOffset.UtcNow.ToString(this.dateTimeFormat);
+            string formattedDateTime = DateTimeOffset.UtcNow.ToString(this.DateTimeFormat);
             return $"{formattedDateTime}/{this.Entity}.{this.FileExtension}";
         }
 

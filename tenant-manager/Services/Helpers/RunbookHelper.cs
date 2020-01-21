@@ -16,7 +16,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public class RunbookHelper : IRunbookHelper, IDisposable
     {
-        public HttpClient httpClient;
+        public HttpClient HttpClient;
         private const string SA_JOB_DATABASE_ID = "pcs-iothub-stream";
         private readonly AppConfig config;
         private readonly ITokenHelper _tokenHelper;
@@ -32,7 +32,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             this.config = config;
             this._appConfigHelper = appConfigHelper;
 
-            this.httpClient = new HttpClient();
+            this.HttpClient = new HttpClient();
         }
 
         public async Task<StatusResultServiceModel> StatusAsync()
@@ -125,7 +125,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             {
                 if (disposing)
                 {
-                    httpClient.Dispose();
+                    HttpClient.Dispose();
                 }
 
                 disposedValue = true;
@@ -164,7 +164,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 {
                     throw new Exception($"The given webHookUrl string was null or empty. It may not be configured correctly.");
                 }
-                return await this.httpClient.PostAsync(webHookUrl, bodyContent);
+                return await this.HttpClient.PostAsync(webHookUrl, bodyContent);
             }
             catch (Exception e)
             {

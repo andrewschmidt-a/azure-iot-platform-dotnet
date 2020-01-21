@@ -72,7 +72,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             // Need to build Query carefully to not clobber other query items -- just injecting state
             var query = HttpUtility.ParseQueryString(uri.Query);
             query["state"] = JsonConvert.SerializeObject(new AuthState
-            { returnUrl = redirect_uri, state = state, tenant = tenant, nonce = nonce, client_id = clientId, invitation = invite });
+            { ReturnUrl = redirect_uri, State = state, Tenant = tenant, Nonce = nonce, ClientId = clientId, Invitation = invite });
             query["redirect_uri"] = _openIdProviderConfiguration.Issuer + "/connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
             return Redirect(uri.Uri.ToString());
@@ -207,7 +207,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 throw new Exception("Invlid state from authentication redirect", e);
             }
 
-            var originalAudience = authState.client_id;
+            var originalAudience = authState.ClientId;
 
             // Bring over Subject and Name
             var jwtHandler = new JwtSecurityTokenHandler();
@@ -215,9 +215,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             var claims = jwt.Claims.Where(t => new List<string> { "sub", "name" }.Contains(t.Type)).ToList();
 
             // If theres an invitation token then add user to tenant
-            if (!string.IsNullOrEmpty(authState.invitation))
+            if (!string.IsNullOrEmpty(authState.Invitation))
             {
-                var inviteJWT = jwtHandler.ReadJwtToken(authState.invitation);
+                var inviteJWT = jwtHandler.ReadJwtToken(authState.Invitation);
                 UserTenantInput UserTenant = new UserTenantInput()
                 {
                     UserId = claims.Where(c => c.Type == "sub").First().Value,
@@ -239,15 +239,15 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 claims.Add(new Claim("email", emailClaim.Value));
             }
 
-            if (!string.IsNullOrEmpty(authState.nonce))
+            if (!string.IsNullOrEmpty(authState.Nonce))
             {
-                claims.Add(new Claim("nonce", authState.nonce));
+                claims.Add(new Claim("nonce", authState.Nonce));
             }
 
-            string tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(claims, authState.tenant, originalAudience, null));
+            string tokenString = jwtHandler.WriteToken(await this._jwtHelper.GetIdentityToken(claims, authState.Tenant, originalAudience, null));
 
             // Build Return Uri
-            var returnUri = new UriBuilder(authState.returnUrl);
+            var returnUri = new UriBuilder(authState.ReturnUrl);
 
             // Need to build Query carefully to not clobber other query items -- just injecting state
             // var query = HttpUtility.ParseQueryString(returnUri.Query);
@@ -257,7 +257,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             returnUri.Fragment =
                 "id_token=" + tokenString + "&state=" +
                 HttpUtility.UrlEncode(authState
-                    .state); // pass token in Fragment for more security (Browser wont forward...)
+                    .State); // pass token in Fragment for more security (Browser wont forward...)
             return Redirect(returnUri.Uri.ToString());
         }
     }

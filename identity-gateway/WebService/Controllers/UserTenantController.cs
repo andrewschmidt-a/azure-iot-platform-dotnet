@@ -217,14 +217,14 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             {
                 UserId = Guid.NewGuid().ToString(),
                 Tenant = this.GetTenantId(),
-                Roles = JsonConvert.SerializeObject(new List<string>() { invitation.role }),
-                Name = invitation.email_address,
+                Roles = JsonConvert.SerializeObject(new List<string>() { invitation.Role }),
+                Name = invitation.EmailAddress,
                 Type = "Invited"
             };
 
             List<Claim> claims = new List<Claim>()
             {
-                new Claim("role", invitation.role),
+                new Claim("role", invitation.Role),
                 new Claim("tenant", this.GetTenantId()),
                 new Claim("userId", input.UserId)
             };
@@ -246,7 +246,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
 
             var recipients = new List<EmailAddress>
             {
-                new EmailAddress(invitation.email_address)
+                new EmailAddress(invitation.EmailAddress)
             };
             msg.AddTos(recipients);
 
