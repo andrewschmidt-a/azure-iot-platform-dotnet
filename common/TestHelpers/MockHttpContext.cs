@@ -9,6 +9,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
 {
     public sealed class MockHttpContext : IDisposable
     {
+        private bool disposedValue;
         private readonly HeaderDictionary requestHeaders = new HeaderDictionary();
         private readonly HeaderDictionary responseHeaders = new HeaderDictionary();
         private readonly MemoryStream requestBody = new MemoryStream();
@@ -33,6 +34,8 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
             this.mockContext.SetupGet(x => x.Response).Returns(response.Object);
         }
 
+        public HttpContext Object => this.mockContext.Object;
+
         public void SetHeader(string key, string value)
         {
             this.requestHeaders.Add(key, value);
@@ -56,10 +59,6 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
             var bytes = this.responseBody.ToArray();
             return Convert.ToBase64String(bytes);
         }
-
-        public HttpContext Object => this.mockContext.Object;
-
-        private bool disposedValue;
 
         private void Dispose(bool disposing)
         {

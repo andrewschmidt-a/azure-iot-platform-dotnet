@@ -20,30 +20,25 @@ using Alarm = Mmm.Platform.IoT.DeviceTelemetry.Services.Models.Alarm;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
 {
-    class AlarmsByRuleControllerTest : IDisposable
+    public class AlarmsByRuleControllerTest : IDisposable
     {
+        private bool disposedValue = false;
         private AlarmsByRuleController controller;
-
         private readonly Mock<ILogger<AlarmsByRuleController>> _logger;
         private readonly IStorageClient storage;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly Mock<IAppConfigurationHelper> appConfigHelper;
         private readonly Mock<IAsaManagerClient> asaManager;
-
         private List<Alarm> sampleAlarms;
-
         private string docSchemaKey = "doc.schema";
         private string docSchemaValue = "alarm";
-
         private string docSchemaVersionKey = "doc.schemaVersion";
         private int docSchemaVersionValue = 1;
-
         private string createdKey = "created";
         private string modifiedKey = "modified";
         private string descriptionKey = "description";
         private string statusKey = "status";
         private string deviceIdKey = "device.id";
-
         private string ruleIdKey = "rule.id";
         private string ruleSeverityKey = "rule.severity";
         private string ruleDescriptionKey = "rule.description";
@@ -189,8 +184,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
                 "critical",
                 "HVAC temp > 75");
         }
-
-        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {

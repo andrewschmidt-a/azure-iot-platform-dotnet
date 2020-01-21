@@ -7,18 +7,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Models
 {
     public class Alarm
     {
-        public string ETag { get; set; }
-        public string Id { get; set; }
-        public DateTimeOffset DateCreated { get; set; }
-        public DateTimeOffset DateModified { get; set; }
-        public string Description { get; set; }
-        public string GroupId { get; set; }
-        public string DeviceId { get; set; }
-        public string Status { get; set; }
-        public string RuleId { get; set; }
-        public string RuleSeverity { get; set; }
-        public string RuleDescription { get; set; }
-
         public Alarm(
             string etag,
             string id,
@@ -62,5 +50,17 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Models
                 this.RuleDescription = doc.GetPropertyValue<string>("rule.description");
             }
         }
+
+        public string ETag { get; set; }
+        public string Id { get; set; }
+        public DateTimeOffset DateCreated { get; set; }
+        public DateTimeOffset DateModified { get; set; }
+        public string Description { get; set; }
+        public string GroupId { get; set; }
+        public string DeviceId { get; set; }
+        public string Status { get; set; }
+        public string RuleId { get; set; }
+        public string RuleSeverity { get; set; }
+        public string RuleDescription { get; set; }
     }
 }

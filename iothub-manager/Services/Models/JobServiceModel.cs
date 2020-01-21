@@ -9,34 +9,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class JobServiceModel
     {
-        public string JobId { get; set; }
-
-        public string QueryCondition { get; set; }
-
-        public DateTime? CreatedTimeUtc { get; set; }
-
-        public DateTime? StartTimeUtc { get; set; }
-
-        public DateTime? EndTimeUtc { get; set; }
-
-        public long MaxExecutionTimeInSeconds { get; set; }
-
-        public JobType Type { get; set; }
-
-        public JobStatus Status { get; set; }
-
-        public MethodParameterServiceModel MethodParameter { get; set; }
-
-        public TwinServiceModel UpdateTwin { get; set; }
-
-        public string FailureReason { get; set; }
-
-        public string StatusMessage { get; set; }
-
-        public JobStatistics ResultStatistics { get; set; }
-
-        public IEnumerable<DeviceJobServiceModel> Devices { get; }
-
         public JobServiceModel()
         {
         }
@@ -103,6 +75,34 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             this.Devices = deviceJobs?.Select(j => new DeviceJobServiceModel(j));
         }
 
+        public string JobId { get; set; }
+
+        public string QueryCondition { get; set; }
+
+        public DateTime? CreatedTimeUtc { get; set; }
+
+        public DateTime? StartTimeUtc { get; set; }
+
+        public DateTime? EndTimeUtc { get; set; }
+
+        public long MaxExecutionTimeInSeconds { get; set; }
+
+        public JobType Type { get; set; }
+
+        public JobStatus Status { get; set; }
+
+        public MethodParameterServiceModel MethodParameter { get; set; }
+
+        public TwinServiceModel UpdateTwin { get; set; }
+
+        public string FailureReason { get; set; }
+
+        public string StatusMessage { get; set; }
+
+        public JobStatistics ResultStatistics { get; set; }
+
+        public IEnumerable<DeviceJobServiceModel> Devices { get; }
+
         public static Microsoft.Azure.Devices.JobType? ToJobTypeAzureModel(JobType? jobType)
         {
             if (!jobType.HasValue)
@@ -141,30 +141,5 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                     return Microsoft.Azure.Devices.JobStatus.Unknown;
             }
         }
-    }
-
-    /// <summary>
-    /// refer to Microsoft.Microsoft.Azure.Devices.JobType
-    /// </summary>
-    public enum JobType
-    {
-        Unknown = 0,
-        ScheduleDeviceMethod = 3,
-        ScheduleUpdateTwin = 4
-    }
-
-    /// <summary>
-    /// refer to Microsoft.Microsoft.Azure.Devices.JobStatus
-    /// </summary>
-    public enum JobStatus
-    {
-        Unknown = 0,
-        Enqueued = 1,
-        Running = 2,
-        Completed = 3,
-        Failed = 4,
-        Cancelled = 5,
-        Scheduled = 6,
-        Queued = 7
     }
 }

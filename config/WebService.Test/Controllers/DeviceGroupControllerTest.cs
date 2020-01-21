@@ -16,6 +16,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class DeviceGroupControllerTest : IDisposable
     {
+        private bool disposedValue = false;
         private readonly Mock<IStorage> mockStorage;
         private readonly DeviceGroupController controller;
         private readonly Random rand;
@@ -248,8 +249,6 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                         It.Is<string>(s => s == groupId)),
                     Times.Once);
         }
-
-        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {

@@ -8,15 +8,6 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 {
     public class ConditionApiModel
     {
-        [JsonProperty(PropertyName = "Field")]
-        public string Field { get; set; } = string.Empty;
-
-        [JsonProperty(PropertyName = "Operator")]
-        public string Operator { get; set; } = string.Empty;
-
-        [JsonProperty(PropertyName = "Value")]
-        public string Value { get; set; } = string.Empty;
-
         public ConditionApiModel() { }
 
         public ConditionApiModel(Condition condition)
@@ -28,6 +19,15 @@ namespace Mmm.Platform.IoT.Common.Services.Models
                 this.Value = condition.Value;
             }
         }
+
+        [JsonProperty(PropertyName = "Field")]
+        public string Field { get; set; } = string.Empty;
+
+        [JsonProperty(PropertyName = "Operator")]
+        public string Operator { get; set; } = string.Empty;
+
+        [JsonProperty(PropertyName = "Value")]
+        public string Value { get; set; } = string.Empty;
 
         public Condition ToServiceModel()
         {

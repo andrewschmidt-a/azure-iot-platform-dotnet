@@ -6,8 +6,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
 {
     public class UserTenantModel : TableEntity
     {
-        public string Roles { get; set; }
-
         public UserTenantModel() { }
 
         public UserTenantModel(string userId, string tenantId)
@@ -23,6 +21,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
             this.RowKey = tenantId;
             this.Roles = roles;
         }
+
+        public string Roles { get; set; }
 
         // Define aliases for the partition and row keys
         public string UserId

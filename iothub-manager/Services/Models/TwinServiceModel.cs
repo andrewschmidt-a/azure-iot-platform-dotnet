@@ -9,14 +9,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class TwinServiceModel
     {
-        public string ETag { get; set; }
-        public string DeviceId { get; set; }
-        public string ModuleId { get; set; }
-        public bool IsSimulated { get; set; }
-        public Dictionary<string, JToken> DesiredProperties { get; set; }
-        public Dictionary<string, JToken> ReportedProperties { get; set; }
-        public Dictionary<string, JToken> Tags { get; set; }
-
         public TwinServiceModel()
         {
         }
@@ -50,6 +42,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 this.IsSimulated = this.Tags.ContainsKey("IsSimulated") && this.Tags["IsSimulated"].ToString() == "Y";
             }
         }
+
+        public string ETag { get; set; }
+        public string DeviceId { get; set; }
+        public string ModuleId { get; set; }
+        public bool IsSimulated { get; set; }
+        public Dictionary<string, JToken> DesiredProperties { get; set; }
+        public Dictionary<string, JToken> ReportedProperties { get; set; }
+        public Dictionary<string, JToken> Tags { get; set; }
 
         public Twin ToAzureModel()
         {

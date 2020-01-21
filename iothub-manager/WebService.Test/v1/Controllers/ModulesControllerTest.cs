@@ -17,6 +17,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 {
     public class ModulesControllerTest : IDisposable
     {
+        private bool disposedValue = false;
         private readonly ModulesController modulesController;
         private readonly Mock<IDevices> devicesMock;
         private readonly HttpContext httpContext;
@@ -111,7 +112,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
                 }
             };
         }
-        private bool disposedValue = false;
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

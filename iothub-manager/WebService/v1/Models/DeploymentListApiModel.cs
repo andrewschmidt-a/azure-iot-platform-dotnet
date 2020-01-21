@@ -8,12 +8,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class DeploymentListApiModel
     {
-        [JsonProperty(PropertyName = "Items")]
-        public List<DeploymentApiModel> Items { get; set; }
-
-        [JsonProperty(PropertyName = "$metadata")]
-        public Dictionary<string, string> Metadata { get; set; }
-
         public DeploymentListApiModel()
         {
             this.Metadata = new Dictionary<string, string>
@@ -34,5 +28,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                 { "$url", $"/v1/deviceproperties" }
             };
         }
+
+        [JsonProperty(PropertyName = "Items")]
+        public List<DeploymentApiModel> Items { get; set; }
+
+        [JsonProperty(PropertyName = "$metadata")]
+        public Dictionary<string, string> Metadata { get; set; }
     }
 }

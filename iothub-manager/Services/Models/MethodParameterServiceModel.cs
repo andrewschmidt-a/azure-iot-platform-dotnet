@@ -7,14 +7,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class MethodParameterServiceModel
     {
-        public string Name { get; set; }
-
-        public TimeSpan? ResponseTimeout { get; set; }
-
-        public TimeSpan? ConnectionTimeout { get; set; }
-
-        public string JsonPayload { get; set; }
-
         public MethodParameterServiceModel()
         {
         }
@@ -26,6 +18,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             this.ConnectionTimeout = azureModel.ConnectionTimeout;
             this.JsonPayload = azureModel.GetPayloadAsJson();
         }
+
+        public string Name { get; set; }
+
+        public TimeSpan? ResponseTimeout { get; set; }
+
+        public TimeSpan? ConnectionTimeout { get; set; }
+
+        public string JsonPayload { get; set; }
 
         public CloudToDeviceMethod ToAzureModel()
         {

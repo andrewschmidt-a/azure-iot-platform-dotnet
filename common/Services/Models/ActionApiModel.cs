@@ -10,13 +10,6 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 {
     public class ActionApiModel
     {
-        [JsonProperty(PropertyName = "Type")]
-        public string Type { get; }
-
-        // Note: Parameters dictionary should always be initialized as case-insensitive.
-        [JsonProperty(PropertyName = "Parameters")]
-        public IDictionary<string, object> Parameters { get; }
-
         public ActionApiModel(string type, Dictionary<string, object> parameters)
         {
             Type = type;
@@ -44,6 +37,13 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             Type = ActionType.Email.ToString();
             Parameters = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
+
+        [JsonProperty(PropertyName = "Type")]
+        public string Type { get; }
+
+        // Note: Parameters dictionary should always be initialized as case-insensitive.
+        [JsonProperty(PropertyName = "Parameters")]
+        public IDictionary<string, object> Parameters { get; }
 
         public IAction ToServiceModel()
         {

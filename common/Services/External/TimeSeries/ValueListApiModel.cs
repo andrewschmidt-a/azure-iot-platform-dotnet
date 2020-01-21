@@ -10,13 +10,13 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 {
     public class ValueListApiModel
     {
-        [JsonProperty("events")]
-        public List<ValueApiModel> Events { get; set; }
-
         public ValueListApiModel()
         {
             this.Events = new List<ValueApiModel>();
         }
+
+        [JsonProperty("events")]
+        public List<ValueApiModel> Events { get; set; }
 
         /// <summary>
         /// Converts Time Series Events to service MessageList model.

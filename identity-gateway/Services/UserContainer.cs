@@ -7,11 +7,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public abstract class UserContainer : IStatusOperation
     {
-        // injections
         protected ITableStorageClient _tableStorageClient;
-
-        // abstracts
-        public abstract string TableName { get; }
 
         public UserContainer()
         {
@@ -21,6 +17,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         {
             this._tableStorageClient = tableStorageClient;
         }
+
+        public abstract string TableName { get; }
 
         public async Task<StatusResultServiceModel> StatusAsync()
         {

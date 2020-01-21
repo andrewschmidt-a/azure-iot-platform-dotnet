@@ -8,21 +8,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class DeploymentServiceModel
     {
-
-        public DateTime CreatedDateTimeUtc { get; set; }
-        public string Id { get; set; }
-        public DeploymentMetricsServiceModel DeploymentMetrics { get; set; }
-        public string DeviceGroupId { get; set; }
-        public string DeviceGroupName { get; set; }
-        public string DeviceGroupQuery { get; set; }
-        public string Name { get; set; }
-        public string PackageContent { get; set; }
-        public string PackageName { get; set; }
-        public int Priority { get; set; }
-        public PackageType PackageType { get; set; }
-        public string ConfigType { get; set; }
-
-        // IoT SDK's configurations is a deployment for RM.
         public DeploymentServiceModel(Configuration deployment)
         {
             if (string.IsNullOrEmpty(deployment.Id))
@@ -75,6 +60,18 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         public DeploymentServiceModel()
         {
         }
+        public DateTime CreatedDateTimeUtc { get; set; }
+        public string Id { get; set; }
+        public DeploymentMetricsServiceModel DeploymentMetrics { get; set; }
+        public string DeviceGroupId { get; set; }
+        public string DeviceGroupName { get; set; }
+        public string DeviceGroupQuery { get; set; }
+        public string Name { get; set; }
+        public string PackageContent { get; set; }
+        public string PackageName { get; set; }
+        public int Priority { get; set; }
+        public PackageType PackageType { get; set; }
+        public string ConfigType { get; set; }
 
         private void VerifyConfigurationLabel(Configuration deployment, string labelName)
         {
@@ -83,17 +80,5 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 throw new ArgumentException($"Configuration is missing necessary label {labelName}");
             }
         }
-    }
-
-    // Sync these variables with PackageType in Config
-    public enum PackageType
-    {
-        EdgeManifest,
-        DeviceConfiguration
-    }
-
-    public enum ConfigType
-    {
-        Firmware
     }
 }

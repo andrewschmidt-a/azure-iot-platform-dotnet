@@ -18,6 +18,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class SolutionControllerTest : IDisposable
     {
+        private bool disposedValue = false;
         private readonly Mock<IStorage> mockStorage;
         private readonly Mock<IActions> mockActions;
         private readonly Mock<ILogger<SolutionSettingsController>> _logger;
@@ -249,8 +250,6 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 Assert.Equal(actionsList.Count, result.Items.Count);
             }
         }
-
-        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {

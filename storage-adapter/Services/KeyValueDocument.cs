@@ -10,10 +10,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
     internal sealed class KeyValueDocument : Resource
     {
-        public string CollectionId { get; }
-        public string Key { get; }
-        public string Data { get; }
-
         public KeyValueDocument(string collectionId, string key, string data)
         {
             this.Id = DocumentIdHelper.GenerateId(collectionId, key);
@@ -21,5 +17,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             this.Key = key;
             this.Data = data;
         }
+        public string CollectionId { get; }
+        public string Key { get; }
+        public string Data { get; }
     }
 }

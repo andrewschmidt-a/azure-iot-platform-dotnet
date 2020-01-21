@@ -15,11 +15,6 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
         private readonly List<Twin> results;
         private readonly List<string> deviceQueryResults;
 
-        /// <summary>
-        /// Constructs a test set of twin query results. numResults number of
-        /// devices are created with deviceIds starting from deviceId{startIndex}
-        /// </summary>
-        /// <param name="numResults">Number of results to create</param>
         public ResultQuery(int numResults)
         {
             this.results = new List<Twin>();
@@ -38,6 +33,8 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
             this.deviceQueryResults = twins.Select(x => $"{{'{DEVICE_ID_KEY}':'device{x.DeviceId}'}}").ToList();
             this.HasMoreResults = true;
         }
+
+        public bool HasMoreResults { get; set; }
 
         public Task<IEnumerable<Twin>> GetNextAsTwinAsync()
         {
@@ -100,8 +97,6 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
         {
             throw new System.NotImplementedException();
         }
-
-        public bool HasMoreResults { get; set; }
 
         private static Twin CreateTestTwin(int valueToReport)
         {

@@ -8,12 +8,6 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
 {
     public class ActionSettingsListApiModel
     {
-        [JsonProperty("Items")]
-        public List<ActionSettingsApiModel> Items { get; set; }
-
-        [JsonProperty("$metadata")]
-        public Dictionary<string, string> Metadata { get; set; }
-
         public ActionSettingsListApiModel(List<IActionSettings> actionSettingsList)
         {
             this.Items = new List<ActionSettingsApiModel>();
@@ -29,5 +23,11 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
                 { "$url", $"/v1/solution-settings/actions" }
             };
         }
+
+        [JsonProperty("Items")]
+        public List<ActionSettingsApiModel> Items { get; set; }
+
+        [JsonProperty("$metadata")]
+        public Dictionary<string, string> Metadata { get; set; }
     }
 }

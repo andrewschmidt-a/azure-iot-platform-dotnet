@@ -10,6 +10,27 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
     // see https://github.com/Azure/device-telemetry-dotnet/blob/master/WebService/v1/Models/RuleModel.cs
     public class RuleModel
     {
+        public RuleModel()
+        {
+            this.Conditions = new List<ConditionModel>();
+            this.Actions = new List<IActionModel>();
+        }
+
+        public RuleModel(string id, RuleDataModel data)
+        {
+            this.Id = id;
+            this.Name = data.Name;
+            this.Enabled = data.Enabled;
+            this.Description = data.Description;
+            this.GroupId = data.GroupId;
+            this.Severity = data.Severity;
+            this.Conditions = data.Conditions;
+            this.Calculation = data.Calculation;
+            this.Actions = data.Actions;
+            this.Deleted = data.Deleted;
+            this.TimePeriod = data.TimePeriod;
+        }
+
         [JsonProperty("Id")]
         public string Id { get; set; }
 
@@ -42,27 +63,6 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
 
         [JsonProperty("Deleted")]
         public bool Deleted { get; set; }
-
-        public RuleModel()
-        {
-            this.Conditions = new List<ConditionModel>();
-            this.Actions = new List<IActionModel>();
-        }
-
-        public RuleModel(string id, RuleDataModel data)
-        {
-            this.Id = id;
-            this.Name = data.Name;
-            this.Enabled = data.Enabled;
-            this.Description = data.Description;
-            this.GroupId = data.GroupId;
-            this.Severity = data.Severity;
-            this.Conditions = data.Conditions;
-            this.Calculation = data.Calculation;
-            this.Actions = data.Actions;
-            this.Deleted = data.Deleted;
-            this.TimePeriod = data.TimePeriod;
-        }
 
         public override bool Equals(object obj)
         {

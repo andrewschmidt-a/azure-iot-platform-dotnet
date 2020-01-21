@@ -16,6 +16,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
     public class UserSettingsControllerTest : IDisposable
     {
+        private bool disposedValue = false;
         private Mock<UserSettingsContainer> mockUserSettingsContainer;
         private UserSettingsController userSettingsController;
         private Mock<HttpContext> mockHttpContext;
@@ -186,8 +187,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             };
             mockHttpContext.Setup(m => m.Items).Returns(contextItems);
         }
-
-        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {

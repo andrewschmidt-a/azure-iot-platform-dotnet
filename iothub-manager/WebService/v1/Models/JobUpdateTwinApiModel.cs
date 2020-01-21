@@ -9,21 +9,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class JobUpdateTwinApiModel
     {
-        [JsonProperty(PropertyName = "ETag")]
-        public string ETag { get; set; }
-
-        [JsonProperty(PropertyName = "DeviceId")]
-        public string DeviceId { get; set; }
-
-        [JsonProperty(PropertyName = "Properties")]
-        public TwinPropertiesApiModel Properties { get; set; }
-
-        [JsonProperty(PropertyName = "Tags")]
-        public Dictionary<string, JToken> Tags { get; set; }
-
-        [JsonProperty(PropertyName = "IsSimulated")]
-        public bool IsSimulated { get; set; }
-
         public JobUpdateTwinApiModel()
         {
             this.Tags = new Dictionary<string, JToken>();
@@ -41,6 +26,21 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                 this.IsSimulated = deviceTwin.IsSimulated;
             }
         }
+
+        [JsonProperty(PropertyName = "ETag")]
+        public string ETag { get; set; }
+
+        [JsonProperty(PropertyName = "DeviceId")]
+        public string DeviceId { get; set; }
+
+        [JsonProperty(PropertyName = "Properties")]
+        public TwinPropertiesApiModel Properties { get; set; }
+
+        [JsonProperty(PropertyName = "Tags")]
+        public Dictionary<string, JToken> Tags { get; set; }
+
+        [JsonProperty(PropertyName = "IsSimulated")]
+        public bool IsSimulated { get; set; }
 
         public TwinServiceModel ToServiceModel()
         {

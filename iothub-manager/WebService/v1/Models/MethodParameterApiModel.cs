@@ -8,18 +8,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class MethodParameterApiModel
     {
-        [JsonProperty(PropertyName = "Name")]
-        public string Name { get; set; }
-
-        [JsonProperty(PropertyName = "ResponseTimeout", NullValueHandling = NullValueHandling.Ignore)]
-        public TimeSpan? ResponseTimeout { get; set; }
-
-        [JsonProperty(PropertyName = "ConnectionTimeout", NullValueHandling = NullValueHandling.Ignore)]
-        public TimeSpan? ConnectionTimeout { get; set; }
-
-        [JsonProperty(PropertyName = "JsonPayload")]
-        public string JsonPayload { get; set; }
-
         public MethodParameterApiModel()
         {
         }
@@ -34,6 +22,18 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                 this.JsonPayload = serviceModel.JsonPayload;
             }
         }
+
+        [JsonProperty(PropertyName = "Name")]
+        public string Name { get; set; }
+
+        [JsonProperty(PropertyName = "ResponseTimeout", NullValueHandling = NullValueHandling.Ignore)]
+        public TimeSpan? ResponseTimeout { get; set; }
+
+        [JsonProperty(PropertyName = "ConnectionTimeout", NullValueHandling = NullValueHandling.Ignore)]
+        public TimeSpan? ConnectionTimeout { get; set; }
+
+        [JsonProperty(PropertyName = "JsonPayload")]
+        public string JsonPayload { get; set; }
 
         public MethodParameterServiceModel ToServiceModel()
         {

@@ -11,6 +11,18 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
     {
         private List<RuleApiModel> items;
 
+        public RuleListApiModel(List<Rule> rules, bool includeDeleted)
+        {
+            this.items = new List<RuleApiModel>();
+            if (rules != null)
+            {
+                foreach (Rule rule in rules)
+                {
+                    this.items.Add(new RuleApiModel(rule, includeDeleted));
+                }
+            }
+        }
+
         [JsonProperty(PropertyName = "Items")]
         public List<RuleApiModel> Items
         {
@@ -23,17 +35,5 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
             { "$type", "RuleList;1" },
             { "$uri", "/" + "v1/rules" },
         };
-
-        public RuleListApiModel(List<Rule> rules, bool includeDeleted)
-        {
-            this.items = new List<RuleApiModel>();
-            if (rules != null)
-            {
-                foreach (Rule rule in rules)
-                {
-                    this.items.Add(new RuleApiModel(rule, includeDeleted));
-                }
-            }
-        }
     }
 }

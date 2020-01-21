@@ -5,10 +5,6 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Models
 {
     public class StatusResultModel
     {
-        public bool IsHealthy { get; set; }
-
-        public string Message { get; set; }
-
         public StatusResultModel() { }
 
         public StatusResultModel(StatusResultServiceModel servicemodel)
@@ -16,5 +12,9 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Models
             this.IsHealthy = servicemodel.IsHealthy;
             this.Message = servicemodel.Message;
         }
+
+        public bool IsHealthy { get; set; }
+
+        public string Message { get; set; }
     }
 }

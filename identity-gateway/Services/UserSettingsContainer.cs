@@ -9,14 +9,14 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public class UserSettingsContainer : UserContainer, IUserContainer<UserSettingsModel, UserSettingsInput>
     {
-        public override string TableName => "userSettings";
-
         public UserSettingsContainer() { }
 
         public UserSettingsContainer(ITableStorageClient tableStorageClient)
             : base(tableStorageClient)
         {
         }
+
+        public override string TableName => "userSettings";
 
         /// <summary>
         /// Get all settings for a given userId

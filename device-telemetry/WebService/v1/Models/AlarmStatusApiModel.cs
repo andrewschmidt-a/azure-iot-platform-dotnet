@@ -6,9 +6,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 {
     public class AlarmStatusApiModel
     {
-        [JsonProperty(PropertyName = "Status")]
-        public string Status { get; set; }
-
         public AlarmStatusApiModel()
         {
             this.Status = null;
@@ -18,5 +15,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
         {
             this.Status = status;
         }
+
+        [JsonProperty(PropertyName = "Status")]
+        public string Status { get; set; }
     }
 }

@@ -6,8 +6,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
 {
     public class Timer : ITimer, IDisposable
     {
+        private bool disposedValue = false;
         private readonly ILogger _logger;
-
         private System.Threading.Timer timer;
         private int frequency;
 
@@ -55,8 +55,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
             this.timer?.Change(Timeout.Infinite, Timeout.Infinite);
             this.timer?.Dispose();
         }
-
-        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {

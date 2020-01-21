@@ -16,7 +16,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
     {
         private static TelemetryConfiguration configuration;
         private static TelemetryClient client;
-
+        private static JsonSerializerSettings jsonSettings = new JsonSerializerSettings()
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        };
         public static void Initialize(string instrumentationKey)
         {
             configuration = new TelemetryConfiguration(instrumentationKey);
@@ -27,12 +30,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
             client = new TelemetryClient();
             client.InstrumentationKey = instrumentationKey;
         }
-
-        // prevent self referencing looping
-        private static JsonSerializerSettings jsonSettings = new JsonSerializerSettings()
-        {
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-        };
 
         public static void LogException(Exception exception, Dictionary<string, string> traceDetails)
         {

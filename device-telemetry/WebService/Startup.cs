@@ -15,14 +15,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 {
     public class Startup : IDisposable
     {
-        public IConfiguration Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; }
+        private bool disposedValue = false;
 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
+        public IConfiguration Configuration { get; }
+        public IContainer ApplicationContainer { get; private set; }
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -76,8 +76,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
         }
-
-        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {

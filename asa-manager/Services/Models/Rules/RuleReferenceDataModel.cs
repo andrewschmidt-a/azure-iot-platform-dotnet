@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
 {
     // Note: all the constants below are meant to be not case sensitive
-    public class RuleReferenceDataModel
+    public partial class RuleReferenceDataModel
     {
         // Value used by the Rules web service to indicate that
         // a rule doesn't use aggregation and has no time window.
@@ -85,41 +85,6 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         // Internal data structure needed to serialize the model to JSON
         private readonly List<Condition> conditions;
 
-        private struct Condition
-        {
-            internal string Calculation { get; set; }
-            internal string Field { get; set; }
-            internal string Operator { get; set; }
-            internal string Value { get; set; }
-        }
-
-        [JsonProperty("Id")]
-        public string Id { get; set; }
-
-        [JsonProperty("Name")]
-        public string Name { get; set; }
-
-        [JsonProperty("Description")]
-        public string Description { get; set; }
-
-        [JsonProperty("GroupId")]
-        public string GroupId { get; set; }
-
-        [JsonProperty("Severity")]
-        public string Severity { get; set; }
-
-        [JsonProperty("AggregationWindow")]
-        public string AggregationWindow { get; set; }
-
-        [JsonProperty("Fields")]
-        public List<string> Fields { get; set; }
-
-        [JsonProperty("Actions", NullValueHandling = NullValueHandling.Ignore)]
-        public List<IActionModel> Actions { get; set; }
-
-        [JsonProperty("__rulefilterjs")]
-        public string RuleFilterJs => this.ConditionsToJavascript();
-
         public RuleReferenceDataModel()
         {
             this.conditions = new List<Condition>();
@@ -158,6 +123,33 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
                 this.Actions = rule.Actions;
             }
         }
+
+        [JsonProperty("Id")]
+        public string Id { get; set; }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("Description")]
+        public string Description { get; set; }
+
+        [JsonProperty("GroupId")]
+        public string GroupId { get; set; }
+
+        [JsonProperty("Severity")]
+        public string Severity { get; set; }
+
+        [JsonProperty("AggregationWindow")]
+        public string AggregationWindow { get; set; }
+
+        [JsonProperty("Fields")]
+        public List<string> Fields { get; set; }
+
+        [JsonProperty("Actions", NullValueHandling = NullValueHandling.Ignore)]
+        public List<IActionModel> Actions { get; set; }
+
+        [JsonProperty("__rulefilterjs")]
+        public string RuleFilterJs => this.ConditionsToJavascript();
 
         private static string GetAggregationWindowValue(string calculation, long timePeriod)
         {

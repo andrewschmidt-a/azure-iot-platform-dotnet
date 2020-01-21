@@ -9,12 +9,6 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
 {
     public class ActionSettingsApiModel
     {
-        [JsonProperty("Type")]
-        public string Type { get; set; }
-
-        [JsonProperty("Settings")]
-        public IDictionary<string, object> Settings { get; set; }
-
         public ActionSettingsApiModel()
         {
             this.Type = ActionType.Email.ToString();
@@ -29,5 +23,11 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
                 actionSettings.Settings,
                 StringComparer.OrdinalIgnoreCase);
         }
+
+        [JsonProperty("Type")]
+        public string Type { get; set; }
+
+        [JsonProperty("Settings")]
+        public IDictionary<string, object> Settings { get; set; }
     }
 }

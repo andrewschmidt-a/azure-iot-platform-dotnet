@@ -8,12 +8,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Models
 {
     public class ValueServiceModel
     {
-        public string CollectionId { get; set; }
-        public string Key { get; set; }
-        public string Data { get; set; }
-        public string ETag { get; set; }
-        public DateTimeOffset Timestamp { get; set; }
-
         public ValueServiceModel()
         {
         }
@@ -41,5 +35,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Models
             this.ETag = document.ETag;
             this.Timestamp = document.Timestamp;
         }
+        public string CollectionId { get; set; }
+        public string Key { get; set; }
+        public string Data { get; set; }
+        public string ETag { get; set; }
+        public DateTimeOffset Timestamp { get; set; }
     }
 }

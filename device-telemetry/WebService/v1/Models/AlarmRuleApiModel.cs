@@ -7,15 +7,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 {
     public class AlarmRuleApiModel
     {
-        [JsonProperty(PropertyName = "Id")]
-        public string Id { get; set; }
-
-        [JsonProperty(PropertyName = "Severity")]
-        public string Severity { get; set; }
-
-        [JsonProperty(PropertyName = "Description")]
-        public string Description { get; set; }
-
         [JsonProperty(PropertyName = "$metadata", Order = 1000)]
         public Dictionary<string, string> Metadata;
 
@@ -34,5 +25,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
                 { "$uri", "/" + "v1/rules/" + id }
             };
         }
+
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
+
+        [JsonProperty(PropertyName = "Severity")]
+        public string Severity { get; set; }
+
+        [JsonProperty(PropertyName = "Description")]
+        public string Description { get; set; }
     }
 }

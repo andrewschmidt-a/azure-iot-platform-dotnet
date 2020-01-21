@@ -24,26 +24,15 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private const string TSI_STORAGE_TYPE_KEY = "tsi";
         private const string TENANT_INFO_KEY = "tenant";
         private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
-
         private readonly ILogger _logger;
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly AppConfig config;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IAppConfigurationHelper _appConfigurationHelper;
-
         private readonly bool timeSeriesEnabled;
         private readonly DocumentClient documentClient;
         private readonly string databaseName;
-
-        private string collectionId
-        {
-            get
-            {
-                return this._appConfigurationHelper.GetValue(
-                    $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
-            }
-        }
 
         public Messages(
             AppConfig config,
@@ -63,6 +52,15 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             this.config = config;
             this._httpContextAccessor = contextAccessor;
             this._appConfigurationHelper = appConfigurationHelper;
+        }
+
+        private string collectionId
+        {
+            get
+            {
+                return this._appConfigurationHelper.GetValue(
+                    $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
+            }
         }
 
         public async Task<MessageList> ListAsync(

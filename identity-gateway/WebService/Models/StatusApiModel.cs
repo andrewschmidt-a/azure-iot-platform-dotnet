@@ -6,12 +6,20 @@ using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
 {
-    /// <summary>
-    /// Model for retrieving the status of API
-    /// /// </summary>
     public sealed class StatusApiModel
     {
         private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+
+        public StatusApiModel(StatusServiceModel model)
+        {
+            this.Status = new StatusResultApiModel(model.Status);
+            this.Dependencies = new Dictionary<string, StatusResultApiModel>();
+            foreach (KeyValuePair<string, StatusResultServiceModel> pair in model.Dependencies)
+            {
+                this.Dependencies.Add(pair.Key, new StatusResultApiModel(pair.Value));
+            }
+            this.Properties = model.Properties;
+        }
 
         [JsonProperty(PropertyName = "Name", Order = 10)]
         public string Name => "IdentityGateway";
@@ -50,16 +58,5 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
             { "$type", "Status;" + "0" },
             { "$uri", "/status" }
         };
-
-        public StatusApiModel(StatusServiceModel model)
-        {
-            this.Status = new StatusResultApiModel(model.Status);
-            this.Dependencies = new Dictionary<string, StatusResultApiModel>();
-            foreach (KeyValuePair<string, StatusResultServiceModel> pair in model.Dependencies)
-            {
-                this.Dependencies.Add(pair.Key, new StatusResultApiModel(pair.Value));
-            }
-            this.Properties = model.Properties;
-        }
     }
 }

@@ -12,18 +12,12 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 {
-    public class StorageWriteLockTest
+    public partial class StorageWriteLockTest
     {
         private const string COLL = "coll";
         private const string KEY = "key";
         private readonly Random rand;
         private readonly Mock<IStorageAdapterClient> mockClient;
-
-        private class ValueModel
-        {
-            public string Value { get; set; }
-            public bool Locked { get; set; }
-        }
 
         public StorageWriteLockTest()
         {

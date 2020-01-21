@@ -11,6 +11,21 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
         private readonly List<MessageApiModel> items = new List<MessageApiModel>();
         private readonly List<string> properties = new List<string>();
 
+        public MessageListApiModel(MessageList data)
+        {
+            if (data == null) return;
+
+            foreach (Message message in data.Messages)
+            {
+                this.items.Add(new MessageApiModel(message));
+            }
+
+            foreach (string s in data.Properties)
+            {
+                this.properties.Add(s);
+            }
+        }
+
         [JsonProperty(PropertyName = "Items")]
         public List<MessageApiModel> Items
         {
@@ -29,20 +44,5 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
             { "$type", "MessageList;1" },
             { "$uri", "/" + "v1/messages" },
         };
-
-        public MessageListApiModel(MessageList data)
-        {
-            if (data == null) return;
-
-            foreach (Message message in data.Messages)
-            {
-                this.items.Add(new MessageApiModel(message));
-            }
-
-            foreach (string s in data.Properties)
-            {
-                this.properties.Add(s);
-            }
-        }
     }
 }

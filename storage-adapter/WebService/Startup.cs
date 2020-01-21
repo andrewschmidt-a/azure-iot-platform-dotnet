@@ -12,13 +12,14 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; }
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
+
+        public IContainer ApplicationContainer { get; private set; }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {

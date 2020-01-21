@@ -5,11 +5,8 @@ using System.Text;
 
 namespace Mmm.Platform.IoT.Common.Services.Models
 {
-    class AppConfigCacheValue
+    public class AppConfigCacheValue
     {
-        public ConfigurationSetting Value { get; set; }
-        public DateTime ExpirationTime { get; set; }
-
         public AppConfigCacheValue(ConfigurationSetting value)
         {
             this.Value = value;
@@ -20,5 +17,8 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             : this(new ConfigurationSetting(key, value))
         {
         }
+
+        public ConfigurationSetting Value { get; set; }
+        public DateTime ExpirationTime { get; set; }
     }
 }

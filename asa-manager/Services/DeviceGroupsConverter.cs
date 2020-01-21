@@ -16,12 +16,8 @@ namespace Mmm.Platform.IoT.AsaManager.Services
 {
     public class DeviceGroupsConverter : Converter, IConverter
     {
-        private const string CSV_HEADER = "DeviceId,GroupId";
-
-        public override string Entity { get { return "devicegroups"; } }
-        public override string FileExtension { get { return "csv"; } }
-
         private readonly IIotHubManagerClient _iotHubManager;
+        private const string CSV_HEADER = "DeviceId,GroupId";
 
         public DeviceGroupsConverter(
             IIotHubManagerClient iotHubManager,
@@ -32,6 +28,10 @@ namespace Mmm.Platform.IoT.AsaManager.Services
         {
             this._iotHubManager = iotHubManager;
         }
+
+        public override string Entity { get { return "devicegroups"; } }
+
+        public override string FileExtension { get { return "csv"; } }
 
         public override async Task<ConversionApiModel> ConvertAsync(string tenantId, string operationId = null)
         {

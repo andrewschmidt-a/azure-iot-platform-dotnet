@@ -12,22 +12,6 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
         [JsonProperty("Id")]
         public string Id;
 
-        [JsonProperty("Name")]
-        public string Name { get; set; }
-
-        [JsonProperty("PackageType")]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public PackageType packageType { get; set; }
-
-        [JsonProperty("ConfigType")]
-        public string ConfigType { get; set; }
-
-        [JsonProperty(PropertyName = "DateCreated")]
-        public string DateCreated { get; set; }
-
-        [JsonProperty("Content")]
-        public string Content { get; set; }
-
         public PackageApiModel(PackageServiceModel model)
         {
             this.Id = model.Id;
@@ -49,6 +33,22 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
             this.packageType = Type;
             this.ConfigType = ConfigType;
         }
+
+        [JsonProperty("Name")]
+        public string Name { get; set; }
+
+        [JsonProperty("PackageType")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public PackageType packageType { get; set; }
+
+        [JsonProperty("ConfigType")]
+        public string ConfigType { get; set; }
+
+        [JsonProperty(PropertyName = "DateCreated")]
+        public string DateCreated { get; set; }
+
+        [JsonProperty("Content")]
+        public string Content { get; set; }
 
         public PackageServiceModel ToServiceModel()
         {

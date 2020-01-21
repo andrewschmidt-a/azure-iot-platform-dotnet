@@ -5,12 +5,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class UserSettingsListModel
     {
-        [JsonProperty("Method", Order=10)]
-        public string batchMethod { get; set; }
-
-        [JsonProperty("Models", Order=20)]
-        public List<UserSettingsModel> models { get; set; }
-
         public UserSettingsListModel() { }
 
         public UserSettingsListModel(List<UserSettingsModel> models)
@@ -23,5 +17,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
             this.batchMethod = batchMethod;
             this.models = models;
         }
+
+        [JsonProperty("Method", Order=10)]
+        public string batchMethod { get; set; }
+
+        [JsonProperty("Models", Order=20)]
+        public List<UserSettingsModel> models { get; set; }
     }
 }

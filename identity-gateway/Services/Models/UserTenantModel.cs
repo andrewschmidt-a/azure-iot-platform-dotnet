@@ -6,10 +6,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class UserTenantModel : TableEntity
     {
-        public string Roles { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-
         public UserTenantModel() { }
 
         public UserTenantModel(string userId, string tenantId)
@@ -44,7 +40,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
             this.Type = tableEntity.Properties.Keys.Contains("Type") ? tableEntity.Properties["Type"].StringValue : "Member";
         }
 
-        // Define aliases for the partition and row keys
+        public string Roles { get; set; }
+
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
         public string UserId
         {
             get

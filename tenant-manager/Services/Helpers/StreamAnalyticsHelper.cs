@@ -17,13 +17,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         private readonly AppConfig config;
         private readonly ITokenHelper _tokenHelper;
 
-        private delegate Task<T> JobOperationDelegate<T>(string rg, string saJobName);
-
         public StreamAnalyticsHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
         {
             this.config = config;
             this._tokenHelper = tokenHelper;
         }
+        private delegate Task<T> JobOperationDelegate<T>(string rg, string saJobName);
 
         private async Task<StreamAnalyticsManagementClient> GetClientAsync()
         {

@@ -12,6 +12,8 @@ namespace Mmm.Platform.IoT.Common.Services.Models
     {
         private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
 
+        public Rule() { }
+
         // Comes from the StorageAdapter document and not the serialized rule
         [JsonIgnore]
         public string ETag { get; set; } = string.Empty;
@@ -33,7 +35,6 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         public IList<Condition> Conditions { get; set; } = new List<Condition>();
         public IList<IAction> Actions { get; set; } = new List<IAction>();
         public bool Deleted { get; set; } = false;
-        public Rule() { }
 
         public int CompareTo(Rule other)
         {

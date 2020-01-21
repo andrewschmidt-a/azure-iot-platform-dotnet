@@ -13,6 +13,45 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
     {
         private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
 
+        public RuleApiModel() { }
+
+        public RuleApiModel(Rule rule, bool includeDeleted)
+        {
+            if (rule != null)
+            {
+                this.ETag = rule.ETag;
+                this.Id = rule.Id;
+                this.Name = rule.Name;
+                this.DateCreated = rule.DateCreated;
+                this.DateModified = rule.DateModified;
+                this.Enabled = rule.Enabled;
+                this.Description = rule.Description;
+                this.GroupId = rule.GroupId;
+                this.Severity = rule.Severity.ToString();
+                this.Calculation = rule.Calculation.ToString();
+                this.TimePeriod = rule.TimePeriod.ToString();
+                if (includeDeleted)
+                {
+                    this.Deleted = rule.Deleted;
+                }
+
+                if (rule.Actions.Count > 0)
+                {
+                    this.Actions = new List<ActionApiModel>();
+                }
+
+                foreach (var action in rule.Actions)
+                {
+                    this.Actions.Add(new ActionApiModel(action));
+                }
+
+                foreach (var condition in rule.Conditions)
+                {
+                    this.Conditions.Add(new ConditionApiModel(condition));
+                }
+            }
+        }
+
         [JsonProperty(PropertyName = "ETag")]
         public string ETag { get; set; } = string.Empty;
 
@@ -63,45 +102,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 
         [JsonProperty(PropertyName = "Deleted", NullValueHandling = NullValueHandling.Ignore)]
         public bool? Deleted { get; set; }
-
-        public RuleApiModel() { }
-
-        public RuleApiModel(Rule rule, bool includeDeleted)
-        {
-            if (rule != null)
-            {
-                this.ETag = rule.ETag;
-                this.Id = rule.Id;
-                this.Name = rule.Name;
-                this.DateCreated = rule.DateCreated;
-                this.DateModified = rule.DateModified;
-                this.Enabled = rule.Enabled;
-                this.Description = rule.Description;
-                this.GroupId = rule.GroupId;
-                this.Severity = rule.Severity.ToString();
-                this.Calculation = rule.Calculation.ToString();
-                this.TimePeriod = rule.TimePeriod.ToString();
-                if (includeDeleted)
-                {
-                    this.Deleted = rule.Deleted;
-                }
-
-                if (rule.Actions.Count > 0)
-                {
-                    this.Actions = new List<ActionApiModel>();
-                }
-
-                foreach (var action in rule.Actions)
-                {
-                    this.Actions.Add(new ActionApiModel(action));
-                }
-
-                foreach (var condition in rule.Conditions)
-                {
-                    this.Conditions.Add(new ConditionApiModel(condition));
-                }
-            }
-        }
 
         public Rule ToServiceModel()
         {

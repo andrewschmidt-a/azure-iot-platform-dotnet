@@ -7,15 +7,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class DeviceServiceListModel
     {
-        public string ContinuationToken { get; set; }
-
-        public List<DeviceServiceModel> Items { get; set; }
-
         public DeviceServiceListModel(IEnumerable<DeviceServiceModel> devices, string continuationToken = null)
         {
             this.ContinuationToken = continuationToken;
             this.Items = new List<DeviceServiceModel>(devices);
         }
+
+        public string ContinuationToken { get; set; }
+
+        public List<DeviceServiceModel> Items { get; set; }
 
         public DeviceTwinName GetDeviceTwinNames()
         {

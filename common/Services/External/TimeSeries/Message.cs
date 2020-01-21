@@ -7,10 +7,6 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 {
     public class Message
     {
-        public string DeviceId { get; set; }
-        public DateTimeOffset Time { get; set; }
-        public JObject Data { get; set; }
-
         public Message()
         {
             this.DeviceId = string.Empty;
@@ -27,5 +23,9 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             this.Time = DateTimeOffset.FromUnixTimeMilliseconds(time);
             this.Data = data;
         }
+
+        public string DeviceId { get; set; }
+        public DateTimeOffset Time { get; set; }
+        public JObject Data { get; set; }
     }
 }

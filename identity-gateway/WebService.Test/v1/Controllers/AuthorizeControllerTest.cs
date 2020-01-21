@@ -23,6 +23,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
     public class AuthorizeControllerTest : IDisposable
     {
+        private bool disposedValue = false;
         private Mock<IUserContainer<UserSettingsModel, UserSettingsInput>> mockUserSettingsContainer;
         private Mock<UserTenantContainer> mockUserTenantContainer;
         private AuthorizeController authorizeController;
@@ -279,8 +280,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out someSecurityToken)).Returns(true);
             mockOpenIdProviderConfiguration.Setup(m => m.issuer).Returns(someIssuer);
         }
-
-        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {

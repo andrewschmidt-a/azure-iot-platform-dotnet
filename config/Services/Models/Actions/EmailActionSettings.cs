@@ -20,10 +20,6 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
         private readonly AppConfig config;
         private readonly ILogger _logger;
 
-        public ActionType Type { get; }
-
-        public IDictionary<string, object> Settings { get; set; }
-
         // In order to initialize all settings, call InitializeAsync
         // to retrieve all settings due to async call to logic app
         public EmailActionSettings(
@@ -38,6 +34,10 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
             this.Type = ActionType.Email;
             this.Settings = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
         }
+
+        public ActionType Type { get; }
+
+        public IDictionary<string, object> Settings { get; set; }
 
         public async Task InitializeAsync()
         {

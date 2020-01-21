@@ -17,17 +17,15 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public class RunbookHelper : IRunbookHelper, IDisposable
     {
+        private bool disposedValue = false;
         private const string SA_JOB_DATABASE_ID = "pcs-iothub-stream";
-
         private string iotHubConnectionStringKeyFormat = "tenant:{0}:iotHubConnectionString";
         private Regex iotHubKeyRegexMatch = new Regex(@"(?<=SharedAccessKey=)[^;]*");
         private Regex storageAccountKeyRegexMatch = new Regex(@"(?<=AccountKey=)[^;]*");
 
-        // injection variables
         private readonly AppConfig config;
         private readonly ITokenHelper _tokenHelper;
         private readonly IAppConfigurationHelper _appConfigHelper;
-
         public HttpClient httpClient;
 
         public RunbookHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
@@ -224,8 +222,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 throw new RunbookTriggerException($"Unable to successfully trigger the requested runbook operation.", e);
             }
         }
-
-        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {

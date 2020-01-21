@@ -9,11 +9,6 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
 {
     public class DeviceGroupListApiModel
     {
-        public IEnumerable<DeviceGroupApiModel> Items { get; set; }
-
-        [JsonProperty("$metadata")]
-        public Dictionary<string, string> Metadata { get; set; }
-
         public DeviceGroupListApiModel(IEnumerable<DeviceGroup> models)
         {
             this.Items = models.Select(m => new DeviceGroupApiModel(m));
@@ -24,5 +19,10 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
                 { "$url", $"/v1/devicegroups" }
             };
         }
+
+        public IEnumerable<DeviceGroupApiModel> Items { get; set; }
+
+        [JsonProperty("$metadata")]
+        public Dictionary<string, string> Metadata { get; set; }
     }
 }

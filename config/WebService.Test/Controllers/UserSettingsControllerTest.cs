@@ -12,6 +12,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class UserSettingsControllerTest : IDisposable
     {
+        private bool disposedValue = false;
         private readonly Mock<IStorage> mockStorage;
         private readonly UserSettingsController controller;
         private readonly Random rand;
@@ -84,9 +85,6 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             var dynamiceObj = obj as dynamic;
             return dynamiceObj.Name.ToString() == name && dynamiceObj.Description.ToString() == description;
         }
-
-        private bool disposedValue = false;
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

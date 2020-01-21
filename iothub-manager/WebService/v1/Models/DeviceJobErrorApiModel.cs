@@ -7,12 +7,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class DeviceJobErrorApiModel
     {
-        [JsonProperty("Code")]
-        public string Code { get; set; }
-
-        [JsonProperty("Description")]
-        public string Description { get; set; }
-
         public DeviceJobErrorApiModel()
         {
         }
@@ -22,5 +16,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
             this.Code = error.Code;
             this.Description = error.Description;
         }
+
+        [JsonProperty("Code")]
+        public string Code { get; set; }
+
+        [JsonProperty("Description")]
+        public string Description { get; set; }
     }
 }

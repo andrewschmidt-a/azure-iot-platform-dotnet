@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.AsaManager.Services;
-using Mmm.Platform.IoT.AsaManager.WebService.v1.Models;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
 

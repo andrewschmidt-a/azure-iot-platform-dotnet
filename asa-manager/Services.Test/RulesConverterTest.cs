@@ -3,17 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.AsaManager.Services;
-using Mmm.Platform.IoT.AsaManager.Services.Exceptions;
 using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
 using Mmm.Platform.IoT.AsaManager.Services.Models;
-using Mmm.Platform.IoT.AsaManager.Services.Models.Rules;
 using Mmm.Platform.IoT.AsaManager.Services.Test.Helpers;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace Mmm.Platform.IoT.AsaManager.Services.Test

@@ -8,18 +8,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 {
     public class DeviceServiceModel
     {
-        public string Etag { get; set; }
-        public string Id { get; set; }
-        public int C2DMessageCount { get; set; }
-        public DateTime LastActivity { get; set; }
-        public bool Connected { get; set; }
-        public bool Enabled { get; set; }
-        public bool IsEdgeDevice { get; set; }
-        public DateTime LastStatusUpdated { get; set; }
-        public TwinServiceModel Twin { get; set; }
-        public string IoTHubHostName { get; set; }
-        public AuthenticationMechanismServiceModel Authentication { get; set; }
-
         public DeviceServiceModel(
             string etag,
             string id,
@@ -46,16 +34,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             this.Authentication = authentication;
         }
 
-        /// <summary>
-        /// Additional constructor which allows passing an additional isConnected field.
-        /// This allows providing a different method of checking whether a device is connected or
-        /// not for edge devices.
-        /// </summary>
-        /// <param name="azureDevice">Device from service</param>
-        /// <param name="azureTwin">Device's twin</param>
-        /// <param name="ioTHubHostName">IoT Hub name</param>
-        /// <param name="isConnected">If this is true OR azureDevice.ConnectionState is Connected
-        /// then the device is said to be connected.</param>
         public DeviceServiceModel(Device azureDevice, Twin azureTwin, string ioTHubHostName, bool isConnected)
             : this(
                 etag: azureDevice.ETag,
@@ -97,7 +75,17 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         {
         }
 
-
+        public string Etag { get; set; }
+        public string Id { get; set; }
+        public int C2DMessageCount { get; set; }
+        public DateTime LastActivity { get; set; }
+        public bool Connected { get; set; }
+        public bool Enabled { get; set; }
+        public bool IsEdgeDevice { get; set; }
+        public DateTime LastStatusUpdated { get; set; }
+        public TwinServiceModel Twin { get; set; }
+        public string IoTHubHostName { get; set; }
+        public AuthenticationMechanismServiceModel Authentication { get; set; }
 
         public Device ToAzureModel(bool ignoreEtag = true)
         {

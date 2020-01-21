@@ -18,13 +18,6 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         private const string NOTES = "Notes";
         private const string RECIPIENTS = "Recipients";
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ActionType Type { get; }
-
-        // Note: Parameters should always be initialized as a case-insensitive dictionary
-        [JsonConverter(typeof(EmailParametersConverter))]
-        public IDictionary<string, object> Parameters { get; }
-
         public EmailAction(IDictionary<string, object> parameters)
         {
             this.Type = ActionType.Email;
@@ -52,6 +45,13 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             this.Parameters[SUBJECT] = parameters[SUBJECT];
             this.Parameters[RECIPIENTS] = this.ValidateAndConvertRecipientEmails(parameters[RECIPIENTS]);
         }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ActionType Type { get; }
+
+        // Note: Parameters should always be initialized as a case-insensitive dictionary
+        [JsonConverter(typeof(EmailParametersConverter))]
+        public IDictionary<string, object> Parameters { get; }
 
         public string GetNotes()
         {

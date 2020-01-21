@@ -11,17 +11,12 @@ namespace Mmm.Platform.IoT.AsaManager.Services
 {
     public abstract class Converter : IConverter
     {
+        public string dateTimeFormat = $"{REFERENCE_DATA_DATE_FORMAT}/{REFERENCE_DATA_TIME_FORMAT}";
         private const string REFERENCE_DATA_DATE_FORMAT = "yyyy-MM-dd";
         private const string REFERENCE_DATA_TIME_FORMAT = "HH-mm";
-
         protected readonly IBlobStorageClient _blobStorageClient;
         protected readonly IStorageAdapterClient _storageAdapterClient;
         protected readonly ILogger _logger;
-
-        public abstract string Entity { get; }
-        public abstract string FileExtension { get; }
-
-        public string dateTimeFormat = $"{REFERENCE_DATA_DATE_FORMAT}/{REFERENCE_DATA_TIME_FORMAT}";
 
         public Converter(
             IBlobStorageClient blobStorageClient,
@@ -32,6 +27,10 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             this._storageAdapterClient = storageAdapterClient;
             this._logger = log;
         }
+
+        public abstract string Entity { get; }
+
+        public abstract string FileExtension { get; }
 
         public abstract Task<ConversionApiModel> ConvertAsync(string tenantId, string operationId = null);
 

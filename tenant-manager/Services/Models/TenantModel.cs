@@ -4,11 +4,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
 {
     public class TenantModel : TableEntity
     {
-        public string TenantId { get; set; }
-        public string IotHubName { get; set; }
-        public string SAJobName { get; set; }
-        public bool IsIotHubDeployed { get; set; }
-
         public TenantModel() { }
 
         public TenantModel(string id)
@@ -21,5 +16,10 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
             this.SAJobName = string.Empty;
             this.IsIotHubDeployed = false;
         }
+
+        public string TenantId { get; set; }
+        public string IotHubName { get; set; }
+        public string SAJobName { get; set; }
+        public bool IsIotHubDeployed { get; set; }
     }
 }

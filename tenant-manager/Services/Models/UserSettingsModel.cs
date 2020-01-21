@@ -4,8 +4,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
 {
     public class UserSettingsModel : TableEntity
     {
-        public string Value { get; set; }
-
         public UserSettingsModel() { }
 
         public UserSettingsModel(string userId, string settingKey, string value)
@@ -14,6 +12,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
             this.RowKey = settingKey;
             this.Value = value;
         }
+
+        public string Value { get; set; }
 
         // Define aliases for the partition and row keys
         public string UserId

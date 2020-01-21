@@ -15,15 +15,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
         private const string FAILED_METRICS_KEY = "reportedFailedCount";
         private const string PENDING_METRICS_KEY = "pendingCount";
 
-        [JsonProperty(PropertyName = "SystemMetrics")]
-        public IDictionary<string, long> SystemMetrics { get; set; }
-
-        [JsonProperty(PropertyName = "CustomMetrics")]
-        public IDictionary<string, long> CustomMetrics { get; set; }
-
-        [JsonProperty(PropertyName = "DeviceStatuses")]
-        public IDictionary<string, DeploymentStatus> DeviceStatuses { get; set; }
-
         public DeploymentMetricsApiModel(DeploymentMetricsServiceModel metricsServiceModel)
         {
             this.SystemMetrics = new Dictionary<string, long>();
@@ -73,5 +64,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                 }
             }
         }
+
+        [JsonProperty(PropertyName = "SystemMetrics")]
+        public IDictionary<string, long> SystemMetrics { get; set; }
+
+        [JsonProperty(PropertyName = "CustomMetrics")]
+        public IDictionary<string, long> CustomMetrics { get; set; }
+
+        [JsonProperty(PropertyName = "DeviceStatuses")]
+        public IDictionary<string, DeploymentStatus> DeviceStatuses { get; set; }
     }
 }

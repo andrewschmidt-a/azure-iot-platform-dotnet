@@ -14,9 +14,6 @@ namespace Mmm.Platform.IoT.AsaManager.Services
 {
     public class RulesConverter : Converter, IConverter
     {
-        public override string Entity { get { return "rules"; } }
-        public override string FileExtension { get { return "json"; } }
-
         public RulesConverter(
             IBlobStorageClient blobClient,
             IStorageAdapterClient storageAdapterClient,
@@ -24,6 +21,9 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 : base(blobClient, storageAdapterClient, log)
         {
         }
+
+        public override string Entity { get { return "rules"; } }
+        public override string FileExtension { get { return "json"; } }
 
         public override async Task<ConversionApiModel> ConvertAsync(string tenantId, string operationId = null)
         {

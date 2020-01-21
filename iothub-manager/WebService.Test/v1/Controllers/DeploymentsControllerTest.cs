@@ -17,6 +17,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 {
     public class DeploymentsControllerTest : IDisposable
     {
+        private bool disposedValue = false;
         private readonly DeploymentsController deploymentsController;
         private readonly Mock<IDeployments> deploymentsMock;
         private const string DEPLOYMENT_NAME = "depname";
@@ -264,8 +265,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             // Act
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.deploymentsController.PostAsync(depApiModel));
         }
-
-        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {

@@ -35,9 +35,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         private RequestOptions docDbOptions;
         private bool disposedValue;
 
-        public virtual string DocumentDataType { get { return "pcs"; } }
-        public virtual string DocumentDatabaseSuffix { get { return "storage"; } }
-
         public DocumentDbKeyValueContainer(
             IFactory<IDocumentClient> clientFactory,
             IExceptionChecker exceptionChecker,
@@ -54,6 +51,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             _logger = logger;
             _httpContextAccessor = httpContextAcessor;
         }
+
+        public virtual string DocumentDataType { get { return "pcs"; } }
+        public virtual string DocumentDatabaseSuffix { get { return "storage"; } }
 
         private string CollectionLink
         {

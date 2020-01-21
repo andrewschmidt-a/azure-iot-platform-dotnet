@@ -8,18 +8,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class TwinPropertiesApiModel
     {
-        [JsonProperty(PropertyName = "Reported", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, JToken> Reported { get; set; }
-
-        [JsonProperty(PropertyName = "Desired", NullValueHandling = NullValueHandling.Ignore)]
-        public Dictionary<string, JToken> Desired { get; set; }
-
-        [JsonProperty(PropertyName = "DeviceId", NullValueHandling = NullValueHandling.Ignore)]
-        public string DeviceId { get; set; }
-
-        [JsonProperty(PropertyName = "ModuleId", NullValueHandling = NullValueHandling.Ignore)]
-        public string ModuleId { get; set; }
-
         public TwinPropertiesApiModel()
         {
             this.Reported = new Dictionary<string, JToken>();
@@ -42,5 +30,17 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
             this.DeviceId = deviceId;
             this.ModuleId = moduleId;
         }
+
+        [JsonProperty(PropertyName = "Reported", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, JToken> Reported { get; set; }
+
+        [JsonProperty(PropertyName = "Desired", NullValueHandling = NullValueHandling.Ignore)]
+        public Dictionary<string, JToken> Desired { get; set; }
+
+        [JsonProperty(PropertyName = "DeviceId", NullValueHandling = NullValueHandling.Ignore)]
+        public string DeviceId { get; set; }
+
+        [JsonProperty(PropertyName = "ModuleId", NullValueHandling = NullValueHandling.Ignore)]
+        public string ModuleId { get; set; }
     }
 }

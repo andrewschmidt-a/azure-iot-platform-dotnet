@@ -18,6 +18,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class PackageControllerTest : IDisposable
     {
+        private bool disposedValue = false;
         private readonly Mock<IStorage> mockStorage;
         private readonly PackagesController controller;
         private readonly Random rand;
@@ -217,8 +218,6 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
             return new FormFile(stream, 0, package.Length, "file", filename);
         }
-
-        private bool disposedValue = false;
 
         protected virtual void Dispose(bool disposing)
         {

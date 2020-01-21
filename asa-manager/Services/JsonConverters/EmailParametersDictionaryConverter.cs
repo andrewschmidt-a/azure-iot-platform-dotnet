@@ -9,10 +9,11 @@ namespace Mmm.Platform.IoT.AsaManager.Services.JsonConverters
 {
     public class EmailParametersDictionaryConverter : JsonConverter
     {
-        public override bool CanWrite => false;
-        public override bool CanRead => true;
-
         private const string RECIPIENTS_KEY = "Recipients";
+
+        public override bool CanWrite => false;
+
+        public override bool CanRead => true;
 
         public override bool CanConvert(Type objectType)
         {

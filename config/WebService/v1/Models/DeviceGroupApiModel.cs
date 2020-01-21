@@ -8,21 +8,6 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
 {
     public class DeviceGroupApiModel
     {
-        [JsonProperty("Id")]
-        public string Id { get; set; }
-
-        [JsonProperty("DisplayName")]
-        public string DisplayName { get; set; }
-
-        [JsonProperty("Conditions")]
-        public IEnumerable<DeviceGroupCondition> Conditions { get; set; }
-
-        [JsonProperty("ETag")]
-        public string ETag { get; set; }
-
-        [JsonProperty("$metadata")]
-        public Dictionary<string, string> Metadata { get; set; }
-
         public DeviceGroupApiModel()
         {
         }
@@ -40,6 +25,21 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
                 { "$url", $"/v1/devicegroups/{model.Id}" }
             };
         }
+
+        [JsonProperty("Id")]
+        public string Id { get; set; }
+
+        [JsonProperty("DisplayName")]
+        public string DisplayName { get; set; }
+
+        [JsonProperty("Conditions")]
+        public IEnumerable<DeviceGroupCondition> Conditions { get; set; }
+
+        [JsonProperty("ETag")]
+        public string ETag { get; set; }
+
+        [JsonProperty("$metadata")]
+        public Dictionary<string, string> Metadata { get; set; }
 
         public DeviceGroup ToServiceModel()
         {

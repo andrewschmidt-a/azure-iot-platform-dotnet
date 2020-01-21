@@ -8,30 +8,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class DeviceJobApiModel
     {
-        [JsonProperty(PropertyName = "DeviceId")]
-        public string DeviceId { get; set; }
-
-        [JsonProperty(PropertyName = "Status")]
-        public DeviceJobStatus Status { get; set; }
-
-        [JsonProperty(PropertyName = "StartTimeUtc")]
-        public DateTime StartTimeUtc { get; set; }
-
-        [JsonProperty(PropertyName = "EndTimeUtc")]
-        public DateTime EndTimeUtc { get; set; }
-
-        [JsonProperty(PropertyName = "CreatedDateTimeUtc")]
-        public DateTime CreatedDateTimeUtc { get; set; }
-
-        [JsonProperty(PropertyName = "LastUpdatedDateTimeUtc")]
-        public DateTime LastUpdatedDateTimeUtc { get; set; }
-
-        [JsonProperty(PropertyName = "Outcome", NullValueHandling = NullValueHandling.Ignore)]
-        public MethodResultApiModel Outcome { get; set; }
-
-        [JsonProperty(PropertyName = "Error", NullValueHandling = NullValueHandling.Ignore)]
-        public DeviceJobErrorApiModel Error { get; set; }
-
         public DeviceJobApiModel()
         {
         }
@@ -55,5 +31,29 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                 this.Error = new DeviceJobErrorApiModel(serviceModel.Error);
             }
         }
+
+        [JsonProperty(PropertyName = "DeviceId")]
+        public string DeviceId { get; set; }
+
+        [JsonProperty(PropertyName = "Status")]
+        public DeviceJobStatus Status { get; set; }
+
+        [JsonProperty(PropertyName = "StartTimeUtc")]
+        public DateTime StartTimeUtc { get; set; }
+
+        [JsonProperty(PropertyName = "EndTimeUtc")]
+        public DateTime EndTimeUtc { get; set; }
+
+        [JsonProperty(PropertyName = "CreatedDateTimeUtc")]
+        public DateTime CreatedDateTimeUtc { get; set; }
+
+        [JsonProperty(PropertyName = "LastUpdatedDateTimeUtc")]
+        public DateTime LastUpdatedDateTimeUtc { get; set; }
+
+        [JsonProperty(PropertyName = "Outcome", NullValueHandling = NullValueHandling.Ignore)]
+        public MethodResultApiModel Outcome { get; set; }
+
+        [JsonProperty(PropertyName = "Error", NullValueHandling = NullValueHandling.Ignore)]
+        public DeviceJobErrorApiModel Error { get; set; }
     }
 }

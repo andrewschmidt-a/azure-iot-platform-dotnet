@@ -8,16 +8,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 {
     public class AlarmListApiModel
     {
-        [JsonProperty(PropertyName = "Items")]
-        public List<AlarmApiModel> Items { get; set; }
-
-        [JsonProperty(PropertyName = "$metadata", Order = 1000)]
-        public Dictionary<string, string> Metadata => new Dictionary<string, string>
-        {
-            { "$type", $"Alarms;1" },
-            { "$uri", "/" + "v1/alarms" }
-        };
-
         public AlarmListApiModel(List<Alarm> alarms)
         {
             this.Items = new List<AlarmApiModel>();
@@ -29,5 +19,15 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
                 }
             }
         }
+
+        [JsonProperty(PropertyName = "Items")]
+        public List<AlarmApiModel> Items { get; set; }
+
+        [JsonProperty(PropertyName = "$metadata", Order = 1000)]
+        public Dictionary<string, string> Metadata => new Dictionary<string, string>
+        {
+            { "$type", $"Alarms;1" },
+            { "$uri", "/" + "v1/alarms" }
+        };
     }
 }

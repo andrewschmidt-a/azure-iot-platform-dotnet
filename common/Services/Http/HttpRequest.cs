@@ -10,22 +10,13 @@ namespace Mmm.Platform.IoT.Common.Services.Http
 {
     public class HttpRequest : IHttpRequest, IDisposable
     {
+        private bool disposedValue = false;
         private readonly MediaTypeHeaderValue defaultMediaType = new MediaTypeHeaderValue("application/json");
         private readonly Encoding defaultEncoding = new UTF8Encoding();
 
         // Http***Headers classes don't have a public ctor, so we use this class
         // to hold the headers, this is also used for PUT/POST requests body
         private readonly HttpRequestMessage requestContent = new HttpRequestMessage();
-
-        public Uri Uri { get; set; }
-
-        public HttpHeaders Headers => this.requestContent.Headers;
-
-        public MediaTypeHeaderValue ContentType { get; private set; }
-
-        public HttpRequestOptions Options { get; } = new HttpRequestOptions();
-
-        public HttpContent Content => this.requestContent.Content;
 
         public HttpRequest()
         {
@@ -40,6 +31,16 @@ namespace Mmm.Platform.IoT.Common.Services.Http
         {
             this.SetUriFromString(uri);
         }
+
+        public Uri Uri { get; set; }
+
+        public HttpHeaders Headers => this.requestContent.Headers;
+
+        public MediaTypeHeaderValue ContentType { get; private set; }
+
+        public HttpRequestOptions Options { get; } = new HttpRequestOptions();
+
+        public HttpContent Content => this.requestContent.Content;
 
         public void AddHeader(string name, string value)
         {
@@ -107,7 +108,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
             this.requestContent.Content = new StringContent(content, encoding, mediaType.MediaType);
             this.ContentType = mediaType;
         }
-        private bool disposedValue = false;
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

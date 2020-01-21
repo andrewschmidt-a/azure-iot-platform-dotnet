@@ -10,6 +10,31 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class JobApiModel
     {
+        public JobApiModel()
+        {
+        }
+
+        public JobApiModel(JobServiceModel serviceModel)
+        {
+            if (serviceModel != null)
+            {
+                this.JobId = serviceModel.JobId;
+                this.QueryCondition = serviceModel.QueryCondition;
+                this.CreatedTimeUtc = serviceModel.CreatedTimeUtc;
+                this.StartTimeUtc = serviceModel.StartTimeUtc;
+                this.EndTimeUtc = serviceModel.EndTimeUtc;
+                this.MaxExecutionTimeInSeconds = serviceModel.MaxExecutionTimeInSeconds;
+                this.Type = serviceModel.Type;
+                this.Status = serviceModel.Status;
+                this.MethodParameter = serviceModel.MethodParameter == null ? null : new MethodParameterApiModel(serviceModel.MethodParameter);
+                this.UpdateTwin = serviceModel.UpdateTwin == null ? null : new JobUpdateTwinApiModel(null, serviceModel.UpdateTwin);
+                this.FailureReason = serviceModel.FailureReason;
+                this.StatusMessage = serviceModel.StatusMessage;
+                this.ResultStatistics = serviceModel.ResultStatistics;
+                this.Devices = serviceModel.Devices?.Select(j => new DeviceJobApiModel(j));
+            }
+        }
+
         [JsonProperty("JobId")]
         public string JobId { get; set; }
 
@@ -51,30 +76,5 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 
         [JsonProperty(PropertyName = "Devices", NullValueHandling = NullValueHandling.Ignore)]
         public IEnumerable<DeviceJobApiModel> Devices { get; set; }
-
-        public JobApiModel()
-        {
-        }
-
-        public JobApiModel(JobServiceModel serviceModel)
-        {
-            if (serviceModel != null)
-            {
-                this.JobId = serviceModel.JobId;
-                this.QueryCondition = serviceModel.QueryCondition;
-                this.CreatedTimeUtc = serviceModel.CreatedTimeUtc;
-                this.StartTimeUtc = serviceModel.StartTimeUtc;
-                this.EndTimeUtc = serviceModel.EndTimeUtc;
-                this.MaxExecutionTimeInSeconds = serviceModel.MaxExecutionTimeInSeconds;
-                this.Type = serviceModel.Type;
-                this.Status = serviceModel.Status;
-                this.MethodParameter = serviceModel.MethodParameter == null ? null : new MethodParameterApiModel(serviceModel.MethodParameter);
-                this.UpdateTwin = serviceModel.UpdateTwin == null ? null : new JobUpdateTwinApiModel(null, serviceModel.UpdateTwin);
-                this.FailureReason = serviceModel.FailureReason;
-                this.StatusMessage = serviceModel.StatusMessage;
-                this.ResultStatistics = serviceModel.ResultStatistics;
-                this.Devices = serviceModel.Devices?.Select(j => new DeviceJobApiModel(j));
-            }
-        }
     }
 }

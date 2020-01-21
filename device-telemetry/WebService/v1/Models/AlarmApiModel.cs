@@ -13,33 +13,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
         private DateTimeOffset dateCreated;
         private DateTimeOffset dateModified;
 
-        [JsonProperty(PropertyName = "ETag")]
-        public string ETag { get; set; }
-
-        [JsonProperty(PropertyName = "Id")]
-        public string Id { get; set; }
-
-        [JsonProperty(PropertyName = "DateCreated")]
-        public string DateCreated => this.dateCreated.ToString(DATE_FORMAT);
-
-        [JsonProperty(PropertyName = "DateModified")]
-        public string DateModified => this.dateModified.ToString(DATE_FORMAT);
-
-        [JsonProperty(PropertyName = "Description")]
-        public string Description { get; set; }
-
-        [JsonProperty(PropertyName = "GroupId")]
-        public string GroupId { get; set; }
-
-        [JsonProperty(PropertyName = "DeviceId")]
-        public string DeviceId { get; set; }
-
-        [JsonProperty(PropertyName = "Status")]
-        public string Status { get; set; }
-
-        [JsonProperty(PropertyName = "Rule")]
-        public AlarmRuleApiModel Rule { get; set; }
-
         [JsonProperty(PropertyName = "$metadata", Order = 1000)]
         public Dictionary<string, string> Metadata;
 
@@ -67,5 +40,34 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
                 };
             }
         }
+
+        [JsonProperty(PropertyName = "ETag")]
+        public string ETag { get; set; }
+
+        [JsonProperty(PropertyName = "Id")]
+        public string Id { get; set; }
+
+        [JsonProperty(PropertyName = "DateCreated")]
+        public string DateCreated => this.dateCreated.ToString(DATE_FORMAT);
+
+        [JsonProperty(PropertyName = "DateModified")]
+        public string DateModified => this.dateModified.ToString(DATE_FORMAT);
+
+        [JsonProperty(PropertyName = "Description")]
+        public string Description { get; set; }
+
+        [JsonProperty(PropertyName = "GroupId")]
+        public string GroupId { get; set; }
+
+        [JsonProperty(PropertyName = "DeviceId")]
+        public string DeviceId { get; set; }
+
+        [JsonProperty(PropertyName = "Status")]
+        public string Status { get; set; }
+
+        [JsonProperty(PropertyName = "Rule")]
+        public AlarmRuleApiModel Rule { get; set; }
+
+
     }
 }

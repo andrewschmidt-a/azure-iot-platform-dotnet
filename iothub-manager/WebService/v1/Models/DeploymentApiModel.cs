@@ -11,6 +11,39 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class DeploymentApiModel
     {
+        public DeploymentApiModel()
+        {
+            this.Metadata = new Dictionary<string, string>
+            {
+                { "$type", $"DevicePropertyList;1" },
+                { "$url", $"/v1/deviceproperties" }
+            };
+        }
+
+        public DeploymentApiModel(DeploymentServiceModel serviceModel)
+        {
+            this.CreatedDateTimeUtc = serviceModel.CreatedDateTimeUtc;
+            this.DeploymentId = serviceModel.Id;
+            this.DeviceGroupId = serviceModel.DeviceGroupId;
+            this.DeviceGroupName = serviceModel.DeviceGroupName;
+            this.DeviceGroupQuery = serviceModel.DeviceGroupQuery;
+            this.Name = serviceModel.Name;
+            this.PackageContent = serviceModel.PackageContent;
+            this.PackageName = serviceModel.PackageName;
+            this.Priority = serviceModel.Priority;
+            this.PackageType = serviceModel.PackageType;
+            this.ConfigType = serviceModel.ConfigType;
+            this.Metrics = new DeploymentMetricsApiModel(serviceModel.DeploymentMetrics)
+            {
+                DeviceStatuses = serviceModel.DeploymentMetrics?.DeviceStatuses
+            };
+            this.Metadata = new Dictionary<string, string>
+            {
+                { "$type", $"DevicePropertyList;1" },
+                { "$url", $"/v1/deviceproperties" }
+            };
+        }
+
         [JsonProperty(PropertyName = "Id")]
         public string DeploymentId { get; set; }
 
@@ -50,40 +83,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 
         [JsonProperty(PropertyName = "$metadata")]
         public Dictionary<string, string> Metadata { get; set; }
-
-        public DeploymentApiModel()
-        {
-            this.Metadata = new Dictionary<string, string>
-            {
-                { "$type", $"DevicePropertyList;1" },
-                { "$url", $"/v1/deviceproperties" }
-            };
-        }
-
-        public DeploymentApiModel(DeploymentServiceModel serviceModel)
-        {
-            this.CreatedDateTimeUtc = serviceModel.CreatedDateTimeUtc;
-            this.DeploymentId = serviceModel.Id;
-            this.DeviceGroupId = serviceModel.DeviceGroupId;
-            this.DeviceGroupName = serviceModel.DeviceGroupName;
-            this.DeviceGroupQuery = serviceModel.DeviceGroupQuery;
-            this.Name = serviceModel.Name;
-            this.PackageContent = serviceModel.PackageContent;
-            this.PackageName = serviceModel.PackageName;
-            this.Priority = serviceModel.Priority;
-            this.PackageType = serviceModel.PackageType;
-            this.ConfigType = serviceModel.ConfigType;
-            this.Metrics = new DeploymentMetricsApiModel(serviceModel.DeploymentMetrics)
-            {
-                DeviceStatuses = serviceModel.DeploymentMetrics?.DeviceStatuses
-            };
-            this.Metadata = new Dictionary<string, string>
-            {
-                { "$type", $"DevicePropertyList;1" },
-                { "$url", $"/v1/deviceproperties" }
-            };
-        }
-
 
         public DeploymentServiceModel ToServiceModel()
         {

@@ -21,18 +21,4 @@ namespace Mmm.Platform.IoT.Config.Services.Models
 
         public string DateCreated { get; set; }
     }
-
-    // Sync these variables with PackageType in IotHubManager
-    public enum PackageType
-    {
-        EdgeManifest,
-        DeviceConfiguration
-    }
-
-    // Used for validation, these are pre-defined constants for configuration type
-    public enum ConfigType
-    {
-        Custom,
-        Firmware
-    }
 }

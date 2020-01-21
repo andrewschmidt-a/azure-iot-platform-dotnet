@@ -16,8 +16,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
 {
     public class DiagnosticsClient : IDiagnosticsClient
     {
-        public bool CanLogToDiagnostics { get; }
-
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string TENANT_ID = "TenantID";
         private readonly IHttpClient httpClient;
@@ -45,6 +43,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
 
             this._httpContextAccessor = contextAccessor;
         }
+
+        public bool CanLogToDiagnostics { get; }
 
         /**
          * Logs event with given event name and empty event properties

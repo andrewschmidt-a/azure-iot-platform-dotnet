@@ -5,9 +5,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 {
     public class AlarmIdListApiModel
     {
-        [JsonProperty(PropertyName = "Items")]
-        public List<string> Items { get; set; }
-
         public AlarmIdListApiModel()
         {
             this.Items = null;
@@ -17,5 +14,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
         {
             this.Items = items;
         }
+
+        [JsonProperty(PropertyName = "Items")]
+        public List<string> Items { get; set; }
     }
 }

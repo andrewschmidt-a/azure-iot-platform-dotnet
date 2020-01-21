@@ -9,11 +9,6 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
 {
     public class PackageListApiModel
     {
-        public IEnumerable<PackageApiModel> Items { get; set; }
-
-        [JsonProperty(PropertyName = "$metadata")]
-        public Dictionary<string, string> Metadata { get; set; }
-
         public PackageListApiModel(IEnumerable<PackageServiceModel> models)
         {
             this.Items = models.Select(m => new PackageApiModel(m));
@@ -24,5 +19,10 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Models
                 { "$url", $"/v1/deviceproperties" }
             };
         }
+
+        public IEnumerable<PackageApiModel> Items { get; set; }
+
+        [JsonProperty(PropertyName = "$metadata")]
+        public Dictionary<string, string> Metadata { get; set; }
     }
 }

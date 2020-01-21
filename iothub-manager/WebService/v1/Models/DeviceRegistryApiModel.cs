@@ -10,6 +10,35 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class DeviceRegistryApiModel
     {
+        public DeviceRegistryApiModel()
+        {
+        }
+
+        public DeviceRegistryApiModel(DeviceServiceModel device)
+        {
+            if (device == null) return;
+
+            this.Id = device.Id;
+            this.ETag = device.Etag;
+            this.C2DMessageCount = device.C2DMessageCount;
+            this.LastActivity = device.LastActivity;
+            this.Connected = device.Connected;
+            this.Enabled = device.Enabled;
+            this.IsEdgeDevice = device.IsEdgeDevice;
+            this.LastStatusUpdated = device.LastStatusUpdated;
+            this.IoTHubHostName = device.IoTHubHostName;
+            this.Authentication = new AuthenticationMechanismApiModel(
+                device.Authentication ?? new AuthenticationMechanismServiceModel());
+
+            if (device.Twin != null)
+            {
+                this.ETag = $"{this.ETag}|{device.Twin.ETag}";
+                this.Properties = new TwinPropertiesApiModel(device.Twin.DesiredProperties, device.Twin.ReportedProperties);
+                this.Tags = device.Twin.Tags;
+                this.IsSimulated = device.Twin.IsSimulated;
+            }
+        }
+
         [JsonProperty(PropertyName = "ETag")]
         public string ETag { get; set; }
 
@@ -56,35 +85,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 
         [JsonProperty(PropertyName = "Authentication")]
         public AuthenticationMechanismApiModel Authentication { get; set; }
-
-        public DeviceRegistryApiModel()
-        {
-        }
-
-        public DeviceRegistryApiModel(DeviceServiceModel device)
-        {
-            if (device == null) return;
-
-            this.Id = device.Id;
-            this.ETag = device.Etag;
-            this.C2DMessageCount = device.C2DMessageCount;
-            this.LastActivity = device.LastActivity;
-            this.Connected = device.Connected;
-            this.Enabled = device.Enabled;
-            this.IsEdgeDevice = device.IsEdgeDevice;
-            this.LastStatusUpdated = device.LastStatusUpdated;
-            this.IoTHubHostName = device.IoTHubHostName;
-            this.Authentication = new AuthenticationMechanismApiModel(
-                device.Authentication ?? new AuthenticationMechanismServiceModel());
-
-            if (device.Twin != null)
-            {
-                this.ETag = $"{this.ETag}|{device.Twin.ETag}";
-                this.Properties = new TwinPropertiesApiModel(device.Twin.DesiredProperties, device.Twin.ReportedProperties);
-                this.Tags = device.Twin.Tags;
-                this.IsSimulated = device.Twin.IsSimulated;
-            }
-        }
 
         internal string DeviceRegistryEtag
         {

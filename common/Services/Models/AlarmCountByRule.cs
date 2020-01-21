@@ -6,11 +6,6 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 {
     public class AlarmCountByRule
     {
-        public int Count { get; set; }
-        public string Status { get; set; }
-        public DateTimeOffset MessageTime { get; set; }
-        public Rule Rule { get; set; }
-
         public AlarmCountByRule(
             int count,
             string status,
@@ -22,5 +17,10 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             this.MessageTime = messageTime;
             this.Rule = rule;
         }
+
+        public int Count { get; set; }
+        public string Status { get; set; }
+        public DateTimeOffset MessageTime { get; set; }
+        public Rule Rule { get; set; }
     }
 }

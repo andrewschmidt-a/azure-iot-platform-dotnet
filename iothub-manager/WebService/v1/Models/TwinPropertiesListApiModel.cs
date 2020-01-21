@@ -8,19 +8,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {
     public class TwinPropertiesListApiModel
     {
-        [JsonProperty(PropertyName = "$metadata")]
-        public Dictionary<string, string> Metadata => new Dictionary<string, string>
-        {
-            { "$type", "DeviceList;1" },
-            { "$uri", "/" + "v1/devices" }
-        };
-
-        [JsonProperty(PropertyName = "ContinuationToken")]
-        public string ContinuationToken { get; set; }
-
-        [JsonProperty(PropertyName = "Items")]
-        public List<TwinPropertiesApiModel> Items { get; set; }
-
         public TwinPropertiesListApiModel()
         {
         }
@@ -38,5 +25,18 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
                     t.ModuleId));
             }
         }
+
+        [JsonProperty(PropertyName = "$metadata")]
+        public Dictionary<string, string> Metadata => new Dictionary<string, string>
+        {
+            { "$type", "DeviceList;1" },
+            { "$uri", "/" + "v1/devices" }
+        };
+
+        [JsonProperty(PropertyName = "ContinuationToken")]
+        public string ContinuationToken { get; set; }
+
+        [JsonProperty(PropertyName = "Items")]
+        public List<TwinPropertiesApiModel> Items { get; set; }
     }
 }
