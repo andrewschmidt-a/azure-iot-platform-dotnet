@@ -3,6 +3,8 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace Mmm.Platform.IoT.Common.Services.Http
@@ -128,7 +130,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
         {
             if (request.Options.AllowInsecureSSLServer)
             {
-                clientHandler.ServerCertificateCustomValidationCallback = delegate { return true; };
+                clientHandler.ServerCertificateCustomValidationCallback = (HttpRequestMessage a, X509Certificate2 b, X509Chain c, SslPolicyErrors d) => true;
             }
         }
 
