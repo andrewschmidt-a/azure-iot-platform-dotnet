@@ -19,7 +19,8 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             ILogger<StatusService> logger,
             IIotHubManagerClient iotHubManager,
             IBlobStorageClient blobStorageClient,
-            IStorageAdapterClient storageAdapterClient) : base(config)
+            IStorageAdapterClient storageAdapterClient)
+                : base(config)
         {
             _logger = logger;
             dependencies = new Dictionary<string, IStatusOperation>

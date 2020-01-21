@@ -27,7 +27,8 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             IIotHubManagerClient iotHubManager,
             IBlobStorageClient blobClient,
             IStorageAdapterClient storageAdapterClient,
-            ILogger<DeviceGroupsConverter> log) : base(blobClient, storageAdapterClient, log)
+            ILogger<DeviceGroupsConverter> log)
+                : base(blobClient, storageAdapterClient, log)
         {
             this._iotHubManager = iotHubManager;
         }

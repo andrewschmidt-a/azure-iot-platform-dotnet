@@ -126,7 +126,8 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
             this.Fields = new List<string>();
         }
 
-        public RuleReferenceDataModel(RuleModel rule) : this()
+        public RuleReferenceDataModel(RuleModel rule)
+            : this()
         {
             if (!rule.Enabled || rule.Deleted) return;
 

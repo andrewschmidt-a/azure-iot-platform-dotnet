@@ -8,7 +8,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models
 {
     public class AlarmListByRuleApiModel : AlarmListApiModel
     {
-        public AlarmListByRuleApiModel(List<Alarm> alarms) : base(alarms)
+        public AlarmListByRuleApiModel(List<Alarm> alarms)
+            : base(alarms)
         {
         }
 

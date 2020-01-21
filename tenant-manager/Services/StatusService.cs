@@ -20,7 +20,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             IDeviceGroupsConfigClient deviceGroupsConfigClient,
             IStorageClient cosmosClient,
             ITableStorageClient tableStorageClient,
-            IRunbookHelper RunbookHelper) : base(config)
+            IRunbookHelper RunbookHelper)
+                : base(config)
         {
             _logger = logger;
             dependencies = new Dictionary<string, IStatusOperation>

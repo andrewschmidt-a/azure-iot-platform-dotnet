@@ -12,7 +12,8 @@ namespace Mmm.Platform.IoT.Common.Services.Config
             Configuration = configuration;
         }
 
-        public AppConfig(IConfigurationBuilder configurationBuilder) : this(configurationBuilder.Build())
+        public AppConfig(IConfigurationBuilder configurationBuilder)
+            : this(configurationBuilder.Build())
         {
         }
 

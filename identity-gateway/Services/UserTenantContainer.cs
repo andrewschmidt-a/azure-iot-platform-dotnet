@@ -14,7 +14,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         {
         }
 
-        public UserTenantContainer(ITableStorageClient tableStorageClient) : base(tableStorageClient)
+        public UserTenantContainer(ITableStorageClient tableStorageClient)
+            : base(tableStorageClient)
         {
         }
 

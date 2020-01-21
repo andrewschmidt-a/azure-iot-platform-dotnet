@@ -20,7 +20,8 @@ namespace Mmm.Platform.IoT.AsaManager.Services
         public RulesConverter(
             IBlobStorageClient blobClient,
             IStorageAdapterClient storageAdapterClient,
-            ILogger<RulesConverter> log) : base(blobClient, storageAdapterClient, log)
+            ILogger<RulesConverter> log)
+                : base(blobClient, storageAdapterClient, log)
         {
         }
 
