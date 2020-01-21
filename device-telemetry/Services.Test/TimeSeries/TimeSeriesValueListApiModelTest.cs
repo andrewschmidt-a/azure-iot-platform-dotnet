@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesValueListApiModelTest
     {
-        private readonly string TSI_SAMPLE_EVENTS_FILE = $"TimeSeries{Path.DirectorySeparatorChar}TimeSeriesEvents.json";
+        private readonly string tsiSampleEventsFile = $"TimeSeries{Path.DirectorySeparatorChar}TimeSeriesEvents.json";
 
         [Fact]
         [Trait(Constants.TYPE, Constants.UNIT_TEST)]
@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
         {
             var path = AppDomain.CurrentDomain.BaseDirectory +
                        Path.DirectorySeparatorChar +
-                       this.TSI_SAMPLE_EVENTS_FILE;
+                       this.tsiSampleEventsFile;
 
             string data = File.ReadAllText(path);
 

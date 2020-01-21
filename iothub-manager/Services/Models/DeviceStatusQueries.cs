@@ -6,7 +6,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models
 {
     public partial class DeviceStatusQueries {
 
-        private static Dictionary<string, IDictionary<QueryType, string>> AdmQueryMapping =
+        private static Dictionary<string, IDictionary<QueryType, string>> admQueryMapping =
             new Dictionary<string, IDictionary<QueryType, string>>()
         {
             {
@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models
                 return EdgeDeviceStatusQueries.Queries;
             }
 
-            return AdmQueryMapping.TryGetValue(
+            return admQueryMapping.TryGetValue(
                 configType,
                 out IDictionary<QueryType, string> value) ? value : DefaultDeviceStatusQueries.Queries;
         }

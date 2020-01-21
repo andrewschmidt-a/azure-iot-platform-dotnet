@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         public readonly long RebuildTimeout;
         public readonly TimeSpan ServiceQueryInterval = TimeSpan.FromSeconds(10);
 
-        private DateTime DevicePropertiesLastUpdated;
+        private DateTime devicePropertiesLastUpdated;
 
         public DeviceProperties(
             IStorageAdapterClient storageClient,
@@ -144,7 +144,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                         });
                     if (updated)
                     {
-                        this.DevicePropertiesLastUpdated = DateTime.Now;
+                        this.devicePropertiesLastUpdated = DateTime.Now;
                         return true;
                     }
                 }
