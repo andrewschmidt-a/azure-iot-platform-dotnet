@@ -12,7 +12,6 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
 {
-
     public class DevicePropertiesControllerTest : IDisposable
     {
         private readonly DevicePropertiesController devicePropertiesController;

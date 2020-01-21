@@ -5,7 +5,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
 {
     public class AlarmRuleApiModel
     {
-
         public AlarmRuleApiModel(
             string id,
             string severity,

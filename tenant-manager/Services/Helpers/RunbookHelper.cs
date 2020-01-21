@@ -181,7 +181,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 
         private string GetRegexMatch(string matchString, Regex expression)
         {
-
             Match match = expression.Match(matchString);
             string value = match.Value;
             if (string.IsNullOrEmpty(value))

@@ -21,9 +21,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
             AppConfig config,
             IHttpContextAccessor httpContextAccessor)
         {
-
             this.httpClient = httpClient;
-
             this.serviceUri = config.ExternalDependencies.DeviceSimulationServiceUrl;
             this.httpContextAccessor = httpContextAccessor;
         }

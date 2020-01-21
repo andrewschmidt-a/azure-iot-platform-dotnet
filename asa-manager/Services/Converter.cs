@@ -44,7 +44,6 @@ namespace Mmm.Platform.IoT.AsaManager.Services
 
         protected async Task<string> WriteFileContentToBlobAsync(string fileContent, string tenantId, string operationId = null)
         {
-
             if (string.IsNullOrEmpty(fileContent))
             {
                 Logger.LogError("The temporary file content was null or empty for {entity}. Blank files will not be written to Blob storage. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);

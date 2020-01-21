@@ -113,7 +113,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 
         public JwtSecurityToken MintToken(List<Claim> claims, string audience, DateTime expirationDateTime)
         {
-
             string forwardedFor = null;
             // add issuer with forwarded for address if exists (added by reverse proxy)
             if (httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)

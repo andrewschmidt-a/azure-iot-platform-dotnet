@@ -23,7 +23,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
         public DevicesTest()
         {
-
             this.registryMock = new Mock<RegistryManager>();
             tenantHelper = new Mock<ITenantConnectionHelper>();
 
@@ -45,7 +44,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         [InlineData("asdf", "qwer", false)]
         public async Task GetModuleTwinTest(string deviceId, string moduleId, bool throwsException)
         {
-
             if (throwsException)
             {
                 // Act & Assert

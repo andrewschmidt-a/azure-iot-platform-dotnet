@@ -11,7 +11,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.KeyGenerator
     {
         public static void Main(string[] args)
         {
-
             string key = string.Empty;
             using (var memStream = new MemoryStream())
             {

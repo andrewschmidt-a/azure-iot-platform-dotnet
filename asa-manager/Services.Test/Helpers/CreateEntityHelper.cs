@@ -10,7 +10,6 @@ using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
 {
-
     public class CreateEntityHelper
     {
         private readonly Random rand;
