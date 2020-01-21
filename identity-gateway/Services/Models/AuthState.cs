@@ -3,11 +3,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class AuthState
     {
-        public string ReturnUrl;
-        public string State;
-        public string Tenant;
-        public string Nonce;
-        public string ClientId;
-        public string Invitation = null;
+        public string ReturnUrl { get; set; }
+        public string State { get; set; }
+        public string Tenant { get; set; }
+        public string Nonce { get; set; }
+        public string ClientId { get; set; }
+        public string Invitation { get; set; }
     }
 }

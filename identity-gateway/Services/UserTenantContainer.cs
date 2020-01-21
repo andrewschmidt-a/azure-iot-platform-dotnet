@@ -29,7 +29,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         public virtual async Task<UserTenantListModel> GetAllAsync(UserTenantInput input)
         {
             TableQuery<UserTenantModel> query = new TableQuery<UserTenantModel>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.UserId));
-            List<UserTenantModel> result = await this.tableStorageClient.QueryAsync<UserTenantModel>(this.TableName, query);
+            List<UserTenantModel> result = await this.TableStorageClient.QueryAsync<UserTenantModel>(this.TableName, query);
             return new UserTenantListModel("GetTenants", result);
         }
 
@@ -42,7 +42,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         public virtual async Task<UserTenantListModel> GetAllUsersAsync(UserTenantInput input)
         {
             TableQuery<UserTenantModel> query = new TableQuery<UserTenantModel>().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.Tenant));
-            List<UserTenantModel> result = await this.tableStorageClient.QueryAsync<UserTenantModel>(this.TableName, query);
+            List<UserTenantModel> result = await this.TableStorageClient.QueryAsync<UserTenantModel>(this.TableName, query);
             return new UserTenantListModel("GetUsers", result);
         }
         /// <summary>
@@ -52,7 +52,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         /// <returns></returns>
         public virtual async Task<UserTenantModel> GetAsync(UserTenantInput input)
         {
-            return await this.tableStorageClient.RetrieveAsync<UserTenantModel>(this.TableName, input.UserId, input.Tenant);
+            return await this.TableStorageClient.RetrieveAsync<UserTenantModel>(this.TableName, input.UserId, input.Tenant);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                     " Use PUT instead to update this setting instead.");
             }
             UserTenantModel user = new UserTenantModel(input);
-            return await this.tableStorageClient.InsertAsync(this.TableName, user);
+            return await this.TableStorageClient.InsertAsync(this.TableName, user);
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                 throw new ArgumentException("The UserTenant update model must contain a serialized role array.");
             }
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
-            return await this.tableStorageClient.InsertOrMergeAsync(this.TableName, model);
+            return await this.TableStorageClient.InsertOrMergeAsync(this.TableName, model);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             }
 
             user.ETag = "*";  // An ETag is required for deleting - this allows any etag to be used
-            return await this.tableStorageClient.DeleteAsync(this.TableName, user);
+            return await this.TableStorageClient.DeleteAsync(this.TableName, user);
         }
 
         public virtual async Task<UserTenantListModel> DeleteAllAsync(UserTenantInput input)

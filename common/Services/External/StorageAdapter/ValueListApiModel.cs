@@ -5,9 +5,9 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
 {
     public class ValueListApiModel
     {
-        public IList<ValueApiModel> Items;
+        public IList<ValueApiModel> Items { get; set; }
 
         [JsonProperty("$metadata")]
-        public Dictionary<string, string> Metadata;
+        public Dictionary<string, string> Metadata { get; set; }
     }
 }

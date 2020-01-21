@@ -16,17 +16,17 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
     {
         public const string CacheCollectioId = "device-twin-properties";
         public const string CacheKey = "cache";
-        public const string WhitelistTagPrefix = "tags.";
-        public const string WhitelistReportedPrefix = "reported.";
-        public const string TagPrefix = "Tags.";
-        public const string ReportedPrefix = "Properties.Reported.";
-        public readonly IStorageAdapterClient StorageClient;
-        public readonly IDevices Devices;
-        public readonly ILogger Logger;
-        public readonly string Whitelist;
-        public readonly long Ttl;
-        public readonly long RebuildTimeout;
-        public readonly TimeSpan ServiceQueryInterval = TimeSpan.FromSeconds(10);
+        private const string WhitelistTagPrefix = "tags.";
+        private const string WhitelistReportedPrefix = "reported.";
+        private const string TagPrefix = "Tags.";
+        private const string ReportedPrefix = "Properties.Reported.";
+        private readonly IStorageAdapterClient storageClient;
+        private readonly IDevices devices;
+        private readonly ILogger logger;
+        private readonly string whitelist;
+        private readonly long ttl;
+        private readonly long rebuildTimeout;
+        private readonly TimeSpan serviceQueryInterval = TimeSpan.FromSeconds(10);
         private DateTime devicePropertiesLastUpdated;
 
         public DeviceProperties(
@@ -35,12 +35,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             ILogger<DeviceProperties> logger,
             IDevices devices)
         {
-            this.StorageClient = storageClient;
-            Logger = logger;
-            this.Whitelist = config.IotHubManagerService.DevicePropertiesCache.Whitelist;
-            this.Ttl = config.IotHubManagerService.DevicePropertiesCache.Ttl;
-            this.RebuildTimeout = config.IotHubManagerService.DevicePropertiesCache.RebuildTimeout;
-            this.Devices = devices;
+            this.storageClient = storageClient;
+            this.logger = logger;
+            this.whitelist = config.IotHubManagerService.DevicePropertiesCache.Whitelist;
+            this.ttl = config.IotHubManagerService.DevicePropertiesCache.Ttl;
+            this.rebuildTimeout = config.IotHubManagerService.DevicePropertiesCache.RebuildTimeout;
+            this.devices = devices;
         }
 
         public async Task<List<string>> GetListAsync()
@@ -48,11 +48,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             ValueApiModel response = new ValueApiModel();
             try
             {
-                response = await this.StorageClient.GetAsync(CacheCollectioId, CacheKey);
+                response = await this.storageClient.GetAsync(CacheCollectioId, CacheKey);
             }
             catch (ResourceNotFoundException)
             {
-                Logger.LogDebug($"Cache get: cache {CacheCollectioId}:{CacheKey} was not found");
+                logger.LogDebug($"Cache get: cache {CacheCollectioId}:{CacheKey} was not found");
             }
             catch (Exception e)
             {
@@ -90,7 +90,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         public async Task<bool> TryRecreateListAsync(bool force = false)
         {
             var @lock = new StorageWriteLock<DevicePropertyServiceModel>(
-                this.StorageClient,
+                this.storageClient,
                 CacheCollectioId,
                 CacheKey,
                 (c, b) => c.Rebuilding = b,
@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 var locked = await @lock.TryLockAsync();
                 if (locked == null)
                 {
-                    Logger.LogWarning("Cache rebuilding: lock failed due to conflict. Retry soon");
+                    logger.LogWarning("Cache rebuilding: lock failed due to conflict. Retry soon");
                     continue;
                 }
 
@@ -119,16 +119,16 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 }
                 catch (Exception)
                 {
-                    Logger.LogWarning("Some underlying service is not ready. Retry after {interval}.", this.ServiceQueryInterval);
+                    logger.LogWarning("Some underlying service is not ready. Retry after {interval}.", this.serviceQueryInterval);
                     try
                     {
                         await @lock.ReleaseAsync();
                     }
                     catch (Exception e)
                     {
-                        Logger.LogError(e, "Cache rebuilding: Unable to release lock");
+                        logger.LogError(e, "Cache rebuilding: Unable to release lock");
                     }
-                    await Task.Delay(this.ServiceQueryInterval);
+                    await Task.Delay(this.serviceQueryInterval);
                     continue;
                 }
 
@@ -149,9 +149,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError(e, "Cache rebuilding: Unable to write and release lock");
+                    logger.LogError(e, "Cache rebuilding: Unable to write and release lock");
                 }
-                Logger.LogWarning("Cache rebuilding: write failed due to conflict. Retry soon");
+                logger.LogWarning("Cache rebuilding: write failed due to conflict. Retry soon");
             }
         }
 
@@ -168,11 +168,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 ValueApiModel model = null;
                 try
                 {
-                    model = await this.StorageClient.GetAsync(CacheCollectioId, CacheKey);
+                    model = await this.storageClient.GetAsync(CacheCollectioId, CacheKey);
                 }
                 catch (ResourceNotFoundException)
                 {
-                    Logger.LogInformation($"Cache updating: cache {CacheCollectioId}:{CacheKey} was not found");
+                    logger.LogInformation($"Cache updating: cache {CacheCollectioId}:{CacheKey} was not found");
                 }
 
                 if (model != null)
@@ -207,17 +207,17 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 var value = JsonConvert.SerializeObject(deviceProperties);
                 try
                 {
-                    var response = await this.StorageClient.UpdateAsync(
+                    var response = await this.storageClient.UpdateAsync(
                         CacheCollectioId, CacheKey, value, etag);
                     return JsonConvert.DeserializeObject<DevicePropertyServiceModel>(response.Data);
                 }
                 catch (ConflictingResourceException)
                 {
-                    Logger.LogInformation("Cache updating: failed due to conflict. Retry soon");
+                    logger.LogInformation("Cache updating: failed due to conflict. Retry soon");
                 }
                 catch (Exception e)
                 {
-                    Logger.LogInformation(e, "Cache updating: failed");
+                    logger.LogInformation(e, "Cache updating: failed");
                     throw new Exception("Cache updating: failed");
                 }
             }
@@ -307,7 +307,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
         private async Task<DeviceTwinName> GetValidNamesAsync()
         {
-            ParseWhitelist(this.Whitelist, out var fullNameWhitelist, out var prefixWhitelist);
+            ParseWhitelist(this.whitelist, out var fullNameWhitelist, out var prefixWhitelist);
 
             var validNames = new DeviceTwinName
             {
@@ -321,7 +321,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 try
                 {
                     // Get list of DeviceTwinNames from IOT-hub
-                    allNames = await this.Devices.GetDeviceTwinNamesAsync();
+                    allNames = await this.devices.GetDeviceTwinNamesAsync();
                 }
                 catch (Exception e)
                 {
@@ -342,13 +342,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         {
             if (force)
             {
-                Logger.LogInformation("Cache will be rebuilt due to the force flag");
+                logger.LogInformation("Cache will be rebuilt due to the force flag");
                 return true;
             }
 
             if (valueApiModel == null)
             {
-                Logger.LogInformation("Cache will be rebuilt since no cache was found");
+                logger.LogInformation("Cache will be rebuilt since no cache was found");
                 return true;
             }
             DevicePropertyServiceModel cacheValue = new DevicePropertyServiceModel();
@@ -360,20 +360,20 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
             catch
             {
-                Logger.LogInformation("DeviceProperties will be rebuilt because the last one is broken.");
+                logger.LogInformation("DeviceProperties will be rebuilt because the last one is broken.");
                 return true;
             }
 
             if (cacheValue.Rebuilding)
             {
-                if (timstamp.AddSeconds(this.RebuildTimeout) < DateTimeOffset.UtcNow)
+                if (timstamp.AddSeconds(this.rebuildTimeout) < DateTimeOffset.UtcNow)
                 {
-                    Logger.LogDebug("Cache will be rebuilt because last rebuilding had timedout");
+                    logger.LogDebug("Cache will be rebuilt because last rebuilding had timedout");
                     return true;
                 }
                 else
                 {
-                    Logger.LogDebug("Cache rebuilding skipped because it is being rebuilt by other instance");
+                    logger.LogDebug("Cache rebuilding skipped because it is being rebuilt by other instance");
                     return false;
                 }
             }
@@ -381,18 +381,18 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             {
                 if (cacheValue.IsNullOrEmpty())
                 {
-                    Logger.LogInformation("Cache will be rebuilt since it is empty");
+                    logger.LogInformation("Cache will be rebuilt since it is empty");
                     return true;
                 }
 
-                if (timstamp.AddSeconds(this.Ttl) < DateTimeOffset.UtcNow)
+                if (timstamp.AddSeconds(this.ttl) < DateTimeOffset.UtcNow)
                 {
-                    Logger.LogInformation("Cache will be rebuilt because it has expired");
+                    logger.LogInformation("Cache will be rebuilt because it has expired");
                     return true;
                 }
                 else
                 {
-                    Logger.LogDebug("Cache rebuilding skipped because it has not expired");
+                    logger.LogDebug("Cache rebuilding skipped because it has not expired");
                     return false;
                 }
             }

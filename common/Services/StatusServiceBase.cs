@@ -7,7 +7,6 @@ namespace Mmm.Platform.IoT.Common.Services
 {
     public class StatusServiceBase : IStatusService
     {
-        protected IDictionary<string, IStatusOperation> dependencies;
         private readonly AppConfig config;
 
         public StatusServiceBase(AppConfig config)
@@ -15,13 +14,15 @@ namespace Mmm.Platform.IoT.Common.Services
             this.config = config;
         }
 
+        protected IDictionary<string, IStatusOperation> Dependencies { get; set; }
+
         public async Task<StatusServiceModel> GetStatusAsync()
         {
             var result = new StatusServiceModel(true, "Alive and well!");
             var errors = new List<string>();
 
             // Loop over the IStatusOperation classes and get each status - set service status based on each response
-            foreach (var dependency in dependencies)
+            foreach (var dependency in Dependencies)
             {
                 var service = dependency.Value;
                 var serviceResult = await service.StatusAsync();

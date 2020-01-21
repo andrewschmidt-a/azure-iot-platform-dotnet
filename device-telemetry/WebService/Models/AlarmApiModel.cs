@@ -7,8 +7,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
 {
     public class AlarmApiModel
     {
-        [JsonProperty(PropertyName = "$metadata", Order = 1000)]
-        public Dictionary<string, string> Metadata;
         private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
         private DateTimeOffset dateCreated;
         private DateTimeOffset dateModified;
@@ -37,6 +35,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
                 };
             }
         }
+
+        [JsonProperty(PropertyName = "$metadata", Order = 1000)]
+        public Dictionary<string, string> Metadata { get; set; }
 
         [JsonProperty(PropertyName = "ETag")]
         public string ETag { get; set; }

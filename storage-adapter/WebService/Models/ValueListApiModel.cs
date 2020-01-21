@@ -7,12 +7,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Models
 {
     public class ValueListApiModel
     {
-        [JsonProperty("Items")]
-        public readonly IEnumerable<ValueApiModel> Items;
-
-        [JsonProperty("$metadata")]
-        public Dictionary<string, string> Metadata;
-
         public ValueListApiModel(IEnumerable<ValueServiceModel> models, string collectionId)
         {
             this.Items = models.Select(m => new ValueApiModel(m));
@@ -23,5 +17,12 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Models
                 { "$uri", $"/v1/collections/{collectionId}/values" }
             };
         }
+
+        [JsonProperty("Items")]
+        public IEnumerable<ValueApiModel> Items { get; private set; }
+
+        [JsonProperty("$metadata")]
+        public Dictionary<string, string> Metadata { get; set; }
+
     }
 }

@@ -7,9 +7,6 @@ namespace Mmm.Platform.IoT.Config.WebService.Models
 {
     public class PackageApiModel
     {
-        [JsonProperty("Id")]
-        public string Id;
-
         public PackageApiModel(PackageServiceModel model)
         {
             this.Id = model.Id;
@@ -31,6 +28,9 @@ namespace Mmm.Platform.IoT.Config.WebService.Models
             this.PackageType = type;
             this.ConfigType = configType;
         }
+
+        [JsonProperty("Id")]
+        public string Id { get; set; }
 
         [JsonProperty("Name")]
         public string Name { get; set; }

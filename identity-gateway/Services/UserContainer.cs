@@ -7,22 +7,22 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public abstract class UserContainer : IStatusOperation
     {
-        protected ITableStorageClient tableStorageClient;
-
         public UserContainer()
         {
         }
 
         public UserContainer(ITableStorageClient tableStorageClient)
         {
-            this.tableStorageClient = tableStorageClient;
+            this.TableStorageClient = tableStorageClient;
         }
 
         public abstract string TableName { get; }
 
+        protected ITableStorageClient TableStorageClient { get; set; }
+
         public async Task<StatusResultServiceModel> StatusAsync()
         {
-            await this.tableStorageClient.GetTableAsync(this.TableName);
+            await this.TableStorageClient.GetTableAsync(this.TableName);
             return new StatusResultServiceModel(true, "Alive and Well!");
         }
     }

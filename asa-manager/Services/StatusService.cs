@@ -21,7 +21,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 : base(config)
         {
             this.logger = logger;
-            dependencies = new Dictionary<string, IStatusOperation>
+            Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "Storage Adapter", storageAdapterClient },
                 { "IoTHub Manager", iotHubManager },

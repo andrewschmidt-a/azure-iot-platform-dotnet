@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
+﻿namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class Invitation
     {
-        public string EmailAddress;
-        public string Role;
+        public string EmailAddress { get; set; }
+        public string Role { get; set; }
     }
 }

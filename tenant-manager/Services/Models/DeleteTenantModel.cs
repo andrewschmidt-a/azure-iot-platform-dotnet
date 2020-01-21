@@ -5,24 +5,24 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
 {
     public class DeleteTenantModel
     {
-        public string TenantId;
-        public bool EnsuredDeployment;
-        public Dictionary<string, bool> DeletionRecord;
+        private string tenantId;
+        private bool ensuredDeployment;
+        private Dictionary<string, bool> deletionRecord;
 
         public DeleteTenantModel() { }
 
         public DeleteTenantModel(string tenantGuid, Dictionary<string, bool> deletionRecord, bool ensuredDeployment)
         {
-            this.TenantId = tenantGuid;
-            this.EnsuredDeployment = ensuredDeployment;
-            this.DeletionRecord = deletionRecord;
+            this.tenantId = tenantGuid;
+            this.ensuredDeployment = ensuredDeployment;
+            this.deletionRecord = deletionRecord;
         }
 
         public bool FullyDeleted
         {
             get
             {
-                return this.DeletionRecord.All(item => item.Value);
+                return this.deletionRecord.All(item => item.Value);
             }
         }
     }

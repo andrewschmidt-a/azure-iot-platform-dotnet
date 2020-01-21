@@ -24,7 +24,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 : base(config)
         {
             this.logger = logger;
-            dependencies = new Dictionary<string, IStatusOperation>
+            Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "CosmosDb", cosmosClient },
                 { "Tenant Runbooks", runbookHelper },

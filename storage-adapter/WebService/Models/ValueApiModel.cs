@@ -7,9 +7,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Models
 {
     public class ValueApiModel
     {
-        [JsonProperty("$metadata")]
-        public Dictionary<string, string> Metadata;
-
         public ValueApiModel(ValueServiceModel model)
         {
             this.Key = model.Key;
@@ -23,6 +20,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Models
                 { "$uri", $"/v1/collections/{model.CollectionId}/values/{model.Key}" }
             };
         }
+
+        [JsonProperty("$metadata")]
+        public Dictionary<string, string> Metadata { get; set; }
 
         [JsonProperty("Key")]
         public string Key { get; set; }

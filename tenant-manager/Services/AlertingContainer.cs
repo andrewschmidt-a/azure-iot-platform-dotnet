@@ -8,19 +8,19 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class AlertingContainer : IAlertingContainer
     {
-        public readonly ITenantContainer TenantContainer;
-        public readonly IStreamAnalyticsHelper StreamAnalyticsHelper;
-        public readonly IRunbookHelper RunbookHelper;
         private const string SaNameFormat = "sa-{0}";
+        private readonly ITenantContainer tenantContainer;
+        private readonly IStreamAnalyticsHelper streamAnalyticsHelper;
+        private readonly IRunbookHelper runbookHelper;
 
         public AlertingContainer(
             ITenantContainer tenantContainer,
             IStreamAnalyticsHelper streamAnalyticsHelper,
             IRunbookHelper runbookHelper)
         {
-            this.TenantContainer = tenantContainer;
-            this.StreamAnalyticsHelper = streamAnalyticsHelper;
-            this.RunbookHelper = runbookHelper;
+            this.tenantContainer = tenantContainer;
+            this.streamAnalyticsHelper = streamAnalyticsHelper;
+            this.runbookHelper = runbookHelper;
         }
 
         public bool SaJobExists(StreamAnalyticsJobModel saJobModel)
@@ -38,7 +38,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             TenantModel tenant = await this.GetTenantFromContainerAsync(tenantId);
             string saJobName = string.Format(SaNameFormat, tenantId.Substring(0, 8));
-            await this.RunbookHelper.CreateAlerting(tenantId, saJobName, tenant.IotHubName);
+            await this.runbookHelper.CreateAlerting(tenantId, saJobName, tenant.IotHubName);
             return new StreamAnalyticsJobModel
             {
                 TenantId = tenant.TenantId,
@@ -51,7 +51,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         public async Task<StreamAnalyticsJobModel> RemoveAlertingAsync(string tenantId)
         {
             TenantModel tenant = await this.GetTenantFromContainerAsync(tenantId);
-            await this.RunbookHelper.DeleteAlerting(tenantId, tenant.SAJobName);
+            await this.runbookHelper.DeleteAlerting(tenantId, tenant.SAJobName);
             return new StreamAnalyticsJobModel
             {
                 TenantId = tenant.TenantId,
@@ -66,12 +66,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             TenantModel tenant = await this.GetTenantFromContainerAsync(tenantId);
             try
             {
-                var job = await this.StreamAnalyticsHelper.GetJobAsync(tenant.SAJobName);
+                var job = await this.streamAnalyticsHelper.GetJobAsync(tenant.SAJobName);
                 return new StreamAnalyticsJobModel
                 {
                     TenantId = tenant.TenantId,
                     JobState = job.JobState,
-                    IsActive = this.StreamAnalyticsHelper.JobIsActive(job),
+                    IsActive = this.streamAnalyticsHelper.JobIsActive(job),
                     StreamAnalyticsJobName = job.Name,
                 };
             }
@@ -97,7 +97,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 throw new Exception("There is no StreamAnalyticsJob is available to start for this tenant.");
             }
-            await this.StreamAnalyticsHelper.StartAsync(saJobModel.StreamAnalyticsJobName);
+            await this.streamAnalyticsHelper.StartAsync(saJobModel.StreamAnalyticsJobName);
             return saJobModel;
         }
 
@@ -108,18 +108,18 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 throw new Exception("There is no StreamAnalyticsJob is available to stop for this tenant.");
             }
-            await this.StreamAnalyticsHelper.StopAsync(saJobModel.StreamAnalyticsJobName);
+            await this.streamAnalyticsHelper.StopAsync(saJobModel.StreamAnalyticsJobName);
             return saJobModel;
         }
 
         private async Task<TenantModel> GetTenantFromContainerAsync(string tenantId)
         {
-            TenantModel tenant = await this.TenantContainer.GetTenantAsync(tenantId);
+            TenantModel tenant = await this.tenantContainer.GetTenantAsync(tenantId);
             if (tenant == null)
             {
                 throw new Exception("The given tenant does not exist.");
             }
-            bool tenantReady = await this.TenantContainer.TenantIsReadyAsync(tenantId);
+            bool tenantReady = await this.tenantContainer.TenantIsReadyAsync(tenantId);
             if (!tenantReady)
             {
                 throw new Exception("The tenant is not fully deployed yet. Please wait for the tenant to fully deploy before performing alerting operations");
