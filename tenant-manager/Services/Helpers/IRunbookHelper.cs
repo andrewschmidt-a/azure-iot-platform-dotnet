@@ -8,8 +8,11 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
     public interface IRunbookHelper : IStatusOperation
     {
         Task<HttpResponseMessage> CreateIotHub(string tenantId, string iotHubName, string dpsName);
+
         Task<HttpResponseMessage> DeleteIotHub(string tenantId, string iotHubName, string dpsName);
+
         Task<HttpResponseMessage> CreateAlerting(string tenantId, string saJobName, string iotHubName);
+
         Task<HttpResponseMessage> DeleteAlerting(string tenantId, string saJobName);
     }
 }

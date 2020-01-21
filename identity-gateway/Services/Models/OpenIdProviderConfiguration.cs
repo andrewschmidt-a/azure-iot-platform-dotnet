@@ -27,13 +27,21 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
         }
 
         public virtual string Issuer => host;
+
         public virtual string JwksUri => host + "/.well-known/openid-configuration/jwks";
+
         public virtual string AuthorizationEndpoint => host + "/connect/authorize";
+
         public virtual string EndSessionEndpoint => host + "/connect/logout";
+
         public virtual IEnumerable<string> ScopesSupported => new List<string> { "openid", "profile" };
+
         public virtual IEnumerable<string> ClaimsSupported => new List<string> { "sub", "name", "tenant", "role" };
+
         public virtual IEnumerable<string> GrantTypesSupported => new List<string> { "implicit" };
+
         public virtual IEnumerable<string> ResponseTypesSupported => new List<string> { "token", "id_token" };
+
         public virtual IEnumerable<string> ResponseModesSupported => new List<string> { "query" };
     }
 }

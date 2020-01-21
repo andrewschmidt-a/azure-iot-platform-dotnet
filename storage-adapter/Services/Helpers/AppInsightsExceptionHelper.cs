@@ -19,6 +19,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
         {
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
         };
+
         public static void Initialize(string instrumentationKey)
         {
             configuration = new TelemetryConfiguration(instrumentationKey);

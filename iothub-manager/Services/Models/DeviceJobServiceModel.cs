@@ -53,12 +53,19 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         }
 
         public string DeviceId { get; }
+
         public DeviceJobStatus Status { get; }
+
         public DateTime StartTimeUtc { get; }
+
         public DateTime EndTimeUtc { get; }
+
         public DateTime CreatedDateTimeUtc { get; }
+
         public DateTime LastUpdatedDateTimeUtc { get; }
+
         public MethodResultServiceModel Outcome { get; }
+
         public DeviceJobErrorServiceModel Error { get; }
     }
 }

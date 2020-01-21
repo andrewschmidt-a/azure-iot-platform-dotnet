@@ -1,5 +1,4 @@
-﻿using System;
-namespace Mmm.Platform.IoT.TenantManager.Services.Models
+﻿namespace Mmm.Platform.IoT.TenantManager.Services.Models
 {
     public class IdentityGatewayApiSettingModel
     {

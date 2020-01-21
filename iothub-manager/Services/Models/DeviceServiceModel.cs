@@ -74,15 +74,25 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         }
 
         public string Etag { get; set; }
+
         public string Id { get; set; }
+
         public int C2DMessageCount { get; set; }
+
         public DateTime LastActivity { get; set; }
+
         public bool Connected { get; set; }
+
         public bool Enabled { get; set; }
+
         public bool IsEdgeDevice { get; set; }
+
         public DateTime LastStatusUpdated { get; set; }
+
         public TwinServiceModel Twin { get; set; }
+
         public string IoTHubHostName { get; set; }
+
         public AuthenticationMechanismServiceModel Authentication { get; set; }
 
         public Device ToAzureModel(bool ignoreEtag = true)

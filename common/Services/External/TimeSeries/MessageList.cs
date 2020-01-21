@@ -26,6 +26,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         }
 
         public List<Message> Messages { get; set; }
+
         public List<string> Properties { get; set; }
     }
 }

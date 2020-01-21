@@ -23,6 +23,7 @@ namespace Mmm.Platform.IoT.Common.Services
         private const string ContextKeyAuthRequired = "AuthRequired";
         private const string ContextKeyAllowedActions = "CurrentUserAllowedActions";
         private const string ContextKeyExternalRequest = "ExternalRequest";
+
         public static void SetCurrentUserClaims(this HttpRequest request, IEnumerable<Claim> claims)
         {
             request.HttpContext.Items[ContextKeyUserClaims] = claims;

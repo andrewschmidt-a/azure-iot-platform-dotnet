@@ -14,8 +14,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         }
 
         public IDictionary<string, long> SystemMetrics { get; set; }
+
         public IDictionary<string, long> CustomMetrics { get; set; }
+
         public IDictionary<DeploymentStatus, long> DeviceMetrics { get; set; }
+
         public IDictionary<string, DeploymentStatus> DeviceStatuses { get; set; }
     }
 }

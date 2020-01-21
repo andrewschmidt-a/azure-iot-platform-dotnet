@@ -123,6 +123,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     },
                     ""etag"": ""MQ==""
                     }";
+
         private readonly string azureMapsKey;
         private readonly Mock<IStorageAdapterClient> mockClient;
         private readonly Mock<IAsaManagerClient> mockAsaManager;

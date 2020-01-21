@@ -20,7 +20,9 @@ namespace Mmm.Platform.IoT.Common.Services.Config
         }
 
         public IConfiguration Configuration { get; private set; }
+
         public string AppConfigurationConnectionString { get; set; }
+
         public string ASPNETCORE_URLS { get; set; }
     }
 }

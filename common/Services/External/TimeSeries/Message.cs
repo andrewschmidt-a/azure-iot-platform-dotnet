@@ -23,7 +23,9 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         }
 
         public string DeviceId { get; set; }
+
         public DateTimeOffset Time { get; set; }
+
         public JObject Data { get; set; }
     }
 }

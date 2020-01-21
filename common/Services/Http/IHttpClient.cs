@@ -18,6 +18,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
         Task<IHttpResponse> HeadAsync(IHttpRequest request);
 
         Task<IHttpResponse> OptionsAsync(IHttpRequest request);
+
         Task<IHttpResponse> SendAsync(IHttpRequest request, HttpMethod method);
     }
 }

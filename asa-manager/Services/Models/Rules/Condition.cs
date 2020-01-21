@@ -5,8 +5,11 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         private struct Condition
         {
             internal string Calculation { get; set; }
+
             internal string Field { get; set; }
+
             internal string Operator { get; set; }
+
             internal string Value { get; set; }
         }
     }

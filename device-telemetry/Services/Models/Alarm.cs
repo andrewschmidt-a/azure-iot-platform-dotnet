@@ -50,15 +50,25 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Models
         }
 
         public string ETag { get; set; }
+
         public string Id { get; set; }
+
         public DateTimeOffset DateCreated { get; set; }
+
         public DateTimeOffset DateModified { get; set; }
+
         public string Description { get; set; }
+
         public string GroupId { get; set; }
+
         public string DeviceId { get; set; }
+
         public string Status { get; set; }
+
         public string RuleId { get; set; }
+
         public string RuleSeverity { get; set; }
+
         public string RuleDescription { get; set; }
     }
 }

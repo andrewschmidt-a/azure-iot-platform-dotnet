@@ -11,6 +11,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         }
 
         public string Code { get; }
+
         public string Description { get; }
     }
 }

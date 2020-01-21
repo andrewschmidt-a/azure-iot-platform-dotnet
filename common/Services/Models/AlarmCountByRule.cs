@@ -17,8 +17,11 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         }
 
         public int Count { get; set; }
+
         public string Status { get; set; }
+
         public DateTimeOffset MessageTime { get; set; }
+
         public Rule Rule { get; set; }
     }
 }

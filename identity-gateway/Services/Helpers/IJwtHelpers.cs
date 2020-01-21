@@ -10,7 +10,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
     public interface IJwtHelpers
     {
         Task<JwtSecurityToken> GetIdentityToken(List<Claim> claims, string tenant, string audience, DateTime? expiration);
+
         JwtSecurityToken MintToken(List<Claim> claims, string audience, DateTime expirationDateTime);
+
         bool TryValidateToken(string audience, string encodedToken, HttpContext context, out JwtSecurityToken jwt);
     }
 }

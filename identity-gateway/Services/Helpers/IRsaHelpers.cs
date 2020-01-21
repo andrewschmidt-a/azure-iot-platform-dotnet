@@ -6,6 +6,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
     public interface IRsaHelpers
     {
         RSA DecodeRsa(string privateRsaKey);
+
         JsonWebKeySet GetJsonWebKey(string key);
     }
 }

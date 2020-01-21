@@ -17,6 +17,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         }
 
         public ConfigurationSetting Value { get; set; }
+
         public DateTime ExpirationTime { get; set; }
     }
 }

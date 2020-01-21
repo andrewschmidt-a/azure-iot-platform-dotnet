@@ -140,14 +140,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                         ""queries"": {}
                     }mockIoTHub
                  }";
+
         private const string DeploymentNameLabel = "Name";
         private const string DeploymentGroupIdLabel = "DeviceGroupId";
         private const string DeploymentGroupNameLabel = "DeviceGroupName";
         private const string ConfigurationTypeLabel = "ConfigType";
         private const string RmCreatedLabel = "RMDeployment";
-        private const string ResourceNotFoundException =
-            "Mmm.Platform.IoT.Common.Services.Exceptions.ResourceNotSupportedException, Mmm.Platform.IoT.Common.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
+        private const string ResourceNotFoundException = "Mmm.Platform.IoT.Common.Services.Exceptions.ResourceNotSupportedException, Mmm.Platform.IoT.Common.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
         private const string DeploymentPackageNameLabel = "PackageName";
+
         private readonly Deployments deployments;
         private readonly Mock<RegistryManager> registry;
         private readonly string ioTHubHostName = "mockIoTHub";

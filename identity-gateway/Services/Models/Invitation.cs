@@ -3,6 +3,7 @@
     public class Invitation
     {
         public string EmailAddress { get; set; }
+
         public string Role { get; set; }
     }
 }

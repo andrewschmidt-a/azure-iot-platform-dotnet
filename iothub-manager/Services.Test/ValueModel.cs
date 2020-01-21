@@ -5,6 +5,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         private class ValueModel
         {
             public string Value { get; set; }
+
             public bool Locked { get; set; }
         }
     }

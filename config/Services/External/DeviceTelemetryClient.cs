@@ -15,6 +15,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
         private readonly string serviceUri;
 
         private readonly IHttpContextAccessor httpContextAccessor;
+
         public DeviceTelemetryClient(
             IHttpClientWrapper httpClient,
             AppConfig config,

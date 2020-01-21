@@ -17,7 +17,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         }
 
         public string CollectionId { get; }
+
         public string Key { get; }
+
         public string Data { get; }
     }
 }
