@@ -11,8 +11,10 @@ namespace Mmm.Platform.IoT.Config.Services.Models
         private static Dictionary<string, IDictionary<QueryType, string>> AdmQueryMapping =
             new Dictionary<string, IDictionary<QueryType, string>>()
         {
-            { ConfigType.Firmware.ToString(),
-                    FirmwareStatusQueries.Queries }
+            {
+                ConfigType.Firmware.ToString(),
+                FirmwareStatusQueries.Queries
+            }
         };
 
         internal static IDictionary<QueryType, string> GetQueries(string deploymentType, string configType)
@@ -24,7 +26,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models
 
             return AdmQueryMapping.TryGetValue(
                 configType,
-                    out IDictionary<QueryType, string> value) ? value : DefaultDeviceStatusQueries.Queries;
+                out IDictionary<QueryType, string> value) ? value : DefaultDeviceStatusQueries.Queries;
         }
     }
 }

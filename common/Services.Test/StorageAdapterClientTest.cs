@@ -90,9 +90,9 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpClient
                 .Verify(
                     x => x.SendAsync(
-                            It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}")),
-                            It.Is<HttpMethod>(m => m == method)),
-                        Times.Once);
+                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}")),
+                        It.Is<HttpMethod>(m => m == method)),
+                    Times.Once);
 
             Assert.Equal(result.Key, key);
             Assert.Equal(result.Data, data);

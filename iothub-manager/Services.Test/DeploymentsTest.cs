@@ -253,7 +253,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             // Act & Assert
             await Assert.ThrowsAsync(
                 Type.GetType(RESOURCE_NOT_FOUND_EXCEPTION),
-                    async () => await this.deployments.GetAsync(configuration.Id));
+                async () => await this.deployments.GetAsync(configuration.Id));
         }
 
         [Theory]

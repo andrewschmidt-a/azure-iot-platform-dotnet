@@ -9,8 +9,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models
     {
         public static IDictionary<QueryType, string> Queries = new Dictionary<QueryType, string>()
         {
-            { QueryType.APPLIED, @"SELECT deviceId from devices where 
-                 configurations.[[{0}]].status = 'Applied'" },
+            { QueryType.APPLIED, @"SELECT deviceId from devices where configurations.[[{0}]].status = 'Applied'" },
             { QueryType.SUCCESSFUL, string.Empty },
             { QueryType.FAILED, string.Empty }
         };
