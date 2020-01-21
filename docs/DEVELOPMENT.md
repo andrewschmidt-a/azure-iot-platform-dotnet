@@ -72,7 +72,21 @@ docker build --file ./storage-adapter/WebService/Dockerfile --build-arg AppConfi
 
 # Running
 ## Run all services
-Use Azure DevSpaces (TODO: document this)
+
+### Azure DevSpaces
+#### Non-Windows
+First, setup your Azure DevSpaces for use
+```
+azds use \
+  --name <Name of your managed kubernetes cluster> \
+  --resource-group <Name of the resource group your cluster is within>
+```
+
+After setting up Azure DevSpaces, you can build each microservice in dev spaces. From the root of the project, run the script ```up.sh```. To build each service in Azure DevSpaces
+```
+./up.sh
+```
+
 ## Run an individual service
 The simplest is to use `dotnet run` to spin up a service on a random port on localhost:
 ```
