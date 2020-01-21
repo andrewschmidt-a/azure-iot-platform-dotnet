@@ -154,6 +154,5 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
                 logger.LogError("Failed to log to diagnostics: {errorMessage}. Reached max retries and will not log.", errorMessage);
             }
         }
-
     }
 }

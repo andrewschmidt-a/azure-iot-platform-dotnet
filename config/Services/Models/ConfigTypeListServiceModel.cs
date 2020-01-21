@@ -27,6 +27,5 @@ namespace Mmm.Platform.IoT.Config.Services.External
         {
             configTypes.Add(customConfig.Trim());
         }
-
     }
 }

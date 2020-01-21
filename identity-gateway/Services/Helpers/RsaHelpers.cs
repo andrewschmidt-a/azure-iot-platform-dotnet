@@ -64,6 +64,5 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 
             return jsonWebKeySet;
         }
-
     }
 }

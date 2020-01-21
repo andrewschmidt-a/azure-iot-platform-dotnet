@@ -99,7 +99,6 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
                 {
                     result.Message = $"Status code: {response.StatusCode}; Response: {response.Content}";
                 }
-
             }
             catch (Exception e)
             {
@@ -271,5 +270,4 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             return request;
         }
     }
-
 }

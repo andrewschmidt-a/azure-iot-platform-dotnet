@@ -34,7 +34,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
 
             tenantHelper = tenantConnectionHelper;
-
         }
 
         public Devices(ITenantConnectionHelper tenantHelper, string ioTHubHostName)

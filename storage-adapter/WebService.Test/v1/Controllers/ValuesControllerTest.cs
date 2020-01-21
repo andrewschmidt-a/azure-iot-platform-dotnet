@@ -334,6 +334,5 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
                 disposedValue = true;
             }
         }
-
     }
 }

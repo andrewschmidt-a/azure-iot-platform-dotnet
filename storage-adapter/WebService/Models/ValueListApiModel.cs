@@ -23,6 +23,5 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Models
 
         [JsonProperty("$metadata")]
         public Dictionary<string, string> Metadata { get; set; }
-
     }
 }

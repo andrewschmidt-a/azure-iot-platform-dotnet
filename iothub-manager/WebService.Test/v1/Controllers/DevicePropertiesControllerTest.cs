@@ -57,7 +57,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
 
             // Act - Assert
             await Assert.ThrowsAsync<ExternalDependencyException>(() => this.devicePropertiesController.GetAsync());
-
         }
 
         public void Dispose()

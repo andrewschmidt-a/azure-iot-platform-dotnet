@@ -23,7 +23,6 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
             context.Request.SetTenant(tenantId);
             return this.requestDelegate(context);
-
         }
     }
 }

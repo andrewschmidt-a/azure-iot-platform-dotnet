@@ -127,7 +127,6 @@ namespace Mmm.Platform.IoT.Common.Services.Http
             {
                 httpRequest.Headers.Add(header.Key, header.Value);
             }
-
         }
 
         private static void SetServerSSLSecurity(IHttpRequest request, HttpClientHandler clientHandler)

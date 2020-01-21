@@ -31,7 +31,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
             this.tenantConnectionHelper = tenantConnectionHelper;
             this.deviceProperties = deviceProperties;
-
         }
 
         public async Task<IEnumerable<JobServiceModel>> GetJobsAsync(

@@ -120,6 +120,5 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 
             return request;
         }
-
     }
 }
