@@ -44,7 +44,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         public TenantContainer(
             IHttpContextAccessor httpContextAccessor,
             ILogger<TenantContainer> logger,
-            IRunbookHelper RunbookHelper,
+            IRunbookHelper runbookHelper,
             IStorageClient cosmosClient,
             ITableStorageClient tableStorageClient,
             IIdentityGatewayClient identityGatewayClient,
@@ -52,7 +52,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             IAppConfigurationHelper appConfigHelper)
         {
             this.Logger = logger;
-            this.RunbookHelper = RunbookHelper;
+            this.RunbookHelper = runbookHelper;
             this.CosmosClient = cosmosClient;
             this.TableStorageClient = tableStorageClient;
             this.IdentityClient = identityGatewayClient;

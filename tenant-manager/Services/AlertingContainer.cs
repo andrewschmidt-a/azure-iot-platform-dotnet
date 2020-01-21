@@ -16,11 +16,11 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         public AlertingContainer(
             ITenantContainer tenantContainer,
             IStreamAnalyticsHelper streamAnalyticsHelper,
-            IRunbookHelper RunbookHelper)
+            IRunbookHelper runbookHelper)
         {
             this.TenantContainer = tenantContainer;
             this.StreamAnalyticsHelper = streamAnalyticsHelper;
-            this.RunbookHelper = RunbookHelper;
+            this.RunbookHelper = runbookHelper;
         }
 
         public bool SaJobExists(StreamAnalyticsJobModel saJobModel)

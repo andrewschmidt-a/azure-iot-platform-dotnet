@@ -21,15 +21,15 @@ namespace Mmm.Platform.IoT.Config.WebService.Models
         }
 
         public PackageApiModel(
-                string Content,
-                string Name,
-                PackageType Type,
-                string ConfigType)
+                string content,
+                string name,
+                PackageType type,
+                string configType)
         {
-            this.Content = Content;
-            this.Name = Name;
-            this.PackageType = Type;
-            this.ConfigType = ConfigType;
+            this.Content = content;
+            this.Name = name;
+            this.PackageType = type;
+            this.ConfigType = configType;
         }
 
         [JsonProperty("Name")]

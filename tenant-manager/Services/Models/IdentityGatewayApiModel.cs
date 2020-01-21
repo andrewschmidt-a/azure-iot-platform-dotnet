@@ -9,9 +9,9 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
     {
         public IdentityGatewayApiModel() { }
 
-        public IdentityGatewayApiModel(string Roles)
+        public IdentityGatewayApiModel(string roles)
         {
-            this.Roles = Roles;
+            this.Roles = roles;
         }
 
         public string Roles { get; set; }
