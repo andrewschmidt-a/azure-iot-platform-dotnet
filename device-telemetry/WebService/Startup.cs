@@ -19,6 +19,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
         {
             Configuration = configuration;
         }
+
         public IConfiguration Configuration { get; }
 
         public IContainer ApplicationContainer { get; private set; }

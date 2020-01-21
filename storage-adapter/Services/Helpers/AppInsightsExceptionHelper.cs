@@ -59,6 +59,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
             {
             }
         }
+
         public static void LogTrace(string message, int severity, Dictionary<string, string> traceDetails)
         {
             try

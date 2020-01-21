@@ -84,6 +84,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
             {
                 throw new InvalidInputException("Rule not provided in request body.");
             }
+
             Rule newRule = await this.ruleService.CreateAsync(rule.ToServiceModel());
 
             return new RuleApiModel(newRule, false);

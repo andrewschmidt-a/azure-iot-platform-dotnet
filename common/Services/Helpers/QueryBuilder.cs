@@ -36,6 +36,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             {
                 ValidateInput(ref devices[i]);
             }
+
             ValidateInput(ref devicesProperty);
 
             var sqlParameterCollection = new SqlParameterCollection();
@@ -90,6 +91,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             {
                 queryBuilder.Append(" ORDER BY c[@orderProperty] ASC");
             }
+
             sqlParameterCollection.Add(new SqlParameter { Name = "@orderProperty", Value = orderProperty });
 
             return new SqlQuerySpec(queryBuilder.ToString(), sqlParameterCollection);

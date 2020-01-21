@@ -47,6 +47,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             {
                 input.UserId = Guid.NewGuid().ToString();
             }
+
             // Create the user and options for creating the user record in the user table
             UserTenantModel existingModel = await this.GetAsync(input);
             if (existingModel != null)
@@ -56,6 +57,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                     $"That UserTenant record already exists with value {existingModel.Roles}." +
                     " Use PUT instead to update this setting instead.");
             }
+
             UserTenantModel user = new UserTenantModel(input);
             return await this.TableStorageClient.InsertAsync(this.TableName, user);
         }
@@ -68,6 +70,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                 // If the RoleList of the model is empty, throw an exception. The RoleList is the only updateable feature of the UserTenant Table
                 throw new ArgumentException("The UserTenant update model must contain a serialized role array.");
             }
+
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
             return await this.TableStorageClient.InsertOrMergeAsync(this.TableName, model);
         }

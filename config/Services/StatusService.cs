@@ -87,6 +87,7 @@ namespace Mmm.Platform.IoT.Config.Services
             {
                 result.Status.Message = string.Join("; ", errors);
             }
+
             return result;
         }
 
@@ -101,6 +102,7 @@ namespace Mmm.Platform.IoT.Config.Services
                 errors.Add(dependencyName + " check failed");
                 result.Status.IsHealthy = false;
             }
+
             result.Dependencies.Add(dependencyName, serviceResult);
         }
 

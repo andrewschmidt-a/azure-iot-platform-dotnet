@@ -226,6 +226,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             {
                 throw new InvalidInputException("Rule not provided.");
             }
+
             rule.Validate();
 
             // Ensure dates are correct

@@ -36,6 +36,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             {
                 throw new InvalidInputException("The value of 'Operator' is not valid");
             }
+
             return new Condition()
             {
                 Field = this.Field,

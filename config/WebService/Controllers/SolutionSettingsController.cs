@@ -86,6 +86,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Controllers
             {
                 this.Response.Headers.Add(Logo.NameHeader, model.Name);
             }
+
             this.Response.Headers.Add(Logo.IsDefaultHeader, model.IsDefault.ToString());
             this.Response.Headers.Add(
                 SolutionSettingsController.AccessControlExposeHeaders,

@@ -18,6 +18,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
             {
                 this.Dependencies.Add(pair.Key, new StatusResultApiModel(pair.Value));
             }
+
             this.Properties = model.Properties;
         }
 

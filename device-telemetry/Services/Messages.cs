@@ -158,6 +158,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                         properties.Add(key);
                     }
                 }
+
                 messages.Add(new Message(
                     doc.GetPropertyValue<string>("deviceId"),
                     doc.GetPropertyValue<long>("_timeReceived"),

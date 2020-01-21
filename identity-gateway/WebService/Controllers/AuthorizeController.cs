@@ -41,7 +41,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             this.authenticationContext = authenticationContext;
         }
 
-        // GET: connect/authorize
         [HttpGet]
         [Route("connect/authorize")]
         public IActionResult Get(
@@ -77,7 +76,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             return Redirect(uri.Uri.ToString());
         }
 
-        // POST: connect/token
         [HttpPost]
         [Route("connect/token")]
         public async Task<IActionResult> PostTokenAsync(
@@ -118,14 +116,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 
             return StatusCode(200, tokenString);
         }
-        // GET: connect/authorize
-        /// <summary>
-        /// This is a pass-through auth gateway so there is no need to officially end session.
-        /// Session state is never saved. Therefore, simply return to redirect.
-        /// </summary>
-        /// <param name="post_logout_redirect_uri"></param>
-        /// <returns></returns>
-        /// <exception cref="Exception"></exception>
+
         [HttpGet]
         [Route("connect/logout")]
         public IActionResult Get([FromQuery] string post_logout_redirect_uri)
@@ -142,7 +133,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                 uri.Uri.ToString());
         }
 
-        // GET connect/callback
         [HttpPost("connect/switch/{tenant}")]
         public async Task<ActionResult> PostAsync([FromHeader(Name = "Authorization")] string authHeader, [FromRoute] string tenant)
         {
@@ -163,6 +153,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             {
                 throw new NoAuthorizationException("Not allowed access. No User Claims");
             }
+
             // Create a userTenantInput for the purpose of finding if the user has access to the space
             UserTenantInput tenantInput = new UserTenantInput
             {
@@ -183,7 +174,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             }
         }
 
-        // GET connect/callback
         [HttpPost("connect/callback")]
         public async Task<IActionResult> PostAsync(
             [FromForm] string state,

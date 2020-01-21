@@ -51,6 +51,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
                 applicationPermissionsAssigned = false;
                 logger.LogError(notAuthorizedException, "The application is not authorized and has not been assigned owner permissions for the subscription. Go to the Azure portal and assign the application as an owner in order to retrieve the token.");
             }
+
             this.Settings.Add(IsEnabledKey, office365IsEnabled);
             this.Settings.Add(ApplicationPermissionsKey, applicationPermissionsAssigned);
 

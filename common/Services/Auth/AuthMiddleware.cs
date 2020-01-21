@@ -88,6 +88,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             {
                 return this.requestDelegate(context);
             }
+
             if (!context.Request.Headers.ContainsKey(ExternalResourcesHeader))
             {
                 // This is a service to service request running in the private

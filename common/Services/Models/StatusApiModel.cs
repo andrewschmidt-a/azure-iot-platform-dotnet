@@ -19,6 +19,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             {
                 this.Dependencies.Add(pair.Key, new StatusResultApiModel(pair.Value));
             }
+
             this.Properties = model.Properties;
         }
 

@@ -173,6 +173,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
             // This is an overall bug in the solution, to be detected at development time
             throw new ApplicationException("Unknown operator: " + op);
         }
+
         private static string GetAggregationWindowValue(string calculation, long timePeriod)
         {
             if (string.IsNullOrEmpty(calculation))

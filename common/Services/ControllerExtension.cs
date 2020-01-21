@@ -14,6 +14,7 @@ namespace Mmm.Platform.IoT.Common.Services
                 {
                     throw new Exception("Request Tenant was null or empty.");
                 }
+
                 return tenantId;
             }
             catch (Exception e)

@@ -97,6 +97,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 throw new Exception("There is no StreamAnalyticsJob is available to start for this tenant.");
             }
+
             await this.streamAnalyticsHelper.StartAsync(saJobModel.StreamAnalyticsJobName);
             return saJobModel;
         }
@@ -108,6 +109,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 throw new Exception("There is no StreamAnalyticsJob is available to stop for this tenant.");
             }
+
             await this.streamAnalyticsHelper.StopAsync(saJobModel.StreamAnalyticsJobName);
             return saJobModel;
         }
@@ -119,11 +121,13 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 throw new Exception("The given tenant does not exist.");
             }
+
             bool tenantReady = await this.tenantContainer.TenantIsReadyAsync(tenantId);
             if (!tenantReady)
             {
                 throw new Exception("The tenant is not fully deployed yet. Please wait for the tenant to fully deploy before performing alerting operations");
             }
+
             return tenant;
         }
     }

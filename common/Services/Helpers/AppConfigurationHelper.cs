@@ -34,11 +34,6 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             }
         }
 
-        /// <summary>
-        /// Get a value from app config using the given key
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns>The value returned by app config for the given key</returns>
         public string GetValue(string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -76,14 +71,10 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             {
                 throw new NullReferenceException($"App Config returned a null value for {key}");
             }
+
             return value;
         }
 
-        /// <summary>
-        /// Delete an app config key value pair based on key
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
         public async Task DeleteKeyAsync(string key)
         {
             if (string.IsNullOrEmpty(key))

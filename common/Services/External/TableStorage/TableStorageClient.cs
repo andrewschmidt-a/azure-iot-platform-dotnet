@@ -46,6 +46,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
                 {
                     throw new Exception($"An error occurred during table.CreateIfNotExistsAsync for the {tableName} table.", e);
                 }
+
                 return table;
             }
             catch (StorageException se)

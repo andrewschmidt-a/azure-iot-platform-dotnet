@@ -56,6 +56,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 Logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
+
             if (deviceGroups.Items.Count() == 0 || deviceGroups == null)
             {
                 Logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
@@ -79,10 +80,12 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                         Logger.LogInformation("Unable to convert a device group to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                     }
                 }
+
                 if (items.Count() == 0)
                 {
                     throw new ResourceNotSupportedException("No device groups were able to be converted to the proper rule reference data model.");
                 }
+
                 deviceGroupModels.Items = items;
             }
             catch (Exception e)
@@ -109,6 +112,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                     Logger.LogError(e, "Unable to get list of devices for devicegroup {deviceGroup} from IotHubManager. OperationId: {operationId}. TenantId: {tenantId}", deviceGroup.Id, operationId, tenantId);
                 }
             }
+
             if (deviceMapping.Count() == 0)
             {
                 string groups = $"[{string.Join(", ", deviceGroupModels.Items.Select(group => group.Id))}]";

@@ -27,6 +27,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                     {
                         this.PrepareTagNames(tagSet, item.Value, item.Key);
                     }
+
                     foreach (var item in m.Twin.ReportedProperties)
                     {
                         this.PrepareTagNames(reportedSet, item.Value, item.Key);
@@ -34,6 +35,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 });
                 return new DeviceTwinName { Tags = tagSet, ReportedProperties = reportedSet };
             }
+
             return null;
         }
 
@@ -44,6 +46,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 set.Add(prefix);
                 return;
             }
+
             foreach (var item in jToken.Values())
             {
                 string path = item.Path;

@@ -104,6 +104,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             {
                 logger.LogError(e, result.Message);
             }
+
             return result;
         }
 

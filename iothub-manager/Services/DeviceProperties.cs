@@ -80,10 +80,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             {
                 result.Add(TagPrefix + tag);
             }
+
             foreach (string reported in properties.Reported)
             {
                 result.Add(ReportedPrefix + reported);
             }
+
             return result;
         }
 
@@ -128,6 +130,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                     {
                         logger.LogError(e, "Cache rebuilding: Unable to release lock");
                     }
+
                     await Task.Delay(this.serviceQueryInterval);
                     continue;
                 }
@@ -151,6 +154,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 {
                     logger.LogError(e, "Cache rebuilding: Unable to write and release lock");
                 }
+
                 logger.LogWarning("Cache rebuilding: write failed due to conflict. Retry soon");
             }
         }
@@ -188,6 +192,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                     {
                         devicePropertiesFromStorage = new DevicePropertyServiceModel();
                     }
+
                     devicePropertiesFromStorage.Tags = devicePropertiesFromStorage.Tags ??
                         new HashSet<string>();
                     devicePropertiesFromStorage.Reported = devicePropertiesFromStorage.Reported ??
@@ -327,6 +332,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 {
                     throw new ExternalDependencyException("Unable to fetch IoT devices", e);
                 }
+
                 validNames.Tags.UnionWith(allNames.Tags.
                     Where(s => prefixWhitelist.Tags.Any(s.StartsWith)));
 
@@ -351,6 +357,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 logger.LogInformation("Cache will be rebuilt since no cache was found");
                 return true;
             }
+
             DevicePropertyServiceModel cacheValue = new DevicePropertyServiceModel();
             DateTimeOffset timstamp;
             try

@@ -50,6 +50,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 Logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
+
             if (rules.Items.Count() == 0 || rules == null)
             {
                 Logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
@@ -74,6 +75,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                         Logger.LogInformation("Unable to convert a rule to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                     }
                 }
+
                 if (jsonRulesList.Count() == 0)
                 {
                     throw new ResourceNotSupportedException("No rules were able to be converted to the proper rule reference data model.");

@@ -63,6 +63,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
                     return false;
                 }
             }
+
             return true;
         }
 

@@ -61,6 +61,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                     unhealthyMessage += $"Unable to get status for {webHook}: {e.Message}";
                 }
             }
+
             return string.IsNullOrEmpty(unhealthyMessage) ? new StatusResultServiceModel(true, "Alive and well!") : new StatusResultServiceModel(false, unhealthyMessage);
         }
 
@@ -114,6 +115,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             return await this.TriggerRunbook(config.TenantManagerService.DeleteSaJobWebHookUrl, bodyContent);
         }
+
         public void Dispose()
         {
             Dispose(true);
@@ -164,6 +166,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 {
                     throw new Exception($"The given webHookUrl string was null or empty. It may not be configured correctly.");
                 }
+
                 return await this.httpClient.PostAsync(webHookUrl, bodyContent);
             }
             catch (Exception e)
@@ -187,6 +190,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             {
                 throw new Exception($"Unable to match a value from string {matchString} for the given regular expression {expression.ToString()}");
             }
+
             return value;
         }
 
@@ -200,6 +204,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 {
                     throw new Exception($"The iotHubConnectionString returned by app config for the key {appConfigKey} returned a null value.");
                 }
+
                 return this.GetRegexMatch(iotHubConnectionString, this.iotHubKeyRegexMatch);
             }
             catch (Exception e)

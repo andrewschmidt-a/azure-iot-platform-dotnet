@@ -102,6 +102,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 throw new Exception("Could not access user settings for LastUsedTenant.", e);
             }
+
             if (userSettings == null)
             {
                 // Set the last used tenant to be this new tenant

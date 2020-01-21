@@ -42,6 +42,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
+
         public void Configure(
             IApplicationBuilder app,
             ICorsSetup corsSetup,

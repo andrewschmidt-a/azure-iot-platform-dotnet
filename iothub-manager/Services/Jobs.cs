@@ -117,6 +117,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             {
                 model.Reported = new HashSet<string>(reportedRoot.GetAllLeavesPath());
             }
+
             var unused = deviceProperties.UpdateListAsync(model);
 
             return new JobServiceModel(result);

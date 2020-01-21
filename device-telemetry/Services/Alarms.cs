@@ -268,6 +268,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                     {
                         retryTimeSpan = ((DocumentClientException)e).RetryAfter;
                     }
+
                     retryCount++;
 
                     if (retryCount >= this.maxDeleteRetryCount)

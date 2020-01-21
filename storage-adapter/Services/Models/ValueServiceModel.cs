@@ -25,6 +25,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Models
             this.ETag = resource.ETag;
             this.Timestamp = resource.Timestamp;
         }
+
         internal ValueServiceModel(KeyValueDocument document)
         {
             if (document == null)

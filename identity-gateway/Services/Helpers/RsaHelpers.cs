@@ -24,6 +24,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 {
                     throw new Exception("Could not read RSA private key");
                 }
+
                 var privateRsaParams = keyPair.Private as RsaPrivateCrtKeyParameters;
                 rsaParams = DotNetUtilities.ToRSAParameters(privateRsaParams);
             }

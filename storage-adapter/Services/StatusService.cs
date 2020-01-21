@@ -62,6 +62,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 result.Status.Message = string.Join("; ", errors);
             }
+
             return result;
         }
 
@@ -76,6 +77,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 errors.Add(dependencyName + " check failed");
                 result.Status.IsHealthy = false;
             }
+
             result.Dependencies.Add(dependencyName, serviceResult);
         }
 
@@ -102,6 +104,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 
             return result;
         }
+
         private HttpRequest PrepareRequest(string path)
         {
             var request = new HttpRequest();

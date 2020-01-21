@@ -45,6 +45,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                 {
                     responseMessage = $"It failed with a code of {response.StatusCode}.";
                 }
+
                 azureB2CResult = new StatusResultServiceModel(response.IsSuccessStatusCode, responseMessage);
             }
             catch (Exception e)
@@ -61,6 +62,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             {
                 result.Status.Message = string.Join("; ", errors);
             }
+
             return result;
         }
 
@@ -75,6 +77,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                 errors.Add(dependencyName + " check failed");
                 result.Status.IsHealthy = false;
             }
+
             result.Dependencies.Add(dependencyName, serviceResult);
         }
     }

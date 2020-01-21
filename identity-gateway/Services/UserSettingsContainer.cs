@@ -41,6 +41,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                     $"That UserSetting already exists with value {existingModel.Value}." +
                     " Use PUT to update this user instead.");
             }
+
             UserSettingsModel model = new UserSettingsModel(input);
             return await this.TableStorageClient.InsertAsync(this.TableName, model);
         }

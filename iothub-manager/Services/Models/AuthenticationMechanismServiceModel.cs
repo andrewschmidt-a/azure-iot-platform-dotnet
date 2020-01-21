@@ -60,6 +60,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 
                     break;
                 }
+
                 case AuthenticationType.SelfSigned:
                 {
                     auth.X509Thumbprint = new X509Thumbprint()
@@ -72,6 +73,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 
                     break;
                 }
+
                 case AuthenticationType.CertificateAuthority:
                 {
                     auth.X509Thumbprint = new X509Thumbprint()
@@ -84,6 +86,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 
                     break;
                 }
+
                 default:
                     throw new ArgumentException("Not supported authentcation type");
             }

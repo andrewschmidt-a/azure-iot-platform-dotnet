@@ -59,6 +59,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
                 {
                     continuedResults = this.results.GetRange(index, count);
                 }
+
                 resultResponse = new QueryResponse<Twin>(continuedResults, "continuationToken");
             }
 

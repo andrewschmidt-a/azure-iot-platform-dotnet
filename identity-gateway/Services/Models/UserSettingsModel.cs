@@ -47,6 +47,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
                 return this.RowKey;
             }
         }
+
         public static explicit operator UserSettingsModel(DynamicTableEntity v) => new UserSettingsModel(v);
     }
 }

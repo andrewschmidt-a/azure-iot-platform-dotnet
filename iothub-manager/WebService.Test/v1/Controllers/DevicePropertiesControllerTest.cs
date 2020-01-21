@@ -43,6 +43,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
             {
                 Assert.Equal(model.Metadata[key], expectedModel.Metadata[key]);
             }
+
             // Assert model and expected model have same items
             Assert.Empty(model.Items.Except(expectedModel.Items));
             Assert.Empty(expectedModel.Items.Except(model.Items));

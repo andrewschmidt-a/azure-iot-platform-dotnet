@@ -60,6 +60,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             {
                 throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionstring.");
             }
+
             return currIoTHubHostName;
         }
 
@@ -75,6 +76,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             {
                 throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionstring.");
             }
+
             return registry;
         }
 
@@ -90,6 +92,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             {
                 throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionstring.");
             }
+
             return job;
         }
     }

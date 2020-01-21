@@ -58,6 +58,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         public DeploymentServiceModel()
         {
         }
+
         public DateTime CreatedDateTimeUtc { get; set; }
         public string Id { get; set; }
         public DeploymentMetricsServiceModel DeploymentMetrics { get; set; }

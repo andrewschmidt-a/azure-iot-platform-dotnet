@@ -107,6 +107,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 return $"/dbs/{this.DocumentDbDatabaseId}/colls/{this.DocumentDbCollectionId}";
             }
         }
+
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             this.SetClientOptions();
@@ -248,6 +249,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 // Match all
                 return null;
             }
+
             return new RequestOptions
             {
                 AccessCondition = new AccessCondition
@@ -381,6 +383,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 {
                     (this.client as IDisposable)?.Dispose();
                 }
+
                 this.disposedValue = true;
             }
         }
