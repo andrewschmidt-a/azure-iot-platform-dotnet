@@ -6,6 +6,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DeploymentStatus
     {
-        Pending, Succeeded, Failed, Unknown
+        Pending,
+        Succeeded,
+        Failed,
+        Unknown
     }
 }

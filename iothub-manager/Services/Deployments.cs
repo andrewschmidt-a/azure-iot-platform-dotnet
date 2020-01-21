@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Config.Services.Models;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
@@ -165,10 +166,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             };
         }
 
-        /// <summary>
-        /// Delete a given deployment by id.
-        /// </summary>
-        /// <returns></returns>
         public async Task DeleteAsync(string deploymentId)
         {
             if (string.IsNullOrEmpty(deploymentId))

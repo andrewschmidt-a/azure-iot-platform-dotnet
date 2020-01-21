@@ -3,59 +3,10 @@
 using System;
 using System.Collections.Generic;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
 
 namespace Mmm.Platform.IoT.Config.Services.Models
 {
-    public class FirmwareStatusQueries
-    {
-        public static IDictionary<QueryType, string> Queries = new Dictionary<QueryType, string>()
-        {
-            { QueryType.APPLIED, @"SELECT deviceId from devices where configurations.[[{0}]].status   
-                  = 'Applied'" },
-            { QueryType.SUCCESSFUL, @"SELECT deviceId FROM devices WHERE  
-                 configurations.[[{0}]].status = 'Applied'  
-                 AND properties.reported.firmware.fwUpdateStatus='Current'  
-                 AND properties.reported.firmware.type='IoTDevKit'" },
-            { QueryType.FAILED, @"SELECT deviceId FROM devices WHERE 
-                 configurations.[[{0}]].status = 'Applied' 
-                 AND properties.reported.firmware.fwUpdateStatus='Error'  
-                 AND properties.reported.firmware.type='IoTDevKit'" }
-        };
-    }
-
-    public class EdgeDeviceStatusQueries
-    {
-        public static IDictionary<QueryType, string> Queries = new Dictionary<QueryType, string>()
-        {
-            { QueryType.APPLIED, @"SELECT deviceId from devices.modules WHERE 
-                moduleId = '$edgeAgent' 
-                AND configurations.[[{0}]].status = 'Applied'" },
-            { QueryType.SUCCESSFUL, @"SELECT deviceId from devices.modules WHERE 
-                moduleId = '$edgeAgent' 
-                AND configurations.[[{0}]].status = 'Applied' 
-                AND properties.desired.$version = properties.reported.lastDesiredVersion  
-                AND properties.reported.lastDesiredStatus.code = 200" },
-            { QueryType.FAILED, @"SELECT deviceId FROM devices.modules WHERE 
-                moduleId = '$edgeAgent' 
-                AND configurations.[[{0}]].status = 'Applied' 
-                AND properties.desired.$version = properties.reported.lastDesiredVersion 
-                AND properties.reported.lastDesiredStatus.code != 200" }
-        };
-    }
-
-    public class DefaultDeviceStatusQueries
-    {
-        public static IDictionary<QueryType, string> Queries = new Dictionary<QueryType, string>()
-        {
-            { QueryType.APPLIED, @"SELECT deviceId from devices where 
-                 configurations.[[{0}]].status = 'Applied'" },
-            { QueryType.SUCCESSFUL, string.Empty },
-            { QueryType.FAILED, string.Empty }
-        };
-    }
-
-    public class DeviceStatusQueries {
+    public partial class DeviceStatusQueries {
 
         private static Dictionary<string, IDictionary<QueryType, string>> AdmQueryMapping =
             new Dictionary<string, IDictionary<QueryType, string>>()
@@ -75,7 +26,5 @@ namespace Mmm.Platform.IoT.Config.Services.Models
                 configType,
                     out IDictionary<QueryType, string> value) ? value : DefaultDeviceStatusQueries.Queries;
         }
-
-        public enum QueryType { APPLIED, SUCCESSFUL, FAILED }
     }
 }
