@@ -262,7 +262,3 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
         }
     }
 }
-public class ErrorModel
-{
-    public string ErrorMessage { get; set; }
-}

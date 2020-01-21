@@ -6,7 +6,6 @@ using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
 {
@@ -64,13 +63,5 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             serializerSettings.ContractResolver = new LowercaseContractResolver();
             return new ContentResult() { Content = JsonConvert.SerializeObject(rsaHelpers.GetJsonWebKey(config.IdentityGatewayService.PublicKey), serializerSettings), ContentType = ContentType, StatusCode = StatusCodes.Status200OK };
         }
-    }
-}
-
-public class LowercaseContractResolver : DefaultContractResolver
-{
-    protected override string ResolvePropertyName(string propertyName)
-    {
-        return propertyName.ToLower();
     }
 }
