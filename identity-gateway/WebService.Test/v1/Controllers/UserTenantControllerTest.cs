@@ -23,6 +23,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
     public class UserTenantControllerTest : IDisposable
     {
+        private const string someUserId = "someUserId";
+        private const string someSub = "someSub";
+        private const string someRole = "someRole";
+        private const string someTenantId = "someTenantId";
         private bool disposedValue = false;
         private Mock<UserTenantContainer> mockUserTenantContainer;
         private UserTenantController userTenantController;
@@ -33,11 +37,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
         private Mock<IJwtHelpers> mockJwtHelper;
         private Mock<ISendGridClientFactory> mockSendGridClientFactory;
         private Mock<ISendGridClient> mockSendGridClient;
-        private const string someUserId = "someUserId";
-        private const string someSub = "someSub";
-        private const string someRole = "someRole";
         private Invitation someInvitation = new Invitation { role = someRole };
-        private const string someTenantId = "someTenantId";
         private JwtSecurityToken someSecurityToken;
         private Guid someTenant = Guid.NewGuid();
         private HostString someHost = new HostString("somehost");

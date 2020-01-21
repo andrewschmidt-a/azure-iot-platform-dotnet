@@ -18,12 +18,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
     {
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string TENANT_ID = "TenantID";
+        private const int RETRY_SLEEP_MS = 500;
         private readonly IHttpClient httpClient;
         private readonly ILogger _logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string serviceUrl;
         private readonly int maxRetries;
-        private const int RETRY_SLEEP_MS = 500;
 
         public DiagnosticsClient(IHttpClient httpClient, AppConfig config, ILogger<DiagnosticsClient> logger, IHttpContextAccessor contextAccessor)
         {

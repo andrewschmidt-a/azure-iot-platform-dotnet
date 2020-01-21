@@ -11,12 +11,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     public class TenantConnectionHelper : ITenantConnectionHelper
     {
+        private const string TENANT_KEY = "tenant:";
+        private const string IOTHUBCONNECTION_KEY = ":iotHubConnectionString";
         private readonly IAppConfigurationHelper appConfig;
         private readonly ILogger<TenantConnectionHelper> logger;
         private readonly IHttpContextAccessor _httpContextAccessor;
-
-        private const string TENANT_KEY = "tenant:";
-        private const string IOTHUBCONNECTION_KEY = ":iotHubConnectionString";
 
         public TenantConnectionHelper(
             IAppConfigurationHelper appConfigurationHelper,

@@ -10,12 +10,12 @@ namespace Mmm.Platform.IoT.Config.Services.External
     public class DeviceSimulationClient : IDeviceSimulationClient
     {
         private const int DEFAULT_SIMULATION_ID = 1;
+        private const string TENANT_HEADER = "ApplicationTenantID";
+        private const string TENANT_ID = "TenantID";
         private readonly IHttpClientWrapper httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string serviceUri;
 
-        private const string TENANT_HEADER = "ApplicationTenantID";
-        private const string TENANT_ID = "TenantID";
         public DeviceSimulationClient(
             IHttpClientWrapper httpClient,
             AppConfig config,

@@ -12,39 +12,24 @@ using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
-    /// <summary>
-    /// This class creates/reads cache of deviceProperties in/from CosmosDB.
-    /// </summary>
-    /// <remarks>
-    /// This is done to avoid request throttling when deviceProperties are queried directly from IOT-Hub.
-    /// This class is called "deviceProperties" even though it deals with both properties
-    /// and tags of devices.
-    /// </remarks>
     public class DeviceProperties : IDeviceProperties
     {
-        public readonly IStorageAdapterClient storageClient;
-        public readonly IDevices devices;
-        public readonly ILogger _logger;
-        /// Hardcoded in appsettings.ini
-        public readonly string whitelist;
-        /// Hardcoded in appsettings.ini
-        public readonly long ttl;
-        /// Hardcoded in appsettings.ini
-        public readonly long rebuildTimeout;
-        public readonly TimeSpan serviceQueryInterval = TimeSpan.FromSeconds(10);
         public const string CACHE_COLLECTION_ID = "device-twin-properties";
         public const string CACHE_KEY = "cache";
-
         public const string WHITELIST_TAG_PREFIX = "tags.";
         public const string WHITELIST_REPORTED_PREFIX = "reported.";
         public const string TAG_PREFIX = "Tags.";
         public const string REPORTED_PREFIX = "Properties.Reported.";
+        public readonly IStorageAdapterClient storageClient;
+        public readonly IDevices devices;
+        public readonly ILogger _logger;
+        public readonly string whitelist;
+        public readonly long ttl;
+        public readonly long rebuildTimeout;
+        public readonly TimeSpan serviceQueryInterval = TimeSpan.FromSeconds(10);
 
         private DateTime DevicePropertiesLastUpdated;
 
-        /// <summary>
-        /// The constructor.
-        /// </summary>
         public DeviceProperties(
             IStorageAdapterClient storageClient,
             AppConfig config,
@@ -59,9 +44,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             this.devices = devices;
         }
 
-        /// <summary>
-        /// Get List of deviceProperties from cache
-        /// </summary>
         public async Task<List<string>> GetListAsync()
         {
             ValueApiModel response = new ValueApiModel();
@@ -106,9 +88,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             return result;
         }
 
-        /// <summary>
-        /// Try to create cache of deviceProperties if lock failed retry after 10 seconds
-        /// </summary>
         public async Task<bool> TryRecreateListAsync(bool force = false)
         {
             var @lock = new StorageWriteLock<DevicePropertyServiceModel>(
@@ -177,9 +156,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
         }
 
-        /// <summary>
-        /// Update Cache when devices are modified/created
-        /// </summary>
         public async Task<DevicePropertyServiceModel> UpdateListAsync(
             DevicePropertyServiceModel deviceProperties)
         {
@@ -248,12 +224,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
         }
 
-        /// <summary>
-        /// Get list of DeviceTwinNames from IOT-hub and whitelist it.
-        /// </summary>
-        /// <remarks>
-        /// List of Twin Names to be whitelisted is hardcoded in appsettings.ini
-        /// </remarks>
         private async Task<DeviceTwinName> GetValidNamesAsync()
         {
             ParseWhitelist(this.whitelist, out var fullNameWhitelist, out var prefixWhitelist);
@@ -269,7 +239,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 DeviceTwinName allNames = new DeviceTwinName();
                 try
                 {
-                    /// Get list of DeviceTwinNames from IOT-hub
+                    // Get list of DeviceTwinNames from IOT-hub
                     allNames = await this.devices.GetDeviceTwinNamesAsync();
                 }
                 catch (Exception e)
@@ -287,16 +257,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             return validNames;
         }
 
-        /// <summary>
-        /// Parse the comma seperated string "whitelist" and create two separate list
-        /// One with regex(*) and one without regex(*)
-        /// </summary>
-        /// <param name="whitelist">Comma seperated list of deviceTwinName to be
-        /// whitlisted which is hardcoded in appsettings.ini.</param>
-        /// <param name="fullNameWhitelist">An out paramenter which is a list of
-        /// deviceTwinName to be whitlisted without regex.</param>
-        /// <param name="prefixWhitelist">An out paramenter which is a list of
-        /// deviceTwinName to be whitlisted with regex.</param>
         private static void ParseWhitelist(
             string whitelist,
             out DeviceTwinName fullNameWhitelist,
@@ -379,13 +339,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             };
         }
 
-        /// <summary>
-        /// A function to decide whether or not cache needs to be rebuilt based on force flag and existing
-        /// cache's validity
-        /// </summary>
-        /// <param name="force">A boolean flag to decide if cache needs to be rebuilt.</param>
-        /// <param name="valueApiModel">An existing valueApiModel to check whether or not cache
-        /// has expired</param>
         private bool ShouldCacheRebuild(bool force, ValueApiModel valueApiModel)
         {
             if (force)

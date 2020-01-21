@@ -8,9 +8,9 @@ namespace Mmm.Platform.IoT.Config.Services.Models
 {
     public class Logo
     {
-        public static readonly Logo Default;
         public const string NAME_HEADER = "Name";
         public const string IS_DEFAULT_HEADER = "IsDefault";
+        public static readonly Logo Default;
         private const string SVG_TYPE = "image/svg+xml";
         private const string DEFAULT_LOGO_NAME = "Default Logo";
 

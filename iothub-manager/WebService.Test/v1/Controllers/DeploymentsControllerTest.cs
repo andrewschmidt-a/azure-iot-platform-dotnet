@@ -17,9 +17,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 {
     public class DeploymentsControllerTest : IDisposable
     {
-        private bool disposedValue = false;
-        private readonly DeploymentsController deploymentsController;
-        private readonly Mock<IDeployments> deploymentsMock;
         private const string DEPLOYMENT_NAME = "depname";
         private const string DEVICE_GROUP_ID = "dvcGroupId";
         private const string DEVICE_GROUP_NAME = "dvcGroupName";
@@ -29,6 +26,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
         private const string DEPLOYMENT_ID = "dvcGroupId-packageId";
         private const int PRIORITY = 10;
         private const string CONFIG_TYPE = "Edge";
+        private bool disposedValue = false;
+        private readonly DeploymentsController deploymentsController;
+        private readonly Mock<IDeployments> deploymentsMock;
 
         public DeploymentsControllerTest()
         {

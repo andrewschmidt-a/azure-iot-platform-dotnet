@@ -20,15 +20,15 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class AlarmsTest
     {
+        private const string TENANT_INFO_KEY = "tenant";
+        private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
+        private const string TENANT_ID = "test_tenant";
         private readonly Mock<IStorageClient> storageClient;
         private readonly Mock<ILogger<Alarms>> _logger;
         private readonly IAlarms alarms;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly Mock<IAppConfigurationHelper> appConfigHelper;
 
-        private const string TENANT_INFO_KEY = "tenant";
-        private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
-        private const string TENANT_ID = "test_tenant";
         public AlarmsTest()
         {
             var servicesConfig = new AppConfig

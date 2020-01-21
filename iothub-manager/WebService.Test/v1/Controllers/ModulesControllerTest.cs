@@ -17,11 +17,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 {
     public class ModulesControllerTest : IDisposable
     {
+        private const string CONTINUATION_TOKEN_NAME = "x-ms-continuation";
         private bool disposedValue = false;
         private readonly ModulesController modulesController;
         private readonly Mock<IDevices> devicesMock;
         private readonly HttpContext httpContext;
-        private const string CONTINUATION_TOKEN_NAME = "x-ms-continuation";
 
         public ModulesControllerTest()
         {

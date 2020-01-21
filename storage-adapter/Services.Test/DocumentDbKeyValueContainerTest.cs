@@ -22,14 +22,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
     public class DocumentDbKeyValueContainerTest
     {
         private const string MOCK_TENANT_ID = "mocktenant";
-        // a concatenation of the DocumentDbKeyValuteContainer DocumentDataType & DocumentDatabaseIdSuffix
-        // This is the return value of the container's DocumentDbDatabaseId
         private const string MOCK_DB_ID = "pcs-storage";
         private const string MOCK_COLL_ID = "mockcoll";
-        private static readonly string mockCollectionLink = $"/dbs/{MOCK_DB_ID}/colls/{MOCK_COLL_ID}";
-
         private const string appConfigConnString = "";
-
+        private static readonly string mockCollectionLink = $"/dbs/{MOCK_DB_ID}/colls/{MOCK_COLL_ID}";
         private readonly Mock<IDocumentClient> mockClient;
         private readonly Mock<IHttpContextAccessor> mockContextAccessor;
         private readonly Mock<DocumentDbKeyValueContainer> mockContainer;

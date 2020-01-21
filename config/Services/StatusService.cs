@@ -15,12 +15,12 @@ namespace Mmm.Platform.IoT.Config.Services
 {
     public class StatusService : IStatusService
     {
+        private const bool ALLOW_INSECURE_SSL_SERVER = true;
         private readonly ILogger _logger;
         private readonly IHttpClient httpClient;
         private readonly AppConfig config;
         private readonly int timeoutMS = 10000;
 
-        private const bool ALLOW_INSECURE_SSL_SERVER = true;
 
         public StatusService(
             ILogger<StatusService> logger,

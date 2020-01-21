@@ -18,10 +18,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
     public class Jobs : IJobs
     {
-        private IDeviceProperties _deviceProperties;
-
         private const string DEVICE_DETAILS_QUERY_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}'";
         private const string DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}' and devices.jobs.status = '{1}'";
+        private IDeviceProperties _deviceProperties;
         private ITenantConnectionHelper tenantHelper;
 
         public Jobs(AppConfig config, IDeviceProperties _deviceProperties, ITenantConnectionHelper tenantConnectionHelper)

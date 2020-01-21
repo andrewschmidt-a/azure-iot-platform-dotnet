@@ -15,9 +15,9 @@ namespace Mmm.Platform.IoT.Common.Services.External
 {
     public class UserManagementClient : IUserManagementClient
     {
+        private const string DEFAULT_USER_ID = "default";
         private readonly IExternalRequestHelper _requestHelper;
         private readonly string serviceUri;
-        private const string DEFAULT_USER_ID = "default";
 
         public UserManagementClient(AppConfig config, IExternalRequestHelper requestHelper)
         {

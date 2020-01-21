@@ -18,8 +18,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
     public class RunbookHelper : IRunbookHelper, IDisposable
     {
         public HttpClient httpClient;
-        private bool disposedValue = false;
         private const string SA_JOB_DATABASE_ID = "pcs-iothub-stream";
+        private bool disposedValue = false;
         private string iotHubConnectionStringKeyFormat = "tenant:{0}:iotHubConnectionString";
         private Regex iotHubKeyRegexMatch = new Regex(@"(?<=SharedAccessKey=)[^;]*");
         private Regex storageAccountKeyRegexMatch = new Regex(@"(?<=AccountKey=)[^;]*");

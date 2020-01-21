@@ -16,8 +16,8 @@ namespace Mmm.Platform.IoT.AsaManager.Services
 {
     public class DeviceGroupsConverter : Converter, IConverter
     {
-        private readonly IIotHubManagerClient _iotHubManager;
         private const string CSV_HEADER = "DeviceId,GroupId";
+        private readonly IIotHubManagerClient _iotHubManager;
 
         public DeviceGroupsConverter(
             IIotHubManagerClient iotHubManager,

@@ -10,6 +10,12 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
     // Note: all the constants below are meant to be not case sensitive
     public partial class RuleReferenceDataModel
     {
+        private const string ASA_INSTANT_VALUE = "";
+        private const string ASA_AVG_VALUE = ".avg";
+        private const string ASA_MIN_VALUE = ".min";
+        private const string ASA_MAX_VALUE = ".max";
+        private const string ASA_COUNT_VALUE = ".count";
+
         // Value used by the Rules web service to indicate that
         // a rule doesn't use aggregation and has no time window.
         // See https://github.com/Azure/device-telemetry-dotnet/blob/master/Services/Models/Rule.cs
@@ -38,12 +44,6 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
                 { 1800000, ASA_AGGREGATION_WINDOW_TUMBLING_30MINS },
                 { 3600000, ASA_AGGREGATION_WINDOW_TUMBLING_1HOUR },
             };
-
-        private const string ASA_INSTANT_VALUE = "";
-        private const string ASA_AVG_VALUE = ".avg";
-        private const string ASA_MIN_VALUE = ".min";
-        private const string ASA_MAX_VALUE = ".max";
-        private const string ASA_COUNT_VALUE = ".count";
 
         // Map from values used in the Device Telemetry web service to the
         // corresponding Javascript field. Some extra values added

@@ -17,9 +17,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
 {
     public class UserSettingsContainerTest
     {
+        private const int dynamicTableEntityCount = 100;
         private UserSettingsContainer userSettingsContainer;
         private Mock<ITableStorageClient> mockTableStorageClient;
-        private const int dynamicTableEntityCount = 100;
         private Random random = new Random();
         private UserSettingsInput someUserSettingsInput = Builder<UserSettingsInput>.CreateNew().Build();
         private IList<DynamicTableEntity> dynamicTableEntities;

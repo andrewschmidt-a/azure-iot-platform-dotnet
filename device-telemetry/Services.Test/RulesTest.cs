@@ -24,6 +24,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class RulesTest
     {
+        private const string TENANT_ID = "test_tenant";
+        private const int LIMIT = 1000;
         private readonly Mock<IStorageAdapterClient> storageAdapter;
         private readonly Mock<IAsaManagerClient> asaManager;
         private readonly Mock<ILogger<Rules>> _logger;
@@ -34,10 +36,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private readonly IRules rules;
         private readonly IDiagnosticsClient diagnosticsClient;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
-
-        private const string TENANT_ID = "test_tenant";
-
-        private const int LIMIT = 1000;
 
         public RulesTest()
         {

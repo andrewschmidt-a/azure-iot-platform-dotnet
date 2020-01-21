@@ -20,11 +20,6 @@ namespace Mmm.Platform.IoT.Config.Services.Test
 {
     public class StorageTest
     {
-        private readonly string azureMapsKey;
-        private readonly Mock<IStorageAdapterClient> mockClient;
-        private readonly Mock<IAsaManagerClient> mockAsaManager;
-        private readonly Storage storage;
-        private readonly Random rand;
         private const string PACKAGES_COLLECTION_ID = "packages";
         private const string EDGE_PACKAGE_JSON =
                 @"{
@@ -130,6 +125,11 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     },
                     ""etag"": ""MQ==""
                     }";
+        private readonly string azureMapsKey;
+        private readonly Mock<IStorageAdapterClient> mockClient;
+        private readonly Mock<IAsaManagerClient> mockAsaManager;
+        private readonly Storage storage;
+        private readonly Random rand;
 
         public StorageTest()
         {

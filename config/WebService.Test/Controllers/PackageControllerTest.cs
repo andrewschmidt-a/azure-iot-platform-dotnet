@@ -18,11 +18,11 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class PackageControllerTest : IDisposable
     {
+        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
         private bool disposedValue = false;
         private readonly Mock<IStorage> mockStorage;
         private readonly PackagesController controller;
         private readonly Random rand;
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
 
         public PackageControllerTest()
         {

@@ -18,9 +18,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
 {
     public class UserTenantContainerTest
     {
+        private const int dynamicTableEntityCount = 100;
         private UserTenantContainer userTenantContainer;
         private Mock<ITableStorageClient> mockTableStorageClient;
-        private const int dynamicTableEntityCount = 100;
         private Random random = new Random();
         private UserTenantInput someUserTenantInput = Builder<UserTenantInput>.CreateNew().Build();
         private IList<DynamicTableEntity> dynamicTableEntities;

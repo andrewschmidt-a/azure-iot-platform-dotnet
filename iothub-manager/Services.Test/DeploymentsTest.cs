@@ -16,21 +16,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 {
     public class DeploymentsTest
     {
-        private readonly Deployments deployments;
-        private readonly Mock<RegistryManager> registry;
-        private Mock<ITenantConnectionHelper> tenantHelper;
-        private readonly string ioTHubHostName = "mockIoTHub";
-
-        private const string DEPLOYMENT_NAME_LABEL = "Name";
-        private const string DEPLOYMENT_GROUP_ID_LABEL = "DeviceGroupId";
-        private const string DEPLOYMENT_GROUP_NAME_LABEL = "DeviceGroupName";
-        private const string DEPLOYMENT_PACKAGE_NAME_LABEL = "PackageName";
-        private string PACKAGE_TYPE_LABEL = "Type";
-        private const string CONFIG_TYPE_LABEL = "ConfigType";
-        private const string RM_CREATED_LABEL = "RMDeployment";
-        private const string RESOURCE_NOT_FOUND_EXCEPTION =
-            "Mmm.Platform.IoT.Common.Services.Exceptions.ResourceNotSupportedException, Mmm.Platform.IoT.Common.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
-
         private const string TEST_EDGE_PACKAGE_JSON =
                 @"{
                     ""id"": ""tempid"",
@@ -158,6 +143,19 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                         ""queries"": {}
                     }mockIoTHub
                  }";
+        private const string DEPLOYMENT_NAME_LABEL = "Name";
+        private const string DEPLOYMENT_GROUP_ID_LABEL = "DeviceGroupId";
+        private const string DEPLOYMENT_GROUP_NAME_LABEL = "DeviceGroupName";
+        private const string CONFIG_TYPE_LABEL = "ConfigType";
+        private const string RM_CREATED_LABEL = "RMDeployment";
+        private const string RESOURCE_NOT_FOUND_EXCEPTION =
+            "Mmm.Platform.IoT.Common.Services.Exceptions.ResourceNotSupportedException, Mmm.Platform.IoT.Common.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
+        private const string DEPLOYMENT_PACKAGE_NAME_LABEL = "PackageName";
+        private readonly Deployments deployments;
+        private readonly Mock<RegistryManager> registry;
+        private Mock<ITenantConnectionHelper> tenantHelper;
+        private readonly string ioTHubHostName = "mockIoTHub";
+        private string PACKAGE_TYPE_LABEL = "Type";
 
         public DeploymentsTest()
         {

@@ -16,17 +16,17 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
     public class UserSettingsControllerTest : IDisposable
     {
+        private const string someUserId = "someUserId";
+        private const string someSub = "someSub";
+        private const string someSetting = "someSetting";
+        private const string someValue = "someValue";
+        private Mock<HttpRequest> mockHttpRequest;
         private bool disposedValue = false;
         private Mock<UserSettingsContainer> mockUserSettingsContainer;
         private UserSettingsController userSettingsController;
         private Mock<HttpContext> mockHttpContext;
         private UserSettingsListModel someUserSettingsList = new UserSettingsListModel();
         private UserSettingsModel someUserSettings = new UserSettingsModel();
-        private Mock<HttpRequest> mockHttpRequest;
-        private const string someUserId = "someUserId";
-        private const string someSub = "someSub";
-        private const string someSetting = "someSetting";
-        private const string someValue = "someValue";
         private IDictionary<object, object> contextItems;
 
         public UserSettingsControllerTest()

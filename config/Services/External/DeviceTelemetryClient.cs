@@ -9,12 +9,12 @@ namespace Mmm.Platform.IoT.Config.Services.External
 {
     public class DeviceTelemetryClient : IDeviceTelemetryClient
     {
-        private readonly IHttpClientWrapper httpClient;
-        private readonly string serviceUri;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
         private const string TENANT_HEADER = "ApplicationTenantID";
         private const string TENANT_ID = "TenantID";
+        private readonly IHttpClientWrapper httpClient;
+        private readonly string serviceUri;
+
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public DeviceTelemetryClient(
             IHttpClientWrapper httpClient,
             AppConfig config,

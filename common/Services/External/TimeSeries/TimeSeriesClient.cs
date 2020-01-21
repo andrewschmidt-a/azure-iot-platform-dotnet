@@ -17,22 +17,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 {
     public class TimeSeriesClient : ITimeSeriesClient
     {
-        private readonly IHttpClient httpClient;
-        private readonly ILogger _logger;
-
-        private AuthenticationResult token;
-
-        private readonly string authority;
-        private readonly string applicationId;
-        private readonly string applicationSecret;
-        private readonly string tenant;
-        private readonly string fqdn;
-        private readonly string host;
-        private readonly string apiVersion;
-        private readonly string timeout;
-
         private const string TSI_DATE_FORMAT = "yyyy-MM-ddTHH:mm:ssZ";
-
         private const string TIME_SERIES_API_VERSION_PREFIX = "api-version";
         private const string TIME_SERIES_TIMEOUT_PREFIX = "timeout";
         private const string EVENTS_KEY = "events";
@@ -50,12 +35,21 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         private const string FROM_KEY = "from";
         private const string TO_KEY = "to";
         private const int CLOCK_CALIBRATION_IN_SECONDS = 5;
-
         private const string DEVICE_ID_KEY = "iothub-connection-device-id";
-
         private const string AAD_CLIENT_ID_KEY = "ApplicationClientId";
         private const string AAD_CLIENT_SECRET_KEY = "ApplicationClientSecret";
         private const string AAD_TENANT_KEY = "Tenant";
+        private readonly IHttpClient httpClient;
+        private readonly ILogger _logger;
+        private AuthenticationResult token;
+        private readonly string authority;
+        private readonly string applicationId;
+        private readonly string applicationSecret;
+        private readonly string tenant;
+        private readonly string fqdn;
+        private readonly string host;
+        private readonly string apiVersion;
+        private readonly string timeout;
 
         public TimeSeriesClient(
             IHttpClient httpClient,

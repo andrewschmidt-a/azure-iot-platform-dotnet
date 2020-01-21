@@ -18,13 +18,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
     public class Alarms : IAlarms
     {
-        private readonly ILogger _logger;
-        private readonly IStorageClient storageClient;
-        private readonly AppConfig config;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private IAppConfigurationHelper _appConfigurationHelper;
-        private readonly string databaseName;
-        private readonly int maxDeleteRetryCount;
         private const string MESSAGE_RECEIVED_KEY = "device.msg.received";
         private const string RULE_ID_KEY = "rule.id";
         private const string DEVICE_ID_KEY = "device.id";
@@ -35,6 +28,13 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private const string TENANT_INFO_KEY = "tenant";
         private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
         private const int DOC_QUERY_LIMIT = 1000;
+        private readonly ILogger _logger;
+        private readonly IStorageClient storageClient;
+        private readonly AppConfig config;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private IAppConfigurationHelper _appConfigurationHelper;
+        private readonly string databaseName;
+        private readonly int maxDeleteRetryCount;
 
         public Alarms(
             AppConfig config,

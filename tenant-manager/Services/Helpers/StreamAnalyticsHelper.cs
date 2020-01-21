@@ -55,7 +55,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             {
                 throw new Exception($"An Unknown Exception occurred while attempting to get the stream analytics job {saJobName}", e);
             }
-ps        }
+        }
 
         public bool JobIsActive(StreamingJob job)
         {
