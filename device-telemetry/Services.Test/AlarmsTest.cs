@@ -45,8 +45,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
                 { { "TenantID", TenantId } });
             this.appConfigHelper.Setup(t => t.GetValue($"{TenantInfoKey}:{TenantId}:{TelemetryCollectionKey}")).Returns("collection");
-
-
             logger = new Mock<ILogger<Alarms>>();
             this.alarms = new Alarms(servicesConfig, this.storageClient.Object, logger.Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
         }

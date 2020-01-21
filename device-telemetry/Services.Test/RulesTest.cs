@@ -183,7 +183,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     Times.Never);
         }
 
-
         /** If get rule throws an exception that is not a resource not found exception,
          * delete should throw that exception.
          */
@@ -386,7 +385,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 Key = newRuleId,
             };
 
-
             this.storageAdapter.Setup(x => x.CreateAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(result));
 
@@ -431,7 +429,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                         It.Is<string>(s => s == Rules.StorageCollection)),
                     Times.Once);
         }
-
 
         [Fact]
         [Trait(Constants.Type, Constants.UnitTest)]

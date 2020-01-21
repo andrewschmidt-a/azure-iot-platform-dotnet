@@ -41,7 +41,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             string storageAdapterName = "StorageAdapter";
             string authName = "Auth";
 
-
             // Check access to StorageAdapter
             var storageAdapterResult = await this.PingServiceAsync(
                 storageAdapterName,

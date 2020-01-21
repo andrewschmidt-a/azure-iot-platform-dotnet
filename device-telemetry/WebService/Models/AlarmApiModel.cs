@@ -65,7 +65,5 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
 
         [JsonProperty(PropertyName = "Rule")]
         public AlarmRuleApiModel Rule { get; set; }
-
-
     }
 }

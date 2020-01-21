@@ -21,11 +21,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 
         public override string TableName => "user";
 
-        /// <summary>
-        /// get all tenants for a user
-        /// </summary>
-        /// <param name="input">UserTenantInput with the userId param</param>
-        /// <returns></returns>
         public virtual async Task<UserTenantListModel> GetAllAsync(UserTenantInput input)
         {
             TableQuery<UserTenantModel> query = new TableQuery<UserTenantModel>().Where(TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, input.UserId));
@@ -33,33 +28,18 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             return new UserTenantListModel("GetTenants", result);
         }
 
-
-        /// <summary>
-        /// get all users for a tenant
-        /// </summary>
-        /// <param name="input">UserTenantInput with the tenant param</param>
-        /// <returns></returns>
         public virtual async Task<UserTenantListModel> GetAllUsersAsync(UserTenantInput input)
         {
             TableQuery<UserTenantModel> query = new TableQuery<UserTenantModel>().Where(TableQuery.GenerateFilterCondition("RowKey", QueryComparisons.Equal, input.Tenant));
             List<UserTenantModel> result = await this.TableStorageClient.QueryAsync<UserTenantModel>(this.TableName, query);
             return new UserTenantListModel("GetUsers", result);
         }
-        /// <summary>
-        /// Get a single tenant for the user
-        /// </summary>
-        /// <param name="input">UserTenantInput with a userid</param>
-        /// <returns></returns>
+
         public virtual async Task<UserTenantModel> GetAsync(UserTenantInput input)
         {
             return await this.TableStorageClient.RetrieveAsync<UserTenantModel>(this.TableName, input.UserId, input.Tenant);
         }
 
-        /// <summary>
-        /// Create a User record in the UserTenantContainer using the given userId and current tenant
-        /// </summary>
-        /// <param name="input">UserTenantInput with a userId</param>
-        /// <returns></returns>
         public virtual async Task<UserTenantModel> CreateAsync(UserTenantInput input)
         {
             // In order to create a new user with a tenant, create a new user id
@@ -80,11 +60,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             return await this.TableStorageClient.InsertAsync(this.TableName, user);
         }
 
-        /// <summary>
-        /// Update a user record
-        /// </summary>
-        /// <param name="input">UserTenantInput with a userId, tenant, and rolelist</param>
-        /// <returns></returns>
         public virtual async Task<UserTenantModel> UpdateAsync(UserTenantInput input)
         {
             UserTenantModel model = new UserTenantModel(input);
@@ -97,11 +72,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             return await this.TableStorageClient.InsertOrMergeAsync(this.TableName, model);
         }
 
-        /// <summary>
-        /// Delete a User record in the UserTenantContainer using the given userId and current tenant
-        /// </summary>
-        /// <param name="input">UserTenantInput with a userId</param>
-        /// <returns></returns>
         public virtual async Task<UserTenantModel> DeleteAsync(UserTenantInput input)
         {
             // Get a list of all user models for this user id - we will pick the one matching the current tenant to delete

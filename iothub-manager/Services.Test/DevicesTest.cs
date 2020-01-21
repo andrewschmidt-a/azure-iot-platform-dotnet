@@ -25,15 +25,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         {
             this.registryMock = new Mock<RegistryManager>();
             tenantHelper = new Mock<ITenantConnectionHelper>();
-
-
             tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
             tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registryMock.Object);
-
             MockIdentity.MockClaims("one");
-
             this.devices = new Devices(tenantHelper.Object, ioTHubHostName);
-
         }
 
         [Theory]

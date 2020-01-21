@@ -19,7 +19,6 @@ namespace Mmm.Platform.IoT.Config.Services
         private readonly AppConfig config;
         private readonly int timeoutMS = 10000;
 
-
         public StatusService(
             ILogger<StatusService> logger,
             IHttpClient httpClient,

@@ -47,8 +47,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             Mock<IAppConfigurationHelper> mockAppConfigHelper = new Mock<IAppConfigurationHelper>();
 
             // Mock service returns dummy data
-
-
             var config = new AppConfig();
             this.mockContainer = new Mock<DocumentDbKeyValueContainer>(
                 new MockFactory<IDocumentClient>(this.mockClient),

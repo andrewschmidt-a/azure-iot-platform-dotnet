@@ -25,55 +25,24 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>
-        /// Process an External Dependency Request using the given parameters to create a generic HttpRequest and deserialize the response to type T
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="url"></param>
-        /// <param name="tenantId"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public async Task<T> ProcessRequestAsync<T>(HttpMethod method, string url, string tenantId = null)
         {
             IHttpRequest request = this.CreateRequest(url, tenantId);
             return await this.SendRequestAsync<T>(method, request);
         }
 
-        /// <summary>
-        /// Process an External Dependency Request using the given parameters to create a generic HttpRequest and deserialize the body and response to type T
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="url"></param>
-        /// <param name="content"></param>
-        /// <param name="tenantId"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public async Task<T> ProcessRequestAsync<T>(HttpMethod method, string url, T content, string tenantId = null)
         {
             IHttpRequest request = this.CreateRequest(url, content, tenantId);
             return await this.SendRequestAsync<T>(method, request);
         }
 
-        /// <summary>
-        /// Process an External Dependency Request using the given parameters to create a generic HttpRequest and return the response.
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="url"></param>
-        /// <param name="tenantId"></param>
-        /// <returns></returns>
         public async Task<IHttpResponse> ProcessRequestAsync(HttpMethod method, string url, string tenantId = null)
         {
             IHttpRequest request = this.CreateRequest(url, tenantId);
             return await this.SendRequestAsync(method, request);
         }
 
-        /// <summary>
-        /// Send an HttpRequest using the given HTTP method, deserialize the response to type T
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="request"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public async Task<T> SendRequestAsync<T>(HttpMethod method, IHttpRequest request)
         {
             IHttpResponse response = await this.SendRequestAsync(method, request);
@@ -88,12 +57,6 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             }
         }
 
-        /// <summary>
-        /// Send an HttpRequest using the given HTTP method
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public async Task<IHttpResponse> SendRequestAsync(HttpMethod method, IHttpRequest request)
         {
             IHttpResponse response = null;
@@ -110,12 +73,6 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             return response;
         }
 
-        /// <summary>
-        /// Create an HttpRequest with the necessary parameters for an External Dependency API request
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="tenantId"></param>
-        /// <returns></returns>
         private IHttpRequest CreateRequest(string url, string tenantId = null)
         {
             var request = new HttpRequest();
@@ -156,14 +113,6 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             return request;
         }
 
-        /// <summary>
-        /// Create an HttpRequest with the necessary parameters for an External Dependency API request
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="content"></param>
-        /// <param name="tenantId"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         private IHttpRequest CreateRequest<T>(string url, T content, string tenantId)
         {
             IHttpRequest request = this.CreateRequest(url, tenantId);

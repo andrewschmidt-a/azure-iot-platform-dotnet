@@ -71,7 +71,6 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                     Times.Once);
         }
 
-
         [Fact]
         [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ProcessModelRequest()
