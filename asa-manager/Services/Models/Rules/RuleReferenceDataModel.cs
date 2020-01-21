@@ -151,6 +151,24 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         [JsonProperty("__rulefilterjs")]
         public string RuleFilterJs => this.ConditionsToJavascript();
 
+        private static string GetFieldName(string field, string calculation)
+        {
+            // Do not remove. This would be a bug, to be detected at development time.
+            if (!jsFieldsMap.ContainsKey(calculation))
+            {
+                throw new ApplicationException("Unknown calculation: " + calculation);
+            }
+
+            return field + jsFieldsMap[calculation];
+        }
+
+        private static string GetJsOperator(string op)
+        {
+            if (operatorsMap.ContainsKey(op)) return operatorsMap[op];
+
+            // This is an overall bug in the solution, to be detected at development time
+            throw new ApplicationException("Unknown operator: " + op);
+        }
         private static string GetAggregationWindowValue(string calculation, long timePeriod)
         {
             if (string.IsNullOrEmpty(calculation))
@@ -192,25 +210,6 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
             }
 
             return $"return ({result}) ? true : false;";
-        }
-
-        private static string GetFieldName(string field, string calculation)
-        {
-            // Do not remove. This would be a bug, to be detected at development time.
-            if (!jsFieldsMap.ContainsKey(calculation))
-            {
-                throw new ApplicationException("Unknown calculation: " + calculation);
-            }
-
-            return field + jsFieldsMap[calculation];
-        }
-
-        private static string GetJsOperator(string op)
-        {
-            if (operatorsMap.ContainsKey(op)) return operatorsMap[op];
-
-            // This is an overall bug in the solution, to be detected at development time
-            throw new ApplicationException("Unknown operator: " + op);
         }
     }
 }

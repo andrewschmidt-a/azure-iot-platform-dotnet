@@ -50,6 +50,19 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             SetupDefaultBehaviors();
         }
 
+        public static IEnumerable<object[]> GetJwtSecurityTokens()
+        {
+            yield return new object[] { null };
+            yield return new object[] { new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", Guid.NewGuid().ToString()) }) };
+        }
+
+        public static IEnumerable<object[]> GetInvalidAuthHeaders()
+        {
+            yield return new object[] { "Bearer not-a-valid-auth-header" };
+            yield return new object[] { "Bearer " };
+            yield return new object[] { ValidAuthHeader };
+        }
+
         [Theory]
         [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("not-a-valid-uri")]
@@ -148,13 +161,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             await Assert.ThrowsAsync<NoAuthorizationException>(a);
         }
 
-        public static IEnumerable<object[]> GetInvalidAuthHeaders()
-        {
-            yield return new object[] { "Bearer not-a-valid-auth-header" };
-            yield return new object[] { "Bearer " };
-            yield return new object[] { ValidAuthHeader };
-        }
-
         [Theory]
         [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [MemberData(nameof(GetInvalidAuthHeaders))]
@@ -169,12 +175,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 
             // Assert
             await Assert.ThrowsAsync<NoAuthorizationException>(a);
-        }
-
-        public static IEnumerable<object[]> GetJwtSecurityTokens()
-        {
-            yield return new object[] { null };
-            yield return new object[] { new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", Guid.NewGuid().ToString()) }) };
         }
 
         [Theory]

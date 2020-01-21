@@ -218,6 +218,23 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             this.Dispose(true);
         }
 
+        private static RequestOptions IfMatch(string etag)
+        {
+            if (etag == "*")
+            {
+                // Match all
+                return null;
+            }
+            return new RequestOptions
+            {
+                AccessCondition = new AccessCondition
+                {
+                    Condition = etag,
+                    Type = AccessConditionType.IfMatch
+                }
+            };
+        }
+
         private RequestOptions GetDocDbOptions()
         {
             return new RequestOptions
@@ -332,23 +349,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 _logger.LogError(e, "Error while creating DocumentDb collection {DocumentDbCollectionId}", DocumentDbDatabaseId);
                 throw;
             }
-        }
-
-        private static RequestOptions IfMatch(string etag)
-        {
-            if (etag == "*")
-            {
-                // Match all
-                return null;
-            }
-            return new RequestOptions
-            {
-                AccessCondition = new AccessCondition
-                {
-                    Condition = etag,
-                    Type = AccessConditionType.IfMatch
-                }
-            };
         }
 
         private void Dispose(bool disposing)

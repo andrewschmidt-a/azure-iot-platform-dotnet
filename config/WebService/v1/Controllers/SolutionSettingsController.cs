@@ -15,10 +15,9 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class SolutionSettingsController : Controller
     {
+        private static readonly string ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
         private readonly IStorage storage;
         private readonly IActions actions;
-
-        private static readonly string ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
 
         public SolutionSettingsController(IStorage storage, IActions actions)
         {

@@ -32,6 +32,13 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             userTenantContainer = new UserTenantContainer(mockTableStorageClient.Object);
         }
 
+        public static IEnumerable<object[]> GetRoleLists()
+        {
+            yield return new object[] { null };
+            yield return new object[] { string.Empty };
+            yield return new object[] { " " };
+        }
+
         [Fact]
         [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetAllReturnsExpectedUserTenantList()
@@ -295,13 +302,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
 
             // Assert
             AssertUserTenantMatchesInput(result);
-        }
-
-        public static IEnumerable<object[]> GetRoleLists()
-        {
-            yield return new object[] { null };
-            yield return new object[] { string.Empty };
-            yield return new object[] { " " };
         }
 
         [Theory]

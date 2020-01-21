@@ -54,12 +54,6 @@ namespace Mmm.Platform.IoT.Common.Services
 
         protected abstract void SetupCustomRules(ContainerBuilder builder);
 
-        private void AutowireAssemblies(ContainerBuilder builder)
-        {
-            var assembly = Assembly.GetEntryAssembly();
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
-        }
-
         // Prepare the OpenId Connect configuration manager, responsibile
         // for retrieving the JWT signing keys and cache them in memory.
         // See: https://openid.net/specs/openid-connect-discovery-1_0.html#rfc.section.4
@@ -84,6 +78,12 @@ namespace Mmm.Platform.IoT.Common.Services
                 // failed, or that a refresh is explicitly requested. Default is 30 seconds.
                 RefreshInterval = TimeSpan.FromMinutes(1)
             };
+        }
+
+        private void AutowireAssemblies(ContainerBuilder builder)
+        {
+            var assembly = Assembly.GetEntryAssembly();
+            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
         }
     }
 }

@@ -224,39 +224,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
         }
 
-        private async Task<DeviceTwinName> GetValidNamesAsync()
-        {
-            ParseWhitelist(this.whitelist, out var fullNameWhitelist, out var prefixWhitelist);
-
-            var validNames = new DeviceTwinName
-            {
-                Tags = fullNameWhitelist.Tags,
-                ReportedProperties = fullNameWhitelist.ReportedProperties
-            };
-
-            if (prefixWhitelist.Tags.Any() || prefixWhitelist.ReportedProperties.Any())
-            {
-                DeviceTwinName allNames = new DeviceTwinName();
-                try
-                {
-                    // Get list of DeviceTwinNames from IOT-hub
-                    allNames = await this.devices.GetDeviceTwinNamesAsync();
-                }
-                catch (Exception e)
-                {
-                    throw new ExternalDependencyException("Unable to fetch IoT devices", e);
-                }
-                validNames.Tags.UnionWith(allNames.Tags.
-                    Where(s => prefixWhitelist.Tags.Any(s.StartsWith)));
-
-                validNames.ReportedProperties.UnionWith(
-                    allNames.ReportedProperties.Where(
-                        s => prefixWhitelist.ReportedProperties.Any(s.StartsWith)));
-            }
-
-            return validNames;
-        }
-
         private static void ParseWhitelist(
             string whitelist,
             out DeviceTwinName fullNameWhitelist,
@@ -337,6 +304,39 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 Tags = new HashSet<string>(regexTags),
                 ReportedProperties = new HashSet<string>(regexReported)
             };
+        }
+
+        private async Task<DeviceTwinName> GetValidNamesAsync()
+        {
+            ParseWhitelist(this.whitelist, out var fullNameWhitelist, out var prefixWhitelist);
+
+            var validNames = new DeviceTwinName
+            {
+                Tags = fullNameWhitelist.Tags,
+                ReportedProperties = fullNameWhitelist.ReportedProperties
+            };
+
+            if (prefixWhitelist.Tags.Any() || prefixWhitelist.ReportedProperties.Any())
+            {
+                DeviceTwinName allNames = new DeviceTwinName();
+                try
+                {
+                    // Get list of DeviceTwinNames from IOT-hub
+                    allNames = await this.devices.GetDeviceTwinNamesAsync();
+                }
+                catch (Exception e)
+                {
+                    throw new ExternalDependencyException("Unable to fetch IoT devices", e);
+                }
+                validNames.Tags.UnionWith(allNames.Tags.
+                    Where(s => prefixWhitelist.Tags.Any(s.StartsWith)));
+
+                validNames.ReportedProperties.UnionWith(
+                    allNames.ReportedProperties.Where(
+                        s => prefixWhitelist.ReportedProperties.Any(s.StartsWith)));
+            }
+
+            return validNames;
         }
 
         private bool ShouldCacheRebuild(bool force, ValueApiModel valueApiModel)
