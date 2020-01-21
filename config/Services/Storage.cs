@@ -282,7 +282,7 @@ namespace Mmm.Platform.IoT.Config.Services
                 // Create empty Package Config Types
                 list = new ConfigTypeListServiceModel();
             }
-            list.add(customConfigType);
+            list.Add(customConfigType);
             await this._client.UpdateAsync(PACKAGES_COLLECTION_ID, PACKAGES_CONFIG_TYPE_KEY, JsonConvert.SerializeObject(list), "*");
         }
 

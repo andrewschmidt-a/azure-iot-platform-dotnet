@@ -6,12 +6,12 @@ using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
+using Mmm.Platform.IoT.IdentityGateway.WebService.Controllers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
 {
     public class ConfigurationControllerTest : IDisposable
     {
@@ -42,7 +42,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             var openIdProviderConfiguration = result.Value as IOpenIdProviderConfiguration;
 
             // Assert
-            Assert.Equal(someIssuer, openIdProviderConfiguration.issuer);
+            Assert.Equal(someIssuer, openIdProviderConfiguration.Issuer);
             Assert.Equal(ConfigurationController.ContentType, result.ContentTypes[0]);
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
         }
@@ -100,7 +100,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
         {
             mockAppConfig.Setup(m => m.Global.AzureB2cBaseUri).Returns(someUri);
             mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(somePublicKey);
-            mockOpenIdProviderConfiguration.SetupGet(m => m.issuer).Returns(someIssuer);
+            mockOpenIdProviderConfiguration.SetupGet(m => m.Issuer).Returns(someIssuer);
             mockRsaHelpers.Setup(m => m.GetJsonWebKey(It.IsAny<string>())).Returns(someJwks);
         }
     }

@@ -44,7 +44,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 UserId = userId
             };
             UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
-            List<UserTenantModel> tenantList = tenantsModel.models;
+            List<UserTenantModel> tenantList = tenantsModel.Models;
 
             // User did not specify the tenant to log into so get the default or last used
             if (string.IsNullOrEmpty(tenant))
@@ -158,7 +158,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 
                 // Validate the token issuer
                 ValidateIssuer = false,
-                ValidIssuer = _openIdProviderConfiguration.issuer,
+                ValidIssuer = _openIdProviderConfiguration.Issuer,
 
                 // Validate the token audience
                 ValidateAudience = false,

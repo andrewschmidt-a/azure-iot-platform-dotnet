@@ -8,12 +8,12 @@ using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.IoTHubManager.Services;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers;
+using Mmm.Platform.IoT.IoTHubManager.WebService.Controllers;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
 {
     public class ModulesControllerTest : IDisposable
     {

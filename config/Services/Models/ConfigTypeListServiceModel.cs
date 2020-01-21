@@ -23,7 +23,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
             }
         }
 
-        internal void add(string customConfig)
+        internal void Add(string customConfig)
         {
             configTypes.Add(customConfig.Trim());
         }

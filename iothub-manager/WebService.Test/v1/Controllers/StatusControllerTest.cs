@@ -1,6 +1,6 @@
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
 {
     public class SomeControllerTest
     {

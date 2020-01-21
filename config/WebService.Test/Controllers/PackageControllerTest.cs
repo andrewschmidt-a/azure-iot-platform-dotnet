@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.Internal;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.Config.Services;
 using Mmm.Platform.IoT.Config.Services.Models;
-using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
+using Mmm.Platform.IoT.Config.WebService.Controllers;
 using Moq;
 using Xunit;
 
@@ -72,7 +72,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 // Assert
                 Assert.False(expectException);
                 Assert.Equal(filename, package.Name);
-                Assert.Equal(type, package.packageType.ToString());
+                Assert.Equal(type, package.PackageType.ToString());
             }
             catch (Exception)
             {
@@ -111,7 +111,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
             Assert.Equal(id, pkg.Id);
             Assert.Equal(name, pkg.Name);
-            Assert.Equal(type, pkg.packageType);
+            Assert.Equal(type, pkg.PackageType);
             Assert.Equal(content, pkg.Content);
             Assert.Equal(dateCreated, pkg.DateCreated);
         }
@@ -154,7 +154,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 var pkg = resultPackages.Items.ElementAt(i);
                 Assert.Equal(id + i, pkg.Id);
                 Assert.Equal(name + i, pkg.Name);
-                Assert.Equal(type, pkg.packageType);
+                Assert.Equal(type, pkg.PackageType);
                 Assert.Equal(content + i, pkg.Content);
                 Assert.Equal(dateCreated, pkg.DateCreated);
             }

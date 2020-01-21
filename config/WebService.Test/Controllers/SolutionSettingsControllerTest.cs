@@ -8,7 +8,7 @@ using Mmm.Platform.IoT.Config.Services;
 using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Models;
 using Mmm.Platform.IoT.Config.Services.Models.Actions;
-using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
+using Mmm.Platform.IoT.Config.WebService.Controllers;
 using Moq;
 using Xunit;
 

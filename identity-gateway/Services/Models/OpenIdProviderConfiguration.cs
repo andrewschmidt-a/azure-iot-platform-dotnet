@@ -24,14 +24,14 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
             _host = forwardedFor ?? $"http{(_httpContextAccessor.HttpContext.Request.IsHttps ? "s" : string.Empty)}://{_httpContextAccessor.HttpContext.Request.Host.ToString()}";
         }
 
-        public virtual string issuer => _host;
-        public virtual string jwks_uri => _host + "/.well-known/openid-configuration/jwks";
-        public virtual string authorization_endpoint => _host + "/connect/authorize";
-        public virtual string end_session_endpoint => _host + "/connect/logout";
-        public virtual IEnumerable<string> scopes_supported => new List<string> { "openid", "profile" };
-        public virtual IEnumerable<string> claims_supported => new List<string> { "sub", "name", "tenant", "role" };
-        public virtual IEnumerable<string> grant_types_supported => new List<string> { "implicit" };
-        public virtual IEnumerable<string> response_types_supported => new List<string> { "token", "id_token" };
-        public virtual IEnumerable<string> response_modes_supported => new List<string> { "query" };
+        public virtual string Issuer => _host;
+        public virtual string JwksUri => _host + "/.well-known/openid-configuration/jwks";
+        public virtual string AuthorizationEndpoint => _host + "/connect/authorize";
+        public virtual string EndSessionEndpoint => _host + "/connect/logout";
+        public virtual IEnumerable<string> ScopesSupported => new List<string> { "openid", "profile" };
+        public virtual IEnumerable<string> ClaimsSupported => new List<string> { "sub", "name", "tenant", "role" };
+        public virtual IEnumerable<string> GrantTypesSupported => new List<string> { "implicit" };
+        public virtual IEnumerable<string> ResponseTypesSupported => new List<string> { "token", "id_token" };
+        public virtual IEnumerable<string> ResponseModesSupported => new List<string> { "query" };
     }
 }

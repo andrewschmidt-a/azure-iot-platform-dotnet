@@ -54,7 +54,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             this._appConfigurationHelper = appConfigurationHelper;
         }
 
-        private string collectionId
+        private string CollectionId
         {
             get
             {
@@ -126,7 +126,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             List<Document> docs = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 queryOptions,
                 sql,
                 skip,

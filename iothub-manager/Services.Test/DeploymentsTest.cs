@@ -161,7 +161,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
             tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
-            MockIdentity.mockClaims("one");
+            MockIdentity.MockClaims("one");
             this.deployments = new Deployments(tenantHelper.Object);
         }
 

@@ -6,16 +6,16 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
 {
     public interface IIdentityGatewayClient : IStatusOperation
     {
-        Task<IdentityGatewayApiModel> addTenantForUserAsync(string userId, string tenantId, string roles);
+        Task<IdentityGatewayApiModel> AddTenantForUserAsync(string userId, string tenantId, string roles);
 
-        Task<IdentityGatewayApiModel> getTenantForUserAsync(string userId, string tenantId);
+        Task<IdentityGatewayApiModel> GetTenantForUserAsync(string userId, string tenantId);
 
-        Task<IdentityGatewayApiSettingModel> addSettingsForUserAsync(string userId, string settingKey, string settingValue);
+        Task<IdentityGatewayApiSettingModel> AddSettingsForUserAsync(string userId, string settingKey, string settingValue);
 
-        Task<IdentityGatewayApiSettingModel> getSettingsForUserAsync(string userId, string settingKey);
+        Task<IdentityGatewayApiSettingModel> GetSettingsForUserAsync(string userId, string settingKey);
 
-        Task<IdentityGatewayApiSettingModel> updateSettingsForUserAsync(string userId, string settingKey, string settingValue);
+        Task<IdentityGatewayApiSettingModel> UpdateSettingsForUserAsync(string userId, string settingKey, string settingValue);
 
-        Task<IdentityGatewayApiModel> deleteTenantForAllUsersAsync(string tenantId);
+        Task<IdentityGatewayApiModel> DeleteTenantForAllUsersAsync(string tenantId);
     }
 }

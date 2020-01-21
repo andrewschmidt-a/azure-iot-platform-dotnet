@@ -74,9 +74,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
                     Times.Once);
 
             // Assert
-            Assert.Equal("gettenants", result.batchMethod.ToLowerInvariant());
-            Assert.NotNull(result.models);
-            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.models.Count);
+            Assert.Equal("gettenants", result.BatchMethod.ToLowerInvariant());
+            Assert.NotNull(result.Models);
+            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.Models.Count);
         }
 
         [Fact]
@@ -104,9 +104,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
                     Times.Once);
 
             // Assert
-            Assert.Equal("gettenants", result.batchMethod.ToLowerInvariant());
-            Assert.NotNull(result.models);
-            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.models.Count);
+            Assert.Equal("gettenants", result.BatchMethod.ToLowerInvariant());
+            Assert.NotNull(result.Models);
+            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.Models.Count);
         }
 
         [Fact]
@@ -128,9 +128,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
                     Times.Once);
 
             // Assert
-            Assert.Equal("gettenants", result.batchMethod.ToLowerInvariant());
-            Assert.NotNull(result.models);
-            Assert.Empty(result.models);
+            Assert.Equal("gettenants", result.BatchMethod.ToLowerInvariant());
+            Assert.NotNull(result.Models);
+            Assert.Empty(result.Models);
         }
 
         [Fact]
@@ -372,9 +372,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             var result = await userTenantContainer.DeleteAllAsync(someUserTenantInput);
 
             // Assert
-            Assert.Equal("delete", result.batchMethod.ToLowerInvariant());
-            Assert.NotNull(result.models);
-            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.models.Count);
+            Assert.Equal("delete", result.BatchMethod.ToLowerInvariant());
+            Assert.NotNull(result.Models);
+            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.Models.Count);
         }
 
         private void AssertUserTenantMatchesInput(UserTenantModel userTenant)

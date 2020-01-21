@@ -115,16 +115,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
             return await this._tableStorageClient.DeleteAsync(this.TableName, user);
         }
 
-        /// <summary>
-        /// Delete the tenant from all users
-        /// </summary>
-        /// <returns></returns>
         public virtual async Task<UserTenantListModel> DeleteAllAsync(UserTenantInput input)
         {
             UserTenantListModel tenantRows = await this.GetAllUsersAsync(input);
 
             // delete all rows as one asynchronous job
-            var deleteTasks = tenantRows.models.Select(row =>
+            var deleteTasks = tenantRows.Models.Select(row =>
             {
                 UserTenantInput deleteInput = new UserTenantInput
                 {

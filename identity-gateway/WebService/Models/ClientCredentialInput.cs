@@ -7,8 +7,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
 {
     public class ClientCredentialInput
     {
-        public string client_id { get; set; }
-        public string client_secret { get; set; }
-        public string scope { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
+        public string Scope { get; set; }
     }
 }

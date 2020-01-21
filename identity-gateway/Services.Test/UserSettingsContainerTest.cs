@@ -65,9 +65,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
                     Times.Once);
 
             // Assert
-            Assert.Equal("get", result.batchMethod.ToLowerInvariant());
-            Assert.NotNull(result.models);
-            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserSettingsInput.UserId), result.models.Count);
+            Assert.Equal("get", result.BatchMethod.ToLowerInvariant());
+            Assert.NotNull(result.Models);
+            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserSettingsInput.UserId), result.Models.Count);
         }
 
         [Fact]
@@ -99,9 +99,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
                     Times.Once);
 
             // Assert
-            Assert.Equal("get", result.batchMethod.ToLowerInvariant());
-            Assert.NotNull(result.models);
-            Assert.Empty(result.models);
+            Assert.Equal("get", result.BatchMethod.ToLowerInvariant());
+            Assert.NotNull(result.Models);
+            Assert.Empty(result.Models);
         }
 
         [Fact]

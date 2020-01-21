@@ -5,7 +5,7 @@ using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.TenantManager.WebService.v1.Controllers
+namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {
     [Route("v1/[controller]")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

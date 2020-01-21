@@ -18,7 +18,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
             this.DeletionRecord = deletionRecord;
         }
 
-        public bool fullyDeleted
+        public bool FullyDeleted
         {
             get
             {

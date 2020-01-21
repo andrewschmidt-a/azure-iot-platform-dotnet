@@ -8,11 +8,11 @@ using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.IdentityGateway.Services;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
+using Mmm.Platform.IoT.IdentityGateway.WebService.Controllers;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
 {
     public class UserSettingsControllerTest : IDisposable
     {

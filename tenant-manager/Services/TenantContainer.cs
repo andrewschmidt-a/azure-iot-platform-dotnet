@@ -85,7 +85,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             try
             {
-                await _identityClient.addTenantForUserAsync(userId, tenantId, CREATED_ROLE);
+                await _identityClient.AddTenantForUserAsync(userId, tenantId, CREATED_ROLE);
             }
             catch (Exception e)
             {
@@ -97,7 +97,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             try
             {
-                userSettings = await _identityClient.getSettingsForUserAsync(userId, LAST_USED_SETTING_KEY);
+                userSettings = await _identityClient.GetSettingsForUserAsync(userId, LAST_USED_SETTING_KEY);
             }
             catch (Exception e)
             {
@@ -108,7 +108,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 // Set the last used tenant to be this new tenant
                 try
                 {
-                    await _identityClient.addSettingsForUserAsync(userId, LAST_USED_SETTING_KEY, tenantId);
+                    await _identityClient.AddSettingsForUserAsync(userId, LAST_USED_SETTING_KEY, tenantId);
                 }
                 catch (Exception e)
                 {
@@ -206,7 +206,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // delete the tenant from the user
             try
             {
-                await this._identityClient.deleteTenantForAllUsersAsync(tenantId);
+                await this._identityClient.DeleteTenantForAllUsersAsync(tenantId);
                 deletionRecord["userTableStorage"] = true;
             }
             catch (Exception e)
@@ -218,11 +218,11 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // update userSettings table LastUsedTenant if necessary
             try
             {
-                IdentityGatewayApiSettingModel lastUsedTenant = await this._identityClient.getSettingsForUserAsync(userId, "LastUsedTenant");
+                IdentityGatewayApiSettingModel lastUsedTenant = await this._identityClient.GetSettingsForUserAsync(userId, "LastUsedTenant");
                 if (lastUsedTenant.Value == tenantId)
                 {
                     // update the LastUsedTenant to some null
-                    await this._identityClient.updateSettingsForUserAsync(userId, "LastUsedTenant", string.Empty);
+                    await this._identityClient.UpdateSettingsForUserAsync(userId, "LastUsedTenant", string.Empty);
                 }
             }
             catch (Exception e)

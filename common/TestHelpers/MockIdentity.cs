@@ -7,7 +7,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
 {
     public static class MockIdentity
     {
-        public static void mockClaims(string tenant)
+        public static void MockClaims(string tenant)
         {
             var cp = new Mock<ClaimsPrincipal>();
             cp.Setup(m => m.HasClaim(It.IsAny<string>(), It.IsAny<string>()))

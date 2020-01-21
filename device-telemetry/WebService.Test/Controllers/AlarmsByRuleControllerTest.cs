@@ -11,7 +11,7 @@ using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Runtime;
 using Mmm.Platform.IoT.DeviceTelemetry.Services;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
-using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers;
+using Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers;
 using Moq;
 using Xunit;
 using Alarm = Mmm.Platform.IoT.DeviceTelemetry.Services.Models.Alarm;
@@ -52,7 +52,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
             this.storage = new StorageClient(config, new Mock<ILogger<StorageClient>>().Object);
             this.storage.CreateCollectionIfNotExistsAsync(config.DeviceTelemetryService.Alarms.Database, string.Empty);
 
-            this.sampleAlarms = this.getSampleAlarms();
+            this.sampleAlarms = this.GetSampleAlarms();
             foreach (Alarm sampleAlarm in this.sampleAlarms)
             {
                 this.storage.UpsertDocumentAsync(
@@ -121,7 +121,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
             return document;
         }
 
-        private List<Alarm> getSampleAlarms()
+        private List<Alarm> GetSampleAlarms()
         {
             List<Alarm> list = new List<Alarm>();
 

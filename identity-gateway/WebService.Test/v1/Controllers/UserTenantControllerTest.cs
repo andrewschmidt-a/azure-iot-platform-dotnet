@@ -13,13 +13,13 @@ using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.IdentityGateway.Services;
 using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
+using Mmm.Platform.IoT.IdentityGateway.WebService.Controllers;
 using Moq;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
 {
     public class UserTenantControllerTest : IDisposable
     {

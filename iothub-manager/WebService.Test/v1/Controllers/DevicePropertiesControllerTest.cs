@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers;
-using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models;
+using Mmm.Platform.IoT.IoTHubManager.WebService.Controllers;
+using Mmm.Platform.IoT.IoTHubManager.WebService.Models;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
 {
 
     public class DevicePropertiesControllerTest : IDisposable

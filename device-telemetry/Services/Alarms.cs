@@ -52,7 +52,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             this._appConfigurationHelper = appConfigurationHelper;
         }
 
-        private string collectionId
+        private string CollectionId
         {
             get
             {
@@ -98,7 +98,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             List<Document> docs = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 queryOptions,
                 sql,
                 skip,
@@ -146,7 +146,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             List<Document> docs = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 queryOptions,
                 sql,
                 skip,
@@ -189,7 +189,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             // request count of alarms for a rule id with given parameters
             var result = await this.storageClient.QueryCountAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 queryOptions,
                 sql);
 
@@ -206,7 +206,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             document = await this.storageClient.UpsertDocumentAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 document);
 
             return new Alarm(document);
@@ -252,7 +252,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 {
                     await this.storageClient.DeleteDocumentAsync(
                         this.databaseName,
-                        this.collectionId,
+                        this.CollectionId,
                         id);
                     return;
                 }
@@ -294,7 +294,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             // Retrieve the document using the DocumentClient.
             List<Document> documentList = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 null,
                 query,
                 0,

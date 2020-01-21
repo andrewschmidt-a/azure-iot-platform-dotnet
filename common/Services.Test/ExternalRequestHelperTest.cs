@@ -83,7 +83,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             string value = this.rand.NextString();
             ExternalRequestModel content = new ExternalRequestModel
             {
-                value = value
+                Value = value
             };
 
             HttpMethod method = HttpMethod.Get;
@@ -110,7 +110,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                         It.Is<HttpMethod>(r => r == method)),
                     Times.Once);
 
-            Assert.Equal(processedResponse.value, value);
+            Assert.Equal(processedResponse.Value, value);
         }
     }
 }

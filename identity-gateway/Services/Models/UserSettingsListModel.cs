@@ -9,19 +9,19 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 
         public UserSettingsListModel(List<UserSettingsModel> models)
         {
-            this.models = models;
+            this.Models = models;
         }
 
         public UserSettingsListModel(string batchMethod, List<UserSettingsModel> models)
         {
-            this.batchMethod = batchMethod;
-            this.models = models;
+            this.BatchMethod = batchMethod;
+            this.Models = models;
         }
 
         [JsonProperty("Method", Order=10)]
-        public string batchMethod { get; set; }
+        public string BatchMethod { get; set; }
 
         [JsonProperty("Models", Order=20)]
-        public List<UserSettingsModel> models { get; set; }
+        public List<UserSettingsModel> Models { get; set; }
     }
 }

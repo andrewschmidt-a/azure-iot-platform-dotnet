@@ -8,12 +8,12 @@ using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.StorageAdapter.Services;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
-using Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers;
+using Mmm.Platform.IoT.StorageAdapter.WebService.Controllers;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
+namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
 {
     public class ValuesControllerTest : IDisposable
     {

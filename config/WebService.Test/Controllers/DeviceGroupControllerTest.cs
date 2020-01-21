@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.Config.Services;
 using Mmm.Platform.IoT.Config.Services.Models;
-using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
-using Mmm.Platform.IoT.Config.WebService.v1.Models;
+using Mmm.Platform.IoT.Config.WebService.Controllers;
+using Mmm.Platform.IoT.Config.WebService.Models;
 using Moq;
 using Xunit;
 
