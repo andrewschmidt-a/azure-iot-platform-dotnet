@@ -1,4 +1,4 @@
-﻿using Microsoft.Azure.Devices;
+using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Azure.EventHubs;
 using Newtonsoft.Json.Linq;

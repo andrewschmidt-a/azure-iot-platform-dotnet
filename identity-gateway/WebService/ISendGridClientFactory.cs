@@ -1,4 +1,4 @@
-﻿using SendGrid;
+using SendGrid;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService
 {

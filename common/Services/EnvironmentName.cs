@@ -1,4 +1,4 @@
-﻿namespace Mmm.Platform.IoT.Common.Services
+namespace Mmm.Platform.IoT.Common.Services
 {
     public static class EnvironmentName
     {

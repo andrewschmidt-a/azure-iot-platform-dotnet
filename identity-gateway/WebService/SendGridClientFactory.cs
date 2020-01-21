@@ -1,4 +1,4 @@
-﻿using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.Config;
 using SendGrid;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService

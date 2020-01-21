@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 
 namespace Mmm.Platform.IoT.Common.TestHelpers

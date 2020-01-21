@@ -1,4 +1,4 @@
-﻿namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
+namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
 {
     internal class EdgePackageValidator : PackageValidator, IPackageValidator
     {

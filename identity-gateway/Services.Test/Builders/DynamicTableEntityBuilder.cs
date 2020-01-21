@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Microsoft.Azure.Cosmos.Table;
 using TestStack.Dossier;
 using TestStack.Dossier.EquivalenceClasses;

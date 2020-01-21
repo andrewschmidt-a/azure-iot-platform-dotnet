@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Mmm.Platform.IoT.Common.Services;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService

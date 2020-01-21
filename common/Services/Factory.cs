@@ -1,4 +1,4 @@
-﻿using Autofac;
+using Autofac;
 
 namespace Mmm.Platform.IoT.Common.Services
 {

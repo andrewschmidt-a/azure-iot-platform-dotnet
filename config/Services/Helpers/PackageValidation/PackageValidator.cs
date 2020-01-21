@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

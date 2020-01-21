@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Azure.Devices;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Models

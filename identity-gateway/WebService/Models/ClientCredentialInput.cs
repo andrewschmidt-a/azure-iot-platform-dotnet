@@ -1,4 +1,4 @@
-﻿namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
+namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
 {
     public class ClientCredentialInput
     {

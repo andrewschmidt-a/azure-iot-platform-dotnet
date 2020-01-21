@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Mmm.Platform.IoT.Common.Services.Converters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;

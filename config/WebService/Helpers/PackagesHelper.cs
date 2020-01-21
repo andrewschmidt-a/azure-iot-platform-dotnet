@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Azure.Devices;
 using Mmm.Platform.IoT.Config.Services.Models;
 using Newtonsoft.Json;
