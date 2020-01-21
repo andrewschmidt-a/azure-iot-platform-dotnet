@@ -123,19 +123,20 @@ export class TelemetryChart extends Component {
         [deviceId]: telemetry[telemetryKey][deviceId]
       }));
     }  
-    const noAnimate = telemetryKey === this.state.telemetryKey;
+    const noAnimate = telemetryKey === this.state.telemetryKey;  // will be false if there is no telemetry data
     // Set a timeout to allow the panel height to be calculated before updating the graph
     setTimeout(() => {
       if (this && this.state && this.lineChart && this.state.renderChart) {
         this.lineChart.render(
           chartData,
-          {
+          { // Chart options object: see https://github.com/microsoft/tsiclient/blob/master/docs/UX.md#chart-options
             grid: false,
             legend: 'compact',
             noAnimate, // If the telemetryKey changes, animate
             tooltip: true,
             yAxisState: 'shared', // Default to all values being on the same axis
-            theme
+            theme,
+            xAxisHidden: true
           },
           this.props.colors
         );
