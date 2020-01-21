@@ -145,6 +145,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 resourceGroup = config.Global.ResourceGroup,
                 location = config.Global.Location,
                 subscriptionId = config.Global.SubscriptionId,
+
                 // Event Hub Connection Strings for setting up IoT Hub Routing
                 telemetryEventHubConnString = config.TenantManagerService.TelemetryEventHubConnectionString,
                 twinChangeEventHubConnString = config.TenantManagerService.TwinChangeEventHubConnectionString,

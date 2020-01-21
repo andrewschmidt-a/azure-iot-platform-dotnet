@@ -293,6 +293,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 {
                     new SqlParameter { Name = "@id", Value = id },
                 }));
+
             // Retrieve the document using the DocumentClient.
             List<Document> documentList = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,

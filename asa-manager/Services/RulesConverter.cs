@@ -66,6 +66,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                     {
                         RuleDataModel dataModel = JsonConvert.DeserializeObject<RuleDataModel>(item.Data);
                         RuleModel ruleModel = new RuleModel(item.Key, dataModel);
+
                         // return a RuleReferenceModel which is a conversion from the RuleModel into a SAjob readable format with additional metadata
                         RuleReferenceDataModel referenceModel = new RuleReferenceDataModel(ruleModel);
                         jsonRulesList.Add(referenceModel);

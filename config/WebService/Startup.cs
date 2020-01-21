@@ -65,6 +65,7 @@ namespace Mmm.Platform.IoT.Config.WebService
             // Enable CORS - Must be before UseMvc
             // see: https://docs.microsoft.com/en-us/aspnet/core/security/cors
             corsSetup.UseMiddleware(app);
+
             // app.UseAuthentication();
             app.UseMvc();
         }

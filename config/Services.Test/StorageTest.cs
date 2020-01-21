@@ -424,6 +424,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
 
             Assert.Equal(image, result.Image.ToString());
             Assert.Equal(type, result.Type.ToString());
+
             // If name is not set, old name should remain
             Assert.Equal(oldName, result.Name.ToString());
             Assert.False(result.IsDefault);
@@ -856,6 +857,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 var resultPackages = await this.storage.GetFilteredPackagesAsync(
                                                     packageType,
                                                     configType);
+
                 // Assert
                 var pkg = resultPackages.First();
                 Assert.Equal(PackageType.EdgeManifest, pkg.PackageType);

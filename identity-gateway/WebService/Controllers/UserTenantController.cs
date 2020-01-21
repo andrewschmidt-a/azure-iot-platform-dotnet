@@ -173,6 +173,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             };
 
             string forwardedFor = null;
+
             // add issuer with forwarded for address if exists (added by reverse proxy)
             if (HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
             {

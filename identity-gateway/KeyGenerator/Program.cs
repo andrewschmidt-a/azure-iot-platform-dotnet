@@ -16,6 +16,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.KeyGenerator
             {
                 // Generate a public/private key pair.
                 RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(2048);
+
                 // Save the public key information to an RSAParameters structure.
                 RSAParameters rsaKeyInfo = rsa.ExportParameters(true);
 

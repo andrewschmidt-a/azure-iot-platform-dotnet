@@ -33,8 +33,10 @@ namespace Mmm.Platform.IoT.AsaManager.WebService.Controllers
         {
             string tenantId = this.GetTenantId();
             string operationId = this.keyGenerator.Generate();
+
             // This can be a long running process due to querying of cosmos/iothub - don't wait for itsyn
             Forget(this.deviceGroupConverter.ConvertAsync(tenantId, operationId), operationId);
+
             // Return the operationId of the devicegroup conversion synchronous process
             return new BeginConversionApiModel
             {

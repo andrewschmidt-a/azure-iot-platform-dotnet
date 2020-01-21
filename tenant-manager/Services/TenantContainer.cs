@@ -221,6 +221,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             // Gather tenant information
             string iotHubName = this.FormatResourceName(this.iotHubNameFormat, tenantId);
             string dpsName = this.FormatResourceName(this.dpsNameFormat, tenantId);
+
             // trigger delete iothub runbook
             try
             {
@@ -234,6 +235,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
 
             string saJobName = this.FormatResourceName(this.streamAnalyticsNameFormat, tenantId);
+
             // trigger delete SA runbook
             try
             {
@@ -265,10 +267,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 if (string.IsNullOrEmpty(collectionId))
                 {
                     logger.LogInformation("The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection", collectionAppConfigKey, tenantId);
+
                     // Currently, the assumption for an unknown collection id is that it has been deleted.
                     // We can come to this conclusion by assuming that the app config key containing the collection id was already deleted.
                     // TODO: Determine a more explicit outcome for this scenario - jrb
                     deletionRecord[$"{collection}Collection"] = true;
+
                     // If the collectionId could not be properly retrieved, go on to the next colleciton, do not attempt to delete.
                     continue;
                 }

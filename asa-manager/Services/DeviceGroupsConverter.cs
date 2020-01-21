@@ -131,6 +131,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 {
                     return string.Join("\n", mapping.Value.Items.Select(device => $"{device.Id},{mapping.Key.Id}"));
                 }));
+
                 // Add the rows and the header together to complete the csv file content
                 fileContent = $"{CsvHeader}\n{fileContentRows}";
             }

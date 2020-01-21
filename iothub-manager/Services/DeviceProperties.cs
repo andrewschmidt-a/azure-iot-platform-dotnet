@@ -201,6 +201,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                     deviceProperties.Tags.UnionWith(devicePropertiesFromStorage.Tags);
                     deviceProperties.Reported.UnionWith(devicePropertiesFromStorage.Reported);
                     etag = model.ETag;
+
                     // If the new set of deviceProperties are already there in cache, return
                     if (deviceProperties.Tags.Count == devicePropertiesFromStorage.Tags.Count &&
                         deviceProperties.Reported.Count == devicePropertiesFromStorage.Reported.Count)
@@ -265,6 +266,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             /// fixedTags = []
             /// </example>
             var fixedTags = tags.Where(s => !s.EndsWith("*"));
+
             /// <example>
             /// fixedReported = [reported.Protocol,
             ///                  reported.SupportedMethods,
@@ -277,6 +279,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             /// regexTags = [tags.]
             /// </example>
             var regexTags = tags.Where(s => s.EndsWith("*")).Select(s => s.Substring(0, s.Length - 1));
+
             /// <example>
             /// regexReported = []
             /// </example>

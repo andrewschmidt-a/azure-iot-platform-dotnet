@@ -32,8 +32,10 @@ namespace Mmm.Platform.IoT.AsaManager.WebService.Controllers
         {
             string tenantId = this.GetTenantId();
             string operationId = this.keyGenerator.Generate();
+
             // This can be a long running process due to querying of cosmos/iothub - don't wait for it
             Forget(this.ruleConverter.ConvertAsync(tenantId, operationId), operationId);
+
             // Return the operationId of the rule conversion synchronous process
             return new BeginConversionApiModel
             {

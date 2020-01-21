@@ -294,6 +294,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(queryResult);
 
             tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId, true);
             var deviceStatuses = returnedDeployment.DeploymentMetrics.DeviceStatuses;
@@ -348,6 +349,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(new ResultQuery(0));
 
             tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId);
 

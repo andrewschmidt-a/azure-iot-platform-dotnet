@@ -17,6 +17,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         // Comes from the StorageAdapter document and not the serialized rule
         [JsonIgnore]
         public string ETag { get; set; } = string.Empty;
+
         // Comes from the StorageAdapter document and not the serialized rule
         [JsonIgnore]
         public string Id { get; set; } = string.Empty;
@@ -30,6 +31,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         public SeverityType Severity { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public CalculationType Calculation { get; set; }
+
         // Possible values -[60000, 300000, 600000] in milliseconds
         public long TimePeriod { get; set; } = 0;
         public IList<Condition> Conditions { get; set; } = new List<Condition>();

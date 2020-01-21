@@ -79,6 +79,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             var diagnosticsResult = await this.PingServiceAsync(
                 diagnosticsName,
                 this.config.ExternalDependencies.DiagnosticsServiceUrl);
+
             // Note: Overall simulation service status is independent of diagnostics service
             // Hence not using SetServiceStatus on diagnosticsResult
             result.Dependencies.Add(diagnosticsName, diagnosticsResult);

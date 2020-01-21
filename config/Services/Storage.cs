@@ -263,6 +263,7 @@ namespace Mmm.Platform.IoT.Config.Services
             catch (ResourceNotFoundException)
             {
                 logger.LogDebug("Document config-types has not been created.");
+
                 // Return empty Package Config types
                 return new ConfigTypeListServiceModel();
             }
@@ -279,6 +280,7 @@ namespace Mmm.Platform.IoT.Config.Services
             catch (ResourceNotFoundException)
             {
                 logger.LogDebug("Config Types have not been created.");
+
                 // Create empty Package Config Types
                 list = new ConfigTypeListServiceModel();
             }

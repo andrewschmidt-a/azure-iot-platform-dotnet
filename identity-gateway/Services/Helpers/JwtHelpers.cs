@@ -38,6 +38,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
             claims.Add(new Claim("iat", timeSinceEpoch.ToString(), ClaimValueTypes.Integer));
 
             var userId = claims.First(t => t.Type == "sub").Value;
+
             // Create a userTenantInput for the purpose of finding the full tenant list associated with this user
             UserTenantInput tenantInput = new UserTenantInput
             {
@@ -57,6 +58,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                     SettingKey = "LastUsedTenant",
                 };
                 UserSettingsModel lastUsedSetting = await this.userSettingsContainer.GetAsync(settingsInput);
+
                 // Has last used tenant and it is in the list
                 if (lastUsedSetting != null && tenantList.Count(t => t.TenantId == lastUsedSetting.Value) > 0)
                 {
@@ -80,8 +82,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                     Tenant = tenant,
                 };
                 UserTenantModel tenantModel = await this.userTenantContainer.GetAsync(input);
+
                 // Add Tenant
                 claims.Add(new Claim("tenant", tenantModel.TenantId));
+
                 // Add Roles
                 tenantModel.RoleList.ForEach(role => claims.Add(new Claim("role", role)));
 
@@ -92,6 +96,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                     SettingKey = "LastUsedTenant",
                     Value = tenant,
                 };
+
                 // Update if name is not the same
                 await this.userSettingsContainer.UpdateAsync(settingsInput);
                 if (tenantModel.Name != claims.Where(c => c.Type == "name").First().Value)
@@ -102,6 +107,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
             }
 
             DateTime expirationDateTime = expiration ?? DateTime.Now.AddDays(30);
+
             // add all tenants they have access to
             claims.AddRange(tenantList.Select(t => new Claim("available_tenants", t.TenantId)));
 
@@ -114,6 +120,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
         public JwtSecurityToken MintToken(List<Claim> claims, string audience, DateTime expirationDateTime)
         {
             string forwardedFor = null;
+
             // add issuer with forwarded for address if exists (added by reverse proxy)
             if (httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
             {
