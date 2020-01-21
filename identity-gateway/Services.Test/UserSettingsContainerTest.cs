@@ -31,7 +31,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void GetAllReturnsExpectedUserSettingsList()
         {
             // Arrange
@@ -71,7 +71,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void GetAllReturnsEmptyUserSettingsList()
         {
             // Arrange
@@ -105,7 +105,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void GetReturnsExpectedUserSettings()
         {
             // Arrange
@@ -148,7 +148,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void GetReturnsEmptyUserSettings()
         {
             // Arrange
@@ -175,7 +175,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void CreateReturnsExpectedUserSettings()
         {
             // mock intial check to see if setting already exists during CreateAsync
@@ -216,7 +216,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void CreateThrowsWhenUserSettingsAlreadyExist()
         {
             // Arrange
@@ -237,7 +237,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void UpdateReturnsExpectedUserSettings()
         {
             // Arrange
@@ -262,7 +262,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void DeleteReturnsExpectedUserSettings()
         {
             // Arrange
@@ -302,7 +302,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void DeleteThrowsWhenUserSettingsDoesNotExist()
         {
             // Arrange

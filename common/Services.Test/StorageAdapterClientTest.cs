@@ -20,9 +20,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 {
     public class StorageAdapterClientTest
     {
-        private const string MOCK_SERVICE_URI = @"http://mockstorageadapter";
-        private const string AZDS_ROUTE_KEY = "azds-route-as";
-
+        private const string MockServiceUri = @"http://mockstorageadapter";
+        private const string AzdsRouteKey = "azds-route-as";
         private readonly Mock<IHttpClient> mockHttpClient;
         private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
         private readonly Mock<ExternalRequestHelper> mockRequestHelper;
@@ -39,7 +38,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 .Returns(new Dictionary<object, object>() { { "TenantID", "test_tenant" } });
             this.mockHttpContextAccessor
                 .Setup(t => t.HttpContext.Request.Headers)
-                .Returns(new HeaderDictionary() { { AZDS_ROUTE_KEY, "mockDevSpace" } });
+                .Returns(new HeaderDictionary() { { AzdsRouteKey, "mockDevSpace" } });
             this.mockRequestHelper = new Mock<ExternalRequestHelper>(
                 this.mockHttpClient.Object,
                 this.mockHttpContextAccessor.Object);
@@ -47,7 +46,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockConfig = new Mock<AppConfig>();
             this.mockConfig
                 .Setup(x => x.ExternalDependencies.StorageAdapterServiceUrl)
-                .Returns(MOCK_SERVICE_URI);
+                .Returns(MockServiceUri);
 
             this.client = new StorageAdapterClient(
                 this.mockConfig.Object,
@@ -88,7 +87,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpClient
                 .Verify(
                     x => x.SendAsync(
-                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}")),
+                        It.Is<IHttpRequest>(r => r.Check($"{MockServiceUri}/collections/{collectionId}/values/{key}")),
                         It.Is<HttpMethod>(m => m == method)),
                     Times.Once);
 
@@ -163,7 +162,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpClient
                 .Verify(
                     x => x.SendAsync(
-                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values")),
+                        It.Is<IHttpRequest>(r => r.Check($"{MockServiceUri}/collections/{collectionId}/values")),
                         It.Is<HttpMethod>(m => m == method)),
                     Times.Once);
 
@@ -207,7 +206,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpClient
                 .Verify(
                     x => x.SendAsync(
-                        It.Is<IHttpRequest>(r => r.Check<ValueApiModel>($"{MOCK_SERVICE_URI}/collections/{collectionId}/values", m => m.Data == data)),
+                        It.Is<IHttpRequest>(r => r.Check<ValueApiModel>($"{MockServiceUri}/collections/{collectionId}/values", m => m.Data == data)),
                         It.Is<HttpMethod>(m => m == method)),
                     Times.Once);
 
@@ -248,7 +247,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpClient
                 .Verify(
                     x => x.SendAsync(
-                        It.Is<IHttpRequest>(r => r.Check<ValueApiModel>($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}", m => m.Data == data && m.ETag == etagOld)),
+                        It.Is<IHttpRequest>(r => r.Check<ValueApiModel>($"{MockServiceUri}/collections/{collectionId}/values/{key}", m => m.Data == data && m.ETag == etagOld)),
                         It.Is<HttpMethod>(m => m == method)),
                     Times.Once);
 
@@ -305,7 +304,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpClient
                 .Verify(
                     x => x.SendAsync(
-                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/collections/{collectionId}/values/{key}")),
+                        It.Is<IHttpRequest>(r => r.Check($"{MockServiceUri}/collections/{collectionId}/values/{key}")),
                         It.Is<HttpMethod>(m => m == method)),
                     Times.Once);
         }

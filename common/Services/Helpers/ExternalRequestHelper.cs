@@ -13,8 +13,8 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
 {
     public class ExternalRequestHelper : IExternalRequestHelper
     {
-        private const string TENANT_HEADER = "ApplicationTenantID";
-        private const string AZDS_ROUTE_KEY = "azds-route-as";
+        private const string TenantHeader = "ApplicationTenantID";
+        private const string AzdsRouteKey = "azds-route-as";
 
         private readonly IHttpClient httpClient;
         private readonly IHttpContextAccessor httpContextAccessor;
@@ -133,23 +133,23 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
                 }
             }
 
-            request.AddHeader(TENANT_HEADER, tenantId);
+            request.AddHeader(TenantHeader, tenantId);
 
             if (url.ToLowerInvariant().StartsWith("https:"))
             {
                 request.Options.AllowInsecureSSLServer = true;
             }
 
-            if (this.httpContextAccessor.HttpContext != null && this.httpContextAccessor.HttpContext.Request.Headers.ContainsKey(AZDS_ROUTE_KEY))
+            if (this.httpContextAccessor.HttpContext != null && this.httpContextAccessor.HttpContext.Request.Headers.ContainsKey(AzdsRouteKey))
             {
                 try
                 {
-                    var azdsRouteAs = this.httpContextAccessor.HttpContext.Request.Headers.First(p => string.Equals(p.Key, AZDS_ROUTE_KEY, StringComparison.OrdinalIgnoreCase));
-                    request.Headers.Add(AZDS_ROUTE_KEY, azdsRouteAs.Value.First());  // azdsRouteAs.Value returns an iterable of strings, take the first
+                    var azdsRouteAs = this.httpContextAccessor.HttpContext.Request.Headers.First(p => string.Equals(p.Key, AzdsRouteKey, StringComparison.OrdinalIgnoreCase));
+                    request.Headers.Add(AzdsRouteKey, azdsRouteAs.Value.First());  // azdsRouteAs.Value returns an iterable of strings, take the first
                 }
                 catch (Exception e)
                 {
-                    throw new Exception($"Unable to attach the {AZDS_ROUTE_KEY} header to the IdentityGatewayClient Request.", e);
+                    throw new Exception($"Unable to attach the {AzdsRouteKey} header to the IdentityGatewayClient Request.", e);
                 }
             }
 

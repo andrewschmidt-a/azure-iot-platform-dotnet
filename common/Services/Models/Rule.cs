@@ -8,7 +8,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 {
     public class Rule : IComparable<Rule>
     {
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
 
         public Rule() { }
 
@@ -19,8 +19,8 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         [JsonIgnore]
         public string Id { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public string DateCreated { get; set; } = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
-        public string DateModified { get; set; } = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
+        public string DateCreated { get; set; } = DateTimeOffset.UtcNow.ToString(DateFormat);
+        public string DateModified { get; set; } = DateTimeOffset.UtcNow.ToString(DateFormat);
         public bool Enabled { get; set; } = false;
         public string Description { get; set; } = string.Empty;
         public string GroupId { get; set; } = string.Empty;

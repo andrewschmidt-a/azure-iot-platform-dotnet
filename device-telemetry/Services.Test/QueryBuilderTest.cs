@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
     public class QueryBuilderTest
     {
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void GetDocumentsSql_WithValidInput()
         {
             // Arrange
@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void GetDocumentsSql_WithNullIdProperty()
         {
             // Arrange
@@ -83,7 +83,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void FailToGetDocumentsSql_WithInvalidInput()
         {
             // Arrange
@@ -108,7 +108,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void GetCountSql_WithValidInput()
         {
             // Arrange
@@ -145,7 +145,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void GetCountSql_WithNullIdProperty()
         {
             // Arrange
@@ -180,7 +180,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void FailToGetCountSql_WithInvalidInput()
         {
             // Arrange

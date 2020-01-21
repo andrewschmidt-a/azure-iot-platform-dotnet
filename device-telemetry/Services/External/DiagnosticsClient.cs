@@ -16,9 +16,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
 {
     public class DiagnosticsClient : IDiagnosticsClient
     {
-        private const string TENANT_HEADER = "ApplicationTenantID";
-        private const string TENANT_ID = "TenantID";
-        private const int RETRY_SLEEP_MS = 500;
+        private const string TenantHeader = "ApplicationTenantID";
+        private const string TenantId = "TenantID";
+        private const int RetrySleepMilliseconds = 500;
         private readonly IHttpClient httpClient;
         private readonly ILogger logger;
         private readonly IHttpContextAccessor httpContextAccessor;
@@ -67,7 +67,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
                 request.SetUriFromString($"{this.serviceUrl}/diagnosticsevents");
 
                 string tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
-                request.Headers.Add(TENANT_HEADER, tenantId);
+                request.Headers.Add(TenantHeader, tenantId);
                 DiagnosticsRequestModel model = new DiagnosticsRequestModel
                 {
                     EventType = eventName,
@@ -91,7 +91,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
             {
                 request.SetUriFromString($"{this.serviceUrl}/status");
                 string tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
-                request.Headers.Add(TENANT_HEADER, tenantId);
+                request.Headers.Add(TenantHeader, tenantId);
                 var response = await this.httpClient.GetAsync(request);
 
                 if (response.IsError)
@@ -147,7 +147,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
                 int retriesLeft = this.maxRetries - retries;
                 string logString = $"";
                 logger.LogWarning("Failed to log to diagnostics: {errorMessage}. {retriesLeft} retries remaining", errorMessage, retriesLeft);
-                Thread.Sleep(RETRY_SLEEP_MS);
+                Thread.Sleep(RetrySleepMilliseconds);
             }
             else
             {

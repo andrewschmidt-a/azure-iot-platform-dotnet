@@ -17,8 +17,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AlarmsByRuleController : Controller
     {
-        private const int DEVICE_LIMIT = 1000;
-
+        private const int DeviceLimit = 1000;
         private readonly IAlarms alarmService;
         private readonly IRules ruleService;
         private readonly ILogger logger;
@@ -128,10 +127,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
              * storage type the limit will be different. DEVICE_LIMIT is CosmosDb
              * limit for the IN clause.
              */
-            if (deviceIds.Length > DEVICE_LIMIT)
+            if (deviceIds.Length > DeviceLimit)
             {
                 logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
-                throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
+                throw new BadRequestException("The number of devices cannot exceed " + DeviceLimit);
             }
 
             List<AlarmCountByRule> alarmsList
@@ -166,10 +165,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
              * storage type the limit will be different. DEVICE_LIMIT is CosmosDb
              * limit for the IN clause.
              */
-            if (deviceIds.Length > DEVICE_LIMIT)
+            if (deviceIds.Length > DeviceLimit)
             {
                 logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
-                throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
+                throw new BadRequestException("The number of devices cannot exceed " + DeviceLimit);
             }
 
             List<Alarm> alarmsList = await this.alarmService.ListByRuleAsync(

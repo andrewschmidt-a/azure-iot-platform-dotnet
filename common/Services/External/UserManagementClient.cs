@@ -8,7 +8,7 @@ namespace Mmm.Platform.IoT.Common.Services.External
 {
     public class UserManagementClient : IUserManagementClient
     {
-        private const string DEFAULT_USER_ID = "default";
+        private const string DefaultUserId = "default";
         private readonly IExternalRequestHelper requestHelper;
         private readonly string serviceUri;
 
@@ -29,7 +29,7 @@ namespace Mmm.Platform.IoT.Common.Services.External
             // Note: The DEFAULT_USER_ID is set to any value. The user management service doesn't
             // currently use the user ID information, but if this API is updated in the future, we
             // will need to grab the user ID from the request JWT token and pass in here.
-            string url = $"{this.serviceUri}/users/{DEFAULT_USER_ID}/token";
+            string url = $"{this.serviceUri}/users/{DefaultUserId}/token";
             TokenApiModel tokenModel = await this.requestHelper.ProcessRequestAsync<TokenApiModel>(HttpMethod.Get, url);
             return tokenModel.AccessToken;
         }

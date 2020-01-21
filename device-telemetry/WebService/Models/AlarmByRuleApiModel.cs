@@ -7,7 +7,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
 {
     public class AlarmByRuleApiModel
     {
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
         private DateTimeOffset created;
         private int count;
 
@@ -63,7 +63,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
         [JsonProperty(PropertyName = "Created")]
         public string Created
         {
-            get { return this.created.ToString(DATE_FORMAT); }
+            get { return this.created.ToString(DateFormat); }
             set { this.created = DateTimeOffset.Parse(value); }
         }
 

@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
 {
     public class ResultQuery : IQuery
     {
-        private const string DEVICE_ID_KEY = "DeviceId";
+        private const string DeviceIdKey = "DeviceId";
         private readonly List<Twin> results;
         private readonly List<string> deviceQueryResults;
 
@@ -20,7 +20,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
             for (int i = 0; i < numResults; i++)
             {
                 this.results.Add(ResultQuery.CreateTestTwin(i));
-                this.deviceQueryResults.Add($"{{'{DEVICE_ID_KEY}':'device{i}'}}");
+                this.deviceQueryResults.Add($"{{'{DeviceIdKey}':'device{i}'}}");
                 this.HasMoreResults = true;
             }
         }
@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
         public ResultQuery(List<Twin> twins)
         {
             this.results = twins;
-            this.deviceQueryResults = twins.Select(x => $"{{'{DEVICE_ID_KEY}':'device{x.DeviceId}'}}").ToList();
+            this.deviceQueryResults = twins.Select(x => $"{{'{DeviceIdKey}':'device{x.DeviceId}'}}").ToList();
             this.HasMoreResults = true;
         }
 

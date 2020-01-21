@@ -15,7 +15,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
 {
     public class DeviceGroupsConverter : Converter, IConverter
     {
-        private const string CSV_HEADER = "DeviceId,GroupId";
+        private const string CsvHeader = "DeviceId,GroupId";
         private readonly IIotHubManagerClient iotHubManager;
 
         public DeviceGroupsConverter(
@@ -116,7 +116,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                     return string.Join("\n", mapping.Value.Items.Select(device => $"{device.Id},{mapping.Key.Id}"));
                 }));
                 // Add the rows and the header together to complete the csv file content
-                fileContent = $"{CSV_HEADER}\n{fileContentRows}";
+                fileContent = $"{CsvHeader}\n{fileContentRows}";
             }
             catch (Exception e)
             {

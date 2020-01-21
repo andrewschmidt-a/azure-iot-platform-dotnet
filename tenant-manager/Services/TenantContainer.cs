@@ -22,23 +22,23 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         public readonly IStorageClient CosmosClient;
         public readonly ITableStorageClient TableStorageClient;
         public readonly IAppConfigurationHelper AppConfigHelper;
-        private const string IOT_DATABASE_ID = "iot";
-        private const string STORAGE_ADAPTER_DATABASE_ID = "pcs-storage";
-        private const string TENANT_TABLE_ID = "tenant";
-        private const string USER_TABLE_ID = "user";
-        private const string USER_SETTINGS_TABLE_ID = "userSettings";
-        private const string LAST_USED_SETTING_KEY = "LastUsedTenant";
-        private const string CREATED_ROLE = "[\"admin\"]";
+        private const string IotDatabaseId = "iot";
+        private const string StorageAdapterDatabaseId = "pcs-storage";
+        private const string TenantTableId = "tenant";
+        private const string UserTableId = "user";
+        private const string UserSettingsTableId = "userSettings";
+        private const string LastUsedSettingKey = "LastUsedTenant";
+        private const string CreatedRole = "[\"admin\"]";
         private string iotHubNameFormat = "iothub-{0}";  // format with a guid
         private string dpsNameFormat = "dps-{0}";  // format with a guid
         private string streamAnalyticsNameFormat = "sa-{0}";  // format with a guide
         private string appConfigCollectionKeyFormat = "tenant:{0}:{1}-collection";  // format with a guid and collection name
         private Dictionary<string, string> tenantCollections = new Dictionary<string, string>
         {
-            { "telemetry", IOT_DATABASE_ID },
-            { "twin-change", IOT_DATABASE_ID },
-            { "lifecycle", IOT_DATABASE_ID },
-            { "pcs", STORAGE_ADAPTER_DATABASE_ID }
+            { "telemetry", IotDatabaseId },
+            { "twin-change", IotDatabaseId },
+            { "lifecycle", IotDatabaseId },
+            { "pcs", StorageAdapterDatabaseId }
         };
 
         public TenantContainer(
@@ -64,7 +64,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         {
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
-            TenantModel tenant = await this.TableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
+            TenantModel tenant = await this.TableStorageClient.RetrieveAsync<TenantModel>(TenantTableId, partitionKey, tenantId);
             return tenant != null && tenant.IsIotHubDeployed;  // True if the tenant's IoTHub is fully deployed, false otherwise
         }
 
@@ -76,7 +76,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             // Create a new tenant and save it to table storage
             var tenant = new TenantModel(tenantId);
-            await this.TableStorageClient.InsertAsync<TenantModel>(TENANT_TABLE_ID, tenant);
+            await this.TableStorageClient.InsertAsync<TenantModel>(TenantTableId, tenant);
 
             // kick off provisioning runbooks
             await this.RunbookHelper.CreateIotHub(tenantId, iotHubName, dpsName);
@@ -85,7 +85,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             try
             {
-                await IdentityClient.AddTenantForUserAsync(userId, tenantId, CREATED_ROLE);
+                await IdentityClient.AddTenantForUserAsync(userId, tenantId, CreatedRole);
             }
             catch (Exception e)
             {
@@ -97,7 +97,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             try
             {
-                userSettings = await IdentityClient.GetSettingsForUserAsync(userId, LAST_USED_SETTING_KEY);
+                userSettings = await IdentityClient.GetSettingsForUserAsync(userId, LastUsedSettingKey);
             }
             catch (Exception e)
             {
@@ -108,7 +108,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 // Set the last used tenant to be this new tenant
                 try
                 {
-                    await IdentityClient.AddSettingsForUserAsync(userId, LAST_USED_SETTING_KEY, tenantId);
+                    await IdentityClient.AddSettingsForUserAsync(userId, LastUsedSettingKey, tenantId);
                 }
                 catch (Exception e)
                 {
@@ -154,7 +154,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             try
             {
                 // Load the tenant from table storage
-                var tenant = await this.TableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, tenantId.Substring(0, 1), tenantId);
+                var tenant = await this.TableStorageClient.RetrieveAsync<TenantModel>(TenantTableId, tenantId.Substring(0, 1), tenantId);
                 return tenant;
             }
             catch (Exception e)
@@ -176,7 +176,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 
             // Load the tenant from table storage
             string partitionKey = tenantId.Substring(0, 1);
-            TenantModel tenant = await this.TableStorageClient.RetrieveAsync<TenantModel>(TENANT_TABLE_ID, partitionKey, tenantId);
+            TenantModel tenant = await this.TableStorageClient.RetrieveAsync<TenantModel>(TenantTableId, partitionKey, tenantId);
             if (tenant != null && !tenant.IsIotHubDeployed && ensureFullyDeployed)
             {
                 // If the tenant iothub is not deployed, we should not be able to start the delete process
@@ -193,7 +193,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 try
                 {
-                    await this.TableStorageClient.DeleteAsync<TenantModel>(TENANT_TABLE_ID, tenant);
+                    await this.TableStorageClient.DeleteAsync<TenantModel>(TenantTableId, tenant);
                     deletionRecord["tenantTableStorage"] = true;
                 }
                 catch (Exception e)

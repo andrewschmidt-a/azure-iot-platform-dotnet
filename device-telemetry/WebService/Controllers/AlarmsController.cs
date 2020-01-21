@@ -16,9 +16,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AlarmsController : Controller
     {
-        private const int DEVICE_LIMIT = 1000;
-        private const int DELETE_LIMIT = 1000;
-
+        private const int DeviceLimit = 1000;
+        private const int DeleteLimit = 1000;
         private readonly IAlarms alarmService;
         private readonly ILogger logger;
 
@@ -115,7 +114,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
                 throw new InvalidInputException("Must give list of at least 1 id to delete");
             }
 
-            if (alarmList.Items.Count > DELETE_LIMIT)
+            if (alarmList.Items.Count > DeleteLimit)
             {
                 throw new InvalidInputException("Cannot delete more than 1000 alarms");
             }
@@ -138,10 +137,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
             if (skip == null) skip = 0;
             if (limit == null) limit = 1000;
 
-            if (deviceIds.Length > DEVICE_LIMIT)
+            if (deviceIds.Length > DeviceLimit)
             {
                 logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
-                throw new BadRequestException("The number of devices cannot exceed " + DEVICE_LIMIT);
+                throw new BadRequestException("The number of devices cannot exceed " + DeviceLimit);
             }
 
             List<Alarm> alarmsList = await this.alarmService.ListAsync(

@@ -11,7 +11,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
         public readonly ITenantContainer TenantContainer;
         public readonly IStreamAnalyticsHelper StreamAnalyticsHelper;
         public readonly IRunbookHelper RunbookHelper;
-        private const string SA_NAME_FORMAT = "sa-{0}";
+        private const string SaNameFormat = "sa-{0}";
 
         public AlertingContainer(
             ITenantContainer tenantContainer,
@@ -37,7 +37,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
 
             TenantModel tenant = await this.GetTenantFromContainerAsync(tenantId);
-            string saJobName = string.Format(SA_NAME_FORMAT, tenantId.Substring(0, 8));
+            string saJobName = string.Format(SaNameFormat, tenantId.Substring(0, 8));
             await this.RunbookHelper.CreateAlerting(tenantId, saJobName, tenant.IotHubName);
             return new StreamAnalyticsJobModel
             {

@@ -15,7 +15,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class PackageControllerTest : IDisposable
     {
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
         private readonly Mock<IStorage> mockStorage;
         private readonly PackagesController controller;
         private readonly Random rand;
@@ -29,7 +29,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("EdgeManifest", "filename", true, false)]
         [InlineData("EdgeManifest", "filename", false, true)]
         [InlineData("EdgeManifest", "filename", false, true, true)]
@@ -88,7 +88,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             const string name = "packageName";
             const PackageType type = PackageType.EdgeManifest;
             const string content = "{}";
-            string dateCreated = DateTime.UtcNow.ToString(DATE_FORMAT);
+            string dateCreated = DateTime.UtcNow.ToString(DateFormat);
 
             this.mockStorage
                 .Setup(x => x.GetPackageAsync(id))
@@ -125,7 +125,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             const PackageType type = PackageType.EdgeManifest;
             string config = string.Empty;
             const string content = "{}";
-            string dateCreated = DateTime.UtcNow.ToString(DATE_FORMAT);
+            string dateCreated = DateTime.UtcNow.ToString(DateFormat);
 
             int[] idx = new int[] { 0, 1, 2 };
             var packages = idx.Select(i => new PackageServiceModel()
@@ -168,7 +168,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             const string name = "packageName";
             const PackageType type = PackageType.DeviceConfiguration;
             const string content = "{}";
-            string dateCreated = DateTime.UtcNow.ToString(DATE_FORMAT);
+            string dateCreated = DateTime.UtcNow.ToString(DateFormat);
 
             int[] idx = new int[] { 0, 1, 2 };
             var packages = idx.Select(i => new PackageServiceModel()

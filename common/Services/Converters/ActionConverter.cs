@@ -9,8 +9,8 @@ namespace Mmm.Platform.IoT.Common.Services.Converters
 {
     public class ActionConverter : JsonConverter
     {
-        private const string ACTION_TYPE_KEY = "Type";
-        private const string PARAMETERS_KEY = "Parameters";
+        private const string ActionTypeKey = "Type";
+        private const string ParametersKey = "Parameters";
 
         public override bool CanWrite => false;
         public override bool CanRead => true;
@@ -26,10 +26,10 @@ namespace Mmm.Platform.IoT.Common.Services.Converters
 
             var actionType = Enum.Parse(
                 typeof(ActionType),
-                jsonObject.GetValue(ACTION_TYPE_KEY).Value<string>(),
+                jsonObject.GetValue(ActionTypeKey).Value<string>(),
                 true);
 
-            var parameters = jsonObject.GetValue(PARAMETERS_KEY).ToString();
+            var parameters = jsonObject.GetValue(ParametersKey).ToString();
 
             switch (actionType)
             {

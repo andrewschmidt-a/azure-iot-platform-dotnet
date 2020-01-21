@@ -10,16 +10,13 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
 {
     public class EmailActionSettings : IActionSettings
     {
-        private const string IS_ENABLED_KEY = "IsEnabled";
-        private const string OFFICE365_CONNECTOR_URL_KEY = "Office365ConnectorUrl";
-        private const string APP_PERMISSIONS_KEY = "ApplicationPermissionsAssigned";
-
+        private const string IsEnabledKey = "IsEnabled";
+        private const string Office365ConnectorUrlKey = "Office365ConnectorUrl";
+        private const string ApplicationPermissionsKey = "ApplicationPermissionsAssigned";
         private readonly IAzureResourceManagerClient resourceManagerClient;
         private readonly AppConfig config;
         private readonly ILogger logger;
 
-        // In order to initialize all settings, call InitializeAsync
-        // to retrieve all settings due to async call to logic app
         public EmailActionSettings(
             IAzureResourceManagerClient resourceManagerClient,
             AppConfig config,
@@ -54,12 +51,12 @@ namespace Mmm.Platform.IoT.Config.Services.Models.Actions
                 applicationPermissionsAssigned = false;
                 logger.LogError(notAuthorizedException, "The application is not authorized and has not been assigned owner permissions for the subscription. Go to the Azure portal and assign the application as an owner in order to retrieve the token.");
             }
-            this.Settings.Add(IS_ENABLED_KEY, office365IsEnabled);
-            this.Settings.Add(APP_PERMISSIONS_KEY, applicationPermissionsAssigned);
+            this.Settings.Add(IsEnabledKey, office365IsEnabled);
+            this.Settings.Add(ApplicationPermissionsKey, applicationPermissionsAssigned);
 
             // Get Url for Office 365 Logic App Connector setup in portal
             // for display on the webui for one-time setup.
-            this.Settings.Add(OFFICE365_CONNECTOR_URL_KEY, config.ConfigService.ConfigServiceActions.Office365ConnectionUrl);
+            this.Settings.Add(Office365ConnectorUrlKey, config.ConfigService.ConfigServiceActions.Office365ConnectionUrl);
 
             logger.LogDebug("Email action settings retrieved: {settings}. Email setup status: {status}", office365IsEnabled, Settings);
         }

@@ -10,7 +10,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
 {
     public class HttpResponse : IHttpResponse
     {
-        private const int TOO_MANY_REQUESTS = 429;
+        private const int Error429TooManyRequests = 429;
 
         public HttpResponse()
         {
@@ -51,7 +51,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
 
         public bool IsRetriableError => this.StatusCode == HttpStatusCode.NotFound ||
                                         this.StatusCode == HttpStatusCode.RequestTimeout ||
-                                        (int)this.StatusCode == TOO_MANY_REQUESTS;
+                                        (int)this.StatusCode == Error429TooManyRequests;
 
         public bool IsBadRequest => (int)this.StatusCode == 400;
         public bool IsUnauthorized => (int)this.StatusCode == 401;

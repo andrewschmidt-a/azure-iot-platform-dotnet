@@ -13,7 +13,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class SolutionSettingsController : Controller
     {
-        private static readonly string ACCESS_CONTROL_EXPOSE_HEADERS = "Access-Control-Expose-Headers";
+        private static readonly string AccessControlExposeHeaders = "Access-Control-Expose-Headers";
         private readonly IStorage storage;
         private readonly IActions actions;
 
@@ -64,9 +64,9 @@ namespace Mmm.Platform.IoT.Config.WebService.Controllers
                 model.Type = this.Request.ContentType;
             }
 
-            if (this.Request.Headers[Logo.NAME_HEADER] != StringValues.Empty)
+            if (this.Request.Headers[Logo.NameHeader] != StringValues.Empty)
             {
-                model.Name = this.Request.Headers[Logo.NAME_HEADER];
+                model.Name = this.Request.Headers[Logo.NameHeader];
             }
 
             var response = await this.storage.SetLogoAsync(model);
@@ -84,12 +84,12 @@ namespace Mmm.Platform.IoT.Config.WebService.Controllers
         {
             if (model.Name != null)
             {
-                this.Response.Headers.Add(Logo.NAME_HEADER, model.Name);
+                this.Response.Headers.Add(Logo.NameHeader, model.Name);
             }
-            this.Response.Headers.Add(Logo.IS_DEFAULT_HEADER, model.IsDefault.ToString());
+            this.Response.Headers.Add(Logo.IsDefaultHeader, model.IsDefault.ToString());
             this.Response.Headers.Add(
-                SolutionSettingsController.ACCESS_CONTROL_EXPOSE_HEADERS,
-                Logo.NAME_HEADER + "," + Logo.IS_DEFAULT_HEADER);
+                SolutionSettingsController.AccessControlExposeHeaders,
+                Logo.NameHeader + "," + Logo.IsDefaultHeader);
             if (model.Image != null)
             {
                 var bytes = model.ConvertImageToBytes();

@@ -9,8 +9,8 @@ namespace Mmm.Platform.IoT.Config.Services.External
 {
     public class DeviceTelemetryClient : IDeviceTelemetryClient
     {
-        private const string TENANT_HEADER = "ApplicationTenantID";
-        private const string TENANT_ID = "TenantID";
+        private const string TenantHeader = "ApplicationTenantID";
+        private const string TenantId = "TenantID";
         private readonly IHttpClientWrapper httpClient;
         private readonly string serviceUri;
 
@@ -38,7 +38,7 @@ namespace Mmm.Platform.IoT.Config.Services.External
             if (this.httpContextAccessor != null && this.httpClient != null)
             {
                 string tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
-                this.httpClient.SetHeaders(new Dictionary<string, string> { { TENANT_HEADER, tenantId } });
+                this.httpClient.SetHeaders(new Dictionary<string, string> { { TenantHeader, tenantId } });
             }
         }
     }

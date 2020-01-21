@@ -40,7 +40,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void GetAllReturnsExpectedUserTenantList()
         {
             // Arrange
@@ -80,7 +80,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void GetAllUsersReturnsExpectedUserTenantList()
         {
             // Arrange
@@ -110,7 +110,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void GetAllReturnsEmptyUserTenantList()
         {
             // Arrange
@@ -134,7 +134,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void GetReturnsExpectedUserTenant()
         {
             // Arrange
@@ -163,7 +163,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void GetReturnsEmptyUserTenant()
         {
             // Arrange
@@ -190,7 +190,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void CreateReturnsExpectedUserTenant()
         {
             // Arrange
@@ -230,7 +230,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void CreateHandlesNullUserIdAndReturnsExpectedUserTenant()
         {
             // Arrange
@@ -272,7 +272,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void CreateThrowsWhenUserTenantAlreadyExist()
         {
             // Arrange
@@ -291,7 +291,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void UpdateReturnsExpectedUserTenant()
         {
             // Arrange
@@ -305,7 +305,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [MemberData(nameof(GetRoleLists))]
         public async void UpdateDoesNotThrowWhenUserTenantRoleListIsNullOrEmptyOrWhitespace(string roles)
         {
@@ -318,7 +318,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void DeleteReturnsExpectedUserTenant()
         {
             // Arrange
@@ -337,7 +337,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void DeleteThrowsWhenUserTenantDoesNotExist()
         {
             // Arrange
@@ -356,7 +356,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async void DeleteAllReturnsExpectedUserTenantList()
         {
             // Arrange

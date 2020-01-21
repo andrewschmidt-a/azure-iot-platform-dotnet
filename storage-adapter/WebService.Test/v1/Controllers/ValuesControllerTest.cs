@@ -35,7 +35,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetTest()
         {
             var collectionId = this.rand.NextString();
@@ -76,7 +76,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllTest()
         {
             var collectionId = this.rand.NextString();
@@ -137,7 +137,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PostTest()
         {
             var collectionId = this.rand.NextString();
@@ -187,7 +187,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PutNewTest()
         {
             var collectionId = this.rand.NextString();
@@ -235,7 +235,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PutUpdateTest()
         {
             var collectionId = this.rand.NextString();
@@ -285,7 +285,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task DeleteTest()
         {
             var collectionId = this.rand.NextString();
@@ -308,7 +308,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ValidateKeyTest()
         {
             await Assert.ThrowsAsync<BadRequestException>(async () =>

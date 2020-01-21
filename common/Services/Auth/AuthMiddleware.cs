@@ -17,11 +17,11 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 {
     public class AuthMiddleware
     {
-        private const string AUTH_HEADER_PREFIX = "Bearer ";
-        private const string AUTH_HEADER = "Authorization";
-        private const string EXT_RESOURCES_HEADER = "X-Source";
-        private const string ERROR401 = @"{""Error"":""Authentication required""}";
-        private const string ERROR503_AUTH = @"{""Error"":""Authentication service not available""}";
+        private const string AuthHeaderPrefix = "Bearer ";
+        private const string AuthHeader = "Authorization";
+        private const string ExternalResourcesHeader = "X-Source";
+        private const string Error401NotAuthenticated = @"{""Error"":""Authentication required""}";
+        private const string Error503AuthenticationServiceNotAvailable = @"{""Error"":""Authentication service not available""}";
         private readonly RequestDelegate requestDelegate;
         private readonly IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan;
         private readonly AppConfig config;
@@ -88,7 +88,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             {
                 return this.requestDelegate(context);
             }
-            if (!context.Request.Headers.ContainsKey(EXT_RESOURCES_HEADER))
+            if (!context.Request.Headers.ContainsKey(ExternalResourcesHeader))
             {
                 // This is a service to service request running in the private
                 // network, so we skip the auth required for user requests
@@ -114,22 +114,22 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             {
                 context.Response.StatusCode = (int)HttpStatusCode.ServiceUnavailable;
                 context.Response.Headers["Content-Type"] = "application/json";
-                context.Response.WriteAsync(ERROR503_AUTH);
+                context.Response.WriteAsync(Error503AuthenticationServiceNotAvailable);
                 return Task.CompletedTask;
             }
 
-            if (context.Request.Headers.ContainsKey(AUTH_HEADER))
+            if (context.Request.Headers.ContainsKey(AuthHeader))
             {
-                header = context.Request.Headers[AUTH_HEADER].SingleOrDefault();
+                header = context.Request.Headers[AuthHeader].SingleOrDefault();
             }
             else
             {
                 logger.LogError("Authorization header not found");
             }
 
-            if (header != null && header.StartsWith(AUTH_HEADER_PREFIX))
+            if (header != null && header.StartsWith(AuthHeaderPrefix))
             {
-                token = header.Substring(AUTH_HEADER_PREFIX.Length).Trim();
+                token = header.Substring(AuthHeaderPrefix.Length).Trim();
             }
             else
             {
@@ -145,7 +145,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
             logger.LogWarning("Authentication required");
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             context.Response.Headers["Content-Type"] = "application/json";
-            context.Response.WriteAsync(ERROR401);
+            context.Response.WriteAsync(Error401NotAuthenticated);
 
             return Task.CompletedTask;
         }

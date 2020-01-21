@@ -15,28 +15,28 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 {
     public class TimeSeriesClient : ITimeSeriesClient
     {
-        private const string TSI_DATE_FORMAT = "yyyy-MM-ddTHH:mm:ssZ";
-        private const string TIME_SERIES_API_VERSION_PREFIX = "api-version";
-        private const string TIME_SERIES_TIMEOUT_PREFIX = "timeout";
-        private const string EVENTS_KEY = "events";
-        private const string AVAILABILITY_KEY = "availability";
-        private const string SEARCH_SPAN_KEY = "searchSpan";
-        private const string PREDICATE_KEY = "predicate";
-        private const string PREDICATE_STRING_KEY = "predicateString";
-        private const string TOP_KEY = "top";
-        private const string SORT_KEY = "sort";
-        private const string SORT_INPUT_KEY = "input";
-        private const string BUILT_IN_PROP_KEY = "builtInProperty";
-        private const string BUILT_IN_PROP_VALUE = "$ts";
-        private const string SORT_ORDER_KEY = "order";
-        private const string COUNT_KEY = "count";
-        private const string FROM_KEY = "from";
-        private const string TO_KEY = "to";
-        private const int CLOCK_CALIBRATION_IN_SECONDS = 5;
-        private const string DEVICE_ID_KEY = "iothub-connection-device-id";
-        private const string AAD_CLIENT_ID_KEY = "ApplicationClientId";
-        private const string AAD_CLIENT_SECRET_KEY = "ApplicationClientSecret";
-        private const string AAD_TENANT_KEY = "Tenant";
+        private const string TsiDateFormat = "yyyy-MM-ddTHH:mm:ssZ";
+        private const string TimeSeriesApiVersionPrefix = "api-version";
+        private const string TimeSeriesTimeoutPrefix = "timeout";
+        private const string EventsKey = "events";
+        private const string AvailabilityKey = "availability";
+        private const string SearchSpanKey = "searchSpan";
+        private const string PredicateKey = "predicate";
+        private const string PredicateStringKey = "predicateString";
+        private const string TopKey = "top";
+        private const string SortKey = "sort";
+        private const string SortInputKey = "input";
+        private const string BuiltInPropKey = "builtInProperty";
+        private const string BuiltInPropValue = "$ts";
+        private const string SortOrderKey = "order";
+        private const string CountKey = "count";
+        private const string FromKey = "from";
+        private const string ToKey = "to";
+        private const int ClockCalibrationInSeconds = 5;
+        private const string DeviceIdKey = "iothub-connection-device-id";
+        private const string AadClientIdKey = "ApplicationClientId";
+        private const string AadClientSecretKey = "ApplicationClientSecret";
+        private const string AadTenantKey = "Tenant";
         private readonly string authority;
         private readonly string applicationId;
         private readonly string applicationSecret;
@@ -83,9 +83,9 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 
                 // Prepare request
                 HttpRequest request = this.PrepareRequest(
-                    AVAILABILITY_KEY,
+                    AvailabilityKey,
                     accessToken,
-                    new[] { TIME_SERIES_TIMEOUT_PREFIX + "=" + this.timeout });
+                    new[] { TimeSeriesTimeoutPrefix + "=" + this.timeout });
 
                 var response = await this.httpClient.GetAsync(request);
 
@@ -121,9 +121,9 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 
             // Prepare request
             HttpRequest request = this.PrepareRequest(
-                EVENTS_KEY,
+                EventsKey,
                 accessToken,
-                new[] { TIME_SERIES_TIMEOUT_PREFIX + "=" + this.timeout });
+                new[] { TimeSeriesTimeoutPrefix + "=" + this.timeout });
 
             request.SetContent(
                 this.PrepareInput(from, to, order, skip, limit, deviceIds));
@@ -142,7 +142,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             if (this.token != null)
             {
                 // Add buffer time to renew token, built in buffer for AAD is 5 mins
-                if (DateTimeOffset.UtcNow.AddSeconds(CLOCK_CALIBRATION_IN_SECONDS) < this.token.ExpiresOn)
+                if (DateTimeOffset.UtcNow.AddSeconds(ClockCalibrationInSeconds) < this.token.ExpiresOn)
                 {
                     return this.token.AccessToken;
                 }
@@ -153,8 +153,8 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
                 string.IsNullOrEmpty(this.tenant))
             {
                 throw new InvalidConfigurationException(
-                    $"Active Directory properties '{AAD_CLIENT_ID_KEY}', '{AAD_CLIENT_SECRET_KEY}' " +
-                    $"and '{AAD_TENANT_KEY}' are not set.");
+                    $"Active Directory properties '{AadClientIdKey}', '{AadClientSecretKey}' " +
+                    $"and '{AadTenantKey}' are not set.");
             }
 
             var authenticationContext = new AuthenticationContext(
@@ -176,7 +176,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             catch (Exception e)
             {
                 var msg = "Unable to retrieve token with Active Directory properties" +
-                          $"'{AAD_CLIENT_ID_KEY}', '{AAD_CLIENT_SECRET_KEY}' and '{AAD_TENANT_KEY}'.";
+                          $"'{AadClientIdKey}', '{AadClientSecretKey}' and '{AadTenantKey}'.";
                 throw new InvalidConfigurationException(msg, e);
             }
         }
@@ -199,9 +199,9 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             if (!to.HasValue) to = DateTimeOffset.UtcNow;
             if (!from.HasValue) from = DateTimeOffset.MinValue;
 
-            result.Add(SEARCH_SPAN_KEY, new JObject(
-                new JProperty(FROM_KEY, from.Value.ToString(TSI_DATE_FORMAT)),
-                new JProperty(TO_KEY, to.Value.ToString(TSI_DATE_FORMAT))));
+            result.Add(SearchSpanKey, new JObject(
+                new JProperty(FromKey, from.Value.ToString(TsiDateFormat)),
+                new JProperty(ToKey, to.Value.ToString(TsiDateFormat))));
 
             // Add the predicate for devices
             if (deviceIds != null && deviceIds.Length > 0)
@@ -209,31 +209,31 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
                 var devicePredicates = new List<string>();
                 foreach (var deviceId in deviceIds)
                 {
-                    devicePredicates.Add($"[{DEVICE_ID_KEY}].String='{deviceId}'");
+                    devicePredicates.Add($"[{DeviceIdKey}].String='{deviceId}'");
                 }
 
                 var predicateStringObject = new JObject
                 {
-                    new JProperty(PREDICATE_STRING_KEY, string.Join(" OR ", devicePredicates))
+                    new JProperty(PredicateStringKey, string.Join(" OR ", devicePredicates))
                 };
-                result.Add(PREDICATE_KEY, predicateStringObject);
+                result.Add(PredicateKey, predicateStringObject);
             }
 
             // Add the limit top clause
-            JObject builtInPropObject = new JObject(new JProperty(BUILT_IN_PROP_KEY, BUILT_IN_PROP_VALUE));
+            JObject builtInPropObject = new JObject(new JProperty(BuiltInPropKey, BuiltInPropValue));
             JArray sortArray = new JArray(new JObject
                 {
-                    { SORT_INPUT_KEY, builtInPropObject },
-                    { SORT_ORDER_KEY, order }
+                    { SortInputKey, builtInPropObject },
+                    { SortOrderKey, order }
                 });
 
             JObject topObject = new JObject
             {
-                { SORT_KEY, sortArray },
-                { COUNT_KEY, skip + limit }
+                { SortKey, sortArray },
+                { CountKey, skip + limit }
             };
 
-            result.Add(TOP_KEY, topObject);
+            result.Add(TopKey, topObject);
 
             return result;
         }
@@ -246,7 +246,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             string accessToken,
             string[] queryArgs = null)
         {
-            string args = TIME_SERIES_API_VERSION_PREFIX + "=" + this.apiVersion;
+            string args = TimeSeriesApiVersionPrefix + "=" + this.apiVersion;
             if (queryArgs != null && queryArgs.Any())
             {
                 args += "&" + string.Join("&", queryArgs);

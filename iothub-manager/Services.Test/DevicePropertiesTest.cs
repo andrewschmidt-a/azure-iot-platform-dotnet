@@ -18,7 +18,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         private Random rand = new Random();
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetListAsyncTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -50,7 +50,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UpdateListAsyncTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -96,7 +96,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task TryRecreateListAsyncSkipByTimeTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -119,8 +119,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             mockStorageAdapterClient
                 .Setup(x => x.GetAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY)))
+                    It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                    It.Is<string>(s => s == DeviceProperties.CacheKey)))
                 .ReturnsAsync(new ValueApiModel
                 {
                     ETag = this.rand.NextString(),
@@ -141,13 +141,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             mockStorageAdapterClient
                 .Verify(
                     x => x.GetAsync(
-                        It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                        It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
+                        It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                        It.Is<string>(s => s == DeviceProperties.CacheKey)),
                     Times.Once);
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task TryRecreateListAsyncSkipByConflictTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -171,8 +171,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             mockStorageAdapterClient
                 .Setup(x => x.GetAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY)))
+                    It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                    It.Is<string>(s => s == DeviceProperties.CacheKey)))
                 .ReturnsAsync(new ValueApiModel
                 {
                     ETag = this.rand.NextString(),
@@ -192,13 +192,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             mockStorageAdapterClient
                 .Verify(
                     x => x.GetAsync(
-                        It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                        It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
+                        It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                        It.Is<string>(s => s == DeviceProperties.CacheKey)),
                     Times.Once);
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task TryRecreateListAsyncTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -226,8 +226,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             mockStorageAdapterClient
                 .Setup(x => x.GetAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY)))
+                    It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                    It.Is<string>(s => s == DeviceProperties.CacheKey)))
                 .ReturnsAsync(new ValueApiModel
                 {
                     ETag = etagOld,
@@ -249,8 +249,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             mockStorageAdapterClient
                 .Setup(x => x.UpdateAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY),
+                    It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                    It.Is<string>(s => s == DeviceProperties.CacheKey),
                     It.Is<string>(s => Rebuilding(s)),
                     It.Is<string>(s => s == etagOld)))
                 .ReturnsAsync(new ValueApiModel
@@ -260,8 +260,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             mockStorageAdapterClient
                 .Setup(x => x.UpdateAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY),
+                    It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                    It.Is<string>(s => s == DeviceProperties.CacheKey),
                     It.Is<string>(s => !Rebuilding(s)),
                     It.Is<string>(s => s == etagLock)))
                 .ReturnsAsync(new ValueApiModel
@@ -287,8 +287,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             mockStorageAdapterClient
                 .Verify(
                     x => x.GetAsync(
-                        It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                        It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
+                        It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                        It.Is<string>(s => s == DeviceProperties.CacheKey)),
                     Times.Once);
 
             mockDevices
@@ -297,8 +297,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             mockStorageAdapterClient
                 .Verify(
                     x => x.UpdateAsync(
-                        It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                        It.Is<string>(s => s == DeviceProperties.CACHE_KEY),
+                        It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                        It.Is<string>(s => s == DeviceProperties.CacheKey),
                         It.Is<string>(s => Rebuilding(s)),
                         It.Is<string>(s => s == etagOld)),
                     Times.Once);

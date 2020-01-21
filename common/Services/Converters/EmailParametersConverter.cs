@@ -7,7 +7,7 @@ namespace Mmm.Platform.IoT.Common.Services.Converters
 {
     public class EmailParametersConverter : JsonConverter
     {
-        private const string RECIPIENTS_KEY = "Recipients";
+        private const string RecipientsKey = "Recipients";
 
         public override bool CanWrite => false;
 
@@ -26,9 +26,9 @@ namespace Mmm.Platform.IoT.Common.Services.Converters
             Dictionary<string, object> result =
                 new Dictionary<string, object>(jsonObject.ToObject<Dictionary<string, object>>(), StringComparer.OrdinalIgnoreCase);
 
-            if (result.ContainsKey(RECIPIENTS_KEY) && result[RECIPIENTS_KEY] != null)
+            if (result.ContainsKey(RecipientsKey) && result[RecipientsKey] != null)
             {
-                result[RECIPIENTS_KEY] = ((JArray)result[RECIPIENTS_KEY]).ToObject<List<string>>();
+                result[RecipientsKey] = ((JArray)result[RecipientsKey]).ToObject<List<string>>();
             }
 
             return result;

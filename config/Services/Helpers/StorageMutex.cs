@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
 {
     public class StorageMutex : IStorageMutex
     {
-        private const string LAST_MODIFIED_KEY = "$modified";
+        private const string LastModifiedKey = "$modified";
         private readonly IStorageAdapterClient storageClient;
         private readonly ILogger logger;
 
@@ -36,7 +36,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
                     // The motivation of timeout check is to recovery from stale state due to instance crash
                     if (Convert.ToBoolean(model.Data))
                     {
-                        if (model.Metadata.ContainsKey(LAST_MODIFIED_KEY) && DateTimeOffset.TryParse(model.Metadata[LAST_MODIFIED_KEY], out var lastModified))
+                        if (model.Metadata.ContainsKey(LastModifiedKey) && DateTimeOffset.TryParse(model.Metadata[LastModifiedKey], out var lastModified))
                         {
                             // Timestamp retrieved successfully, nothing to do
                             logger.LogInformation($"Mutex {collectionId}.{key} was occupied. Last modified = {lastModified}");

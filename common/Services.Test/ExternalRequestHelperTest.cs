@@ -17,9 +17,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 {
     public class ExternalRequestHelperTest
     {
-        private const string MOCK_SERVICE_URI = @"http://mockuri";
-        private const string AZDS_ROUTE_KEY = "azds-route-as";
-
+        private const string MockServiceUri = @"http://mockuri";
+        private const string AzdsRouteKey = "azds-route-as";
         private readonly Mock<IHttpClient> mockHttpClient;
         private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
         private readonly IExternalRequestHelper externalRequestHelper;
@@ -35,7 +34,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 .Returns(new Dictionary<object, object>() { { "TenantID", "test_tenant" } });
             this.mockHttpContextAccessor
                 .Setup(t => t.HttpContext.Request.Headers)
-                .Returns(new HeaderDictionary() { { AZDS_ROUTE_KEY, "mockDevSpace" } });
+                .Returns(new HeaderDictionary() { { AzdsRouteKey, "mockDevSpace" } });
             this.rand = new Random();
 
             this.externalRequestHelper = new ExternalRequestHelper(
@@ -44,11 +43,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ProcessNoModelRequest()
         {
             string path = this.rand.NextString();
-            string url = $"{MOCK_SERVICE_URI}/{path}";
+            string url = $"{MockServiceUri}/{path}";
 
             HttpMethod method = HttpMethod.Get;
 
@@ -74,11 +73,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ProcessModelRequest()
         {
             string path = this.rand.NextString();
-            string url = $"{MOCK_SERVICE_URI}/{path}";
+            string url = $"{MockServiceUri}/{path}";
 
             string value = this.rand.NextString();
             ExternalRequestModel content = new ExternalRequestModel

@@ -7,7 +7,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 {
     public class SchemaModel
     {
-        private const string DEVICE_ID_KEY = "iothub-connection-device-id";
+        private const string DeviceIdKey = "iothub-connection-device-id";
         private readonly HashSet<string> excludeProperties;
 
         public SchemaModel()
@@ -66,14 +66,14 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         {
             for (int i = 0; i < this.Properties.Count; i++)
             {
-                if (this.Properties[i].Name.Equals(DEVICE_ID_KEY, StringComparison.OrdinalIgnoreCase))
+                if (this.Properties[i].Name.Equals(DeviceIdKey, StringComparison.OrdinalIgnoreCase))
                 {
                     return i;
                 }
             }
 
             throw new TimeSeriesParseException("No device id found in message schema from Time Series Insights. " +
-                                            $"Device id property '{DEVICE_ID_KEY}' is missing.");
+                                            $"Device id property '{DeviceIdKey}' is missing.");
         }
     }
 }

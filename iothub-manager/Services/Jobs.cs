@@ -17,8 +17,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
     public class Jobs : IJobs
     {
-        private const string DEVICE_DETAILS_QUERY_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}'";
-        private const string DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}' and devices.jobs.status = '{1}'";
+        private const string DeviceDetailsQueryFormat = "select * from devices.jobs where devices.jobs.jobId = '{0}'";
+        private const string DeviceDetailsQueryWithStatusFormat = "select * from devices.jobs where devices.jobs.jobId = '{0}' and devices.jobs.status = '{1}'";
         private IDeviceProperties deviceProperties;
         private ITenantConnectionHelper tenantConnectionHelper;
 
@@ -76,8 +76,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             // Device job query by status of 'Completed' or 'Cancelled' will fail with InternalServerError
             // https://github.com/Azure/azure-iot-sdk-csharp/issues/257
             var queryString = deviceJobStatus.HasValue ?
-                string.Format(DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT, jobId, deviceJobStatus.Value.ToString().ToLower()) :
-                string.Format(DEVICE_DETAILS_QUERY_FORMAT, jobId);
+                string.Format(DeviceDetailsQueryWithStatusFormat, jobId, deviceJobStatus.Value.ToString().ToLower()) :
+                string.Format(DeviceDetailsQueryFormat, jobId);
 
             var query = tenantConnectionHelper.GetRegistry().CreateQuery(queryString);
 

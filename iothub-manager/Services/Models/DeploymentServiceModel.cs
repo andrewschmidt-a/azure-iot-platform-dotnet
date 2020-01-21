@@ -13,23 +13,23 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 throw new ArgumentException($"Invalid deploymentId provided {deployment.Id}");
             }
 
-            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.DEPLOYMENT_NAME_LABEL);
-            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.DEPLOYMENT_GROUP_ID_LABEL);
-            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.RM_CREATED_LABEL);
+            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.DeploymentNameLabel);
+            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.DeploymentGroupIdLabel);
+            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.RmCreatedLabel);
 
             this.Id = deployment.Id;
-            this.Name = deployment.Labels[ConfigurationsHelper.DEPLOYMENT_NAME_LABEL];
+            this.Name = deployment.Labels[ConfigurationsHelper.DeploymentNameLabel];
             this.CreatedDateTimeUtc = deployment.CreatedTimeUtc;
-            this.DeviceGroupId = deployment.Labels[ConfigurationsHelper.DEPLOYMENT_GROUP_ID_LABEL];
+            this.DeviceGroupId = deployment.Labels[ConfigurationsHelper.DeploymentGroupIdLabel];
 
-            if (deployment.Labels.ContainsKey(ConfigurationsHelper.DEPLOYMENT_GROUP_NAME_LABEL))
+            if (deployment.Labels.ContainsKey(ConfigurationsHelper.DeploymentGroupNameLabel))
             {
-                this.DeviceGroupName = deployment.Labels[ConfigurationsHelper.DEPLOYMENT_GROUP_NAME_LABEL];
+                this.DeviceGroupName = deployment.Labels[ConfigurationsHelper.DeploymentGroupNameLabel];
             }
 
-            if (deployment.Labels.ContainsKey(ConfigurationsHelper.DEPLOYMENT_PACKAGE_NAME_LABEL))
+            if (deployment.Labels.ContainsKey(ConfigurationsHelper.DeploymentPackageNameLabel))
             {
-                this.PackageName = deployment.Labels[ConfigurationsHelper.DEPLOYMENT_PACKAGE_NAME_LABEL];
+                this.PackageName = deployment.Labels[ConfigurationsHelper.DeploymentPackageNameLabel];
             }
 
             this.Priority = deployment.Priority;
@@ -43,9 +43,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 this.PackageType = PackageType.DeviceConfiguration;
             }
 
-            if (deployment.Labels.ContainsKey(ConfigurationsHelper.CONFIG_TYPE_LABEL))
+            if (deployment.Labels.ContainsKey(ConfigurationsHelper.ConfigTypeLabel))
             {
-                this.ConfigType = deployment.Labels[ConfigurationsHelper.CONFIG_TYPE_LABEL];
+                this.ConfigType = deployment.Labels[ConfigurationsHelper.ConfigTypeLabel];
             }
             else
             {

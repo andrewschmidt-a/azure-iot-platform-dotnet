@@ -13,16 +13,13 @@ namespace Mmm.Platform.IoT.Config.Services.Test
 {
     public class AzureResourceManagerClientTest
     {
-        private const string MOCK_SUBSCRIPTION_ID = @"123456abcd";
-        private const string MOCK_RESOURCE_GROUP = @"example-name";
-        private const string MOCK_ARM_ENDPOINT_URL = @"https://management.azure.com";
-        private const string MOCK_API_VERSION = @"2016-06-01";
-
+        private const string MockSubscriptionId = @"123456abcd";
+        private const string MockResourceGroup = @"example-name";
+        private const string MockArmEndpointUrl = @"https://management.azure.com";
+        private const string MockApiVersion = @"2016-06-01";
         private readonly string logicAppTestConnectionUrl;
-
         private readonly Mock<IHttpClient> mockHttpClient;
         private readonly Mock<IUserManagementClient> mockUserManagementClient;
-
         private readonly AzureResourceManagerClient client;
 
         public AzureResourceManagerClientTest()
@@ -37,25 +34,25 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     {
                         ConfigServiceActions = new ConfigServiceActionsConfig
                         {
-                            SubscriptionId = MOCK_SUBSCRIPTION_ID,
-                            SolutionName = MOCK_RESOURCE_GROUP,
-                            ArmEndpointUrl = MOCK_ARM_ENDPOINT_URL,
-                            ManagementApiVersion = MOCK_API_VERSION
+                            SubscriptionId = MockSubscriptionId,
+                            SolutionName = MockResourceGroup,
+                            ArmEndpointUrl = MockArmEndpointUrl,
+                            ManagementApiVersion = MockApiVersion
                         }
                     }
                 },
                 this.mockUserManagementClient.Object);
 
-            this.logicAppTestConnectionUrl = $"{MOCK_ARM_ENDPOINT_URL}" +
-                                        $"/subscriptions/{MOCK_SUBSCRIPTION_ID}/" +
-                                        $"resourceGroups/{MOCK_RESOURCE_GROUP}/" +
+            this.logicAppTestConnectionUrl = $"{MockArmEndpointUrl}" +
+                                        $"/subscriptions/{MockSubscriptionId}/" +
+                                        $"resourceGroups/{MockResourceGroup}/" +
                                         "providers/Microsoft.Web/connections/" +
                                         "office365-connector/extensions/proxy/testconnection?" +
-                                        $"api-version={MOCK_API_VERSION}";
+                                        $"api-version={MockApiVersion}";
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetOffice365IsEnabled_ReturnsTrueIfEnabled()
         {
             // Arrange
@@ -83,7 +80,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetOffice365IsEnabled_ReturnsFalseIfDisabled()
         {
             // Arrange
@@ -111,7 +108,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetOffice365IsEnabled_ThrowsIfNotAuthorizd()
         {
             // Arrange

@@ -16,9 +16,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
     public class AlarmsTest
     {
-        private const string TENANT_INFO_KEY = "tenant";
-        private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
-        private const string TENANT_ID = "test_tenant";
+        private const string TenantInfoKey = "tenant";
+        private const string TelemetryCollectionKey = "telemetry-collection";
+        private const string TenantId = "test_tenant";
         private readonly Mock<IStorageClient> storageClient;
         private readonly Mock<ILogger<Alarms>> logger;
         private readonly IAlarms alarms;
@@ -43,8 +43,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             this.appConfigHelper = new Mock<IAppConfigurationHelper>();
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
-                { { "TenantID", TENANT_ID } });
-            this.appConfigHelper.Setup(t => t.GetValue($"{TENANT_INFO_KEY}:{TENANT_ID}:{TELEMETRY_COLLECTION_KEY}")).Returns("collection");
+                { { "TenantID", TenantId } });
+            this.appConfigHelper.Setup(t => t.GetValue($"{TenantInfoKey}:{TenantId}:{TelemetryCollectionKey}")).Returns("collection");
 
 
             logger = new Mock<ILogger<Alarms>>();
@@ -55,7 +55,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
          * Test basic functionality of delete alarms by id.
          */
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void BasicDelete()
         {
             // Arrange
@@ -85,7 +85,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
          * Verify if delete alarm by id fails once it will retry
         */
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task DeleteSucceedsTransientExceptionAsync()
         {
             // Arrange
@@ -114,7 +114,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
          * exception will be thrown.
          */
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task DeleteFailsAfter3ExceptionsAsync()
         {
             // Arrange
@@ -141,7 +141,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ThrowsOnInvalidInput()
         {
             // Arrange

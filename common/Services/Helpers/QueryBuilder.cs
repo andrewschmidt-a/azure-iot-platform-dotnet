@@ -10,7 +10,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
 {
     public class QueryBuilder
     {
-        private const string INVALID_CHARACTER = @"[^A-Za-z0-9:;.,_\-@]";
+        private const string InvalidCharacterRegex = @"[^A-Za-z0-9:;.,_\-@]";
 
         public static SqlQuerySpec GetDocumentsSql(
             string schemaName,
@@ -180,7 +180,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
         {
             input = input.Trim();
 
-            if (Regex.IsMatch(input, INVALID_CHARACTER))
+            if (Regex.IsMatch(input, InvalidCharacterRegex))
             {
                 throw new InvalidInputException($"Input '{input}' contains invalid characters.");
             }

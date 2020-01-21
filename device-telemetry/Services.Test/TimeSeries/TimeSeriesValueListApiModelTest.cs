@@ -12,7 +12,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
         private readonly string tsiSampleEventsFile = $"TimeSeries{Path.DirectorySeparatorChar}TimeSeriesEvents.json";
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void ConvertsToMessageList_WhenMultipleDeviceTypes()
         {
             // Arrange
@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void ConvertsToMessageList_WithSkipValue()
         {
             // Arrange

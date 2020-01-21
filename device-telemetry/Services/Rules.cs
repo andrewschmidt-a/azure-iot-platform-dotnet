@@ -19,8 +19,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
     public class Rules : IRules
     {
-        public const string STORAGE_COLLECTION = "rules";
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        public const string StorageCollection = "rules";
+        private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
         private readonly IStorageAdapterClient storage;
         private readonly ILogger logger;
         private readonly IAsaManagerClient asaManager;
@@ -89,11 +89,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             var item = JsonConvert.SerializeObject(existing);
             await this.storage.UpdateAsync(
-                STORAGE_COLLECTION,
+                StorageCollection,
                 existing.Id,
                 item,
                 existing.ETag);
-            await this.asaManager.BeginConversionAsync(STORAGE_COLLECTION);
+            await this.asaManager.BeginConversionAsync(StorageCollection);
             LogEventAndRuleCountToDiagnostics("Rule_Deleted");
         }
 
@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         {
             InputValidator.Validate(id);
 
-            var item = await this.storage.GetAsync(STORAGE_COLLECTION, id);
+            var item = await this.storage.GetAsync(StorageCollection, id);
             var rule = this.Deserialize(item.Data);
 
             rule.ETag = item.ETag;
@@ -123,7 +123,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 InputValidator.Validate(groupId);
             }
 
-            var data = await this.storage.GetAllAsync(STORAGE_COLLECTION);
+            var data = await this.storage.GetAllAsync(StorageCollection);
             var ruleList = new List<Rule>();
             foreach (var item in data.Items)
             {
@@ -229,12 +229,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             rule.Validate();
 
             // Ensure dates are correct
-            rule.DateCreated = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
+            rule.DateCreated = DateTimeOffset.UtcNow.ToString(DateFormat);
             rule.DateModified = rule.DateCreated;
 
             var item = JsonConvert.SerializeObject(rule);
-            var result = await this.storage.CreateAsync(STORAGE_COLLECTION, item);
-            await this.asaManager.BeginConversionAsync(STORAGE_COLLECTION);
+            var result = await this.storage.CreateAsync(StorageCollection, item);
+            await this.asaManager.BeginConversionAsync(StorageCollection);
 
             Rule newRule = this.Deserialize(result.Data);
             newRule.ETag = result.ETag;
@@ -294,23 +294,23 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             // If rule does not exist and id is provided upsert rule with that id
             if (savedRule == null && rule.Id != null)
             {
-                rule.DateCreated = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
+                rule.DateCreated = DateTimeOffset.UtcNow.ToString(DateFormat);
                 rule.DateModified = rule.DateCreated;
             }
             else
             {
                 rule.DateCreated = savedRule.DateCreated;
-                rule.DateModified = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
+                rule.DateModified = DateTimeOffset.UtcNow.ToString(DateFormat);
             }
 
             // Save the updated rule if it exists or create new rule with id
             var item = JsonConvert.SerializeObject(rule);
             var result = await this.storage.UpdateAsync(
-                STORAGE_COLLECTION,
+                StorageCollection,
                 rule.Id,
                 item,
                 rule.ETag);
-            await this.asaManager.BeginConversionAsync(STORAGE_COLLECTION);
+            await this.asaManager.BeginConversionAsync(StorageCollection);
 
             Rule updatedRule = this.Deserialize(result.Data);
 
@@ -361,7 +361,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
         private async Task<int> GetRuleCountAsync()
         {
-            ValueListApiModel rules = await this.storage.GetAllAsync(STORAGE_COLLECTION);
+            ValueListApiModel rules = await this.storage.GetAllAsync(StorageCollection);
             int ruleCount = 0;
             foreach (var item in rules.Items)
             {

@@ -18,16 +18,16 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
     public class Alarms : IAlarms
     {
-        private const string MESSAGE_RECEIVED_KEY = "device.msg.received";
-        private const string RULE_ID_KEY = "rule.id";
-        private const string DEVICE_ID_KEY = "device.id";
-        private const string STATUS_KEY = "status";
-        private const string ALARM_SCHEMA_KEY = "alarm";
-        private const string ALARM_STATUS_OPEN = "open";
-        private const string ALARM_STATUS_ACKNOWLEDGED = "acknowledged";
-        private const string TENANT_INFO_KEY = "tenant";
-        private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
-        private const int DOC_QUERY_LIMIT = 1000;
+        private const string MessageReceivedKey = "device.msg.received";
+        private const string RuleIdKey = "rule.id";
+        private const string DeviceIdKey = "device.id";
+        private const string StatusKey = "status";
+        private const string AlarmSchemaKey = "alarm";
+        private const string AlarmStatusOpen = "open";
+        private const string AlarmStatusAcknowledged = "acknowledged";
+        private const string TenantInfoKey = "tenant";
+        private const string TelemetryCollectionKey = "telemetry-collection";
+        private const int DocumentQueryLimit = 1000;
         private readonly ILogger logger;
         private readonly IStorageClient storageClient;
         private readonly AppConfig config;
@@ -57,7 +57,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             get
             {
                 return this.appConfigurationHelper.GetValue(
-                    $"{TENANT_INFO_KEY}:{httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
+                    $"{TenantInfoKey}:{httpContextAccessor.HttpContext.Request.GetTenant()}:{TelemetryCollectionKey}");
             }
         }
 
@@ -76,19 +76,19 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             string[] devices)
         {
             var sql = QueryBuilder.GetDocumentsSql(
-                ALARM_SCHEMA_KEY,
+                AlarmSchemaKey,
                 null,
                 null,
                 from,
-                MESSAGE_RECEIVED_KEY,
+                MessageReceivedKey,
                 to,
-                MESSAGE_RECEIVED_KEY,
+                MessageReceivedKey,
                 order,
-                MESSAGE_RECEIVED_KEY,
+                MessageReceivedKey,
                 skip,
                 limit,
                 devices,
-                DEVICE_ID_KEY);
+                DeviceIdKey);
 
             logger.LogDebug("Created alarm query {sql}", sql);
 
@@ -124,19 +124,19 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             string[] devices)
         {
             var sql = QueryBuilder.GetDocumentsSql(
-                ALARM_SCHEMA_KEY,
+                AlarmSchemaKey,
                 id,
-                RULE_ID_KEY,
+                RuleIdKey,
                 from,
-                MESSAGE_RECEIVED_KEY,
+                MessageReceivedKey,
                 to,
-                MESSAGE_RECEIVED_KEY,
+                MessageReceivedKey,
                 order,
-                MESSAGE_RECEIVED_KEY,
+                MessageReceivedKey,
                 skip,
                 limit,
                 devices,
-                DEVICE_ID_KEY);
+                DeviceIdKey);
 
             logger.LogDebug("Created alarm by rule query {sql}", sql);
 
@@ -168,19 +168,19 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             string[] devices)
         {
             // build sql query to get open/acknowledged alarm count for rule
-            string[] statusList = { ALARM_STATUS_OPEN, ALARM_STATUS_ACKNOWLEDGED };
+            string[] statusList = { AlarmStatusOpen, AlarmStatusAcknowledged };
             var sql = QueryBuilder.GetCountSql(
-                ALARM_SCHEMA_KEY,
+                AlarmSchemaKey,
                 id,
-                RULE_ID_KEY,
+                RuleIdKey,
                 from,
-                MESSAGE_RECEIVED_KEY,
+                MessageReceivedKey,
                 to,
-                MESSAGE_RECEIVED_KEY,
+                MessageReceivedKey,
                 devices,
-                DEVICE_ID_KEY,
+                DeviceIdKey,
                 statusList,
-                STATUS_KEY);
+                StatusKey);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -202,7 +202,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             InputValidator.Validate(status);
 
             Document document = await this.GetDocumentByIdAsync(id);
-            document.SetPropertyValue(STATUS_KEY, status);
+            document.SetPropertyValue(StatusKey, status);
 
             document = await this.storageClient.UpsertDocumentAsync(
                 this.databaseName,
@@ -298,7 +298,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 null,
                 query,
                 0,
-                DOC_QUERY_LIMIT);
+                DocumentQueryLimit);
 
             if (documentList.Count > 0)
             {

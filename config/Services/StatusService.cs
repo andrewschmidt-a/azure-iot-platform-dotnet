@@ -13,7 +13,7 @@ namespace Mmm.Platform.IoT.Config.Services
 {
     public class StatusService : IStatusService
     {
-        private const bool ALLOW_INSECURE_SSL_SERVER = true;
+        private const bool AllowInsecureSslServer = true;
         private readonly ILogger logger;
         private readonly IHttpClient httpClient;
         private readonly AppConfig config;
@@ -166,7 +166,7 @@ namespace Mmm.Platform.IoT.Config.Services
             request.Options.Timeout = this.timeoutMS;
             if (path.ToLowerInvariant().StartsWith("https:"))
             {
-                request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
+                request.Options.AllowInsecureSSLServer = AllowInsecureSslServer;
             }
 
             logger.LogDebug("Prepare request {request}", request);

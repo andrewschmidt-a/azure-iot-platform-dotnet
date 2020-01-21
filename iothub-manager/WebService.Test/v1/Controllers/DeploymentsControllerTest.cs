@@ -15,15 +15,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
 {
     public class DeploymentsControllerTest : IDisposable
     {
-        private const string DEPLOYMENT_NAME = "depname";
-        private const string DEVICE_GROUP_ID = "dvcGroupId";
-        private const string DEVICE_GROUP_NAME = "dvcGroupName";
-        private const string DEVICE_GROUP_QUERY = "dvcGroupQuery";
-        private const string PACKAGE_CONTENT = "{}";
-        private const string PACKAGE_NAME = "packageName";
-        private const string DEPLOYMENT_ID = "dvcGroupId-packageId";
-        private const int PRIORITY = 10;
-        private const string CONFIG_TYPE = "Edge";
+        private const string DeploymentName = "depname";
+        private const string DeviceGroupId = "dvcGroupId";
+        private const string DeviceGroupName = "dvcGroupName";
+        private const string DeviceGroupQuery = "dvcGroupQuery";
+        private const string PackageContent = "{}";
+        private const string PackageName = "packageName";
+        private const string DeploymentId = "dvcGroupId-packageId";
+        private const int Priority = 10;
+        private const string ConfigurationType = "Edge";
         private readonly DeploymentsController deploymentsController;
         private readonly Mock<IDeployments> deploymentsMock;
         private bool disposedValue = false;
@@ -35,76 +35,76 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetDeploymentTest()
         {
             // Arrange
-            this.deploymentsMock.Setup(x => x.GetAsync(DEPLOYMENT_ID, false)).ReturnsAsync(new DeploymentServiceModel()
+            this.deploymentsMock.Setup(x => x.GetAsync(DeploymentId, false)).ReturnsAsync(new DeploymentServiceModel()
             {
-                Name = DEPLOYMENT_NAME,
-                DeviceGroupId = DEVICE_GROUP_ID,
-                DeviceGroupName = DEVICE_GROUP_NAME,
-                DeviceGroupQuery = DEVICE_GROUP_QUERY,
-                PackageContent = PACKAGE_CONTENT,
-                PackageName = PACKAGE_NAME,
-                Priority = PRIORITY,
-                Id = DEPLOYMENT_ID,
+                Name = DeploymentName,
+                DeviceGroupId = DeviceGroupId,
+                DeviceGroupName = DeviceGroupName,
+                DeviceGroupQuery = DeviceGroupQuery,
+                PackageContent = PackageContent,
+                PackageName = PackageName,
+                Priority = Priority,
+                Id = DeploymentId,
                 PackageType = PackageType.EdgeManifest,
-                ConfigType = CONFIG_TYPE,
+                ConfigType = ConfigurationType,
                 CreatedDateTimeUtc = DateTime.UtcNow
             });
 
             // Act
-            var result = await this.deploymentsController.GetAsync(DEPLOYMENT_ID);
+            var result = await this.deploymentsController.GetAsync(DeploymentId);
 
             // Assert
-            Assert.Equal(DEPLOYMENT_ID, result.DeploymentId);
-            Assert.Equal(DEPLOYMENT_NAME, result.Name);
-            Assert.Equal(PACKAGE_CONTENT, result.PackageContent);
-            Assert.Equal(PACKAGE_NAME, result.PackageName);
-            Assert.Equal(DEVICE_GROUP_ID, result.DeviceGroupId);
-            Assert.Equal(DEVICE_GROUP_NAME, result.DeviceGroupName);
-            Assert.Equal(PRIORITY, result.Priority);
+            Assert.Equal(DeploymentId, result.DeploymentId);
+            Assert.Equal(DeploymentName, result.Name);
+            Assert.Equal(PackageContent, result.PackageContent);
+            Assert.Equal(PackageName, result.PackageName);
+            Assert.Equal(DeviceGroupId, result.DeviceGroupId);
+            Assert.Equal(DeviceGroupName, result.DeviceGroupName);
+            Assert.Equal(Priority, result.Priority);
             Assert.Equal(PackageType.EdgeManifest, result.PackageType);
-            Assert.Equal(CONFIG_TYPE, result.ConfigType);
+            Assert.Equal(ConfigurationType, result.ConfigType);
             Assert.True((DateTimeOffset.UtcNow - result.CreatedDateTimeUtc).TotalSeconds < 5);
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task VerifyGroupAndPackageNameLabelsTest()
         {
             // Arrange
-            this.deploymentsMock.Setup(x => x.GetAsync(DEPLOYMENT_ID, false)).ReturnsAsync(new DeploymentServiceModel()
+            this.deploymentsMock.Setup(x => x.GetAsync(DeploymentId, false)).ReturnsAsync(new DeploymentServiceModel()
             {
-                Name = DEPLOYMENT_NAME,
-                DeviceGroupId = DEVICE_GROUP_ID,
-                DeviceGroupName = DEVICE_GROUP_NAME,
-                DeviceGroupQuery = DEVICE_GROUP_QUERY,
-                PackageContent = PACKAGE_CONTENT,
-                Priority = PRIORITY,
-                Id = DEPLOYMENT_ID,
+                Name = DeploymentName,
+                DeviceGroupId = DeviceGroupId,
+                DeviceGroupName = DeviceGroupName,
+                DeviceGroupQuery = DeviceGroupQuery,
+                PackageContent = PackageContent,
+                Priority = Priority,
+                Id = DeploymentId,
                 PackageType = PackageType.EdgeManifest,
-                ConfigType = CONFIG_TYPE,
+                ConfigType = ConfigurationType,
                 CreatedDateTimeUtc = DateTime.UtcNow
             });
 
             // Act
-            var result = await this.deploymentsController.GetAsync(DEPLOYMENT_ID);
+            var result = await this.deploymentsController.GetAsync(DeploymentId);
 
             // Assert
-            Assert.Equal(DEPLOYMENT_ID, result.DeploymentId);
-            Assert.Equal(DEPLOYMENT_NAME, result.Name);
-            Assert.Equal(PACKAGE_CONTENT, result.PackageContent);
-            Assert.Equal(DEVICE_GROUP_ID, result.DeviceGroupId);
-            Assert.Equal(PRIORITY, result.Priority);
+            Assert.Equal(DeploymentId, result.DeploymentId);
+            Assert.Equal(DeploymentName, result.Name);
+            Assert.Equal(PackageContent, result.PackageContent);
+            Assert.Equal(DeviceGroupId, result.DeviceGroupId);
+            Assert.Equal(Priority, result.Priority);
             Assert.Equal(PackageType.EdgeManifest, result.PackageType);
-            Assert.Equal(CONFIG_TYPE, result.ConfigType);
+            Assert.Equal(ConfigurationType, result.ConfigType);
             Assert.True((DateTimeOffset.UtcNow - result.CreatedDateTimeUtc).TotalSeconds < 5);
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(5)]
@@ -126,14 +126,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
             {
                 deploymentsList.Add(new DeploymentServiceModel()
                 {
-                    Name = DEPLOYMENT_NAME + i,
-                    DeviceGroupId = DEVICE_GROUP_ID + i,
-                    DeviceGroupQuery = DEVICE_GROUP_QUERY + i,
-                    PackageContent = PACKAGE_CONTENT + i,
-                    Priority = PRIORITY + i,
-                    Id = DEPLOYMENT_ID + i,
+                    Name = DeploymentName + i,
+                    DeviceGroupId = DeviceGroupId + i,
+                    DeviceGroupQuery = DeviceGroupQuery + i,
+                    PackageContent = PackageContent + i,
+                    Priority = Priority + i,
+                    Id = DeploymentId + i,
                     PackageType = PackageType.EdgeManifest,
-                    ConfigType = CONFIG_TYPE,
+                    ConfigType = ConfigurationType,
                     CreatedDateTimeUtc = DateTime.UtcNow,
                     DeploymentMetrics = deploymentMetrics
                 });
@@ -150,21 +150,21 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
             for (var i = 0; i < numDeployments; i++)
             {
                 var result = results.Items[i];
-                Assert.Equal(DEPLOYMENT_ID + i, result.DeploymentId);
-                Assert.Equal(DEPLOYMENT_NAME + i, result.Name);
-                Assert.Equal(DEVICE_GROUP_QUERY + i, result.DeviceGroupQuery);
-                Assert.Equal(DEVICE_GROUP_ID + i, result.DeviceGroupId);
-                Assert.Equal(PACKAGE_CONTENT + i, result.PackageContent);
-                Assert.Equal(PRIORITY + i, result.Priority);
+                Assert.Equal(DeploymentId + i, result.DeploymentId);
+                Assert.Equal(DeploymentName + i, result.Name);
+                Assert.Equal(DeviceGroupQuery + i, result.DeviceGroupQuery);
+                Assert.Equal(DeviceGroupId + i, result.DeviceGroupId);
+                Assert.Equal(PackageContent + i, result.PackageContent);
+                Assert.Equal(Priority + i, result.Priority);
                 Assert.Equal(PackageType.EdgeManifest, result.PackageType);
-                Assert.Equal(CONFIG_TYPE, result.ConfigType);
+                Assert.Equal(ConfigurationType, result.ConfigType);
                 Assert.True((DateTimeOffset.UtcNow - result.CreatedDateTimeUtc).TotalSeconds < 5);
                 Assert.Equal(5, result.Metrics.SystemMetrics.Count());
             }
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("depName", "dvcGroupId", "dvcQuery", "pkgContent", 10, false)]
         [InlineData("", "dvcGroupId", "dvcQuery", "pkgContent", 10, true)]
         [InlineData("depName", "", "dvcQuery", "pkgContent", 10, true)]
@@ -189,7 +189,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                     model.DeviceGroupName == deviceGroupName &&
                     model.Name == name &&
                     model.PackageType == PackageType.EdgeManifest &&
-                    model.ConfigType == CONFIG_TYPE)))
+                    model.ConfigType == ConfigurationType)))
                 .ReturnsAsync(new DeploymentServiceModel()
                 {
                     Name = name,
@@ -200,7 +200,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                     Priority = priority,
                     Id = deploymentId,
                     PackageType = PackageType.EdgeManifest,
-                    ConfigType = CONFIG_TYPE,
+                    ConfigType = ConfigurationType,
                     CreatedDateTimeUtc = DateTime.UtcNow
                 });
 
@@ -212,7 +212,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                 DeviceGroupName = deviceGroupName,
                 PackageContent = packageContent,
                 PackageType = PackageType.EdgeManifest,
-                ConfigType = CONFIG_TYPE,
+                ConfigType = ConfigurationType,
                 Priority = priority
             };
 
@@ -233,13 +233,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                 Assert.Equal(packageContent, result.PackageContent);
                 Assert.Equal(priority, result.Priority);
                 Assert.Equal(PackageType.EdgeManifest, result.PackageType);
-                Assert.Equal(CONFIG_TYPE, result.ConfigType);
+                Assert.Equal(ConfigurationType, result.ConfigType);
                 Assert.True((DateTimeOffset.UtcNow - result.CreatedDateTimeUtc).TotalSeconds < 5);
             }
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("depName", "dvcGroupId", "dvcQuery", "pkgContent", -1)]
         public async Task PostInvalidDeploymentTest(
             string name,

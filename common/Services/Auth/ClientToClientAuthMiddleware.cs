@@ -6,8 +6,8 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 {
     public class ClientToClientAuthMiddleware
     {
-        private const string TENANT_HEADER = "ApplicationTenantID";
-        private const string TENANT_KEY = "TenantID";
+        private const string TenantHeader = "ApplicationTenantID";
+        private const string TenantKey = "TenantID";
         private readonly ILogger logger;
         private RequestDelegate requestDelegate;
 
@@ -19,7 +19,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
         public Task Invoke(HttpContext context)
         {
-            string tenantId = context.Request.Headers[TENANT_HEADER].ToString();
+            string tenantId = context.Request.Headers[TenantHeader].ToString();
 
             context.Request.SetTenant(tenantId);
             return this.requestDelegate(context);

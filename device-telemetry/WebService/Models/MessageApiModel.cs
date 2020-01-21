@@ -7,7 +7,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
 {
     public class MessageApiModel
     {
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
         private DateTimeOffset time;
 
         public MessageApiModel(
@@ -34,7 +34,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
         public string DeviceId { get; set; }
 
         [JsonProperty(PropertyName = "Time")]
-        public string Time => this.time.ToString(DATE_FORMAT);
+        public string Time => this.time.ToString(DateFormat);
 
         [JsonProperty(PropertyName = "Data")]
         public JObject Data { get; set; }

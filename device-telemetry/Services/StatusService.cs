@@ -15,14 +15,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
     public class StatusService : IStatusService
     {
-        private const string STORAGE_TYPE_KEY = "StorageType";
-        private const string TIME_SERIES_KEY = "tsi";
-        private const string TIME_SERIES_EXPLORER_URL_KEY = "TsiExplorerUrl";
-        private const string TIME_SERIES_EXPLORER_URL_SEPARATOR_CHAR = ".";
-
-        private const bool ALLOW_INSECURE_SSL_SERVER = true;
-        private readonly int timeoutMS = 10000;
-
+        private const string StorageTypeKey = "StorageType";
+        private const string TimeSeriesKey = "tsi";
+        private const string TimeSeriesExplorerUrlKey = "TsiExplorerUrl";
+        private const string TimeSeriesExplorerUrlSeparatorCharacter = ".";
+        private const bool AllowInsecureSslServer = true;
+        private readonly int timeoutInMilliseconds = 10000;
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly IHttpClient httpClient;
@@ -87,7 +85,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             // Add Time Series Dependencies if needed
             if (this.config.DeviceTelemetryService.Messages.TelemetryStorageType.Equals(
-                TIME_SERIES_KEY,
+                TimeSeriesKey,
                 StringComparison.OrdinalIgnoreCase))
             {
                 // Check connection to Time Series Insights
@@ -96,11 +94,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
                 // Add Time Series Insights explorer url
                 var timeSeriesFqdn = this.config.DeviceTelemetryService.TimeSeries.TsiDataAccessFqdn;
-                var environmentId = timeSeriesFqdn.Substring(0, timeSeriesFqdn.IndexOf(TIME_SERIES_EXPLORER_URL_SEPARATOR_CHAR));
+                var environmentId = timeSeriesFqdn.Substring(0, timeSeriesFqdn.IndexOf(TimeSeriesExplorerUrlSeparatorCharacter));
                 explorerUrl = this.config.DeviceTelemetryService.TimeSeries.ExplorerUrl +
                     "?environmentId=" + environmentId +
                     "&tid=" + this.config.Global.AzureActiveDirectory.TenantId;
-                result.Properties.Add(TIME_SERIES_EXPLORER_URL_KEY, explorerUrl);
+                result.Properties.Add(TimeSeriesExplorerUrlKey, explorerUrl);
             }
 
             // Check access to Storage
@@ -169,10 +167,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             request.AddHeader(HttpRequestHeader.Referer.ToString(), "Device Telemetry " + this.GetType().FullName);
             request.SetUriFromString(path);
             request.Options.EnsureSuccess = false;
-            request.Options.Timeout = this.timeoutMS;
+            request.Options.Timeout = this.timeoutInMilliseconds;
             if (path.ToLowerInvariant().StartsWith("https:"))
             {
-                request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
+                request.Options.AllowInsecureSSLServer = AllowInsecureSslServer;
             }
 
             logger.LogDebug("Prepare request {request}", request);

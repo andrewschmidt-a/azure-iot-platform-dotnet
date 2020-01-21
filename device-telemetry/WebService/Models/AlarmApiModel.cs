@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
     {
         [JsonProperty(PropertyName = "$metadata", Order = 1000)]
         public Dictionary<string, string> Metadata;
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
         private DateTimeOffset dateCreated;
         private DateTimeOffset dateModified;
 
@@ -45,10 +45,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
         public string Id { get; set; }
 
         [JsonProperty(PropertyName = "DateCreated")]
-        public string DateCreated => this.dateCreated.ToString(DATE_FORMAT);
+        public string DateCreated => this.dateCreated.ToString(DateFormat);
 
         [JsonProperty(PropertyName = "DateModified")]
-        public string DateModified => this.dateModified.ToString(DATE_FORMAT);
+        public string DateModified => this.dateModified.ToString(DateFormat);
 
         [JsonProperty(PropertyName = "Description")]
         public string Description { get; set; }

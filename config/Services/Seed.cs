@@ -17,11 +17,10 @@ namespace Mmm.Platform.IoT.Config.Services
 {
     public class Seed : ISeed
     {
-        private const string SEED_COLLECTION_ID = "solution-settings";
-        private const string MUTEX_KEY = "seedMutex";
-        private const string COMPLETED_FLAG_KEY = "seedCompleted";
+        private const string SeedCollectionId = "solution-settings";
+        private const string MutexKey = "seedMutex";
+        private const string CompletedFlagKey = "seedCompleted";
         private readonly TimeSpan mutexTimeout = TimeSpan.FromMinutes(5);
-
         private readonly AppConfig config;
         private readonly IStorageMutex mutex;
         private readonly IStorage storage;
@@ -55,7 +54,7 @@ namespace Mmm.Platform.IoT.Config.Services
                 return;
             }
 
-            if (!await this.mutex.EnterAsync(SEED_COLLECTION_ID, MUTEX_KEY, this.mutexTimeout))
+            if (!await this.mutex.EnterAsync(SeedCollectionId, MutexKey, this.mutexTimeout))
             {
                 logger.LogInformation("Seed skipped (conflict)");
                 return;
@@ -77,7 +76,7 @@ namespace Mmm.Platform.IoT.Config.Services
             }
             finally
             {
-                await this.mutex.LeaveAsync(SEED_COLLECTION_ID, MUTEX_KEY);
+                await this.mutex.LeaveAsync(SeedCollectionId, MutexKey);
             }
         }
 
@@ -85,7 +84,7 @@ namespace Mmm.Platform.IoT.Config.Services
         {
             try
             {
-                await this.storageClient.GetAsync(SEED_COLLECTION_ID, COMPLETED_FLAG_KEY);
+                await this.storageClient.GetAsync(SeedCollectionId, CompletedFlagKey);
                 return true;
             }
             catch (ResourceNotFoundException)
@@ -96,7 +95,7 @@ namespace Mmm.Platform.IoT.Config.Services
 
         private async Task SetCompletedFlagAsync()
         {
-            await this.storageClient.UpdateAsync(SEED_COLLECTION_ID, COMPLETED_FLAG_KEY, "true", "*");
+            await this.storageClient.UpdateAsync(SeedCollectionId, CompletedFlagKey, "true", "*");
         }
 
         private async Task SeedAsync()

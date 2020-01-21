@@ -12,7 +12,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ModulesController : Controller
     {
-        private const string CONTINUATION_TOKEN_NAME = "x-ms-continuation";
+        private const string ContinuationTokenName = "x-ms-continuation";
         private readonly IDevices devices;
 
         public ModulesController(IDevices devices)
@@ -28,9 +28,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
         public async Task<TwinPropertiesListApiModel> GetModuleTwinsAsync([FromQuery] string query)
         {
             string continuationToken = string.Empty;
-            if (this.Request.Headers.ContainsKey(CONTINUATION_TOKEN_NAME))
+            if (this.Request.Headers.ContainsKey(ContinuationTokenName))
             {
-                continuationToken = this.Request.Headers[CONTINUATION_TOKEN_NAME].FirstOrDefault();
+                continuationToken = this.Request.Headers[ContinuationTokenName].FirstOrDefault();
             }
 
             return new TwinPropertiesListApiModel(

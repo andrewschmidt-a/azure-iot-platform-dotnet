@@ -13,7 +13,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
     public class StatusService : IStatusService
     {
-        private const bool ALLOW_INSECURE_SSL_SERVER = true;
+        private const bool AllowInsecureSslServer = true;
         private readonly int timeoutMS = 10000;
 
         private readonly IDevices devices;
@@ -131,7 +131,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             request.Options.Timeout = this.timeoutMS;
             if (path.ToLowerInvariant().StartsWith("https:"))
             {
-                request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
+                request.Options.AllowInsecureSSLServer = AllowInsecureSslServer;
             }
 
             logger.LogDebug("Prepare request {request}", request);

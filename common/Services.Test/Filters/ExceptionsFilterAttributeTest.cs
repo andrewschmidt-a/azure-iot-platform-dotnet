@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test.Filters
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void Doesnt_Fail_When_StackTraces_AreNull()
         {
             // Arrange

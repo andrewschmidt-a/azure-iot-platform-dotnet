@@ -64,7 +64,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("not-a-valid-uri")]
         [InlineData(null)]
         [InlineData("")]
@@ -79,7 +79,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("x")]
         [InlineData("7")]
         [InlineData("")]
@@ -95,7 +95,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void AuthorizeRedirectsToRedirectUri()
         {
             // Arrange
@@ -120,7 +120,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("not-a-valid-uri")]
         [InlineData(null)]
         [InlineData("")]
@@ -135,7 +135,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void LogoutRedirectsToRedirectUri()
         {
             // Arrange
@@ -147,7 +147,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("not-a-valid-auth-header")]
         [InlineData(null)]
         [InlineData("")]
@@ -162,7 +162,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [MemberData(nameof(GetInvalidAuthHeaders))]
         public async Task SwitchTenantThrowsWhenAuthorizationHeaderTokenNotReadableOrValid(string invalidAuthHeader)
         {
@@ -178,7 +178,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [MemberData(nameof(GetJwtSecurityTokens))]
 #pragma warning disable xUnit1026
         public async Task SwitchTenantThrowsWhenTenantAccessNotAllowed(JwtSecurityToken jwtSecurityToken)
@@ -195,7 +195,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task SwitchTenantMintsNewTokenWithNewTenant()
         {
             // Arrange
@@ -222,7 +222,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
 #pragma warning disable xUnit1026
         public async Task ErrorInClientCredentialsAuthentication()
 #pragma warning restore xUnit1026
@@ -238,7 +238,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task SuccessClientCredentialsAuthentication()
         {
             // Arrange

@@ -15,9 +15,8 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 {
     public class StorageClient : IStorageClient, IDisposable
     {
-        private const string CONNECTION_STRING_VALUE_REGEX = @"^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$";
-        private const string STORAGE_PARTITION_KEY = "/deviceId";
-
+        private const string ConnectionStringValueRegex = @"^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$";
+        private const string StoragePartitionKey = "/deviceId";
         private readonly ILogger logger;
         private Uri storageUri;
         private string storagePrimaryKey;
@@ -57,7 +56,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             collectionInfo.IndexingPolicy = new IndexingPolicy(
                 new Index[] { index });
             collectionInfo.Id = id;
-            collectionInfo.PartitionKey.Paths.Add(STORAGE_PARTITION_KEY);
+            collectionInfo.PartitionKey.Paths.Add(StoragePartitionKey);
 
             // Azure Cosmos DB collections can be reserved with
             // throughput specified in request units/second.
@@ -303,7 +302,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 
             try
             {
-                Match match = Regex.Match(config.Global.CosmosDb.DocumentDbConnectionString, CONNECTION_STRING_VALUE_REGEX);
+                Match match = Regex.Match(config.Global.CosmosDb.DocumentDbConnectionString, ConnectionStringValueRegex);
 
                 // Get the storage uri from the regular expression match
                 Uri storageUriEndpoint;

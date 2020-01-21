@@ -13,9 +13,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
     public class StatusService : IStatusService
     {
-        private const bool ALLOW_INSECURE_SSL_SERVER = true;
-        private const string AUTH_NAME = "Auth";
-
+        private const bool AllowInsecureSslServer = true;
+        private const string AuthName = "Auth";
         private readonly int timeoutMS = 10000;
         private readonly ILogger logger;
         private readonly IHttpClient httpClient;
@@ -47,9 +46,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             {
                 // Check access to Auth
                 var authResult = await this.PingServiceAsync(
-                    AUTH_NAME,
+                    AuthName,
                     config.ExternalDependencies.AuthServiceUrl);
-                SetServiceStatus(AUTH_NAME, authResult, result, errors);
+                SetServiceStatus(AuthName, authResult, result, errors);
                 result.Properties.Add("UserManagementApiUrl", config.ExternalDependencies.AuthServiceUrl);
             }
 
@@ -114,7 +113,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             request.Options.Timeout = this.timeoutMS;
             if (path.ToLowerInvariant().StartsWith("https:"))
             {
-                request.Options.AllowInsecureSSLServer = ALLOW_INSECURE_SSL_SERVER;
+                request.Options.AllowInsecureSSLServer = AllowInsecureSslServer;
             }
 
             logger.LogDebug("Prepare request {request}", request);

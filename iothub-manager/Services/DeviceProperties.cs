@@ -14,12 +14,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
     public class DeviceProperties : IDeviceProperties
     {
-        public const string CACHE_COLLECTION_ID = "device-twin-properties";
-        public const string CACHE_KEY = "cache";
-        public const string WHITELIST_TAG_PREFIX = "tags.";
-        public const string WHITELIST_REPORTED_PREFIX = "reported.";
-        public const string TAG_PREFIX = "Tags.";
-        public const string REPORTED_PREFIX = "Properties.Reported.";
+        public const string CacheCollectioId = "device-twin-properties";
+        public const string CacheKey = "cache";
+        public const string WhitelistTagPrefix = "tags.";
+        public const string WhitelistReportedPrefix = "reported.";
+        public const string TagPrefix = "Tags.";
+        public const string ReportedPrefix = "Properties.Reported.";
         public readonly IStorageAdapterClient StorageClient;
         public readonly IDevices Devices;
         public readonly ILogger Logger;
@@ -27,7 +27,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         public readonly long Ttl;
         public readonly long RebuildTimeout;
         public readonly TimeSpan ServiceQueryInterval = TimeSpan.FromSeconds(10);
-
         private DateTime devicePropertiesLastUpdated;
 
         public DeviceProperties(
@@ -49,11 +48,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             ValueApiModel response = new ValueApiModel();
             try
             {
-                response = await this.StorageClient.GetAsync(CACHE_COLLECTION_ID, CACHE_KEY);
+                response = await this.StorageClient.GetAsync(CacheCollectioId, CacheKey);
             }
             catch (ResourceNotFoundException)
             {
-                Logger.LogDebug($"Cache get: cache {CACHE_COLLECTION_ID}:{CACHE_KEY} was not found");
+                Logger.LogDebug($"Cache get: cache {CacheCollectioId}:{CacheKey} was not found");
             }
             catch (Exception e)
             {
@@ -63,7 +62,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
             if (string.IsNullOrEmpty(response?.Data))
             {
-                throw new Exception($"StorageAdapter did not return any data for {CACHE_COLLECTION_ID}:{CACHE_KEY}. The DeviceProperties cache has not been created for this tenant yet.");
+                throw new Exception($"StorageAdapter did not return any data for {CacheCollectioId}:{CacheKey}. The DeviceProperties cache has not been created for this tenant yet.");
             }
 
             DevicePropertyServiceModel properties = new DevicePropertyServiceModel();
@@ -79,11 +78,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             List<string> result = new List<string>();
             foreach (string tag in properties.Tags)
             {
-                result.Add(TAG_PREFIX + tag);
+                result.Add(TagPrefix + tag);
             }
             foreach (string reported in properties.Reported)
             {
-                result.Add(REPORTED_PREFIX + reported);
+                result.Add(ReportedPrefix + reported);
             }
             return result;
         }
@@ -92,8 +91,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         {
             var @lock = new StorageWriteLock<DevicePropertyServiceModel>(
                 this.StorageClient,
-                CACHE_COLLECTION_ID,
-                CACHE_KEY,
+                CacheCollectioId,
+                CacheKey,
                 (c, b) => c.Rebuilding = b,
                 m => this.ShouldCacheRebuild(force, m));
 
@@ -169,11 +168,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 ValueApiModel model = null;
                 try
                 {
-                    model = await this.StorageClient.GetAsync(CACHE_COLLECTION_ID, CACHE_KEY);
+                    model = await this.StorageClient.GetAsync(CacheCollectioId, CacheKey);
                 }
                 catch (ResourceNotFoundException)
                 {
-                    Logger.LogInformation($"Cache updating: cache {CACHE_COLLECTION_ID}:{CACHE_KEY} was not found");
+                    Logger.LogInformation($"Cache updating: cache {CacheCollectioId}:{CacheKey} was not found");
                 }
 
                 if (model != null)
@@ -209,7 +208,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 try
                 {
                     var response = await this.StorageClient.UpdateAsync(
-                        CACHE_COLLECTION_ID, CACHE_KEY, value, etag);
+                        CacheCollectioId, CacheKey, value, etag);
                     return JsonConvert.DeserializeObject<DevicePropertyServiceModel>(response.Data);
                 }
                 catch (ConflictingResourceException)
@@ -244,8 +243,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             /// tags = [tags.*]
             /// </example>
             var tags = whitelistItems
-                .Where(s => s.StartsWith(WHITELIST_TAG_PREFIX, StringComparison.OrdinalIgnoreCase))
-                .Select(s => s.Substring(WHITELIST_TAG_PREFIX.Length));
+                .Where(s => s.StartsWith(WhitelistTagPrefix, StringComparison.OrdinalIgnoreCase))
+                .Select(s => s.Substring(WhitelistTagPrefix.Length));
 
             /// <example>
             /// reported = [reported.Protocol,
@@ -254,8 +253,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             ///             reported.FirmwareUpdateStatus]
             /// </example>
             var reported = whitelistItems
-                .Where(s => s.StartsWith(WHITELIST_REPORTED_PREFIX, StringComparison.OrdinalIgnoreCase))
-                .Select(s => s.Substring(WHITELIST_REPORTED_PREFIX.Length));
+                .Where(s => s.StartsWith(WhitelistReportedPrefix, StringComparison.OrdinalIgnoreCase))
+                .Select(s => s.Substring(WhitelistReportedPrefix.Length));
 
             /// <example>
             /// fixedTags = []

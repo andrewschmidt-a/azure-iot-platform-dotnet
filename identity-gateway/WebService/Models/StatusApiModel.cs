@@ -8,7 +8,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
 {
     public sealed class StatusApiModel
     {
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
 
         public StatusApiModel(StatusServiceModel model)
         {
@@ -28,10 +28,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
         public StatusResultApiModel Status { get; set; }
 
         [JsonProperty(PropertyName = "CurrentTime", Order = 30)]
-        public string CurrentTime => DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
+        public string CurrentTime => DateTimeOffset.UtcNow.ToString(DateFormat);
 
         [JsonProperty(PropertyName = "StartTime", Order = 40)]
-        public string StartTime => Uptime.Start.ToString(DATE_FORMAT);
+        public string StartTime => Uptime.Start.ToString(DateFormat);
 
         [JsonProperty(PropertyName = "UpTime", Order = 50)]
         public long UpTime => Convert.ToInt64(Uptime.Duration.TotalSeconds);

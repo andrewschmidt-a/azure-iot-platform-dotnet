@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
 {
     public class RuleApiModel
     {
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
 
         public RuleApiModel() { }
 
@@ -60,10 +60,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
         public string Name { get; set; } = string.Empty;
 
         [JsonProperty(PropertyName = "DateCreated")]
-        public string DateCreated { get; set; } = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
+        public string DateCreated { get; set; } = DateTimeOffset.UtcNow.ToString(DateFormat);
 
         [JsonProperty(PropertyName = "DateModified")]
-        public string DateModified { get; set; } = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
+        public string DateModified { get; set; } = DateTimeOffset.UtcNow.ToString(DateFormat);
 
         [JsonProperty(PropertyName = "Enabled")]
         public bool Enabled { get; set; } = false;

@@ -19,8 +19,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 {
     public class IothubmanagerclientTest
     {
-        private const string MOCK_API_URL = "http://iothub:80/v1";
-
+        private const string MockApiUrl = "http://iothub:80/v1";
         private Mock<AppConfig> mockConfig;
         private Mock<IExternalRequestHelper> mockRequestHelper;
         private IIotHubManagerClient client;
@@ -32,7 +31,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             this.mockConfig = new Mock<AppConfig>();
             this.mockConfig
                 .Setup(c => c.ExternalDependencies.IotHubManagerServiceUrl)
-                .Returns(MOCK_API_URL);
+                .Returns(MockApiUrl);
 
             this.mockRequestHelper = new Mock<IExternalRequestHelper>();
 
@@ -59,7 +58,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             this.mockRequestHelper
                 .Setup(r => r.ProcessRequestAsync<DeviceListModel>(
                     It.Is<HttpMethod>(m => m == HttpMethod.Get),
-                    It.Is<string>(url => url.Contains(MOCK_API_URL)),
+                    It.Is<string>(url => url.Contains(MockApiUrl)),
                     It.Is<string>(s => s == tenantId)))
                 .ReturnsAsync(deviceListModel);
 
@@ -69,7 +68,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
                 .Verify(
                     r => r.ProcessRequestAsync<DeviceListModel>(
                         It.Is<HttpMethod>(m => m == HttpMethod.Get),
-                        It.Is<string>(url => url.Contains(MOCK_API_URL)),
+                        It.Is<string>(url => url.Contains(MockApiUrl)),
                         It.Is<string>(s => s == tenantId)),
                     Times.Once);
 

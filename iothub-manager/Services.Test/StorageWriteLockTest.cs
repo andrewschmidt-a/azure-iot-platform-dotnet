@@ -25,7 +25,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task NormalLoopTest()
         {
             var etagOriginal = this.rand.NextString();
@@ -126,7 +126,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task LockFailTest()
         {
             var etagOriginal = this.rand.NextString();
@@ -161,7 +161,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task LockConflictTest()
         {
             var etagOriginal = this.rand.NextString();
@@ -207,7 +207,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task WriteConflictTest()
         {
             var etagOriginal = this.rand.NextString();
@@ -304,7 +304,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ReleaseAsyncWithoutLockTest()
         {
             var @lock = new StorageWriteLock<ValueModel>(
@@ -318,7 +318,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ReleaseAndWriteAsyncWithoutLockTest()
         {
             var @lock = new StorageWriteLock<ValueModel>(

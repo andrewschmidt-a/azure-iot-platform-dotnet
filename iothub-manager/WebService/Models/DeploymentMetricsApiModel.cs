@@ -7,18 +7,18 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
 {
     public class DeploymentMetricsApiModel
     {
-        private const string APPLIED_METRICS_KEY = "appliedCount";
-        private const string TARGETED_METRICS_KEY = "targetedCount";
-        private const string SUCCESSFUL_METRICS_KEY = "reportedSuccessfulCount";
-        private const string FAILED_METRICS_KEY = "reportedFailedCount";
-        private const string PENDING_METRICS_KEY = "pendingCount";
+        private const string AppliedMetricsKey = "appliedCount";
+        private const string TargetedMetricsKey = "targetedCount";
+        private const string SuccessfulMetricsKey = "reportedSuccessfulCount";
+        private const string FailedMetricsKey = "reportedFailedCount";
+        private const string PendingMetricsKey = "pendingCount";
 
         public DeploymentMetricsApiModel(DeploymentMetricsServiceModel metricsServiceModel)
         {
             this.SystemMetrics = new Dictionary<string, long>();
 
-            this.SystemMetrics[APPLIED_METRICS_KEY] = 0;
-            this.SystemMetrics[TARGETED_METRICS_KEY] = 0;
+            this.SystemMetrics[AppliedMetricsKey] = 0;
+            this.SystemMetrics[TargetedMetricsKey] = 0;
 
             if (metricsServiceModel == null) return;
 
@@ -29,36 +29,36 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
 
             if (metricsServiceModel.DeviceMetrics != null)
             {
-                this.SystemMetrics[SUCCESSFUL_METRICS_KEY] =
+                this.SystemMetrics[SuccessfulMetricsKey] =
                     metricsServiceModel.DeviceMetrics[DeploymentStatus.Succeeded];
-                this.SystemMetrics[FAILED_METRICS_KEY] =
+                this.SystemMetrics[FailedMetricsKey] =
                     metricsServiceModel.DeviceMetrics[DeploymentStatus.Failed];
-                this.SystemMetrics[PENDING_METRICS_KEY] =
+                this.SystemMetrics[PendingMetricsKey] =
                     metricsServiceModel.DeviceMetrics[DeploymentStatus.Pending];
             }
 
             if (this.CustomMetrics != null)
             {
                 // Override System metrics if custom metric contain same metrics
-                if (this.CustomMetrics.ContainsKey(SUCCESSFUL_METRICS_KEY))
+                if (this.CustomMetrics.ContainsKey(SuccessfulMetricsKey))
                 {
-                    this.SystemMetrics[SUCCESSFUL_METRICS_KEY] =
-                        this.CustomMetrics[SUCCESSFUL_METRICS_KEY];
-                    this.CustomMetrics.Remove(SUCCESSFUL_METRICS_KEY);
+                    this.SystemMetrics[SuccessfulMetricsKey] =
+                        this.CustomMetrics[SuccessfulMetricsKey];
+                    this.CustomMetrics.Remove(SuccessfulMetricsKey);
                 }
 
-                if (this.CustomMetrics.ContainsKey(FAILED_METRICS_KEY))
+                if (this.CustomMetrics.ContainsKey(FailedMetricsKey))
                 {
-                    this.SystemMetrics[FAILED_METRICS_KEY] =
-                        this.CustomMetrics[FAILED_METRICS_KEY];
-                    this.CustomMetrics.Remove(FAILED_METRICS_KEY);
+                    this.SystemMetrics[FailedMetricsKey] =
+                        this.CustomMetrics[FailedMetricsKey];
+                    this.CustomMetrics.Remove(FailedMetricsKey);
                 }
 
-                if (this.CustomMetrics.ContainsKey(PENDING_METRICS_KEY))
+                if (this.CustomMetrics.ContainsKey(PendingMetricsKey))
                 {
-                    this.SystemMetrics[PENDING_METRICS_KEY] =
-                        this.CustomMetrics[PENDING_METRICS_KEY];
-                    this.CustomMetrics.Remove(PENDING_METRICS_KEY);
+                    this.SystemMetrics[PendingMetricsKey] =
+                        this.CustomMetrics[PendingMetricsKey];
+                    this.CustomMetrics.Remove(PendingMetricsKey);
                 }
             }
         }

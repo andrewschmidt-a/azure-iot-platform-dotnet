@@ -19,9 +19,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 {
     public class UserManagementClientTest
     {
-        private const string MOCK_SERVICE_URI = @"http://mockauth";
-        private const string AZDS_ROUTE_KEY = "azds-route-as";
-
+        private const string MockServiceUri = @"http://mockauth";
+        private const string AzdsRouteKey = "azds-route-as";
         private readonly Mock<IHttpClient> mockHttpClient;
         private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
         private readonly Mock<ExternalRequestHelper> mockRequestHelper;
@@ -38,7 +37,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 .Returns(new Dictionary<object, object>() { { "TenantID", "test_tenant" } });
             this.mockHttpContextAccessor
                 .Setup(t => t.HttpContext.Request.Headers)
-                .Returns(new HeaderDictionary() { { AZDS_ROUTE_KEY, "mockDevSpace" } });
+                .Returns(new HeaderDictionary() { { AzdsRouteKey, "mockDevSpace" } });
             this.mockRequestHelper = new Mock<ExternalRequestHelper>(
                 this.mockHttpClient.Object,
                 this.mockHttpContextAccessor.Object);
@@ -46,7 +45,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockConfig = new Mock<AppConfig>();
             this.mockConfig
                 .Setup(x => x.ExternalDependencies.AuthServiceUrl)
-                .Returns(MOCK_SERVICE_URI);
+                .Returns(MockServiceUri);
 
             this.client = new UserManagementClient(
                 this.mockConfig.Object,
@@ -55,7 +54,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllowedActions_ReturnValues()
         {
             var userObjectId = this.rand.NextString();
@@ -80,7 +79,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpClient
                 .Verify(
                     x => x.SendAsync(
-                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/users/{userObjectId}/allowedActions")),
+                        It.Is<IHttpRequest>(r => r.Check($"{MockServiceUri}/users/{userObjectId}/allowedActions")),
                         It.Is<HttpMethod>(m => m == method)),
                     Times.Once);
 
@@ -88,7 +87,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllowedActions_ReturnNotFound()
         {
             var userObjectId = this.rand.NextString();
@@ -112,7 +111,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllowedActions_ReturnError()
         {
             var userObjectId = this.rand.NextString();
@@ -136,7 +135,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetToken_ReturnsValue()
         {
             // Arrange
@@ -169,7 +168,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpClient
                 .Verify(
                     x => x.SendAsync(
-                        It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/users/default/token")),
+                        It.Is<IHttpRequest>(r => r.Check($"{MockServiceUri}/users/default/token")),
                         It.Is<HttpMethod>(m => m == method)),
                     Times.Once);
 

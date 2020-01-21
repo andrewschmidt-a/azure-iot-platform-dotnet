@@ -10,8 +10,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     public class TenantConnectionHelper : ITenantConnectionHelper
     {
-        private const string TENANT_KEY = "tenant:";
-        private const string IOTHUBCONNECTION_KEY = ":iotHubConnectionString";
+        private const string TenantKey = "tenant:";
+        private const string IotHubConnectionKey = ":iotHubConnectionString";
         private readonly IAppConfigurationHelper appConfig;
         private readonly ILogger<TenantConnectionHelper> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
@@ -44,7 +44,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 
         public string GetIotHubConnectionString()
         {
-            var appConfigurationKey = TENANT_KEY + TenantName + IOTHUBCONNECTION_KEY;
+            var appConfigurationKey = TenantKey + TenantName + IotHubConnectionKey;
             logger.LogDebug("App Configuration key for IoT Hub connection string for tenant {tenant} is {appConfigurationKey}", TenantName, appConfigurationKey);
             return appConfig.GetValue(appConfigurationKey);
         }

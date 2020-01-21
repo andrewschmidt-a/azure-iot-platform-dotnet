@@ -20,10 +20,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
     public class Devices : IDevices
     {
-        private const int MAX_GET_LIST = 1000;
-        private const string QUERY_PREFIX = "SELECT * FROM devices";
-        private const string MODULE_QUERY_PREFIX = "SELECT * FROM devices.modules";
-        private const string DEVICES_CONNECTED_QUERY = "connectionState = 'Connected'";
+        private const int MaximumGetList = 1000;
+        private const string QueryPrefix = "SELECT * FROM devices";
+        private const string ModuleQueryPrefix = "SELECT * FROM devices.modules";
+        private const string DevicesConnectedQuery = "connectionState = 'Connected'";
         private ITenantConnectionHelper tenantHelper;
 
         public Devices(AppConfig config, ITenantConnectionHelper tenantConnectionHelper)
@@ -68,10 +68,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
 
             var twins = await this.GetTwinByQueryAsync(
-                QUERY_PREFIX,
+                QueryPrefix,
                 query,
                 continuationToken,
-                MAX_GET_LIST);
+                MaximumGetList);
 
             var connectedEdgeDevices = await this.GetConnectedEdgeDevices(twins.Result);
 
@@ -203,10 +203,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             string continuationToken)
         {
             var twins = await this.GetTwinByQueryAsync(
-                MODULE_QUERY_PREFIX,
+                ModuleQueryPrefix,
                 query,
                 continuationToken,
-                MAX_GET_LIST);
+                MaximumGetList);
             var result = twins.Result.Select(twin => new TwinServiceModel(twin)).ToList();
 
             return new TwinServiceListModel(result, twins.ContinuationToken);
@@ -251,7 +251,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         {
             var connectedEdgeDevices = new HashSet<string>();
 
-            var edgeModules = await this.GetModuleTwinsByQueryAsync(DEVICES_CONNECTED_QUERY, string.Empty);
+            var edgeModules = await this.GetModuleTwinsByQueryAsync(DevicesConnectedQuery, string.Empty);
             foreach (var model in edgeModules.Items)
             {
                 connectedEdgeDevices.Add(model.DeviceId);
@@ -262,7 +262,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
         private async Task<bool> DoesDeviceHaveConnectedModules(string deviceId)
         {
-            var query = $"deviceId='{deviceId}' AND {DEVICES_CONNECTED_QUERY}";
+            var query = $"deviceId='{deviceId}' AND {DevicesConnectedQuery}";
             var edgeModules = await this.GetModuleTwinsByQueryAsync(query, string.Empty);
             return edgeModules.Items.Any();
         }

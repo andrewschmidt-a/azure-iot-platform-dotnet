@@ -16,14 +16,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
     public class Messages : IMessages
     {
-        private const string DATA_PROPERTY_NAME = "data";
-        private const string DATA_PREFIX = DATA_PROPERTY_NAME + ".";
-        private const string SYSTEM_PREFIX = "_";
-        private const string DATA_SCHEMA_TYPE = DATA_PREFIX + "schema";
-        private const string DATA_PARTITION_ID = "PartitionId";
-        private const string TSI_STORAGE_TYPE_KEY = "tsi";
-        private const string TENANT_INFO_KEY = "tenant";
-        private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
+        private const string DataPropertyName = "data";
+        private const string DataPrefix = DataPropertyName + ".";
+        private const string SystemPrefix = "_";
+        private const string DataSchemaType = DataPrefix + "schema";
+        private const string DataPartitionId = "PartitionId";
+        private const string TsiStorageTypeKey = "tsi";
+        private const string TenantInfoKey = "tenant";
+        private const string TelemetryCollectionKey = "telemetry-collection";
         private readonly ILogger logger;
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
@@ -45,7 +45,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
             this.timeSeriesEnabled = config.DeviceTelemetryService.Messages.TelemetryStorageType.Equals(
-                TSI_STORAGE_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
+                TsiStorageTypeKey, StringComparison.OrdinalIgnoreCase);
             this.documentClient = storageClient.GetDocumentClient();
             this.databaseName = config.DeviceTelemetryService.Messages.Database;
             this.logger = logger;
@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             get
             {
                 return this.appConfigurationHelper.GetValue(
-                    $"{TENANT_INFO_KEY}:{httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
+                    $"{TenantInfoKey}:{httpContextAccessor.HttpContext.Request.GetTenant()}:{TelemetryCollectionKey}");
             }
         }
 
@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             int limit,
             string[] devices)
         {
-            int dataPrefixLen = DATA_PREFIX.Length;
+            int dataPrefixLen = DataPrefix.Length;
 
             var sql = QueryBuilder.GetDocumentsSql(
                 "message",
@@ -149,7 +149,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 foreach (var item in jsonDoc)
                 {
                     // Ignore fields that werent sent by device (system fields)"
-                    if (!item.Key.StartsWith(SYSTEM_PREFIX) && item.Key != "id" && item.Key != "deviceId")
+                    if (!item.Key.StartsWith(SystemPrefix) && item.Key != "id" && item.Key != "deviceId")
                     {
                         string key = item.Key.ToString();
                         data.Add(key, item.Value);

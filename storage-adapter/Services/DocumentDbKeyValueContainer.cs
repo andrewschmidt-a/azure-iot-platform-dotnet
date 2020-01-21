@@ -21,7 +21,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
     public class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
     {
-        private const string COLLECTION_ID_KEY_FORMAT = "tenant:{0}:{1}-collection";
+        private const string CollectionIdKeyFormat = "tenant:{0}:{1}-collection";
         private readonly IAppConfigurationHelper appConfigHelper;
         private readonly AppConfig appConfig;
         private readonly IFactory<IDocumentClient> clientFactory;
@@ -66,7 +66,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             get
             {
                 string tenantId = this.TenantId;
-                string key = string.Format(COLLECTION_ID_KEY_FORMAT, this.TenantId, this.DocumentDataType);
+                string key = string.Format(CollectionIdKeyFormat, this.TenantId, this.DocumentDataType);
                 try
                 {
                     return this.appConfigHelper.GetValue(key);

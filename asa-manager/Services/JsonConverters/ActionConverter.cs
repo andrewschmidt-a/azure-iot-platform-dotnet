@@ -7,7 +7,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.JsonConverters
 {
     public class ActionConverter : JsonConverter
     {
-        private const string TYPE_KEY = "Type";
+        private const string TypeKey = "Type";
 
         public override bool CanWrite => false;
 
@@ -24,7 +24,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.JsonConverters
             var action = default(EmailActionModel);
             var actionType = Enum.Parse(
                 typeof(ActionType),
-                jsonObject.GetValue(TYPE_KEY).Value<string>(),
+                jsonObject.GetValue(TypeKey).Value<string>(),
                 true);
 
             switch (actionType)

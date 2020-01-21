@@ -9,11 +9,10 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
 {
     public class StorageAdapterClient : IStorageAdapterClient
     {
-        private const bool ALLOW_INSECURE_SSL_SERVER = true;
-        private const string TENANT_HEADER = "ApplicationTenantID";
-        private const string TENANT_ID = "TenantID";
-        private const string AZDS_ROUTE_KEY = "azds-route-as";
-
+        private const bool AllowInsecureSslServer = true;
+        private const string TenantHeader = "ApplicationTenantID";
+        private const string TenantId = "TenantID";
+        private const string AzdsRouteKey = "azds-route-as";
         private readonly string serviceUri;
         private readonly int timeout;
         private readonly IExternalRequestHelper requestHelper;

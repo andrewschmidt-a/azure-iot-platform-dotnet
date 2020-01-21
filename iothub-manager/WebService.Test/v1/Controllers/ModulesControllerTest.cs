@@ -17,7 +17,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
 {
     public class ModulesControllerTest : IDisposable
     {
-        private const string CONTINUATION_TOKEN_NAME = "x-ms-continuation";
+        private const string ContinuationTokenName = "x-ms-continuation";
         private readonly ModulesController modulesController;
         private readonly Mock<IDevices> devicesMock;
         private readonly HttpContext httpContext;
@@ -37,7 +37,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("", "", true)]
         [InlineData("deviceId", "", true)]
         [InlineData("", "moduleId", true)]
@@ -68,7 +68,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("", "")]
         [InlineData("my module query", "continuationToken")]
         public async Task GetModuleTwinsTest(string query, string continuationToken)
@@ -81,7 +81,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
             this.devicesMock.Setup(x => x.GetModuleTwinsByQueryAsync(query, continuationToken))
                 .ReturnsAsync(twins);
             this.httpContext.Request.Headers.Add(
-                CONTINUATION_TOKEN_NAME,
+                ContinuationTokenName,
                 new StringValues(continuationToken));
 
             // Act

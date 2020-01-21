@@ -36,7 +36,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllReturnsExpectedUserSettingsList()
         {
             // Arrange
@@ -48,7 +48,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UserClaimsGetAllReturnsExpectedUserSettingsList()
         {
             // Arrange
@@ -60,7 +60,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetReturnsExpectedUserSettings()
         {
             // Arrange
@@ -72,7 +72,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UserClaimsGetReturnsExpectedUserSettings()
         {
             // Arrange
@@ -84,7 +84,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PostReturnsExpectedUserSettings()
         {
             // Arrange
@@ -96,7 +96,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UserClaimsPostReturnsExpectedUserSettings()
         {
             // Arrange
@@ -108,7 +108,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PutReturnsExpectedUserSettings()
         {
             // Arrange
@@ -120,7 +120,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UserClaimsPutReturnsExpectedUserSettings()
         {
             // Arrange
@@ -132,7 +132,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task DeleteReturnsExpectedUserSettings()
         {
             // Arrange
@@ -144,7 +144,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UserClaimsDeleteReturnsExpectedUserSettings()
         {
             // Arrange

@@ -38,7 +38,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("", "", true)]
         [InlineData("asdf", "", true)]
         [InlineData("", "qwer", true)]
@@ -69,7 +69,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("", 5)]
         [InlineData("2", 5)]
         [InlineData("6", 5)]
@@ -99,7 +99,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("", "SELECT * FROM devices.modules")]
         [InlineData("deviceId='test'", "SELECT * FROM devices.modules where deviceId='test'")]
         public async Task GetTwinByQueryTest(string query, string queryToMatch)
@@ -118,7 +118,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetEdgeDeviceTest()
         {
             // Arrange
@@ -165,7 +165,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task TestConnectedEdgeDevice()
         {
             // Arrange
@@ -195,7 +195,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("SelfSigned")]
         [InlineData("CertificateAuthority")]
         public async Task InvalidAuthenticationTypeForEdgeDevice(string authTypeString)

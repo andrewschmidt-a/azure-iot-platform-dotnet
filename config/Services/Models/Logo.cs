@@ -6,11 +6,11 @@ namespace Mmm.Platform.IoT.Config.Services.Models
 {
     public class Logo
     {
-        public const string NAME_HEADER = "Name";
-        public const string IS_DEFAULT_HEADER = "IsDefault";
+        public const string NameHeader = "Name";
+        public const string IsDefaultHeader = "IsDefault";
         public static readonly Logo Default;
-        private const string SVG_TYPE = "image/svg+xml";
-        private const string DEFAULT_LOGO_NAME = "Default Logo";
+        private const string SvgType = "image/svg+xml";
+        private const string DefaultLogoName = "Default Logo";
 
         static Logo()
         {
@@ -20,8 +20,8 @@ namespace Mmm.Platform.IoT.Config.Services.Models
             Default = new Logo
             {
                 Image = Convert.ToBase64String(bytes),
-                Type = Logo.SVG_TYPE,
-                Name = Logo.DEFAULT_LOGO_NAME,
+                Type = Logo.SvgType,
+                Name = Logo.DefaultLogoName,
                 IsDefault = true
             };
         }

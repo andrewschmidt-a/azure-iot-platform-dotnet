@@ -29,7 +29,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task QueryThrowsInvalidConfiguration_WhenConfigValuesAreNull()
         {
             // Arrange
@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PingReturnsFalse_WhenConfigValuesAreNull()
         {
             // Arrange
@@ -56,7 +56,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task QueryThrows_IfInvalidAuthParams()
         {
             // Arrange

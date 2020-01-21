@@ -13,7 +13,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 {
     public class DeploymentsTest
     {
-        private const string TEST_EDGE_PACKAGE_JSON =
+        private const string TestEdgePackageJson =
                 @"{
                     ""id"": ""tempid"",
                     ""schemaVersion"": ""1.0"",
@@ -77,7 +77,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     }
                  }";
 
-        private const string TEST_ADM_PACKAGE_JSON =
+        private const string TestAdmPackageJson =
                 @"{
                     ""id"": ""tempid"",
                     ""schemaVersion"": ""1.0"",
@@ -140,14 +140,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                         ""queries"": {}
                     }mockIoTHub
                  }";
-        private const string DEPLOYMENT_NAME_LABEL = "Name";
-        private const string DEPLOYMENT_GROUP_ID_LABEL = "DeviceGroupId";
-        private const string DEPLOYMENT_GROUP_NAME_LABEL = "DeviceGroupName";
-        private const string CONFIG_TYPE_LABEL = "ConfigType";
-        private const string RM_CREATED_LABEL = "RMDeployment";
-        private const string RESOURCE_NOT_FOUND_EXCEPTION =
+        private const string DeploymentNameLabel = "Name";
+        private const string DeploymentGroupIdLabel = "DeviceGroupId";
+        private const string DeploymentGroupNameLabel = "DeviceGroupName";
+        private const string ConfigurationTypeLabel = "ConfigType";
+        private const string RmCreatedLabel = "RMDeployment";
+        private const string ResourceNotFoundException =
             "Mmm.Platform.IoT.Common.Services.Exceptions.ResourceNotSupportedException, Mmm.Platform.IoT.Common.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
-        private const string DEPLOYMENT_PACKAGE_NAME_LABEL = "PackageName";
+        private const string DeploymentPackageNameLabel = "PackageName";
         private readonly Deployments deployments;
         private readonly Mock<RegistryManager> registry;
         private readonly string ioTHubHostName = "mockIoTHub";
@@ -166,13 +166,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        [InlineData("depname", "dvcgroupid", "dvcquery", TEST_EDGE_PACKAGE_JSON, 10, "")]
-        [InlineData("", "dvcgroupid", "dvcquery", TEST_EDGE_PACKAGE_JSON, 10, "System.ArgumentNullException")]
-        [InlineData("depname", "", "dvcquery", TEST_EDGE_PACKAGE_JSON, 10, "System.ArgumentNullException")]
-        [InlineData("depname", "dvcgroupid", "", TEST_EDGE_PACKAGE_JSON, 10, "System.ArgumentNullException")]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        [InlineData("depname", "dvcgroupid", "dvcquery", TestEdgePackageJson, 10, "")]
+        [InlineData("", "dvcgroupid", "dvcquery", TestEdgePackageJson, 10, "System.ArgumentNullException")]
+        [InlineData("depname", "", "dvcquery", TestEdgePackageJson, 10, "System.ArgumentNullException")]
+        [InlineData("depname", "dvcgroupid", "", TestEdgePackageJson, 10, "System.ArgumentNullException")]
         [InlineData("depname", "dvcgroupid", "dvcquery", "", 10, "System.ArgumentNullException")]
-        [InlineData("depname", "dvcgroupid", "dvcquery", TEST_EDGE_PACKAGE_JSON, -1, "System.ArgumentOutOfRangeException")]
+        [InlineData("depname", "dvcgroupid", "dvcquery", TestEdgePackageJson, -1, "System.ArgumentOutOfRangeException")]
         public async Task CreateDeploymentTest(
             string deploymentName,
             string deviceGroupId,
@@ -196,21 +196,21 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             {
                 Labels = new Dictionary<string, string>()
                 {
-                    { DEPLOYMENT_NAME_LABEL, deploymentName },
+                    { DeploymentNameLabel, deploymentName },
                     { packageTypeLabel, PackageType.EdgeManifest.ToString() },
-                    { DEPLOYMENT_GROUP_ID_LABEL, deviceGroupId },
-                    { RM_CREATED_LABEL, bool.TrueString },
+                    { DeploymentGroupIdLabel, deviceGroupId },
+                    { RmCreatedLabel, bool.TrueString },
                 },
                 Priority = priority
             };
 
             this.registry.Setup(r => r.AddConfigurationAsync(It.Is<Configuration>(c =>
-                    c.Labels.ContainsKey(DEPLOYMENT_NAME_LABEL) &&
-                    c.Labels.ContainsKey(DEPLOYMENT_GROUP_ID_LABEL) &&
-                    c.Labels.ContainsKey(RM_CREATED_LABEL) &&
-                    c.Labels[DEPLOYMENT_NAME_LABEL] == deploymentName &&
-                    c.Labels[DEPLOYMENT_GROUP_ID_LABEL] == deviceGroupId &&
-                    c.Labels[RM_CREATED_LABEL] == bool.TrueString)))
+                    c.Labels.ContainsKey(DeploymentNameLabel) &&
+                    c.Labels.ContainsKey(DeploymentGroupIdLabel) &&
+                    c.Labels.ContainsKey(RmCreatedLabel) &&
+                    c.Labels[DeploymentNameLabel] == deploymentName &&
+                    c.Labels[DeploymentGroupIdLabel] == deviceGroupId &&
+                    c.Labels[RmCreatedLabel] == bool.TrueString)))
                 .ReturnsAsync(newConfig);
 
             tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
@@ -235,7 +235,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task InvalidRmConfigurationTest()
         {
             // Arrange
@@ -247,12 +247,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             // Act & Assert
             await Assert.ThrowsAsync(
-                Type.GetType(RESOURCE_NOT_FOUND_EXCEPTION),
+                Type.GetType(ResourceNotFoundException),
                 async () => await this.deployments.GetAsync(configuration.Id));
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(5)]
@@ -282,7 +282,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetDeploymentsWithDeviceStatusTest()
         {
             // Arrange
@@ -306,7 +306,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData(true, true, true)]
         [InlineData(false, true)]
         [InlineData(true, true)]
@@ -334,11 +334,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             {
                 Labels = new Dictionary<string, string>()
                 {
-                    { DEPLOYMENT_NAME_LABEL, string.Empty },
-                    { DEPLOYMENT_GROUP_ID_LABEL, string.Empty },
+                    { DeploymentNameLabel, string.Empty },
+                    { DeploymentGroupIdLabel, string.Empty },
                     { packageTypeLabel, label },
-                    { CONFIG_TYPE_LABEL, "CustomConfig" },
-                    { RM_CREATED_LABEL, bool.TrueString },
+                    { ConfigurationTypeLabel, "CustomConfig" },
+                    { RmCreatedLabel, bool.TrueString },
                 },
                 Content = content
             };
@@ -377,7 +377,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Theory]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData(true)]
         [InlineData(false)]
         public async Task GetDeploymentMetricsTest(bool isEdgeDeployment)
@@ -397,11 +397,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             {
                 Labels = new Dictionary<string, string>()
                 {
-                    { DEPLOYMENT_NAME_LABEL, string.Empty },
-                    { DEPLOYMENT_GROUP_ID_LABEL, string.Empty },
+                    { DeploymentNameLabel, string.Empty },
+                    { DeploymentGroupIdLabel, string.Empty },
                     { packageTypeLabel, label },
-                    { CONFIG_TYPE_LABEL, Firmware },
-                    { RM_CREATED_LABEL, bool.TrueString },
+                    { ConfigurationTypeLabel, Firmware },
+                    { RmCreatedLabel, bool.TrueString },
                 },
                 Content = content
             };
@@ -420,7 +420,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task VerifyGroupAndPackageNameLabelsTest()
         {
             // Arrange
@@ -436,7 +436,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 DeviceGroupId = deviceGroupId,
                 DeviceGroupName = deviceGroupName,
                 DeviceGroupQuery = deviceGroupQuery,
-                PackageContent = TEST_EDGE_PACKAGE_JSON,
+                PackageContent = TestEdgePackageJson,
                 PackageName = packageName,
                 Priority = priority
             };
@@ -446,22 +446,22 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 Labels = new Dictionary<string, string>()
                 {
                     { packageTypeLabel, PackageType.EdgeManifest.ToString() },
-                    { DEPLOYMENT_NAME_LABEL, deploymentName },
-                    { DEPLOYMENT_GROUP_ID_LABEL, deviceGroupId },
-                    { RM_CREATED_LABEL, bool.TrueString },
-                    { DEPLOYMENT_GROUP_NAME_LABEL, deviceGroupName },
-                    { DEPLOYMENT_PACKAGE_NAME_LABEL, packageName }
+                    { DeploymentNameLabel, deploymentName },
+                    { DeploymentGroupIdLabel, deviceGroupId },
+                    { RmCreatedLabel, bool.TrueString },
+                    { DeploymentGroupNameLabel, deviceGroupName },
+                    { DeploymentPackageNameLabel, packageName }
                 },
                 Priority = priority
             };
 
             this.registry.Setup(r => r.AddConfigurationAsync(It.Is<Configuration>(c =>
-                    c.Labels.ContainsKey(DEPLOYMENT_NAME_LABEL) &&
-                    c.Labels.ContainsKey(DEPLOYMENT_GROUP_ID_LABEL) &&
-                    c.Labels.ContainsKey(RM_CREATED_LABEL) &&
-                    c.Labels[DEPLOYMENT_NAME_LABEL] == deploymentName &&
-                    c.Labels[DEPLOYMENT_GROUP_ID_LABEL] == deviceGroupId &&
-                    c.Labels[RM_CREATED_LABEL] == bool.TrueString)))
+                    c.Labels.ContainsKey(DeploymentNameLabel) &&
+                    c.Labels.ContainsKey(DeploymentGroupIdLabel) &&
+                    c.Labels.ContainsKey(RmCreatedLabel) &&
+                    c.Labels[DeploymentNameLabel] == deploymentName &&
+                    c.Labels[DeploymentGroupIdLabel] == deviceGroupId &&
+                    c.Labels[RmCreatedLabel] == bool.TrueString)))
                 .ReturnsAsync(newConfig);
 
             tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
@@ -479,7 +479,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task FilterOutNonRmDeploymentsTest()
         {
             // Arrange
@@ -508,15 +508,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 Labels = new Dictionary<string, string>()
                 {
                     { packageTypeLabel, PackageType.EdgeManifest.ToString() },
-                    { DEPLOYMENT_NAME_LABEL, "deployment" + idx },
-                    { DEPLOYMENT_GROUP_ID_LABEL, "dvcGroupId" + idx }
+                    { DeploymentNameLabel, "deployment" + idx },
+                    { DeploymentGroupIdLabel, "dvcGroupId" + idx }
                 },
                 Priority = 10
             };
 
             if (addCreatedByRmLabel)
             {
-                conf.Labels.Add(RM_CREATED_LABEL, "true");
+                conf.Labels.Add(RmCreatedLabel, "true");
             }
 
             return conf;

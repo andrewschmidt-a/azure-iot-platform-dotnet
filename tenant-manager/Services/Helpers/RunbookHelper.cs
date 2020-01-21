@@ -17,7 +17,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
     public class RunbookHelper : IRunbookHelper, IDisposable
     {
         public HttpClient HttpClient;
-        private const string SA_JOB_DATABASE_ID = "pcs-iothub-stream";
+        private const string SaJobDatabaseId = "pcs-iothub-stream";
         private readonly AppConfig config;
         private readonly ITokenHelper tokenHelper;
         private readonly IAppConfigurationHelper appConfigHelper;
@@ -94,7 +94,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 iotHubAccessKey = iotHubKey,
                 cosmosDbAccountName = config.Global.CosmosDb.AccountName,
                 cosmosDbAccountKey = config.Global.CosmosDb.DocumentDbAuthKey,
-                cosmosDbDatabaseId = SA_JOB_DATABASE_ID
+                cosmosDbDatabaseId = SaJobDatabaseId
             };
 
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");

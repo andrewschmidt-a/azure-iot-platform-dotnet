@@ -26,7 +26,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetPropertiesReturnExpectedResponse()
         {
             // Arrange
@@ -50,7 +50,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetPropertiesThrowsException_IfDevicePropertiesThrowsException()
         {
             // Arrange

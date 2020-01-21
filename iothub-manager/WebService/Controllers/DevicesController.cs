@@ -11,8 +11,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class DevicesController : Controller
     {
-        const string CONTINUATION_TOKEN_NAME = "x-ms-continuation";
-
+        const string ContinuationTokenName = "x-ms-continuation";
         private readonly IDevices devices;
         private readonly IDeviceProperties deviceProperties;
         private readonly IDeviceService deviceService;
@@ -24,16 +23,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
             this.deviceService = deviceService;
         }
 
-        /// <summary>Get a list of devices</summary>
-        /// <returns>List of devices</returns>
         [HttpGet]
         [Authorize("ReadAll")]
         public async Task<DeviceListApiModel> GetDevicesAsync([FromQuery] string query)
         {
             string continuationToken = string.Empty;
-            if (this.Request.Headers.ContainsKey(CONTINUATION_TOKEN_NAME))
+            if (this.Request.Headers.ContainsKey(ContinuationTokenName))
             {
-                continuationToken = this.Request.Headers[CONTINUATION_TOKEN_NAME].FirstOrDefault();
+                continuationToken = this.Request.Headers[ContinuationTokenName].FirstOrDefault();
             }
 
             return new DeviceListApiModel(await this.devices.GetListAsync(query, continuationToken));
@@ -44,17 +41,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
         public async Task<DeviceListApiModel> QueryDevicesAsync([FromBody] string query)
         {
             string continuationToken = string.Empty;
-            if (this.Request.Headers.ContainsKey(CONTINUATION_TOKEN_NAME))
+            if (this.Request.Headers.ContainsKey(ContinuationTokenName))
             {
-                continuationToken = this.Request.Headers[CONTINUATION_TOKEN_NAME].FirstOrDefault();
+                continuationToken = this.Request.Headers[ContinuationTokenName].FirstOrDefault();
             }
 
             return new DeviceListApiModel(await this.devices.GetListAsync(query, continuationToken));
         }
 
-        /// <summary>Get one device</summary>
-        /// <param name="id">Device Id</param>
-        /// <returns>Device information</returns>
         [HttpGet("{id}")]
         [Authorize("ReadAll")]
         public async Task<DeviceRegistryApiModel> GetDeviceAsync(string id)
@@ -62,9 +56,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
             return new DeviceRegistryApiModel(await this.devices.GetAsync(id));
         }
 
-        /// <summary>Create one device</summary>
-        /// <param name="device">Device information</param>
-        /// <returns>Device information</returns>
         [HttpPost]
         [Authorize("CreateDevices")]
         public async Task<DeviceRegistryApiModel> PostAsync([FromBody] DeviceRegistryApiModel device)
@@ -72,10 +63,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
             return new DeviceRegistryApiModel(await this.devices.CreateAsync(device.ToServiceModel()));
         }
 
-        /// <summary>Update device twin</summary>
-        /// <param name="id">Device Id</param>
-        /// <param name="device">Device information</param>
-        /// <returns>Device information</returns>
         [HttpPut("{id}")]
         [Authorize("UpdateDevices")]
         public async Task<DeviceRegistryApiModel> PutAsync(string id, [FromBody] DeviceRegistryApiModel device)
@@ -84,8 +71,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
             return new DeviceRegistryApiModel(await this.devices.CreateOrUpdateAsync(device.ToServiceModel(), updateListDelegate));
         }
 
-        /// <summary>Remove device</summary>
-        /// <param name="id">Device Id</param>
         [HttpDelete("{id}")]
         [Authorize("DeleteDevices")]
         public async Task DeleteAsync(string id)
@@ -93,12 +78,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
             await this.devices.DeleteAsync(id);
         }
 
-        /// <summary>
-        /// Interactively invokes a method on device
-        /// </summary>
-        /// <param name="id">Device Id</param>
-        /// <param name="parameter">Device method parameters (passthrough to device)</param>
-        /// <returns></returns>
         [HttpPost("{id}/methods")]
         [Authorize("CreateJobs")]
         public async Task<MethodResultApiModel> InvokeDeviceMethodAsync(string id, [FromBody] MethodParameterApiModel parameter)

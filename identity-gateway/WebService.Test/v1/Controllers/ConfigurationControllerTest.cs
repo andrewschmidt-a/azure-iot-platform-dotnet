@@ -33,7 +33,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void GetOpenIdProviderConfigurationReturnsExpectedIssuer()
         {
             // Arrange
@@ -48,7 +48,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void GetJsonWebKeySetReturnsExpctedJwks()
         {
             // Arrange

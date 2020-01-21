@@ -112,7 +112,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
                 Assert.Equal(Logo.Default.Image, mockContext.GetBody());
                 Assert.Equal(Logo.Default.Type, mockContext.Object.Response.ContentType);
-                Assert.Equal("True", mockContext.GetHeader(Logo.IS_DEFAULT_HEADER));
+                Assert.Equal("True", mockContext.GetHeader(Logo.IsDefaultHeader));
             }
         }
 
@@ -144,8 +144,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
                 Assert.Equal(image, mockContext.GetBody());
                 Assert.Equal(type, mockContext.Object.Response.ContentType);
-                Assert.Equal(name, mockContext.GetHeader(Logo.NAME_HEADER));
-                Assert.Equal("False", mockContext.GetHeader(Logo.IS_DEFAULT_HEADER));
+                Assert.Equal(name, mockContext.GetHeader(Logo.NameHeader));
+                Assert.Equal("False", mockContext.GetHeader(Logo.IsDefaultHeader));
             }
         }
 
@@ -176,7 +176,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
                 Assert.Equal(image, mockContext.GetBody());
                 Assert.Equal(type, mockContext.Object.Response.ContentType);
-                Assert.Equal("False", mockContext.GetHeader(Logo.IS_DEFAULT_HEADER));
+                Assert.Equal("False", mockContext.GetHeader(Logo.IsDefaultHeader));
             }
         }
 
@@ -197,7 +197,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
                 mockContext.Object.Request.ContentType = type;
                 mockContext.SetBody(image);
-                mockContext.SetHeader(Logo.NAME_HEADER, name);
+                mockContext.SetHeader(Logo.NameHeader, name);
 
                 await this.controller.SetLogoAsync();
 
@@ -209,8 +209,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
                 Assert.Equal(image, mockContext.GetBody());
                 Assert.Equal(type, mockContext.Object.Response.ContentType);
-                Assert.Equal(name, mockContext.GetHeader(Logo.NAME_HEADER));
-                Assert.Equal("False", mockContext.GetHeader(Logo.IS_DEFAULT_HEADER));
+                Assert.Equal(name, mockContext.GetHeader(Logo.NameHeader));
+                Assert.Equal("False", mockContext.GetHeader(Logo.IsDefaultHeader));
             }
         }
 

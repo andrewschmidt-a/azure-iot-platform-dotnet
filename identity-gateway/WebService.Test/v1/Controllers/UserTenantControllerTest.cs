@@ -50,7 +50,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllUsersForTenantReturnsExpectedUserTenantList()
         {
             // Arrange
@@ -62,7 +62,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UserClaimsGetAllTenantsForUserReturnsExpectedUserTenantList()
         {
             // Arrange
@@ -74,7 +74,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllTenantsForUserReturnsExpectedUserTenantList()
         {
             // Arrange
@@ -86,7 +86,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UserClaimsGetReturnsExpectedUserTenant()
         {
             // Arrange
@@ -98,7 +98,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetReturnsExpectedUserTenant()
         {
             // Arrange
@@ -110,7 +110,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PostReturnsExpectedUserTenant()
         {
             // Arrange
@@ -122,7 +122,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UserClaimsPostReturnsExpectedUserTenant()
         {
             // Arrange
@@ -134,7 +134,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PutReturnsExpectedUserTenant()
         {
             // Arrange
@@ -146,7 +146,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UserClaimsPutReturnsExpectedUserTenant()
         {
             // Arrange
@@ -158,7 +158,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task DeleteReturnsExpectedUserTenant()
         {
             // Arrange
@@ -170,7 +170,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UserClaimsDeleteReturnsExpectedUserTenant()
         {
             // Arrange
@@ -182,7 +182,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task DeleteAllReturnsExpectedUserTenantList()
         {
             // Arrange
@@ -194,7 +194,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
         }
 
         [Fact]
-        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task InviteReturnsExpectedUserTenant()
         {
             // Arrange
