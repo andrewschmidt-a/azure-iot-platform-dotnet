@@ -117,29 +117,30 @@ export class TelemetryChart extends Component {
   }
 
   componentWillUpdate({ telemetry, theme }, { telemetryKey }) {
+    var chartData = [];
     if (Object.keys(telemetry).length && telemetryKey && telemetry[telemetryKey]) {
-      const chartData = Object.keys(telemetry[telemetryKey]).map(deviceId => ({
+      chartData = Object.keys(telemetry[telemetryKey]).map(deviceId => ({
         [deviceId]: telemetry[telemetryKey][deviceId]
       }));
-      const noAnimate = telemetryKey === this.state.telemetryKey;
-      // Set a timeout to allow the panel height to be calculated before updating the graph
-      setTimeout(() => {
-        if (this && this.state && this.lineChart && this.state.renderChart) {
-          this.lineChart.render(
-            chartData,
-            {
-              grid: false,
-              legend: 'compact',
-              noAnimate, // If the telemetryKey changes, animate
-              tooltip: true,
-              yAxisState: 'shared', // Default to all values being on the same axis
-              theme
-            },
-            this.props.colors
-          );
-        }
-      }, 10);
-    }
+    }  
+    const noAnimate = telemetryKey === this.state.telemetryKey;
+    // Set a timeout to allow the panel height to be calculated before updating the graph
+    setTimeout(() => {
+      if (this && this.state && this.lineChart && this.state.renderChart) {
+        this.lineChart.render(
+          chartData,
+          {
+            grid: false,
+            legend: 'compact',
+            noAnimate, // If the telemetryKey changes, animate
+            tooltip: true,
+            yAxisState: 'shared', // Default to all values being on the same axis
+            theme
+          },
+          this.props.colors
+        );
+      }
+    }, 10);
   }
 
   setTelemetryKey = telemetryKey => () => {
