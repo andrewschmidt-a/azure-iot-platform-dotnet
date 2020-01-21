@@ -5,7 +5,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class UserTenantListModel
     {
-        public UserTenantListModel() { }
+        public UserTenantListModel()
+        {
+        }
 
         public UserTenantListModel(List<UserTenantModel> models)
         {

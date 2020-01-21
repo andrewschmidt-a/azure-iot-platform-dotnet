@@ -4,7 +4,9 @@ namespace Mmm.Platform.IoT.Common.Services.Config
 {
     public partial class AppConfig
     {
-        public AppConfig() { }
+        public AppConfig()
+        {
+        }
 
         public AppConfig(IConfiguration configuration)
         {

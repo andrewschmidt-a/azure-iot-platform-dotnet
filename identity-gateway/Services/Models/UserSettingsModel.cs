@@ -4,7 +4,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class UserSettingsModel : TableEntity
     {
-        public UserSettingsModel() { }
+        public UserSettingsModel()
+        {
+        }
 
         public UserSettingsModel(string userId, string settingKey, string value)
         {

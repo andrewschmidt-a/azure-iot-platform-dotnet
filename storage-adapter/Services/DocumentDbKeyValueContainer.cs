@@ -50,8 +50,21 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public virtual string DocumentDataType { get { return "pcs"; } }
-        public virtual string DocumentDatabaseSuffix { get { return "storage"; } }
+        public virtual string DocumentDataType
+        {
+            get
+            {
+                return "pcs";
+            }
+        }
+
+        public virtual string DocumentDatabaseSuffix
+        {
+            get
+            {
+                return "storage";
+            }
+        }
 
         public virtual string DocumentDbDatabaseId
         {

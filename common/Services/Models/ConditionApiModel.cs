@@ -6,7 +6,9 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 {
     public class ConditionApiModel
     {
-        public ConditionApiModel() { }
+        public ConditionApiModel()
+        {
+        }
 
         public ConditionApiModel(Condition condition)
         {

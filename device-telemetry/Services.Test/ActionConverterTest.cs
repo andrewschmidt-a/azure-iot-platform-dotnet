@@ -15,7 +15,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private const string ParameterNotesKey = "Notes";
         private const string ParameterRecipientsKey = "Recipients";
 
-        public ActionConverterTest() { }
+        public ActionConverterTest()
+        {
+        }
 
         [Fact]
         [Trait(Constants.Type, Constants.UnitTest)]

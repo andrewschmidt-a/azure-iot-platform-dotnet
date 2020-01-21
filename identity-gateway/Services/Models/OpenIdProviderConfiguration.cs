@@ -9,7 +9,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly string host;
 
-        public OpenIdProviderConfiguration() { }
+        public OpenIdProviderConfiguration()
+        {
+        }
 
         public OpenIdProviderConfiguration(IHttpContextAccessor httpContextAccessor)
         {

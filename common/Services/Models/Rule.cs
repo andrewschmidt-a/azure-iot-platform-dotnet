@@ -10,7 +10,9 @@ namespace Mmm.Platform.IoT.Common.Services.Models
     {
         private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
 
-        public Rule() { }
+        public Rule()
+        {
+        }
 
         // Comes from the StorageAdapter document and not the serialized rule
         [JsonIgnore]

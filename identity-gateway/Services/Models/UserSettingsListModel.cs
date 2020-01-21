@@ -5,7 +5,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class UserSettingsListModel
     {
-        public UserSettingsListModel() { }
+        public UserSettingsListModel()
+        {
+        }
 
         public UserSettingsListModel(List<UserSettingsModel> models)
         {

@@ -5,7 +5,9 @@ namespace Mmm.Platform.IoT.TenantManager.WebService.Models
 {
     public class StatusResultModel
     {
-        public StatusResultModel() { }
+        public StatusResultModel()
+        {
+        }
 
         public StatusResultModel(StatusResultServiceModel servicemodel)
         {

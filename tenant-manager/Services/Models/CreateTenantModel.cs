@@ -8,7 +8,9 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
         private string tenantId;
         private string message;
 
-        public CreateTenantModel() { }
+        public CreateTenantModel()
+        {
+        }
 
         public CreateTenantModel(string tenantGuid)
         {

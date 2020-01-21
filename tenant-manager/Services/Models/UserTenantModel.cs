@@ -6,7 +6,9 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
 {
     public class UserTenantModel : TableEntity
     {
-        public UserTenantModel() { }
+        public UserTenantModel()
+        {
+        }
 
         public UserTenantModel(string userId, string tenantId)
         {

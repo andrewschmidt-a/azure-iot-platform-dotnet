@@ -22,8 +22,21 @@ namespace Mmm.Platform.IoT.AsaManager.Services
         {
         }
 
-        public override string Entity { get { return "rules"; } }
-        public override string FileExtension { get { return "json"; } }
+        public override string Entity
+        {
+            get
+            {
+                return "rules";
+            }
+        }
+
+        public override string FileExtension
+        {
+            get
+            {
+                return "json";
+            }
+        }
 
         public override async Task<ConversionApiModel> ConvertAsync(string tenantId, string operationId = null)
         {

@@ -28,9 +28,21 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             this.iotHubManager = iotHubManager;
         }
 
-        public override string Entity { get { return "devicegroups"; } }
+        public override string Entity
+        {
+            get
+            {
+                return "devicegroups";
+            }
+        }
 
-        public override string FileExtension { get { return "csv"; } }
+        public override string FileExtension
+        {
+            get
+            {
+                return "csv";
+            }
+        }
 
         public override async Task<ConversionApiModel> ConvertAsync(string tenantId, string operationId = null)
         {

@@ -5,7 +5,9 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 {
     public class Condition
     {
-        public Condition() { }
+        public Condition()
+        {
+        }
 
         public string Field { get; set; } = string.Empty;
 

@@ -8,7 +8,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public class UserSettingsContainer : UserContainer, IUserContainer<UserSettingsModel, UserSettingsInput>
     {
-        public UserSettingsContainer() { }
+        public UserSettingsContainer()
+        {
+        }
 
         public UserSettingsContainer(ITableStorageClient tableStorageClient)
             : base(tableStorageClient)

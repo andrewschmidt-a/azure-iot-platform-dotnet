@@ -4,7 +4,9 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
 {
     public class TenantModel : TableEntity
     {
-        public TenantModel() { }
+        public TenantModel()
+        {
+        }
 
         public TenantModel(string id)
         {

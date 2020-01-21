@@ -11,7 +11,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
     {
         private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
 
-        public RuleApiModel() { }
+        public RuleApiModel()
+        {
+        }
 
         public RuleApiModel(Rule rule, bool includeDeleted)
         {
