@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
 
@@ -23,6 +24,16 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
         {
             this._httpClient = httpClient;
             this._httpContextAccessor = httpContextAccessor;
+        }
+
+        /// <summary>
+        /// Special wrapper method for ProcessRequestAsync specifically for calling our storage endpoints
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <returns></returns>
+        public async Task<StatusServiceModel> ProcessStatusAsync(string uri)
+        {
+            return await this.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, $"{uri}/status");
         }
 
         /// <summary>

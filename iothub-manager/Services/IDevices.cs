@@ -1,10 +1,11 @@
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.Services;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {
-    public interface IDevices
+    public interface IDevices : IStatusOperation
     {
         Task<DeviceServiceListModel> GetListAsync(string query, string continuationToken);
         Task<DeviceTwinName> GetDeviceTwinNamesAsync();
@@ -14,6 +15,5 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         Task DeleteAsync(string id);
         Task<TwinServiceModel> GetModuleTwinAsync(string deviceId, string moduleId);
         Task<TwinServiceListModel> GetModuleTwinsByQueryAsync(string query, string continuationToken);
-        Task<StatusResultServiceModel> PingRegistryAsync();
     }
 }

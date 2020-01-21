@@ -6,12 +6,13 @@ using Mmm.Platform.IoT.TenantManager.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 
 namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class StatusService : StatusServiceBase
     {
-        private readonly ILogger<StatusService> _logger;
+        public override IDictionary<string, IStatusOperation> dependencies { get; set; }
 
         public StatusService(
             AppConfig config,
@@ -20,16 +21,18 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             IDeviceGroupsConfigClient deviceGroupsConfigClient,
             IStorageClient cosmosClient,
             ITableStorageClient tableStorageClient,
-            IRunbookHelper RunbookHelper) : base(config)
+            IRunbookHelper RunbookHelper,
+            IAppConfigurationClient appConfigClient) :
+            base(config)
         {
-            _logger = logger;
             dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "CosmosDb", cosmosClient },
                 { "Tenant Runbooks", RunbookHelper },
                 { "Table Storage", tableStorageClient },
                 { "Identity Gateway", identityGatewayClient },
-                { "Config", deviceGroupsConfigClient }
+                { "Config", deviceGroupsConfigClient },
+                { "App Config", appConfigClient }
             };
         }
     }

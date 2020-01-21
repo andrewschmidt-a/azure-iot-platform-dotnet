@@ -15,6 +15,7 @@ using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {
@@ -27,7 +28,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private readonly Mock<ITimeSeriesClient> timeSeriesClient;
         private readonly Mock<ILogger<Messages>> _logger;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
-        private readonly Mock<IAppConfigurationHelper> appConfigHelper;
+        private readonly Mock<IAppConfigurationClient> appConfigHelper;
         private readonly IMessages messages;
 
         public MessagesTest()
@@ -46,7 +47,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             storageClient = new Mock<IStorageClient>();
             timeSeriesClient = new Mock<ITimeSeriesClient>();
             httpContextAccessor = new Mock<IHttpContextAccessor>();
-            appConfigHelper = new Mock<IAppConfigurationHelper>();
+            appConfigHelper = new Mock<IAppConfigurationClient>();
             _logger = new Mock<ILogger<Messages>>();
             messages = new Messages(
                 servicesConfig,
