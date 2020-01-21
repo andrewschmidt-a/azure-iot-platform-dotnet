@@ -18,10 +18,6 @@ namespace Mmm.Platform.IoT.Config.Services
 {
     public class Storage : IStorage
     {
-        private readonly IStorageAdapterClient _client;
-        private readonly IAsaManagerClient _asaManager;
-        private readonly AppConfig config;
-        private readonly ILogger _logger;
         public const string SOLUTION_COLLECTION_ID = "solution-settings";
         public const string THEME_KEY = "theme";
         public const string LOGO_KEY = "logo";
@@ -31,6 +27,10 @@ namespace Mmm.Platform.IoT.Config.Services
         public const string PACKAGES_CONFIG_TYPE_KEY = "config-types";
         public const string AZURE_MAPS_KEY = "AzureMapsKey";
         public const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        private readonly IStorageAdapterClient _client;
+        private readonly IAsaManagerClient _asaManager;
+        private readonly AppConfig config;
+        private readonly ILogger _logger;
 
         public Storage(
             IStorageAdapterClient client,
@@ -70,14 +70,6 @@ namespace Mmm.Platform.IoT.Config.Services
             var themeOut = JsonConvert.DeserializeObject(response.Data) as JToken ?? new JObject();
             this.AppendAzureMapsKey(themeOut);
             return themeOut;
-        }
-
-        private void AppendAzureMapsKey(JToken theme)
-        {
-            if (theme[AZURE_MAPS_KEY] == null)
-            {
-                theme[AZURE_MAPS_KEY] = config.ConfigService.AzureMapsKey;
-            }
         }
 
         public async Task<object> GetUserSetting(string id)
@@ -292,6 +284,14 @@ namespace Mmm.Platform.IoT.Config.Services
             }
             list.add(customConfigType);
             await this._client.UpdateAsync(PACKAGES_COLLECTION_ID, PACKAGES_CONFIG_TYPE_KEY, JsonConvert.SerializeObject(list), "*");
+        }
+
+        private void AppendAzureMapsKey(JToken theme)
+        {
+            if (theme[AZURE_MAPS_KEY] == null)
+            {
+                theme[AZURE_MAPS_KEY] = config.ConfigService.AzureMapsKey;
+            }
         }
 
         private bool IsValidPackage(PackageServiceModel package)

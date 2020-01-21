@@ -13,12 +13,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     public static class ConfigurationsHelper
     {
-        private const string DEVICE_GROUP_ID_PARAM = "deviceGroupId";
-        private const string DEVICE_GROUP_QUERY_PARAM = "deviceGroupQuery";
-        private const string NAME_PARAM = "name";
-        private const string PACKAGE_CONTENT_PARAM = "packageContent";
-        private const string PRIORITY_PARAM = "priority";
-
         public const string PACKAGE_TYPE_LABEL = "Type";
         public const string CONFIG_TYPE_LABEL = "ConfigType";
         public const string DEPLOYMENT_NAME_LABEL = "Name";
@@ -26,6 +20,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
         public const string DEPLOYMENT_GROUP_NAME_LABEL = "DeviceGroupName";
         public const string DEPLOYMENT_PACKAGE_NAME_LABEL = "PackageName";
         public const string RM_CREATED_LABEL = "RMDeployment";
+        private const string DEVICE_GROUP_ID_PARAM = "deviceGroupId";
+        private const string DEVICE_GROUP_QUERY_PARAM = "deviceGroupQuery";
+        private const string NAME_PARAM = "name";
+        private const string PACKAGE_CONTENT_PARAM = "packageContent";
+        private const string PRIORITY_PARAM = "priority";
 
         public static Configuration ToHubConfiguration(DeploymentServiceModel model)
         {

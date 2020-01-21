@@ -19,10 +19,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
     public class Rules : IRules
     {
-        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
-
         public const string STORAGE_COLLECTION = "rules";
-
+        private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
         private readonly IStorageAdapterClient _storage;
         private readonly ILogger _logger;
         private readonly IAsaManagerClient _asaManager;

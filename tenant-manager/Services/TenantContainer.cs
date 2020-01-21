@@ -15,18 +15,20 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class TenantContainer : ITenantContainer
     {
-        // database ids for various collecitons
+        public readonly ILogger _logger;
+        public readonly IIdentityGatewayClient _identityClient;
+        public readonly IDeviceGroupsConfigClient _deviceGroupClient;
+        public readonly IRunbookHelper _runbookHelper;
+        public readonly IStorageClient _cosmosClient;
+        public readonly ITableStorageClient _tableStorageClient;
+        public readonly IAppConfigurationHelper _appConfigHelper;
         private const string IOT_DATABASE_ID = "iot";
         private const string STORAGE_ADAPTER_DATABASE_ID = "pcs-storage";
-
-        // table storage table ids
         private const string TENANT_TABLE_ID = "tenant";
         private const string USER_TABLE_ID = "user";
         private const string USER_SETTINGS_TABLE_ID = "userSettings";
         private const string LAST_USED_SETTING_KEY = "LastUsedTenant";
         private const string CREATED_ROLE = "[\"admin\"]";
-
-        // collection and iothub naming
         private string iotHubNameFormat = "iothub-{0}";  // format with a guid
         private string dpsNameFormat = "dps-{0}";  // format with a guid
         private string streamAnalyticsNameFormat = "sa-{0}";  // format with a guide
@@ -38,14 +40,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             { "lifecycle", IOT_DATABASE_ID },
             { "pcs", STORAGE_ADAPTER_DATABASE_ID }
         };
-
-        public readonly ILogger _logger;
-        public readonly IIdentityGatewayClient _identityClient;
-        public readonly IDeviceGroupsConfigClient _deviceGroupClient;
-        public readonly IRunbookHelper _runbookHelper;
-        public readonly IStorageClient _cosmosClient;
-        public readonly ITableStorageClient _tableStorageClient;
-        public readonly IAppConfigurationHelper _appConfigHelper;
 
         public TenantContainer(
             IHttpContextAccessor httpContextAccessor,
@@ -66,16 +60,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             this._appConfigHelper = appConfigHelper;
         }
 
-        private string FormatResourceName(string format, string tenantId)
-        {
-            return string.Format(format, tenantId.Substring(0, 8));
-        }
-
-        /// <summary>
-        /// Check if the tenant has been fully deployed by ensuring that the tenant's IoT Hub is deployed.
-        /// </summary>
-        /// <param name="tenantId"></param>
-        /// <returns>bool</returns>
         public async Task<bool> TenantIsReadyAsync(string tenantId)
         {
             // Load the tenant from table storage
@@ -84,13 +68,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             return tenant != null && tenant.IsIotHubDeployed;  // True if the tenant's IoTHub is fully deployed, false otherwise
         }
 
-        /// <summary>
-        /// Create a new tenant and all required information realted to the tenant
-        /// this process involves kicking off a long running Runbook webhook that provisions a new IoT Hub for the tenant
-        /// Because of the long process, this method returns a response with the new tenant GUID and a message stating that the tenant is currently being created
-        /// </summary>
-        /// <param name="tenantId"></param>
-        /// <returns>CreateTenantModel</returns>
         public async Task<CreateTenantModel> CreateTenantAsync(string tenantId, string userId)
         {
             /* Creates a new tenant */
@@ -336,6 +313,11 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
 
             return new DeleteTenantModel(tenantId, deletionRecord, ensureFullyDeployed);
+        }
+
+        private string FormatResourceName(string format, string tenantId)
+        {
+            return string.Format(format, tenantId.Substring(0, 8));
         }
     }
 }

@@ -213,32 +213,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             return new Alarm(document);
         }
 
-        private async Task<Document> GetDocumentByIdAsync(string id)
-        {
-            InputValidator.Validate(id);
-
-            var query = new SqlQuerySpec(
-                "SELECT * FROM c WHERE c.id=@id",
-                new SqlParameterCollection(new SqlParameter[] {
-                    new SqlParameter { Name = "@id", Value = id }
-                }));
-            // Retrieve the document using the DocumentClient.
-            List<Document> documentList = await this.storageClient.QueryDocumentsAsync(
-                this.databaseName,
-                this.collectionId,
-                null,
-                query,
-                0,
-                DOC_QUERY_LIMIT);
-
-            if (documentList.Count > 0)
-            {
-                return documentList[0];
-            }
-
-            return null;
-        }
-
         public async Task Delete(List<string> ids)
         {
             foreach (var id in ids)
@@ -307,6 +281,32 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                     Thread.Sleep(retryTimeSpan);
                 }
             }
+        }
+
+        private async Task<Document> GetDocumentByIdAsync(string id)
+        {
+            InputValidator.Validate(id);
+
+            var query = new SqlQuerySpec(
+                "SELECT * FROM c WHERE c.id=@id",
+                new SqlParameterCollection(new SqlParameter[] {
+                    new SqlParameter { Name = "@id", Value = id }
+                }));
+            // Retrieve the document using the DocumentClient.
+            List<Document> documentList = await this.storageClient.QueryDocumentsAsync(
+                this.databaseName,
+                this.collectionId,
+                null,
+                query,
+                0,
+                DOC_QUERY_LIMIT);
+
+            if (documentList.Count > 0)
+            {
+                return documentList[0];
+            }
+
+            return null;
         }
     }
 }

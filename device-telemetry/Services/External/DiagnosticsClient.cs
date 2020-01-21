@@ -82,6 +82,37 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
             }
         }
 
+        public async Task<StatusResultServiceModel> StatusAsync()
+        {
+            var isHealthy = false;
+            var message = "Diagnostics check failed";
+            var request = new HttpRequest();
+            try
+            {
+                request.SetUriFromString($"{this.serviceUrl}/status");
+                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                request.Headers.Add(TENANT_HEADER, tenantId);
+                var response = await this.httpClient.GetAsync(request);
+
+                if (response.IsError)
+                {
+                    message = "Status code: " + response.StatusCode + "; Response: " + response.Content;
+                }
+                else
+                {
+                    var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content);
+                    message = data["Message"].ToString();
+                    isHealthy = Convert.ToBoolean(data["IsHealthy"]);
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, message);
+            }
+
+            return new StatusResultServiceModel(isHealthy, message);
+        }
+
         private async Task PostHttpRequestWithRetryAsync(HttpRequest request)
         {
             int retries = 0;
@@ -124,35 +155,5 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
             }
         }
 
-        public async Task<StatusResultServiceModel> StatusAsync()
-        {
-            var isHealthy = false;
-            var message = "Diagnostics check failed";
-            var request = new HttpRequest();
-            try
-            {
-                request.SetUriFromString($"{this.serviceUrl}/status");
-                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
-                request.Headers.Add(TENANT_HEADER, tenantId);
-                var response = await this.httpClient.GetAsync(request);
-
-                if (response.IsError)
-                {
-                    message = "Status code: " + response.StatusCode + "; Response: " + response.Content;
-                }
-                else
-                {
-                    var data = JsonConvert.DeserializeObject<Dictionary<string, object>>(response.Content);
-                    message = data["Message"].ToString();
-                    isHealthy = Convert.ToBoolean(data["IsHealthy"]);
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, message);
-            }
-
-            return new StatusResultServiceModel(isHealthy, message);
-        }
     }
 }

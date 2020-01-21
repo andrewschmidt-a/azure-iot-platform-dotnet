@@ -205,6 +205,24 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.Equal(someUserTenant, result);
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    userTenantController.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
         private void InitializeController()
         {
             mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
@@ -249,24 +267,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
                 }
             };
             mockHttpContext.Setup(m => m.Items).Returns(contextItems);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    userTenantController.Dispose();
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

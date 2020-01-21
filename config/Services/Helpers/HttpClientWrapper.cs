@@ -161,16 +161,17 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             }
         }
 
+        public void SetHeaders(Dictionary<string, string> headers)
+        {
+            this.headers = headers;
+        }
+
         private void AddDefaultHeaders(HttpRequest request)
         {
             foreach (var key in this.headers.Keys)
             {
                 request.Headers.Add(key, this.headers[key]);
             }
-        }
-        public void SetHeaders(Dictionary<string, string> headers)
-        {
-            this.headers = headers;
         }
     }
 }

@@ -17,16 +17,15 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
     public class RunbookHelper : IRunbookHelper, IDisposable
     {
+        public HttpClient httpClient;
         private bool disposedValue = false;
         private const string SA_JOB_DATABASE_ID = "pcs-iothub-stream";
         private string iotHubConnectionStringKeyFormat = "tenant:{0}:iotHubConnectionString";
         private Regex iotHubKeyRegexMatch = new Regex(@"(?<=SharedAccessKey=)[^;]*");
         private Regex storageAccountKeyRegexMatch = new Regex(@"(?<=AccountKey=)[^;]*");
-
         private readonly AppConfig config;
         private readonly ITokenHelper _tokenHelper;
         private readonly IAppConfigurationHelper _appConfigHelper;
-        public HttpClient httpClient;
 
         public RunbookHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
         {
@@ -37,63 +36,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             this.httpClient = new HttpClient();
         }
 
-        /// <summary>
-        /// Get an automation client using an auth token from the token helper
-        /// </summary>
-        /// <returns>AutomationManagementClient</returns>
-        private async Task<AutomationManagementClient> GetAutomationClientAsync()
-        {
-            string authToken = await this._tokenHelper.GetTokenAsync();
-            TokenCloudCredentials credentials = new TokenCloudCredentials(config.Global.SubscriptionId, authToken);
-            return new AutomationManagementClient(credentials);
-        }
-
-        private string GetRegexMatch(string matchString, Regex expression)
-        {
-
-            Match match = expression.Match(matchString);
-            string value = match.Value;
-            if (string.IsNullOrEmpty(value))
-            {
-                throw new Exception($"Unable to match a value from string {matchString} for the given regular expression {expression.ToString()}");
-            }
-            return value;
-        }
-
-        private string GetIotHubKey(string tenantId, string iotHubName)
-        {
-            try
-            {
-                string appConfigKey = string.Format(this.iotHubConnectionStringKeyFormat, tenantId);
-                string iotHubConnectionString = this._appConfigHelper.GetValue(appConfigKey);
-                if (string.IsNullOrEmpty(iotHubConnectionString))
-                {
-                    throw new Exception($"The iotHubConnectionString returned by app config for the key {appConfigKey} returned a null value.");
-                }
-                return this.GetRegexMatch(iotHubConnectionString, this.iotHubKeyRegexMatch);
-            }
-            catch (Exception e)
-            {
-                throw new IotHubKeyException($"Unable to get the iothub SharedAccessKey for tenant {tenantId}", e);
-            }
-        }
-
-        private string GetStorageAccountKey(string connectionString)
-        {
-            try
-            {
-                return this.GetRegexMatch(connectionString, this.storageAccountKeyRegexMatch);
-            }
-            catch (Exception e)
-            {
-                throw new StorageAccountKeyException("Unable to get the Storage Account Key from the connection string. The connection string may not be configured correctly.", e);
-            }
-        }
-
-        /// <summary>
-        /// Return the status of the create and delete runbooks
-        /// </summary>
-        /// <returns>StatusResultServiceModel task</returns>
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             string unhealthyMessage = string.Empty;
@@ -173,16 +115,24 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
             return await this.TriggerRunbook(config.TenantManagerService.DeleteSaJobWebHookUrl, bodyContent);
         }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
 
-        /// <summary>
-        /// Trigger a runbook for the given URL
-        /// This method builds a very specific request body using configuration and the given parameters
-        /// In general, the webhooks passed to this method will create or delete iot hubs
-        /// </summary>
-        /// <param name="webHookUrlKey" type="string">The config key for the url for the runbook to trigger</param>
-        /// <param name="tenantId" type="string">Tenant Guid</param>
-        /// <param name="iotHubName" type="string">Iot Hub Name for deletion or creation</param>
-        /// <returns></returns>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    httpClient.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
         private async Task<HttpResponseMessage> TriggerIotHubRunbook(string webHookUrl, string tenantId, string iotHubName, string dpsName)
         {
             var requestBody = new
@@ -223,22 +173,53 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             }
         }
 
-        protected virtual void Dispose(bool disposing)
+        private async Task<AutomationManagementClient> GetAutomationClientAsync()
         {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    httpClient.Dispose();
-                }
+            string authToken = await this._tokenHelper.GetTokenAsync();
+            TokenCloudCredentials credentials = new TokenCloudCredentials(config.Global.SubscriptionId, authToken);
+            return new AutomationManagementClient(credentials);
+        }
 
-                disposedValue = true;
+        private string GetRegexMatch(string matchString, Regex expression)
+        {
+
+            Match match = expression.Match(matchString);
+            string value = match.Value;
+            if (string.IsNullOrEmpty(value))
+            {
+                throw new Exception($"Unable to match a value from string {matchString} for the given regular expression {expression.ToString()}");
+            }
+            return value;
+        }
+
+        private string GetIotHubKey(string tenantId, string iotHubName)
+        {
+            try
+            {
+                string appConfigKey = string.Format(this.iotHubConnectionStringKeyFormat, tenantId);
+                string iotHubConnectionString = this._appConfigHelper.GetValue(appConfigKey);
+                if (string.IsNullOrEmpty(iotHubConnectionString))
+                {
+                    throw new Exception($"The iotHubConnectionString returned by app config for the key {appConfigKey} returned a null value.");
+                }
+                return this.GetRegexMatch(iotHubConnectionString, this.iotHubKeyRegexMatch);
+            }
+            catch (Exception e)
+            {
+                throw new IotHubKeyException($"Unable to get the iothub SharedAccessKey for tenant {tenantId}", e);
             }
         }
 
-        public void Dispose()
+        private string GetStorageAccountKey(string connectionString)
         {
-            Dispose(true);
+            try
+            {
+                return this.GetRegexMatch(connectionString, this.storageAccountKeyRegexMatch);
+            }
+            catch (Exception e)
+            {
+                throw new StorageAccountKeyException("Unable to get the Storage Account Key from the connection string. The connection string may not be configured correctly.", e);
+            }
         }
     }
 }

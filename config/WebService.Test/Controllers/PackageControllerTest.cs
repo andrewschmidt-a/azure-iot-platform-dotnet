@@ -203,20 +203,9 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 Times.Once);
         }
 
-        private FormFile CreateSampleFile(string filename, bool isEdgePackage)
+        public void Dispose()
         {
-            var admPackage = "{\"id\":\"dummy\",\"content\":{\"deviceContent\":{}}}";
-            var edgePackage = "{\"id\":\"dummy\",\"content\":{\"modulesContent\":{}}}";
-
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            var package = isEdgePackage ? edgePackage : admPackage;
-
-            writer.Write(package);
-            writer.Flush();
-            stream.Position = 0;
-
-            return new FormFile(stream, 0, package.Length, "file", filename);
+            Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -232,9 +221,20 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             }
         }
 
-        public void Dispose()
+        private FormFile CreateSampleFile(string filename, bool isEdgePackage)
         {
-            Dispose(true);
+            var admPackage = "{\"id\":\"dummy\",\"content\":{\"deviceContent\":{}}}";
+            var edgePackage = "{\"id\":\"dummy\",\"content\":{\"modulesContent\":{}}}";
+
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            var package = isEdgePackage ? edgePackage : admPackage;
+
+            writer.Write(package);
+            writer.Flush();
+            stream.Position = 0;
+
+            return new FormFile(stream, 0, package.Length, "file", filename);
         }
     }
 }

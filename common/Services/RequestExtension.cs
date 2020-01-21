@@ -15,15 +15,14 @@ namespace Mmm.Platform.IoT.Common.Services
     public static class RequestExtension
     {
         public const string ContextKeyUserClaims = "CurrentUserClaims";
-        private const string ContextKeyAuthRequired = "AuthRequired";
-        private const string ContextKeyAllowedActions = "CurrentUserAllowedActions";
-        private const string ContextKeyExternalRequest = "ExternalRequest";
         public const string ContextKeyTenantId = "TenantID";
+        public const string UserObjectIdClaimType = "sub";
         private const string ClaimKeyTenantId = "tenant";
         private const string HeaderKeyTenantId = "ApplicationTenantID";
         private const string RoleClaimType = "role";
-        public const string UserObjectIdClaimType = "sub";
-
+        private const string ContextKeyAuthRequired = "AuthRequired";
+        private const string ContextKeyAllowedActions = "CurrentUserAllowedActions";
+        private const string ContextKeyExternalRequest = "ExternalRequest";
         public static void SetCurrentUserClaims(this HttpRequest request, IEnumerable<Claim> claims)
         {
             request.HttpContext.Items[ContextKeyUserClaims] = claims;

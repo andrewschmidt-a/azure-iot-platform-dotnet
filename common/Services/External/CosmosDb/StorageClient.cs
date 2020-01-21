@@ -35,42 +35,6 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             this.client = this.GetDocumentClient();
         }
 
-        private void SetValuesFromConfig(AppConfig config)
-        {
-            if (string.IsNullOrEmpty(config.Global.CosmosDb.DocumentDbConnectionString))
-            {
-                throw new ArgumentNullException("The CosmosDbConnectionString in the IStorageClientConfig was null or empty. The StorageClient cannot be created with an empty connection string.");
-            }
-
-            try
-            {
-                Match match = Regex.Match(config.Global.CosmosDb.DocumentDbConnectionString, CONNECTION_STRING_VALUE_REGEX);
-
-                // Get the storage uri from the regular expression match
-                Uri storageUriEndpoint;
-                Uri.TryCreate(match.Groups["endpoint"].Value, UriKind.RelativeOrAbsolute, out storageUriEndpoint);
-                this.storageUri = storageUriEndpoint;
-                if (string.IsNullOrEmpty(this.storageUri.ToString()))
-                {
-                    throw new Exception("The StorageUri dissected from the connection string was null. The connection string may be null or not formatted correctly.");
-                }
-
-                // Get the PrimaryKey from the connection string
-                this.storagePrimaryKey = match.Groups["key"]?.Value;
-                if (string.IsNullOrEmpty(this.storagePrimaryKey))
-                {
-                    throw new Exception("The StoragePrimaryKey dissected from the connection string was null. The connection string may be null or not formatted correctly.");
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Unable to create required StorageClient fields using the connection string from the IStorageClientConfig instance.", e);
-            }
-
-            // handling exceptions is not necessary here - the value can be left null if not configured.
-            this.storageThroughput = config.Global.CosmosDb.Rus;
-        }
-
         public async Task DeleteCollectionAsync(
             string databaseName,
             string id)
@@ -330,6 +294,42 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             {
                 this.client.Dispose();
             }
+        }
+
+        private void SetValuesFromConfig(AppConfig config)
+        {
+            if (string.IsNullOrEmpty(config.Global.CosmosDb.DocumentDbConnectionString))
+            {
+                throw new ArgumentNullException("The CosmosDbConnectionString in the IStorageClientConfig was null or empty. The StorageClient cannot be created with an empty connection string.");
+            }
+
+            try
+            {
+                Match match = Regex.Match(config.Global.CosmosDb.DocumentDbConnectionString, CONNECTION_STRING_VALUE_REGEX);
+
+                // Get the storage uri from the regular expression match
+                Uri storageUriEndpoint;
+                Uri.TryCreate(match.Groups["endpoint"].Value, UriKind.RelativeOrAbsolute, out storageUriEndpoint);
+                this.storageUri = storageUriEndpoint;
+                if (string.IsNullOrEmpty(this.storageUri.ToString()))
+                {
+                    throw new Exception("The StorageUri dissected from the connection string was null. The connection string may be null or not formatted correctly.");
+                }
+
+                // Get the PrimaryKey from the connection string
+                this.storagePrimaryKey = match.Groups["key"]?.Value;
+                if (string.IsNullOrEmpty(this.storagePrimaryKey))
+                {
+                    throw new Exception("The StoragePrimaryKey dissected from the connection string was null. The connection string may be null or not formatted correctly.");
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to create required StorageClient fields using the connection string from the IStorageClientConfig instance.", e);
+            }
+
+            // handling exceptions is not necessary here - the value can be left null if not configured.
+            this.storageThroughput = config.Global.CosmosDb.Rus;
         }
     }
 }

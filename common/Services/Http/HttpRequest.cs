@@ -109,6 +109,11 @@ namespace Mmm.Platform.IoT.Common.Services.Http
             this.ContentType = mediaType;
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -120,11 +125,6 @@ namespace Mmm.Platform.IoT.Common.Services.Http
 
                 disposedValue = true;
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

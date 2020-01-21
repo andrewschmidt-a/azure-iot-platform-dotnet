@@ -63,6 +63,24 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.Equal(ConfigurationController.ContentType, result.ContentType.ToLowerInvariant());
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    configurationController.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
         private void InitializeController()
         {
             mockAppConfig = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
@@ -84,24 +102,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(somePublicKey);
             mockOpenIdProviderConfiguration.SetupGet(m => m.issuer).Returns(someIssuer);
             mockRsaHelpers.Setup(m => m.GetJsonWebKey(It.IsAny<string>())).Returns(someJwks);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    configurationController.Dispose();
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

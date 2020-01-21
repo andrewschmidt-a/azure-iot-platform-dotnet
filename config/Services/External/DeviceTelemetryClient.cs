@@ -25,9 +25,14 @@ namespace Mmm.Platform.IoT.Config.Services.External
             this._httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>
-        /// Sets the Tenant ID in the http headers
-        /// </summary>
+        public async Task UpdateRuleAsync(RuleApiModel rule, string etag)
+        {
+            SetHttpClientHeaders();
+            rule.ETag = etag;
+
+            await this.httpClient.PutAsync($"{this.serviceUri}/rules/{rule.Id}", $"Rule {rule.Id}", rule);
+        }
+
         private void SetHttpClientHeaders()
         {
             if (this._httpContextAccessor != null && this.httpClient != null)
@@ -35,14 +40,6 @@ namespace Mmm.Platform.IoT.Config.Services.External
                 string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
                 this.httpClient.SetHeaders(new Dictionary<string, string> { { TENANT_HEADER, tenantId } });
             }
-        }
-
-        public async Task UpdateRuleAsync(RuleApiModel rule, string etag)
-        {
-            SetHttpClientHeaders();
-            rule.ETag = etag;
-
-            await this.httpClient.PutAsync($"{this.serviceUri}/rules/{rule.Id}", $"Rule {rule.Id}", rule);
         }
     }
 }

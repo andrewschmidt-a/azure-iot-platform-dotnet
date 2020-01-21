@@ -22,7 +22,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             Configuration = configuration;
         }
         public IConfiguration Configuration { get; }
+
         public IContainer ApplicationContainer { get; private set; }
+
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -44,8 +46,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        // This method is called by the runtime, after the ConfigureServices
-        // method above. Use this method to add middleware.
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
@@ -77,6 +77,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -88,11 +93,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 
                 disposedValue = true;
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

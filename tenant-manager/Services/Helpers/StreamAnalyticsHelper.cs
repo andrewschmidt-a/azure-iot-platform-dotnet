@@ -22,38 +22,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             this.config = config;
             this._tokenHelper = tokenHelper;
         }
+
         private delegate Task<T> JobOperationDelegate<T>(string rg, string saJobName);
-
-        private async Task<StreamAnalyticsManagementClient> GetClientAsync()
-        {
-            try
-            {
-                string authToken = string.Empty;
-                try
-                {
-                    authToken = await this._tokenHelper.GetTokenAsync();
-                    if (string.IsNullOrEmpty(authToken))
-                    {
-                        throw new Exception("Auth Token from tokenHelper returned a null response.");
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Unable to get an authorization token for creating a Stream Analytics Management Client.", e);
-                }
-
-                TokenCredentials credentials = new TokenCredentials(authToken);
-                StreamAnalyticsManagementClient client = new StreamAnalyticsManagementClient(credentials)
-                {
-                    SubscriptionId = config.Global.SubscriptionId
-                };
-                return client;
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Unable to get a new Stream Analytics Management Client.", e);
-            }
-        }
 
         public async Task<StatusResultServiceModel> StatusAsync()
         {
@@ -85,7 +55,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             {
                 throw new Exception($"An Unknown Exception occurred while attempting to get the stream analytics job {saJobName}", e);
             }
-        }
+ps        }
 
         public bool JobIsActive(StreamingJob job)
         {
@@ -115,6 +85,37 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             catch (Exception e)
             {
                 throw new Exception($"Unable to stop the Stream Analytics Job {saJobName}.", e);
+            }
+        }
+
+        private async Task<StreamAnalyticsManagementClient> GetClientAsync()
+        {
+            try
+            {
+                string authToken = string.Empty;
+                try
+                {
+                    authToken = await this._tokenHelper.GetTokenAsync();
+                    if (string.IsNullOrEmpty(authToken))
+                    {
+                        throw new Exception("Auth Token from tokenHelper returned a null response.");
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Unable to get an authorization token for creating a Stream Analytics Management Client.", e);
+                }
+
+                TokenCredentials credentials = new TokenCredentials(authToken);
+                StreamAnalyticsManagementClient client = new StreamAnalyticsManagementClient(credentials)
+                {
+                    SubscriptionId = config.Global.SubscriptionId
+                };
+                return client;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to get a new Stream Analytics Management Client.", e);
             }
         }
     }

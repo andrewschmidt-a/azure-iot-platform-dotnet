@@ -28,17 +28,6 @@ namespace Mmm.Platform.IoT.Config.Services.External
             this._httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>
-        /// Sets the Tenant ID in the http headers
-        /// </summary>
-        private void SetHttpClientHeaders()
-        {
-            if (this._httpContextAccessor != null && this.httpClient != null)
-            {
-                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
-                this.httpClient.SetHeaders(new Dictionary<string, string> { { TENANT_HEADER, tenantId } });
-            }
-        }
         public async Task<SimulationApiModel> GetDefaultSimulationAsync()
         {
             SetHttpClientHeaders();
@@ -49,6 +38,15 @@ namespace Mmm.Platform.IoT.Config.Services.External
         {
             SetHttpClientHeaders();
             await this.httpClient.PutAsync($"{this.serviceUri}/simulations/{model.Id}", $"Simulation {model.Id}");
+        }
+
+        private void SetHttpClientHeaders()
+        {
+            if (this._httpContextAccessor != null && this.httpClient != null)
+            {
+                string tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                this.httpClient.SetHeaders(new Dictionary<string, string> { { TENANT_HEADER, tenantId } });
+            }
         }
     }
 }

@@ -714,41 +714,6 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     Times.Once);
         }
 
-        private async Task<Logo> SetLogoHelper(Logo logo, string oldImage, string oldName, string oldType, bool isDefault)
-        {
-            this.mockClient
-                .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync((string id, string key, string value, string etag) => new ValueApiModel
-                {
-                    Data = value
-                });
-
-            this.mockClient.Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(new ValueApiModel
-                {
-                    Data = JsonConvert.SerializeObject(new Logo
-                    {
-                        Image = oldImage,
-                        Type = oldType,
-                        Name = oldName,
-                        IsDefault = false
-                    })
-                });
-
-            Logo result = await this.storage.SetLogoAsync(logo);
-
-            this.mockClient
-                .Verify(
-                    x => x.UpdateAsync(
-                        It.Is<string>(s => s == Storage.SOLUTION_COLLECTION_ID),
-                        It.Is<string>(s => s == Storage.LOGO_KEY),
-                        It.Is<string>(s => s == JsonConvert.SerializeObject(logo)),
-                        It.Is<string>(s => s == "*")),
-                    Times.Once);
-
-            return result;
-        }
-
         [Fact]
         public async Task AddEdgePackageTest()
         {
@@ -985,6 +950,41 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             originalPkg.Remove(dateCreatedField);
 
             return JToken.DeepEquals(createdPkg, originalPkg);
+        }
+
+        private async Task<Logo> SetLogoHelper(Logo logo, string oldImage, string oldName, string oldType, bool isDefault)
+        {
+            this.mockClient
+                .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync((string id, string key, string value, string etag) => new ValueApiModel
+                {
+                    Data = value
+                });
+
+            this.mockClient.Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new ValueApiModel
+                {
+                    Data = JsonConvert.SerializeObject(new Logo
+                    {
+                        Image = oldImage,
+                        Type = oldType,
+                        Name = oldName,
+                        IsDefault = false
+                    })
+                });
+
+            Logo result = await this.storage.SetLogoAsync(logo);
+
+            this.mockClient
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == Storage.SOLUTION_COLLECTION_ID),
+                        It.Is<string>(s => s == Storage.LOGO_KEY),
+                        It.Is<string>(s => s == JsonConvert.SerializeObject(logo)),
+                        It.Is<string>(s => s == "*")),
+                    Times.Once);
+
+            return result;
         }
     }
 }

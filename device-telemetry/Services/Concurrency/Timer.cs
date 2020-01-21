@@ -56,6 +56,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
             this.timer?.Dispose();
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -67,11 +72,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
 
                 disposedValue = true;
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

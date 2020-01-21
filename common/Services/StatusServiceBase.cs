@@ -7,23 +7,12 @@ namespace Mmm.Platform.IoT.Common.Services
 {
     public class StatusServiceBase : IStatusService
     {
-        private readonly AppConfig config;
         protected IDictionary<string, IStatusOperation> dependencies;
+        private readonly AppConfig config;
 
         public StatusServiceBase(AppConfig config)
         {
             this.config = config;
-        }
-
-        protected void SetServiceStatus(string dependencyName, StatusResultServiceModel serviceResult, StatusServiceModel result, IList<string> errors)
-        {
-            if (!serviceResult.IsHealthy)
-            {
-                errors.Add(dependencyName + " check failed");
-                result.Status.IsHealthy = false;
-            }
-
-            result.Dependencies.Add(dependencyName, serviceResult);
         }
 
         public async Task<StatusServiceModel> GetStatusAsync()
@@ -48,6 +37,17 @@ namespace Mmm.Platform.IoT.Common.Services
             result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
 
             return result;
+        }
+
+        protected void SetServiceStatus(string dependencyName, StatusResultServiceModel serviceResult, StatusServiceModel result, IList<string> errors)
+        {
+            if (!serviceResult.IsHealthy)
+            {
+                errors.Add(dependencyName + " check failed");
+                result.Status.IsHealthy = false;
+            }
+
+            result.Dependencies.Add(dependencyName, serviceResult);
         }
     }
 }

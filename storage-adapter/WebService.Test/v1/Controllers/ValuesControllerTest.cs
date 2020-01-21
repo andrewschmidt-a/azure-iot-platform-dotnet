@@ -319,6 +319,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             await Assert.ThrowsAsync<BadRequestException>(async () =>
                 await this.controller.Delete("collection", new string('a', 256)));
         }
+        public void Dispose()
+        {
+            Dispose(true);
+        }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -333,9 +337,5 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-        }
     }
 }

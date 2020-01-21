@@ -266,6 +266,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.deploymentsController.PostAsync(depApiModel));
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -277,11 +282,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 
                 disposedValue = true;
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

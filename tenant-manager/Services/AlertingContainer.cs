@@ -8,12 +8,10 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class AlertingContainer : IAlertingContainer
     {
-        private const string SA_NAME_FORMAT = "sa-{0}";
-
-        // collection and iothub naming
         public readonly ITenantContainer _tenantContainer;
         public readonly IStreamAnalyticsHelper _streamAnalyticsHelper;
         public readonly IRunbookHelper _runbookHelper;
+        private const string SA_NAME_FORMAT = "sa-{0}";
 
         public AlertingContainer(
             ITenantContainer tenantContainer,
@@ -23,21 +21,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             this._tenantContainer = tenantContainer;
             this._streamAnalyticsHelper = streamAnalyticsHelper;
             this._runbookHelper = RunbookHelper;
-        }
-
-        private async Task<TenantModel> GetTenantFromContainerAsync(string tenantId)
-        {
-            TenantModel tenant = await this._tenantContainer.GetTenantAsync(tenantId);
-            if (tenant == null)
-            {
-                throw new Exception("The given tenant does not exist.");
-            }
-            bool tenantReady = await this._tenantContainer.TenantIsReadyAsync(tenantId);
-            if (!tenantReady)
-            {
-                throw new Exception("The tenant is not fully deployed yet. Please wait for the tenant to fully deploy before performing alerting operations");
-            }
-            return tenant;
         }
 
         public bool SaJobExists(StreamAnalyticsJobModel saJobModel)
@@ -127,6 +110,21 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
             await this._streamAnalyticsHelper.StopAsync(saJobModel.StreamAnalyticsJobName);
             return saJobModel;
+        }
+
+        private async Task<TenantModel> GetTenantFromContainerAsync(string tenantId)
+        {
+            TenantModel tenant = await this._tenantContainer.GetTenantAsync(tenantId);
+            if (tenant == null)
+            {
+                throw new Exception("The given tenant does not exist.");
+            }
+            bool tenantReady = await this._tenantContainer.TenantIsReadyAsync(tenantId);
+            if (!tenantReady)
+            {
+                throw new Exception("The tenant is not fully deployed yet. Please wait for the tenant to fully deploy before performing alerting operations");
+            }
+            return tenant;
         }
     }
 }

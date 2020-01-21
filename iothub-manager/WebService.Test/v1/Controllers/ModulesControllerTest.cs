@@ -96,6 +96,24 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             Assert.Equal("v1", moduleTwin.Reported["version"]);
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    modulesController.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
         private static TwinServiceModel CreateTestTwin(string deviceId, string moduleId)
         {
             return new TwinServiceModel()
@@ -111,23 +129,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
                     { "version", JToken.Parse("'v1'") }
                 }
             };
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    modulesController.Dispose();
-                }
-
-                disposedValue = true;
-            }
-        }
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

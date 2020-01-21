@@ -27,13 +27,6 @@ namespace Mmm.Platform.IoT.AsaManager.WebService.v1.Controllers
             this._logger = logger;
         }
 
-        private void Forget(Task task, string operationId)
-        {
-            task.ContinueWith(
-                t => { this._logger.LogError(t.Exception, "An exception occurred during the background conversion. OperationId {operationId}", operationId); },
-                TaskContinuationOptions.OnlyOnFaulted);
-        }
-
         [HttpPost("")]
         public BeginConversionApiModel BeginRuleConversion()
         {
@@ -47,6 +40,13 @@ namespace Mmm.Platform.IoT.AsaManager.WebService.v1.Controllers
                 TenantId = tenantId,
                 OperationId = operationId
             };
+        }
+
+        private void Forget(Task task, string operationId)
+        {
+            task.ContinueWith(
+                t => { this._logger.LogError(t.Exception, "An exception occurred during the background conversion. OperationId {operationId}", operationId); },
+                TaskContinuationOptions.OnlyOnFaulted);
         }
     }
 }

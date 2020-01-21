@@ -14,10 +14,10 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ConfigurationController : Controller
     {
+        public const string ContentType = "application/json";
         private AppConfig config;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
         private readonly IRsaHelpers _rsaHelpers;
-        public const string ContentType = "application/json";
 
         public ConfigurationController(AppConfig config, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
         {

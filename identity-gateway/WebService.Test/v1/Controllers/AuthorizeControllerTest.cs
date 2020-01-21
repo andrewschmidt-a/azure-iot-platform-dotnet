@@ -23,6 +23,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {
     public class AuthorizeControllerTest : IDisposable
     {
+        public static readonly string ValidAuthHeader = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
         private bool disposedValue = false;
         private Mock<IUserContainer<UserSettingsModel, UserSettingsInput>> mockUserSettingsContainer;
         private Mock<UserTenantContainer> mockUserTenantContainer;
@@ -41,7 +42,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
         private Mock<IJwtHelpers> mockJwtHelper;
         private Mock<IAuthenticationContext> mockAuthContext;
         private JwtSecurityToken someSecurityToken;
-        public static readonly string ValidAuthHeader = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
         private Mock<IOpenIdProviderConfiguration> mockOpenIdProviderConfiguration;
 
         public AuthorizeControllerTest()
@@ -253,6 +253,23 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.IsType<string>(result.Value);
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    authorizeController.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
 
         private void InitializeController()
         {
@@ -279,24 +296,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             someSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", someTenant.ToString()) });
             mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out someSecurityToken)).Returns(true);
             mockOpenIdProviderConfiguration.Setup(m => m.issuer).Returns(someIssuer);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    authorizeController.Dispose();
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

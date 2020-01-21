@@ -12,11 +12,11 @@ namespace Mmm.Platform.IoT.AsaManager.Services
     public abstract class Converter : IConverter
     {
         public string dateTimeFormat = $"{REFERENCE_DATA_DATE_FORMAT}/{REFERENCE_DATA_TIME_FORMAT}";
-        private const string REFERENCE_DATA_DATE_FORMAT = "yyyy-MM-dd";
-        private const string REFERENCE_DATA_TIME_FORMAT = "HH-mm";
         protected readonly IBlobStorageClient _blobStorageClient;
         protected readonly IStorageAdapterClient _storageAdapterClient;
         protected readonly ILogger _logger;
+        private const string REFERENCE_DATA_DATE_FORMAT = "yyyy-MM-dd";
+        private const string REFERENCE_DATA_TIME_FORMAT = "HH-mm";
 
         public Converter(
             IBlobStorageClient blobStorageClient,

@@ -60,6 +60,11 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
             return Convert.ToBase64String(bytes);
         }
 
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
         private void Dispose(bool disposing)
         {
             if (!this.disposedValue)
@@ -72,11 +77,6 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
 
                 this.disposedValue = true;
             }
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
         }
     }
 }

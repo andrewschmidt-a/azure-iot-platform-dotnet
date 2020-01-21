@@ -63,15 +63,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 
         }
 
-        private List<string> CreateFakeList()
+        public void Dispose()
         {
-            return new List<string>
-            {
-                "property1",
-                "property2",
-                "property3",
-                "property4"
-            };
+            Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -87,9 +81,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             }
         }
 
-        public void Dispose()
+        private List<string> CreateFakeList()
         {
-            Dispose(true);
+            return new List<string>
+            {
+                "property1",
+                "property2",
+                "property3",
+                "property4"
+            };
         }
     }
 }

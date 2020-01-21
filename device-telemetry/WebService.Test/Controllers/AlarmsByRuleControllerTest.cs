@@ -81,6 +81,24 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
             Assert.NotEmpty(response.Result.Items);
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    controller.Dispose();
+                }
+
+                disposedValue = true;
+            }
+        }
+
         private Document AlarmToDocument(Alarm alarm)
         {
             Document document = new Document()
@@ -183,24 +201,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
                 "1234",
                 "critical",
                 "HVAC temp > 75");
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    controller.Dispose();
-                }
-
-                disposedValue = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

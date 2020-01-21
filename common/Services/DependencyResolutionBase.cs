@@ -52,13 +52,13 @@ namespace Mmm.Platform.IoT.Common.Services
             return container;
         }
 
+        protected abstract void SetupCustomRules(ContainerBuilder builder);
+
         private void AutowireAssemblies(ContainerBuilder builder)
         {
             var assembly = Assembly.GetEntryAssembly();
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
         }
-
-        protected abstract void SetupCustomRules(ContainerBuilder builder);
 
         // Prepare the OpenId Connect configuration manager, responsibile
         // for retrieving the JWT signing keys and cache them in memory.

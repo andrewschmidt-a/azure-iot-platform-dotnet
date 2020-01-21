@@ -55,14 +55,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         public virtual string DocumentDataType { get { return "pcs"; } }
         public virtual string DocumentDatabaseSuffix { get { return "storage"; } }
 
-        private string CollectionLink
-        {
-            get
-            {
-                return $"/dbs/{this.DocumentDbDatabaseId}/colls/{this.DocumentDbCollectionId}";
-            }
-        }
-
         public virtual string DocumentDbDatabaseId
         {
             get
@@ -97,6 +89,13 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
         }
 
+        private string CollectionLink
+        {
+            get
+            {
+                return $"/dbs/{this.DocumentDbDatabaseId}/colls/{this.DocumentDbCollectionId}";
+            }
+        }
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             this.SetClientOptions();
@@ -212,6 +211,11 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 
                 _logger.LogDebug("Key {key} does not exist, nothing to do");
             }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
         }
 
         private RequestOptions GetDocDbOptions()
@@ -357,11 +361,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 }
                 this.disposedValue = true;
             }
-        }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
         }
     }
 }

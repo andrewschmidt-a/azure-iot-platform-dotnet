@@ -147,15 +147,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             AssertUserSettingsMatchesInput(result);
         }
 
-        private void AssertUserSettingsMatchesInput(UserSettingsModel userSettings)
-        {
-            Assert.NotNull(userSettings);
-            userSettings = new UserSettingsModel(someUserSettingsInput);
-            Assert.Equal(userSettings.SettingKey, userSettings.SettingKey);
-            Assert.Equal(userSettings.UserId, userSettings.UserId);
-            Assert.Equal(userSettings.Value, userSettings.Value);
-        }
-
         [Fact]
         [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetReturnsEmptyUserSettings()
@@ -327,6 +318,15 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
 
             // Assert
             await Assert.ThrowsAsync<StorageException>(a);
+        }
+
+        private void AssertUserSettingsMatchesInput(UserSettingsModel userSettings)
+        {
+            Assert.NotNull(userSettings);
+            userSettings = new UserSettingsModel(someUserSettingsInput);
+            Assert.Equal(userSettings.SettingKey, userSettings.SettingKey);
+            Assert.Equal(userSettings.UserId, userSettings.UserId);
+            Assert.Equal(userSettings.Value, userSettings.Value);
         }
     }
 }

@@ -91,12 +91,6 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             Assert.Equal(result.Description.ToString(), description);
         }
 
-        private bool CheckTheme(object obj, string name, string description)
-        {
-            var dynamiceObj = obj as dynamic;
-            return dynamiceObj.Name.ToString() == name && dynamiceObj.Description.ToString() == description;
-        }
-
         [Fact]
         public async Task GetLogoShouldReturnDefaultLogo()
         {
@@ -251,6 +245,11 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             }
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -264,9 +263,10 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             }
         }
 
-        public void Dispose()
+        private bool CheckTheme(object obj, string name, string description)
         {
-            Dispose(true);
+            var dynamiceObj = obj as dynamic;
+            return dynamiceObj.Name.ToString() == name && dynamiceObj.Description.ToString() == description;
         }
     }
 }

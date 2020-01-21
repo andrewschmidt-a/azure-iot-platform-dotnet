@@ -12,10 +12,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
     public class StatusService : IStatusService
     {
-        private AppConfig config;
-
         public UserTenantContainer _userTenantContainer;
         public UserSettingsContainer _userSettingsContainer;
+        private AppConfig config;
 
         public StatusService(AppConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer)
         {

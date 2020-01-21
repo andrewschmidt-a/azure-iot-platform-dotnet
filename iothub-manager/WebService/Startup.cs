@@ -42,15 +42,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
-
-        private void LogDependencyInjectionContainerRegistrations(ILogger logger)
-        {
-            foreach (var registration in ApplicationContainer.ComponentRegistry.Registrations)
-            {
-                logger.LogDebug("Type {type} is registered in dependency injection container", registration.Activator.ToString());
-            }
-        }
-
         public void Configure(
             IApplicationBuilder app,
             ICorsSetup corsSetup,
@@ -82,6 +73,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+        }
+
+        private void LogDependencyInjectionContainerRegistrations(ILogger logger)
+        {
+            foreach (var registration in ApplicationContainer.ComponentRegistry.Registrations)
+            {
+                logger.LogDebug("Type {type} is registered in dependency injection container", registration.Activator.ToString());
+            }
         }
     }
 }

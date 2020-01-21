@@ -250,6 +250,11 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     Times.Once);
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -261,11 +266,6 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
                 disposedValue = true;
             }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
         }
     }
 }

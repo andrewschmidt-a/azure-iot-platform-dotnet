@@ -54,27 +54,6 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
             }
         }
 
-        private async Task<T> ExecuteTableOperationAsync<T>(CloudTable table, TableOperation operation)
-            where T : ITableEntity
-        {
-            try
-            {
-                TableResult result = await table.ExecuteAsync(operation);
-                try
-                {
-                    return (T)result.Result;
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Unable to transform the table result {result.ToString()} to the requested entity type", e);
-                }
-            }
-            catch (StorageException se)
-            {
-                throw new Exception($"Unable to perform the requested table operation {operation.OperationType}", se);
-            }
-        }
-
         public async Task<T> InsertAsync<T>(string tableName, T entity)
             where T : ITableEntity
         {
@@ -132,6 +111,27 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
                 items.AddRange(seg);
             } while (token != null && !cancellationToken.IsCancellationRequested);
             return items;
+        }
+
+        private async Task<T> ExecuteTableOperationAsync<T>(CloudTable table, TableOperation operation)
+            where T : ITableEntity
+        {
+            try
+            {
+                TableResult result = await table.ExecuteAsync(operation);
+                try
+                {
+                    return (T)result.Result;
+                }
+                catch (Exception e)
+                {
+                    throw new Exception($"Unable to transform the table result {result.ToString()} to the requested entity type", e);
+                }
+            }
+            catch (StorageException se)
+            {
+                throw new Exception($"Unable to perform the requested table operation {operation.OperationType}", se);
+            }
         }
     }
 }
