@@ -170,7 +170,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             this.deployments = new Deployments(tenantHelper.Object);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("depname", "dvcgroupid", "dvcquery", TEST_EDGE_PACKAGE_JSON, 10, "")]
         [InlineData("", "dvcgroupid", "dvcquery", TEST_EDGE_PACKAGE_JSON, 10, "System.ArgumentNullException")]
         [InlineData("depname", "", "dvcquery", TEST_EDGE_PACKAGE_JSON, 10, "System.ArgumentNullException")]
@@ -238,7 +239,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task InvalidRmConfigurationTest()
         {
             // Arrange
@@ -254,7 +256,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     async () => await this.deployments.GetAsync(configuration.Id));
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(5)]
@@ -283,7 +286,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetDeploymentsWithDeviceStatusTest()
         {
             // Arrange
@@ -306,7 +310,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.Null(deviceStatuses);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData(true, true, true)]
         [InlineData(false, true)]
         [InlineData(true, true)]
@@ -376,7 +381,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData(true)]
         [InlineData(false)]
         public async Task GetDeploymentMetricsTest(bool isEdgeDeployment)
@@ -418,7 +424,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.Equal(3, returnedDeployment.DeploymentMetrics.DeviceMetrics.Count());
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task VerifyGroupAndPackageNameLabelsTest()
         {
             // Arrange
@@ -476,7 +483,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.Equal(packageName, createdDeployment.PackageName);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task FilterOutNonRmDeploymentsTest()
         {
             // Arrange

@@ -14,7 +14,8 @@ using Mmm.Platform.IoT.Config.WebService.v1.Models;
 
 namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
 {
-    [Route("v1/packages"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/packages")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class PackagesController : Controller
     {
         private readonly IStorage storage;

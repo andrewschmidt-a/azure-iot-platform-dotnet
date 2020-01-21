@@ -56,7 +56,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                                         $"api-version={MOCK_API_VERSION}";
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetOffice365IsEnabled_ReturnsTrueIfEnabled()
         {
             // Arrange
@@ -83,7 +84,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             Assert.True(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetOffice365IsEnabled_ReturnsFalseIfDisabled()
         {
             // Arrange
@@ -110,7 +112,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             Assert.False(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetOffice365IsEnabled_ThrowsIfNotAuthorizd()
         {
             // Arrange

@@ -19,7 +19,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 
         public ActionConverterTest() { }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void ItReturnsEmailAction_WhenEmailActionJsonPassed()
         {
             // Arrange

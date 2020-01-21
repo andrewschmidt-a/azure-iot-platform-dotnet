@@ -20,7 +20,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
     {
         private Random rand = new Random();
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetListAsyncTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -51,7 +52,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 Assert.Contains(result, s => s.Contains(reported));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task UpdateListAsyncTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -96,7 +98,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.True(result.Reported.SetEquals(newCacheValue.Reported));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task TryRecreateListAsyncSkipByTimeTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -146,7 +149,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task TryRecreateListAsyncSkipByConflictTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -196,7 +200,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task TryRecreateListAsyncTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();

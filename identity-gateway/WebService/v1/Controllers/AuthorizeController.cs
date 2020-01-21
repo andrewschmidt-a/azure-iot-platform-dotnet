@@ -21,7 +21,8 @@ using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 {
-    [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AuthorizeController : Controller
     {
         private AppConfig config;

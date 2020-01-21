@@ -30,7 +30,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             this.userSettingsContainer = new UserSettingsContainer(mockTableStorageClient.Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetAllReturnsExpectedUserSettingsList()
         {
             // Arrange
@@ -69,7 +70,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserSettingsInput.UserId), result.models.Count);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetAllReturnsEmptyUserSettingsList()
         {
             // Arrange
@@ -102,7 +104,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             Assert.Empty(result.models);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetReturnsExpectedUserSettings()
         {
             // Arrange
@@ -153,7 +156,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             Assert.Equal(userSettings.Value, userSettings.Value);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetReturnsEmptyUserSettings()
         {
             // Arrange
@@ -179,7 +183,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             Assert.Null(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void CreateReturnsExpectedUserSettings()
         {
             // mock intial check to see if setting already exists during CreateAsync
@@ -219,7 +224,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             AssertUserSettingsMatchesInput(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void CreateThrowsWhenUserSettingsAlreadyExist()
         {
             // Arrange
@@ -239,7 +245,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             await Assert.ThrowsAsync<StorageException>(a);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void UpdateReturnsExpectedUserSettings()
         {
             // Arrange
@@ -263,7 +270,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             AssertUserSettingsMatchesInput(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void DeleteReturnsExpectedUserSettings()
         {
             // Arrange
@@ -302,7 +310,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             AssertUserSettingsMatchesInput(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void DeleteThrowsWhenUserSettingsDoesNotExist()
         {
             // Arrange

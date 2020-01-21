@@ -10,7 +10,8 @@ using Newtonsoft.Json.Serialization;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
 {
-    [Route(""), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ConfigurationController : Controller
     {
         private AppConfig config;

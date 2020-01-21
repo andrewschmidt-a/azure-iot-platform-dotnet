@@ -57,7 +57,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 appConfigHelper.Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task InitialListIsEmptyAsync()
         {
             // Arrange
@@ -72,7 +73,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Empty(list.Properties);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetListWithValuesAsync()
         {
             // Arrange
@@ -87,7 +89,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.NotEmpty(list.Properties);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task ThrowsOnInvalidInput()
         {
             // Arrange

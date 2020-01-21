@@ -35,7 +35,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             };
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("", "", true)]
         [InlineData("deviceId", "", true)]
         [InlineData("", "moduleId", true)]
@@ -65,7 +66,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             }
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("", "")]
         [InlineData("my module query", "continuationToken")]
         public async Task GetModuleTwinsTest(string query, string continuationToken)

@@ -74,7 +74,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.container = this.mockContainer.Object;
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetAsyncTest()
         {
             var collectionId = this.rand.NextString();
@@ -115,7 +116,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetAsyncNotFoundTest()
         {
             var collectionId = this.rand.NextString();
@@ -132,7 +134,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                 await this.container.GetAsync(collectionId, key));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetAllAsyncTest()
         {
             var collectionId = this.rand.NextString();
@@ -174,7 +177,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task CreateAsyncTest()
         {
             var collectionId = this.rand.NextString();
@@ -222,7 +226,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task CreateAsyncConflictTest()
         {
             var collectionId = this.rand.NextString();
@@ -245,7 +250,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                 }));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task UpsertAsyncTest()
         {
             var collectionId = this.rand.NextString();
@@ -295,7 +301,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task UpsertAsyncConflictTest()
         {
             var collectionId = this.rand.NextString();
@@ -320,7 +327,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                 }));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task DeleteAsyncTest()
         {
             var collectionId = this.rand.NextString();
@@ -344,7 +352,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task DeleteAsyncNotFoundTest()
         {
             var collectionId = this.rand.NextString();

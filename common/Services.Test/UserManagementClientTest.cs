@@ -56,7 +56,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.rand = new Random();
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetAllowedActions_ReturnValues()
         {
             var userObjectId = this.rand.NextString();
@@ -88,7 +89,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             Assert.Equal(allowedActions, result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetAllowedActions_ReturnNotFound()
         {
             var userObjectId = this.rand.NextString();
@@ -111,7 +113,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 await this.client.GetAllowedActionsAsync(userObjectId, roles));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetAllowedActions_ReturnError()
         {
             var userObjectId = this.rand.NextString();
@@ -134,7 +137,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 await this.client.GetAllowedActionsAsync(userObjectId, roles));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetToken_ReturnsValue()
         {
             // Arrange

@@ -11,7 +11,8 @@ using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {
-    [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("api/[controller]")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class TenantController : Controller
     {
         private readonly ITenantContainer _tenantContainer;

@@ -65,7 +65,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.rules = new Rules(this.storageAdapter.Object, this.asaManager.Object, this._logger.Object, this.alarms.Object, this.diagnosticsClient);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task InitialListIsEmptyAsync()
         {
             // Arrange
@@ -78,7 +79,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Empty(list);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetListWithValuesAsync()
         {
             // Arrange
@@ -99,7 +101,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         /**
          * Verify call to delete on non-deleted rule will get and update rule as expected.
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task VerifyBasicDeleteAsync()
         {
             // Arrange
@@ -127,7 +130,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         /**
          * If rule is already deleted and delete is called, verify it will not throw exception
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task VerifyDeleteDoesNotFailIfAlreadyDeletedAsync()
         {
             // Arrange
@@ -155,7 +159,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         /**
          * If rule does not exist and delete is called, verify it will not throw exception
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task VerifyDeleteDoesNotFailIfRuleNotExistsAsync()
         {
             // Arrange
@@ -186,7 +191,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         /** If get rule throws an exception that is not a resource not found exception,
          * delete should throw that exception.
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task VerifyDeleteFailsIfGetRuleThrowsException()
         {
             // Arrange
@@ -216,7 +222,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         /**
          * If upsert is called on a deleted rule, verify a NotFoundException will be thrown.
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task VerifyCannotUpdateDeletedRuleAsync()
         {
             // Arrange
@@ -247,7 +254,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
          * If GetListAsync() is called with includeDeleted = false, verify no
          * deleted rules will be returned
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task VerifyGetBehaviorIfDontIncludeDeleted()
         {
             // Arrange
@@ -282,7 +290,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
          * If GetListAsync() is called with includeDeleted = true, verify
          * deleted rules will be returned
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task VerifyGetBehaviorIfDoIncludeDeleted()
         {
             // Arrange
@@ -317,7 +326,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
           * If upsert is called with a rule that is not created and a
           * specified Id, it should be created with that Id.
         */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task UpsertNewRuleWithId_CreatesNewRuleWithId()
         {
             // Arrange
@@ -354,7 +364,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         /**
         * On creating a new rule, new rule id should be returned
         */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task CreateNewRule_ReturnsNewId()
         {
             // Arrange
@@ -390,7 +401,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Equal(newRuleId, rule.Id);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task DeleteRule_QueriesRuleCountAndLogs()
         {
             // Arrange
@@ -425,7 +437,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task DeleteRule_RetriesLogOnError()
         {
             // Arrange
@@ -462,7 +475,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task ThrowsOnInvalidInput()
         {
             // Arrange
@@ -515,7 +529,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.rules.UpsertIfNotDeletedAsync(rule));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void InputValidationPassesWithValidRule()
         {
             // Arrange

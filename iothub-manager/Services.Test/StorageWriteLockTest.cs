@@ -32,7 +32,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             this.mockClient = new Mock<IStorageAdapterClient>();
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task NormalLoopTest()
         {
             var etagOriginal = this.rand.NextString();
@@ -132,7 +133,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task LockFailTest()
         {
             var etagOriginal = this.rand.NextString();
@@ -166,7 +168,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.False(result.Value);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task LockConflictTest()
         {
             var etagOriginal = this.rand.NextString();
@@ -211,7 +214,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.Null(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task WriteConflictTest()
         {
             var etagOriginal = this.rand.NextString();
@@ -307,7 +311,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task ReleaseAsyncWithoutLockTest()
         {
             var @lock = new StorageWriteLock<ValueModel>(
@@ -320,7 +325,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             await Assert.ThrowsAsync<ResourceOutOfDateException>(() => @lock.ReleaseAsync());
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task ReleaseAndWriteAsyncWithoutLockTest()
         {
             var @lock = new StorageWriteLock<ValueModel>(

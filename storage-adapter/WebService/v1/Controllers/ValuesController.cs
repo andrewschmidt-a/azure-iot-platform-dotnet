@@ -14,7 +14,8 @@ using Mmm.Platform.IoT.StorageAdapter.WebService.v1.Models;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers
 {
-    [Route("v1"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ValuesController : Controller
     {
         private readonly IKeyValueContainer _container;

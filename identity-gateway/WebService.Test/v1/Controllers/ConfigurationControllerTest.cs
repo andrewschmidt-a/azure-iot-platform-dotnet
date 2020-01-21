@@ -31,7 +31,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             SetupDefaultBehaviors();
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void GetOpenIdProviderConfigurationReturnsExpectedIssuer()
         {
             // Arrange
@@ -45,7 +46,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void GetJsonWebKeySetReturnsExpctedJwks()
         {
             // Arrange

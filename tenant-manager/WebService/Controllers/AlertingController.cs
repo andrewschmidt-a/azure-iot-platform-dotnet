@@ -10,7 +10,8 @@ using Mmm.Platform.IoT.Common.Services.Filters;
 
 namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {
-    [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("api/[controller]")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AlertingController : Controller
     {
         private readonly IAlertingContainer _alertingContainer;

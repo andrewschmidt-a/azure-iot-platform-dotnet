@@ -8,7 +8,8 @@ using Mmm.Platform.IoT.Config.WebService.v1.Models;
 
 namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
 {
-    [Route("v1/configtypes"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/configtypes")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class ConfigTypesController
     {
         private readonly IStorage storage;

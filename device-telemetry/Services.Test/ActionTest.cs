@@ -26,7 +26,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.emailArray = new JArray { PARAM_RECIPIENTS };
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void Should_ReturnActionModel_When_ValidActionType()
         {
             // Arrange
@@ -46,7 +47,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Equal(this.emailArray, result.Parameters[PARAM_RECIPIENTS_KEY]);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void Should_ThrowInvalidInputException_When_ActionTypeIsEmailAndInvalidEmail()
         {
             // Arrange
@@ -61,7 +63,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Throws<InvalidInputException>(() => new EmailAction(parameters));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void Should_Throw_InvalidInputException_WhenActionTypeIsEmailAndNoRecipients()
         {
             // Arrange
@@ -75,7 +78,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Throws<InvalidInputException>(() => new EmailAction(parameters));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void Should_ThrowInvalidInputException_When_ActionTypeIsEmailAndEmailIsString()
         {
             // Arrange
@@ -90,7 +94,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Throws<InvalidInputException>(() => new EmailAction(parameters));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void Should_ReturnActionModel_When_ValidActionTypeParametersIsCaseInsensitive()
         {
             // Arrange
@@ -110,7 +115,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Equal(this.emailArray, result.Parameters[PARAM_RECIPIENTS_KEY]);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void Should_CreateAction_When_OptionalNotesAreMissing()
         {
             // Arrange

@@ -45,7 +45,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 this.mockHttpContextAccessor.Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task ProcessNoModelRequest()
         {
             string path = this.rand.NextString();
@@ -74,7 +75,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
         }
 
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task ProcessModelRequest()
         {
             string path = this.rand.NextString();

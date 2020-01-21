@@ -26,7 +26,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             this.devicePropertiesController = new DevicePropertiesController(this.devicePropertiesMock.Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetPropertiesReturnExpectedResponse()
         {
             // Arrange
@@ -49,7 +50,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             Assert.Empty(expectedModel.Items.Except(model.Items));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetPropertiesThrowsException_IfDevicePropertiesThrowsException()
         {
             // Arrange

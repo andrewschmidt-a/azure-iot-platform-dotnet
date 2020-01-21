@@ -30,7 +30,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             this.rand = new Random();
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("EdgeManifest", "filename", true, false)]
         [InlineData("EdgeManifest", "filename", false, true)]
         [InlineData("EdgeManifest", "filename", false, true, true)]

@@ -7,7 +7,8 @@ using Mmm.Platform.IoT.Config.Services;
 
 namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
 {
-    [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/[controller]")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class SeedController : Controller
     {
         private readonly ISeed seed;

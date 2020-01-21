@@ -49,7 +49,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             SetupDefaultBehaviors();
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("not-a-valid-uri")]
         [InlineData(null)]
         [InlineData("")]
@@ -63,7 +64,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.Throws<Exception>(a);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("x")]
         [InlineData("7")]
         [InlineData("")]
@@ -78,7 +80,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.Throws<Exception>(a);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void AuthorizeRedirectsToRedirectUri()
         {
             // Arrange
@@ -102,7 +105,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.Equal(invite, returnedState["invitation"]);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("not-a-valid-uri")]
         [InlineData(null)]
         [InlineData("")]
@@ -116,7 +120,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.Throws<Exception>(a);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void LogoutRedirectsToRedirectUri()
         {
             // Arrange
@@ -127,7 +132,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.Equal(someUiRedirectUri, redirectResult.Url);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("not-a-valid-auth-header")]
         [InlineData(null)]
         [InlineData("")]
@@ -148,7 +154,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             yield return new object[] { ValidAuthHeader };
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [MemberData(nameof(GetInvalidAuthHeaders))]
         public async Task SwitchTenantThrowsWhenAuthorizationHeaderTokenNotReadableOrValid(string invalidAuthHeader)
         {
@@ -169,7 +176,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             yield return new object[] { new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", Guid.NewGuid().ToString()) }) };
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [MemberData(nameof(GetJwtSecurityTokens))]
 #pragma warning disable xUnit1026
         public async Task SwitchTenantThrowsWhenTenantAccessNotAllowed(JwtSecurityToken jwtSecurityToken)
@@ -185,7 +193,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             await Assert.ThrowsAsync<NoAuthorizationException>(a);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task SwitchTenantMintsNewTokenWithNewTenant()
         {
             // Arrange
@@ -211,7 +220,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.Equal(StatusCodes.Status200OK, objectResult.StatusCode);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
 #pragma warning disable xUnit1026
         public async Task ErrorInClientCredentialsAuthentication()
 #pragma warning restore xUnit1026
@@ -226,7 +236,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             Assert.Equal(StatusCodes.Status401Unauthorized, result.StatusCode);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task SuccessClientCredentialsAuthentication()
         {
             // Arrange

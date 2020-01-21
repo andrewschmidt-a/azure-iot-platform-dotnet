@@ -16,7 +16,8 @@ using SendGrid.Helpers.Mail;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
 {
-    [Route("v1/tenants"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/tenants")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class UserTenantController : Controller
     {
         private UserTenantContainer _container;

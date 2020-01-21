@@ -35,7 +35,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                 new Mock<ILogger<ValuesController>>().Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetTest()
         {
             var collectionId = this.rand.NextString();
@@ -75,7 +76,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetAllTest()
         {
             var collectionId = this.rand.NextString();
@@ -135,7 +137,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     It.Is<string>(s => s == collectionId)));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task PostTest()
         {
             var collectionId = this.rand.NextString();
@@ -184,7 +187,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     It.Is<ValueServiceModel>(m => m.Equals(modelIn))));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task PutNewTest()
         {
             var collectionId = this.rand.NextString();
@@ -231,7 +235,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task PutUpdateTest()
         {
             var collectionId = this.rand.NextString();
@@ -280,7 +285,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task DeleteTest()
         {
             var collectionId = this.rand.NextString();
@@ -302,7 +308,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task ValidateKeyTest()
         {
             await Assert.ThrowsAsync<BadRequestException>(async () =>

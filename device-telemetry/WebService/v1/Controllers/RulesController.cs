@@ -10,7 +10,8 @@ using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
 {
-    [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/[controller]")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public sealed class RulesController : Controller
     {
         private readonly IRules ruleService;

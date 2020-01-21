@@ -40,7 +40,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("", "", true)]
         [InlineData("asdf", "", true)]
         [InlineData("", "qwer", true)]
@@ -70,7 +71,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("", 5)]
         [InlineData("2", 5)]
         [InlineData("6", 5)]
@@ -99,7 +101,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("", "SELECT * FROM devices.modules")]
         [InlineData("deviceId='test'", "SELECT * FROM devices.modules where deviceId='test'")]
         public async Task GetTwinByQueryTest(string query, string queryToMatch)
@@ -117,7 +120,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.Equal(3, queryResult.Items.Count);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetEdgeDeviceTest()
         {
             // Arrange
@@ -163,7 +167,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.True(dvc3.IsEdgeDevice, "Edge device from twin reporting not edge device");
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task TestConnectedEdgeDevice()
         {
             // Arrange
@@ -192,7 +197,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.False(allDevices.Items[3].Connected);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("SelfSigned")]
         [InlineData("CertificateAuthority")]
         public async Task InvalidAuthenticationTypeForEdgeDevice(string authTypeString)

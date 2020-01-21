@@ -15,7 +15,8 @@ using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers
 {
-    [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/[controller]")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AlarmsByRuleController : Controller
     {
         private const int DEVICE_LIMIT = 1000;

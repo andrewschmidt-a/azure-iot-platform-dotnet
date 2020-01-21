@@ -35,7 +35,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             this.deploymentsController = new DeploymentsController(this.deploymentsMock.Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task GetDeploymentTest()
         {
             // Arrange
@@ -70,7 +71,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             Assert.True((DateTimeOffset.UtcNow - result.CreatedDateTimeUtc).TotalSeconds < 5);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task VerifyGroupAndPackageNameLabelsTest()
         {
             // Arrange
@@ -102,7 +104,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             Assert.True((DateTimeOffset.UtcNow - result.CreatedDateTimeUtc).TotalSeconds < 5);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(5)]
@@ -161,7 +164,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             }
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("depName", "dvcGroupId", "dvcQuery", "pkgContent", 10, false)]
         [InlineData("", "dvcGroupId", "dvcQuery", "pkgContent", 10, true)]
         [InlineData("depName", "", "dvcQuery", "pkgContent", 10, true)]
@@ -235,7 +239,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             }
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("depName", "dvcGroupId", "dvcQuery", "pkgContent", -1)]
         public async Task PostInvalidDeploymentTest(
             string name,

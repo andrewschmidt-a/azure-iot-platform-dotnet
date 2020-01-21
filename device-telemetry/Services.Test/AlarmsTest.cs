@@ -58,7 +58,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         /**
          * Test basic functionality of delete alarms by id.
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void BasicDelete()
         {
             // Arrange
@@ -87,7 +88,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         /**
          * Verify if delete alarm by id fails once it will retry
         */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task DeleteSucceedsTransientExceptionAsync()
         {
             // Arrange
@@ -115,7 +117,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
          * Verify that after 3 failures to delete an alarm an
          * exception will be thrown.
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task DeleteFailsAfter3ExceptionsAsync()
         {
             // Arrange
@@ -141,7 +144,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.storageClient.Verify(x => x.DeleteDocumentAsync("database", "collection", ids[0]), Times.Exactly(3));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task ThrowsOnInvalidInput()
         {
             // Arrange

@@ -32,7 +32,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             userTenantContainer = new UserTenantContainer(mockTableStorageClient.Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetAllReturnsExpectedUserTenantList()
         {
             // Arrange
@@ -71,7 +72,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.models.Count);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetAllUsersReturnsExpectedUserTenantList()
         {
             // Arrange
@@ -100,7 +102,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.models.Count);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetAllReturnsEmptyUserTenantList()
         {
             // Arrange
@@ -123,7 +126,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             Assert.Empty(result.models);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetReturnsExpectedUserTenant()
         {
             // Arrange
@@ -151,7 +155,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             AssertUserTenantMatchesInput(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void GetReturnsEmptyUserTenant()
         {
             // Arrange
@@ -177,7 +182,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             Assert.Null(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void CreateReturnsExpectedUserTenant()
         {
             // Arrange
@@ -216,7 +222,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             AssertUserTenantMatchesInput(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void CreateHandlesNullUserIdAndReturnsExpectedUserTenant()
         {
             // Arrange
@@ -257,7 +264,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             AssertUserTenantMatchesInput(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void CreateThrowsWhenUserTenantAlreadyExist()
         {
             // Arrange
@@ -275,7 +283,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             await Assert.ThrowsAsync<StorageException>(a);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void UpdateReturnsExpectedUserTenant()
         {
             // Arrange
@@ -295,7 +304,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             yield return new object[] { " " };
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [MemberData(nameof(GetRoleLists))]
         public async void UpdateDoesNotThrowWhenUserTenantRoleListIsNullOrEmptyOrWhitespace(string roles)
         {
@@ -307,7 +317,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             await userTenantContainer.UpdateAsync(someUserTenantInput);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void DeleteReturnsExpectedUserTenant()
         {
             // Arrange
@@ -325,7 +336,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             AssertUserTenantMatchesInput(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void DeleteThrowsWhenUserTenantDoesNotExist()
         {
             // Arrange
@@ -343,7 +355,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
             await Assert.ThrowsAsync<StorageException>(a);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async void DeleteAllReturnsExpectedUserTenantList()
         {
             // Arrange

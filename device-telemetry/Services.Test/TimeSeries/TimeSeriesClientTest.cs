@@ -30,7 +30,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
                 _logger.Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task QueryThrowsInvalidConfiguration_WhenConfigValuesAreNull()
         {
             // Arrange
@@ -41,7 +42,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
                  this.client.QueryEventsAsync(null, null, "desc", 0, 1000, new string[0]));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task PingReturnsFalse_WhenConfigValuesAreNull()
         {
             // Arrange
@@ -55,7 +57,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
             Assert.Contains("TimeSeries check failed", result.Message);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public async Task QueryThrows_IfInvalidAuthParams()
         {
             // Arrange

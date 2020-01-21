@@ -9,7 +9,8 @@ using Mmm.Platform.IoT.TenantManager.Services;
 
 namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {
-    [Route("api/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("api/[controller]")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class TenantReadyController : Controller
     {
         private readonly ITenantContainer _tenantContainer;

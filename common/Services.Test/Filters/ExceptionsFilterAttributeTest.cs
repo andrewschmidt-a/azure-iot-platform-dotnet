@@ -28,11 +28,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test.Filters
             this.target = new ExceptionsFilterAttribute(_logger.Object);
         }
 
-        /// <summary>
-        /// When handling unknown/unexpected exceptions, the stack trace could be null,
-        /// the filter must support this scenario.
-        /// </summary>
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void Doesnt_Fail_When_StackTraces_AreNull()
         {
             // Arrange

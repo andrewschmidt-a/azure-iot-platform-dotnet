@@ -7,7 +7,8 @@ using Mmm.Platform.IoT.Config.Services;
 
 namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
 {
-    [Route("v1"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class UserSettingsController : Controller
     {
         private readonly IStorage storage;

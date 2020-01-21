@@ -8,7 +8,8 @@ using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
 {
-    [Route("v1/settings"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/settings")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     [Authorize("ReadAll")]
     public class UserSettingsController : Controller
     {

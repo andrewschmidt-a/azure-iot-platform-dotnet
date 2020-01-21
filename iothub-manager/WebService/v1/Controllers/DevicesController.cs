@@ -7,7 +7,8 @@ using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers
 {
-    [Route("v1/[controller]"), TypeFilter(typeof(ExceptionsFilterAttribute))]
+    [Route("v1/[controller]")]
+    [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class DevicesController : Controller
     {
         const string CONTINUATION_TOKEN_NAME = "x-ms-continuation";
