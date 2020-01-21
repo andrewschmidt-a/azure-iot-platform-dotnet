@@ -18,7 +18,7 @@ using Xunit;
 
 namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
-    public class SolutionControllerTest : IDisposable
+    public class SolutionSettingsControllerTest : IDisposable
     {
         private readonly Mock<IStorage> mockStorage;
         private readonly Mock<IActions> mockActions;
@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
         private readonly Random rand;
         private bool disposedValue = false;
 
-        public SolutionControllerTest()
+        public SolutionSettingsControllerTest()
         {
             this.mockStorage = new Mock<IStorage>();
             this.mockActions = new Mock<IActions>();

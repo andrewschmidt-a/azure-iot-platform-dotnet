@@ -1,4 +1,4 @@
-// <copyright file="FirmwareUpdateMxChipValidator.cs" company="3M">
+// <copyright file="FirmwareValidator.cs" company="3M">
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 

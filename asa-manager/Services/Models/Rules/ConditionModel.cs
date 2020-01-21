@@ -1,4 +1,4 @@
-// <copyright file="RuleConditionModel.cs" company="3M">
+// <copyright file="ConditionModel.cs" company="3M">
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
