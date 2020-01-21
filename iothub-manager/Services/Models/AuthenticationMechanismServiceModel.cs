@@ -1,3 +1,7 @@
+// <copyright file="AuthenticationMechanismServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using Microsoft.Azure.Devices;
 

@@ -1,3 +1,7 @@
+// <copyright file="UserSettingsModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Microsoft.Azure.Cosmos.Table;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Models

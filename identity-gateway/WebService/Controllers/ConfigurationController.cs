@@ -1,3 +1,7 @@
+// <copyright file="ConfigurationController.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;

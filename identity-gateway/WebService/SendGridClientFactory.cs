@@ -1,3 +1,7 @@
+// <copyright file="SendGridClientFactory.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Mmm.Platform.IoT.Common.Services.Config;
 using SendGrid;
 

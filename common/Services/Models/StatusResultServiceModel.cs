@@ -1,3 +1,7 @@
+// <copyright file="StatusResultServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.Common.Services.Models

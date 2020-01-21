@@ -1,3 +1,7 @@
+// <copyright file="StatusController.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;

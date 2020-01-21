@@ -1,3 +1,7 @@
+// <copyright file="MockHttpContext.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.IO;
 using Microsoft.AspNetCore.Http;

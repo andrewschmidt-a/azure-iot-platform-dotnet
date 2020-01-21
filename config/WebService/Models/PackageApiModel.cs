@@ -1,3 +1,7 @@
+// <copyright file="PackageApiModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using Mmm.Platform.IoT.Config.Services.Models;
 using Newtonsoft.Json;

@@ -1,3 +1,7 @@
+// <copyright file="LowercaseContractResolver.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Newtonsoft.Json.Serialization;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers

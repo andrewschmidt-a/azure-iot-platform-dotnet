@@ -1,3 +1,7 @@
+// <copyright file="AzureResourceManagerClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;

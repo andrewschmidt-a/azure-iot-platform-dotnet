@@ -1,3 +1,7 @@
+// <copyright file="KeyValueDocument.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Runtime.CompilerServices;
 using Microsoft.Azure.Documents;
 using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;

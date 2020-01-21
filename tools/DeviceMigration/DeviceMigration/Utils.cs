@@ -1,3 +1,7 @@
+// <copyright file="Utils.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Azure.EventHubs;

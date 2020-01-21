@@ -1,3 +1,7 @@
+// <copyright file="PackageValidator.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Newtonsoft.Json;

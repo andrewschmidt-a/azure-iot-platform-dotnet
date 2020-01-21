@@ -1,3 +1,7 @@
+// <copyright file="StatusService.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;

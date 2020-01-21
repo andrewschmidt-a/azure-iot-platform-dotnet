@@ -1,3 +1,7 @@
+// <copyright file="DeviceJobErrorApiModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 

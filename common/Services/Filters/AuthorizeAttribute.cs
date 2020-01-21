@@ -1,3 +1,7 @@
+// <copyright file="AuthorizeAttribute.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Mmm.Platform.IoT.Common.Services.Filters

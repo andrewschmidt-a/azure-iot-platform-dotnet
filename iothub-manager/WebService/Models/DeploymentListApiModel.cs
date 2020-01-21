@@ -1,3 +1,7 @@
+// <copyright file="DeploymentListApiModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Newtonsoft.Json;

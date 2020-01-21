@@ -1,3 +1,7 @@
+// <copyright file="MockIdentity.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;

@@ -1,3 +1,7 @@
+// <copyright file="IExternalRequestHelper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services.Http;

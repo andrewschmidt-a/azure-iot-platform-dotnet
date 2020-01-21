@@ -1,3 +1,7 @@
+// <copyright file="IHttpRequest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Net.Http;
 using System.Net.Http.Headers;

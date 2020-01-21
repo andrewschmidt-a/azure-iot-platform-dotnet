@@ -1,3 +1,7 @@
+// <copyright file="ConversionApiModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 
 namespace Mmm.Platform.IoT.AsaManager.Services.Models

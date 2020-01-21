@@ -1,3 +1,7 @@
+// <copyright file="DocumentDbKeyValueContainerTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Linq;
 using System.Threading;

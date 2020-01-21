@@ -1,3 +1,7 @@
+// <copyright file="DocumentIdHelper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
 {
     public static class DocumentIdHelper

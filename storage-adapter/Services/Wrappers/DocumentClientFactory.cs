@@ -1,3 +1,7 @@
+// <copyright file="DocumentClientFactory.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Text.RegularExpressions;
 using Microsoft.Azure.Documents;

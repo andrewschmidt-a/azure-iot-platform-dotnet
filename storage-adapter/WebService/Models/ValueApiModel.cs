@@ -1,3 +1,7 @@
+// <copyright file="ValueApiModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using System.Globalization;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;

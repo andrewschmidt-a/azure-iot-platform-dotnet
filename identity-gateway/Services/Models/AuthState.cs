@@ -1,3 +1,7 @@
+// <copyright file="AuthState.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {
     public class AuthState

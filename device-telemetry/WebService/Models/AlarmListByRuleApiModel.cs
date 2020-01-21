@@ -1,3 +1,7 @@
+// <copyright file="AlarmListByRuleApiModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
 using Newtonsoft.Json;

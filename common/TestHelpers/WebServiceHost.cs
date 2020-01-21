@@ -1,3 +1,7 @@
+// <copyright file="WebServiceHost.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 
 namespace Mmm.Platform.IoT.Common.TestHelpers

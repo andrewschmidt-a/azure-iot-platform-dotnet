@@ -1,3 +1,7 @@
+// <copyright file="TimeSeriesValueListApiModelTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.IO;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;

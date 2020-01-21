@@ -1,3 +1,7 @@
+// <copyright file="AuthenticationContext.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Mmm.Platform.IoT.Common.Services.Config;

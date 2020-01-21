@@ -1,3 +1,7 @@
+// <copyright file="DeviceGroupListApiModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using System.Linq;
 using Mmm.Platform.IoT.Config.Services.Models;

@@ -1,3 +1,7 @@
+// <copyright file="Template.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using Mmm.Platform.IoT.Config.Services.External;
 using Newtonsoft.Json;

@@ -1,3 +1,7 @@
+// <copyright file="SchemaType.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

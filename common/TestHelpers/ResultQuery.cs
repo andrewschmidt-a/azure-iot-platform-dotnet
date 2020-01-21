@@ -1,3 +1,7 @@
+// <copyright file="ResultQuery.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
