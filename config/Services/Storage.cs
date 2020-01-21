@@ -1,18 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation;
-using Mmm.Platform.IoT.Config.Services.Models;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation;
+using Mmm.Platform.IoT.Config.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services
 {

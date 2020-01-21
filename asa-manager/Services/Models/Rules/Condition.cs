@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
 {
     public partial class RuleReferenceDataModel

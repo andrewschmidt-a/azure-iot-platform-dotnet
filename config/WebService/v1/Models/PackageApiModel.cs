@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using Mmm.Platform.IoT.Config.Services.Models;
 using Newtonsoft.Json;

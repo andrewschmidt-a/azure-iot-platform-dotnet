@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System.IO;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Newtonsoft.Json.Linq;

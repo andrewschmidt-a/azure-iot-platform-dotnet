@@ -1,18 +1,16 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.Config.Services;
 using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Models;
 using Mmm.Platform.IoT.Config.Services.Models.Actions;
 using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
-using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {

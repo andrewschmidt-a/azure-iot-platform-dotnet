@@ -1,13 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Microsoft.Azure.Devices;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
-using System.Text.RegularExpressions;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {

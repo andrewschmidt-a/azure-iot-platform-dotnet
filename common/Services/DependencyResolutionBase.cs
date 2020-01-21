@@ -1,25 +1,23 @@
+using System;
+using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using System.Reflection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
-using Mmm.Platform.IoT.Common.Services.Config;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using System;
 using Mmm.Platform.IoT.Common.Services.Auth;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
+using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Platform.IoT.Common.Services.Wrappers;
 
 namespace Mmm.Platform.IoT.Common.Services
 {

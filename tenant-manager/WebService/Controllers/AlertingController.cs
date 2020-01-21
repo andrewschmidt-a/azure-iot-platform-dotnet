@@ -1,12 +1,10 @@
-using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.TenantManager.Services;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.TenantManager.Services;
+using Mmm.Platform.IoT.TenantManager.Services.Models;
 
 namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
 {

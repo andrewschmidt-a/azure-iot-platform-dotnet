@@ -2,18 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
+using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Config.Services.Models;
 using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Config.Services.Models;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {

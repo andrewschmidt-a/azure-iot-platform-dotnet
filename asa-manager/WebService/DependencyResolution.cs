@@ -1,7 +1,7 @@
 using System.Reflection;
 using Autofac;
-using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.AsaManager.Services;
+using Mmm.Platform.IoT.Common.Services;
 
 namespace Mmm.Platform.IoT.AsaManager.WebService
 {

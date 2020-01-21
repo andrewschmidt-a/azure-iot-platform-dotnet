@@ -1,11 +1,11 @@
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.TenantManager.Services.External;
 using Mmm.Platform.IoT.TenantManager.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.TenantManager.Services
 {

@@ -1,15 +1,15 @@
-﻿using System;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
+using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
 {

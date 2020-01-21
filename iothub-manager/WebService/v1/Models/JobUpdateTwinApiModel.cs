@@ -1,9 +1,7 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System.Collections.Generic;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models
 {

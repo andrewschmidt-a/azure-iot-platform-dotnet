@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Net;
 using Microsoft.Azure.Documents;

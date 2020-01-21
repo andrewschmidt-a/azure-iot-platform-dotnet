@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
-using System.IO;
-using System.Reflection;
 
 namespace Mmm.Platform.IoT.Common.Services
 {

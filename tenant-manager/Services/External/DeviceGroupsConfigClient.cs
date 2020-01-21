@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.TenantManager.Services.Models;
 using Newtonsoft.Json;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.External
 {

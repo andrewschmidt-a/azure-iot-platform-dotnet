@@ -1,14 +1,13 @@
-﻿using Microsoft.ApplicationInsights;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Kubernetes.Debugging;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Text;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
 {

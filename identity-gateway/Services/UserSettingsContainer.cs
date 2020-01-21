@@ -1,9 +1,8 @@
-using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Azure.Cosmos.Table;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Microsoft.Azure.Cosmos.Table;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services
 {

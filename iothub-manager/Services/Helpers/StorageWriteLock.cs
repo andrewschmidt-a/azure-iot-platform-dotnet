@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services.Exceptions;

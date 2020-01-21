@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 

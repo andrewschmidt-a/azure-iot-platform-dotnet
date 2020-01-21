@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Models

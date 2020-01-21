@@ -1,18 +1,15 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 {

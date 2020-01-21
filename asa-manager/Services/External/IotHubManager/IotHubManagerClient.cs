@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
 using Newtonsoft.Json;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager
 {

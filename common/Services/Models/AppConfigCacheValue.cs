@@ -1,7 +1,5 @@
-﻿using Azure.Data.AppConfiguration;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using Azure.Data.AppConfiguration;
 
 namespace Mmm.Platform.IoT.Common.Services.Models
 {

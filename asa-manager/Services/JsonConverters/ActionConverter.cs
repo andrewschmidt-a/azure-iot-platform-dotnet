@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using Mmm.Platform.IoT.AsaManager.Services.Models.Rules;
 using Newtonsoft.Json;

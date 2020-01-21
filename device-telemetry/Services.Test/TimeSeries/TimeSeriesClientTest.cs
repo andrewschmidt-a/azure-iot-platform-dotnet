@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;

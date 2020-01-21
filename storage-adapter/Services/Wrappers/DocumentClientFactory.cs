@@ -1,13 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
+using System;
+using System.Text.RegularExpressions;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
-using System;
-using System.Text.RegularExpressions;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services.Wrappers
 {

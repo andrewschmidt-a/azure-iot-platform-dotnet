@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
+using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Microsoft.Extensions.Logging;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {

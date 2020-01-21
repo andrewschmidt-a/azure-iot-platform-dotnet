@@ -1,11 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Mmm.Platform.IoT.Common.Services.Http
 {

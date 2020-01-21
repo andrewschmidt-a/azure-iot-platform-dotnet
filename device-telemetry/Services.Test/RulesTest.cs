@@ -1,24 +1,22 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
 using Microsoft.Extensions.Logging;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
 using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 {

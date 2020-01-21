@@ -1,6 +1,6 @@
-﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Mmm.Platform.IoT.Common.Services.Config;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
 {

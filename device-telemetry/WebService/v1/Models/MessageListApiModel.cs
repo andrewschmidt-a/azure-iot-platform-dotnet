@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System.Collections.Generic;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Newtonsoft.Json;

@@ -1,11 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;

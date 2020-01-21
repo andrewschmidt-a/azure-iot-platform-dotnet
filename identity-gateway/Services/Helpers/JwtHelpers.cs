@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 {

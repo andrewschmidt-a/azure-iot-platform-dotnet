@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using Microsoft.AspNetCore.Hosting;
 using Mmm.Platform.IoT.Common.Services;
 

@@ -1,13 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.StorageAdapter.Services;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers;

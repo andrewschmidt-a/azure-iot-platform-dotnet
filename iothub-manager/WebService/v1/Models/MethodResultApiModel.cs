@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models

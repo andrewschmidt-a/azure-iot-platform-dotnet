@@ -1,14 +1,12 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.IoTHubManager.Services;
 using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers;
 using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Models;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
 

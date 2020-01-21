@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Microsoft.Extensions.Configuration;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services
 {

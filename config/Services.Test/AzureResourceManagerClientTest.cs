@@ -1,15 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System.Net;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Platform.IoT.Config.Services.External;
 using Moq;
 using Xunit;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.Config.Services.Test
 {

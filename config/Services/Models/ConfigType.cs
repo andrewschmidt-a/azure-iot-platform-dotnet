@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 namespace Mmm.Platform.IoT.Config.Services.Models
 {
     // Used for validation, these are pre-defined constants for configuration type

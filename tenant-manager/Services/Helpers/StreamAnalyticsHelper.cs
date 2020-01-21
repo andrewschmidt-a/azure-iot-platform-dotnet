@@ -1,14 +1,13 @@
-
 using System;
 using System.Threading.Tasks;
-using Microsoft.Rest;
 using Microsoft.Azure.Management.StreamAnalytics;
 using Microsoft.Azure.Management.StreamAnalytics.Models;
+using Microsoft.Rest;
+using Microsoft.Rest.Azure;
+using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
-using Microsoft.Rest.Azure;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {

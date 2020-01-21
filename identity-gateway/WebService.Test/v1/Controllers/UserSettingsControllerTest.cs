@@ -1,14 +1,14 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IdentityGateway.Services;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers;
 using Moq;
 using Xunit;
 

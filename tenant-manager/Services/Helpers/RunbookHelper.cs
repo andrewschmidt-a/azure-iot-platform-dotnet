@@ -1,17 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Net.Http;
-using Newtonsoft.Json;
-using Mmm.Platform.IoT.TenantManager.Services.Exceptions;
 using Microsoft.Azure;
 using Microsoft.Azure.Management.Automation;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.TenantManager.Services.Exceptions;
+using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {

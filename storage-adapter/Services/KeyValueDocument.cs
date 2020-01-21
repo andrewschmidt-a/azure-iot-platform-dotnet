@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System.Runtime.CompilerServices;
 using Microsoft.Azure.Documents;
 using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Config.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Config.Services.Helpers;
 
 namespace Mmm.Platform.IoT.Config.Services.External
 {

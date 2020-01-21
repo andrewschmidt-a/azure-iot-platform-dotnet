@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using Microsoft.Azure.Devices;
 using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;

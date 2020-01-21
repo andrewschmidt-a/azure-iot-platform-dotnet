@@ -1,24 +1,18 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
+using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.IoTHubManager.Services.Extensions;
 using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Microsoft.Extensions.Configuration;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using AuthenticationType = Mmm.Platform.IoT.IoTHubManager.Services.Models.AuthenticationType;
-using Mmm.Platform.IoT.Common.Services.Config;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services
 {

@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System.Collections.Generic;
 using System.Globalization;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;

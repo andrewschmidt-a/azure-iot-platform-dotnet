@@ -1,7 +1,4 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System.Collections.Generic;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 

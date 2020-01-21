@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Exceptions

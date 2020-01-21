@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using System;
 using System.Collections.Generic;
 using Mmm.Platform.IoT.IoTHubManager.Services.Models;

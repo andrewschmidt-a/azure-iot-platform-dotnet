@@ -1,6 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-
 using System;
 using System.Linq;
 using System.Threading;
@@ -8,12 +5,12 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Moq;
 using Xunit;
 

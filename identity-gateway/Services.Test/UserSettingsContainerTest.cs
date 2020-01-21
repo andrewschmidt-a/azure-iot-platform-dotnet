@@ -1,13 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.Services.Test.Helpers.Builders;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Platform.IoT.IdentityGateway.Services.Test.Helpers.Builders;
 using Moq;
 using TestStack.Dossier;
 using TestStack.Dossier.Lists;

@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using Xunit;
 
 namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers

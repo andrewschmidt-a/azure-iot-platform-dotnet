@@ -1,3 +1,4 @@
+using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -5,7 +6,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using System;
 using Mmm.Platform.IoT.Common.Services.Auth;
 
 namespace Mmm.Platform.IoT.StorageAdapter.WebService

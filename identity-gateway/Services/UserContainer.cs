@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
+using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services
 {

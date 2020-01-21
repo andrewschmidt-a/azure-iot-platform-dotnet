@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Moq;
 

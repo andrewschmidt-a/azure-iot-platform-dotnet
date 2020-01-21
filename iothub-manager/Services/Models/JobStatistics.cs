@@ -1,5 +1,3 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
 using Microsoft.Azure.Devices;
 using Newtonsoft.Json;
 

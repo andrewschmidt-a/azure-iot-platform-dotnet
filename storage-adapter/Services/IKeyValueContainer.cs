@@ -1,10 +1,7 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services
 {

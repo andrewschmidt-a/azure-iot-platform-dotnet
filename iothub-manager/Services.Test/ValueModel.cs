@@ -1,5 +1,3 @@
-// Copyright (c) Microsoft. All rights reserved.
-
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 {
     public partial class StorageWriteLockTest
