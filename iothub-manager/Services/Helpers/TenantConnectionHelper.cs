@@ -8,7 +8,7 @@ using Microsoft.Azure.Devices;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 
 namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
@@ -16,17 +16,17 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
     {
         private const string TenantKey = "tenant:";
         private const string IotHubConnectionKey = ":iotHubConnectionString";
-        private readonly IAppConfigurationHelper appConfig;
+        private readonly IAppConfigurationClient appConfig;
         private readonly ILogger<TenantConnectionHelper> logger;
         private readonly IHttpContextAccessor httpContextAccessor;
 
         public TenantConnectionHelper(
-            IAppConfigurationHelper appConfigurationHelper,
+            IAppConfigurationClient appConfigurationClient,
             IHttpContextAccessor httpContextAccessor,
             ILogger<TenantConnectionHelper> logger)
         {
             this.httpContextAccessor = httpContextAccessor;
-            this.appConfig = appConfigurationHelper;
+            this.appConfig = appConfigurationClient;
             this.logger = logger;
         }
 

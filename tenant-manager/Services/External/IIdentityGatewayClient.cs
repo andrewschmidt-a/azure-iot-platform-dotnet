@@ -3,12 +3,12 @@
 // </copyright>
 
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.TenantManager.Services.Models;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.External
 {
-    public interface IIdentityGatewayClient : IStatusOperation
+    public interface IIdentityGatewayClient : IExternalServiceClient
     {
         Task<IdentityGatewayApiModel> AddTenantForUserAsync(string userId, string tenantId, string roles);
 

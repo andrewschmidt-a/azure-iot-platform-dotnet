@@ -5,51 +5,44 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.Wrappers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
-using Index = Microsoft.Azure.Documents.Index;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
     public class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
     {
         private const string CollectionIdKeyFormat = "tenant:{0}:{1}-collection";
-        private readonly IAppConfigurationHelper appConfigHelper;
+        private readonly IAppConfigurationClient appConfigClient;
         private readonly AppConfig appConfig;
-        private readonly IFactory<IDocumentClient> clientFactory;
         private readonly IExceptionChecker exceptionChecker;
         private readonly ILogger logger;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private IDocumentClient client;
-        private int docDbRUs;
-        private RequestOptions docDbOptions;
+        private IStorageClient client;
         private bool disposedValue;
 
         public DocumentDbKeyValueContainer(
-            IFactory<IDocumentClient> clientFactory,
+            IStorageClient client,
             IExceptionChecker exceptionChecker,
             AppConfig appConfig,
-            IAppConfigurationHelper appConfigHelper,
+            IAppConfigurationClient appConfigHelper,
             ILogger<DocumentDbKeyValueContainer> logger,
             IHttpContextAccessor httpContextAccessor)
         {
             disposedValue = false;
-            this.clientFactory = clientFactory;
+            this.client = client;
             this.exceptionChecker = exceptionChecker;
             this.appConfig = appConfig;
-            this.appConfigHelper = appConfigHelper;
+            this.appConfigClient = appConfigHelper;
             this.logger = logger;
             this.httpContextAccessor = httpContextAccessor;
         }
@@ -86,7 +79,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 string key = string.Format(CollectionIdKeyFormat, this.TenantId, this.DocumentDataType);
                 try
                 {
-                    return this.appConfigHelper.GetValue(key);
+                    return this.appConfigClient.GetValue(key);
                 }
                 catch (Exception ex)
                 {
@@ -112,42 +105,12 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
         }
 
-        public async Task<StatusResultServiceModel> StatusAsync()
-        {
-            this.SetClientOptions();
-            var result = new StatusResultServiceModel(false, "Storage check failed");
-
-            try
-            {
-                DatabaseAccount response = null;
-                if (this.client != null)
-                {
-                    // make generic call to see if storage client can be reached
-                    response = await this.client.GetDatabaseAccountAsync();
-                }
-
-                if (response != null)
-                {
-                    result.IsHealthy = true;
-                    result.Message = "Alive and Well!";
-                }
-            }
-            catch (Exception e)
-            {
-                logger.LogInformation(e, result.Message);
-            }
-
-            return result;
-        }
-
         public async Task<ValueServiceModel> GetAsync(string collectionId, string key)
         {
-            await this.SetupStorageAsync();
-
             try
             {
                 var docId = DocumentIdHelper.GenerateId(collectionId, key);
-                var response = await this.client.ReadDocumentAsync($"{this.CollectionLink}/docs/{docId}");
+                var response = await this.client.ReadDocumentAsync(this.DocumentDbDatabaseId, this.DocumentDbCollectionId, docId);
                 return new ValueServiceModel(response);
             }
             catch (Exception ex)
@@ -165,23 +128,23 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 
         public async Task<IEnumerable<ValueServiceModel>> GetAllAsync(string collectionId)
         {
-            await this.SetupStorageAsync();
-
-            var query = this.client.CreateDocumentQuery<KeyValueDocument>(this.CollectionLink)
-                .Where(doc => doc.CollectionId.ToLower() == collectionId.ToLower())
-                .ToList();
+            var query = await this.client.QueryAllDocumentsAsync(
+                this.DocumentDbDatabaseId,
+                this.DocumentDbCollectionId);
             return await Task.FromResult(query.Select(doc => new ValueServiceModel(doc)));
         }
 
         public async Task<ValueServiceModel> CreateAsync(string collectionId, string key, ValueServiceModel input)
         {
-            await this.SetupStorageAsync();
-
             try
             {
                 var response = await this.client.CreateDocumentAsync(
-                    this.CollectionLink,
-                    new KeyValueDocument(collectionId, key, input.Data));
+                    this.DocumentDbDatabaseId,
+                    this.DocumentDbCollectionId,
+                    new KeyValueDocument(
+                        collectionId,
+                        key,
+                        input.Data));
                 return new ValueServiceModel(response);
             }
             catch (Exception ex)
@@ -199,14 +162,15 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 
         public async Task<ValueServiceModel> UpsertAsync(string collectionId, string key, ValueServiceModel input)
         {
-            await this.SetupStorageAsync();
-
             try
             {
                 var response = await this.client.UpsertDocumentAsync(
-                    this.CollectionLink,
-                    new KeyValueDocument(collectionId, key, input.Data),
-                    IfMatch(input.ETag));
+                    this.DocumentDbDatabaseId,
+                    this.DocumentDbCollectionId,
+                    new KeyValueDocument(
+                        collectionId,
+                        key,
+                        input.Data));
                 return new ValueServiceModel(response);
             }
             catch (Exception ex)
@@ -224,11 +188,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 
         public async Task DeleteAsync(string collectionId, string key)
         {
-            await this.SetupStorageAsync();
-
             try
             {
-                await this.client.DeleteDocumentAsync($"{this.CollectionLink}/docs/{DocumentIdHelper.GenerateId(collectionId, key)}");
+                string documentId = DocumentIdHelper.GenerateId(collectionId, key);
+                await this.client.DeleteDocumentAsync(this.DocumentDbDatabaseId, this.DocumentDbCollectionId, documentId);
             }
             catch (Exception ex)
             {
@@ -244,139 +207,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         public void Dispose()
         {
             this.Dispose(true);
-        }
-
-        private static RequestOptions IfMatch(string etag)
-        {
-            if (etag == "*")
-            {
-                // Match all
-                return null;
-            }
-
-            return new RequestOptions
-            {
-                AccessCondition = new AccessCondition
-                {
-                    Condition = etag,
-                    Type = AccessConditionType.IfMatch,
-                },
-            };
-        }
-
-        private RequestOptions GetDocDbOptions()
-        {
-            return new RequestOptions
-            {
-                OfferThroughput = this.docDbRUs,
-                ConsistencyLevel = ConsistencyLevel.Strong,
-            };
-        }
-
-        private async Task SetupStorageAsync()
-        {
-            this.SetClientOptions();
-            await this.CreateDatabaseIfNotExistsAsync();
-            await this.CreateCollectionIfNotExistsAsync();
-        }
-
-        private void SetClientOptions()
-        {
-            this.client = this.clientFactory.Create();
-            this.docDbRUs = appConfig.StorageAdapterService.DocumentDbRus;
-            this.docDbOptions = this.GetDocDbOptions();
-        }
-
-        private async Task CreateDatabaseIfNotExistsAsync()
-        {
-            try
-            {
-                var uri = "/dbs/" + this.DocumentDbDatabaseId;
-                await this.client.ReadDatabaseAsync(uri, this.docDbOptions);
-            }
-            catch (DocumentClientException e)
-            {
-                if (e.StatusCode != HttpStatusCode.NotFound)
-                {
-                    logger.LogError(e, "Error while getting DocumentDb database");
-                }
-
-                await this.CreateDatabaseAsync();
-            }
-        }
-
-        private async Task CreateCollectionIfNotExistsAsync()
-        {
-            try
-            {
-                var uri = $"/dbs/{this.DocumentDbDatabaseId}/colls/{this.DocumentDbCollectionId}";
-                await this.client.ReadDocumentCollectionAsync(uri, this.docDbOptions);
-            }
-            catch (DocumentClientException e)
-            {
-                if (e.StatusCode != HttpStatusCode.NotFound)
-                {
-                    logger.LogError(e, "Error while getting DocumentDb collection");
-                }
-
-                await this.CreateCollectionAsync();
-            }
-        }
-
-        private async Task CreateDatabaseAsync()
-        {
-            try
-            {
-                logger.LogInformation("Creating DocumentDb database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
-                var db = new Database { Id = this.DocumentDbDatabaseId };
-                await this.client.CreateDatabaseAsync(db);
-            }
-            catch (DocumentClientException e)
-            {
-                if (e.StatusCode == HttpStatusCode.Conflict)
-                {
-                    logger.LogWarning("Another process already created the database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
-                }
-
-                logger.LogError(e, "Error while creating DocumentDb database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Error while creating DocumentDb database {DocumentDbDatabaseId}", DocumentDbDatabaseId);
-                throw;
-            }
-        }
-
-        private async Task CreateCollectionAsync()
-        {
-            try
-            {
-                logger.LogInformation("Creating DocumentDb collection {DocumentDbCollectionId}", DocumentDbCollectionId);
-                var coll = new DocumentCollection { Id = this.DocumentDbCollectionId };
-
-                var index = Index.Range(DataType.String, -1);
-                var indexing = new IndexingPolicy(index) { IndexingMode = IndexingMode.Consistent };
-                coll.IndexingPolicy = indexing;
-
-                // Partitioning can be enabled in case the storage adapter is used to store 100k+ records
-                // coll.PartitionKey = new PartitionKeyDefinition { Paths = new Collection<string> { "/CollectionId" } };
-                var dbUri = "/dbs/" + this.DocumentDbDatabaseId;
-                await this.client.CreateDocumentCollectionAsync(dbUri, coll, this.docDbOptions);
-            }
-            catch (DocumentClientException e)
-            {
-                if (e.StatusCode == HttpStatusCode.Conflict)
-                {
-                    logger.LogWarning("Another process already created the collection {DocumentDbCollectionId}", DocumentDbCollectionId);
-                }
-
-                logger.LogError(e, "Error while creating DocumentDb collection {DocumentDbCollectionId}", DocumentDbCollectionId);
-            }
-            catch (Exception e)
-            {
-                logger.LogError(e, "Error while creating DocumentDb collection {DocumentDbCollectionId}", DocumentDbDatabaseId);
-                throw;
-            }
         }
 
         private void Dispose(bool disposing)

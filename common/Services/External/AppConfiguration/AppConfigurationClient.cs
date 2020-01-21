@@ -1,24 +1,42 @@
-// <copyright file="AppConfigurationHelper.cs" company="3M">
+// <copyright file="AppConfigurationClient.cs" company="3M">
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using Azure.Data.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+namespace Mmm.Platform.IoT.Common.Services.External.AppConfiguration
 {
-    public class AppConfigurationHelper : IAppConfigurationHelper
+    public class AppConfigurationClient : IAppConfigurationClient
     {
+        private readonly AppConfig config;
         private ConfigurationClient client;
         private Dictionary<string, AppConfigCacheValue> cache = new Dictionary<string, AppConfigCacheValue>();
 
-        public AppConfigurationHelper(AppConfig config)
+        public AppConfigurationClient(AppConfig config)
         {
             this.client = new ConfigurationClient(config.AppConfigurationConnectionString);
+            this.config = config;
+        }
+
+        public async Task<StatusResultServiceModel> StatusAsync()
+        {
+            // Test a key created from one of the configuration variable names
+            string statusKey = this.config.GetType().GetProperties(BindingFlags.Public)[0].Name;
+            try
+            {
+                await this.client.GetConfigurationSettingAsync(statusKey);
+                return new StatusResultServiceModel(true, "Alive and well!");
+            }
+            catch (Exception)
+            {
+                return new StatusResultServiceModel(false, $"Unable to retrieve basic key {statusKey} from app config.");
+            }
         }
 
         public async Task SetValueAsync(string key, string value)

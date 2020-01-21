@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Platform.IoT.Common.Services.External.UserManagement;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.Config.Services.External;

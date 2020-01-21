@@ -64,8 +64,7 @@ stages:
         releaseName: ${{parameters.service}}
 
 - stage: DeployCHIMDev
-  dependsOn:
-  - DeployCRSLQA
+  dependsOn: []
   displayName: Deploy To CHIM Dev
   jobs:
   - template: approval.yaml

@@ -10,8 +10,8 @@ using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private readonly Mock<ILogger<Alarms>> logger;
         private readonly IAlarms alarms;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
-        private readonly Mock<IAppConfigurationHelper> appConfigHelper;
+        private readonly Mock<IAppConfigurationClient> appConfigHelper;
 
         public AlarmsTest()
         {
@@ -45,7 +45,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             };
             this.storageClient = new Mock<IStorageClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
-            this.appConfigHelper = new Mock<IAppConfigurationHelper>();
+            this.appConfigHelper = new Mock<IAppConfigurationClient>();
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
                 { { "TenantID", TenantId } });
             this.appConfigHelper.Setup(t => t.GetValue($"{TenantInfoKey}:{TenantId}:{TelemetryCollectionKey}")).Returns("collection");

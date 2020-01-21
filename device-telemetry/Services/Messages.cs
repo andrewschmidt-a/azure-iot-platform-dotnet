@@ -11,6 +11,7 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.Helpers;
@@ -33,7 +34,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly AppConfig config;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly IAppConfigurationHelper appConfigurationHelper;
+        private readonly IAppConfigurationClient appConfigurationClient;
+
         private readonly bool timeSeriesEnabled;
         private readonly DocumentClient documentClient;
         private readonly string databaseName;
@@ -44,7 +46,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             ITimeSeriesClient timeSeriesClient,
             ILogger<Messages> logger,
             IHttpContextAccessor contextAccessor,
-            IAppConfigurationHelper appConfigurationHelper)
+            IAppConfigurationClient appConfigurationClient)
         {
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
@@ -55,14 +57,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             this.logger = logger;
             this.config = config;
             this.httpContextAccessor = contextAccessor;
-            this.appConfigurationHelper = appConfigurationHelper;
+            this.appConfigurationClient = appConfigurationClient;
         }
 
         private string CollectionId
         {
             get
             {
-                return this.appConfigurationHelper.GetValue(
+                return this.appConfigurationClient.GetValue(
                     $"{TenantInfoKey}:{httpContextAccessor.HttpContext.Request.GetTenant()}:{TelemetryCollectionKey}");
             }
         }

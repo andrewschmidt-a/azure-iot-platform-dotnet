@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json.Linq;
@@ -28,7 +28,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private readonly Mock<ITimeSeriesClient> timeSeriesClient;
         private readonly Mock<ILogger<Messages>> logger;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
-        private readonly Mock<IAppConfigurationHelper> appConfigHelper;
+        private readonly Mock<IAppConfigurationClient> appConfigHelper;
         private readonly IMessages messages;
 
         public MessagesTest()
@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             storageClient = new Mock<IStorageClient>();
             timeSeriesClient = new Mock<ITimeSeriesClient>();
             httpContextAccessor = new Mock<IHttpContextAccessor>();
-            appConfigHelper = new Mock<IAppConfigurationHelper>();
+            appConfigHelper = new Mock<IAppConfigurationClient>();
             logger = new Mock<ILogger<Messages>>();
             messages = new Messages(
                 servicesConfig,

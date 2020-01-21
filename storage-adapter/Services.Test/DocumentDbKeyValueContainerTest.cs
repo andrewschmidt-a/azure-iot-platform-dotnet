@@ -12,7 +12,7 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Moq;
@@ -48,7 +48,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                 .Returns(Task.FromResult(new Mock<ResourceResponse<DocumentCollection>>().Object));
 
             // mock a specific tenant
-            Mock<IAppConfigurationHelper> mockAppConfigHelper = new Mock<IAppConfigurationHelper>();
+            Mock<IAppConfigurationClient> mockAppConfigHelper = new Mock<IAppConfigurationClient>();
 
             // Mock service returns dummy data
             var config = new AppConfig();

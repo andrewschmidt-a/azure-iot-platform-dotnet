@@ -46,7 +46,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         public string UID => Uptime.ProcessId;
 
         [JsonProperty(PropertyName = "Properties", Order = 70)]
-        public Dictionary<string, string> Properties { get; set; }
+        public StatusServicePropertiesModel Properties { get; set; }
 
         [JsonProperty(PropertyName = "Dependencies", Order = 80)]
         public Dictionary<string, StatusResultApiModel> Dependencies { get; set; }

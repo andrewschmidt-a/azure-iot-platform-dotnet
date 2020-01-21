@@ -1,12 +1,12 @@
-// <copyright file="IAppConfigurationHelper.cs" company="3M">
+// <copyright file="IAppConfigurationClient.cs" company="3M">
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+namespace Mmm.Platform.IoT.Common.Services.External.AppConfiguration
 {
-    public interface IAppConfigurationHelper
+    public interface IAppConfigurationClient : IStatusOperation
     {
         Task SetValueAsync(string key, string value);
 

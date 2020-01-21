@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
@@ -27,13 +26,43 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
         private int storageThroughput;
         private DocumentClient client;
 
-        public StorageClient(
-            AppConfig config,
-            ILogger<StorageClient> logger)
+        public StorageClient(AppConfig config, ILogger<StorageClient> logger)
         {
             this.SetValuesFromConfig(config);
             this.logger = logger;
             this.client = this.GetDocumentClient();
+        }
+
+        public async Task DeleteDatabaseAsync(string databaseName)
+        {
+            try
+            {
+                await this.client.DeleteDatabaseAsync($"/dbs/{databaseName}");
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, "Unable to delete database {databaseName}", databaseName);
+                throw;
+            }
+        }
+
+        public async Task CreateDatabaseIfNotExistsAsync(
+            string databaseName)
+        {
+            Database database = new Database
+            {
+                Id = databaseName,
+            };
+
+            try
+            {
+                await this.client.CreateDatabaseIfNotExistsAsync(database);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, "Unable to create database {databaseName}", databaseName);
+                throw;
+            }
         }
 
         public async Task DeleteCollectionAsync(
@@ -47,7 +76,8 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                throw new Exception($"Unable to delete collection {id}.", e);
+                this.logger.LogError(e, "Unable to delete collection {id}.", databaseName);
+                throw;
             }
         }
 
@@ -66,46 +96,78 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             // throughput specified in request units/second.
             RequestOptions requestOptions = new RequestOptions();
             requestOptions.OfferThroughput = this.storageThroughput;
+            requestOptions.ConsistencyLevel = ConsistencyLevel.Strong;
             string dbUrl = "/dbs/" + databaseName;
             string colUrl = dbUrl + "/colls/" + id;
-            bool create = false;
             ResourceResponse<DocumentCollection> response = null;
 
             try
             {
-                response = await this.client.ReadDocumentCollectionAsync(
-                    colUrl,
-                    requestOptions);
+                await this.CreateDatabaseIfNotExistsAsync(databaseName);
             }
-            catch (DocumentClientException dcx)
+            catch (Exception e)
             {
-                if (dcx.StatusCode == HttpStatusCode.NotFound)
-                {
-                    create = true;
-                }
-                else
-                {
-                    logger.LogError(dcx, "Error reading collection with ID {id}", id);
-                }
+                throw new Exception($"While attempting to create collection {id}, an error occured while attepmting to create its database {databaseName}.", e);
             }
 
-            if (create)
+            try
             {
-                try
-                {
-                    response = await this.client.CreateDocumentCollectionIfNotExistsAsync(
-                        dbUrl,
-                        collectionInfo,
-                        requestOptions);
-                }
-                catch (Exception e)
-                {
-                    logger.LogError(e, "Error creating collection with ID {id}, database URL {databaseUrl}, and collection info {collectionInfo}", id, dbUrl, collectionInfo);
-                    throw new Exception("Could not create the collection");
-                }
+                response = await this.client.CreateDocumentCollectionIfNotExistsAsync(
+                    dbUrl,
+                    collectionInfo,
+                    requestOptions);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Error creating collection with ID {id}, database URL {databaseUrl}, and collection info {collectionInfo}", id, dbUrl, collectionInfo);
+                throw;
             }
 
             return response;
+        }
+
+        public async Task<Document> ReadDocumentAsync(
+            string databaseName,
+            string colId,
+            string docId)
+        {
+            string docUrl = string.Format(
+                "/dbs/{0}/colls/{1}/docs/{2}",
+                databaseName,
+                colId,
+                docId);
+
+            await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
+            try
+            {
+                return await this.client.ReadDocumentAsync(
+                    docUrl,
+                    new RequestOptions());
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Error reading document in collection with collection ID {collectionId}", colId);
+                throw;
+            }
+        }
+
+        public async Task<Document> CreateDocumentAsync(
+            string databaseName,
+            string colId,
+            object document)
+        {
+            string colUrl = string.Format("/dbs/{0}/colls/{1}", databaseName, colId);
+
+            await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
+            try
+            {
+                return await this.client.CreateDocumentAsync(colUrl, document, new RequestOptions(), false);
+            }
+            catch (Exception e)
+            {
+                logger.LogError(e, "Error upserting document into collection with collection ID {collectionId}", colId);
+                throw;
+            }
         }
 
         public async Task<Document> DeleteDocumentAsync(
@@ -189,6 +251,27 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
 
             return result;
+        }
+
+        public async Task<List<Document>> QueryAllDocumentsAsync(
+            string databaseName,
+            string colId)
+        {
+            string collectionLink = string.Format(
+                "/dbs/{0}/colls/{1}",
+                databaseName,
+                colId);
+
+            await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
+            try
+            {
+                return this.client.CreateDocumentQuery(collectionLink).ToList<Document>();
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e, "Unable to query collection {colId} for All documents", colId);
+                throw;
+            }
         }
 
         public async Task<List<Document>> QueryDocumentsAsync(

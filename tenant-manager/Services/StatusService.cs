@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 using Mmm.Platform.IoT.TenantManager.Services.External;
@@ -15,8 +16,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services
 {
     public class StatusService : StatusServiceBase
     {
-        private readonly ILogger<StatusService> logger;
-
         public StatusService(
             AppConfig config,
             ILogger<StatusService> logger,
@@ -24,10 +23,10 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             IDeviceGroupsConfigClient deviceGroupsConfigClient,
             IStorageClient cosmosClient,
             ITableStorageClient tableStorageClient,
-            IRunbookHelper runbookHelper)
+            IRunbookHelper runbookHelper,
+            IAppConfigurationClient appConfigClient)
                 : base(config)
         {
-            this.logger = logger;
             Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "CosmosDb", cosmosClient },
@@ -35,7 +34,10 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 { "Table Storage", tableStorageClient },
                 { "Identity Gateway", identityGatewayClient },
                 { "Config", deviceGroupsConfigClient },
+                { "App Config", appConfigClient },
             };
         }
+
+        public override IDictionary<string, IStatusOperation> Dependencies { get; set; }
     }
 }

@@ -2,14 +2,11 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
-    public abstract class UserContainer : IStatusOperation
+    public abstract class UserContainer
     {
         public UserContainer()
         {
@@ -22,12 +19,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
 
         public abstract string TableName { get; }
 
-        protected ITableStorageClient TableStorageClient { get; set; }
-
-        public async Task<StatusResultServiceModel> StatusAsync()
-        {
-            await this.TableStorageClient.GetTableAsync(this.TableName);
-            return new StatusResultServiceModel(true, "Alive and Well!");
-        }
+        protected ITableStorageClient TableStorageClient { get; private set; }
     }
 }

@@ -1,4 +1,4 @@
-// <copyright file="Alarms.cs" company="3M">
+﻿// <copyright file="Alarms.cs" company="3M">
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
@@ -32,20 +33,20 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private const string TenantInfoKey = "tenant";
         private const string TelemetryCollectionKey = "telemetry-collection";
         private const int DocumentQueryLimit = 1000;
+        private readonly string databaseName;
+        private readonly int maxDeleteRetryCount;
         private readonly ILogger logger;
         private readonly IStorageClient storageClient;
         private readonly AppConfig config;
         private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly IAppConfigurationHelper appConfigurationHelper;
-        private readonly string databaseName;
-        private readonly int maxDeleteRetryCount;
+        private readonly IAppConfigurationClient appConfigurationClient;
 
         public Alarms(
             AppConfig config,
             IStorageClient storageClient,
             ILogger<Alarms> logger,
             IHttpContextAccessor contextAccessor,
-            IAppConfigurationHelper appConfigurationHelper)
+            IAppConfigurationClient appConfigurationClient)
         {
             this.storageClient = storageClient;
             this.databaseName = config.DeviceTelemetryService.Alarms.Database;
@@ -53,14 +54,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             this.maxDeleteRetryCount = config.DeviceTelemetryService.Alarms.MaxDeleteRetries;
             this.config = config;
             this.httpContextAccessor = contextAccessor;
-            this.appConfigurationHelper = appConfigurationHelper;
+            this.appConfigurationClient = appConfigurationClient;
         }
 
         private string CollectionId
         {
             get
             {
-                return this.appConfigurationHelper.GetValue(
+                return this.appConfigurationClient.GetValue(
                     $"{TenantInfoKey}:{httpContextAccessor.HttpContext.Request.GetTenant()}:{TelemetryCollectionKey}");
             }
         }

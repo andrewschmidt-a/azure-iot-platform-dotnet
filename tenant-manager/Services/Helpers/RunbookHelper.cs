@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure;
 using Microsoft.Azure.Management.Automation;
 using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.TenantManager.Services.Exceptions;
 using Newtonsoft.Json;
@@ -23,18 +23,18 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         private const string SaJobDatabaseId = "pcs-iothub-stream";
         private readonly AppConfig config;
         private readonly ITokenHelper tokenHelper;
-        private readonly IAppConfigurationHelper appConfigHelper;
+        private readonly IAppConfigurationClient appConfigClient;
         private HttpClient httpClient;
         private bool disposedValue = false;
         private string iotHubConnectionStringKeyFormat = "tenant:{0}:iotHubConnectionString";
         private Regex iotHubKeyRegexMatch = new Regex(@"(?<=SharedAccessKey=)[^;]*");
         private Regex storageAccountKeyRegexMatch = new Regex(@"(?<=AccountKey=)[^;]*");
 
-        public RunbookHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
+        public RunbookHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationClient appConfigHelper)
         {
             this.tokenHelper = tokenHelper;
             this.config = config;
-            this.appConfigHelper = appConfigHelper;
+            this.appConfigClient = appConfigHelper;
 
             this.httpClient = new HttpClient();
         }
@@ -204,7 +204,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             try
             {
                 string appConfigKey = string.Format(this.iotHubConnectionStringKeyFormat, tenantId);
-                string iotHubConnectionString = this.appConfigHelper.GetValue(appConfigKey);
+                string iotHubConnectionString = this.appConfigClient.GetValue(appConfigKey);
                 if (string.IsNullOrEmpty(iotHubConnectionString))
                 {
                     throw new Exception($"The iotHubConnectionString returned by app config for the key {appConfigKey} returned a null value.");

@@ -4,21 +4,22 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.Common.Services
 {
-    public class StatusServiceBase : IStatusService
+    public abstract class StatusServiceBase : IStatusService
     {
-        private readonly AppConfig config;
+        private AppConfig config;
 
         public StatusServiceBase(AppConfig config)
         {
             this.config = config;
         }
 
-        protected IDictionary<string, IStatusOperation> Dependencies { get; set; }
+        public abstract IDictionary<string, IStatusOperation> Dependencies { get; set; }
 
         public async Task<StatusServiceModel> GetStatusAsync()
         {
@@ -38,13 +39,18 @@ namespace Mmm.Platform.IoT.Common.Services
                 result.Status.Message = string.Join("; ", errors);
             }
 
-            result.Properties.Add("AuthRequired", config.Global.AuthRequired.ToString());
-            result.Properties.Add("Endpoint", config.ASPNETCORE_URLS);
+            result.Properties.AuthRequired = config.Global.AuthRequired;
+            result.Properties.Endpoint = config.ASPNETCORE_URLS;
 
             return result;
         }
 
-        protected void SetServiceStatus(string dependencyName, StatusResultServiceModel serviceResult, StatusServiceModel result, IList<string> errors)
+        public IActionResult Ping()
+        {
+            return new StatusCodeResult(200);
+        }
+
+        private void SetServiceStatus(string dependencyName, StatusResultServiceModel serviceResult, StatusServiceModel result, IList<string> errors)
         {
             if (!serviceResult.IsHealthy)
             {

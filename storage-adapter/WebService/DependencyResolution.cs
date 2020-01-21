@@ -15,6 +15,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
         {
             var assembly = typeof(StatusService).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
+            builder.RegisterType<DocumentDbKeyValueContainer>().As<IKeyValueContainer>().SingleInstance();
         }
     }
 }

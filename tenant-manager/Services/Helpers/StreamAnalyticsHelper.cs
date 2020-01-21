@@ -10,7 +10,6 @@ using Microsoft.Rest;
 using Microsoft.Rest.Azure;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
@@ -20,7 +19,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         private readonly AppConfig config;
         private readonly ITokenHelper tokenHelper;
 
-        public StreamAnalyticsHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
+        public StreamAnalyticsHelper(AppConfig config, ITokenHelper tokenHelper)
         {
             this.config = config;
             this.tokenHelper = tokenHelper;

@@ -9,7 +9,10 @@ using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services
 {
-    public interface IKeyValueContainer : IStatusOperation
+    /// <summary>
+    /// Common interface for underlying key-value storage services, such as Cosmos DB, Azure Storage Table and so on
+    /// </summary>
+    public interface IKeyValueContainer
     {
         string DocumentDataType { get; }
 

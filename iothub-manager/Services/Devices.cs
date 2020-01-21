@@ -45,7 +45,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             this.tenantHelper = tenantHelper ?? throw new ArgumentNullException("tenantHelper " + ioTHubHostName);
         }
 
-        public async Task<StatusResultServiceModel> PingRegistryAsync()
+        // Ping the registry to see if the connection is healthy
+        public async Task<StatusResultServiceModel> StatusAsync()
         {
             var result = new StatusResultServiceModel(false, string.Empty);
             try
