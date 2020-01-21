@@ -44,9 +44,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var result = await cache.GetListAsync();
             Assert.Equal(result.Count, cacheValue.Tags.Count + cacheValue.Reported.Count);
             foreach (string tag in cacheValue.Tags)
+            {
                 Assert.Contains(result, s => s.Contains(tag));
+            }
+
             foreach (string reported in cacheValue.Reported)
+            {
                 Assert.Contains(result, s => s.Contains(reported));
+            }
         }
 
         [Fact]
