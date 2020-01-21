@@ -283,7 +283,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 int ruleCount = await this.GetRuleCountAsync();
                 var eventProperties = new Dictionary<string, object>
                 {
-                    { "Count", ruleCount }
+                    { "Count", ruleCount },
                 };
                 await this.diagnosticsClient.LogEventAsync("Rule_Count", eventProperties);
             }

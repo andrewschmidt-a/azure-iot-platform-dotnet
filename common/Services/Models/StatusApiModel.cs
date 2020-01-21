@@ -37,19 +37,12 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         [JsonProperty(PropertyName = "UpTime", Order = 50)]
         public long UpTime => Convert.ToInt64(Uptime.Duration.TotalSeconds);
 
-        /// <summary>
-        /// Value generated at bootstrap by each instance of the service and
-        /// used to correlate logs coming from the same instance. The value
-        /// changes every time the service starts.
-        /// </summary>
         [JsonProperty(PropertyName = "UID", Order = 60)]
         public string UID => Uptime.ProcessId;
 
-        /// <summary>A property bag with details about the service</summary>
         [JsonProperty(PropertyName = "Properties", Order = 70)]
         public Dictionary<string, string> Properties { get; set; }
 
-        /// <summary>A property bag with details about the internal dependencies</summary>
         [JsonProperty(PropertyName = "Dependencies", Order = 80)]
         public Dictionary<string, StatusResultApiModel> Dependencies { get; set; }
 
@@ -57,7 +50,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         public Dictionary<string, string> Metadata => new Dictionary<string, string>
         {
             { "$type", "Status;" + "0" },
-            { "$uri", "/status" }
+            { "$uri", "/status" },
         };
     }
 }

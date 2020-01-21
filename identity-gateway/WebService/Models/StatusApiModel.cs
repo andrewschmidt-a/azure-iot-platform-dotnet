@@ -56,7 +56,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
         public Dictionary<string, string> Metadata => new Dictionary<string, string>
         {
             { "$type", "Status;" + "0" },
-            { "$uri", "/status" }
+            { "$uri", "/status" },
         };
     }
 }

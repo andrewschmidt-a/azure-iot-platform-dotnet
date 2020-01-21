@@ -72,8 +72,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 {
                     Key = key,
                     Data = data,
-                    ETag = etag
-                })
+                    ETag = etag,
+                }),
             };
 
             this.mockHttpClient
@@ -106,7 +106,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             var response = new HttpResponse
             {
                 StatusCode = HttpStatusCode.NotFound,
-                IsSuccessStatusCode = false
+                IsSuccessStatusCode = false,
             };
 
             this.mockHttpClient
@@ -129,27 +129,27 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 {
                     Key = this.rand.NextString(),
                     Data = this.rand.NextString(),
-                    ETag = this.rand.NextString()
+                    ETag = this.rand.NextString(),
                 },
                 new ValueApiModel
                 {
                     Key = this.rand.NextString(),
                     Data = this.rand.NextString(),
-                    ETag = this.rand.NextString()
+                    ETag = this.rand.NextString(),
                 },
                 new ValueApiModel
                 {
                     Key = this.rand.NextString(),
                     Data = this.rand.NextString(),
-                    ETag = this.rand.NextString()
-                }
+                    ETag = this.rand.NextString(),
+                },
             };
             var method = HttpMethod.Get;
             var response = new HttpResponse
             {
                 StatusCode = HttpStatusCode.OK,
                 IsSuccessStatusCode = true,
-                Content = JsonConvert.SerializeObject(new ValueListApiModel { Items = models })
+                Content = JsonConvert.SerializeObject(new ValueListApiModel { Items = models }),
             };
 
             this.mockHttpClient
@@ -192,8 +192,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 {
                     Key = key,
                     Data = data,
-                    ETag = etag
-                })
+                    ETag = etag,
+                }),
             };
 
             this.mockHttpClient
@@ -233,8 +233,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 {
                     Key = key,
                     Data = data,
-                    ETag = etagNew
-                })
+                    ETag = etagNew,
+                }),
             };
 
             this.mockHttpClient
@@ -268,7 +268,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             var response = new HttpResponse
             {
                 StatusCode = HttpStatusCode.Conflict,
-                IsSuccessStatusCode = false
+                IsSuccessStatusCode = false,
             };
 
             this.mockHttpClient
@@ -291,7 +291,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             var response = new HttpResponse
             {
                 StatusCode = HttpStatusCode.OK,
-                IsSuccessStatusCode = true
+                IsSuccessStatusCode = true,
             };
 
             this.mockHttpClient

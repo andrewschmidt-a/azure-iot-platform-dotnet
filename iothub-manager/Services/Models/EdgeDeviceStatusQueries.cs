@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models
         {
             { QueryType.APPLIED, @"SELECT deviceId from devices.modules WHERE moduleId = '$edgeAgent' AND configurations.[[{0}]].status = 'Applied'" },
             { QueryType.SUCCESSFUL, @"SELECT deviceId from devices.modules WHERE moduleId = '$edgeAgent' AND configurations.[[{0}]].status = 'Applied' AND properties.desired.$version = properties.reported.lastDesiredVersion AND properties.reported.lastDesiredStatus.code = 200" },
-            { QueryType.FAILED, @"SELECT deviceId FROM devices.modules WHERE moduleId = '$edgeAgent' AND configurations.[[{0}]].status = 'Applied' AND properties.desired.$version = properties.reported.lastDesiredVersion AND properties.reported.lastDesiredStatus.code != 200" }
+            { QueryType.FAILED, @"SELECT deviceId FROM devices.modules WHERE moduleId = '$edgeAgent' AND configurations.[[{0}]].status = 'Applied' AND properties.desired.$version = properties.reported.lastDesiredVersion AND properties.reported.lastDesiredStatus.code != 200" },
         };
     }
 }

@@ -48,7 +48,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             UserSettingsInput input = new UserSettingsInput
             {
                 UserId = userId,
-                SettingKey = setting
+                SettingKey = setting,
             };
             return await this.container.GetAsync(input);
         }
@@ -68,7 +68,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             {
                 UserId = userId,
                 SettingKey = setting,
-                Value = value
+                Value = value,
             };
             return await this.container.CreateAsync(input);
         }
@@ -88,7 +88,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             {
                 UserId = userId,
                 SettingKey = setting,
-                Value = value
+                Value = value,
             };
             return await this.container.UpdateAsync(input);
         }

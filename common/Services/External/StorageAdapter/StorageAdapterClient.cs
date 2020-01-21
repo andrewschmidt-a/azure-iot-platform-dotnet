@@ -48,7 +48,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
             string url = this.RequestUrl($"collections/{collectionId}/values");
             ValueApiModel data = new ValueApiModel
             {
-                Data = value
+                Data = value,
             };
             return await this.requestHelper.ProcessRequestAsync(HttpMethod.Post, url, data);
         }
@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
             ValueApiModel data = new ValueApiModel
             {
                 Data = value,
-                ETag = etag
+                ETag = etag,
             };
             return await this.requestHelper.ProcessRequestAsync(HttpMethod.Put, url, data);
         }

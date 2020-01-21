@@ -38,7 +38,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             {
                 Field = this.Field,
                 Operator = operatorInstance,
-                Value = this.Value
+                Value = this.Value,
             };
         }
     }

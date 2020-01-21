@@ -253,7 +253,7 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
                     // Validate token lifetime
                     ValidateLifetime = true,
-                    ClockSkew = new TimeSpan(0, 0, config.Global.ClientAuth.Jwt.ClockSkewSeconds)
+                    ClockSkew = new TimeSpan(0, 0, config.Global.ClientAuth.Jwt.ClockSkewSeconds),
                 };
 
                 this.tokenValidationInitialized = true;

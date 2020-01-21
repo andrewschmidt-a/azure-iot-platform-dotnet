@@ -235,8 +235,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
             {
                 ControllerContext = new ControllerContext()
                 {
-                    HttpContext = mockHttpContext.Object
-                }
+                    HttpContext = mockHttpContext.Object,
+                },
             };
         }
 
@@ -264,7 +264,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
                 },
                 {
                     RequestExtension.ContextKeyTenantId, SomeTenantId
-                }
+                },
             };
             mockHttpContext.Setup(m => m.Items).Returns(contextItems);
         }

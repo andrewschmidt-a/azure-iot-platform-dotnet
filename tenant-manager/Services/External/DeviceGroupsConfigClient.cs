@@ -26,10 +26,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
             return $"{this.serviceUri}/{path}";
         }
 
-        /// <summary>
-        /// Ping the DeviceGroups for its status
-        /// </summary>
-        /// <returns></returns>
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             try
@@ -61,7 +57,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
             DeviceGroupApiModel defaultGroup = new DeviceGroupApiModel
             {
                 DisplayName = "Default",
-                Conditions = new List<DeviceGroupConditionModel>()
+                Conditions = new List<DeviceGroupConditionModel>(),
             };
             string url = this.RequestUrl("devicegroups/");
             return await this.requestHelper.ProcessRequestAsync(HttpMethod.Post, url, defaultGroup, tenantId);

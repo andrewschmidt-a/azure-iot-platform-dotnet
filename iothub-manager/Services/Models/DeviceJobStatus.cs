@@ -10,6 +10,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         Running = 2,
         Completed = 3,
         Failed = 4,
-        Canceled = 5
+        Canceled = 5,
     }
 }

@@ -31,8 +31,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
             {
                 ControllerContext = new ControllerContext()
                 {
-                    HttpContext = this.httpContext
-                }
+                    HttpContext = this.httpContext,
+                },
             };
         }
 
@@ -122,12 +122,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                 ModuleId = moduleId,
                 DesiredProperties = new Dictionary<string, JToken>()
                 {
-                    { "version", JToken.Parse("'v2'") }
+                    { "version", JToken.Parse("'v2'") },
                 },
                 ReportedProperties = new Dictionary<string, JToken>()
                 {
-                    { "version", JToken.Parse("'v1'") }
-                }
+                    { "version", JToken.Parse("'v1'") },
+                },
             };
         }
     }

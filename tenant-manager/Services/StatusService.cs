@@ -30,7 +30,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 { "Tenant Runbooks", runbookHelper },
                 { "Table Storage", tableStorageClient },
                 { "Identity Gateway", identityGatewayClient },
-                { "Config", deviceGroupsConfigClient }
+                { "Config", deviceGroupsConfigClient },
             };
         }
     }

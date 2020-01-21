@@ -44,11 +44,11 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             List<ValueApiModel> rulesList = new List<ValueApiModel>
             {
                 this.entityHelper.CreateRule(),
-                this.entityHelper.CreateRule()
+                this.entityHelper.CreateRule(),
             };
             ValueListApiModel rules = new ValueListApiModel
             {
-                Items = rulesList
+                Items = rulesList,
             };
 
             this.mockStorageAdapterClient
@@ -88,7 +88,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             string tenantId = this.rand.NextString();
             ValueListApiModel rules = new ValueListApiModel
             {
-                Items = new List<ValueApiModel>()
+                Items = new List<ValueApiModel>(),
             };
 
             this.mockStorageAdapterClient

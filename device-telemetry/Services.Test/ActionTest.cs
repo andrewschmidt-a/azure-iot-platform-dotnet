@@ -16,7 +16,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private const string ParameterSubjectKey = "Subject";
         private const string ParameterNotesKey = "Notes";
         private const string ParameterRecipientsKey = "Recipients";
-
         private readonly JArray emailArray;
 
         public ActionTest()
@@ -33,7 +32,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 { ParameterSubjectKey, ParameterSubject },
                 { ParameterNotesKey, ParameterNotes },
-                { ParameterRecipientsKey, this.emailArray }
+                { ParameterRecipientsKey, this.emailArray },
             };
 
             // Act
@@ -54,7 +53,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 { ParameterSubjectKey, ParameterSubject },
                 { ParameterNotesKey, ParameterNotes },
-                { ParameterRecipientsKey, new JArray() { "sampleEmailgmail.com" } }
+                { ParameterRecipientsKey, new JArray() { "sampleEmailgmail.com" } },
             };
 
             // Act and Assert
@@ -69,7 +68,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             var parameters = new Dictionary<string, object>()
             {
                 { ParameterSubjectKey, ParameterSubject },
-                { ParameterNotesKey, ParameterNotes }
+                { ParameterNotesKey, ParameterNotes },
             };
 
             // Act and Assert
@@ -85,7 +84,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 { ParameterSubjectKey, ParameterSubject },
                 { ParameterNotesKey, ParameterNotes },
-                { ParameterRecipientsKey, ParameterRecipients }
+                { ParameterRecipientsKey, ParameterRecipients },
             };
 
             // Act and Assert
@@ -101,7 +100,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 { "subject", ParameterSubject },
                 { "nOtEs", ParameterNotes },
-                { "rEcipiEnts", this.emailArray }
+                { "rEcipiEnts", this.emailArray },
             };
 
             // Act
@@ -121,7 +120,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             var parameters = new Dictionary<string, object>()
             {
                 { ParameterSubjectKey, ParameterSubject },
-                { ParameterRecipientsKey, this.emailArray }
+                { ParameterRecipientsKey, this.emailArray },
             };
 
             // Act

@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models
                 Image = Convert.ToBase64String(bytes),
                 Type = Logo.SvgType,
                 Name = Logo.DefaultLogoName,
-                IsDefault = true
+                IsDefault = true,
             };
         }
 

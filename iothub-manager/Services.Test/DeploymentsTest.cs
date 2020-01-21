@@ -189,7 +189,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 DeviceGroupQuery = deviceGroupQuery,
                 PackageContent = packageContent,
                 PackageType = PackageType.EdgeManifest,
-                Priority = priority
+                Priority = priority,
             };
 
             var newConfig = new Configuration("test-config")
@@ -201,7 +201,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     { DeploymentGroupIdLabel, deviceGroupId },
                     { RmCreatedLabel, bool.TrueString },
                 },
-                Priority = priority
+                Priority = priority,
             };
 
             this.registry.Setup(r => r.AddConfigurationAsync(It.Is<Configuration>(c =>
@@ -319,7 +319,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var content = new ConfigurationContent()
             {
                 ModulesContent = isEdgeContent ? new Dictionary<string, IDictionary<string, object>>() : null,
-                DeviceContent = !isEdgeContent ? new Dictionary<string, object>() : null
+                DeviceContent = !isEdgeContent ? new Dictionary<string, object>() : null,
             };
 
             var label = string.Empty;
@@ -340,7 +340,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     { ConfigurationTypeLabel, "CustomConfig" },
                     { RmCreatedLabel, bool.TrueString },
                 },
-                Content = content
+                Content = content,
             };
 
             var deploymentId = configuration.Id;
@@ -386,7 +386,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var content = new ConfigurationContent()
             {
                 ModulesContent = isEdgeDeployment ? new Dictionary<string, IDictionary<string, object>>() : null,
-                DeviceContent = !isEdgeDeployment ? new Dictionary<string, object>() : null
+                DeviceContent = !isEdgeDeployment ? new Dictionary<string, object>() : null,
             };
 
             var label = isEdgeDeployment ? PackageType.EdgeManifest.ToString() : PackageType.DeviceConfiguration.ToString();
@@ -403,7 +403,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     { ConfigurationTypeLabel, firmware },
                     { RmCreatedLabel, bool.TrueString },
                 },
-                Content = content
+                Content = content,
             };
 
             var deploymentId = configuration.Id;
@@ -438,7 +438,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 DeviceGroupQuery = deviceGroupQuery,
                 PackageContent = TestEdgePackageJson,
                 PackageName = packageName,
-                Priority = priority
+                Priority = priority,
             };
 
             var newConfig = new Configuration("test-config")
@@ -450,9 +450,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     { DeploymentGroupIdLabel, deviceGroupId },
                     { RmCreatedLabel, bool.TrueString },
                     { DeploymentGroupNameLabel, deviceGroupName },
-                    { DeploymentPackageNameLabel, packageName }
+                    { DeploymentPackageNameLabel, packageName },
                 },
-                Priority = priority
+                Priority = priority,
             };
 
             this.registry.Setup(r => r.AddConfigurationAsync(It.Is<Configuration>(c =>
@@ -486,7 +486,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var configurations = new List<Configuration>
             {
                 this.CreateConfiguration(0, true),
-                this.CreateConfiguration(1, false)
+                this.CreateConfiguration(1, false),
             };
 
             this.registry.Setup(r => r.GetConfigurationsAsync(20))
@@ -509,9 +509,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 {
                     { packageTypeLabel, PackageType.EdgeManifest.ToString() },
                     { DeploymentNameLabel, "deployment" + idx },
-                    { DeploymentGroupIdLabel, "dvcGroupId" + idx }
+                    { DeploymentGroupIdLabel, "dvcGroupId" + idx },
                 },
-                Priority = 10
+                Priority = 10,
             };
 
             if (addCreatedByRmLabel)

@@ -40,7 +40,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
                 Name = this.Name,
                 ResponseTimeout = this.ResponseTimeout,
                 ConnectionTimeout = this.ConnectionTimeout,
-                JsonPayload = this.JsonPayload
+                JsonPayload = this.JsonPayload,
             };
         }
     }

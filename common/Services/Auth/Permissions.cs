@@ -32,15 +32,15 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                     "UpdateDevices",
                     "UpdateRules",
                     "UpdateSimManagement",
-                    "UserManage"
+                    "UserManage",
                 }
             },
             {
                 "ReadOnly", new List<string>
                 {
-                    "ReadAll"
+                    "ReadAll",
                 }
-            }
+            },
         };
     }
 }

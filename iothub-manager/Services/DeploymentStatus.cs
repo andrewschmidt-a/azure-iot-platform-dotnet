@@ -9,6 +9,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         Pending,
         Succeeded,
         Failed,
-        Unknown
+        Unknown,
     }
 }

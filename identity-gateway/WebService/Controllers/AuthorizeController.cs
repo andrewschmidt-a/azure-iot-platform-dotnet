@@ -99,7 +99,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             UserTenantInput tenantInput = new UserTenantInput
             {
                 UserId = input.ClientId,
-                Tenant = input.Scope
+                Tenant = input.Scope,
             };
             UserTenantListModel tenantsModel = await this.userTenantContainer.GetAllAsync(tenantInput);
             if (tenantsModel.Models.Count == 0) {
@@ -167,7 +167,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             UserTenantInput tenantInput = new UserTenantInput
             {
                 UserId = jwt?.Claims?.Where(c => c.Type == "sub").First()?.Value,
-                Tenant = tenant
+                Tenant = tenant,
             };
             UserTenantModel tenantResult = await this.userTenantContainer.GetAsync(tenantInput);
             if (tenantResult != null)
@@ -223,7 +223,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
                     UserId = claims.Where(c => c.Type == "sub").First().Value,
                     Tenant = inviteJWT.Claims.Where(c => c.Type == "tenant").First().Value,
                     Roles = JsonConvert.SerializeObject(inviteJWT.Claims.Where(c => c.Type == "role").Select(c => c.Value).ToList()),
-                    Type = "Member"
+                    Type = "Member",
                 };
                 await this.userTenantContainer.UpdateAsync(userTenant);
 

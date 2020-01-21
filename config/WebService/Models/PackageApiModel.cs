@@ -55,7 +55,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Models
                 Content = this.Content,
                 Name = this.Name,
                 PackageType = this.PackageType,
-                ConfigType = this.ConfigType
+                ConfigType = this.ConfigType,
             };
         }
     }

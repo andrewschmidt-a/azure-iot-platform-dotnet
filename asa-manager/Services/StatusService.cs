@@ -25,7 +25,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             {
                 { "Storage Adapter", storageAdapterClient },
                 { "IoTHub Manager", iotHubManager },
-                { "Blob Storage", blobStorageClient }
+                { "Blob Storage", blobStorageClient },
             };
         }
     }

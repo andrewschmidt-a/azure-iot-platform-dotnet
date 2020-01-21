@@ -214,7 +214,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 
                 var predicateStringObject = new JObject
                 {
-                    new JProperty(PredicateStringKey, string.Join(" OR ", devicePredicates))
+                    new JProperty(PredicateStringKey, string.Join(" OR ", devicePredicates)),
                 };
                 result.Add(PredicateKey, predicateStringObject);
             }
@@ -224,13 +224,13 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             JArray sortArray = new JArray(new JObject
                 {
                     { SortInputKey, builtInPropObject },
-                    { SortOrderKey, order }
+                    { SortOrderKey, order },
                 });
 
             JObject topObject = new JObject
             {
                 { SortKey, sortArray },
-                { CountKey, skip + limit }
+                { CountKey, skip + limit },
             };
 
             result.Add(TopKey, topObject);
@@ -255,7 +255,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             Uri uri = new UriBuilder("https", this.fqdn)
             {
                 Path = path,
-                Query = args
+                Query = args,
             }.Uri;
             HttpRequest request = new HttpRequest(uri);
             request.Headers.Add("x-ms-client-application-name", this.applicationId);

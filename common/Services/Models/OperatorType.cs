@@ -6,6 +6,6 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         GreaterThanOrEqual,
         LessThan,
         LessThanOrEqual,
-        Equals
+        Equals,
     }
 }

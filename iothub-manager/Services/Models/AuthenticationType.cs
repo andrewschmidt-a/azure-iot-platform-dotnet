@@ -6,6 +6,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 
         SelfSigned = 1,
 
-        CertificateAuthority = 2
+        CertificateAuthority = 2,
     }
 }

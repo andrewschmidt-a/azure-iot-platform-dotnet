@@ -34,7 +34,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var model = new ValueModel
             {
-                Value = this.rand.NextString()
+                Value = this.rand.NextString(),
             };
 
             model.Locked = false;
@@ -61,7 +61,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Data = dataOriginal,
-                    ETag = etagOriginal
+                    ETag = etagOriginal,
                 });
 
             this.mockClient
@@ -72,7 +72,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     It.Is<string>(s => s == etagOriginal)))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    ETag = etagLocked
+                    ETag = etagLocked,
                 });
 
             var lockResult = await @lock.TryLockAsync();
@@ -109,7 +109,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     It.Is<string>(s => s == etagLocked)))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    ETag = etagUpdated
+                    ETag = etagUpdated,
                 });
 
             var writeResult = await @lock.WriteAndReleaseAsync(model);
@@ -133,7 +133,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var model = new ValueModel
             {
-                Value = this.rand.NextString()
+                Value = this.rand.NextString(),
             };
 
             model.Locked = true;
@@ -153,7 +153,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Data = dataOriginal,
-                    ETag = etagOriginal
+                    ETag = etagOriginal,
                 });
 
             var result = await @lock.TryLockAsync();
@@ -168,7 +168,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var model = new ValueModel
             {
-                Value = this.rand.NextString()
+                Value = this.rand.NextString(),
             };
 
             model.Locked = false;
@@ -191,7 +191,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Data = dataOriginal,
-                    ETag = etagOriginal
+                    ETag = etagOriginal,
                 });
 
             this.mockClient
@@ -215,7 +215,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var model = new ValueModel
             {
-                Value = this.rand.NextString()
+                Value = this.rand.NextString(),
             };
 
             model.Locked = false;
@@ -242,7 +242,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Data = dataOriginal,
-                    ETag = etagOriginal
+                    ETag = etagOriginal,
                 });
 
             this.mockClient
@@ -253,7 +253,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     It.Is<string>(s => s == etagOriginal)))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    ETag = etagLocked
+                    ETag = etagLocked,
                 });
 
             var lockResult = await @lock.TryLockAsync();

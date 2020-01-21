@@ -101,7 +101,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
         {
             Document document = new Document()
             {
-                Id = Guid.NewGuid().ToString()
+                Id = Guid.NewGuid().ToString(),
             };
 
             document.SetPropertyValue(this.docSchemaKey, this.docSchemaValue);

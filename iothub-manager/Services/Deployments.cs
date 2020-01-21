@@ -153,8 +153,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 DeploymentMetrics =
                 {
                     DeviceMetrics = CalculateDeviceMetrics(deviceStatuses),
-                    DeviceStatuses = includeDeviceStatus ? deviceStatuses : null
-                }
+                    DeviceStatuses = includeDeviceStatus ? deviceStatuses : null,
+                },
             };
         }
 

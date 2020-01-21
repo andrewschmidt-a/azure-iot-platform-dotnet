@@ -125,7 +125,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                 UserTenantInput deleteInput = new UserTenantInput
                 {
                     UserId = row.PartitionKey,
-                    Tenant = input.Tenant
+                    Tenant = input.Tenant,
                 };
                 return this.DeleteAsync(deleteInput);
             });

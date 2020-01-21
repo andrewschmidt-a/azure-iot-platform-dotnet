@@ -86,7 +86,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                 "property1",
                 "property2",
                 "property3",
-                "property4"
+                "property4",
             };
         }
     }

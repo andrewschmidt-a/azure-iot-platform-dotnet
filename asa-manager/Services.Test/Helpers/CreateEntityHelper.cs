@@ -33,14 +33,14 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
                 Description = this.rand.NextString(),
                 GroupId = this.rand.NextString(),
                 Severity = this.rand.NextString(),
-                Calculation = this.rand.NextString()
+                Calculation = this.rand.NextString(),
             };
 
             return new ValueApiModel
             {
                 Key = this.rand.NextString(),
                 ETag = this.rand.NextString(),
-                Data = JsonConvert.SerializeObject(data)
+                Data = JsonConvert.SerializeObject(data),
             };
         }
 
@@ -49,14 +49,14 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
             DeviceGroupDataModel data = new DeviceGroupDataModel
             {
                 Conditions = new List<DeviceGroupConditionModel>(),
-                DisplayName = this.rand.NextString()
+                DisplayName = this.rand.NextString(),
             };
 
             return new ValueApiModel
             {
                 Key = this.rand.NextString(),
                 ETag = this.rand.NextString(),
-                Data = JsonConvert.SerializeObject(data)
+                Data = JsonConvert.SerializeObject(data),
             };
         }
 
@@ -66,7 +66,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
             {
                 Key = this.rand.NextString(),
                 Operator = this.rand.NextString(),
-                Value = this.rand.NextString()
+                Value = this.rand.NextString(),
             };
         }
 
@@ -74,7 +74,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
         {
             return new DeviceModel
             {
-                Id = this.rand.NextString()
+                Id = this.rand.NextString(),
             };
         }
     }

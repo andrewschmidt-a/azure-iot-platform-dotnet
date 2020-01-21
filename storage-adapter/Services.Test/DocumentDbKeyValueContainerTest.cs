@@ -199,7 +199,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
 
             var result = await this.container.CreateAsync(collectionId, key, new ValueServiceModel
             {
-                Data = data
+                Data = data,
             });
 
             Assert.Equal(result.CollectionId, collectionId);
@@ -239,7 +239,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             await Assert.ThrowsAsync<ConflictingResourceException>(async () =>
                 await this.container.CreateAsync(collectionId, key, new ValueServiceModel
                 {
-                    Data = data
+                    Data = data,
                 }));
         }
 
@@ -274,7 +274,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             var result = await this.container.UpsertAsync(collectionId, key, new ValueServiceModel
             {
                 Data = data,
-                ETag = etagOld
+                ETag = etagOld,
             });
 
             Assert.Equal(result.CollectionId, collectionId);
@@ -316,7 +316,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
                 await this.container.UpsertAsync(collectionId, key, new ValueServiceModel
                 {
                     Data = data,
-                    ETag = etag
+                    ETag = etag,
                 }));
         }
 

@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
                 var httpRequest = new HttpRequestMessage
                 {
                     Method = httpMethod,
-                    RequestUri = request.Uri
+                    RequestUri = request.Uri,
                 };
 
                 SetServerSSLSecurity(request, clientHandler);
@@ -98,7 +98,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
                     {
                         StatusCode = 0,
                         IsSuccessStatusCode = false,
-                        Content = errorMessage
+                        Content = errorMessage,
                     };
                 }
             }

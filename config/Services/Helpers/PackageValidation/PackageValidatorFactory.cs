@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
         private static Dictionary<ConfigType, IPackageValidator> validatorMapping =
             new Dictionary<ConfigType, IPackageValidator>()
         {
-            { ConfigType.Firmware, new FirmwareValidator() }
+            { ConfigType.Firmware, new FirmwareValidator() },
         };
 
         private static EdgePackageValidator edgePackageValidator = new EdgePackageValidator();

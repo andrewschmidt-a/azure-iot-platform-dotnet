@@ -74,7 +74,7 @@ namespace Mmm.Platform.IoT.Common.Services
 
                 // The minimum time between retrievals, in the event that a retrieval
                 // failed, or that a refresh is explicitly requested. Default is 30 seconds.
-                RefreshInterval = TimeSpan.FromMinutes(1)
+                RefreshInterval = TimeSpan.FromMinutes(1),
             };
         }
 

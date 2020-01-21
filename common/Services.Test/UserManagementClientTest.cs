@@ -66,7 +66,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             {
                 StatusCode = HttpStatusCode.OK,
                 IsSuccessStatusCode = true,
-                Content = JsonConvert.SerializeObject(allowedActions)
+                Content = JsonConvert.SerializeObject(allowedActions),
             };
 
             this.mockHttpClient
@@ -97,7 +97,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             var response = new HttpResponse
             {
                 StatusCode = HttpStatusCode.NotFound,
-                IsSuccessStatusCode = false
+                IsSuccessStatusCode = false,
             };
 
             this.mockHttpClient
@@ -121,7 +121,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             var response = new HttpResponse
             {
                 StatusCode = HttpStatusCode.InternalServerError,
-                IsSuccessStatusCode = false
+                IsSuccessStatusCode = false,
             };
 
             this.mockHttpClient
@@ -144,7 +144,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 AccessToken = "1234ExampleToken",
                 AccessTokenType = "Bearer",
                 Audience = "https://management.azure.com/",
-                Authority = "https://login.microsoftonline.com/12345/"
+                Authority = "https://login.microsoftonline.com/12345/",
             };
 
             var method = HttpMethod.Get;
@@ -152,7 +152,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             {
                 StatusCode = HttpStatusCode.OK,
                 IsSuccessStatusCode = true,
-                Content = JsonConvert.SerializeObject(token)
+                Content = JsonConvert.SerializeObject(token),
             };
 
             this.mockHttpClient

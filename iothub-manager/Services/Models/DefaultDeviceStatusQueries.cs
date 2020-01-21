@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models
         {
             { QueryType.APPLIED, @"SELECT deviceId from devices where configurations.[[{0}]].status = 'Applied'" },
             { QueryType.SUCCESSFUL, string.Empty },
-            { QueryType.FAILED, string.Empty }
+            { QueryType.FAILED, string.Empty },
         };
     }
 }

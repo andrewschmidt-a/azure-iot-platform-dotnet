@@ -37,9 +37,9 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                             SubscriptionId = MockSubscriptionId,
                             SolutionName = MockResourceGroup,
                             ArmEndpointUrl = MockArmEndpointUrl,
-                            ManagementApiVersion = MockApiVersion
-                        }
-                    }
+                            ManagementApiVersion = MockApiVersion,
+                        },
+                    },
                 },
                 this.mockUserManagementClient.Object);
 
@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var response = new HttpResponse
             {
                 StatusCode = HttpStatusCode.OK,
-                IsSuccessStatusCode = true
+                IsSuccessStatusCode = true,
             };
 
             this.mockHttpClient
@@ -87,7 +87,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var response = new HttpResponse
             {
                 StatusCode = HttpStatusCode.NotFound,
-                IsSuccessStatusCode = false
+                IsSuccessStatusCode = false,
             };
 
             this.mockHttpClient

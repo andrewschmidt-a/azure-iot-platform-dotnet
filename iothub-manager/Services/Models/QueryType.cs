@@ -4,6 +4,6 @@ namespace Mmm.Platform.IoT.Config.Services.Models
     {
         APPLIED,
         SUCCESSFUL,
-        FAILED
+        FAILED,
     }
 }

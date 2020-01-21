@@ -41,10 +41,10 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
+                            Value = this.rand.NextString(),
+                        },
                     },
-                    ETag = this.rand.NextString()
+                    ETag = this.rand.NextString(),
                 },
                 new DeviceGroup
                 {
@@ -56,10 +56,10 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
+                            Value = this.rand.NextString(),
+                        },
                     },
-                    ETag = this.rand.NextString()
+                    ETag = this.rand.NextString(),
                 },
                 new DeviceGroup
                 {
@@ -71,11 +71,11 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
+                            Value = this.rand.NextString(),
+                        },
                     },
-                    ETag = this.rand.NextString()
-                }
+                    ETag = this.rand.NextString(),
+                },
             };
 
             this.mockStorage
@@ -108,8 +108,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etag = this.rand.NextString();
 
@@ -120,7 +120,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     Id = groupId,
                     DisplayName = displayName,
                     Conditions = conditions,
-                    ETag = etag
+                    ETag = etag,
                 });
 
             var result = await this.controller.GetAsync(groupId);
@@ -147,8 +147,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etag = this.rand.NextString();
 
@@ -159,13 +159,13 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     Id = groupId,
                     DisplayName = displayName,
                     Conditions = conditions,
-                    ETag = etag
+                    ETag = etag,
                 });
 
             var result = await this.controller.CreateAsync(new DeviceGroupApiModel
             {
                 DisplayName = displayName,
-                Conditions = conditions
+                Conditions = conditions,
             });
 
             this.mockStorage
@@ -191,8 +191,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etagOld = this.rand.NextString();
             var etagNew = this.rand.NextString();
@@ -204,7 +204,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     Id = groupId,
                     DisplayName = displayName,
                     Conditions = conditions,
-                    ETag = etagNew
+                    ETag = etagNew,
                 });
 
             var result = await this.controller.UpdateAsync(
@@ -213,7 +213,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 {
                     DisplayName = displayName,
                     Conditions = conditions,
-                    ETag = etagOld
+                    ETag = etagOld,
                 });
 
             this.mockStorage

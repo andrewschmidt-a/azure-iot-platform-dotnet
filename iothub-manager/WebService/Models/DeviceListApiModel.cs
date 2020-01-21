@@ -21,7 +21,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
         public Dictionary<string, string> Metadata => new Dictionary<string, string>
         {
             { "$type", "DeviceList;1" },
-            { "$uri", "/" + "v1/devices" }
+            { "$uri", "/" + "v1/devices" },
         };
 
         [JsonProperty(PropertyName = "ContinuationToken")]

@@ -31,11 +31,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             this.sendGridClientFactory = sendGridClientFactory;
         }
 
-        /// <summary>
-        /// Get all users for the current tenant
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet("users")]
         [Authorize("ReadAll")]
         public async Task<UserTenantListModel> GetAllUsersForTenantAsync()
@@ -43,26 +38,17 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 UserId = null,
-                Tenant = this.GetTenantId()
+                Tenant = this.GetTenantId(),
             };
             return await this.container.GetAllUsersAsync(input);
         }
 
-        /// <summary>
-        /// Get all tenants for a user using the userId in the claims
-        /// </summary>
-        /// <returns></returns>
         [HttpGet("all")]
         public async Task<UserTenantListModel> UserClaimsGetAllTenantsForUserAsync()
         {
             return await this.GetAllTenantsForUserAsync(this.GetClaimsUserId());
         }
 
-        /// <summary>
-        /// Get all tenants for a user
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
         [HttpGet("{userId}/all")]
         [Authorize("ReadAll")]
         public async Task<UserTenantListModel> GetAllTenantsForUserAsync(string userId)
@@ -74,10 +60,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             return await this.container.GetAllAsync(input);
         }
 
-        /// <summary>
-        /// Get the User-Tenant realtionship model by using the userId from the claims
-        /// </summary>
-        /// <returns></returns>
         [HttpGet("")]
         [Authorize("ReadAll")]
         public async Task<UserTenantModel> UserClaimsGetAsync()
@@ -85,12 +67,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             return await this.GetAsync(this.GetClaimsUserId());
         }
 
-        /// <summary>
-        /// Get User-Tenant relationship model by Id
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        // GET: api/User/5
         [HttpGet("{userId}")]
         [Authorize("ReadAll")]
         public async Task<UserTenantModel> GetAsync(string userId)
@@ -98,16 +74,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 UserId = userId,
-                Tenant = this.GetTenantId()
+                Tenant = this.GetTenantId(),
             };
             return await this.container.GetAsync(input);
         }
 
-        /// <summary>
-        /// Create a user-tenant relationship record using the userId from the claims
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
         [HttpPost("")]
         [Authorize("UserManage")]
         public async Task<UserTenantModel> UserClaimsPostAsync([FromBody] UserTenantModel model)
@@ -115,10 +86,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             return await this.PostAsync(this.GetClaimsUserId(), model);
         }
 
-        /// <summary>
-        /// Create a User in container storage associated with the tenant in the header
-        /// </summary>
-        /// <param name="value"></param>
         [HttpPost("{userId}")]
         [Authorize("UserManage")]
         public async Task<UserTenantModel> PostAsync(string userId, [FromBody] UserTenantModel model)
@@ -129,15 +96,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
                 Tenant = this.GetTenantId(),
                 Roles = model.Roles,
                 Name = model.Name,
-                Type = model.Type
+                Type = model.Type,
             };
             return await this.container.CreateAsync(input);
         }
 
-        /// <summary>
-        /// Update a user-tenant relationship record using the userId from the claims
-        /// </summary>
-        /// <param name="update"></param>
         [HttpPut("")]
         [Authorize("UserManage")]
         public async Task<UserTenantModel> UserClaimsPutAsync([FromBody] UserTenantModel update)
@@ -145,10 +108,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             return await this.PutAsync(this.GetClaimsUserId(), update);
         }
 
-        /// <summary>
-        /// Update a user-tenant relationship record
-        /// </summary>
-        /// <param name="update"></param>
         [HttpPut("{userId}")]
         [Authorize("UserManage")]
         public async Task<UserTenantModel> PutAsync(string userId, [FromBody] UserTenantModel update)
@@ -157,15 +116,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             {
                 UserId = userId,
                 Tenant = this.GetTenantId(),
-                Roles = update.Roles
+                Roles = update.Roles,
             };
             return await this.container.UpdateAsync(input);
         }
 
-        /// <summary>
-        /// Delete a user-tenant relationship record using the userId from the claims
-        /// </summary>
-        /// <param name="userId"></param>
         [HttpDelete("")]
         [Authorize("UserManage")]
         public async Task<UserTenantModel> UserClaimsDeleteAsync()
@@ -173,11 +128,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             return await this.DeleteAsync(this.GetClaimsUserId());
         }
 
-        /// <summary>
-        /// Delete a user-tenant relationship record
-        /// </summary>
-        /// <param name="userId"></param>
-        // DELETE: api/ApiWithActions/5
         [HttpDelete("{userId}")]
         [Authorize("UserManage")]
         public async Task<UserTenantModel> DeleteAsync(string userId)
@@ -185,29 +135,22 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
             UserTenantInput input = new UserTenantInput
             {
                 UserId = userId,
-                Tenant = this.GetTenantId()
+                Tenant = this.GetTenantId(),
             };
             return await this.container.DeleteAsync(input);
         }
 
-        /// <summary>
-        /// Delete the tenant from all users
-        /// </summary>
         [HttpDelete("all")]
         [Authorize("UserManage")]
         public async Task<UserTenantListModel> DeleteAllAsync()
         {
             UserTenantInput input = new UserTenantInput
             {
-                Tenant = this.GetTenantId()
+                Tenant = this.GetTenantId(),
             };
             return await this.container.DeleteAllAsync(input);
         }
-        /// <summary>
-        /// Invite the user to join a tenant
-        /// </summary>
-        /// <returns></returns>
-        // GET: api/User/5
+
         [HttpPost("invite")]
         [Authorize("UserManage")]
         public async Task<UserTenantModel> InviteAsync([FromBody] Invitation invitation)
@@ -219,14 +162,14 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
                 Tenant = this.GetTenantId(),
                 Roles = JsonConvert.SerializeObject(new List<string>() { invitation.Role }),
                 Name = invitation.EmailAddress,
-                Type = "Invited"
+                Type = "Invited",
             };
 
             List<Claim> claims = new List<Claim>()
             {
                 new Claim("role", invitation.Role),
                 new Claim("tenant", this.GetTenantId()),
-                new Claim("userId", input.UserId)
+                new Claim("userId", input.UserId),
             };
 
             string forwardedFor = null;
@@ -246,7 +189,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
 
             var recipients = new List<EmailAddress>
             {
-                new EmailAddress(invitation.EmailAddress)
+                new EmailAddress(invitation.EmailAddress),
             };
             msg.AddTos(recipients);
 

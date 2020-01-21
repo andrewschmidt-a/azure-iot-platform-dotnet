@@ -73,7 +73,7 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             {
                 ["Message"] = "An error has occurred.",
                 ["ExceptionMessage"] = e.Message,
-                ["ExceptionType"] = e.GetType().FullName
+                ["ExceptionType"] = e.GetType().FullName,
             };
 
             if (stackTrace)

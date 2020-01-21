@@ -17,7 +17,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
         private static TelemetryClient client;
         private static JsonSerializerSettings jsonSettings = new JsonSerializerSettings()
         {
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
         };
         public static void Initialize(string instrumentationKey)
         {

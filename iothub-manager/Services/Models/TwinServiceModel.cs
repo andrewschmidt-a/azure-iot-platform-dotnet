@@ -61,7 +61,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             {
                 ETag = this.ETag,
                 Tags = DictionaryToTwinCollection(this.Tags),
-                Properties = properties
+                Properties = properties,
             };
         }
 

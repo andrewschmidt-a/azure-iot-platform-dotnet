@@ -38,7 +38,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             { "telemetry", IotDatabaseId },
             { "twin-change", IotDatabaseId },
             { "lifecycle", IotDatabaseId },
-            { "pcs", StorageAdapterDatabaseId }
+            { "pcs", StorageAdapterDatabaseId },
         };
 
         public TenantContainer(

@@ -100,7 +100,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
         {
             var twin = new Twin($"device{valueToReport}")
             {
-                Properties = new TwinProperties()
+                Properties = new TwinProperties(),
             };
             twin.Properties.Reported = new TwinCollection("{\"test\":\"value" + valueToReport + "\"}");
             twin.Properties.Desired = new TwinCollection("{\"test\":\"value" + valueToReport + "\"}");

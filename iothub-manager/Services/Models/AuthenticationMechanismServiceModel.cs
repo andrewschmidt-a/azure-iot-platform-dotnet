@@ -53,7 +53,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                     auth.SymmetricKey = new SymmetricKey()
                     {
                         PrimaryKey = this.PrimaryKey,
-                        SecondaryKey = this.SecondaryKey
+                        SecondaryKey = this.SecondaryKey,
                     };
 
                     auth.Type = Microsoft.Azure.Devices.AuthenticationType.Sas;
@@ -65,7 +65,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                     auth.X509Thumbprint = new X509Thumbprint()
                     {
                         PrimaryThumbprint = this.PrimaryThumbprint,
-                        SecondaryThumbprint = this.SecondaryThumbprint
+                        SecondaryThumbprint = this.SecondaryThumbprint,
                     };
 
                     auth.Type = Microsoft.Azure.Devices.AuthenticationType.SelfSigned;
@@ -77,7 +77,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                     auth.X509Thumbprint = new X509Thumbprint()
                     {
                         PrimaryThumbprint = this.PrimaryThumbprint,
-                        SecondaryThumbprint = this.SecondaryThumbprint
+                        SecondaryThumbprint = this.SecondaryThumbprint,
                     };
 
                     auth.Type = Microsoft.Azure.Devices.AuthenticationType.CertificateAuthority;

@@ -110,7 +110,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
                     Calculation = rule.Calculation,
                     Field = c.Field,
                     Operator = c.Operator,
-                    Value = c.Value
+                    Value = c.Value,
                 };
                 this.conditions.Add(condition);
                 this.Fields.Add(c.Field);

@@ -95,7 +95,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
         public IDictionary<string, string> Metadata => new Dictionary<string, string>
         {
             { "$type", "Rule;1" },
-            { "$uri", "/" + "v1/rules/" + this.Id }
+            { "$uri", "/" + "v1/rules/" + this.Id },
         };
 
         [JsonProperty(PropertyName = "Deleted", NullValueHandling = NullValueHandling.Ignore)]
@@ -156,7 +156,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
                 TimePeriod = timePeriod,
                 Conditions = conditions,
                 Actions = actions,
-                Deleted = deleted
+                Deleted = deleted,
             };
         }
     }

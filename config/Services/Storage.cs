@@ -229,7 +229,7 @@ namespace Mmm.Platform.IoT.Config.Services
                 Formatting.Indented,
                 new JsonSerializerSettings
                 {
-                    NullValueHandling = NullValueHandling.Ignore
+                    NullValueHandling = NullValueHandling.Ignore,
                 });
 
             var response = await this.client.CreateAsync(PackagesCollectionId, value);

@@ -45,8 +45,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 ExternalDependencies = new ExternalDependenciesConfig
                 {
                     DiagnosticsServiceUrl = "http://localhost:9006/v1",
-                    DiagnosticsMaxLogRetries = 3
-                }
+                    DiagnosticsMaxLogRetries = 3,
+                },
             };
             this.rulesMock = new Mock<IRules>();
             this.alarms = new Mock<IAlarms>();
@@ -105,7 +105,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Rule test = new Rule
             {
                 Enabled = true,
-                Deleted = false
+                Deleted = false,
             };
 
             this.SetUpStorageAdapterGet(test);
@@ -134,7 +134,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Rule test = new Rule
             {
                 Enabled = false,
-                Deleted = true
+                Deleted = true,
             };
 
             this.SetUpStorageAdapterGet(test);
@@ -163,7 +163,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Rule test = new Rule
             {
                 Enabled = false,
-                Deleted = true
+                Deleted = true,
             };
 
             this.storageAdapter
@@ -195,7 +195,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Rule test = new Rule
             {
                 Enabled = false,
-                Deleted = true
+                Deleted = true,
             };
 
             this.storageAdapter
@@ -228,7 +228,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 Enabled = false,
                 Deleted = true,
                 Id = "id",
-                ETag = "123"
+                ETag = "123",
             };
             this.SetUpStorageAdapterGet(test);
 
@@ -260,14 +260,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 Enabled = false,
                 Deleted = true,
                 Id = "id",
-                ETag = "123"
+                ETag = "123",
             };
             string ruleString = JsonConvert.SerializeObject(test);
             ValueApiModel model = new ValueApiModel
             {
                 Data = ruleString,
                 ETag = "123",
-                Key = "id"
+                Key = "id",
             };
             ValueListApiModel result = new ValueListApiModel();
             result.Items = new List<ValueApiModel> { model };
@@ -296,14 +296,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 Enabled = false,
                 Deleted = true,
                 Id = "id",
-                ETag = "123"
+                ETag = "123",
             };
             string ruleString = JsonConvert.SerializeObject(test);
             ValueApiModel model = new ValueApiModel
             {
                 Data = ruleString,
                 ETag = "123",
-                Key = "id"
+                Key = "id",
             };
             ValueListApiModel result = new ValueListApiModel();
             result.Items = new List<ValueApiModel> { model };
@@ -331,7 +331,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Rule test = new Rule
             {
                 Enabled = true,
-                Id = newRuleId
+                Id = newRuleId,
             };
 
             string ruleString = JsonConvert.SerializeObject(test);
@@ -340,7 +340,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 Data = ruleString,
                 ETag = "1234",
-                Key = newRuleId
+                Key = newRuleId,
             };
 
             this.storageAdapter
@@ -367,14 +367,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             // Arrange
             Rule test = new Rule
             {
-                Enabled = true
+                Enabled = true,
             };
 
             string newRuleId = "TESTRULEID" + DateTime.Now.ToString("yyyyMMddHHmmss");
             Rule resultRule = new Rule
             {
                 Enabled = true,
-                Id = newRuleId
+                Id = newRuleId,
             };
 
             string ruleString = JsonConvert.SerializeObject(resultRule);
@@ -383,7 +383,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 Data = ruleString,
                 ETag = "1234",
-                Key = newRuleId
+                Key = newRuleId,
             };
 
 
@@ -413,7 +413,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Rule test = new Rule
             {
                 Enabled = true,
-                Deleted = false
+                Deleted = false,
             };
 
             this.SetUpStorageAdapterGet(test);
@@ -452,7 +452,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Rule test = new Rule
             {
                 Enabled = true,
-                Deleted = false
+                Deleted = false,
             };
 
             this.SetUpStorageAdapterGet(test);
@@ -480,7 +480,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             var xssList = new List<string>
             {
                 "<body onload=alert('test1')>",
-                "<IMG SRC=j&#X41vascript:alert('test2')>"
+                "<IMG SRC=j&#X41vascript:alert('test2')>",
             };
 
             var rule = new Rule()
@@ -500,8 +500,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     {
                         Field = "sample_conddition",
                         Operator = OperatorType.Equals,
-                        Value = "1"
-                    }
+                        Value = "1",
+                    },
                 },
                 Actions = new List<IAction>
                 {
@@ -510,9 +510,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                         {
                             { "recipients", new Newtonsoft.Json.Linq.JArray() { "sampleEmail@gmail.com", "sampleEmail2@gmail.com" } },
                             { "subject", "Test Email" },
-                            { "notes", "Test Email Notes." }
-                        })
-                }
+                            { "notes", "Test Email Notes." },
+                        }),
+                },
             };
 
             // Act & Assert
@@ -563,8 +563,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 {
                     Field = "sample_conddition",
                     Operator = OperatorType.Equals,
-                    Value = "1"
-                }
+                    Value = "1",
+                },
             };
 
             var sampleActions = new List<IAction>
@@ -574,8 +574,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     {
                         { "recipients", new Newtonsoft.Json.Linq.JArray() { "sampleEmail@gmail.com", "sampleEmail2@gmail.com" } },
                         { "subject", "Test Email" },
-                        { "notes", "Test Email Notes." }
-                    })
+                        { "notes", "Test Email Notes." },
+                    }),
             };
 
             var sampleRules = new List<Rule>
@@ -588,7 +588,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     GroupId = "Prototyping devices",
                     Severity = SeverityType.Critical,
                     Conditions = sampleConditions,
-                    Actions = sampleActions
+                    Actions = sampleActions,
                 },
                 new Rule()
                 {
@@ -598,7 +598,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     GroupId = "Prototyping devices",
                     Severity = SeverityType.Warning,
                     Conditions = sampleConditions,
-                    Actions = sampleActions
+                    Actions = sampleActions,
                 },
                 new Rule()
                 {
@@ -610,8 +610,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     GroupId = "Chillers",
                     Severity = SeverityType.Warning,
                     Conditions = sampleConditions,
-                    Actions = sampleActions
-                }
+                    Actions = sampleActions,
+                },
             };
 
             return sampleRules;
@@ -627,7 +627,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 Data = ruleString,
                 ETag = "123",
-                Key = "id"
+                Key = "id",
             };
 
             this.storageAdapter
@@ -640,7 +640,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Rule test = new Rule
             {
                 Enabled = true,
-                Id = ruleId
+                Id = ruleId,
             };
 
             string ruleString = JsonConvert.SerializeObject(test);
@@ -649,7 +649,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 Data = ruleString,
                 ETag = "1234",
-                Key = ruleId
+                Key = ruleId,
             };
         }
     }

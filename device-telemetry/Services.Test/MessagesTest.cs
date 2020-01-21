@@ -36,9 +36,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     Messages = new MessagesConfig
                     {
                         Database = "database",
-                        TelemetryStorageType = "tsi"
-                    }
-                }
+                        TelemetryStorageType = "tsi",
+                    },
+                },
             };
             storageClient = new Mock<IStorageClient>();
             timeSeriesClient = new Mock<ITimeSeriesClient>();
@@ -95,7 +95,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             var xssList = new List<string>
             {
                 "<body onload=alert('test1')>",
-                "<IMG SRC=j&#X41vascript:alert('test2')>"
+                "<IMG SRC=j&#X41vascript:alert('test2')>",
             };
 
             // Act & Assert
@@ -116,7 +116,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             var data = new JObject
             {
                 { "data.sample_unit", "mph" },
-                { "data.sample_speed", "10" }
+                { "data.sample_speed", "10" },
             };
 
             sampleMessages.Add(new Message("id1", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(), data));

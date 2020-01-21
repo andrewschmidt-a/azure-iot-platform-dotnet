@@ -38,7 +38,7 @@ namespace Mmm.Platform.IoT.AsaManager.WebService.Controllers
             return new BeginConversionApiModel
             {
                 TenantId = tenantId,
-                OperationId = operationId
+                OperationId = operationId,
             };
         }
 

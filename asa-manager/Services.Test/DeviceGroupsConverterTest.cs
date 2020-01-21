@@ -52,11 +52,11 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             List<ValueApiModel> deviceGroupsList = new List<ValueApiModel>
             {
                 this.entityHelper.CreateDeviceGroup(),
-                this.entityHelper.CreateDeviceGroup()
+                this.entityHelper.CreateDeviceGroup(),
             };
             ValueListApiModel deviceGroups = new ValueListApiModel
             {
-                Items = deviceGroupsList
+                Items = deviceGroupsList,
             };
 
             this.mockStorageAdapterClient
@@ -108,7 +108,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             string tenantId = this.rand.NextString();
             ValueListApiModel deviceGroups = new ValueListApiModel
             {
-                Items = new List<ValueApiModel>()
+                Items = new List<ValueApiModel>(),
             };
 
             this.mockStorageAdapterClient
@@ -128,11 +128,11 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             List<ValueApiModel> deviceGroupsList = new List<ValueApiModel>
             {
                 this.entityHelper.CreateDeviceGroup(),
-                this.entityHelper.CreateDeviceGroup()
+                this.entityHelper.CreateDeviceGroup(),
             };
             ValueListApiModel deviceGroups = new ValueListApiModel
             {
-                Items = deviceGroupsList
+                Items = deviceGroupsList,
             };
 
             this.mockStorageAdapterClient

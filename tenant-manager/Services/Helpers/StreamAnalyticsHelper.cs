@@ -108,7 +108,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 TokenCredentials credentials = new TokenCredentials(authToken);
                 StreamAnalyticsManagementClient client = new StreamAnalyticsManagementClient(credentials)
                 {
-                    SubscriptionId = config.Global.SubscriptionId
+                    SubscriptionId = config.Global.SubscriptionId,
                 };
                 return client;
             }

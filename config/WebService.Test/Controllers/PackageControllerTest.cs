@@ -59,7 +59,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                             .ReturnsAsync(new PackageServiceModel()
                             {
                                 Name = filename,
-                                PackageType = pckgType
+                                PackageType = pckgType,
                             });
 
             var configType = shouldHaveConfig ? "customconfig" : null;
@@ -99,7 +99,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     Content = content,
                     PackageType = type,
                     ConfigType = string.Empty,
-                    DateCreated = dateCreated
+                    DateCreated = dateCreated,
                 });
 
             // Act
@@ -135,7 +135,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 Content = content + i,
                 PackageType = type,
                 ConfigType = config + i,
-                DateCreated = dateCreated
+                DateCreated = dateCreated,
             }).ToList();
 
             this.mockStorage
@@ -178,7 +178,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 Content = content + i,
                 PackageType = type + i,
                 ConfigType = (i == 0) ? ConfigType.Firmware.ToString() : i.ToString(),
-                DateCreated = dateCreated
+                DateCreated = dateCreated,
             }).ToList();
 
             this.mockStorage

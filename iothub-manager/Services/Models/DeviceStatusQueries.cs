@@ -12,7 +12,7 @@ namespace Mmm.Platform.IoT.Config.Services.Models
             {
                 ConfigType.Firmware.ToString(),
                 FirmwareStatusQueries.Queries
-            }
+            },
         };
 
         internal static IDictionary<QueryType, string> GetQueries(string deploymentType, string configType)

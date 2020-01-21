@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 var dict = new Dictionary<string, string>() {
                     { "e", e },
                     { "kty", "RSA" },
-                    { "n", n }
+                    { "n", n },
                 };
                 var hash = SHA256.Create();
                 var hashBytes = hash.ComputeHash(System.Text.Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(dict)));
@@ -56,7 +56,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                     Kid = Base64UrlEncoder.Encode(hashBytes),
                     Kty = "RSA",
                     E = e,
-                    N = n
+                    N = n,
                 };
                 jsonWebKeySet.Keys.Add(jsonWebKey);
             }

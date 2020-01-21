@@ -14,7 +14,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Models
             this.Metadata = new Dictionary<string, string>
             {
                 { "$type", $"DeviceGroupList;1" },
-                { "$url", $"/v1/devicegroups" }
+                { "$url", $"/v1/devicegroups" },
             };
         }
 

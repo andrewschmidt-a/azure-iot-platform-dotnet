@@ -4,6 +4,6 @@ namespace Mmm.Platform.IoT.Common.Services.Models
     {
         Critical,
         Warning,
-        Info
+        Info,
     }
 }

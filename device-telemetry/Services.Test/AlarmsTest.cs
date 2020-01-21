@@ -35,9 +35,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     {
                         Database = "database",
                         Collection = "collection",
-                        MaxDeleteRetries = 3
-                    }
-                }
+                        MaxDeleteRetries = 3,
+                    },
+                },
             };
             this.storageClient = new Mock<IStorageClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -62,7 +62,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             List<string> ids = new List<string> { "id1", "id2", "id3", "id4" };
             Document d1 = new Document
             {
-                Id = "test"
+                Id = "test",
             };
             this.storageClient
                 .Setup(x => x.DeleteDocumentAsync(
@@ -92,7 +92,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             List<string> ids = new List<string> { "id1" };
             Document d1 = new Document
             {
-                Id = "test"
+                Id = "test",
             };
             this.storageClient
                 .SetupSequence(x => x.DeleteDocumentAsync(
@@ -121,7 +121,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             List<string> ids = new List<string> { "id1" };
             Document d1 = new Document
             {
-                Id = "test"
+                Id = "test",
             };
 
             this.storageClient
@@ -149,7 +149,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             var xssList = new List<string>
             {
                 "<body onload=alert('test1')>",
-                "<IMG SRC=j&#X41vascript:alert('test2')>"
+                "<IMG SRC=j&#X41vascript:alert('test2')>",
             };
 
             // Act & Assert

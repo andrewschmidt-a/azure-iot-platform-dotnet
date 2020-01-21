@@ -14,7 +14,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
             this.Metadata = new Dictionary<string, string>
             {
                 { "$type", $"DevicePropertyList;1" },
-                { "$url", $"/v1/deviceproperties" }
+                { "$url", $"/v1/deviceproperties" },
             };
         }
 
@@ -33,12 +33,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
             this.ConfigType = serviceModel.ConfigType;
             this.Metrics = new DeploymentMetricsApiModel(serviceModel.DeploymentMetrics)
             {
-                DeviceStatuses = serviceModel.DeploymentMetrics?.DeviceStatuses
+                DeviceStatuses = serviceModel.DeploymentMetrics?.DeviceStatuses,
             };
             this.Metadata = new Dictionary<string, string>
             {
                 { "$type", $"DevicePropertyList;1" },
-                { "$url", $"/v1/deviceproperties" }
+                { "$url", $"/v1/deviceproperties" },
             };
         }
 
@@ -93,7 +93,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
                 PackageName = this.PackageName,
                 Priority = this.Priority,
                 PackageType = this.PackageType,
-                ConfigType = this.ConfigType
+                ConfigType = this.ConfigType,
 
             };
         }

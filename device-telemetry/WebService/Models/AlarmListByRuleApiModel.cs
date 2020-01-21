@@ -15,7 +15,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
         public new Dictionary<string, string> Metadata => new Dictionary<string, string>
         {
             { "$type", $"AlarmsByRule;1" },
-            { "$uri", "/" + "v1/alarmsbyrule" }
+            { "$uri", "/" + "v1/alarmsbyrule" },
         };
     }
 }

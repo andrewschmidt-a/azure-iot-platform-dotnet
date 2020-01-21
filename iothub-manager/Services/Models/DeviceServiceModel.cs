@@ -94,8 +94,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 Authentication = this.Authentication == null ? null : this.Authentication.ToAzureModel(),
                 Capabilities = this.IsEdgeDevice ? new DeviceCapabilities()
                 {
-                    IotEdge = this.IsEdgeDevice
-                } : null
+                    IotEdge = this.IsEdgeDevice,
+                } : null,
             };
 
             return device;

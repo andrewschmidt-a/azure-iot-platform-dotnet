@@ -12,6 +12,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         Failed = 4,
         Cancelled = 5,
         Scheduled = 6,
-        Queued = 7
+        Queued = 7,
     }
 }

@@ -43,7 +43,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 "CreateIotHub",
                 "DeleteIotHub",
                 "CreateSAJob",
-                "DeleteSAJob"
+                "DeleteSAJob",
             };
             foreach (var webHook in webHooks)
             {
@@ -94,7 +94,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 iotHubAccessKey = iotHubKey,
                 cosmosDbAccountName = config.Global.CosmosDb.AccountName,
                 cosmosDbAccountKey = config.Global.CosmosDb.DocumentDbAuthKey,
-                cosmosDbDatabaseId = SaJobDatabaseId
+                cosmosDbDatabaseId = SaJobDatabaseId,
             };
 
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
@@ -149,7 +149,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
                 lifecycleEventHubConnString = config.TenantManagerService.LifecycleEventHubConnectionString,
                 appConfigConnectionString = config.AppConfigurationConnectionString,
                 setAppConfigEndpoint = config.TenantManagerService.SetAppConfigEndpoint,
-                storageAccount = config.Global.StorageAccount.Name
+                storageAccount = config.Global.StorageAccount.Name,
             };
 
             var bodyContent = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");

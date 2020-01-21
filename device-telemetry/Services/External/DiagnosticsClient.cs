@@ -71,7 +71,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
                 DiagnosticsRequestModel model = new DiagnosticsRequestModel
                 {
                     EventType = eventName,
-                    EventProperties = eventProperties
+                    EventProperties = eventProperties,
                 };
                 request.SetContent(JsonConvert.SerializeObject(model));
                 await this.PostHttpRequestWithRetryAsync(request);

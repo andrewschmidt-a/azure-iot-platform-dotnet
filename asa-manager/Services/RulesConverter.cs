@@ -90,7 +90,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 TenantId = tenantId,
                 BlobFilePath = blobFilePath,
                 Entities = rules,
-                OperationId = operationId
+                OperationId = operationId,
             };
             Logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
             return conversionResponse;

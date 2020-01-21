@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 .ReturnsAsync(new
                 {
                     Name = name,
-                    Description = description
+                    Description = description,
                 });
 
             var result = await this.controller.GetThemeAsync() as dynamic;
@@ -70,13 +70,13 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 .ReturnsAsync(new
                 {
                     Name = name,
-                    Description = description
+                    Description = description,
                 });
 
             var result = await this.controller.SetThemeAsync(new
             {
                 Name = name,
-                Description = description
+                Description = description,
             }) as dynamic;
 
             this.mockStorage
@@ -102,7 +102,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     {
                         Image = Logo.Default.Image,
                         Type = Logo.Default.Type,
-                        IsDefault = true
+                        IsDefault = true,
                     });
 
                 await this.controller.GetLogoAsync();
@@ -134,7 +134,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                         Image = image,
                         Type = type,
                         Name = name,
-                        IsDefault = false
+                        IsDefault = false,
                     });
 
                 await this.controller.GetLogoAsync();
@@ -226,7 +226,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 var action = new EmailActionSettings(this.mockResourceManagementClient.Object, config, new Mock<ILogger<EmailActionSettings>>().Object);
                 var actionsList = new List<IActionSettings>
                 {
-                    action
+                    action,
                 };
                 this.mockActions
                     .Setup(x => x.GetListAsync())

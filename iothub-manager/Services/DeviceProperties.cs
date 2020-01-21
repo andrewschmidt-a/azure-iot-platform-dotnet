@@ -139,7 +139,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                         new DevicePropertyServiceModel
                         {
                             Tags = twinNames.Tags,
-                            Reported = twinNames.ReportedProperties
+                            Reported = twinNames.ReportedProperties,
                         });
                     if (updated)
                     {
@@ -291,7 +291,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             fullNameWhitelist = new DeviceTwinName
             {
                 Tags = new HashSet<string>(fixedTags),
-                ReportedProperties = new HashSet<string>(fixedReported)
+                ReportedProperties = new HashSet<string>(fixedReported),
             };
 
             /// <example>
@@ -301,7 +301,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             prefixWhitelist = new DeviceTwinName
             {
                 Tags = new HashSet<string>(regexTags),
-                ReportedProperties = new HashSet<string>(regexReported)
+                ReportedProperties = new HashSet<string>(regexReported),
             };
         }
 
@@ -312,7 +312,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             var validNames = new DeviceTwinName
             {
                 Tags = fullNameWhitelist.Tags,
-                ReportedProperties = fullNameWhitelist.ReportedProperties
+                ReportedProperties = fullNameWhitelist.ReportedProperties,
             };
 
             if (prefixWhitelist.Tags.Any() || prefixWhitelist.ReportedProperties.Any())

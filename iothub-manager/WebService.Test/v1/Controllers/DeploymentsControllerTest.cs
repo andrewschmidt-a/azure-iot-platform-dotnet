@@ -51,7 +51,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                 Id = DeploymentId,
                 PackageType = PackageType.EdgeManifest,
                 ConfigType = ConfigurationType,
-                CreatedDateTimeUtc = DateTime.UtcNow
+                CreatedDateTimeUtc = DateTime.UtcNow,
             });
 
             // Act
@@ -86,7 +86,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                 Id = DeploymentId,
                 PackageType = PackageType.EdgeManifest,
                 ConfigType = ConfigurationType,
-                CreatedDateTimeUtc = DateTime.UtcNow
+                CreatedDateTimeUtc = DateTime.UtcNow,
             });
 
             // Act
@@ -118,8 +118,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                 {
                     { DeploymentStatus.Succeeded, 0 },
                     { DeploymentStatus.Pending, 0 },
-                    { DeploymentStatus.Failed, 0 }
-                }
+                    { DeploymentStatus.Failed, 0 },
+                },
             };
 
             for (var i = 0; i < numDeployments; i++)
@@ -135,7 +135,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                     PackageType = PackageType.EdgeManifest,
                     ConfigType = ConfigurationType,
                     CreatedDateTimeUtc = DateTime.UtcNow,
-                    DeploymentMetrics = deploymentMetrics
+                    DeploymentMetrics = deploymentMetrics,
                 });
             }
 
@@ -201,7 +201,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                     Id = deploymentId,
                     PackageType = PackageType.EdgeManifest,
                     ConfigType = ConfigurationType,
-                    CreatedDateTimeUtc = DateTime.UtcNow
+                    CreatedDateTimeUtc = DateTime.UtcNow,
                 });
 
             var depApiModel = new DeploymentApiModel()
@@ -213,7 +213,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                 PackageContent = packageContent,
                 PackageType = PackageType.EdgeManifest,
                 ConfigType = ConfigurationType,
-                Priority = priority
+                Priority = priority,
             };
 
             // Act
@@ -257,7 +257,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
                 PackageContent = packageContent,
                 PackageType = PackageType.DeviceConfiguration,
                 ConfigType = string.Empty,
-                Priority = priority
+                Priority = priority,
             };
 
             // Act

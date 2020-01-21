@@ -66,7 +66,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
         {
             { "$type", "Device;1" },
             { "$uri", "/" + "v1/devices/" + this.Id },
-            { "$twin_uri", "/" + "v1/devices/" + this.Id + "/twin" }
+            { "$twin_uri", "/" + "v1/devices/" + this.Id + "/twin" },
         };
 
         [JsonProperty(PropertyName = "Properties", NullValueHandling = NullValueHandling.Ignore)]

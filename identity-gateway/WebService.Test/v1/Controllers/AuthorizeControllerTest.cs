@@ -284,8 +284,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
             {
                 ControllerContext = new ControllerContext()
                 {
-                    HttpContext = this.mockHttpContext.Object
-                }
+                    HttpContext = this.mockHttpContext.Object,
+                },
             };
         }
 

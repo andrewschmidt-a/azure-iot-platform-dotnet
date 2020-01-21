@@ -44,7 +44,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 TenantId = tenant.TenantId,
                 StreamAnalyticsJobName = saJobName,
                 IsActive = false,
-                JobState = "Creating"
+                JobState = "Creating",
             };
         }
 
@@ -57,7 +57,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 TenantId = tenant.TenantId,
                 StreamAnalyticsJobName = tenant.SAJobName,
                 IsActive = false,
-                JobState = "Deleting"
+                JobState = "Deleting",
             };
         }
 
@@ -81,7 +81,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services
                 return new StreamAnalyticsJobModel
                 {
                     TenantId = tenant.TenantId,
-                    IsActive = false
+                    IsActive = false,
                 };
             }
             catch (Exception e)

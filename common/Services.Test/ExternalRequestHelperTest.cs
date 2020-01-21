@@ -82,7 +82,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             string value = this.rand.NextString();
             ExternalRequestModel content = new ExternalRequestModel
             {
-                Value = value
+                Value = value,
             };
 
             HttpMethod method = HttpMethod.Get;
@@ -91,7 +91,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             {
                 StatusCode = HttpStatusCode.OK,
                 IsSuccessStatusCode = true,
-                Content = JsonConvert.SerializeObject(content)
+                Content = JsonConvert.SerializeObject(content),
             };
 
             this.mockHttpClient

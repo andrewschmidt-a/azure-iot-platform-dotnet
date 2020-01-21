@@ -31,7 +31,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
                 this.Metadata = new Dictionary<string, string>
                 {
                     { "$type", $"Alarm;1" },
-                    { "$uri", "/" + "v1/alarms/" + this.Id }
+                    { "$uri", "/" + "v1/alarms/" + this.Id },
                 };
             }
         }

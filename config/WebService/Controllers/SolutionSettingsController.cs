@@ -55,7 +55,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Controllers
 
             var model = new Logo
             {
-                IsDefault = false
+                IsDefault = false,
             };
 
             if (bytes.Length > 0)

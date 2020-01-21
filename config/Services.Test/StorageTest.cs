@@ -146,8 +146,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     ConfigService = new ConfigServiceConfig
                     {
-                        AzureMapsKey = azureMapsKey
-                    }
+                        AzureMapsKey = azureMapsKey,
+                    },
                 },
                 new Mock<ILogger<Storage>>().Object);
         }
@@ -165,8 +165,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     Data = JsonConvert.SerializeObject(new
                     {
                         Name = name,
-                        Description = description
-                    })
+                        Description = description,
+                    }),
                 });
 
             var result = await this.storage.GetThemeAsync() as dynamic;
@@ -213,14 +213,14 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var theme = new
             {
                 Name = name,
-                Description = description
+                Description = description,
             };
 
             this.mockClient
                 .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    Data = JsonConvert.SerializeObject(theme)
+                    Data = JsonConvert.SerializeObject(theme),
                 });
 
             var result = await this.storage.SetThemeAsync(theme) as dynamic;
@@ -253,8 +253,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     Data = JsonConvert.SerializeObject(new
                     {
                         Name = name,
-                        Description = description
-                    })
+                        Description = description,
+                    }),
                 });
 
             var result = await this.storage.GetUserSetting(id) as dynamic;
@@ -280,14 +280,14 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var setting = new
             {
                 Name = name,
-                Description = description
+                Description = description,
             };
 
             this.mockClient
                 .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    Data = JsonConvert.SerializeObject(setting)
+                    Data = JsonConvert.SerializeObject(setting),
                 });
 
             var result = await this.storage.SetUserSetting(id, setting) as dynamic;
@@ -319,8 +319,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     {
                         Image = image,
                         Type = type,
-                        IsDefault = false
-                    })
+                        IsDefault = false,
+                    }),
                 });
 
             var result = await this.storage.GetLogoAsync() as dynamic;
@@ -354,8 +354,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         Image = image,
                         Type = type,
                         Name = name,
-                        IsDefault = false
-                    })
+                        IsDefault = false,
+                    }),
                 });
 
             var result = await this.storage.GetLogoAsync() as dynamic;
@@ -408,7 +408,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var logo = new Logo
             {
                 Image = image,
-                Type = type
+                Type = type,
             };
 
             Logo result = await SetLogoHelper(logo, oldImage, oldName, oldType, false);
@@ -444,7 +444,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             {
                 Image = image,
                 Type = type,
-                Name = name
+                Name = name,
             };
 
             Logo result = await SetLogoHelper(logo, oldImage, oldName, oldType, false);
@@ -469,9 +469,9 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
-                    }
+                            Value = this.rand.NextString(),
+                        },
+                    },
                 },
                 new DeviceGroup
                 {
@@ -482,9 +482,9 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
-                    }
+                            Value = this.rand.NextString(),
+                        },
+                    },
                 },
                 new DeviceGroup
                 {
@@ -495,17 +495,17 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
-                    }
-                }
+                            Value = this.rand.NextString(),
+                        },
+                    },
+                },
             };
 
             var items = groups.Select(g => new ValueApiModel
             {
                 Key = this.rand.NextString(),
                 Data = JsonConvert.SerializeObject(g),
-                ETag = this.rand.NextString()
+                ETag = this.rand.NextString(),
             }).ToList();
 
             this.mockClient
@@ -543,8 +543,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etag = this.rand.NextString();
 
@@ -556,9 +556,9 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     Data = JsonConvert.SerializeObject(new DeviceGroup
                     {
                         DisplayName = displayName,
-                        Conditions = conditions
+                        Conditions = conditions,
                     }),
-                    ETag = etag
+                    ETag = etag,
                 });
 
             var result = await this.storage.GetDeviceGroupAsync(groupId);
@@ -587,15 +587,15 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etag = this.rand.NextString();
 
             var group = new DeviceGroup
             {
                 DisplayName = displayName,
-                Conditions = conditions
+                Conditions = conditions,
             };
 
             this.mockClient
@@ -604,7 +604,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     Key = groupId,
                     Data = JsonConvert.SerializeObject(group),
-                    ETag = etag
+                    ETag = etag,
                 });
 
             var result = await this.storage.CreateDeviceGroupAsync(group);
@@ -641,8 +641,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etagOld = this.rand.NextString();
             var etagNew = this.rand.NextString();
@@ -650,7 +650,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var group = new DeviceGroup
             {
                 DisplayName = displayName,
-                Conditions = conditions
+                Conditions = conditions,
             };
 
             this.mockClient
@@ -659,7 +659,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     Key = groupId,
                     Data = JsonConvert.SerializeObject(group),
-                    ETag = etagNew
+                    ETag = etagNew,
                 });
 
             var result = await this.storage.UpdateDeviceGroupAsync(groupId, group, etagOld);
@@ -724,7 +724,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 Name = key,
                 PackageType = PackageType.EdgeManifest,
                 ConfigType = string.Empty,
-                Content = EdgePackageJson
+                Content = EdgePackageJson,
             };
             var value = JsonConvert.SerializeObject(pkg);
 
@@ -735,7 +735,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Key = key,
-                    Data = value
+                    Data = value,
                 });
 
             // Act
@@ -763,7 +763,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 Name = key,
                 PackageType = PackageType.DeviceConfiguration,
                 Content = AdmPackageJson,
-                ConfigType = configType
+                ConfigType = configType,
             };
 
             var value = JsonConvert.SerializeObject(pkg);
@@ -775,7 +775,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Key = key,
-                    Data = value
+                    Data = value,
                 });
 
             const string configKey = "config-types";
@@ -789,7 +789,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Key = key,
-                    Data = value
+                    Data = value,
                 });
 
             this.mockClient
@@ -826,8 +826,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 Name = name + i,
                 Content = content + i,
                 PackageType = (i == 0) ? PackageType.DeviceConfiguration : PackageType.EdgeManifest,
-                ConfigType = (i == 0) ? ConfigType.Firmware.ToString() : string.Empty
-
+                ConfigType = (i == 0) ? ConfigType.Firmware.ToString() : string.Empty,
             }).ToList();
 
             this.mockClient
@@ -842,8 +841,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         new ValueApiModel()
                         { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[1]) },
                         new ValueApiModel()
-                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[2]) }
-                    }
+                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[2]) },
+                    },
                 });
 
             // Act
@@ -897,7 +896,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 Id = string.Empty,
                 Name = "testpackage",
                 PackageType = PackageType.EdgeManifest,
-                Content = "InvalidPackage"
+                Content = "InvalidPackage",
             };
 
             // Act & Assert
@@ -956,7 +955,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync((string id, string key, string value, string etag) => new ValueApiModel
                 {
-                    Data = value
+                    Data = value,
                 });
 
             this.mockClient.Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<string>()))
@@ -967,8 +966,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         Image = oldImage,
                         Type = oldType,
                         Name = oldName,
-                        IsDefault = false
-                    })
+                        IsDefault = false,
+                    }),
                 });
 
             Logo result = await this.storage.SetLogoAsync(logo);

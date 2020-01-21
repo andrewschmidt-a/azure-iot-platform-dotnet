@@ -228,8 +228,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
                 AccessCondition = new AccessCondition
                 {
                     Condition = etag,
-                    Type = AccessConditionType.IfMatch
-                }
+                    Type = AccessConditionType.IfMatch,
+                },
             };
         }
 
@@ -238,7 +238,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             return new RequestOptions
             {
                 OfferThroughput = this.docDbRUs,
-                ConsistencyLevel = ConsistencyLevel.Strong
+                ConsistencyLevel = ConsistencyLevel.Strong,
             };
         }
 

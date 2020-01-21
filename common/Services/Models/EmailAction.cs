@@ -21,7 +21,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             this.Type = ActionType.Email;
             this.Parameters = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
-                [NOTES] = string.Empty
+                [NOTES] = string.Empty,
             };
 
             // Ensure input is in case-insensitive dictionary

@@ -27,7 +27,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
                 "iothub-creation-time-utc",
                 "iothub-enqueuedtime",
                 "iothub-message-schema",
-                "iothub-message-source"
+                "iothub-message-source",
             };
         }
 

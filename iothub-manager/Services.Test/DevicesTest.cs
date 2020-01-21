@@ -205,7 +205,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var auth = new AuthenticationMechanismServiceModel()
             {
-                AuthenticationType = authType
+                AuthenticationType = authType,
             };
 
             DeviceServiceModel model = new DeviceServiceModel(
@@ -231,7 +231,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var twin = new Twin()
             {
                 Properties = new TwinProperties(),
-                Capabilities = isEdgeDevice ? new DeviceCapabilities() { IotEdge = true } : null
+                Capabilities = isEdgeDevice ? new DeviceCapabilities() { IotEdge = true } : null,
             };
             twin.DeviceId = $"device{valueToReport}";
             twin.Properties.Reported = new TwinCollection("{\"test\":\"value" + valueToReport + "\"}");
@@ -249,18 +249,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     SymmetricKey = new SymmetricKey
                     {
                         PrimaryKey = Convert.ToBase64String(Encoding.UTF8.GetBytes("SomeTestPrimaryKey")),
-                        SecondaryKey = Convert.ToBase64String(Encoding.UTF8.GetBytes("SomeTestSecondaryKey"))
-                    }
+                        SecondaryKey = Convert.ToBase64String(Encoding.UTF8.GetBytes("SomeTestSecondaryKey")),
+                    },
                 },
-                Capabilities = isEdgeDevice ? new DeviceCapabilities() { IotEdge = true } : null
+                Capabilities = isEdgeDevice ? new DeviceCapabilities() { IotEdge = true } : null,
             };
             return dvc;
         }
 
-        /// <summary>
-        /// Returns a set of edge and non-edge twins
-        /// </summary>
-        /// <returns></returns>
         private List<Twin> CreateTestListOfTwins()
         {
             return new List<Twin>()
@@ -268,7 +264,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 DevicesTest.CreateTestTwin(0, false),
                 DevicesTest.CreateTestTwin(1, false),
                 DevicesTest.CreateTestTwin(2, true),
-                DevicesTest.CreateTestTwin(3, true)
+                DevicesTest.CreateTestTwin(3, true),
             };
         }
     }

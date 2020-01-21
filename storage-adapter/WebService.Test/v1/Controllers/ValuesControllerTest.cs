@@ -50,7 +50,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
                 Key = key,
                 Data = data,
                 ETag = etag,
-                Timestamp = timestamp
+                Timestamp = timestamp,
             };
 
             this.mockContainer
@@ -89,7 +89,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
                     Key = this.rand.NextString(),
                     Data = this.rand.NextString(),
                     ETag = this.rand.NextString(),
-                    Timestamp = this.rand.NextDateTimeOffset()
+                    Timestamp = this.rand.NextDateTimeOffset(),
                 },
                 new ValueServiceModel
                 {
@@ -97,7 +97,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
                     Key = this.rand.NextString(),
                     Data = this.rand.NextString(),
                     ETag = this.rand.NextString(),
-                    Timestamp = this.rand.NextDateTimeOffset()
+                    Timestamp = this.rand.NextDateTimeOffset(),
                 },
                 new ValueServiceModel
                 {
@@ -105,8 +105,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
                     Key = this.rand.NextString(),
                     Data = this.rand.NextString(),
                     ETag = this.rand.NextString(),
-                    Timestamp = this.rand.NextDateTimeOffset()
-                }
+                    Timestamp = this.rand.NextDateTimeOffset(),
+                },
             };
 
             this.mockContainer
@@ -148,7 +148,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
 
             var modelIn = new ValueServiceModel
             {
-                Data = data
+                Data = data,
             };
 
             var modelOut = new ValueServiceModel
@@ -157,7 +157,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
                 Key = key,
                 Data = data,
                 ETag = etag,
-                Timestamp = timestamp
+                Timestamp = timestamp,
             };
 
             this.mockGenerator
@@ -198,7 +198,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
 
             var modelIn = new ValueServiceModel
             {
-                Data = data
+                Data = data,
             };
 
             var modelOut = new ValueServiceModel
@@ -207,7 +207,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
                 Key = key,
                 Data = data,
                 ETag = etag,
-                Timestamp = timestamp
+                Timestamp = timestamp,
             };
 
             this.mockContainer
@@ -248,7 +248,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
             var modelIn = new ValueServiceModel
             {
                 Data = data,
-                ETag = etagOld
+                ETag = etagOld,
             };
 
             var modelOut = new ValueServiceModel
@@ -257,7 +257,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
                 Key = key,
                 Data = data,
                 ETag = etagNew,
-                Timestamp = timestamp
+                Timestamp = timestamp,
             };
 
             this.mockContainer

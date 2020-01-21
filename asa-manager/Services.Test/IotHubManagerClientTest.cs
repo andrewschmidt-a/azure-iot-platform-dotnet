@@ -48,11 +48,11 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
             List<DeviceModel> devices = new List<DeviceModel>
             {
                 this.entityHelper.CreateDevice(),
-                this.entityHelper.CreateDevice()
+                this.entityHelper.CreateDevice(),
             };
             DeviceListModel deviceListModel = new DeviceListModel
             {
-                Items = devices
+                Items = devices,
             };
 
             this.mockRequestHelper

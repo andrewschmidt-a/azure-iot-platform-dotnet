@@ -17,7 +17,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Models
             {
                 { "$type", $"Value;1" },
                 { "$modified", model.Timestamp.ToString(CultureInfo.InvariantCulture) },
-                { "$uri", $"/v1/collections/{model.CollectionId}/values/{model.Key}" }
+                { "$uri", $"/v1/collections/{model.CollectionId}/values/{model.Key}" },
             };
         }
 

@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
             // Create a userTenantInput for the purpose of finding the full tenant list associated with this user
             UserTenantInput tenantInput = new UserTenantInput
             {
-                UserId = userId
+                UserId = userId,
             };
             UserTenantListModel tenantsModel = await this.userTenantContainer.GetAllAsync(tenantInput);
             List<UserTenantModel> tenantList = tenantsModel.Models;
@@ -54,7 +54,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 UserSettingsInput settingsInput = new UserSettingsInput
                 {
                     UserId = userId,
-                    SettingKey = "LastUsedTenant"
+                    SettingKey = "LastUsedTenant",
                 };
                 UserSettingsModel lastUsedSetting = await this.userSettingsContainer.GetAsync(settingsInput);
                 // Has last used tenant and it is in the list
@@ -77,7 +77,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 UserTenantInput input = new UserTenantInput
                 {
                     UserId = userId,
-                    Tenant = tenant
+                    Tenant = tenant,
                 };
                 UserTenantModel tenantModel = await this.userTenantContainer.GetAsync(input);
                 // Add Tenant
@@ -90,7 +90,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 {
                     UserId = claims.Where(c => c.Type == "sub").First().Value,
                     SettingKey = "LastUsedTenant",
-                    Value = tenant
+                    Value = tenant,
                 };
                 // Update if name is not the same
                 await this.userSettingsContainer.UpdateAsync(settingsInput);
@@ -166,7 +166,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 
                 // Validate token lifetime
                 ValidateLifetime = true,
-                ClockSkew = new TimeSpan(0) // shouldnt be skewed as this is the same server that issued it.
+                ClockSkew = new TimeSpan(0), // shouldnt be skewed as this is the same server that issued it.
             };
 
             SecurityToken validated_token = null;

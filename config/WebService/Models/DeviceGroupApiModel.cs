@@ -20,7 +20,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Models
             this.Metadata = new Dictionary<string, string>
             {
                 { "$type", $"DeviceGroup;1" },
-                { "$url", $"/v1/devicegroups/{model.Id}" }
+                { "$url", $"/v1/devicegroups/{model.Id}" },
             };
         }
 
@@ -44,7 +44,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Models
             return new DeviceGroup
             {
                 DisplayName = this.DisplayName,
-                Conditions = this.Conditions
+                Conditions = this.Conditions,
             };
         }
     }

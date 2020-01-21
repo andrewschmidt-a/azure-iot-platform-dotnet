@@ -41,7 +41,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
                 PrimaryKey = this.PrimaryKey,
                 SecondaryKey = this.SecondaryKey,
                 PrimaryThumbprint = this.PrimaryThumbprint,
-                SecondaryThumbprint = this.SecondaryThumbprint
+                SecondaryThumbprint = this.SecondaryThumbprint,
             };
         }
     }

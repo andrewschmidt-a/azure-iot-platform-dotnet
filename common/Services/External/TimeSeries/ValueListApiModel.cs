@@ -58,7 +58,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
                         {
                             DeviceId = tsiEvent.Values[schema.GetDeviceIdIndex()].ToString(),
                             Time = DateTimeOffset.Parse(tsiEvent.Timestamp),
-                            Data = this.GetEventAsJson(tsiEvent.Values, schema)
+                            Data = this.GetEventAsJson(tsiEvent.Values, schema),
                         };
                         messages.Add(message);
                     }

@@ -289,7 +289,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             var query = new SqlQuerySpec(
                 "SELECT * FROM c WHERE c.id=@id",
                 new SqlParameterCollection(new SqlParameter[] {
-                    new SqlParameter { Name = "@id", Value = id }
+                    new SqlParameter { Name = "@id", Value = id },
                 }));
             // Retrieve the document using the DocumentClient.
             List<Document> documentList = await this.storageClient.QueryDocumentsAsync(

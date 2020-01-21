@@ -17,7 +17,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             { "LE", "<=" },
             { "GT", ">" },
             { "GE", ">=" },
-            { "IN", "IN" }
+            { "IN", "IN" },
         };
 
         public static string ToQueryString(string conditions)

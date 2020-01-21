@@ -34,7 +34,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 .ReturnsAsync(new
                 {
                     Name = name,
-                    Description = description
+                    Description = description,
                 });
 
             var result = await this.controller.GetUserSettingAsync(id) as dynamic;
@@ -58,13 +58,13 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 .ReturnsAsync(new
                 {
                     Name = name,
-                    Description = description
+                    Description = description,
                 });
 
             var result = await this.controller.SetUserSettingAsync(id, new
             {
                 Name = name,
-                Description = description
+                Description = description,
             }) as dynamic;
 
             this.mockStorage
