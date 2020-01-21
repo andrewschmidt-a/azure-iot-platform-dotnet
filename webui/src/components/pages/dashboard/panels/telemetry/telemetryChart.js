@@ -130,13 +130,12 @@ export class TelemetryChart extends Component {
         this.lineChart.render(
           chartData,
           { // Chart options object: see https://github.com/microsoft/tsiclient/blob/master/docs/UX.md#chart-options
+            noAnimate, // If the telemetryKey changes, animate
+            theme,
+            includeDots: true,
+            yAxisState: 'shared', // Default to all values being on the same axis
             grid: false,
             legend: 'compact',
-            noAnimate, // If the telemetryKey changes, animate
-            tooltip: true,
-            yAxisState: 'shared', // Default to all values being on the same axis
-            theme,
-            xAxisHidden: true
           },
           this.props.colors
         );
