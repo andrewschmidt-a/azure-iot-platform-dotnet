@@ -25,9 +25,9 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         public string Description { get; set; } = string.Empty;
         public string GroupId { get; set; } = string.Empty;
         [JsonConverter(typeof(StringEnumConverter))]
-        public SeverityType Severity { get; set; } = new SeverityType();
+        public SeverityType Severity { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
-        public CalculationType Calculation { get; set; } = new CalculationType();
+        public CalculationType Calculation { get; set; }
         // Possible values -[60000, 300000, 600000] in milliseconds
         public long TimePeriod { get; set; } = 0;
         public IList<Condition> Conditions { get; set; } = new List<Condition>();
@@ -47,18 +47,5 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         {
             InputValidator.Validate(this.Id);
         }
-    }
-
-    public enum CalculationType
-    {
-        Average,
-        Instant
-    }
-
-    public enum SeverityType
-    {
-        Critical,
-        Warning,
-        Info
     }
 }

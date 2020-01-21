@@ -86,11 +86,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 etag: azureTwin.ETag,
                 id: azureTwin.DeviceId,
                 c2DMessageCount: azureTwin.CloudToDeviceMessageCount ?? azureTwin.CloudToDeviceMessageCount ?? 0,
-                lastActivity: azureTwin.LastActivityTime ?? azureTwin.LastActivityTime ?? new DateTime(),
+                lastActivity: azureTwin.LastActivityTime ?? azureTwin.LastActivityTime ?? default,
                 connected: isConnected || azureTwin.ConnectionState.Equals(DeviceConnectionState.Connected),
                 enabled: azureTwin.Status.Equals(DeviceStatus.Enabled),
                 isEdgeDevice: azureTwin.Capabilities?.IotEdge ?? azureTwin.Capabilities?.IotEdge ?? false,
-                lastStatusUpdated: azureTwin.StatusUpdatedTime ?? azureTwin.StatusUpdatedTime ?? new DateTime(),
+                lastStatusUpdated: azureTwin.StatusUpdatedTime ?? azureTwin.StatusUpdatedTime ?? default,
                 twin: new TwinServiceModel(azureTwin),
                 ioTHubHostName: ioTHubHostName,
                 authentication: null)

@@ -400,7 +400,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 return true;
             }
             DevicePropertyServiceModel cacheValue = new DevicePropertyServiceModel();
-            DateTimeOffset timstamp = new DateTimeOffset();
+            DateTimeOffset timstamp;
             try
             {
                 cacheValue = JsonConvert.DeserializeObject<DevicePropertyServiceModel>(valueApiModel.Data);

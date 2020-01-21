@@ -31,7 +31,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 
         public Condition ToServiceModel()
         {
-            OperatorType operatorInstance = new OperatorType();
+            OperatorType operatorInstance;
             if (!Enum.TryParse<OperatorType>(this.Operator, true, out operatorInstance))
             {
                 throw new InvalidInputException("The value of 'Operator' is not valid");
