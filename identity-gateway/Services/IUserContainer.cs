@@ -2,11 +2,11 @@ using System.Threading.Tasks;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
-    public interface IUserContainer<TModel, UInput>
+    public interface IUserContainer<TModel, TUiInput>
     {
-        Task<TModel> GetAsync(UInput input);
-        Task<TModel> CreateAsync(UInput input);
-        Task<TModel> UpdateAsync(UInput input);
-        Task<TModel> DeleteAsync(UInput input);
+        Task<TModel> GetAsync(TUiInput input);
+        Task<TModel> CreateAsync(TUiInput input);
+        Task<TModel> UpdateAsync(TUiInput input);
+        Task<TModel> DeleteAsync(TUiInput input);
     }
 }
