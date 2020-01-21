@@ -4,21 +4,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Mmm.Platform.IoT.Common.Services.Auth
 {
-    /// <summary>
-    /// Insert into the HttpContext a tenant coming from the header. (assumes a client 2 client call
-    /// </summary>
     public class ClientToClientAuthMiddleware
     {
-        // Where to pull the tenant information from
         private const string TENANT_HEADER = "ApplicationTenantID";
-
-
-        // Where to store the information in HTTPContext
         private const string TENANT_KEY = "TenantID";
-
+        private readonly ILogger _logger;
         private RequestDelegate requestDelegate;
 
-        private readonly ILogger _logger;
         public ClientToClientAuthMiddleware(RequestDelegate requestDelegate, ILogger<ClientToClientAuthMiddleware> logger)
         {
             this.requestDelegate = requestDelegate;

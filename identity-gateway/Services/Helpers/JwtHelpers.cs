@@ -14,12 +14,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 {
     public class JwtHelpers : IJwtHelpers
     {
+        private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
+        private readonly IRsaHelpers _rsaHelpers;
         private UserTenantContainer _userTenantContainer;
         private UserSettingsContainer _userSettingsContainer;
         private AppConfig config;
         private IHttpContextAccessor _httpContextAccessor;
-        private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
-        private readonly IRsaHelpers _rsaHelpers;
 
         public JwtHelpers(UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, AppConfig config, IHttpContextAccessor httpContextAccessor, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
         {

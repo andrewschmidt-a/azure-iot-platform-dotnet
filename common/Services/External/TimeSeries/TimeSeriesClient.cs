@@ -37,9 +37,6 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         private const string AAD_CLIENT_ID_KEY = "ApplicationClientId";
         private const string AAD_CLIENT_SECRET_KEY = "ApplicationClientSecret";
         private const string AAD_TENANT_KEY = "Tenant";
-        private readonly IHttpClient httpClient;
-        private readonly ILogger _logger;
-        private AuthenticationResult token;
         private readonly string authority;
         private readonly string applicationId;
         private readonly string applicationSecret;
@@ -48,6 +45,9 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         private readonly string host;
         private readonly string apiVersion;
         private readonly string timeout;
+        private readonly IHttpClient httpClient;
+        private readonly ILogger _logger;
+        private AuthenticationResult token;
 
         public TimeSeriesClient(
             IHttpClient httpClient,

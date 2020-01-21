@@ -16,13 +16,13 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class SolutionControllerTest : IDisposable
     {
-        private bool disposedValue = false;
         private readonly Mock<IStorage> mockStorage;
         private readonly Mock<IActions> mockActions;
         private readonly Mock<ILogger<SolutionSettingsController>> _logger;
         private readonly Mock<IAzureResourceManagerClient> mockResourceManagementClient;
         private readonly SolutionSettingsController controller;
         private readonly Random rand;
+        private bool disposedValue = false;
 
         public SolutionControllerTest()
         {

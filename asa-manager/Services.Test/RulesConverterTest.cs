@@ -16,11 +16,11 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 {
     public class RulesConverterTest
     {
+        private readonly Random rand;
         private Mock<IBlobStorageClient> mockBlobStorageClient;
         private Mock<IStorageAdapterClient> mockStorageAdapterClient;
         private Mock<ILogger<RulesConverter>> mockLog;
         private RulesConverter converter;
-        private readonly Random rand;
         private CreateEntityHelper entityHelper;
 
         public RulesConverterTest()

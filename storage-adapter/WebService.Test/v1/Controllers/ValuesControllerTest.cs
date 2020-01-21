@@ -17,11 +17,11 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
 {
     public class ValuesControllerTest : IDisposable
     {
-        private bool disposedValue = false;
         private readonly Mock<IKeyValueContainer> mockContainer;
         private readonly Mock<IKeyGenerator> mockGenerator;
         private readonly ValuesController controller;
         private readonly Random rand = new Random();
+        private bool disposedValue = false;
 
         public ValuesControllerTest()
         {

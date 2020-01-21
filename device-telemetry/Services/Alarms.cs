@@ -32,7 +32,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly IStorageClient storageClient;
         private readonly AppConfig config;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private IAppConfigurationHelper _appConfigurationHelper;
+        private readonly IAppConfigurationHelper _appConfigurationHelper;
         private readonly string databaseName;
         private readonly int maxDeleteRetryCount;
 
@@ -50,7 +50,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             this.config = config;
             this._httpContextAccessor = contextAccessor;
             this._appConfigurationHelper = appConfigurationHelper;
-
         }
 
         private string collectionId

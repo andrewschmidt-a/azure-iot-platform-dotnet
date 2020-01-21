@@ -15,9 +15,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
     public class ConfigurationController : Controller
     {
         public const string ContentType = "application/json";
-        private AppConfig config;
         private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
         private readonly IRsaHelpers _rsaHelpers;
+        private AppConfig config;
 
         public ConfigurationController(AppConfig config, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
         {

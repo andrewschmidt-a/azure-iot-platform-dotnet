@@ -21,12 +21,12 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test
 {
     public class DeviceGroupsConverterTest
     {
+        private readonly Random rand;
         private Mock<IBlobStorageClient> mockBlobStorageClient;
         private Mock<IStorageAdapterClient> mockStorageAdapterClient;
         private Mock<IIotHubManagerClient> mockIotHubManagerClient;
         private Mock<ILogger<DeviceGroupsConverter>> mockLog;
         private DeviceGroupsConverter converter;
-        private readonly Random rand;
         private CreateEntityHelper entityHelper;
 
         public DeviceGroupsConverterTest()

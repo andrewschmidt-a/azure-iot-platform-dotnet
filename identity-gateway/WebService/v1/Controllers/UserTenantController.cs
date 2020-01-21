@@ -20,9 +20,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.v1.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class UserTenantController : Controller
     {
+        private readonly ISendGridClientFactory _sendGridClientFactory;
         private UserTenantContainer _container;
         private IJwtHelpers _jwtHelper;
-        private readonly ISendGridClientFactory _sendGridClientFactory;
 
         public UserTenantController(UserTenantContainer container, IJwtHelpers jwtHelper, ISendGridClientFactory sendGridClientFactory)
         {

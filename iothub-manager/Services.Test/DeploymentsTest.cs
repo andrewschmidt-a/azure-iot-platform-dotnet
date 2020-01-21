@@ -150,8 +150,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         private const string DEPLOYMENT_PACKAGE_NAME_LABEL = "PackageName";
         private readonly Deployments deployments;
         private readonly Mock<RegistryManager> registry;
-        private Mock<ITenantConnectionHelper> tenantHelper;
         private readonly string ioTHubHostName = "mockIoTHub";
+        private Mock<ITenantConnectionHelper> tenantHelper;
         private string PACKAGE_TYPE_LABEL = "Type";
 
         public DeploymentsTest()

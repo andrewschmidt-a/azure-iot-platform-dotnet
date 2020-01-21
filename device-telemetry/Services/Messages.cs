@@ -29,7 +29,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly AppConfig config;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private IAppConfigurationHelper _appConfigurationHelper;
+        private readonly IAppConfigurationHelper _appConfigurationHelper;
         private readonly bool timeSeriesEnabled;
         private readonly DocumentClient documentClient;
         private readonly string databaseName;

@@ -10,10 +10,10 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
     public class UserSettingsControllerTest : IDisposable
     {
-        private bool disposedValue = false;
         private readonly Mock<IStorage> mockStorage;
         private readonly UserSettingsController controller;
         private readonly Random rand;
+        private bool disposedValue = false;
 
         public UserSettingsControllerTest()
         {

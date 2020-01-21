@@ -20,13 +20,13 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
 {
     public class AlarmsByRuleControllerTest : IDisposable
     {
-        private bool disposedValue = false;
-        private AlarmsByRuleController controller;
         private readonly Mock<ILogger<AlarmsByRuleController>> _logger;
         private readonly IStorageClient storage;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly Mock<IAppConfigurationHelper> appConfigHelper;
         private readonly Mock<IAsaManagerClient> asaManager;
+        private bool disposedValue = false;
+        private AlarmsByRuleController controller;
         private List<Alarm> sampleAlarms;
         private string docSchemaKey = "doc.schema";
         private string docSchemaValue = "alarm";

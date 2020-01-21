@@ -7,12 +7,12 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
 {
     public sealed class MockHttpContext : IDisposable
     {
-        private bool disposedValue;
         private readonly HeaderDictionary requestHeaders = new HeaderDictionary();
         private readonly HeaderDictionary responseHeaders = new HeaderDictionary();
         private readonly MemoryStream requestBody = new MemoryStream();
         private readonly MemoryStream responseBody = new MemoryStream();
         private readonly Mock<HttpContext> mockContext = new Mock<HttpContext>();
+        private bool disposedValue;
 
         public MockHttpContext()
         {

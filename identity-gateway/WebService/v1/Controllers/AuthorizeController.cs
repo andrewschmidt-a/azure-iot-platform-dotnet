@@ -25,14 +25,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AuthorizeController : Controller
     {
+        private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
         private AppConfig config;
         private IJwtHelpers _jwtHelper;
-        private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
         private IAuthenticationContext _authenticationContext;
-
         private UserTenantContainer _userTenantContainer;
         private UserSettingsContainer _userSettingsContainer;
-
 
         public AuthorizeController(AppConfig config, UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, IJwtHelpers jwtHelper, IOpenIdProviderConfiguration openIdProviderConfiguration, IAuthenticationContext authenticationContext)
         {

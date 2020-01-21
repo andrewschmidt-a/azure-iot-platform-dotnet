@@ -8,13 +8,10 @@ namespace Mmm.Platform.IoT.Common.Services.Http
 {
     public class HttpRequest : IHttpRequest, IDisposable
     {
-        private bool disposedValue = false;
         private readonly MediaTypeHeaderValue defaultMediaType = new MediaTypeHeaderValue("application/json");
         private readonly Encoding defaultEncoding = new UTF8Encoding();
-
-        // Http***Headers classes don't have a public ctor, so we use this class
-        // to hold the headers, this is also used for PUT/POST requests body
         private readonly HttpRequestMessage requestContent = new HttpRequestMessage();
+        private bool disposedValue = false;
 
         public HttpRequest()
         {

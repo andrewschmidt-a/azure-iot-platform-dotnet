@@ -18,13 +18,13 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
     {
         public HttpClient httpClient;
         private const string SA_JOB_DATABASE_ID = "pcs-iothub-stream";
+        private readonly AppConfig config;
+        private readonly ITokenHelper _tokenHelper;
+        private readonly IAppConfigurationHelper _appConfigHelper;
         private bool disposedValue = false;
         private string iotHubConnectionStringKeyFormat = "tenant:{0}:iotHubConnectionString";
         private Regex iotHubKeyRegexMatch = new Regex(@"(?<=SharedAccessKey=)[^;]*");
         private Regex storageAccountKeyRegexMatch = new Regex(@"(?<=AccountKey=)[^;]*");
-        private readonly AppConfig config;
-        private readonly ITokenHelper _tokenHelper;
-        private readonly IAppConfigurationHelper _appConfigHelper;
 
         public RunbookHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
         {

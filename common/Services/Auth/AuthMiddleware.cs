@@ -15,48 +15,23 @@ using Mmm.Platform.IoT.Common.Services.External;
 
 namespace Mmm.Platform.IoT.Common.Services.Auth
 {
-    /// <summary>
-    /// Validate every incoming request checking for a valid authorization header.
-    /// The header must containg a valid JWT token. Other than the usual token
-    /// validation, the middleware also restrict the allowed algorithms to block
-    /// tokens created with a weak algorithm.
-    /// Validations used:
-    /// * The issuer must match the one in the configuration
-    /// * The audience must match the one in the configuration
-    /// * The token must not be expired, some configurable clock skew is allowed
-    /// * Signature is required
-    /// * Signature must be valid
-    /// * Signature must be from the issuer
-    /// * Signature must use one of the algorithms configured
-    /// </summary>
     public class AuthMiddleware
     {
-        // The authorization header carries a bearer token, with this prefix
         private const string AUTH_HEADER_PREFIX = "Bearer ";
-
-        // Usual authorization header, carrying the bearer token
         private const string AUTH_HEADER = "Authorization";
-
-        // User requests are marked with this header by the reverse proxy
-        // TODO ~devis: this is a temporary solution for public preview only
-        // TODO ~devis: remove this approach and use the service to service authentication
-        // https://github.com/Azure/pcs-auth-dotnet/issues/18
-        // https://github.com/Azure/azure-iot-pcs-remote-monitoring-dotnet/issues/11
         private const string EXT_RESOURCES_HEADER = "X-Source";
-
         private const string ERROR401 = @"{""Error"":""Authentication required""}";
         private const string ERROR503_AUTH = @"{""Error"":""Authentication service not available""}";
-
         private readonly RequestDelegate requestDelegate;
         private readonly IConfigurationManager<OpenIdConnectConfiguration> openIdCfgMan;
         private readonly AppConfig config;
         private readonly ILogger<AuthMiddleware> logger;
         private readonly ILoggerFactory loggerFactory;
-        private TokenValidationParameters tokenValidationParams;
         private readonly bool authRequired;
-        private bool tokenValidationInitialized;
         private readonly IUserManagementClient userManagementClient;
         private readonly List<string> allowedUrls = new List<string>() { "/v1/status", "/api/status", "/.well-known/openid-configuration", "/connect" };
+        private TokenValidationParameters tokenValidationParams;
+        private bool tokenValidationInitialized;
 
         public AuthMiddleware(
             RequestDelegate requestDelegate,
