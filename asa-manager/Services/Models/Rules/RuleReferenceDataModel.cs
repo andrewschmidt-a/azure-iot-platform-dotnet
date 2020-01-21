@@ -32,7 +32,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         // to the corresponding ASA constant. Some extra values added
         // in case we want to add more options.
         // See https://github.com/Azure/device-telemetry-dotnet/blob/master/Services/Models/Rule.cs
-        private static readonly Dictionary<long, string> timePeriodMap =
+        private static readonly Dictionary<long, string> TimePeriodMap =
             new Dictionary<long, string>
             {
                 { 60000, AsaAggregationWindowTumbling1Minute },
@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         // corresponding Javascript field. Some extra values added
         // in case we want to add more options.
         // See https://github.com/Azure/device-telemetry-dotnet/blob/master/Services/Models/Rule.cs
-        private static readonly Dictionary<string, string> jsFieldsMap =
+        private static readonly Dictionary<string, string> JsFieldsMap =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 { SourceNoAggregation, AsaInstantValue },
@@ -64,7 +64,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         // corresponding Javascript symbols.
         // For flexibility, the keys are case insensitive, and also symbol-to-symbol mapping is supported.
         // See also https://github.com/Azure/device-telemetry-dotnet/blob/master/Services/Models/Condition.cs
-        private static readonly Dictionary<string, string> operatorsMap =
+        private static readonly Dictionary<string, string> OperatorsMap =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 { "GreaterThan", ">" },
@@ -152,17 +152,17 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         private static string GetFieldName(string field, string calculation)
         {
             // Do not remove. This would be a bug, to be detected at development time.
-            if (!jsFieldsMap.ContainsKey(calculation))
+            if (!JsFieldsMap.ContainsKey(calculation))
             {
                 throw new ApplicationException("Unknown calculation: " + calculation);
             }
 
-            return field + jsFieldsMap[calculation];
+            return field + JsFieldsMap[calculation];
         }
 
         private static string GetJsOperator(string op)
         {
-            if (operatorsMap.ContainsKey(op)) return operatorsMap[op];
+            if (OperatorsMap.ContainsKey(op)) return OperatorsMap[op];
 
             // This is an overall bug in the solution, to be detected at development time
             throw new ApplicationException("Unknown operator: " + op);
@@ -180,12 +180,12 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
             }
 
             // Do not remove. This would be a bug, to be detected at development time.
-            if (!timePeriodMap.ContainsKey(timePeriod))
+            if (!TimePeriodMap.ContainsKey(timePeriod))
             {
                 throw new ApplicationException("Unknown time period: " + timePeriod);
             }
 
-            return timePeriodMap[timePeriod];
+            return TimePeriodMap[timePeriod];
         }
 
         private string ConditionsToJavascript()

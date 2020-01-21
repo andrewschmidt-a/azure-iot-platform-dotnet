@@ -9,7 +9,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 {
     static class QueryConditionTranslator
     {
-        private static readonly Dictionary<string, string> operatorMap = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> OperatorMap = new Dictionary<string, string>
         {
             { "EQ", "=" },
             { "NE", "!=" },
@@ -42,7 +42,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             var clauseStrings = clauses.Select(c =>
             {
                 string op;
-                if (!operatorMap.TryGetValue(c.Operator.ToUpperInvariant(), out op))
+                if (!OperatorMap.TryGetValue(c.Operator.ToUpperInvariant(), out op))
                 {
                     throw new InvalidInputException();
                 }

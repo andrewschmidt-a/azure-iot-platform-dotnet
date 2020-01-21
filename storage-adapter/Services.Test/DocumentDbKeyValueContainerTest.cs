@@ -22,7 +22,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
         private const string MockDatabaseId = "pcs-storage";
         private const string MockCollectionId = "mockcoll";
         private const string AppConfigConnString = "";
-        private static readonly string mockCollectionLink = $"/dbs/{MockDatabaseId}/colls/{MockCollectionId}";
+        private static readonly string MockCollectionLink = $"/dbs/{MockDatabaseId}/colls/{MockCollectionId}";
         private readonly Mock<IDocumentClient> mockClient;
         private readonly Mock<IHttpContextAccessor> mockContextAccessor;
         private readonly Mock<DocumentDbKeyValueContainer> mockContainer;
@@ -103,7 +103,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Verify(
                     x => x.ReadDocumentAsync(
-                        It.Is<string>(s => s == $"{mockCollectionLink}/docs/{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}"),
+                        It.Is<string>(s => s == $"{MockCollectionLink}/docs/{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}"),
                         It.IsAny<RequestOptions>(),
                         It.IsAny<CancellationToken>()),
                     Times.Once);
@@ -165,7 +165,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Verify(
                     x => x.CreateDocumentQuery<KeyValueDocument>(
-                        It.Is<string>(s => s == mockCollectionLink),
+                        It.Is<string>(s => s == MockCollectionLink),
                         It.IsAny<FeedOptions>()),
                     Times.Once);
         }
@@ -211,7 +211,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Verify(
                     x => x.CreateDocumentAsync(
-                        It.Is<string>(s => s == mockCollectionLink),
+                        It.Is<string>(s => s == MockCollectionLink),
                         It.Is<KeyValueDocument>(doc => doc.Id == $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}" && doc.CollectionId == collectionId && doc.Key == key && doc.Data == data),
                         It.IsAny<RequestOptions>(),
                         It.IsAny<bool>(),
@@ -286,7 +286,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Verify(
                     x => x.UpsertDocumentAsync(
-                        It.Is<string>(s => s == mockCollectionLink),
+                        It.Is<string>(s => s == MockCollectionLink),
                         It.Is<KeyValueDocument>(doc => doc.Id == $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}" && doc.CollectionId == collectionId && doc.Key == key && doc.Data == data),
                         It.IsAny<RequestOptions>(),
                         It.IsAny<bool>(),
@@ -339,7 +339,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Verify(
                     x => x.DeleteDocumentAsync(
-                        It.Is<string>(s => s == $"{mockCollectionLink}/docs/{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}"),
+                        It.Is<string>(s => s == $"{MockCollectionLink}/docs/{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}"),
                         It.IsAny<RequestOptions>(),
                         It.IsAny<CancellationToken>()),
                     Times.Once);
