@@ -217,7 +217,10 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
 
         private async Task<bool> InitializeTokenValidationAsync(CancellationToken token)
         {
-            if (this.tokenValidationInitialized) return true;
+            if (this.tokenValidationInitialized)
+            {
+                return true;
+            }
 
             try
             {

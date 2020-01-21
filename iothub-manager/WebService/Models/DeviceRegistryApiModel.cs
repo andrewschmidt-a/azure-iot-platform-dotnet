@@ -14,7 +14,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
 
         public DeviceRegistryApiModel(DeviceServiceModel device)
         {
-            if (device == null) return;
+            if (device == null)
+            {
+                return;
+            }
 
             this.Id = device.Id;
             this.ETag = device.Etag;

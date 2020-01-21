@@ -41,9 +41,15 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
         /// <returns>true if validatation succeed</returns>
         private bool IsValidAuthorization(HttpContext httpContext, string allowedAction)
         {
-            if (!httpContext.Request.GetAuthRequired() || !httpContext.Request.IsExternalRequest()) return true;
+            if (!httpContext.Request.GetAuthRequired() || !httpContext.Request.IsExternalRequest())
+            {
+                return true;
+            }
 
-            if (allowedAction == null || !allowedAction.Any()) return true;
+            if (allowedAction == null || !allowedAction.Any())
+            {
+                return true;
+            }
 
             var userAllowedActions = httpContext.Request.GetCurrentUserAllowedActions();
             if (userAllowedActions == null || !userAllowedActions.Any())

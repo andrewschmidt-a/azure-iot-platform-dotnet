@@ -20,7 +20,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
             this.SystemMetrics[AppliedMetricsKey] = 0;
             this.SystemMetrics[TargetedMetricsKey] = 0;
 
-            if (metricsServiceModel == null) return;
+            if (metricsServiceModel == null)
+            {
+                return;
+            }
 
             this.CustomMetrics = metricsServiceModel.CustomMetrics;
             this.SystemMetrics = metricsServiceModel.SystemMetrics != null && metricsServiceModel.SystemMetrics.Count > 0 ?

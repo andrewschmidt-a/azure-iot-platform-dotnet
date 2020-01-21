@@ -73,7 +73,10 @@ namespace Mmm.Platform.IoT.Common.Services.Http
                 {
                     using (var response = await client.SendAsync(httpRequest))
                     {
-                        if (request.Options.EnsureSuccess) response.EnsureSuccessStatusCode();
+                        if (request.Options.EnsureSuccess)
+                        {
+                            response.EnsureSuccessStatusCode();
+                        }
 
                         return new HttpResponse
                         {
@@ -106,7 +109,10 @@ namespace Mmm.Platform.IoT.Common.Services.Http
 
         private static void SetContent(IHttpRequest request, HttpMethod httpMethod, HttpRequestMessage httpRequest)
         {
-            if (httpMethod != HttpMethod.Post && httpMethod != HttpMethod.Put) return;
+            if (httpMethod != HttpMethod.Post && httpMethod != HttpMethod.Put)
+            {
+                return;
+            }
 
             httpRequest.Content = request.Content;
             if (request.ContentType != null && request.Content != null)

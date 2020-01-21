@@ -80,7 +80,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         {
             var result = new Dictionary<string, JToken>();
 
-            if (x == null) return result;
+            if (x == null)
+            {
+                return result;
+            }
 
             foreach (KeyValuePair<string, object> twin in x)
             {

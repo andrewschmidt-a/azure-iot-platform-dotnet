@@ -7,7 +7,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers.Helpers
     {
         public static DateTimeOffset? ParseDate(string text)
         {
-            if (string.IsNullOrEmpty(text)) return null;
+            if (string.IsNullOrEmpty(text))
+            {
+                return null;
+            }
 
             text = text.Trim();
             string utext = text.ToUpper();

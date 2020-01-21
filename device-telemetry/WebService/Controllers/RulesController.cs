@@ -36,10 +36,25 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
             [FromQuery] string groupId,
             [FromQuery] bool? includeDeleted)
         {
-            if (order == null) order = "asc";
-            if (skip == null) skip = 0;
-            if (limit == null) limit = 1000;
-            if (includeDeleted == null) includeDeleted = false;
+            if (order == null)
+            {
+                order = "asc";
+            }
+
+            if (skip == null)
+            {
+                skip = 0;
+            }
+
+            if (limit == null)
+            {
+                limit = 1000;
+            }
+
+            if (includeDeleted == null)
+            {
+                includeDeleted = false;
+            }
 
             return new RuleListApiModel(
                 await this.ruleService.GetListAsync(

@@ -36,7 +36,10 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 
         public int CompareTo(Rule other)
         {
-            if (other == null) return 1;
+            if (other == null)
+            {
+                return 1;
+            }
 
             return DateTimeOffset.Parse(other.DateCreated)
                 .CompareTo(DateTimeOffset.Parse(this.DateCreated));

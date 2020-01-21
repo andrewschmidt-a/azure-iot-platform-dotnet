@@ -14,7 +14,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
         {
             this.Items = new List<DeviceRegistryApiModel>();
             this.ContinuationToken = devices.ContinuationToken;
-            foreach (var d in devices.Items) this.Items.Add(new DeviceRegistryApiModel(d));
+            foreach (var d in devices.Items)
+            {
+                this.Items.Add(new DeviceRegistryApiModel(d));
+            }
         }
 
         [JsonProperty(PropertyName = "$metadata")]

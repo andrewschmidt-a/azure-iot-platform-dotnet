@@ -119,9 +119,20 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
             DateTimeOffset? fromDate = DateHelper.ParseDate(from);
             DateTimeOffset? toDate = DateHelper.ParseDate(to);
 
-            if (order == null) order = "asc";
-            if (skip == null) skip = 0;
-            if (limit == null) limit = 1000;
+            if (order == null)
+            {
+                order = "asc";
+            }
+
+            if (skip == null)
+            {
+                skip = 0;
+            }
+
+            if (limit == null)
+            {
+                limit = 1000;
+            }
 
             /* TODO: move this logic to the storage engine, depending on the
              * storage type the limit will be different. DEVICE_LIMIT is CosmosDb
@@ -157,9 +168,20 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
             DateTimeOffset? fromDate = DateHelper.ParseDate(from);
             DateTimeOffset? toDate = DateHelper.ParseDate(to);
 
-            if (order == null) order = "asc";
-            if (skip == null) skip = 0;
-            if (limit == null) limit = 1000;
+            if (order == null)
+            {
+                order = "asc";
+            }
+
+            if (skip == null)
+            {
+                skip = 0;
+            }
+
+            if (limit == null)
+            {
+                limit = 1000;
+            }
 
             /* TODO: move this logic to the storage engine, depending on the
              * storage type the limit will be different. DEVICE_LIMIT is CosmosDb

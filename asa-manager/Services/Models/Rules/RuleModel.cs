@@ -64,7 +64,10 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
 
         public override bool Equals(object obj)
         {
-            if (!(obj is RuleModel x)) return false;
+            if (!(obj is RuleModel x))
+            {
+                return false;
+            }
 
             if (this.Conditions.Count != x.Conditions.Count
                 || this.Actions.Count != x.Actions.Count)

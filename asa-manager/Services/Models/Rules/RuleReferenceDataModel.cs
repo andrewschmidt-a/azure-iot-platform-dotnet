@@ -92,7 +92,10 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         public RuleReferenceDataModel(RuleModel rule)
             : this()
         {
-            if (!rule.Enabled || rule.Deleted) return;
+            if (!rule.Enabled || rule.Deleted)
+            {
+                return;
+            }
 
             this.Id = rule.Id;
             this.Name = rule.Name;
@@ -162,7 +165,10 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
 
         private static string GetJsOperator(string op)
         {
-            if (OperatorsMap.ContainsKey(op)) return OperatorsMap[op];
+            if (OperatorsMap.ContainsKey(op))
+            {
+                return OperatorsMap[op];
+            }
 
             // This is an overall bug in the solution, to be detected at development time
             throw new ApplicationException("Unknown operator: " + op);
@@ -200,7 +206,10 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
             foreach (var c in this.conditions)
             {
                 // Concatenate conditions with AND
-                if (!string.IsNullOrEmpty(result)) result += " && ";
+                if (!string.IsNullOrEmpty(result))
+                {
+                    result += " && ";
+                }
 
                 result += $"record.__aggregates." + GetFieldName(c.Field, c.Calculation);
                 result += " " + GetJsOperator(c.Operator) + " ";

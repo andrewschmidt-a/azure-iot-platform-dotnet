@@ -239,7 +239,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             Rule newRule = this.Deserialize(result.Data);
             newRule.ETag = result.ETag;
 
-            if (string.IsNullOrEmpty(newRule.Id)) newRule.Id = result.Key;
+            if (string.IsNullOrEmpty(newRule.Id))
+            {
+                newRule.Id = result.Key;
+            }
+
             LogEventAndRuleCountToDiagnostics("Rule_Created");
 
             return newRule;

@@ -53,12 +53,18 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers
 
             JArray rulesList = (JArray)json["Rules"];
 
-            if (rulesList == null) return false;
+            if (rulesList == null)
+            {
+                return false;
+            }
 
             foreach (var rule in rulesList)
             {
                 // TODO: IsValid is obsolete - see http://www.newtonsoft.com/jsonschema for more details
-                if (!rule.IsValid(fileSchema)) return false;
+                if (!rule.IsValid(fileSchema))
+                {
+                    return false;
+                }
             }
 
             return true;

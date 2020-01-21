@@ -133,9 +133,20 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
             DateTimeOffset? fromDate = DateHelper.ParseDate(from);
             DateTimeOffset? toDate = DateHelper.ParseDate(to);
 
-            if (order == null) order = "asc";
-            if (skip == null) skip = 0;
-            if (limit == null) limit = 1000;
+            if (order == null)
+            {
+                order = "asc";
+            }
+
+            if (skip == null)
+            {
+                skip = 0;
+            }
+
+            if (limit == null)
+            {
+                limit = 1000;
+            }
 
             if (deviceIds.Length > DeviceLimit)
             {

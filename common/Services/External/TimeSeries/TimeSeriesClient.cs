@@ -196,8 +196,15 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
 
             // Add the search span clause
             // End of the interval is exclusive
-            if (!to.HasValue) to = DateTimeOffset.UtcNow;
-            if (!from.HasValue) from = DateTimeOffset.MinValue;
+            if (!to.HasValue)
+            {
+                to = DateTimeOffset.UtcNow;
+            }
+
+            if (!from.HasValue)
+            {
+                from = DateTimeOffset.MinValue;
+            }
 
             result.Add(SearchSpanKey, new JObject(
                 new JProperty(FromKey, from.Value.ToString(TsiDateFormat)),

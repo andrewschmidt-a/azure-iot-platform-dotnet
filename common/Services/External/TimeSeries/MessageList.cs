@@ -14,8 +14,15 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             List<Message> messages,
             List<string> properties)
         {
-            if (messages != null) this.Messages = messages;
-            if (properties != null) this.Properties = properties;
+            if (messages != null)
+            {
+                this.Messages = messages;
+            }
+
+            if (properties != null)
+            {
+                this.Properties = properties;
+            }
         }
 
         public List<Message> Messages { get; set; }

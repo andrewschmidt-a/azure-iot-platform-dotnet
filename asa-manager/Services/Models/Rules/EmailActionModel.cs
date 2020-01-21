@@ -38,7 +38,10 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         // For a dictionary[key] => list, does a comparison of all the elements of the list, regardless of order.
         private bool IsEqualDictionary(IDictionary<string, object> compareDictionary)
         {
-            if (this.Parameters.Count != compareDictionary.Count) return false;
+            if (this.Parameters.Count != compareDictionary.Count)
+            {
+                return false;
+            }
 
             foreach (var key in this.Parameters.Keys)
             {

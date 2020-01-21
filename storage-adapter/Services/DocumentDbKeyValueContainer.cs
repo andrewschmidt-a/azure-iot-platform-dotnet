@@ -134,7 +134,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception ex)
             {
-                if (!this.exceptionChecker.IsNotFoundException(ex)) throw;
+                if (!this.exceptionChecker.IsNotFoundException(ex))
+                {
+                    throw;
+                }
 
                 const string message = "The resource requested doesn't exist.";
                 logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
@@ -165,7 +168,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception ex)
             {
-                if (!this.exceptionChecker.IsConflictException(ex)) throw;
+                if (!this.exceptionChecker.IsConflictException(ex))
+                {
+                    throw;
+                }
 
                 const string message = "There is already a value with the key specified.";
                 logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
@@ -187,7 +193,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception ex)
             {
-                if (!this.exceptionChecker.IsPreconditionFailedException(ex)) throw;
+                if (!this.exceptionChecker.IsPreconditionFailedException(ex))
+                {
+                    throw;
+                }
 
                 const string message = "ETag mismatch: the resource has been updated by another client.";
                 logger.LogInformation(message + " {collection ID {collectionId}, key {key}, ETag {eTag}", collectionId, key, input.ETag);
@@ -205,7 +214,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception ex)
             {
-                if (!this.exceptionChecker.IsNotFoundException(ex)) throw;
+                if (!this.exceptionChecker.IsNotFoundException(ex))
+                {
+                    throw;
+                }
 
                 logger.LogDebug("Key {key} does not exist, nothing to do");
             }

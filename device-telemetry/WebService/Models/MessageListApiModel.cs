@@ -11,7 +11,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
 
         public MessageListApiModel(MessageList data)
         {
-            if (data == null) return;
+            if (data == null)
+            {
+                return;
+            }
 
             foreach (Message message in data.Messages)
             {

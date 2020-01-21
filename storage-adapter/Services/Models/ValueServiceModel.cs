@@ -12,7 +12,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Models
 
         public ValueServiceModel(IResourceResponse<Document> response)
         {
-            if (response == null) return;
+            if (response == null)
+            {
+                return;
+            }
 
             var resource = response.Resource;
 
@@ -22,10 +25,12 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Models
             this.ETag = resource.ETag;
             this.Timestamp = resource.Timestamp;
         }
-
         internal ValueServiceModel(KeyValueDocument document)
         {
-            if (document == null) return;
+            if (document == null)
+            {
+                return;
+            }
 
             this.CollectionId = document.CollectionId;
             this.Key = document.Key;
@@ -33,10 +38,15 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Models
             this.ETag = document.ETag;
             this.Timestamp = document.Timestamp;
         }
+
         public string CollectionId { get; set; }
+
         public string Key { get; set; }
+
         public string Data { get; set; }
+
         public string ETag { get; set; }
+
         public DateTimeOffset Timestamp { get; set; }
     }
 }
