@@ -130,8 +130,8 @@ export class TelemetryChart extends Component {
         this.lineChart.render(
           chartData,
           { // Chart options object: see https://github.com/microsoft/tsiclient/blob/master/docs/UX.md#chart-options
-            noAnimate, // If the telemetryKey changes, animate
-            theme,
+            noAnimate: noAnimate, // If the telemetryKey changes, animate
+            theme: (theme == 'mmm'  ? 'light' : theme),  // theme may only be light or dark, handle mmm theme setting
             includeDots: true,
             yAxisState: 'shared', // Default to all values being on the same axis
             grid: false,
