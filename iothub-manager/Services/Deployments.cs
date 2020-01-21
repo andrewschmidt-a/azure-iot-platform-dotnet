@@ -188,10 +188,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
 
             deployment.Labels.TryGetValue(ConfigurationsHelper.ConfigTypeLabel, out string configType);
-            var Queries = GetQueries(deploymentType, configType);
+            var queries = GetQueries(deploymentType, configType);
 
             string deploymentId = deployment.Id;
-            var appliedDevices = this.GetDevicesInQuery(Queries[QueryType.APPLIED], deploymentId);
+            var appliedDevices = this.GetDevicesInQuery(queries[QueryType.APPLIED], deploymentId);
 
             var deviceWithStatus = new Dictionary<string, DeploymentStatus>();
 
@@ -205,8 +205,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 return deviceWithStatus;
             }
 
-            var successfulDevices = this.GetDevicesInQuery(Queries[QueryType.SUCCESSFUL], deploymentId);
-            var failedDevices = this.GetDevicesInQuery(Queries[QueryType.FAILED], deploymentId);
+            var successfulDevices = this.GetDevicesInQuery(queries[QueryType.SUCCESSFUL], deploymentId);
+            var failedDevices = this.GetDevicesInQuery(queries[QueryType.FAILED], deploymentId);
 
             foreach (var successfulDevice in successfulDevices)
             {

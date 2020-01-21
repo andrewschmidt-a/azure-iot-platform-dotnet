@@ -41,9 +41,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
             using (var textReader = new StringReader(publicKey))
             {
                 var pubkeyReader = new PemReader(textReader);
-                RsaKeyParameters KeyParameters = (RsaKeyParameters)pubkeyReader.ReadObject();
-                var e = Base64UrlEncoder.Encode(KeyParameters.Exponent.ToByteArrayUnsigned());
-                var n = Base64UrlEncoder.Encode(KeyParameters.Modulus.ToByteArrayUnsigned());
+                RsaKeyParameters keyParameters = (RsaKeyParameters)pubkeyReader.ReadObject();
+                var e = Base64UrlEncoder.Encode(keyParameters.Exponent.ToByteArrayUnsigned());
+                var n = Base64UrlEncoder.Encode(keyParameters.Modulus.ToByteArrayUnsigned());
                 var dict = new Dictionary<string, string>() {
                     { "e", e },
                     { "kty", "RSA" },

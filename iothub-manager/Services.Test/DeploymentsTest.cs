@@ -391,7 +391,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var label = isEdgeDeployment ? PackageType.EdgeManifest.ToString() : PackageType.DeviceConfiguration.ToString();
 
-            var Firmware = "Firmware";
+            var firmware = "Firmware";
 
             var configuration = new Configuration("test-config")
             {
@@ -400,7 +400,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     { DeploymentNameLabel, string.Empty },
                     { DeploymentGroupIdLabel, string.Empty },
                     { packageTypeLabel, label },
-                    { ConfigurationTypeLabel, Firmware },
+                    { ConfigurationTypeLabel, firmware },
                     { RmCreatedLabel, bool.TrueString },
                 },
                 Content = content

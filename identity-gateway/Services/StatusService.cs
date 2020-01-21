@@ -47,9 +47,9 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
                 }
                 azureB2CResult = new StatusResultServiceModel(response.IsSuccessStatusCode, responseMessage);
             }
-            catch (Exception E)
+            catch (Exception e)
             {
-                azureB2CResult = new StatusResultServiceModel(false, E.Message);
+                azureB2CResult = new StatusResultServiceModel(false, e.Message);
             }
 
             SetServiceStatus("AzureB2C", azureB2CResult, result, errors);

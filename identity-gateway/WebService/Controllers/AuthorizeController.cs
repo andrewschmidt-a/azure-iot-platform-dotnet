@@ -218,18 +218,18 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             if (!string.IsNullOrEmpty(authState.Invitation))
             {
                 var inviteJWT = jwtHandler.ReadJwtToken(authState.Invitation);
-                UserTenantInput UserTenant = new UserTenantInput()
+                UserTenantInput userTenant = new UserTenantInput()
                 {
                     UserId = claims.Where(c => c.Type == "sub").First().Value,
                     Tenant = inviteJWT.Claims.Where(c => c.Type == "tenant").First().Value,
                     Roles = JsonConvert.SerializeObject(inviteJWT.Claims.Where(c => c.Type == "role").Select(c => c.Value).ToList()),
                     Type = "Member"
                 };
-                await this.userTenantContainer.UpdateAsync(UserTenant);
+                await this.userTenantContainer.UpdateAsync(userTenant);
 
                 // Delete placeholder for invite
-                UserTenant.UserId = inviteJWT.Claims.Where(c => c.Type == "userId").First().Value;
-                await this.userTenantContainer.DeleteAsync(UserTenant);
+                userTenant.UserId = inviteJWT.Claims.Where(c => c.Type == "userId").First().Value;
+                await this.userTenantContainer.DeleteAsync(userTenant);
             }
 
             // Extract first email

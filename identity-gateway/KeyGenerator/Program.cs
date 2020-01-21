@@ -7,7 +7,7 @@ using Org.BouncyCastle.Security;
 
 namespace Mmm.Platform.IoT.IdentityGateway.KeyGenerator
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
@@ -20,11 +20,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.KeyGenerator
                 // Save the public key information to an RSAParameters structure.
                 RSAParameters rsaKeyInfo = rsa.ExportParameters(true);
 
-                AsymmetricCipherKeyPair KeyPair = DotNetUtilities.GetRsaKeyPair(rsaKeyInfo);
+                AsymmetricCipherKeyPair keyPair = DotNetUtilities.GetRsaKeyPair(rsaKeyInfo);
                 TextWriter textWriter = new StringWriter();
                 PemWriter pemWriter = new PemWriter(textWriter);
-                pemWriter.WriteObject(KeyPair.Private);
-                pemWriter.WriteObject(KeyPair.Public);
+                pemWriter.WriteObject(keyPair.Private);
+                pemWriter.WriteObject(keyPair.Public);
                 pemWriter.Writer.Flush();
                 key = textWriter.ToString();
             }
