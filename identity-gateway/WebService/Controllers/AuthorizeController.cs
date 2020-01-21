@@ -18,7 +18,6 @@ using Mmm.Platform.IoT.IdentityGateway.WebService.Models;
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace Mmm.Platform.IoT.IdentityGateway.Controllers
 {
     [Route("")]
@@ -254,7 +253,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Controllers
             // var query = HttpUtility.ParseQueryString(returnUri.Query);
             // query["state"] = HttpUtility.UrlEncode(authState.state);
             // returnUri.Query = query.ToString();
-
             returnUri.Fragment =
                 "id_token=" + tokenString + "&state=" +
                 HttpUtility.UrlEncode(authState

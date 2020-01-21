@@ -238,7 +238,6 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                 // {
                 //    keys = JsonConvert.DeserializeObject<IdentityGatewayKeys>(reader.ReadToEnd());
                 // }
-
                 this.tokenValidationParams = new TokenValidationParameters
                 {
                     // Validate the token signature

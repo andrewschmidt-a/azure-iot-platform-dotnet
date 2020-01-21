@@ -24,7 +24,6 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         public void ItReturnsEmailAction_WhenEmailActionJsonPassed()
         {
             // Arrange
-
             const string SAMPLE_JSON = "[{\"Type\":\"Email\"," +
                                  "\"Parameters\":{\"Notes\":\"" + ParameterNotes +
                                  "\",\"Subject\":\"" + ParameterSubject +

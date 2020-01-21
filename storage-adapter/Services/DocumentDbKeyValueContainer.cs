@@ -354,7 +354,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
 
                 // Partitioning can be enabled in case the storage adapter is used to store 100k+ records
                 // coll.PartitionKey = new PartitionKeyDefinition { Paths = new Collection<string> { "/CollectionId" } };
-
                 var dbUri = "/dbs/" + this.DocumentDbDatabaseId;
                 await this.client.CreateDocumentCollectionAsync(dbUri, coll, this.docDbOptions);
             }

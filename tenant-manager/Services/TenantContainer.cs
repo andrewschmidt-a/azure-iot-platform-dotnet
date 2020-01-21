@@ -82,7 +82,6 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             await this.runbookHelper.CreateIotHub(tenantId, iotHubName, dpsName);
 
             // Give the requesting user an admin role to the new tenant
-
             try
             {
                 await identityClient.AddTenantForUserAsync(userId, tenantId, CreatedRole);

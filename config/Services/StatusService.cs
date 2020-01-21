@@ -66,7 +66,6 @@ namespace Mmm.Platform.IoT.Config.Services
 
             // Andrew Schmidt -- disabling until we stand up simulation
             // SetServiceStatus(deviceSimulationName, deviceSimulationResult, result, errors);
-
             var authResult = await this.PingServiceAsync(
                 authName,
                 config.ExternalDependencies.AuthServiceUrl);

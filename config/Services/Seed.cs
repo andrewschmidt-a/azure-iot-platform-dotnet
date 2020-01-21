@@ -198,7 +198,6 @@ namespace Mmm.Platform.IoT.Config.Services
             if (!File.Exists(file))
             {
                 // ToDo: Check if `template` is a valid URL and try to load the content
-
                 throw new ResourceNotFoundException($"Template {templateName} does not exist");
             }
             else
