@@ -1,4 +1,3 @@
-
 using System.Net.Http;
 using System.Threading.Tasks;
 using Mmm.Platform.IoT.Common.Services;

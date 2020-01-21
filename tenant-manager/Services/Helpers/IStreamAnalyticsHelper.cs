@@ -1,4 +1,3 @@
-
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.StreamAnalytics.Models;
 using Mmm.Platform.IoT.Common.Services;
