@@ -91,11 +91,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             {
                 ETag = ignoreEtag ? null : this.Etag,
                 Status = Enabled ? DeviceStatus.Enabled : DeviceStatus.Disabled,
-                Authentication = this.Authentication == null ? null : this.Authentication.ToAzureModel(),
+                Authentication = this.Authentication?.ToAzureModel(),
                 Capabilities = this.IsEdgeDevice ? new DeviceCapabilities()
                 {
                     IotEdge = this.IsEdgeDevice,
-                } : null,
+                }
+                : null,
             };
 
             return device;

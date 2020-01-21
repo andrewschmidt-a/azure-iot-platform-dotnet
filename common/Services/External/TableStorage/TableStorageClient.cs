@@ -109,7 +109,8 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
                 TableQuerySegment<T> seg = await table.ExecuteQuerySegmentedAsync<T>(query, token);
                 token = seg.ContinuationToken;
                 items.AddRange(seg);
-            } while (token != null && !cancellationToken.IsCancellationRequested);
+            }
+            while (token != null && !cancellationToken.IsCancellationRequested);
             return items;
         }
 

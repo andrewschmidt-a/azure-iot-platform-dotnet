@@ -288,7 +288,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             var query = new SqlQuerySpec(
                 "SELECT * FROM c WHERE c.id=@id",
-                new SqlParameterCollection(new SqlParameter[] {
+                new SqlParameterCollection(new SqlParameter[]
+                {
                     new SqlParameter { Name = "@id", Value = id },
                 }));
             // Retrieve the document using the DocumentClient.

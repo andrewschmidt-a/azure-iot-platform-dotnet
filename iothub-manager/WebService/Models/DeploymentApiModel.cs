@@ -84,7 +84,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
 
         public DeploymentServiceModel ToServiceModel()
         {
-            return new DeploymentServiceModel() {
+            return new DeploymentServiceModel()
+            {
                 DeviceGroupId = this.DeviceGroupId,
                 DeviceGroupName = this.DeviceGroupName,
                 DeviceGroupQuery = this.DeviceGroupQuery,

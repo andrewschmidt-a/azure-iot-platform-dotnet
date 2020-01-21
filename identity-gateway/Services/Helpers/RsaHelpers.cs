@@ -44,7 +44,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 RsaKeyParameters keyParameters = (RsaKeyParameters)pubkeyReader.ReadObject();
                 var e = Base64UrlEncoder.Encode(keyParameters.Exponent.ToByteArrayUnsigned());
                 var n = Base64UrlEncoder.Encode(keyParameters.Modulus.ToByteArrayUnsigned());
-                var dict = new Dictionary<string, string>() {
+                var dict = new Dictionary<string, string>()
+                {
                     { "e", e },
                     { "kty", "RSA" },
                     { "n", n },

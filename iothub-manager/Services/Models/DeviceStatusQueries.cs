@@ -4,8 +4,8 @@ using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 
 namespace Mmm.Platform.IoT.Config.Services.Models
 {
-    public partial class DeviceStatusQueries {
-
+    public partial class DeviceStatusQueries
+    {
         private static Dictionary<string, IDictionary<QueryType, string>> admQueryMapping =
             new Dictionary<string, IDictionary<QueryType, string>>()
         {
