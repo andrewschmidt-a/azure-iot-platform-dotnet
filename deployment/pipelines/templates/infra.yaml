@@ -23,6 +23,9 @@ parameters:
   defaultSASKeyName: "RootManageSharedAccessKey"
   applicationCode: ''
   deployEnvironment: ''
+  crslplatformKeyvault: 'crsliot-platform-akv'
+  platformOperationServiceConnection: ''
+  userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
   
 jobs:
 - job: aks
@@ -112,8 +115,11 @@ jobs:
       location: ${{ parameters.location }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{ parameters.keyVaultName }}-${{ parameters.deployEnvironment }}
-      userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
+      userObjId: ${{ parameters.userObjId }}
       defaultSASKeyName: ${{ parameters.defaultSASKeyName }}
+      applicationCode: ${{ parameters.applicationCode }}
+      crslplatformKeyvault: ${{ parameters.crslplatformKeyvault }}
+      platformOperationServiceConnection: ${{ parameters.platformOperationServiceConnection }}
       
 ## Create Private/Public Key Pair for Identity Gateway 
   - template: infra/identitygateway.yaml
