@@ -116,7 +116,10 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             var query = await this._client.QueryAllDocumentsAsync(
                 this.DocumentDbDatabaseId,
                 this.DocumentDbCollectionId);
-            return await Task.FromResult(query.Select(doc => new ValueServiceModel(doc)));
+            return await Task
+                .FromResult(query
+                    .Select(doc => new ValueServiceModel(doc))
+                    .Where(model => model.CollectionId == collectionId));
         }
 
         public async Task<ValueServiceModel> CreateAsync(string collectionId, string key, ValueServiceModel input)
