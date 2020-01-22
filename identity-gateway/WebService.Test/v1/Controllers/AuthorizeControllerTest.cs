@@ -248,9 +248,11 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
             // Arrange
             mockAuthContext.Setup(m => m.AcquireTokenAsync(It.IsAny<string>(), It.IsAny<ClientCredential>())).Returns(Task.FromResult<AuthenticationResult>(null));
             mockJwtHelper.Setup(m => m.GetIdentityToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new JwtSecurityToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"));
+            var tenantId = Guid.NewGuid().ToString();
+            mockUserTenantContainer.Setup(s => s.GetAllAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(new UserTenantListModel(new List<UserTenantModel> { new UserTenantModel("test", tenantId) }));
 
             // Act
-            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { ClientId = Guid.NewGuid().ToString(), ClientSecret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F" }) as ObjectResult;
+            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { ClientId = Guid.NewGuid().ToString(), ClientSecret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F", Scope = tenantId }) as ObjectResult;
 
             // Assert
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
