@@ -4,12 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Models;
 using Newtonsoft.Json;
-using Rule = Mmm.Platform.IoT.Common.Services.Models.Rule;
+using Rule = Mmm.Iot.Common.Services.Models.Rule;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
+namespace Mmm.Iot.DeviceTelemetry.WebService.Models
 {
     public class RuleApiModel
     {

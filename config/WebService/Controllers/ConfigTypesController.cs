@@ -4,11 +4,11 @@
 
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.Config.Services;
-using Mmm.Platform.IoT.Config.WebService.Models;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.Config.Services;
+using Mmm.Iot.Config.WebService.Models;
 
-namespace Mmm.Platform.IoT.Config.WebService.Controllers
+namespace Mmm.Iot.Config.WebService.Controllers
 {
     [Route("v1/configtypes")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

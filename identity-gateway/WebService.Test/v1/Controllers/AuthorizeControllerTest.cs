@@ -11,19 +11,19 @@ using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.IdentityGateway.Controllers;
-using Mmm.Platform.IoT.IdentityGateway.Services;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.WebService.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IdentityGateway.Controllers;
+using Mmm.Iot.IdentityGateway.Services;
+using Mmm.Iot.IdentityGateway.Services.Helpers;
+using Mmm.Iot.IdentityGateway.Services.Models;
+using Mmm.Iot.IdentityGateway.WebService.Models;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
+namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
 {
     public class AuthorizeControllerTest : IDisposable
     {

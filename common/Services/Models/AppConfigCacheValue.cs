@@ -5,7 +5,7 @@
 using System;
 using Azure.Data.AppConfiguration;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     public class AppConfigCacheValue
     {

@@ -10,15 +10,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.StorageAdapter.Services.Models;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
+namespace Mmm.Iot.StorageAdapter.Services.Test
 {
     public class DocumentDbKeyValueContainerTest
     {

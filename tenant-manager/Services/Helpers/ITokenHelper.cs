@@ -4,7 +4,7 @@
 
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
+namespace Mmm.Iot.TenantManager.Services.Helpers
 {
     public interface ITokenHelper
     {

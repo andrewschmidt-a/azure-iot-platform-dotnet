@@ -4,11 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Helpers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     public class Rule : IComparable<Rule>
     {

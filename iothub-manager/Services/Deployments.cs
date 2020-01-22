@@ -8,15 +8,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Config.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Config.Services.Models;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Newtonsoft.Json.Linq;
-using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
+using static Mmm.Iot.Config.Services.Models.DeviceStatusQueries;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services
+namespace Mmm.Iot.IoTHubManager.Services
 {
     public class Deployments : IDeployments
     {

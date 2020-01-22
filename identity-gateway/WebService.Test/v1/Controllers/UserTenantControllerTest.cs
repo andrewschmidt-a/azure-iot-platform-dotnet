@@ -12,18 +12,18 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.IdentityGateway.Services;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.WebService.Controllers;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IdentityGateway.Services;
+using Mmm.Iot.IdentityGateway.Services.Helpers;
+using Mmm.Iot.IdentityGateway.Services.Models;
+using Mmm.Iot.IdentityGateway.WebService.Controllers;
 using Moq;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
+namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
 {
     public class UserTenantControllerTest : IDisposable
     {

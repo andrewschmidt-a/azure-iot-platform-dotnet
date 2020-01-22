@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.Filters
+namespace Mmm.Iot.Common.Services.Filters
 {
     /// <summary>
     /// Detect all the unhandled exceptions returned by the API controllers

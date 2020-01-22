@@ -2,10 +2,10 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-using Mmm.Platform.IoT.Common.Services.Wrappers;
+using Mmm.Iot.Common.Services.Wrappers;
 using Moq;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
     public class MockFactory<T> : IFactory<T>
         where T : class

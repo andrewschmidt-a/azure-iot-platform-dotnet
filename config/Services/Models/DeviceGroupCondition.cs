@@ -6,7 +6,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
     public class DeviceGroupCondition
     {

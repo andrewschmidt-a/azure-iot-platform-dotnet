@@ -2,9 +2,9 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Iot.Common.Services;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.External
+namespace Mmm.Iot.IdentityGateway.Services.External
 {
     public interface IAzureB2cClient : IStatusOperation
     {

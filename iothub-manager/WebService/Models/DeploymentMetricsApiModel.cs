@@ -3,11 +3,11 @@
 // </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.IoTHubManager.Services;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
+namespace Mmm.Iot.IoTHubManager.WebService.Models
 {
     public class DeploymentMetricsApiModel
     {

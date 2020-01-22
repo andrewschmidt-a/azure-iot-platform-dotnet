@@ -8,14 +8,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.DeviceTelemetry.Services;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
-using Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers.Helpers;
-using Mmm.Platform.IoT.DeviceTelemetry.WebService.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.DeviceTelemetry.Services;
+using Mmm.Iot.DeviceTelemetry.Services.Models;
+using Mmm.Iot.DeviceTelemetry.WebService.Controllers.Helpers;
+using Mmm.Iot.DeviceTelemetry.WebService.Models;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
+namespace Mmm.Iot.DeviceTelemetry.WebService.Controllers
 {
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class AlarmsController : Controller

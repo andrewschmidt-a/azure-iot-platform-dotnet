@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 
-namespace Mmm.Platform.IoT.Common.Services.Http
+namespace Mmm.Iot.Common.Services.Http
 {
     public interface IHttpRequest
     {

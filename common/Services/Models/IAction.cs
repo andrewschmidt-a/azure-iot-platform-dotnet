@@ -3,11 +3,11 @@
 // </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services.Converters;
+using Mmm.Iot.Common.Services.Converters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     /// <summary>
     /// Interface for all Actions that can be added as part of a Rule.

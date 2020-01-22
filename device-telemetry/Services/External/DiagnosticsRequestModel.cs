@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
+namespace Mmm.Iot.DeviceTelemetry.Services.External
 {
     public class DiagnosticsRequestModel
     {

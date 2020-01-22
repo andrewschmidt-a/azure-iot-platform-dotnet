@@ -5,7 +5,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services
+namespace Mmm.Iot.IoTHubManager.Services
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum DeploymentStatus

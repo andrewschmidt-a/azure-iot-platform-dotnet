@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
+namespace Mmm.Iot.IoTHubManager.Services.Test
 {
     public partial class StorageWriteLockTest
     {

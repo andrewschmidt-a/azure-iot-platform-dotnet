@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Mmm.Platform.IoT.Common.Services.Auth
+namespace Mmm.Iot.Common.Services.Auth
 {
     public class ClientToClientAuthMiddleware
     {

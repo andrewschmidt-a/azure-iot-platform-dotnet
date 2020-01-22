@@ -3,10 +3,10 @@
 // </copyright>
 
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.TenantManager.Services.Models;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.External
+namespace Mmm.Iot.TenantManager.Services.External
 {
     public interface IIdentityGatewayClient : IExternalServiceClient
     {

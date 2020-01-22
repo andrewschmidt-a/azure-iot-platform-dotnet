@@ -12,17 +12,17 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.IdentityGateway.Services;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.WebService.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.IdentityGateway.Services;
+using Mmm.Iot.IdentityGateway.Services.Helpers;
+using Mmm.Iot.IdentityGateway.Services.Models;
+using Mmm.Iot.IdentityGateway.WebService.Models;
 using Newtonsoft.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-namespace Mmm.Platform.IoT.IdentityGateway.Controllers
+namespace Mmm.Iot.IdentityGateway.Controllers
 {
     [Route("")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

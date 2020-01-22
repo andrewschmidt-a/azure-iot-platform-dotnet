@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Mmm.Platform.IoT.Common.TestHelpers</AssemblyName>
+    <AssemblyName>Mmm.Iot.Common.TestHelpers</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 

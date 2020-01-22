@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
     public enum PackageType
     {

@@ -6,19 +6,19 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.AsaManager.Services;
-using Mmm.Platform.IoT.AsaManager.Services.Exceptions;
-using Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager;
-using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
-using Mmm.Platform.IoT.AsaManager.Services.Test.Helpers;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.AsaManager.Services;
+using Mmm.Iot.AsaManager.Services.Exceptions;
+using Mmm.Iot.AsaManager.Services.External.IotHubManager;
+using Mmm.Iot.AsaManager.Services.Models.DeviceGroups;
+using Mmm.Iot.AsaManager.Services.Test.Helpers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Test
+namespace Mmm.Iot.AsaManager.Services.Test
 {
     public class IothubmanagerclientTest
     {

@@ -12,9 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Auth;
 
-namespace Mmm.Platform.IoT.AsaManager.WebService
+namespace Mmm.Iot.AsaManager.WebService
 {
     public class Startup
     {

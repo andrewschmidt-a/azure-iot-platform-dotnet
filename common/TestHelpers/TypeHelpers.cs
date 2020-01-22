@@ -5,7 +5,7 @@
 using System;
 using System.Reflection;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
     public static class TypeHelpers
     {

@@ -9,14 +9,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Models;
 using Newtonsoft.Json;
-using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
+using HttpRequest = Mmm.Iot.Common.Services.Http.HttpRequest;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
+namespace Mmm.Iot.DeviceTelemetry.Services.External
 {
     public class DiagnosticsClient : IDiagnosticsClient
     {

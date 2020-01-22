@@ -4,7 +4,7 @@
 
 using Microsoft.Azure.Cosmos.Table;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Models
+namespace Mmm.Iot.TenantManager.Services.Models
 {
     public class TenantModel : TableEntity
     {

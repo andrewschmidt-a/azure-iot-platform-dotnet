@@ -5,7 +5,7 @@
 using System;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.External
+namespace Mmm.Iot.Common.Services.External
 {
     public class TokenApiModel
     {

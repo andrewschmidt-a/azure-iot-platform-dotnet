@@ -4,15 +4,15 @@
 
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
+namespace Mmm.Iot.IoTHubManager.Services.Test
 {
     public partial class StorageWriteLockTest
     {

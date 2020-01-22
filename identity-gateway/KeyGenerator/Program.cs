@@ -9,7 +9,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
 
-namespace Mmm.Platform.IoT.IdentityGateway.KeyGenerator
+namespace Mmm.Iot.IdentityGateway.KeyGenerator
 {
     public class Program
     {

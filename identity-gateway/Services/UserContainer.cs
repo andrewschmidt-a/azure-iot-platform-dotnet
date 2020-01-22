@@ -2,9 +2,9 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
+using Mmm.Iot.Common.Services.External.TableStorage;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services
+namespace Mmm.Iot.IdentityGateway.Services
 {
     public abstract class UserContainer
     {

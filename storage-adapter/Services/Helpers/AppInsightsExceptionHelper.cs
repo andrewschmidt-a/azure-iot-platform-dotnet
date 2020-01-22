@@ -13,7 +13,7 @@ using Microsoft.ApplicationInsights.Kubernetes.Debugging;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
+namespace Mmm.Iot.StorageAdapter.Services.Helpers
 {
     public static class AppInsightsExceptionHelper
     {

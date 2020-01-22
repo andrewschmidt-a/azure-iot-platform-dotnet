@@ -8,16 +8,16 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Models;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
+using HttpResponse = Mmm.Iot.Common.Services.Http.HttpResponse;
 
-namespace Mmm.Platform.IoT.Common.Services.Test
+namespace Mmm.Iot.Common.Services.Test
 {
     public class ExternalServiceClientTest
     {

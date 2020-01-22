@@ -4,11 +4,11 @@
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.Services.Runtime;
+using Mmm.Iot.Common.Services.Models;
+using Mmm.Iot.Common.Services.Runtime;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     public sealed class StatusApiModel
     {

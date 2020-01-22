@@ -2,10 +2,10 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.TenantManager.WebService.Models
+namespace Mmm.Iot.TenantManager.WebService.Models
 {
     public class StatusResultModel
     {

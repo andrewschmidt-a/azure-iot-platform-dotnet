@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.Common.Services.Config
+namespace Mmm.Iot.Common.Services.Config
 {
     public partial class ClientAuthConfig
     {

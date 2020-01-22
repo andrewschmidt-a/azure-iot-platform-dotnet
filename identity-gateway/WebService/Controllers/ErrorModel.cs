@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
+namespace Mmm.Iot.IdentityGateway.WebService.Controllers
 {
     public class ErrorModel
     {

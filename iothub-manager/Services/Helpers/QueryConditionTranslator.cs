@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     public static class QueryConditionTranslator
     {

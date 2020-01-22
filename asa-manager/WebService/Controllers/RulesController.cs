@@ -5,13 +5,13 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.AsaManager.Services;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
+using Mmm.Iot.AsaManager.Services;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.Common.Services.Wrappers;
 
-namespace Mmm.Platform.IoT.AsaManager.WebService.Controllers
+namespace Mmm.Iot.AsaManager.WebService.Controllers
 {
     [Route("v1/[controller]")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

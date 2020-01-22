@@ -3,9 +3,9 @@
 // </copyright>
 
 using Microsoft.AspNetCore.Hosting;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Iot.Common.Services;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService
+namespace Mmm.Iot.IoTHubManager.WebService
 {
     public class Program
     {

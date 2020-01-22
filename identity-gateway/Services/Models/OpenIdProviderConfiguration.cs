@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
+namespace Mmm.Iot.IdentityGateway.Services.Models
 {
     public class OpenIdProviderConfiguration : IOpenIdProviderConfiguration
     {

@@ -6,10 +6,10 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage
+namespace Mmm.Iot.AsaManager.Services.External.BlobStorage
 {
     public class BlobStorageClient : IBlobStorageClient
     {

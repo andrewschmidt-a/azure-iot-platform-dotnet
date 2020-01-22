@@ -6,11 +6,11 @@ using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     public class TenantConnectionHelper : ITenantConnectionHelper
     {

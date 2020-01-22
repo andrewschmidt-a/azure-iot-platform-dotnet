@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.TenantManager.Services;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.TenantManager.Services;
+using Mmm.Iot.TenantManager.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
+namespace Mmm.Iot.TenantManager.WebService.Controllers
 {
     [Route("api/[controller]")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

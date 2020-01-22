@@ -2,10 +2,10 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Iot.Common.Services.Config;
 using SendGrid;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService
+namespace Mmm.Iot.IdentityGateway.WebService
 {
     public class SendGridClientFactory : ISendGridClientFactory
     {

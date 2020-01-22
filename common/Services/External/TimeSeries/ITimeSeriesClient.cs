@@ -4,9 +4,9 @@
 
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
+namespace Mmm.Iot.Common.Services.External.TimeSeries
 {
     public interface ITimeSeriesClient : IStatusOperation
     {

@@ -4,7 +4,7 @@
 
 using Newtonsoft.Json.Serialization;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
+namespace Mmm.Iot.IdentityGateway.WebService.Controllers
 {
     public class LowercaseContractResolver : DefaultContractResolver
     {

@@ -4,15 +4,15 @@
 
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.TenantManager.Services.External;
-using Mmm.Platform.IoT.TenantManager.Services.Helpers;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.External.TableStorage;
+using Mmm.Iot.TenantManager.Services.External;
+using Mmm.Iot.TenantManager.Services.Helpers;
 
-namespace Mmm.Platform.IoT.TenantManager.Services
+namespace Mmm.Iot.TenantManager.Services
 {
     public class StatusService : StatusServiceBase
     {

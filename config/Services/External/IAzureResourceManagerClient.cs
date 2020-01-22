@@ -4,7 +4,7 @@
 
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Config.Services.External
+namespace Mmm.Iot.Config.Services.External
 {
     public interface IAzureResourceManagerClient
     {

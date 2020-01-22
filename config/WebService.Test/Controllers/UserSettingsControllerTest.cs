@@ -4,13 +4,13 @@
 
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.Config.Services;
-using Mmm.Platform.IoT.Config.WebService.Controllers;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.Config.Services;
+using Mmm.Iot.Config.WebService.Controllers;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
+namespace Mmm.Iot.Config.WebService.Test.Controllers
 {
     public class UserSettingsControllerTest : IDisposable
     {

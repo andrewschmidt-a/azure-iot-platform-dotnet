@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class TwinServiceListModel
     {

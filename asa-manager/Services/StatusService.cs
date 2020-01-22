@@ -3,13 +3,13 @@
 // </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
-using Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Iot.AsaManager.Services.External.BlobStorage;
+using Mmm.Iot.AsaManager.Services.External.IotHubManager;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
 
-namespace Mmm.Platform.IoT.AsaManager.Services
+namespace Mmm.Iot.AsaManager.Services
 {
     public class StatusService : StatusServiceBase
     {

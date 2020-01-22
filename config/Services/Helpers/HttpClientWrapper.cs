@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Http;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Config.Services.Helpers
+namespace Mmm.Iot.Config.Services.Helpers
 {
     public class HttpClientWrapper : IHttpClientWrapper
     {

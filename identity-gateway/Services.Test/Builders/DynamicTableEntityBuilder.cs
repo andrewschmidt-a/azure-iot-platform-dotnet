@@ -7,7 +7,7 @@ using Microsoft.Azure.Cosmos.Table;
 using TestStack.Dossier;
 using TestStack.Dossier.EquivalenceClasses;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Test.Helpers.Builders
+namespace Mmm.Iot.IdentityGateway.Services.Test.Helpers.Builders
 {
     public class DynamicTableEntityBuilder : TestDataBuilder<DynamicTableEntity, DynamicTableEntityBuilder>
     {

@@ -13,7 +13,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
+namespace Mmm.Iot.IdentityGateway.Services.Helpers
 {
     public class RsaHelpers : IRsaHelpers
     {

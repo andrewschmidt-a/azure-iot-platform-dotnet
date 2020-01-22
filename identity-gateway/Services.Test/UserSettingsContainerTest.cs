@@ -8,16 +8,16 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.Services.Test.Helpers.Builders;
+using Mmm.Iot.Common.Services.External.TableStorage;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IdentityGateway.Services.Models;
+using Mmm.Iot.IdentityGateway.Services.Test.Helpers.Builders;
 using Moq;
 using TestStack.Dossier;
 using TestStack.Dossier.Lists;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Test
+namespace Mmm.Iot.IdentityGateway.Services.Test
 {
     public class UserSettingsContainerTest
     {

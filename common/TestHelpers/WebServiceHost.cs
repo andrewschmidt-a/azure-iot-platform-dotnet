@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
     public class WebServiceHost
     {

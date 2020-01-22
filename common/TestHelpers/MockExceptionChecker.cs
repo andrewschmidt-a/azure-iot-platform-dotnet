@@ -3,10 +3,10 @@
 // </copyright>
 
 using System;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Wrappers;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
     public class MockExceptionChecker : IExceptionChecker
     {

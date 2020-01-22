@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
+namespace Mmm.Iot.IdentityGateway.Services.Models
 {
     public interface IOpenIdProviderConfiguration
     {

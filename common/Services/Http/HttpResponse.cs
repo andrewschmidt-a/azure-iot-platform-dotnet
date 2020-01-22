@@ -6,12 +6,12 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Mmm.Platform.IoT.Config.Services.Test")]
-[assembly: InternalsVisibleTo("Mmm.Platform.IoT.DeviceTelemetry.Services.Test")]
-[assembly: InternalsVisibleTo("Mmm.Platform.IoT.StorageAdapter.Services.Test")]
-[assembly: InternalsVisibleTo("Mmm.Platform.IoT.IoTHubManager.Services.Test")]
+[assembly: InternalsVisibleTo("Mmm.Iot.Config.Services.Test")]
+[assembly: InternalsVisibleTo("Mmm.Iot.DeviceTelemetry.Services.Test")]
+[assembly: InternalsVisibleTo("Mmm.Iot.StorageAdapter.Services.Test")]
+[assembly: InternalsVisibleTo("Mmm.Iot.IoTHubManager.Services.Test")]
 
-namespace Mmm.Platform.IoT.Common.Services.Http
+namespace Mmm.Iot.Common.Services.Http
 {
     public class HttpResponse : IHttpResponse
     {

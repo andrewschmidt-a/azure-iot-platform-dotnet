@@ -3,16 +3,16 @@
 // </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.External.TimeSeries;
+using Mmm.Iot.DeviceTelemetry.Services.External;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services
+namespace Mmm.Iot.DeviceTelemetry.Services
 {
     public class StatusService : StatusServiceBase
     {

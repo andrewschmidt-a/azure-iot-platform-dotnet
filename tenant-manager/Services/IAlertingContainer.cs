@@ -3,9 +3,9 @@
 // </copyright>
 
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Iot.TenantManager.Services.Models;
 
-namespace Mmm.Platform.IoT.TenantManager.Services
+namespace Mmm.Iot.TenantManager.Services
 {
     public interface IAlertingContainer
     {

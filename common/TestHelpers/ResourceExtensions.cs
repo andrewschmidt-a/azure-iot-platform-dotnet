@@ -5,7 +5,7 @@
 using System;
 using Microsoft.Azure.Documents;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
     public static class ResourceExtensions
     {

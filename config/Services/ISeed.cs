@@ -4,7 +4,7 @@
 
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Config.Services
+namespace Mmm.Iot.Config.Services
 {
     public interface ISeed
     {

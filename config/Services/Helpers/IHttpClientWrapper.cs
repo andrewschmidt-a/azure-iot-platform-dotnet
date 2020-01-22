@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Config.Services.Helpers
+namespace Mmm.Iot.Config.Services.Helpers
 {
     public interface IHttpClientWrapper
     {

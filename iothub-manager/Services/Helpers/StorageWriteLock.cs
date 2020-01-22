@@ -4,11 +4,11 @@
 
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     public class StorageWriteLock<T>
         where T : class,

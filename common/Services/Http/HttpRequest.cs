@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.Http
+namespace Mmm.Iot.Common.Services.Http
 {
     public class HttpRequest : IHttpRequest, IDisposable
     {

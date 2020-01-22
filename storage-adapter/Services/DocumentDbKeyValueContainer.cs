@@ -8,16 +8,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
-using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.Wrappers;
+using Mmm.Iot.StorageAdapter.Services.Helpers;
+using Mmm.Iot.StorageAdapter.Services.Models;
 
-namespace Mmm.Platform.IoT.StorageAdapter.Services
+namespace Mmm.Iot.StorageAdapter.Services
 {
     public class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
     {

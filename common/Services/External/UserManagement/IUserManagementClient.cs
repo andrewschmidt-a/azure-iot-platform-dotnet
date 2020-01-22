@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Common.Services.External.UserManagement
+namespace Mmm.Iot.Common.Services.External.UserManagement
 {
     public interface IUserManagementClient : IStatusOperation
     {

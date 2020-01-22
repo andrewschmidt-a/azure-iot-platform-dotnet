@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Extensions
+namespace Mmm.Iot.IoTHubManager.Services.Extensions
 {
     public static class JTokenExtension
     {

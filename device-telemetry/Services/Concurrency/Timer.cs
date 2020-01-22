@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
+namespace Mmm.Iot.DeviceTelemetry.Services.Concurrency
 {
     public class Timer : ITimer, IDisposable
     {

@@ -7,7 +7,7 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Moq;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
     public sealed class MockHttpContext : IDisposable
     {

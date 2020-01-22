@@ -7,15 +7,15 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
+namespace Mmm.Iot.IoTHubManager.Services.Test
 {
     public class DevicePropertiesTest
     {

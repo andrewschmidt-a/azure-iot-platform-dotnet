@@ -4,10 +4,10 @@
 
 using System.Reflection;
 using Autofac;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.StorageAdapter.Services;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.StorageAdapter.Services;
 
-namespace Mmm.Platform.IoT.StorageAdapter.WebService
+namespace Mmm.Iot.StorageAdapter.WebService
 {
     public class DependencyResolution : DependencyResolutionBase
     {

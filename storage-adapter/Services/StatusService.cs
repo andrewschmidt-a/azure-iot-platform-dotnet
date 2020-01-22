@@ -3,12 +3,12 @@
 // </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.CosmosDb;
 
-namespace Mmm.Platform.IoT.StorageAdapter.Services
+namespace Mmm.Iot.StorageAdapter.Services
 {
     public class StatusService : StatusServiceBase
     {

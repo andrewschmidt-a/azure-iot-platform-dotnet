@@ -4,7 +4,7 @@
 
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services
+namespace Mmm.Iot.IdentityGateway.Services
 {
     public interface IUserContainer<TModel, TUiInput>
     {

@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
+namespace Mmm.Iot.IdentityGateway.WebService.Models
 {
     public class ClientCredentialInput
     {

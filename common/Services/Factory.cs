@@ -4,7 +4,7 @@
 
 using Autofac;
 
-namespace Mmm.Platform.IoT.Common.Services
+namespace Mmm.Iot.Common.Services
 {
     public class Factory : IFactory
     {

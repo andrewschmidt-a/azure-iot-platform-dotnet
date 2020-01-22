@@ -8,17 +8,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.Services.Extensions;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Models;
+using Mmm.Iot.IoTHubManager.Services.Extensions;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using AuthenticationType = Mmm.Platform.IoT.IoTHubManager.Services.Models.AuthenticationType;
+using AuthenticationType = Mmm.Iot.IoTHubManager.Services.Models.AuthenticationType;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services
+namespace Mmm.Iot.IoTHubManager.Services
 {
     public delegate Task<DevicePropertyServiceModel> DevicePropertyDelegate(DevicePropertyServiceModel model);
 

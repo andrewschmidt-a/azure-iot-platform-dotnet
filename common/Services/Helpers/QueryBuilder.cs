@@ -8,9 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Azure.Documents;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+namespace Mmm.Iot.Common.Services.Helpers
 {
     public class QueryBuilder
     {

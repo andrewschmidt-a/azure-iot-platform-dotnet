@@ -4,9 +4,9 @@
 
 using System;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class DeploymentServiceModel
     {

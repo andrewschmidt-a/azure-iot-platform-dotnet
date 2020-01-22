@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Microsoft.Azure.Cosmos.Table;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Models
+namespace Mmm.Iot.TenantManager.Services.Models
 {
     public class UserTenantModel : TableEntity
     {

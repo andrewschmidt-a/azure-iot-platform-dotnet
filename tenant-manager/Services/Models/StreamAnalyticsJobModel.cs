@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Models
+namespace Mmm.Iot.TenantManager.Services.Models
 {
     public class StreamAnalyticsJobModel
     {

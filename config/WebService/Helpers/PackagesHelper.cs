@@ -4,10 +4,10 @@
 
 using System;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Iot.Config.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Config.WebService.Helpers
+namespace Mmm.Iot.Config.WebService.Helpers
 {
     public class PackagesHelper
     {

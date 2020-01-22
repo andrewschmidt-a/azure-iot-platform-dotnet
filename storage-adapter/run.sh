@@ -4,5 +4,5 @@ cd /app/
 
 cd webservice
 
-#Can add environment variables here 
-dotnet Mmm.Platform.IoT.StorageAdapter.WebService.dll
+#Can add environment variables here
+dotnet Mmm.Iot.StorageAdapter.WebService.dll

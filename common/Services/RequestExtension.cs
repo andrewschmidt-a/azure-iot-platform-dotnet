@@ -9,7 +9,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Mmm.Platform.IoT.Common.Services
+namespace Mmm.Iot.Common.Services
 {
     public static class RequestExtension
     {

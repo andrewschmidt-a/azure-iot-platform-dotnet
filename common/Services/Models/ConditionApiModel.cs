@@ -3,10 +3,10 @@
 // </copyright>
 
 using System;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     public class ConditionApiModel
     {

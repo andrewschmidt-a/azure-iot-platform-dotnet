@@ -7,19 +7,19 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.DeviceTelemetry.Services;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
-using Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.DeviceTelemetry.Services;
+using Mmm.Iot.DeviceTelemetry.Services.External;
+using Mmm.Iot.DeviceTelemetry.WebService.Controllers;
 using Moq;
 using Xunit;
-using Alarm = Mmm.Platform.IoT.DeviceTelemetry.Services.Models.Alarm;
+using Alarm = Mmm.Iot.DeviceTelemetry.Services.Models.Alarm;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
+namespace Mmm.Iot.DeviceTelemetry.WebService.Test.Controllers
 {
     public class AlarmsByRuleControllerTest : IDisposable
     {

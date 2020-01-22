@@ -5,7 +5,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Mmm.Platform.IoT.Common.Services.Auth
+namespace Mmm.Iot.Common.Services.Auth
 {
     public static class Permissions
     {

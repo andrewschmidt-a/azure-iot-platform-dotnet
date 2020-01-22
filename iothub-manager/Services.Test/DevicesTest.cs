@@ -8,15 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Moq;
 using Xunit;
-using AuthenticationType = Mmm.Platform.IoT.IoTHubManager.Services.Models.AuthenticationType;
+using AuthenticationType = Mmm.Iot.IoTHubManager.Services.Models.AuthenticationType;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
+namespace Mmm.Iot.IoTHubManager.Services.Test
 {
     public class DevicesTest
     {

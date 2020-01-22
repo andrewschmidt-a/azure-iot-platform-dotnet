@@ -3,9 +3,9 @@
 // </copyright>
 
 using System;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     internal class IoTHubConnectionHelper
     {

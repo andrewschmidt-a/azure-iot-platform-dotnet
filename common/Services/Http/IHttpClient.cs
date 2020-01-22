@@ -5,7 +5,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Common.Services.Http
+namespace Mmm.Iot.Common.Services.Http
 {
     public interface IHttpClient
     {

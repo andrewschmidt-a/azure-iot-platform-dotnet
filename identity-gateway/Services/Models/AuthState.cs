@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
+namespace Mmm.Iot.IdentityGateway.Services.Models
 {
     public class AuthState
     {

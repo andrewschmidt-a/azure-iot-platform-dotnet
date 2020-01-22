@@ -5,7 +5,7 @@
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
+namespace Mmm.Iot.IdentityGateway.Services.Models
 {
     public interface IAuthenticationContext
     {

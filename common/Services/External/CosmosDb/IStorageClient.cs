@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 
-namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
+namespace Mmm.Iot.Common.Services.External.CosmosDb
 {
     public interface IStorageClient : IStatusOperation
     {

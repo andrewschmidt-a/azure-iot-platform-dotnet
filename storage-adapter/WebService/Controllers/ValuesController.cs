@@ -6,15 +6,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
-using Mmm.Platform.IoT.StorageAdapter.Services;
-using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
-using Mmm.Platform.IoT.StorageAdapter.WebService.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.Common.Services.Wrappers;
+using Mmm.Iot.StorageAdapter.Services;
+using Mmm.Iot.StorageAdapter.Services.Helpers;
+using Mmm.Iot.StorageAdapter.Services.Models;
+using Mmm.Iot.StorageAdapter.WebService.Models;
 
-namespace Mmm.Platform.IoT.StorageAdapter.WebService.Controllers
+namespace Mmm.Iot.StorageAdapter.WebService.Controllers
 {
     [Route("v1")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

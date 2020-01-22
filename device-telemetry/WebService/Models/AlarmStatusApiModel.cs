@@ -4,7 +4,7 @@
 
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
+namespace Mmm.Iot.DeviceTelemetry.WebService.Models
 {
     public class AlarmStatusApiModel
     {

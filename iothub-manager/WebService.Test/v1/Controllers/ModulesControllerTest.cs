@@ -8,16 +8,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.WebService.Controllers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services;
+using Mmm.Iot.IoTHubManager.Services.Models;
+using Mmm.Iot.IoTHubManager.WebService.Controllers;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
+namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
 {
     public class ModulesControllerTest : IDisposable
     {

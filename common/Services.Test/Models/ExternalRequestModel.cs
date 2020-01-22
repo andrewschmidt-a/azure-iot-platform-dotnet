@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.Common.Services.Test.Models
+namespace Mmm.Iot.Common.Services.Test.Models
 {
     public class ExternalRequestModel
     {

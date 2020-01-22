@@ -5,12 +5,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.WebService.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.IoTHubManager.Services;
+using Mmm.Iot.IoTHubManager.WebService.Models;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Controllers
+namespace Mmm.Iot.IoTHubManager.WebService.Controllers
 {
     [Route("v1/[controller]")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

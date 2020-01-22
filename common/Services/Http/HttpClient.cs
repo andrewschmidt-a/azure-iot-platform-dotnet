@@ -9,7 +9,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Mmm.Platform.IoT.Common.Services.Http
+namespace Mmm.Iot.Common.Services.Http
 {
     public class HttpClient : IHttpClient
     {

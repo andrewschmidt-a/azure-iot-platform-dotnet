@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
+namespace Mmm.Iot.IdentityGateway.Services.Models
 {
     public class UserSettingsListModel
     {

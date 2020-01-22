@@ -14,10 +14,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.UserManagement;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.UserManagement;
 
-namespace Mmm.Platform.IoT.Common.Services.Auth
+namespace Mmm.Iot.Common.Services.Auth
 {
     public class AuthMiddleware
     {

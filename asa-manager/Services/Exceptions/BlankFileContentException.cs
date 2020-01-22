@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Exceptions
+namespace Mmm.Iot.AsaManager.Services.Exceptions
 {
     public class BlankFileContentException : Exception
     {

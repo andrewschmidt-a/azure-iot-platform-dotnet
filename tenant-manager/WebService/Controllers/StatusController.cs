@@ -5,11 +5,11 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.TenantManager.WebService.Controllers
+namespace Mmm.Iot.TenantManager.WebService.Controllers
 {
     [Route("v1/[controller]")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

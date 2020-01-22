@@ -6,16 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
-using Mmm.Platform.IoT.AsaManager.Services.Models;
-using Mmm.Platform.IoT.AsaManager.Services.Test.Helpers;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.AsaManager.Services.External.BlobStorage;
+using Mmm.Iot.AsaManager.Services.Models;
+using Mmm.Iot.AsaManager.Services.Test.Helpers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.TestHelpers;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Test
+namespace Mmm.Iot.AsaManager.Services.Test
 {
     public class RulesConverterTest
     {

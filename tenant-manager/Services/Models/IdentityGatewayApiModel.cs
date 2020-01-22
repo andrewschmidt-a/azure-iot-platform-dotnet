@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Models
+namespace Mmm.Iot.TenantManager.Services.Models
 {
     public class IdentityGatewayApiModel
     {

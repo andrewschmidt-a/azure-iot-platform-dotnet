@@ -4,11 +4,11 @@
 
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.TenantManager.Services.Helpers;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.TenantManager.Services.Helpers;
+using Mmm.Iot.TenantManager.Services.Models;
 
-namespace Mmm.Platform.IoT.TenantManager.Services
+namespace Mmm.Iot.TenantManager.Services
 {
     public class AlertingContainer : IAlertingContainer
     {

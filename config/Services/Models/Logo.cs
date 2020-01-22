@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
     public class Logo
     {

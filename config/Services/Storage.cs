@@ -8,17 +8,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation;
-using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Config.Services.External;
+using Mmm.Iot.Config.Services.Helpers.PackageValidation;
+using Mmm.Iot.Config.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.Config.Services
+namespace Mmm.Iot.Config.Services
 {
     public class Storage : IStorage
     {

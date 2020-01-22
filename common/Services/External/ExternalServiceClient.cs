@@ -4,10 +4,10 @@
 
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.Common.Services.External
+namespace Mmm.Iot.Common.Services.External
 {
     public class ExternalServiceClient : IExternalServiceClient
     {

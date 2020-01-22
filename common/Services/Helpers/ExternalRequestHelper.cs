@@ -8,13 +8,13 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Models;
 using Newtonsoft.Json;
-using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
+using HttpRequest = Mmm.Iot.Common.Services.Http.HttpRequest;
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+namespace Mmm.Iot.Common.Services.Helpers
 {
     public class ExternalRequestHelper : IExternalRequestHelper
     {

@@ -7,10 +7,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Exceptions;
 
-namespace Mmm.Platform.IoT.Common.Services.Filters
+namespace Mmm.Iot.Common.Services.Filters
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Interface | AttributeTargets.Delegate)]
     public class AuthorizeActionFilterAttribute : Attribute, IAsyncActionFilter

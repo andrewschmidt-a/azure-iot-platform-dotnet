@@ -4,7 +4,7 @@
 
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     public interface IHttpClientWrapper
     {

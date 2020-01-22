@@ -4,11 +4,11 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.Common.Services.Helpers;
 
-namespace Mmm.Platform.IoT.Config.Services.External
+namespace Mmm.Iot.Config.Services.External
 {
     public class DeviceTelemetryClient : ExternalServiceClient, IDeviceTelemetryClient
     {

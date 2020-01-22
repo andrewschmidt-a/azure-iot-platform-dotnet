@@ -4,9 +4,9 @@
 
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.StreamAnalytics.Models;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Iot.Common.Services;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
+namespace Mmm.Iot.TenantManager.Services.Helpers
 {
     public interface IStreamAnalyticsHelper : IStatusOperation
     {

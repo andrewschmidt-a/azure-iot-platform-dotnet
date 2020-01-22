@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
+namespace Mmm.Iot.Common.Services.External.TableStorage
 {
     public class TableStorageClient : ITableStorageClient
     {

@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.Config.Services.Models.Actions
+namespace Mmm.Iot.Config.Services.Models.Actions
 {
     public enum ActionType
     {

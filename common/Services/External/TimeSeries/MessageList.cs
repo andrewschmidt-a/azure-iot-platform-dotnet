@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
+namespace Mmm.Iot.Common.Services.External.TimeSeries
 {
     public class MessageList
     {

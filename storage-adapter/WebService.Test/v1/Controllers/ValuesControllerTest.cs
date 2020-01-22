@@ -7,17 +7,17 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.StorageAdapter.Services;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
-using Mmm.Platform.IoT.StorageAdapter.WebService.Controllers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Wrappers;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.StorageAdapter.Services;
+using Mmm.Iot.StorageAdapter.Services.Models;
+using Mmm.Iot.StorageAdapter.WebService.Controllers;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.Controllers
+namespace Mmm.Iot.StorageAdapter.WebService.Test.Controllers
 {
     public class ValuesControllerTest : IDisposable
     {

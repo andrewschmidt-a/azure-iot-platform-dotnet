@@ -6,7 +6,7 @@ using System;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class DeviceServiceModel
     {

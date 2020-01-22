@@ -4,7 +4,7 @@
 
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Common.Services.External.AppConfiguration
+namespace Mmm.Iot.Common.Services.External.AppConfiguration
 {
     public interface IAppConfigurationClient : IStatusOperation
     {

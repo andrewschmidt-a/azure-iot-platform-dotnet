@@ -4,10 +4,10 @@
 
 using System.Reflection;
 using Autofac;
-using Mmm.Platform.IoT.AsaManager.Services;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Iot.AsaManager.Services;
+using Mmm.Iot.Common.Services;
 
-namespace Mmm.Platform.IoT.AsaManager.WebService
+namespace Mmm.Iot.AsaManager.WebService
 {
     public class DependencyResolution : DependencyResolutionBase
     {

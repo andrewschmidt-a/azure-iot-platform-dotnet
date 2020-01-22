@@ -4,14 +4,14 @@
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.AsaManager.Services.Models;
-using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
-using Mmm.Platform.IoT.AsaManager.Services.Models.Rules;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.AsaManager.Services.Models;
+using Mmm.Iot.AsaManager.Services.Models.DeviceGroups;
+using Mmm.Iot.AsaManager.Services.Models.Rules;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.TestHelpers;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
+namespace Mmm.Iot.AsaManager.Services.Test.Helpers
 {
     public class CreateEntityHelper
     {

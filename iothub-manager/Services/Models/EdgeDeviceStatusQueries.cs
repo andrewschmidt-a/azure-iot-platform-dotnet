@@ -3,9 +3,9 @@
 // </copyright>
 
 using System.Collections.Generic;
-using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
+using static Mmm.Iot.Config.Services.Models.DeviceStatusQueries;
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
     public class EdgeDeviceStatusQueries
     {

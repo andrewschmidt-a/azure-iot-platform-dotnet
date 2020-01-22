@@ -8,14 +8,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
+namespace Mmm.Iot.Common.Services.External.TimeSeries
 {
     public class TimeSeriesClient : ITimeSeriesClient
     {

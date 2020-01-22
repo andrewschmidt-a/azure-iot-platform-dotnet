@@ -6,7 +6,7 @@ using System;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 
-namespace Mmm.Platform.IoT.StorageAdapter.Services.Models
+namespace Mmm.Iot.StorageAdapter.Services.Models
 {
     public class ValueServiceModel
     {

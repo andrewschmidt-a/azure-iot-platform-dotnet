@@ -4,7 +4,7 @@
 
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
+namespace Mmm.Iot.Common.Services.External.TimeSeries
 {
     public class PropertyModel
     {

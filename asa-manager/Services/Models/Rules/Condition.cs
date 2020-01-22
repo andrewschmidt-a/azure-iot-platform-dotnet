@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
+namespace Mmm.Iot.AsaManager.Services.Models.Rules
 {
     public partial class RuleReferenceDataModel
     {

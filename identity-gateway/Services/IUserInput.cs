@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services
+namespace Mmm.Iot.IdentityGateway.Services
 {
     public interface IUserInput<TModel>
     {

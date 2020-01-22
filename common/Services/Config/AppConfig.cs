@@ -4,7 +4,7 @@
 
 using Microsoft.Extensions.Configuration;
 
-namespace Mmm.Platform.IoT.Common.Services.Config
+namespace Mmm.Iot.Common.Services.Config
 {
     public partial class AppConfig
     {

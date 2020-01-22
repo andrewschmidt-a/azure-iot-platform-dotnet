@@ -4,7 +4,7 @@
 
 using System.Collections.Generic;
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
     public class DeviceGroup
     {

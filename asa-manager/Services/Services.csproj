@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>Mmm.Platform.IoT.AsaManager.Services</AssemblyName>
+    <AssemblyName>Mmm.Iot.AsaManager.Services</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
   <ItemGroup>

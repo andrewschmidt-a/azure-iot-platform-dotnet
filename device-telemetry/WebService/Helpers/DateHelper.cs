@@ -5,7 +5,7 @@
 using System;
 using System.Xml;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers.Helpers
+namespace Mmm.Iot.DeviceTelemetry.WebService.Controllers.Helpers
 {
     public static class DateHelper
     {

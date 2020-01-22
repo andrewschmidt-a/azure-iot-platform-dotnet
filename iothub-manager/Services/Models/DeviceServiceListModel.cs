@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class DeviceServiceListModel
     {

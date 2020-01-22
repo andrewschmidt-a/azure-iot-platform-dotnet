@@ -5,7 +5,7 @@
 using System;
 using Microsoft.Azure.Devices;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class DeviceJobServiceModel
     {

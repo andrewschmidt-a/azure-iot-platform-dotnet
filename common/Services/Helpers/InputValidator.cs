@@ -3,9 +3,9 @@
 // </copyright>
 
 using System.Text.RegularExpressions;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+namespace Mmm.Iot.Common.Services.Helpers
 {
     public class InputValidator
     {

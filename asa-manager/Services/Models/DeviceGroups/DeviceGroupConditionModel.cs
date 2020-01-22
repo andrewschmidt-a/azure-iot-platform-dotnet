@@ -4,7 +4,7 @@
 
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups
+namespace Mmm.Iot.AsaManager.Services.Models.DeviceGroups
 {
     public class DeviceGroupConditionModel
     {

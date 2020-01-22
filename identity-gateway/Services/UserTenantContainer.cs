@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Iot.Common.Services.External.TableStorage;
+using Mmm.Iot.IdentityGateway.Services.Models;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services
+namespace Mmm.Iot.IdentityGateway.Services
 {
     public class UserTenantContainer : UserContainer, IUserContainer<UserTenantModel, UserTenantInput>
     {

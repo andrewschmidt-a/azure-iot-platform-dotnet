@@ -7,15 +7,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
-using Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager;
-using Mmm.Platform.IoT.AsaManager.Services.Models;
-using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Iot.AsaManager.Services.External.BlobStorage;
+using Mmm.Iot.AsaManager.Services.External.IotHubManager;
+using Mmm.Iot.AsaManager.Services.Models;
+using Mmm.Iot.AsaManager.Services.Models.DeviceGroups;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services
+namespace Mmm.Iot.AsaManager.Services
 {
     public class DeviceGroupsConverter : Converter, IConverter
     {

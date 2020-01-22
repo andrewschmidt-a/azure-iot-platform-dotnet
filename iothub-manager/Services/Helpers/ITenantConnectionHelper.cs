@@ -4,7 +4,7 @@
 
 using Microsoft.Azure.Devices;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     public interface ITenantConnectionHelper
     {

@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.Services.Exceptions
+namespace Mmm.Iot.Common.Services.Exceptions
 {
     public class ResourceNotFoundException : Exception
     {

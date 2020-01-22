@@ -5,7 +5,7 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mmm.Platform.IoT.Common.Services
+namespace Mmm.Iot.Common.Services
 {
     public static class ControllerExtension
     {

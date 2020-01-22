@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.IdentityGateway.Services.Models;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
+namespace Mmm.Iot.IdentityGateway.Services.Helpers
 {
     public class JwtHelpers : IJwtHelpers
     {

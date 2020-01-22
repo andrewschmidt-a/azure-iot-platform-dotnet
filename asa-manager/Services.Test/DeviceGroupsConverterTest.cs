@@ -6,21 +6,21 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.AsaManager.Services;
-using Mmm.Platform.IoT.AsaManager.Services.Exceptions;
-using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
-using Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager;
-using Mmm.Platform.IoT.AsaManager.Services.Models;
-using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
-using Mmm.Platform.IoT.AsaManager.Services.Test.Helpers;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.AsaManager.Services;
+using Mmm.Iot.AsaManager.Services.Exceptions;
+using Mmm.Iot.AsaManager.Services.External.BlobStorage;
+using Mmm.Iot.AsaManager.Services.External.IotHubManager;
+using Mmm.Iot.AsaManager.Services.Models;
+using Mmm.Iot.AsaManager.Services.Models.DeviceGroups;
+using Mmm.Iot.AsaManager.Services.Test.Helpers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Test
+namespace Mmm.Iot.AsaManager.Services.Test
 {
     public class DeviceGroupsConverterTest
     {

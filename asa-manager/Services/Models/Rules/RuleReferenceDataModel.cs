@@ -4,10 +4,10 @@
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.AsaManager.Services.Models;
+using Mmm.Iot.AsaManager.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
+namespace Mmm.Iot.AsaManager.Services.Models.Rules
 {
     // Note: all the constants below are meant to be not case sensitive
     public partial class RuleReferenceDataModel

@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     public class ActionApiModel
     {

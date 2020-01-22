@@ -4,10 +4,10 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Iot.Config.Services.External;
+using Mmm.Iot.Config.Services.Models;
 
-namespace Mmm.Platform.IoT.Config.Services
+namespace Mmm.Iot.Config.Services
 {
     public interface IStorage
     {

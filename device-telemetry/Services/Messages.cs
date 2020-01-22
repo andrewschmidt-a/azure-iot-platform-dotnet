@@ -9,15 +9,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.Services.Helpers;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services
+namespace Mmm.Iot.DeviceTelemetry.Services
 {
     public class Messages : IMessages
     {

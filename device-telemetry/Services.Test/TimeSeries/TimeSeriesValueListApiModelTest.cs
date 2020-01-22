@@ -4,12 +4,12 @@
 
 using System;
 using System.IO;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.TestHelpers;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
+namespace Mmm.Iot.DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesValueListApiModelTest
     {

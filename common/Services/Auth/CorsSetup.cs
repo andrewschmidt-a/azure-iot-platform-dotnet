@@ -7,10 +7,10 @@ using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Iot.Common.Services.Config;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.Auth
+namespace Mmm.Iot.Common.Services.Auth
 {
     public class CorsSetup : ICorsSetup
     {

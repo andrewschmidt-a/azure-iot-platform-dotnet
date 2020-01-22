@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Iot.Config.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Config.Services.External
+namespace Mmm.Iot.Config.Services.External
 {
     public class ConfigTypeListServiceModel
     {

@@ -3,11 +3,11 @@
 // </copyright>
 
 using System;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
+namespace Mmm.Iot.Config.Services.Helpers.PackageValidation
 {
     public abstract class PackageValidator : IPackageValidator
     {

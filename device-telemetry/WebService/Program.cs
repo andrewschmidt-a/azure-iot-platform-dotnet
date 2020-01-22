@@ -3,9 +3,9 @@
 // </copyright>
 
 using Microsoft.AspNetCore.Hosting;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Iot.Common.Services;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
+namespace Mmm.Iot.DeviceTelemetry.WebService
 {
     public static class Program
     {

@@ -8,11 +8,11 @@ using Microsoft.Azure.Management.StreamAnalytics;
 using Microsoft.Azure.Management.StreamAnalytics.Models;
 using Microsoft.Rest;
 using Microsoft.Rest.Azure;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
+namespace Mmm.Iot.TenantManager.Services.Helpers
 {
     public class StreamAnalyticsHelper : IStreamAnalyticsHelper
     {

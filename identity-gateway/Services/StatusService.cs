@@ -3,12 +3,12 @@
 // </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.IdentityGateway.Services.External;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.TableStorage;
+using Mmm.Iot.IdentityGateway.Services.External;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services
+namespace Mmm.Iot.IdentityGateway.Services
 {
     public class StatusService : StatusServiceBase
     {

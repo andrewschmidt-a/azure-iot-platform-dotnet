@@ -4,9 +4,9 @@
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.IoTHubManager.Services.Models;
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
     public partial class DeviceStatusQueries
     {

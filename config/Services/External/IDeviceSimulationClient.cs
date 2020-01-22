@@ -3,10 +3,10 @@
 // </copyright>
 
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.External;
 
-namespace Mmm.Platform.IoT.Config.Services.External
+namespace Mmm.Iot.Config.Services.External
 {
     public interface IDeviceSimulationClient : IExternalServiceClient
     {

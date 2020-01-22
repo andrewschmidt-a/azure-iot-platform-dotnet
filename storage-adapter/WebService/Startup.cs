@@ -10,9 +10,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Auth;
 
-namespace Mmm.Platform.IoT.StorageAdapter.WebService
+namespace Mmm.Iot.StorageAdapter.WebService
 {
     public class Startup
     {

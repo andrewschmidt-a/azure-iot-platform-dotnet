@@ -6,14 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Iot.AsaManager.Services.Models.DeviceGroups;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.Common.Services.Helpers;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager
+namespace Mmm.Iot.AsaManager.Services.External.IotHubManager
 {
     public class IotHubManagerClient : ExternalServiceClient, IIotHubManagerClient
     {

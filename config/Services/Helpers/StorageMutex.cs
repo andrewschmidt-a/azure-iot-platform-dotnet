@@ -5,11 +5,11 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
 
-namespace Mmm.Platform.IoT.Config.Services.Helpers
+namespace Mmm.Iot.Config.Services.Helpers
 {
     public class StorageMutex : IStorageMutex
     {

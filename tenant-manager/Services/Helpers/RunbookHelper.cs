@@ -10,13 +10,13 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Azure;
 using Microsoft.Azure.Management.Automation;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.TenantManager.Services.Exceptions;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.Models;
+using Mmm.Iot.TenantManager.Services.Exceptions;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
+namespace Mmm.Iot.TenantManager.Services.Helpers
 {
     public class RunbookHelper : IRunbookHelper, IDisposable
     {

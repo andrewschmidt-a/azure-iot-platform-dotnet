@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 using Azure.Data.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.Common.Services.External.AppConfiguration
+namespace Mmm.Iot.Common.Services.External.AppConfiguration
 {
     public class AppConfigurationClient : IAppConfigurationClient
     {

@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     public class AlarmCountByRule
     {

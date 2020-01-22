@@ -5,7 +5,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Config.Services.Models.Actions
+namespace Mmm.Iot.Config.Services.Models.Actions
 {
     public interface IActionSettings
     {

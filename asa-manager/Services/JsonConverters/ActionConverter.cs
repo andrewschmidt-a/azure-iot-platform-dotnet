@@ -3,11 +3,11 @@
 // </copyright>
 
 using System;
-using Mmm.Platform.IoT.AsaManager.Services.Models.Rules;
+using Mmm.Iot.AsaManager.Services.Models.Rules;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.JsonConverters
+namespace Mmm.Iot.AsaManager.Services.JsonConverters
 {
     public class ActionConverter : JsonConverter
     {

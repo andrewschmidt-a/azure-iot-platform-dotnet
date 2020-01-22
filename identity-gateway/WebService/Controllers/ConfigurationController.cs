@@ -5,13 +5,13 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.IdentityGateway.Services.Helpers;
+using Mmm.Iot.IdentityGateway.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
+namespace Mmm.Iot.IdentityGateway.WebService.Controllers
 {
     [Route("")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

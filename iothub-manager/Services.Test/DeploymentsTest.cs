@@ -7,13 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
+namespace Mmm.Iot.IoTHubManager.Services.Test
 {
     public class DeploymentsTest
     {
@@ -150,7 +150,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
         private const string DeploymentGroupNameLabel = "DeviceGroupName";
         private const string ConfigurationTypeLabel = "ConfigType";
         private const string RmCreatedLabel = "RMDeployment";
-        private const string ResourceNotFoundException = "Mmm.Platform.IoT.Common.Services.Exceptions.ResourceNotSupportedException, Mmm.Platform.IoT.Common.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
+        private const string ResourceNotFoundException = "Mmm.Iot.Common.Services.Exceptions.ResourceNotSupportedException, Mmm.Iot.Common.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
         private const string DeploymentPackageNameLabel = "PackageName";
 
         private readonly Deployments deployments;

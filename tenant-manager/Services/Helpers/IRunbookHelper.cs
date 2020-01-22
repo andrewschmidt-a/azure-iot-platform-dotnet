@@ -4,9 +4,9 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Iot.Common.Services;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
+namespace Mmm.Iot.TenantManager.Services.Helpers
 {
     public interface IRunbookHelper : IStatusOperation
     {

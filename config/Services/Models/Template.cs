@@ -3,10 +3,10 @@
 // </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Iot.Config.Services.External;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
     public class Template
     {

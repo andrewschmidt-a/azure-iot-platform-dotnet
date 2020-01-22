@@ -4,10 +4,10 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.StorageAdapter.Services.Models;
 
-namespace Mmm.Platform.IoT.StorageAdapter.Services
+namespace Mmm.Iot.StorageAdapter.Services
 {
     /// <summary>
     /// Common interface for underlying key-value storage services, such as Cosmos DB, Azure Storage Table and so on

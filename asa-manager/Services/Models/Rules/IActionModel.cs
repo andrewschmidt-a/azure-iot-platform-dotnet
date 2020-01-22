@@ -3,11 +3,11 @@
 // </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.AsaManager.Services.JsonConverters;
+using Mmm.Iot.AsaManager.Services.JsonConverters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
+namespace Mmm.Iot.AsaManager.Services.Models.Rules
 {
     [JsonConverter(typeof(ActionConverter))]
     public interface IActionModel

@@ -3,9 +3,9 @@
 // </copyright>
 
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.IoTHubManager.Services.Models;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services
+namespace Mmm.Iot.IoTHubManager.Services
 {
     public interface IDeployments
     {

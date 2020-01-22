@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
+namespace Mmm.Iot.Common.Services.External.CosmosDb
 {
     public class StorageClient : IStorageClient, IDisposable
     {

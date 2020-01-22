@@ -3,11 +3,11 @@
 // </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
+namespace Mmm.Iot.IoTHubManager.WebService.Models
 {
     public class JobUpdateTwinApiModel
     {

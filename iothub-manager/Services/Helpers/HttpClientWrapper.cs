@@ -6,10 +6,10 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Http;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     public class HttpClientWrapper : IHttpClientWrapper
     {

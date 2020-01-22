@@ -6,16 +6,16 @@ using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
-using Mmm.Platform.IoT.IdentityGateway.WebService.Controllers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IdentityGateway.Services.Helpers;
+using Mmm.Iot.IdentityGateway.Services.Models;
+using Mmm.Iot.IdentityGateway.WebService.Controllers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.Controllers
+namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
 {
     public class ConfigurationControllerTest : IDisposable
     {

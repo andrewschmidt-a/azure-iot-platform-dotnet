@@ -4,11 +4,11 @@
 
 using System.Runtime.CompilerServices;
 using Microsoft.Azure.Documents;
-using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
+using Mmm.Iot.StorageAdapter.Services.Helpers;
 
-[assembly: InternalsVisibleTo("Mmm.Platform.IoT.StorageAdapter.Services.Test")]
+[assembly: InternalsVisibleTo("Mmm.Iot.StorageAdapter.Services.Test")]
 
-namespace Mmm.Platform.IoT.StorageAdapter.Services
+namespace Mmm.Iot.StorageAdapter.Services
 {
     internal sealed class KeyValueDocument : Resource
     {

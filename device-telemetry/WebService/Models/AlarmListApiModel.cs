@@ -3,10 +3,10 @@
 // </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
+using Mmm.Iot.DeviceTelemetry.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
+namespace Mmm.Iot.DeviceTelemetry.WebService.Models
 {
     public class AlarmListApiModel
     {

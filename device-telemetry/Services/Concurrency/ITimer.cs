@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
+namespace Mmm.Iot.DeviceTelemetry.Services.Concurrency
 {
     public interface ITimer
     {

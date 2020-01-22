@@ -4,16 +4,16 @@
 
 using System.Net;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.UserManagement;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.UserManagement;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.Config.Services.External;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.Config.Services.Test
+namespace Mmm.Iot.Config.Services.Test
 {
     public class AzureResourceManagerClientTest
     {

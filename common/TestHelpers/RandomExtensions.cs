@@ -5,7 +5,7 @@
 using System;
 using System.Text;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
     public static class RandomExtensions
     {

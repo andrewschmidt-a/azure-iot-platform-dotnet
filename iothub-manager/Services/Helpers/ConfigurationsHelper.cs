@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     public static class ConfigurationsHelper
     {

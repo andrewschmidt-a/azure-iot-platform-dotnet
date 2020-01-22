@@ -4,10 +4,10 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Helpers;
 
-namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
+namespace Mmm.Iot.Common.Services.External.StorageAdapter
 {
     public class StorageAdapterClient : ExternalServiceClient, IStorageAdapterClient
     {

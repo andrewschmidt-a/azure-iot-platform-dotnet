@@ -4,7 +4,7 @@
 
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Common.Services.External.AsaManager
+namespace Mmm.Iot.Common.Services.External.AsaManager
 {
     public interface IAsaManagerClient : IExternalServiceClient
     {

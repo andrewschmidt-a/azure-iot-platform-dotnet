@@ -2,9 +2,9 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Iot.IdentityGateway.Services.Models;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services
+namespace Mmm.Iot.IdentityGateway.Services
 {
     public class UserSettingsInput : IUserInput<UserSettingsModel>
     {

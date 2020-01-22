@@ -3,9 +3,9 @@
 // </copyright>
 
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Iot.Common.Services;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage
+namespace Mmm.Iot.AsaManager.Services.External.BlobStorage
 {
     public interface IBlobStorageClient : IStatusOperation
     {

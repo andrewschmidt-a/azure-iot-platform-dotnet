@@ -5,10 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
+namespace Mmm.Iot.IoTHubManager.WebService.Models
 {
     public class JobApiModel
     {

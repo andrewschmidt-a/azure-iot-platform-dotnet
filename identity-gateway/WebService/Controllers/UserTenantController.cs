@@ -9,16 +9,16 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.IdentityGateway.Services;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.IdentityGateway.Services;
+using Mmm.Iot.IdentityGateway.Services.Helpers;
+using Mmm.Iot.IdentityGateway.Services.Models;
 using Newtonsoft.Json;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Controllers
+namespace Mmm.Iot.IdentityGateway.WebService.Controllers
 {
     [Route("v1/tenants")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

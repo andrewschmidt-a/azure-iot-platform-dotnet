@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Models
+namespace Mmm.Iot.IoTHubManager.WebService.Models
 {
     public class TwinPropertiesApiModel
     {

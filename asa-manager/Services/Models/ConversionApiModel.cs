@@ -2,9 +2,9 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Models
+namespace Mmm.Iot.AsaManager.Services.Models
 {
     public class ConversionApiModel
     {

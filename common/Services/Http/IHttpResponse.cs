@@ -5,7 +5,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 
-namespace Mmm.Platform.IoT.Common.Services.Http
+namespace Mmm.Iot.Common.Services.Http
 {
     public interface IHttpResponse
     {

@@ -6,17 +6,17 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.Config.Services;
-using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Models;
-using Mmm.Platform.IoT.Config.Services.Models.Actions;
-using Mmm.Platform.IoT.Config.WebService.Controllers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.Config.Services;
+using Mmm.Iot.Config.Services.External;
+using Mmm.Iot.Config.Services.Models;
+using Mmm.Iot.Config.Services.Models.Actions;
+using Mmm.Iot.Config.WebService.Controllers;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
+namespace Mmm.Iot.Config.WebService.Test.Controllers
 {
     public class SolutionSettingsControllerTest : IDisposable
     {

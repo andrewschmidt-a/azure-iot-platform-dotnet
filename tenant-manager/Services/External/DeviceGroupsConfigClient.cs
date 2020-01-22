@@ -6,13 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Models;
+using Mmm.Iot.TenantManager.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.External
+namespace Mmm.Iot.TenantManager.Services.External
 {
     public class DeviceGroupsConfigClient : IDeviceGroupsConfigClient
     {

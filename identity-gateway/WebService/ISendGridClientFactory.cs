@@ -4,7 +4,7 @@
 
 using SendGrid;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService
+namespace Mmm.Iot.IdentityGateway.WebService
 {
     public interface ISendGridClientFactory
     {

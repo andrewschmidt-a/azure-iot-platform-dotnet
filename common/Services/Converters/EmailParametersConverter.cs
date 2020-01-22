@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.Common.Services.Converters
+namespace Mmm.Iot.Common.Services.Converters
 {
     public class EmailParametersConverter : JsonConverter
     {

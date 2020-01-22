@@ -8,18 +8,18 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Models;
+using Mmm.Iot.DeviceTelemetry.Services.External;
+using Mmm.Iot.DeviceTelemetry.Services.Helpers;
+using Mmm.Iot.DeviceTelemetry.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services
+namespace Mmm.Iot.DeviceTelemetry.Services
 {
     public class Rules : IRules
     {

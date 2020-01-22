@@ -5,12 +5,12 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.UserManagement;
-using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.UserManagement;
+using Mmm.Iot.Common.Services.Http;
 
-namespace Mmm.Platform.IoT.Config.Services.External
+namespace Mmm.Iot.Config.Services.External
 {
     public class AzureResourceManagerClient : IAzureResourceManagerClient
     {

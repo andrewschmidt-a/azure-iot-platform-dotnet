@@ -11,20 +11,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Mmm.Platform.IoT.Common.Services.Auth;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.Common.Services.External.UserManagement;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
+using Mmm.Iot.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.External.TableStorage;
+using Mmm.Iot.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.Services.External.UserManagement;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Wrappers;
 
-namespace Mmm.Platform.IoT.Common.Services
+namespace Mmm.Iot.Common.Services
 {
     public abstract class DependencyResolutionBase
     {

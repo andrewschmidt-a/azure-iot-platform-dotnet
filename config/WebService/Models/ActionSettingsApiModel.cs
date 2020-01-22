@@ -4,10 +4,10 @@
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Config.Services.Models.Actions;
+using Mmm.Iot.Config.Services.Models.Actions;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Config.WebService.Models
+namespace Mmm.Iot.Config.WebService.Models
 {
     public class ActionSettingsApiModel
     {

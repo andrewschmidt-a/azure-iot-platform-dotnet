@@ -4,9 +4,9 @@
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Iot.Config.Services.Models;
 
-namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
+namespace Mmm.Iot.Config.Services.Helpers.PackageValidation
 {
     public static class PackageValidatorFactory
     {

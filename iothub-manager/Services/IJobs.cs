@@ -5,12 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using DeviceJobStatus = Mmm.Platform.IoT.IoTHubManager.Services.Models.DeviceJobStatus;
-using JobStatus = Mmm.Platform.IoT.IoTHubManager.Services.Models.JobStatus;
-using JobType = Mmm.Platform.IoT.IoTHubManager.Services.Models.JobType;
+using Mmm.Iot.IoTHubManager.Services.Models;
+using DeviceJobStatus = Mmm.Iot.IoTHubManager.Services.Models.DeviceJobStatus;
+using JobStatus = Mmm.Iot.IoTHubManager.Services.Models.JobStatus;
+using JobType = Mmm.Iot.IoTHubManager.Services.Models.JobType;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services
+namespace Mmm.Iot.IoTHubManager.Services
 {
     public interface IJobs
     {

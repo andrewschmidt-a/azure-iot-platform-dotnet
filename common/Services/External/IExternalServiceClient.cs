@@ -2,7 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
-namespace Mmm.Platform.IoT.Common.Services.External
+namespace Mmm.Iot.Common.Services.External
 {
     public interface IExternalServiceClient : IStatusOperation
     {

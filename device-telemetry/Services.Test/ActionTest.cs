@@ -4,13 +4,13 @@
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Models;
+using Mmm.Iot.Common.TestHelpers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
+namespace Mmm.Iot.DeviceTelemetry.Services.Test
 {
     public class ActionTest
     {

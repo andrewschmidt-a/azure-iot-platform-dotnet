@@ -3,9 +3,9 @@
 // </copyright>
 
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.AsaManager.Services.Models;
+using Mmm.Iot.AsaManager.Services.Models;
 
-namespace Mmm.Platform.IoT.AsaManager.Services
+namespace Mmm.Iot.AsaManager.Services
 {
     public interface IConverter
     {

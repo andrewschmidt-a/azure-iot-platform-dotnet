@@ -6,16 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.WebService.Controllers;
-using Mmm.Platform.IoT.IoTHubManager.WebService.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services;
+using Mmm.Iot.IoTHubManager.Services.Models;
+using Mmm.Iot.IoTHubManager.WebService.Controllers;
+using Mmm.Iot.IoTHubManager.WebService.Models;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.Controllers
+namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
 {
     public class DeploymentsControllerTest : IDisposable
     {

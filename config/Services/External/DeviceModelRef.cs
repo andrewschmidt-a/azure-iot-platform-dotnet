@@ -4,7 +4,7 @@
 
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Config.Services.External
+namespace Mmm.Iot.Config.Services.External
 {
     public class DeviceModelRef
     {

@@ -3,11 +3,11 @@
 // </copyright>
 
 using System;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.Services.External.TimeSeries;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Models
+namespace Mmm.Iot.DeviceTelemetry.WebService.Models
 {
     public class MessageApiModel
     {

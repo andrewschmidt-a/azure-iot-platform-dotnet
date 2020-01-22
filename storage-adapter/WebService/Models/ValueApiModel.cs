@@ -4,10 +4,10 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
+using Mmm.Iot.StorageAdapter.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.StorageAdapter.WebService.Models
+namespace Mmm.Iot.StorageAdapter.WebService.Models
 {
     public class ValueApiModel
     {

@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
+namespace Mmm.Iot.Common.Services.External.TableStorage
 {
     public interface ITableStorageClient : IStatusOperation
     {

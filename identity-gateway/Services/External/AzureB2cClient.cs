@@ -5,11 +5,11 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.External
+namespace Mmm.Iot.IdentityGateway.Services.External
 {
     public class AzureB2cClient : IAzureB2cClient
     {

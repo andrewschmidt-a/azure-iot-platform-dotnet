@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Config.Services.External;
 
-namespace Mmm.Platform.IoT.Config.Services.Models.Actions
+namespace Mmm.Iot.Config.Services.Models.Actions
 {
     public class EmailActionSettings : IActionSettings
     {

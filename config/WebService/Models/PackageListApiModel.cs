@@ -4,10 +4,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Iot.Config.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Config.WebService.Models
+namespace Mmm.Iot.Config.WebService.Models
 {
     public class PackageListApiModel
     {

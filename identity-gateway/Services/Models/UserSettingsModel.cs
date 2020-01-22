@@ -4,7 +4,7 @@
 
 using Microsoft.Azure.Cosmos.Table;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
+namespace Mmm.Iot.IdentityGateway.Services.Models
 {
     public class UserSettingsModel : TableEntity
     {

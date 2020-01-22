@@ -12,12 +12,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.Common.TestHelpers;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.Common.Services.Test.Filters
+namespace Mmm.Iot.Common.Services.Test.Filters
 {
     public class ExceptionsFilterAttributeTest
     {

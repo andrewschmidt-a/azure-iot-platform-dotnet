@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.Services.Wrappers
+namespace Mmm.Iot.Common.Services.Wrappers
 {
     public class GuidKeyGenerator : IKeyGenerator
     {

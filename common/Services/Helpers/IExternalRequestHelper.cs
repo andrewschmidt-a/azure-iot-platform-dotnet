@@ -4,10 +4,10 @@
 
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+namespace Mmm.Iot.Common.Services.Helpers
 {
     public interface IExternalRequestHelper
     {

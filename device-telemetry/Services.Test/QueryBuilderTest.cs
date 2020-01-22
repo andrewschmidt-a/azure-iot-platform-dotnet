@@ -3,12 +3,12 @@
 // </copyright>
 
 using System;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.TestHelpers;
 using Xunit;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
+namespace Mmm.Iot.DeviceTelemetry.Services.Test
 {
     public class QueryBuilderTest
     {

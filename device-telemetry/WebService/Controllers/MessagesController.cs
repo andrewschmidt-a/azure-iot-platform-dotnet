@@ -6,14 +6,14 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.DeviceTelemetry.Services;
-using Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers.Helpers;
-using Mmm.Platform.IoT.DeviceTelemetry.WebService.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.DeviceTelemetry.Services;
+using Mmm.Iot.DeviceTelemetry.WebService.Controllers.Helpers;
+using Mmm.Iot.DeviceTelemetry.WebService.Models;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Controllers
+namespace Mmm.Iot.DeviceTelemetry.WebService.Controllers
 {
     [Route("v1/[controller]")]
     [TypeFilter(typeof(ExceptionsFilterAttribute))]

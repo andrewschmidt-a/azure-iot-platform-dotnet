@@ -6,13 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
-using Mmm.Platform.IoT.Common.Services.Converters;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Converters;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     public class EmailAction : IAction
     {

@@ -4,7 +4,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mmm.Platform.IoT.Common.Services.Filters
+namespace Mmm.Iot.Common.Services.Filters
 {
     public class AuthorizeAttribute : TypeFilterAttribute
     {

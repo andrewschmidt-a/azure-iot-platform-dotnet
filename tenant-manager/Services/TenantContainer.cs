@@ -7,15 +7,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.TenantManager.Services.External;
-using Mmm.Platform.IoT.TenantManager.Services.Helpers;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.External.TableStorage;
+using Mmm.Iot.TenantManager.Services.External;
+using Mmm.Iot.TenantManager.Services.Helpers;
+using Mmm.Iot.TenantManager.Services.Models;
 
-namespace Mmm.Platform.IoT.TenantManager.Services
+namespace Mmm.Iot.TenantManager.Services
 {
     public class TenantContainer : ITenantContainer
     {

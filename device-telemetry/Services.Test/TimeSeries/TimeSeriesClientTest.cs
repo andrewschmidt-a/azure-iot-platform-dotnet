@@ -4,15 +4,15 @@
 
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.TestHelpers;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
+namespace Mmm.Iot.DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesClientTest
     {

@@ -11,9 +11,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Auth;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
+namespace Mmm.Iot.DeviceTelemetry.WebService
 {
     public class Startup : IDisposable
     {

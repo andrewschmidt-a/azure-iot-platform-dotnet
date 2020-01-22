@@ -3,10 +3,10 @@
 // </copyright>
 
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.IoTHubManager.Services.Models;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services
+namespace Mmm.Iot.IoTHubManager.Services
 {
     public interface IDevices : IStatusOperation
     {

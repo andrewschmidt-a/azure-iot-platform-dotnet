@@ -8,21 +8,21 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Models;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.DeviceTelemetry.Services.External;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
-using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
+using HttpRequest = Mmm.Iot.Common.Services.Http.HttpRequest;
+using HttpResponse = Mmm.Iot.Common.Services.Http.HttpResponse;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
+namespace Mmm.Iot.DeviceTelemetry.Services.Test
 {
     public class RulesTest
     {

@@ -4,7 +4,7 @@
 
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
+namespace Mmm.Iot.AsaManager.Services.Models.Rules
 {
     public class ConditionModel
     {

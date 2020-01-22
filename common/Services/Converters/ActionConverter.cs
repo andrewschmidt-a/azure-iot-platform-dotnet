@@ -4,12 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.Common.Services.Converters
+namespace Mmm.Iot.Common.Services.Converters
 {
     public class ActionConverter : JsonConverter
     {

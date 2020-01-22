@@ -5,7 +5,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Models
+namespace Mmm.Iot.DeviceTelemetry.Services.Models
 {
     [JsonConverter(typeof(StringEnumConverter))]
     public enum SchemaType

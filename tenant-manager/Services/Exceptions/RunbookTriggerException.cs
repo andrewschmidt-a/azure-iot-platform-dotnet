@@ -4,7 +4,7 @@
 
 using System;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Exceptions
+namespace Mmm.Iot.TenantManager.Services.Exceptions
 {
     public class RunbookTriggerException : Exception
     {
