@@ -5,6 +5,8 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS restore
 WORKDIR /src
 COPY Directory.Build.props .
+COPY StyleCop.json .
+COPY Mmm.Iot.ruleset .
 COPY common/Services/Services.csproj common/Services/
 COPY config/Services/Services.csproj config/Services/
 COPY config/WebService/WebService.csproj config/WebService/
