@@ -1,20 +1,54 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Azure.Data.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Models;
+using System.Reflection;
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+namespace Mmm.Platform.IoT.Common.Services.External.AppConfiguration
 {
-    public class AppConfigurationHelper : IAppConfigurationHelper
+    public class AppConfigurationClient : IAppConfigurationClient
     {
+        private readonly AppConfig _config;
         private ConfigurationClient client;
         private Dictionary<string, AppConfigCacheValue> _cache = new Dictionary<string, AppConfigCacheValue>();
 
-        public AppConfigurationHelper(AppConfig config)
+        public AppConfigurationClient(AppConfig config)
         {
             this.client = new ConfigurationClient(config.AppConfigurationConnectionString);
+            this._config = config;
+        }
+
+        public async Task<StatusResultServiceModel> StatusAsync()
+        {
+            // Test a key created from one of the configuration variable names
+            string statusKey = "";
+            try
+            {
+                string configKey = this._config.Global
+                    .GetType()
+                    .GetProperties()
+                    .First(prop => prop.PropertyType == typeof(string))
+                    .Name;
+                // Append global to the retrieved configKey and append global to it, since that is its parent key name
+                statusKey = $"Global:{configKey}";
+            }
+            catch (Exception)
+            {
+                return new StatusResultServiceModel(false, $"Unable to get the status of AppConfig because no Global Configuration Key could be retrieved from the generated configuration class.");
+            }
+
+            try
+            {
+                await this.client.GetConfigurationSettingAsync(statusKey);
+                return new StatusResultServiceModel(true, "Alive and well!");
+            }
+            catch (Exception e)
+            {
+                return new StatusResultServiceModel(false, $"Unable to retrieve a key from AppConfig. {e.Message}");
+            }
         }
 
         /// <summary>

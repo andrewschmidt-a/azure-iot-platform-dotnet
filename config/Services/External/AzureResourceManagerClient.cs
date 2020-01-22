@@ -5,6 +5,7 @@ using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External;
 using Mmm.Platform.IoT.Common.Services.Http;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.UserManagement;
 
 namespace Mmm.Platform.IoT.Config.Services.External
 {

@@ -5,7 +5,7 @@ using Mmm.Platform.IoT.Common.Services.External.TableStorage;
 
 namespace Mmm.Platform.IoT.IdentityGateway.Services
 {
-    public abstract class UserContainer : IStatusOperation
+    public abstract class UserContainer
     {
         // injections
         protected ITableStorageClient _tableStorageClient;
@@ -20,12 +20,6 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services
         public UserContainer(ITableStorageClient tableStorageClient)
         {
             this._tableStorageClient = tableStorageClient;
-        }
-
-        public async Task<StatusResultServiceModel> StatusAsync()
-        {
-            await this._tableStorageClient.GetTableAsync(this.TableName);
-            return new StatusResultServiceModel(true, "Alive and Well!");
         }
     }
 }

@@ -11,8 +11,9 @@ using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Helpers;
 
 namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 {
@@ -22,7 +23,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         private readonly IStorageClient storageClient;
         private readonly AppConfig config;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private IAppConfigurationHelper _appConfigurationHelper;
+        private readonly IAppConfigurationClient _appConfigurationClient;
 
         private readonly string databaseName;
         private readonly int maxDeleteRetryCount;
@@ -47,7 +48,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         {
             get
             {
-                return this._appConfigurationHelper.GetValue(
+                return this._appConfigurationClient.GetValue(
                     $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
             }
         }
@@ -57,7 +58,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             IStorageClient storageClient,
             ILogger<Alarms> logger,
             IHttpContextAccessor contextAccessor,
-            IAppConfigurationHelper appConfigurationHelper)
+            IAppConfigurationClient appConfigurationClient)
         {
             this.storageClient = storageClient;
             this.databaseName = config.DeviceTelemetryService.Alarms.Database;
@@ -65,7 +66,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             this.maxDeleteRetryCount = config.DeviceTelemetryService.Alarms.MaxDeleteRetries;
             this.config = config;
             this._httpContextAccessor = contextAccessor;
-            this._appConfigurationHelper = appConfigurationHelper;
+            this._appConfigurationClient = appConfigurationClient;
 
         }
 

@@ -10,6 +10,7 @@ using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.UserManagement;
 
 namespace Mmm.Platform.IoT.Config.Services.Test
 {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
 {
-    public interface IStorageAdapterClient : IStatusOperation
+    public interface IStorageAdapterClient : IExternalServiceClient
     {
         Task<ValueApiModel> GetAsync(string collectionId, string key);
         Task<ValueListApiModel> GetAllAsync(string collectionId);
