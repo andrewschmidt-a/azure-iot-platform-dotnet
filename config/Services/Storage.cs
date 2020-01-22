@@ -16,6 +16,8 @@ using Mmm.Platform.IoT.Common.Services.Config;
 using System.IO;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.AspNetCore.Http;
+using Mmm.Platform.IoT.Common.Services;
 
 namespace Mmm.Platform.IoT.Config.Services
 {
@@ -25,6 +27,7 @@ namespace Mmm.Platform.IoT.Config.Services
         private readonly IAsaManagerClient _asaManager;
         private readonly AppConfig config;
         private readonly ILogger _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         public const string SOLUTION_COLLECTION_ID = "solution-settings";
         public const string THEME_KEY = "theme";
         public const string LOGO_KEY = "logo";
@@ -40,14 +43,15 @@ namespace Mmm.Platform.IoT.Config.Services
             IStorageAdapterClient client,
             IAsaManagerClient asaManager,
             AppConfig config,
-            ILogger<Storage> logger)
+            ILogger<Storage> logger,
+            IHttpContextAccessor httpContextAcessor)
         {
             this._client = client;
             this._asaManager = asaManager;
             this.config = config;
             this._logger = logger;
+            this._httpContextAccessor = httpContextAcessor;
         }
-
         public async Task<object> GetThemeAsync()
         {
             string data;
@@ -305,6 +309,13 @@ namespace Mmm.Platform.IoT.Config.Services
             string url = string.Empty;
             string storageConnectionString = config.Global.StorageAccountConnectionString;
             string  duration = config.Global.PackageSharedAccessExpiryTime;
+            string  tenantId = _httpContextAccessor.HttpContext.Request.GetTenant();
+
+            if(string.IsNullOrEmpty(tenantId))
+            {
+                _logger.LogError("Tenant ID is blank, cannot create container without tenandId.");
+                return null;
+            }
 
             if (CloudStorageAccount.TryParse(storageConnectionString, out storageAccount))
             {
@@ -314,7 +325,7 @@ namespace Mmm.Platform.IoT.Config.Services
                     CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
 
                     // Create a container 
-                    cloudBlobContainer = cloudBlobClient.GetContainerReference(SOFTWARE_PACKAGE_STORE);
+                    cloudBlobContainer = cloudBlobClient.GetContainerReference($"{tenantId}-{SOFTWARE_PACKAGE_STORE}");
                     
                     // Create the container if it does not already exist
                     await cloudBlobContainer.CreateIfNotExistsAsync();

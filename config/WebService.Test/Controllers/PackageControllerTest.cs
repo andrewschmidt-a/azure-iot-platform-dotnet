@@ -200,8 +200,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
         [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         [InlineData("filename", true, false)]
         [InlineData("filename", false, true)]
-        public async Task UploadFileVerificationTest(string filename,
-                                                             bool isValidFileProvided, bool expectException)
+        public async Task UploadFileVerificationTest(string filename, bool isValidFileProvided, bool expectException)
         {
             // Arrange
             IFormFile file = null;
