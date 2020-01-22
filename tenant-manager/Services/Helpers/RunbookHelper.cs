@@ -12,6 +12,7 @@ using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
@@ -26,15 +27,15 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         // injection variables
         private readonly AppConfig config;
         private readonly ITokenHelper _tokenHelper;
-        private readonly IAppConfigurationHelper _appConfigHelper;
+        private readonly IAppConfigurationClient _appConfigClient;
 
         public HttpClient httpClient;
 
-        public RunbookHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
+        public RunbookHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationClient appConfigHelper)
         {
             this._tokenHelper = tokenHelper;
             this.config = config;
-            this._appConfigHelper = appConfigHelper;
+            this._appConfigClient = appConfigHelper;
 
             this.httpClient = new HttpClient();
         }
@@ -67,7 +68,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             try
             {
                 string appConfigKey = String.Format(this.iotHubConnectionStringKeyFormat, tenantId);
-                string iotHubConnectionString = this._appConfigHelper.GetValue(appConfigKey);
+                string iotHubConnectionString = this._appConfigClient.GetValue(appConfigKey);
                 if (String.IsNullOrEmpty(iotHubConnectionString))
                 {
                     throw new Exception($"The iotHubConnectionString returned by app config for the key {appConfigKey} returned a null value.");

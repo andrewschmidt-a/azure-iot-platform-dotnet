@@ -11,6 +11,12 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
     {
         DocumentClient GetDocumentClient();
 
+        Task DeleteDatabaseAsync(
+            string databaseName);
+
+        Task CreateDatabaseIfNotExistsAsync(
+            string databaseName);
+
         Task DeleteCollectionAsync(
             string databaseName,
             string id
@@ -19,6 +25,16 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
         Task<ResourceResponse<DocumentCollection>> CreateCollectionIfNotExistsAsync(
             string databaseName,
             string id);
+        
+        Task<Document> CreateDocumentAsync(
+            string databaseName,
+            string colId,
+            object docId);
+        
+        Task<Document> ReadDocumentAsync(
+            string databaseName,
+            string colId,
+            string docId);
 
         Task<Document> UpsertDocumentAsync(
             string databaseName,
@@ -29,6 +45,10 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             string databaseName,
             string colId,
             string docId);
+
+        Task<List<Document>> QueryAllDocumentsAsync(
+            string databaseName,
+            string colId);
 
         Task<List<Document>> QueryDocumentsAsync(
             string databaseName,

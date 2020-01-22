@@ -61,7 +61,7 @@
             "created": 1571413838953,
             "description": "",
             "environment": {
-                "resourceGroupName": "rg-crslbbiot-odin-dev",
+                "resourceGroupName": "rg-iot-crsl-dev",
                 "resourceName": "iothub-9f7f4312",
                 "resourceName2": "iothub-b9b6b88f",
                 "subscriptionId": "c36fb2f8-f98d-40d0-90a9-d65e93acb428"

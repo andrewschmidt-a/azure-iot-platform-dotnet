@@ -4,3 +4,4 @@
 [submodule "azure-iot-appconfig-function"]
 	path = azure-iot-appconfig-function
 	url = git@github.mmm.com:MMM/azure-iot-appconfig-function.git
+	branch = master

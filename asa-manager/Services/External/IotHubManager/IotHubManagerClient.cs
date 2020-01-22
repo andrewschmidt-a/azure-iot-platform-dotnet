@@ -9,31 +9,17 @@ using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
 using Newtonsoft.Json;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External;
 
 namespace Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager
 {
-    public class IotHubManagerClient : IIotHubManagerClient
+    public class IotHubManagerClient : ExternalServiceClient, IIotHubManagerClient
     {
-        private readonly IExternalRequestHelper _requestHelper;
-        private readonly string apiUrl;
-
-        public IotHubManagerClient(AppConfig config, IExternalRequestHelper requestHelper)
+        public IotHubManagerClient(
+            AppConfig config,
+            IExternalRequestHelper requestHelper) :
+            base(config.ExternalDependencies.IotHubManagerServiceUrl, requestHelper)
         {
-            this.apiUrl = config.ExternalDependencies.IotHubManagerServiceUrl;
-            this._requestHelper = requestHelper;
-        }
-
-        public async Task<StatusResultServiceModel> StatusAsync()
-        {
-            try
-            {
-                StatusServiceModel status = await this._requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, $"{apiUrl}/status");
-                return status.Status;
-            }
-            catch (Exception)
-            {
-                return new StatusResultServiceModel(false, "Unable to get the status of the IoT Hub Manager Service. The service may be down or misconfigured.");
-            }
         }
 
         public async Task<DeviceListModel> GetListAsync(IEnumerable<DeviceGroupConditionModel> conditions, string tenantId)
@@ -41,7 +27,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager
             try
             {
                 var query = JsonConvert.SerializeObject(conditions);
-                var url = $"{this.apiUrl}/devices?query={query}";
+                var url = $"{this.serviceUri}/devices?query={query}";
                 return await this._requestHelper.ProcessRequestAsync<DeviceListModel>(HttpMethod.Get, url, tenantId);
             }
             catch (Exception e)

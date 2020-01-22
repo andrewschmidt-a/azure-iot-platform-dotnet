@@ -50,7 +50,7 @@
     "build": "GENERATE_SOURCEMAP=false react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "debug": "cross-env NODE_PATH=src/ REACT_APP_BASE_SERVICE_URL='https://aks-dev-spaces-odin.centralus.cloudapp.azure.com' react-scripts --inspect-brk start --runInBand"
+    "debug": "cross-env NODE_PATH=src/ REACT_APP_BASE_SERVICE_URL='https://crsliot-aks-dev.centralus.cloudapp.azure.com' react-scripts --inspect-brk start --runInBand"
   },
   "browserslist": [
     ">0.2%",
