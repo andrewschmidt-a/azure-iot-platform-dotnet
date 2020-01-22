@@ -1,4 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DocumentDbKeyValueContainer.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
@@ -6,33 +8,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
-using Mmm.Platform.IoT.StorageAdapter.Services.Helpers;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.Wrappers;
+using Mmm.Iot.StorageAdapter.Services.Helpers;
+using Mmm.Iot.StorageAdapter.Services.Models;
 
-namespace Mmm.Platform.IoT.StorageAdapter.Services
+namespace Mmm.Iot.StorageAdapter.Services
 {
     public class DocumentDbKeyValueContainer : IKeyValueContainer, IDisposable
     {
-        private const string COLLECTION_ID_KEY_FORMAT = "tenant:{0}:{1}-collection";
-
-        private readonly IAppConfigurationClient _appConfigClient;
-        private readonly AppConfig _appConfig;
-        private readonly IExceptionChecker _exceptionChecker;
-        private readonly ILogger _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private IStorageClient _client;
-
+        private const string CollectionIdKeyFormat = "tenant:{0}:{1}-collection";
+        private readonly IAppConfigurationClient appConfigClient;
+        private readonly AppConfig appConfig;
+        private readonly IExceptionChecker exceptionChecker;
+        private readonly ILogger logger;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private IStorageClient client;
         private bool disposedValue;
-
-        public virtual string DocumentDataType { get { return "pcs"; }}
-        public virtual string DocumentDatabaseSuffix { get { return "storage"; }}
 
         public DocumentDbKeyValueContainer(
             IStorageClient client,
@@ -40,22 +36,30 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             AppConfig appConfig,
             IAppConfigurationClient appConfigHelper,
             ILogger<DocumentDbKeyValueContainer> logger,
-            IHttpContextAccessor httpContextAcessor)
+            IHttpContextAccessor httpContextAccessor)
         {
-            disposedValue = false;
-            _client = client;
-            _exceptionChecker = exceptionChecker;
-            _appConfig = appConfig;
-            _appConfigClient = appConfigHelper;
-            _logger = logger;
-            _httpContextAccessor = httpContextAcessor;
+            this.disposedValue = false;
+            this.client = client;
+            this.exceptionChecker = exceptionChecker;
+            this.appConfig = appConfig;
+            this.appConfigClient = appConfigHelper;
+            this.logger = logger;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        private string CollectionLink
+        public virtual string DocumentDataType
         {
             get
             {
-                return $"/dbs/{this.DocumentDbDatabaseId}/colls/{this.DocumentDbCollectionId}";
+                return "pcs";
+            }
+        }
+
+        public virtual string DocumentDatabaseSuffix
+        {
+            get
+            {
+                return "storage";
             }
         }
 
@@ -72,14 +76,14 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             get
             {
                 string tenantId = this.TenantId;
-                string key = String.Format(COLLECTION_ID_KEY_FORMAT, this.TenantId, this.DocumentDataType);
+                string key = string.Format(CollectionIdKeyFormat, this.TenantId, this.DocumentDataType);
                 try
                 {
-                    return this._appConfigClient.GetValue(key);
+                    return this.appConfigClient.GetValue(key);
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Unable to get the CollectionId from App Config. Key: {key}. TenantId: {tenantId}", key, this.TenantId);
+                    this.logger.LogError(ex, "Unable to get the CollectionId from App Config. Key: {key}. TenantId: {tenantId}", key, this.TenantId);
                     throw;
                 }
             }
@@ -89,7 +93,15 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             get
             {
-                return this._httpContextAccessor.HttpContext.Request.GetTenant();
+                return this.httpContextAccessor.HttpContext.Request.GetTenant();
+            }
+        }
+
+        private string CollectionLink
+        {
+            get
+            {
+                return $"/dbs/{this.DocumentDbDatabaseId}/colls/{this.DocumentDbCollectionId}";
             }
         }
 
@@ -98,22 +110,25 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             try
             {
                 var docId = DocumentIdHelper.GenerateId(collectionId, key);
-                var response = await this._client.ReadDocumentAsync(this.DocumentDbDatabaseId, this.DocumentDbCollectionId, docId);
+                var response = await this.client.ReadDocumentAsync(this.DocumentDbDatabaseId, this.DocumentDbCollectionId, docId);
                 return new ValueServiceModel(response);
             }
             catch (Exception ex)
             {
-                if (!this._exceptionChecker.IsNotFoundException(ex)) throw;
+                if (!this.exceptionChecker.IsNotFoundException(ex))
+                {
+                    throw;
+                }
 
                 const string message = "The resource requested doesn't exist.";
-                _logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
+                this.logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
                 throw new ResourceNotFoundException(message);
             }
         }
 
         public async Task<IEnumerable<ValueServiceModel>> GetAllAsync(string collectionId)
         {
-            var query = await this._client.QueryAllDocumentsAsync(
+            var query = await this.client.QueryAllDocumentsAsync(
                 this.DocumentDbDatabaseId,
                 this.DocumentDbCollectionId);
             return await Task
@@ -126,7 +141,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             try
             {
-                var response = await this._client.CreateDocumentAsync(
+                var response = await this.client.CreateDocumentAsync(
                     this.DocumentDbDatabaseId,
                     this.DocumentDbCollectionId,
                     new KeyValueDocument(
@@ -137,10 +152,13 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception ex)
             {
-                if (!this._exceptionChecker.IsConflictException(ex)) throw;
+                if (!this.exceptionChecker.IsConflictException(ex))
+                {
+                    throw;
+                }
 
                 const string message = "There is already a value with the key specified.";
-                _logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
+                this.logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
                 throw new ConflictingResourceException(message);
             }
         }
@@ -149,7 +167,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
         {
             try
             {
-                var response = await this._client.UpsertDocumentAsync(
+                var response = await this.client.UpsertDocumentAsync(
                     this.DocumentDbDatabaseId,
                     this.DocumentDbCollectionId,
                     new KeyValueDocument(
@@ -160,10 +178,13 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             }
             catch (Exception ex)
             {
-                if (!this._exceptionChecker.IsPreconditionFailedException(ex)) throw;
+                if (!this.exceptionChecker.IsPreconditionFailedException(ex))
+                {
+                    throw;
+                }
 
                 const string message = "ETag mismatch: the resource has been updated by another client.";
-                _logger.LogInformation(message + " {collection ID {collectionId}, key {key}, ETag {eTag}", collectionId, key, input.ETag);
+                this.logger.LogInformation(message + " {collection ID {collectionId}, key {key}, ETag {eTag}", collectionId, key, input.ETag);
                 throw new ConflictingResourceException(message);
             }
         }
@@ -173,26 +194,16 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             try
             {
                 string documentId = DocumentIdHelper.GenerateId(collectionId, key);
-                await this._client.DeleteDocumentAsync(this.DocumentDbDatabaseId, this.DocumentDbCollectionId, documentId);
+                await this.client.DeleteDocumentAsync(this.DocumentDbDatabaseId, this.DocumentDbCollectionId, documentId);
             }
             catch (Exception ex)
             {
-                if (!this._exceptionChecker.IsNotFoundException(ex)) throw;
-                _logger.LogDebug("Key {key} does not exist, nothing to do");
-            }
-        }
-
-        #region IDisposable Support
-
-        private void Dispose(bool disposing)
-        {
-            if (!this.disposedValue)
-            {
-                if (disposing)
+                if (!this.exceptionChecker.IsNotFoundException(ex))
                 {
-                    (this._client as IDisposable)?.Dispose();
+                    throw;
                 }
-                this.disposedValue = true;
+
+                this.logger.LogDebug("Key {key} does not exist, nothing to do");
             }
         }
 
@@ -201,6 +212,17 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
             this.Dispose(true);
         }
 
-        #endregion
+        private void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    (this.client as IDisposable)?.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
+        }
     }
 }

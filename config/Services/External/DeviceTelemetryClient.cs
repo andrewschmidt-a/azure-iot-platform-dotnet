@@ -1,25 +1,26 @@
-﻿using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using System.Net.Http;
-using Mmm.Platform.IoT.Common.Services.External;
+﻿// <copyright file="DeviceTelemetryClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Config.Services.External
+using System.Net.Http;
+using System.Threading.Tasks;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.Common.Services.Helpers;
+
+namespace Mmm.Iot.Config.Services.External
 {
     public class DeviceTelemetryClient : ExternalServiceClient, IDeviceTelemetryClient
     {
-        public DeviceTelemetryClient(
-            AppConfig config,
-            IExternalRequestHelper requestHelper) :
-            base(config.ExternalDependencies.TelemetryServiceUrl, requestHelper)
+        public DeviceTelemetryClient(AppConfig config, IExternalRequestHelper requestHelper)
+            : base(config.ExternalDependencies.TelemetryServiceUrl, requestHelper)
         {
         }
 
         public async Task UpdateRuleAsync(RuleApiModel rule, string etag)
         {
             rule.ETag = etag;
-            await this._requestHelper.ProcessRequestAsync(HttpMethod.Put, $"{this.serviceUri}/rules/{rule.Id}", rule);
+            await this.RequestHelper.ProcessRequestAsync(HttpMethod.Put, $"{this.ServiceUri}/rules/{rule.Id}", rule);
         }
     }
 }

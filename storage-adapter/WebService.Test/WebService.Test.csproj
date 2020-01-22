@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Mmm.Platform.IoT.StorageAdapter.WebService.Test</AssemblyName>
+    <AssemblyName>Mmm.Iot.StorageAdapter.WebService.Test</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 

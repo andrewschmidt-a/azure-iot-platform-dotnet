@@ -7,10 +7,12 @@ EXPOSE 80
 WORKDIR /src
 ARG AppConfigurationConnectionString=
 COPY Directory.Build.props .
+COPY StyleCop.json .
+COPY Mmm.Iot.ruleset .
 COPY common/Services/Services.csproj common/Services/
 COPY iothub-manager/Services/Services.csproj iothub-manager/Services/
 COPY iothub-manager/WebService/WebService.csproj iothub-manager/WebService/
-RUN dotnet restore iothub-manager/WebService/WebService.csproj  
+RUN dotnet restore iothub-manager/WebService/WebService.csproj
 COPY common common
 COPY iothub-manager iothub-manager
 WORKDIR /src/iothub-manager/WebService

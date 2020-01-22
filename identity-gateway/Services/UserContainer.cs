@@ -1,25 +1,24 @@
-using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
+// <copyright file="UserContainer.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services
+using Mmm.Iot.Common.Services.External.TableStorage;
+
+namespace Mmm.Iot.IdentityGateway.Services
 {
     public abstract class UserContainer
     {
-        // injections
-        protected ITableStorageClient _tableStorageClient;
-
-        // abstracts
-        public abstract string TableName { get; }
-
         public UserContainer()
         {
         }
 
         public UserContainer(ITableStorageClient tableStorageClient)
         {
-            this._tableStorageClient = tableStorageClient;
+            this.TableStorageClient = tableStorageClient;
         }
+
+        public abstract string TableName { get; }
+
+        protected ITableStorageClient TableStorageClient { get; private set; }
     }
 }

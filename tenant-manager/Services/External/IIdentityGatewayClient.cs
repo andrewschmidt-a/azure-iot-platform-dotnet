@@ -1,21 +1,25 @@
-using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
+// <copyright file="IIdentityGatewayClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.TenantManager.Services.External
+using System.Threading.Tasks;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.TenantManager.Services.Models;
+
+namespace Mmm.Iot.TenantManager.Services.External
 {
     public interface IIdentityGatewayClient : IExternalServiceClient
     {
-        Task<IdentityGatewayApiModel> addTenantForUserAsync(string userId, string tenantId, string roles);
+        Task<IdentityGatewayApiModel> AddTenantForUserAsync(string userId, string tenantId, string roles);
 
-        Task<IdentityGatewayApiModel> getTenantForUserAsync(string userId, string tenantId);
+        Task<IdentityGatewayApiModel> GetTenantForUserAsync(string userId, string tenantId);
 
-        Task<IdentityGatewayApiSettingModel> addSettingsForUserAsync(string userId, string settingKey, string settingValue);
+        Task<IdentityGatewayApiSettingModel> AddSettingsForUserAsync(string userId, string settingKey, string settingValue);
 
-        Task<IdentityGatewayApiSettingModel> getSettingsForUserAsync(string userId, string settingKey);
+        Task<IdentityGatewayApiSettingModel> GetSettingsForUserAsync(string userId, string settingKey);
 
-        Task<IdentityGatewayApiSettingModel> updateSettingsForUserAsync(string userId, string settingKey, string settingValue);
+        Task<IdentityGatewayApiSettingModel> UpdateSettingsForUserAsync(string userId, string settingKey, string settingValue);
 
-        Task<IdentityGatewayApiModel> deleteTenantForAllUsersAsync(string tenantId);
+        Task<IdentityGatewayApiModel> DeleteTenantForAllUsersAsync(string tenantId);
     }
 }

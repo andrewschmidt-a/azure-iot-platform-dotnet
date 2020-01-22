@@ -1,21 +1,20 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="InvalidInputException.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.Services.Exceptions
+namespace Mmm.Iot.Common.Services.Exceptions
 {
-    /// <summary>
-    /// This exception is thrown when a client sends a request badly formatted
-    /// or containing invalid values. The client should fix the request before
-    /// retrying.
-    /// </summary>
     public class InvalidInputException : Exception
     {
-        public InvalidInputException() : base()
+        public InvalidInputException()
+            : base()
         {
         }
 
-        public InvalidInputException(string message) : base(message)
+        public InvalidInputException(string message)
+            : base(message)
         {
         }
 

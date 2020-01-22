@@ -1,6 +1,5 @@
-﻿// <copyright file="RequestExtension.cs" company="3M">
+// <copyright file="RequestExtension.cs" company="3M">
 // Copyright (c) 3M. All rights reserved.
-// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 
 using System;
@@ -10,19 +9,19 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace Mmm.Platform.IoT.Common.Services
+namespace Mmm.Iot.Common.Services
 {
     public static class RequestExtension
     {
         public const string ContextKeyUserClaims = "CurrentUserClaims";
-        private const string ContextKeyAuthRequired = "AuthRequired";
-        private const string ContextKeyAllowedActions = "CurrentUserAllowedActions";
-        private const string ContextKeyExternalRequest = "ExternalRequest";
         public const string ContextKeyTenantId = "TenantID";
+        public const string UserObjectIdClaimType = "sub";
         private const string ClaimKeyTenantId = "tenant";
         private const string HeaderKeyTenantId = "ApplicationTenantID";
         private const string RoleClaimType = "role";
-        public const string UserObjectIdClaimType = "sub";
+        private const string ContextKeyAuthRequired = "AuthRequired";
+        private const string ContextKeyAllowedActions = "CurrentUserAllowedActions";
+        private const string ContextKeyExternalRequest = "ExternalRequest";
 
         public static void SetCurrentUserClaims(this HttpRequest request, IEnumerable<Claim> claims)
         {

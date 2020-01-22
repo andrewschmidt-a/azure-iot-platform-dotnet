@@ -1,32 +1,36 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="RulesTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Models;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Models;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.DeviceTelemetry.Services.External;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
-using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
-using Mmm.Platform.IoT.Common.Services.Config;
+using HttpRequest = Mmm.Iot.Common.Services.Http.HttpRequest;
+using HttpResponse = Mmm.Iot.Common.Services.Http.HttpResponse;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
+namespace Mmm.Iot.DeviceTelemetry.Services.Test
 {
     public class RulesTest
     {
+        private const string TenantId = "test_tenant";
+        private const int Limit = 1000;
         private readonly Mock<IStorageAdapterClient> storageAdapter;
         private readonly Mock<IAsaManagerClient> asaManager;
-        private readonly Mock<ILogger<Rules>> _logger;
+        private readonly Mock<ILogger<Rules>> logger;
         private readonly AppConfig config;
         private readonly Mock<IRules> rulesMock;
         private readonly Mock<IAlarms> alarms;
@@ -35,22 +39,18 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         private readonly IDiagnosticsClient diagnosticsClient;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
 
-        private const string TENANT_ID = "test_tenant";
-
-        private const int LIMIT = 1000;
-
         public RulesTest()
         {
             this.storageAdapter = new Mock<IStorageAdapterClient>();
             this.asaManager = new Mock<IAsaManagerClient>();
-            this._logger = new Mock<ILogger<Rules>>();
+            this.logger = new Mock<ILogger<Rules>>();
             this.config = new AppConfig
             {
                 ExternalDependencies = new ExternalDependenciesConfig
                 {
                     DiagnosticsServiceUrl = "http://localhost:9006/v1",
-                    DiagnosticsMaxLogRetries = 3
-                }
+                    DiagnosticsMaxLogRetries = 3,
+                },
             };
             this.rulesMock = new Mock<IRules>();
             this.alarms = new Mock<IAlarms>();
@@ -59,33 +59,35 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.config, new Mock<ILogger<DiagnosticsClient>>().Object, this.httpContextAccessor.Object);
 
             this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
-                {{"TenantID", TENANT_ID}});
+                { { "TenantID", TenantId } });
             this.asaManager.Setup(t => t.BeginConversionAsync(It.IsAny<string>())).ReturnsAsync(new BeginConversionApiModel());
 
-            this.rules = new Rules(this.storageAdapter.Object, this.asaManager.Object, this._logger.Object, this.alarms.Object, this.diagnosticsClient);
+            this.rules = new Rules(this.storageAdapter.Object, this.asaManager.Object, this.logger.Object, this.alarms.Object, this.diagnosticsClient);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task InitialListIsEmptyAsync()
         {
             // Arrange
             this.ThereAreNoRulessInStorage();
 
             // Act
-            var list = await this.rulesMock.Object.GetListAsync(null, 0, LIMIT, null, false);
+            var list = await this.rulesMock.Object.GetListAsync(null, 0, Limit, null, false);
 
             // Assert
             Assert.Empty(list);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetListWithValuesAsync()
         {
             // Arrange
             this.ThereAreSomeRulesInStorage();
 
             // Act
-            var list = await this.rulesMock.Object.GetListAsync(null, 0, LIMIT, null, false);
+            var list = await this.rulesMock.Object.GetListAsync(null, 0, Limit, null, false);
 
             // Assert
             Assert.NotEmpty(list);
@@ -99,14 +101,15 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         /**
          * Verify call to delete on non-deleted rule will get and update rule as expected.
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task VerifyBasicDeleteAsync()
         {
             // Arrange
             Rule test = new Rule
             {
                 Enabled = true,
-                Deleted = false
+                Deleted = false,
             };
 
             this.SetUpStorageAdapterGet(test);
@@ -118,22 +121,24 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), "id", It.IsAny<string>(), "123"), Times.Once);
 
             this.asaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                .Verify(
+                    x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.StorageCollection)),
                     Times.Once);
         }
 
         /**
          * If rule is already deleted and delete is called, verify it will not throw exception
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task VerifyDeleteDoesNotFailIfAlreadyDeletedAsync()
         {
             // Arrange
             Rule test = new Rule
             {
                 Enabled = false,
-                Deleted = true
+                Deleted = true,
             };
 
             this.SetUpStorageAdapterGet(test);
@@ -145,22 +150,24 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
 
             this.asaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                .Verify(
+                    x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.StorageCollection)),
                     Times.Never);
         }
 
         /**
          * If rule does not exist and delete is called, verify it will not throw exception
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task VerifyDeleteDoesNotFailIfRuleNotExistsAsync()
         {
             // Arrange
             Rule test = new Rule
             {
                 Enabled = false,
-                Deleted = true
+                Deleted = true,
             };
 
             this.storageAdapter
@@ -174,23 +181,24 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
 
             this.asaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                .Verify(
+                    x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.StorageCollection)),
                     Times.Never);
         }
-
 
         /** If get rule throws an exception that is not a resource not found exception,
          * delete should throw that exception.
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task VerifyDeleteFailsIfGetRuleThrowsException()
         {
             // Arrange
             Rule test = new Rule
             {
                 Enabled = false,
-                Deleted = true
+                Deleted = true,
             };
 
             this.storageAdapter
@@ -204,15 +212,17 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
 
             this.asaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                .Verify(
+                    x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.StorageCollection)),
                     Times.Never);
         }
 
         /**
          * If upsert is called on a deleted rule, verify a NotFoundException will be thrown.
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task VerifyCannotUpdateDeletedRuleAsync()
         {
             // Arrange
@@ -221,7 +231,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 Enabled = false,
                 Deleted = true,
                 Id = "id",
-                ETag = "123"
+                ETag = "123",
             };
             this.SetUpStorageAdapterGet(test);
 
@@ -233,8 +243,9 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.storageAdapter.Verify(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
 
             this.asaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                .Verify(
+                    x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.StorageCollection)),
                     Times.Never);
         }
 
@@ -242,7 +253,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
          * If GetListAsync() is called with includeDeleted = false, verify no
          * deleted rules will be returned
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task VerifyGetBehaviorIfDontIncludeDeleted()
         {
             // Arrange
@@ -251,14 +263,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 Enabled = false,
                 Deleted = true,
                 Id = "id",
-                ETag = "123"
+                ETag = "123",
             };
             string ruleString = JsonConvert.SerializeObject(test);
             ValueApiModel model = new ValueApiModel
             {
                 Data = ruleString,
                 ETag = "123",
-                Key = "id"
+                Key = "id",
             };
             ValueListApiModel result = new ValueListApiModel();
             result.Items = new List<ValueApiModel> { model };
@@ -266,7 +278,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 .Returns(Task.FromResult(result));
 
             // Act
-            List<Rule> rulesList = await this.rules.GetListAsync("asc", 0, LIMIT, null, false);
+            List<Rule> rulesList = await this.rules.GetListAsync("asc", 0, Limit, null, false);
 
             // Assert
             Assert.Empty(rulesList);
@@ -274,10 +286,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
         /**
-         * If GetListAsync() is called with includeDeleted = true, verify 
+         * If GetListAsync() is called with includeDeleted = true, verify
          * deleted rules will be returned
          */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task VerifyGetBehaviorIfDoIncludeDeleted()
         {
             // Arrange
@@ -286,14 +299,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 Enabled = false,
                 Deleted = true,
                 Id = "id",
-                ETag = "123"
+                ETag = "123",
             };
             string ruleString = JsonConvert.SerializeObject(test);
             ValueApiModel model = new ValueApiModel
             {
                 Data = ruleString,
                 ETag = "123",
-                Key = "id"
+                Key = "id",
             };
             ValueListApiModel result = new ValueListApiModel();
             result.Items = new List<ValueApiModel> { model };
@@ -301,7 +314,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 .Returns(Task.FromResult(result));
 
             // Act
-            List<Rule> rulesList = await this.rules.GetListAsync("asc", 0, LIMIT, null, true);
+            List<Rule> rulesList = await this.rules.GetListAsync("asc", 0, Limit, null, true);
 
             // Assert
             Assert.Single(rulesList);
@@ -309,10 +322,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         }
 
         /**
-          * If upsert is called with a rule that is not created and a 
+          * If upsert is called with a rule that is not created and a
           * specified Id, it should be created with that Id.
         */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UpsertNewRuleWithId_CreatesNewRuleWithId()
         {
             // Arrange
@@ -320,7 +334,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Rule test = new Rule
             {
                 Enabled = true,
-                Id = newRuleId
+                Id = newRuleId,
             };
 
             string ruleString = JsonConvert.SerializeObject(test);
@@ -329,7 +343,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 Data = ruleString,
                 ETag = "1234",
-                Key = newRuleId
+                Key = newRuleId,
             };
 
             this.storageAdapter
@@ -349,20 +363,21 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         /**
         * On creating a new rule, new rule id should be returned
         */
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task CreateNewRule_ReturnsNewId()
         {
             // Arrange
             Rule test = new Rule
             {
-                Enabled = true
+                Enabled = true,
             };
 
             string newRuleId = "TESTRULEID" + DateTime.Now.ToString("yyyyMMddHHmmss");
             Rule resultRule = new Rule
             {
                 Enabled = true,
-                Id = newRuleId
+                Id = newRuleId,
             };
 
             string ruleString = JsonConvert.SerializeObject(resultRule);
@@ -371,9 +386,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 Data = ruleString,
                 ETag = "1234",
-                Key = newRuleId
+                Key = newRuleId,
             };
-
 
             this.storageAdapter.Setup(x => x.CreateAsync(It.IsAny<string>(), It.IsAny<string>()))
                 .Returns(Task.FromResult(result));
@@ -385,7 +399,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Equal(newRuleId, rule.Id);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task DeleteRule_QueriesRuleCountAndLogs()
         {
             // Arrange
@@ -394,13 +409,13 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             fakeRules.Items.Add(this.CreateFakeRule("rule1"));
             fakeRules.Items.Add(this.CreateFakeRule("rule2"));
             this.storageAdapter.Setup(x => x.GetAllAsync(It.IsAny<string>())).Returns(Task.FromResult(fakeRules));
-            IHttpResponse fakeOkResponse = new HttpResponse(HttpStatusCode.OK, "", null);
+            IHttpResponse fakeOkResponse = new HttpResponse(HttpStatusCode.OK, string.Empty, null);
             this.httpClientMock.Setup(x => x.PostAsync(It.IsAny<HttpRequest>())).ReturnsAsync(fakeOkResponse);
 
             Rule test = new Rule
             {
                 Enabled = true,
-                Deleted = false
+                Deleted = false,
             };
 
             this.SetUpStorageAdapterGet(test);
@@ -413,13 +428,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.httpClientMock.Verify(x => x.PostAsync(It.IsAny<HttpRequest>()), Times.Exactly(2));
 
             this.asaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                .Verify(
+                    x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.StorageCollection)),
                     Times.Once);
         }
 
-
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task DeleteRule_RetriesLogOnError()
         {
             // Arrange
@@ -430,14 +446,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.storageAdapter.Setup(x => x.GetAllAsync(It.IsAny<string>())).Returns(Task.FromResult(fakeRules));
             this.httpClientMock.SetupSequence(x => x.PostAsync(It.IsAny<HttpRequest>()))
                 .Throws<Exception>()
-                .ReturnsAsync(new HttpResponse(HttpStatusCode.ServiceUnavailable, "", null))
-                .ReturnsAsync(new HttpResponse(HttpStatusCode.OK, "", null))
-                .ReturnsAsync(new HttpResponse(HttpStatusCode.OK, "", null));
+                .ReturnsAsync(new HttpResponse(HttpStatusCode.ServiceUnavailable, string.Empty, null))
+                .ReturnsAsync(new HttpResponse(HttpStatusCode.OK, string.Empty, null))
+                .ReturnsAsync(new HttpResponse(HttpStatusCode.OK, string.Empty, null));
 
             Rule test = new Rule
             {
                 Enabled = true,
-                Deleted = false
+                Deleted = false,
             };
 
             this.SetUpStorageAdapterGet(test);
@@ -450,12 +466,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             this.httpClientMock.Verify(x => x.PostAsync(It.IsAny<HttpRequest>()), Times.Exactly(4));
 
             this.asaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.STORAGE_COLLECTION)),
+                .Verify(
+                    x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Rules.StorageCollection)),
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ThrowsOnInvalidInput()
         {
             // Arrange
@@ -463,7 +481,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             var xssList = new List<string>
             {
                 "<body onload=alert('test1')>",
-                "<IMG SRC=j&#X41vascript:alert('test2')>"
+                "<IMG SRC=j&#X41vascript:alert('test2')>",
             };
 
             var rule = new Rule()
@@ -483,19 +501,19 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     {
                         Field = "sample_conddition",
                         Operator = OperatorType.Equals,
-                        Value = "1"
-                    }
+                        Value = "1",
+                    },
                 },
                 Actions = new List<IAction>
                 {
                     new EmailAction(
                         new Dictionary<string, object>
                         {
-                            { "recipients", new Newtonsoft.Json.Linq.JArray(){ "sampleEmail@gmail.com", "sampleEmail2@gmail.com" } },
+                            { "recipients", new Newtonsoft.Json.Linq.JArray() { "sampleEmail@gmail.com", "sampleEmail2@gmail.com" } },
                             { "subject", "Test Email" },
-                            { "notes", "Test Email Notes." }
-                        })
-                }
+                            { "notes", "Test Email Notes." },
+                        }),
+                },
             };
 
             // Act & Assert
@@ -503,12 +521,13 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.rules.DeleteAsync(xssString));
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.rules.GetAsync(xssString));
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.rules.GetListAsync(xssString, 0, 1, xssString, false));
-            await Assert.ThrowsAsync<InvalidInputException>(async () => await this.rules.GetAlarmCountForListAsync(null, null, xssString, 0, LIMIT, xssList.ToArray()));
+            await Assert.ThrowsAsync<InvalidInputException>(async () => await this.rules.GetAlarmCountForListAsync(null, null, xssString, 0, Limit, xssList.ToArray()));
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.rules.CreateAsync(rule));
             await Assert.ThrowsAsync<InvalidInputException>(async () => await this.rules.UpsertIfNotDeletedAsync(rule));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void InputValidationPassesWithValidRule()
         {
             // Arrange
@@ -525,7 +544,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
 
         private void ThereAreNoRulessInStorage()
         {
-            this.rulesMock.Setup(x => x.GetListAsync(null, 0, LIMIT, null, false))
+            this.rulesMock.Setup(x => x.GetListAsync(null, 0, Limit, null, false))
                 .ReturnsAsync(new List<Rule>());
         }
 
@@ -533,7 +552,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
         {
             var sampleRules = this.GetSampleRulesList();
 
-            this.rulesMock.Setup(x => x.GetListAsync(null, 0, LIMIT, null, false))
+            this.rulesMock.Setup(x => x.GetListAsync(null, 0, Limit, null, false))
                 .ReturnsAsync(sampleRules);
         }
 
@@ -545,8 +564,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 {
                     Field = "sample_conddition",
                     Operator = OperatorType.Equals,
-                    Value = "1"
-                }
+                    Value = "1",
+                },
             };
 
             var sampleActions = new List<IAction>
@@ -554,10 +573,10 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 new EmailAction(
                     new Dictionary<string, object>
                     {
-                        { "recipients", new Newtonsoft.Json.Linq.JArray(){ "sampleEmail@gmail.com", "sampleEmail2@gmail.com" } },
+                        { "recipients", new Newtonsoft.Json.Linq.JArray() { "sampleEmail@gmail.com", "sampleEmail2@gmail.com" } },
                         { "subject", "Test Email" },
-                        { "notes", "Test Email Notes." }
-                    })
+                        { "notes", "Test Email Notes." },
+                    }),
             };
 
             var sampleRules = new List<Rule>
@@ -570,17 +589,17 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     GroupId = "Prototyping devices",
                     Severity = SeverityType.Critical,
                     Conditions = sampleConditions,
-                    Actions = sampleActions
+                    Actions = sampleActions,
                 },
                 new Rule()
                 {
                     Name = "Sample 2",
                     Enabled = true,
                     Description = "Sample description 2",
-                    GroupId =  "Prototyping devices",
-                    Severity =  SeverityType.Warning,
+                    GroupId = "Prototyping devices",
+                    Severity = SeverityType.Warning,
                     Conditions = sampleConditions,
-                    Actions = sampleActions
+                    Actions = sampleActions,
                 },
                 new Rule()
                 {
@@ -589,11 +608,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                     Enabled = true,
                     Calculation = CalculationType.Instant,
                     Description = "Sample description 2.",
-                    GroupId =  "Chillers",
-                    Severity =  SeverityType.Warning,
+                    GroupId = "Chillers",
+                    Severity = SeverityType.Warning,
                     Conditions = sampleConditions,
-                    Actions = sampleActions
-                }
+                    Actions = sampleActions,
+                },
             };
 
             return sampleRules;
@@ -609,7 +628,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 Data = ruleString,
                 ETag = "123",
-                Key = "id"
+                Key = "id",
             };
 
             this.storageAdapter
@@ -622,7 +641,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Rule test = new Rule
             {
                 Enabled = true,
-                Id = ruleId
+                Id = ruleId,
             };
 
             string ruleString = JsonConvert.SerializeObject(test);
@@ -631,7 +650,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             {
                 Data = ruleString,
                 ETag = "1234",
-                Key = ruleId
+                Key = ruleId,
             };
         }
     }

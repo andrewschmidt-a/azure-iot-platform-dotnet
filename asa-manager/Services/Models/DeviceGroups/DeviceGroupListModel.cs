@@ -1,9 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeviceGroupListModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups
+namespace Mmm.Iot.AsaManager.Services.Models.DeviceGroups
 {
     public class DeviceGroupListModel
     {

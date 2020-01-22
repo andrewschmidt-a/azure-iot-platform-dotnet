@@ -1,50 +1,44 @@
-﻿using System;
+// <copyright file="Messages.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.Services.Helpers;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services
+namespace Mmm.Iot.DeviceTelemetry.Services
 {
     public class Messages : IMessages
     {
-        private const string DATA_PROPERTY_NAME = "data";
-        private const string DATA_PREFIX = DATA_PROPERTY_NAME + ".";
-        private const string SYSTEM_PREFIX = "_";
-        private const string DATA_SCHEMA_TYPE = DATA_PREFIX + "schema";
-        private const string DATA_PARTITION_ID = "PartitionId";
-        private const string TSI_STORAGE_TYPE_KEY = "tsi";
-        private const string TENANT_INFO_KEY = "tenant";
-        private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
-
-        private readonly ILogger _logger;
+        private const string DataPropertyName = "data";
+        private const string DataPrefix = DataPropertyName + ".";
+        private const string SystemPrefix = "_";
+        private const string DataSchemaType = DataPrefix + "schema";
+        private const string DataPartitionId = "PartitionId";
+        private const string TsiStorageTypeKey = "tsi";
+        private const string TenantInfoKey = "tenant";
+        private const string TelemetryCollectionKey = "telemetry-collection";
+        private readonly ILogger logger;
         private readonly IStorageClient storageClient;
         private readonly ITimeSeriesClient timeSeriesClient;
         private readonly AppConfig config;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAppConfigurationClient _appConfigurationClient;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IAppConfigurationClient appConfigurationClient;
 
         private readonly bool timeSeriesEnabled;
         private readonly DocumentClient documentClient;
         private readonly string databaseName;
-
-        private string collectionId
-        {
-            get
-            {
-                return this._appConfigurationClient.GetValue(
-                    $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
-            }
-        }
 
         public Messages(
             AppConfig config,
@@ -57,13 +51,22 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             this.storageClient = storageClient;
             this.timeSeriesClient = timeSeriesClient;
             this.timeSeriesEnabled = config.DeviceTelemetryService.Messages.TelemetryStorageType.Equals(
-                TSI_STORAGE_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
+                TsiStorageTypeKey, StringComparison.OrdinalIgnoreCase);
             this.documentClient = storageClient.GetDocumentClient();
             this.databaseName = config.DeviceTelemetryService.Messages.Database;
-            _logger = logger;
+            this.logger = logger;
             this.config = config;
-            this._httpContextAccessor = contextAccessor;
-            this._appConfigurationClient = appConfigurationClient;
+            this.httpContextAccessor = contextAccessor;
+            this.appConfigurationClient = appConfigurationClient;
+        }
+
+        private string CollectionId
+        {
+            get
+            {
+                return this.appConfigurationClient.GetValue(
+                    $"{TenantInfoKey}:{this.httpContextAccessor.HttpContext.Request.GetTenant()}:{TelemetryCollectionKey}");
+            }
         }
 
         public async Task<MessageList> ListAsync(
@@ -80,8 +83,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 InputValidator.Validate(device);
             }
 
-            return this.timeSeriesEnabled ? 
-                await this.GetListFromTimeSeriesAsync(from, to, order, skip, limit, devices) : 
+            return this.timeSeriesEnabled ?
+                await this.GetListFromTimeSeriesAsync(from, to, order, skip, limit, devices) :
                 await this.GetListFromCosmosDbAsync(from, to, order, skip, limit, devices);
         }
 
@@ -104,19 +107,24 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             int limit,
             string[] devices)
         {
-            int dataPrefixLen = DATA_PREFIX.Length;
+            int dataPrefixLen = DataPrefix.Length;
 
             var sql = QueryBuilder.GetDocumentsSql(
                 "message",
-                null, null,
-                from, "_timeReceived",
-                to, "_timeReceived",
-                order, "_timeReceived",
+                null,
+                null,
+                from,
+                "_timeReceived",
+                to,
+                "_timeReceived",
+                order,
+                "_timeReceived",
                 skip,
                 limit,
-                devices, "deviceId");
+                devices,
+                "deviceId");
 
-            _logger.LogDebug("Created message query {sql}", sql);
+            this.logger.LogDebug("Created message query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -124,7 +132,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             List<Document> docs = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 queryOptions,
                 sql,
                 skip,
@@ -147,7 +155,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 foreach (var item in jsonDoc)
                 {
                     // Ignore fields that werent sent by device (system fields)"
-                    if (!item.Key.StartsWith(SYSTEM_PREFIX) && item.Key != "id" && item.Key != "deviceId")
+                    if (!item.Key.StartsWith(SystemPrefix) && item.Key != "id" && item.Key != "deviceId")
                     {
                         string key = item.Key.ToString();
                         data.Add(key, item.Value);
@@ -156,6 +164,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                         properties.Add(key);
                     }
                 }
+
                 messages.Add(new Message(
                     doc.GetPropertyValue<string>("deviceId"),
                     doc.GetPropertyValue<long>("_timeReceived"),

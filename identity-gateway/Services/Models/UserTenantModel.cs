@@ -1,22 +1,24 @@
+// <copyright file="UserTenantModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using Microsoft.Azure.Cosmos.Table;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
+namespace Mmm.Iot.IdentityGateway.Services.Models
 {
     public class UserTenantModel : TableEntity
     {
-        public string Roles { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-
-        public UserTenantModel() { }
+        public UserTenantModel()
+        {
+        }
 
         public UserTenantModel(string userId, string tenantId)
         {
             this.PartitionKey = userId;
             this.RowKey = tenantId;
-            this.Roles = "";
+            this.Roles = string.Empty;
         }
 
         public UserTenantModel(string userId, string tenantId, string roles)
@@ -44,7 +46,12 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
             this.Type = tableEntity.Properties.Keys.Contains("Type") ? tableEntity.Properties["Type"].StringValue : "Member";
         }
 
-        // Define aliases for the partition and row keys
+        public string Roles { get; set; }
+
+        public string Name { get; set; }
+
+        public string Type { get; set; }
+
         public string UserId
         {
             get
@@ -67,8 +74,8 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
             {
                 try
                 {
-                    var rolesIsNullOrEmptyOrWhitespace = string.IsNullOrEmpty(Roles) || string.IsNullOrWhiteSpace(Roles);
-                    return rolesIsNullOrEmptyOrWhitespace ? null : JsonConvert.DeserializeObject<List<string>>(Roles);
+                    var rolesIsNullOrEmptyOrWhitespace = string.IsNullOrEmpty(this.Roles) || string.IsNullOrWhiteSpace(this.Roles);
+                    return rolesIsNullOrEmptyOrWhitespace ? null : JsonConvert.DeserializeObject<List<string>>(this.Roles);
                 }
                 catch
                 {

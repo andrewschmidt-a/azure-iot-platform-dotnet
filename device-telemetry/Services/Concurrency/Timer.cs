@@ -1,19 +1,23 @@
-﻿using System;
+// <copyright file="Timer.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Threading;
 using Microsoft.Extensions.Logging;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
+namespace Mmm.Iot.DeviceTelemetry.Services.Concurrency
 {
-    public class Timer : ITimer
+    public class Timer : ITimer, IDisposable
     {
-        private readonly ILogger _logger;
-
+        private readonly ILogger logger;
+        private bool disposedValue = false;
         private System.Threading.Timer timer;
         private int frequency;
 
         public Timer(ILogger<Timer> logger)
         {
-            _logger = logger;
+            this.logger = logger;
             this.frequency = 0;
         }
 
@@ -42,7 +46,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
         {
             if (this.timer == null)
             {
-                _logger.LogError("The timer is not initialized");
+                this.logger.LogError("The timer is not initialized");
                 throw new TimerNotInitializedException();
             }
 
@@ -54,6 +58,24 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
         {
             this.timer?.Change(Timeout.Infinite, Timeout.Infinite);
             this.timer?.Dispose();
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.Stop();
+                }
+
+                this.disposedValue = true;
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Mmm.Platform.IoT.IdentityGateway.Services.Test</AssemblyName>
+    <AssemblyName>Mmm.Iot.IdentityGateway.Services.Test</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 

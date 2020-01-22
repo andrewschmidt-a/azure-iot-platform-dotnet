@@ -1,4 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="QueryBuilder.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
@@ -6,13 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Azure.Documents;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+namespace Mmm.Iot.Common.Services.Helpers
 {
     public class QueryBuilder
     {
-        private const string INVALID_CHARACTER = @"[^A-Za-z0-9:;.,_\-@]";
+        private const string InvalidCharacterRegex = @"[^A-Za-z0-9:;.,_\-@]";
 
         public static SqlQuerySpec GetDocumentsSql(
             string schemaName,
@@ -38,6 +40,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             {
                 ValidateInput(ref devices[i]);
             }
+
             ValidateInput(ref devicesProperty);
 
             var sqlParameterCollection = new SqlParameterCollection();
@@ -92,6 +95,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             {
                 queryBuilder.Append(" ORDER BY c[@orderProperty] ASC");
             }
+
             sqlParameterCollection.Add(new SqlParameter { Name = "@orderProperty", Value = orderProperty });
 
             return new SqlQuerySpec(queryBuilder.ToString(), sqlParameterCollection);
@@ -182,7 +186,7 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
         {
             input = input.Trim();
 
-            if (Regex.IsMatch(input, INVALID_CHARACTER))
+            if (Regex.IsMatch(input, InvalidCharacterRegex))
             {
                 throw new InvalidInputException($"Input '{input}' contains invalid characters.");
             }

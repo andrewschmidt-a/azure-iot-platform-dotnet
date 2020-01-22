@@ -1,20 +1,19 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ResourceNotSupportedException.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.Services.Exceptions
+namespace Mmm.Iot.Common.Services.Exceptions
 {
-    /// <summary>
-    /// This exception is thrown when a client is requesting a resource that
-    /// was created outside of remote monitoring specifically by id.
-    /// </summary>
     public class ResourceNotSupportedException : Exception
     {
         public ResourceNotSupportedException()
         {
         }
 
-        public ResourceNotSupportedException(string message) : base(message)
+        public ResourceNotSupportedException(string message)
+            : base(message)
         {
         }
 

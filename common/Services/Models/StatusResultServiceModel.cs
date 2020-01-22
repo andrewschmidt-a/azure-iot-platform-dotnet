@@ -1,22 +1,24 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="StatusResultServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     public class StatusResultServiceModel
     {
+        [JsonConstructor]
+        public StatusResultServiceModel(bool isHealthy, string message)
+        {
+            this.IsHealthy = isHealthy;
+            this.Message = message;
+        }
+
         [JsonProperty(PropertyName = "IsHealthy")]
         public bool IsHealthy { get; set; }
 
         [JsonProperty(PropertyName = "Message")]
         public string Message { get; set; }
-
-        [JsonConstructor]
-        public StatusResultServiceModel(bool isHealthy, string message)
-        {
-            IsHealthy = isHealthy;
-            Message = message;
-        }
     }
 }

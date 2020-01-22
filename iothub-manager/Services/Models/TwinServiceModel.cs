@@ -1,22 +1,16 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="TwinServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using Microsoft.Azure.Devices.Shared;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class TwinServiceModel
     {
-        public string ETag { get; set; }
-        public string DeviceId { get; set; }
-        public string ModuleId { get; set; }
-        public bool IsSimulated { get; set; }
-        public Dictionary<string, JToken> DesiredProperties { get; set; }
-        public Dictionary<string, JToken> ReportedProperties { get; set; }
-        public Dictionary<string, JToken> Tags { get; set; }
-
         public TwinServiceModel()
         {
         }
@@ -51,6 +45,20 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             }
         }
 
+        public string ETag { get; set; }
+
+        public string DeviceId { get; set; }
+
+        public string ModuleId { get; set; }
+
+        public bool IsSimulated { get; set; }
+
+        public Dictionary<string, JToken> DesiredProperties { get; set; }
+
+        public Dictionary<string, JToken> ReportedProperties { get; set; }
+
+        public Dictionary<string, JToken> Tags { get; set; }
+
         public Twin ToAzureModel()
         {
             var properties = new TwinProperties
@@ -63,7 +71,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             {
                 ETag = this.ETag,
                 Tags = DictionaryToTwinCollection(this.Tags),
-                Properties = properties
+                Properties = properties,
             };
         }
 
@@ -82,7 +90,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         {
             var result = new Dictionary<string, JToken>();
 
-            if (x == null) return result;
+            if (x == null)
+            {
+                return result;
+            }
 
             foreach (KeyValuePair<string, object> twin in x)
             {
@@ -90,7 +101,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 {
                     if (twin.Value is JToken)
                     {
-                        result.Add(twin.Key, (JToken) twin.Value);
+                        result.Add(twin.Key, (JToken)twin.Value);
                     }
                     else
                     {

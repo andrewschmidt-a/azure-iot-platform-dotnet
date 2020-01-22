@@ -1,40 +1,40 @@
-﻿using System;
+// <copyright file="Jobs.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.IoTHubManager.Services.Extensions;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using DeviceJobStatus = Mmm.Platform.IoT.IoTHubManager.Services.Models.DeviceJobStatus;
-using JobStatus = Mmm.Platform.IoT.IoTHubManager.Services.Models.JobStatus;
-using JobType = Mmm.Platform.IoT.IoTHubManager.Services.Models.JobType;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.IoTHubManager.Services.Extensions;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.Services.Config;
+using DeviceJobStatus = Mmm.Iot.IoTHubManager.Services.Models.DeviceJobStatus;
+using JobStatus = Mmm.Iot.IoTHubManager.Services.Models.JobStatus;
+using JobType = Mmm.Iot.IoTHubManager.Services.Models.JobType;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services
+namespace Mmm.Iot.IoTHubManager.Services
 {
     public class Jobs : IJobs
     {
-        private IDeviceProperties _deviceProperties;
+        private const string DeviceDetailsQueryFormat = "select * from devices.jobs where devices.jobs.jobId = '{0}'";
+        private const string DeviceDetailsQueryWithStatusFormat = "select * from devices.jobs where devices.jobs.jobId = '{0}' and devices.jobs.status = '{1}'";
+        private IDeviceProperties deviceProperties;
+        private ITenantConnectionHelper tenantConnectionHelper;
 
-        private const string DEVICE_DETAILS_QUERY_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}'";
-        private const string DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT = "select * from devices.jobs where devices.jobs.jobId = '{0}' and devices.jobs.status = '{1}'";
-        private ITenantConnectionHelper tenantHelper;
-
-        public Jobs(AppConfig config, IDeviceProperties _deviceProperties, ITenantConnectionHelper tenantConnectionHelper)
+        public Jobs(AppConfig config, IDeviceProperties deviceProperties, ITenantConnectionHelper tenantConnectionHelper)
         {
             if (config == null)
             {
                 throw new ArgumentNullException("config");
             }
 
-            tenantHelper = tenantConnectionHelper;
-
-            this._deviceProperties = _deviceProperties;
-
+            this.tenantConnectionHelper = tenantConnectionHelper;
+            this.deviceProperties = deviceProperties;
         }
 
         public async Task<IEnumerable<JobServiceModel>> GetJobsAsync(
@@ -47,7 +47,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             var from = DateTimeOffsetExtension.Parse(queryFrom, DateTimeOffset.MinValue);
             var to = DateTimeOffsetExtension.Parse(queryTo, DateTimeOffset.MaxValue);
 
-            var query = tenantHelper.GetJobClient().CreateQuery(
+            var query = this.tenantConnectionHelper.GetJobClient().CreateQuery(
                 JobServiceModel.ToJobTypeAzureModel(jobType),
                 JobServiceModel.ToJobStatusAzureModel(jobStatus),
                 pageSize);
@@ -69,7 +69,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             bool? includeDeviceDetails,
             DeviceJobStatus? deviceJobStatus)
         {
-            var result = await tenantHelper.GetJobClient().GetJobAsync(jobId);
+            var result = await this.tenantConnectionHelper.GetJobClient().GetJobAsync(jobId);
 
             if (!includeDeviceDetails.HasValue || !includeDeviceDetails.Value)
             {
@@ -79,10 +79,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             // Device job query by status of 'Completed' or 'Cancelled' will fail with InternalServerError
             // https://github.com/Azure/azure-iot-sdk-csharp/issues/257
             var queryString = deviceJobStatus.HasValue ?
-                string.Format(DEVICE_DETAILS_QUERYWITH_STATUS_FORMAT, jobId, deviceJobStatus.Value.ToString().ToLower()) :
-                string.Format(DEVICE_DETAILS_QUERY_FORMAT, jobId);
+                string.Format(DeviceDetailsQueryWithStatusFormat, jobId, deviceJobStatus.Value.ToString().ToLower()) :
+                string.Format(DeviceDetailsQueryFormat, jobId);
 
-            var query = tenantHelper.GetRegistry().CreateQuery(queryString);
+            var query = this.tenantConnectionHelper.GetRegistry().CreateQuery(queryString);
 
             var deviceJobs = new List<DeviceJob>();
             while (query.HasMoreResults)
@@ -100,7 +100,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             DateTimeOffset startTimeUtc,
             long maxExecutionTimeInSeconds)
         {
-            var result = await tenantHelper.GetJobClient().ScheduleTwinUpdateAsync(
+            var result = await this.tenantConnectionHelper.GetJobClient().ScheduleTwinUpdateAsync(
                 jobId,
                 queryCondition,
                 twin.ToAzureModel(),
@@ -121,7 +121,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             {
                 model.Reported = new HashSet<string>(reportedRoot.GetAllLeavesPath());
             }
-            var unused = _deviceProperties.UpdateListAsync(model);
+
+            var unused = this.deviceProperties.UpdateListAsync(model);
 
             return new JobServiceModel(result);
         }
@@ -133,8 +134,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             DateTimeOffset startTimeUtc,
             long maxExecutionTimeInSeconds)
         {
-            var result = await tenantHelper.GetJobClient().ScheduleDeviceMethodAsync(
-                jobId, queryCondition,
+            var result = await this.tenantConnectionHelper.GetJobClient().ScheduleDeviceMethodAsync(
+                jobId,
+                queryCondition,
                 parameter.ToAzureModel(),
                 startTimeUtc.DateTime,
                 maxExecutionTimeInSeconds);

@@ -1,37 +1,34 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="Devices.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
-using Mmm.Platform.IoT.IoTHubManager.Services.Extensions;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Microsoft.Extensions.Configuration;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Models;
+using Mmm.Iot.IoTHubManager.Services.Extensions;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using AuthenticationType = Mmm.Platform.IoT.IoTHubManager.Services.Models.AuthenticationType;
-using Mmm.Platform.IoT.Common.Services.Config;
+using AuthenticationType = Mmm.Iot.IoTHubManager.Services.Models.AuthenticationType;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services
+namespace Mmm.Iot.IoTHubManager.Services
 {
     public delegate Task<DevicePropertyServiceModel> DevicePropertyDelegate(DevicePropertyServiceModel model);
 
     public class Devices : IDevices
     {
-        private const int MAX_GET_LIST = 1000;
-        private const string QUERY_PREFIX = "SELECT * FROM devices";
-        private const string MODULE_QUERY_PREFIX = "SELECT * FROM devices.modules";
-        private const string DEVICES_CONNECTED_QUERY = "connectionState = 'Connected'";
-
-        private ITenantConnectionHelper _tenantHelper;
+        private const int MaximumGetList = 1000;
+        private const string QueryPrefix = "SELECT * FROM devices";
+        private const string ModuleQueryPrefix = "SELECT * FROM devices.modules";
+        private const string DevicesConnectedQuery = "connectionState = 'Connected'";
+        private ITenantConnectionHelper tenantConnectionHelper;
 
         public Devices(AppConfig config, ITenantConnectionHelper tenantConnectionHelper)
         {
@@ -40,22 +37,21 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 throw new ArgumentNullException("config");
             }
 
-            _tenantHelper = tenantConnectionHelper;
-
+            this.tenantConnectionHelper = tenantConnectionHelper;
         }
-        //used for testing
-        public Devices(ITenantConnectionHelper _tenantHelper, string ioTHubHostName)
+
+        public Devices(ITenantConnectionHelper tenantConnectionHelper, string ioTHubHostName)
         {
-            this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper " + ioTHubHostName);
+            this.tenantConnectionHelper = tenantConnectionHelper ?? throw new ArgumentNullException("tenantConnectionHelper " + ioTHubHostName);
         }
 
         // Ping the registry to see if the connection is healthy
         public async Task<StatusResultServiceModel> StatusAsync()
         {
-            var result = new StatusResultServiceModel(false, "");
+            var result = new StatusResultServiceModel(false, string.Empty);
             try
             {
-                await _tenantHelper.GetRegistry().GetDeviceAsync("healthcheck");
+                await this.tenantConnectionHelper.GetRegistry().GetDeviceAsync("healthcheck");
                 result.IsHealthy = true;
                 result.Message = "Alive and Well!";
             }
@@ -67,16 +63,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             return result;
         }
 
-        /// <summary>
-        /// Query devices
-        /// </summary>
-        /// <param name="query">
-        /// Two types of query supported:
-        /// 1. Serialized Clause list in JSON. Each clause includes three parts: key, operator and value
-        /// 2. The "Where" clause of official IoTHub query string, except keyword "WHERE"
-        /// </param>
-        /// <param name="continuationToken">Continuation token. Not in use yet</param>
-        /// <returns>List of devices</returns>
         public async Task<DeviceServiceListModel> GetListAsync(string query, string continuationToken)
         {
             if (!string.IsNullOrWhiteSpace(query))
@@ -85,26 +71,24 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 query = QueryConditionTranslator.ToQueryString(query);
             }
 
-            var twins = await this.GetTwinByQueryAsync(QUERY_PREFIX,
-                                                       query,
-                                                       continuationToken,
-                                                       MAX_GET_LIST);
+            var twins = await this.GetTwinByQueryAsync(
+                QueryPrefix,
+                query,
+                continuationToken,
+                MaximumGetList);
 
             var connectedEdgeDevices = await this.GetConnectedEdgeDevices(twins.Result);
 
-            var resultModel = new DeviceServiceListModel(twins.Result
-                    .Select(azureTwin => new DeviceServiceModel(azureTwin,
-                                                                  _tenantHelper.GetIotHubName(),
-                                                                  connectedEdgeDevices.ContainsKey(azureTwin.DeviceId))),
-                                                                  twins.ContinuationToken);
+            var resultModel = new DeviceServiceListModel(
+                twins.Result.Select(azureTwin => new DeviceServiceModel(
+                    azureTwin,
+                    this.tenantConnectionHelper.GetIotHubName(),
+                    connectedEdgeDevices.ContainsKey(azureTwin.DeviceId))),
+                twins.ContinuationToken);
 
             return resultModel;
         }
 
-        /// <summary>
-        /// Query devices
-        /// </summary>
-        /// <returns>DeviceTwinName</returns>
         public async Task<DeviceTwinName> GetDeviceTwinNamesAsync()
         {
             var content = await this.GetListAsync(string.Empty, string.Empty);
@@ -114,8 +98,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
         public async Task<DeviceServiceModel> GetAsync(string id)
         {
-            var device = _tenantHelper.GetRegistry().GetDeviceAsync(id);
-            var twin = _tenantHelper.GetRegistry().GetTwinAsync(id);
+            var device = this.tenantConnectionHelper.GetRegistry().GetDeviceAsync(id);
+            var twin = this.tenantConnectionHelper.GetRegistry().GetTwinAsync(id);
 
             await Task.WhenAll(device, twin);
 
@@ -126,7 +110,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
             var isEdgeConnectedDevice = await this.DoesDeviceHaveConnectedModules(device.Result.Id);
 
-            return new DeviceServiceModel(device.Result, twin.Result, _tenantHelper.GetIotHubName(), isEdgeConnectedDevice);
+            return new DeviceServiceModel(device.Result, twin.Result, this.tenantConnectionHelper.GetIotHubName(), isEdgeConnectedDevice);
         }
 
         public async Task<DeviceServiceModel> CreateAsync(DeviceServiceModel device)
@@ -144,44 +128,38 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 device.Id = Guid.NewGuid().ToString();
             }
 
-            var azureDevice = await _tenantHelper.GetRegistry().AddDeviceAsync(device.ToAzureModel());
+            var azureDevice = await this.tenantConnectionHelper.GetRegistry().AddDeviceAsync(device.ToAzureModel());
 
             Twin azureTwin;
             if (device.Twin == null)
             {
-                azureTwin = await _tenantHelper.GetRegistry().GetTwinAsync(device.Id);
+                azureTwin = await this.tenantConnectionHelper.GetRegistry().GetTwinAsync(device.Id);
             }
             else
             {
-                azureTwin = await _tenantHelper.GetRegistry().UpdateTwinAsync(device.Id, device.Twin.ToAzureModel(), "*");
+                azureTwin = await this.tenantConnectionHelper.GetRegistry().UpdateTwinAsync(device.Id, device.Twin.ToAzureModel(), "*");
             }
 
-            return new DeviceServiceModel(azureDevice, azureTwin, _tenantHelper.GetIotHubName());
+            return new DeviceServiceModel(azureDevice, azureTwin, this.tenantConnectionHelper.GetIotHubName());
         }
 
-        /// <summary>
-        /// We only support update twin
-        /// </summary>
-        /// <param name="device"></param>
-        /// <param name="devicePropertyDelegate"></param>
-        /// <returns></returns>
         public async Task<DeviceServiceModel> CreateOrUpdateAsync(DeviceServiceModel device, DevicePropertyDelegate devicePropertyDelegate)
         {
             // validate device module
-            var azureDevice = await _tenantHelper.GetRegistry().GetDeviceAsync(device.Id);
+            var azureDevice = await this.tenantConnectionHelper.GetRegistry().GetDeviceAsync(device.Id);
             if (azureDevice == null)
             {
-                azureDevice = await _tenantHelper.GetRegistry().AddDeviceAsync(device.ToAzureModel());
+                azureDevice = await this.tenantConnectionHelper.GetRegistry().AddDeviceAsync(device.ToAzureModel());
             }
 
             Twin azureTwin;
             if (device.Twin == null)
             {
-                azureTwin = await _tenantHelper.GetRegistry().GetTwinAsync(device.Id);
+                azureTwin = await this.tenantConnectionHelper.GetRegistry().GetTwinAsync(device.Id);
             }
             else
             {
-                azureTwin = await _tenantHelper.GetRegistry().UpdateTwinAsync(device.Id, device.Twin.ToAzureModel(), device.Twin.ETag);
+                azureTwin = await this.tenantConnectionHelper.GetRegistry().UpdateTwinAsync(device.Id, device.Twin.ToAzureModel(), device.Twin.ETag);
 
                 // Update the deviceGroupFilter cache, no need to wait
                 var model = new DevicePropertyServiceModel();
@@ -197,15 +175,16 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 {
                     model.Reported = new HashSet<string>(reportedRoot.GetAllLeavesPath());
                 }
+
                 var unused = devicePropertyDelegate(model);
             }
 
-            return new DeviceServiceModel(azureDevice, azureTwin, _tenantHelper.GetIotHubName());
+            return new DeviceServiceModel(azureDevice, azureTwin, this.tenantConnectionHelper.GetIotHubName());
         }
 
         public async Task DeleteAsync(string id)
         {
-            await _tenantHelper.GetRegistry().RemoveDeviceAsync(id);
+            await this.tenantConnectionHelper.GetRegistry().RemoveDeviceAsync(id);
         }
 
         public async Task<TwinServiceModel> GetModuleTwinAsync(string deviceId, string moduleId)
@@ -220,38 +199,35 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 throw new InvalidInputException("A valid moduleId must be provided.");
             }
 
-            var twin = await _tenantHelper.GetRegistry().GetTwinAsync(deviceId, moduleId);
+            var twin = await this.tenantConnectionHelper.GetRegistry().GetTwinAsync(deviceId, moduleId);
             return new TwinServiceModel(twin);
         }
 
-        public async Task<TwinServiceListModel> GetModuleTwinsByQueryAsync(string query,
-                                                                           string continuationToken)
+        public async Task<TwinServiceListModel> GetModuleTwinsByQueryAsync(
+            string query,
+            string continuationToken)
         {
-            var twins = await this.GetTwinByQueryAsync(MODULE_QUERY_PREFIX,
-                                                       query,
-                                                       continuationToken,
-                                                       MAX_GET_LIST);
+            var twins = await this.GetTwinByQueryAsync(
+                ModuleQueryPrefix,
+                query,
+                continuationToken,
+                MaximumGetList);
             var result = twins.Result.Select(twin => new TwinServiceModel(twin)).ToList();
 
             return new TwinServiceListModel(result, twins.ContinuationToken);
         }
 
-        /// <summary>
-        /// Get twin result by query
-        /// </summary>
-        /// <param name="queryPrefix">The query prefix which selects devices or device modules</param>
-        /// <param name="query">The query without prefix</param>
-        /// <param name="continuationToken">The continuationToken</param>
-        /// <param name="numberOfResult">The max result</param>
-        /// <returns></returns>
-        private async Task<ResultWithContinuationToken<List<Twin>>> GetTwinByQueryAsync(string queryPrefix,
-            string query, string continuationToken, int numberOfResult)
+        private async Task<ResultWithContinuationToken<List<Twin>>> GetTwinByQueryAsync(
+            string queryPrefix,
+            string query,
+            string continuationToken,
+            int numberOfResult)
         {
             query = string.IsNullOrEmpty(query) ? queryPrefix : $"{queryPrefix} where {query}";
 
             var twins = new List<Twin>();
 
-            var twinQuery = _tenantHelper.GetRegistry().CreateQuery(query);
+            var twinQuery = this.tenantConnectionHelper.GetRegistry().CreateQuery(query);
 
             QueryOptions options = new QueryOptions();
             options.ContinuationToken = continuationToken;
@@ -266,13 +242,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             return new ResultWithContinuationToken<List<Twin>>(twins, options.ContinuationToken);
         }
 
-        /// <summary>
-        /// Retrieves the list of edge twins which are reporting as connected based on
-        /// connectivity of their modules. If any of the modules are connected then the edge device
-        /// should report as connected.
-        /// </summary>
-        /// <param name="twins">The list of twins to check</param>
-        /// <returns>Dictionary of edge device ids and the device</returns>
         private async Task<Dictionary<string, Twin>> GetConnectedEdgeDevices(List<Twin> twins)
         {
             var devicesWithConnectedModules = await this.GetDevicesWithConnectedModules();
@@ -283,15 +252,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             return edgeTwins;
         }
 
-        /// <summary>
-        /// Retrieves the set of devices that have at least one module connected.
-        /// </summary>
-        /// <returns>Set of devices which are listed as connected</returns>
         private async Task<HashSet<string>> GetDevicesWithConnectedModules()
         {
             var connectedEdgeDevices = new HashSet<string>();
 
-            var edgeModules = await this.GetModuleTwinsByQueryAsync(DEVICES_CONNECTED_QUERY, "");
+            var edgeModules = await this.GetModuleTwinsByQueryAsync(DevicesConnectedQuery, string.Empty);
             foreach (var model in edgeModules.Items)
             {
                 connectedEdgeDevices.Add(model.DeviceId);
@@ -300,29 +265,24 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             return connectedEdgeDevices;
         }
 
-        /// <summary>
-        /// Checks if a single device has connected modules
-        /// </summary>
-        /// <param name="deviceId">Device Id to query</param>
-        /// <returns>True if one of the modules for this device is connected.</returns>
         private async Task<bool> DoesDeviceHaveConnectedModules(string deviceId)
         {
-            var query = $"deviceId='{deviceId}' AND {DEVICES_CONNECTED_QUERY}";
-            var edgeModules = await this.GetModuleTwinsByQueryAsync(query, "");
+            var query = $"deviceId='{deviceId}' AND {DevicesConnectedQuery}";
+            var edgeModules = await this.GetModuleTwinsByQueryAsync(query, string.Empty);
             return edgeModules.Items.Any();
         }
 
         private class ResultWithContinuationToken<T>
         {
-            public T Result { get; private set; }
-
-            public string ContinuationToken { get; private set; }
-
             public ResultWithContinuationToken(T queryResult, string continuationToken)
             {
                 this.Result = queryResult;
                 this.ContinuationToken = continuationToken;
             }
+
+            public T Result { get; private set; }
+
+            public string ContinuationToken { get; private set; }
         }
     }
 }

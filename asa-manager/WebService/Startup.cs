@@ -1,4 +1,8 @@
-﻿using System;
+// <copyright file="Startup.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -8,19 +12,20 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Auth;
 
-namespace Mmm.Platform.IoT.AsaManager.WebService
+namespace Mmm.Iot.AsaManager.WebService
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; }
-
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
+
+        public IContainer ApplicationContainer { get; private set; }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -32,23 +37,15 @@ namespace Mmm.Platform.IoT.AsaManager.WebService
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
             services.AddHttpContextAccessor();
-            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        private void LogDependencyInjectionContainerRegistrations(ILogger logger)
-        {
-            foreach (var registration in ApplicationContainer.ComponentRegistry.Registrations)
-            {
-                logger.LogDebug("Type {type} is registered in dependency injection container", registration.Activator.ToString());
-            }
-        }
-
         public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
-            LogDependencyInjectionContainerRegistrations(logger);
+            this.LogDependencyInjectionContainerRegistrations(logger);
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -66,6 +63,14 @@ namespace Mmm.Platform.IoT.AsaManager.WebService
 
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
+        }
+
+        private void LogDependencyInjectionContainerRegistrations(ILogger logger)
+        {
+            foreach (var registration in this.ApplicationContainer.ComponentRegistry.Registrations)
+            {
+                logger.LogDebug("Type {type} is registered in dependency injection container", registration.Activator.ToString());
+            }
         }
     }
 }

@@ -1,10 +1,14 @@
+// <copyright file="TokenHelper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
+namespace Mmm.Iot.TenantManager.Services.Helpers
 {
     public class TokenHelper : ITokenHelper
     {
@@ -14,12 +18,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
         {
             this.config = config;
         }
-        
+
         public async Task<string> GetTokenAsync()
         {
-            string keyVaultAppId = config.Global.AzureActiveDirectory.AppId;
-            string aadTenantId = config.Global.AzureActiveDirectory.TenantId;
-            string keyVaultAppKey = config.Global.AzureActiveDirectory.AppSecret;
+            string keyVaultAppId = this.config.Global.AzureActiveDirectory.AppId;
+            string aadTenantId = this.config.Global.AzureActiveDirectory.TenantId;
+            string keyVaultAppKey = this.config.Global.AzureActiveDirectory.AppSecret;
 
             // Retrieve a token from Azure AD using the application id and password.
             try

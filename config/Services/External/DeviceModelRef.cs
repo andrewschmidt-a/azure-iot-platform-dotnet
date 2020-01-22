@@ -1,8 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeviceModelRef.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Config.Services.External
+namespace Mmm.Iot.Config.Services.External
 {
     public class DeviceModelRef
     {

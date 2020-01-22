@@ -1,42 +1,47 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ModulesControllerTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.IoTHubManager.WebService.v1.Controllers;
 using Microsoft.Extensions.Primitives;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services;
+using Mmm.Iot.IoTHubManager.Services.Models;
+using Mmm.Iot.IoTHubManager.WebService.Controllers;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
+namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
 {
-    public class ModulesControllerTest
+    public class ModulesControllerTest : IDisposable
     {
-        private readonly ModulesController modulesController;
+        private const string ContinuationTokenName = "x-ms-continuation";
+        private readonly ModulesController controller;
         private readonly Mock<IDevices> devicesMock;
         private readonly HttpContext httpContext;
-        private const string CONTINUATION_TOKEN_NAME = "x-ms-continuation";
+        private bool disposedValue = false;
 
         public ModulesControllerTest()
         {
             this.devicesMock = new Mock<IDevices>();
             this.httpContext = new DefaultHttpContext();
-            this.modulesController = new ModulesController(this.devicesMock.Object)
+            this.controller = new ModulesController(this.devicesMock.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
-                    HttpContext = this.httpContext
-                }
+                    HttpContext = this.httpContext,
+                },
             };
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("", "", true)]
         [InlineData("deviceId", "", true)]
         [InlineData("", "moduleId", true)]
@@ -46,7 +51,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             if (throwsException)
             {
                 await Assert.ThrowsAsync<InvalidInputException>(async () =>
-                    await this.modulesController.GetModuleTwinAsync(deviceId, moduleId));
+                    await this.controller.GetModuleTwinAsync(deviceId, moduleId));
             }
             else
             {
@@ -56,7 +61,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
                     .ReturnsAsync(twinResult);
 
                 // Act
-                var module = await this.modulesController.GetModuleTwinAsync(deviceId, moduleId);
+                var module = await this.controller.GetModuleTwinAsync(deviceId, moduleId);
 
                 // Assert
                 Assert.Equal(moduleId, module.ModuleId);
@@ -66,7 +71,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             }
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("", "")]
         [InlineData("my module query", "continuationToken")]
         public async Task GetModuleTwinsTest(string query, string continuationToken)
@@ -78,11 +84,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
 
             this.devicesMock.Setup(x => x.GetModuleTwinsByQueryAsync(query, continuationToken))
                 .ReturnsAsync(twins);
-            this.httpContext.Request.Headers.Add(CONTINUATION_TOKEN_NAME,
-                                                 new StringValues(continuationToken));
+            this.httpContext.Request.Headers.Add(
+                ContinuationTokenName,
+                new StringValues(continuationToken));
 
             // Act
-            var moduleTwins = await this.modulesController.GetModuleTwinsAsync(query);
+            var moduleTwins = await this.controller.GetModuleTwinsAsync(query);
 
             // Assert
             var moduleTwin = moduleTwins.Items[0];
@@ -93,6 +100,24 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
             Assert.Equal("v1", moduleTwin.Reported["version"]);
         }
 
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.controller.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
+        }
+
         private static TwinServiceModel CreateTestTwin(string deviceId, string moduleId)
         {
             return new TwinServiceModel()
@@ -101,12 +126,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.WebService.Test.v1.Controllers
                 ModuleId = moduleId,
                 DesiredProperties = new Dictionary<string, JToken>()
                 {
-                    { "version", JToken.Parse("'v2'") }
+                    { "version", JToken.Parse("'v2'") },
                 },
                 ReportedProperties = new Dictionary<string, JToken>()
                 {
-                    { "version", JToken.Parse("'v1'") }
-                }
+                    { "version", JToken.Parse("'v1'") },
+                },
             };
         }
     }

@@ -1,13 +1,15 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="EmailActionModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mmm.Platform.IoT.AsaManager.Services.JsonConverters;
+using Mmm.Iot.AsaManager.Services.JsonConverters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
+namespace Mmm.Iot.AsaManager.Services.Models.Rules
 {
     public class EmailActionModel : IActionModel
     {
@@ -37,10 +39,13 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         }
 
         // Checks if both the dictionaries have the same keys and values.
-        // For a dictionary[key] => list, does a comparison of all the elements of the list, regardless of order. 
+        // For a dictionary[key] => list, does a comparison of all the elements of the list, regardless of order.
         private bool IsEqualDictionary(IDictionary<string, object> compareDictionary)
         {
-            if (this.Parameters.Count != compareDictionary.Count) return false;
+            if (this.Parameters.Count != compareDictionary.Count)
+            {
+                return false;
+            }
 
             foreach (var key in this.Parameters.Keys)
             {
@@ -62,6 +67,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
                     return false;
                 }
             }
+
             return true;
         }
 

@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using Mmm.Platform.IoT.Config.Services.Models;
+// <copyright file="PackageValidatorFactory.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation
+using System;
+using System.Collections.Generic;
+using Mmm.Iot.Config.Services.Models;
+
+namespace Mmm.Iot.Config.Services.Helpers.PackageValidation
 {
     public static class PackageValidatorFactory
     {
         private static Dictionary<ConfigType, IPackageValidator> validatorMapping =
             new Dictionary<ConfigType, IPackageValidator>()
         {
-            { ConfigType.Firmware, new FirmwareValidator() }
+            { ConfigType.Firmware, new FirmwareValidator() },
         };
 
         private static EdgePackageValidator edgePackageValidator = new EdgePackageValidator();

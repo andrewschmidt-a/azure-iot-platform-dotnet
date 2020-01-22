@@ -1,24 +1,28 @@
-﻿using System;
+// <copyright file="StorageMutex.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
 
-namespace Mmm.Platform.IoT.Config.Services.Helpers
+namespace Mmm.Iot.Config.Services.Helpers
 {
     public class StorageMutex : IStorageMutex
     {
-        private const string LAST_MODIFIED_KEY = "$modified";
+        private const string LastModifiedKey = "$modified";
         private readonly IStorageAdapterClient storageClient;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public StorageMutex(
             IStorageAdapterClient storageClient,
             ILogger<StorageMutex> logger)
         {
             this.storageClient = storageClient;
-            _logger = logger;
+            this.logger = logger;
         }
 
         public async Task<bool> EnterAsync(string collectionId, string key, TimeSpan timeout)
@@ -36,16 +40,16 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
                     // The motivation of timeout check is to recovery from stale state due to instance crash
                     if (Convert.ToBoolean(model.Data))
                     {
-                        if (model.Metadata.ContainsKey(LAST_MODIFIED_KEY) && DateTimeOffset.TryParse(model.Metadata[LAST_MODIFIED_KEY], out var lastModified))
+                        if (model.Metadata.ContainsKey(LastModifiedKey) && DateTimeOffset.TryParse(model.Metadata[LastModifiedKey], out var lastModified))
                         {
                             // Timestamp retrieved successfully, nothing to do
-                            _logger.LogInformation($"Mutex {collectionId}.{key} was occupied. Last modified = {lastModified}");
+                            this.logger.LogInformation($"Mutex {collectionId}.{key} was occupied. Last modified = {lastModified}");
                         }
                         else
                         {
                             // Treat it as timeout if the timestamp could not be retrieved
                             lastModified = DateTimeOffset.MinValue;
-                            _logger.LogInformation("Mutex {collectionId}.{key} was occupied. Last modified could not be retrieved");
+                            this.logger.LogInformation("Mutex {collectionId}.{key} was occupied. Last modified could not be retrieved");
                         }
 
                         if (DateTimeOffset.UtcNow < lastModified + timeout)
@@ -55,13 +59,13 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
                     }
                     else
                     {
-                        _logger.LogInformation($"Mutex {collectionId}.{key} was NOT occupied");
+                        this.logger.LogInformation($"Mutex {collectionId}.{key} was NOT occupied");
                     }
                 }
                 catch (ResourceNotFoundException)
                 {
                     // Mutex is not initialized, treat it as released
-                    _logger.LogInformation($"Mutex {collectionId}.{key} was not found");
+                    this.logger.LogInformation($"Mutex {collectionId}.{key} was not found");
                 }
 
                 try

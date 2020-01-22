@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Mmm.Platform.IoT.Common.Services;
+// <copyright file="Program.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Config.WebService
+using Microsoft.AspNetCore.Hosting;
+using Mmm.Iot.Common.Services;
+
+namespace Mmm.Iot.Config.WebService
 {
     public class Program
     {

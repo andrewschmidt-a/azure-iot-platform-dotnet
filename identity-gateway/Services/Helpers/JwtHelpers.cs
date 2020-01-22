@@ -1,69 +1,75 @@
-﻿using System;
+// <copyright file="JwtHelpers.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
-using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.IdentityGateway.Services.Models;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
+namespace Mmm.Iot.IdentityGateway.Services.Helpers
 {
     public class JwtHelpers : IJwtHelpers
     {
-        private UserTenantContainer _userTenantContainer;
-        private UserSettingsContainer _userSettingsContainer;
+        private readonly IOpenIdProviderConfiguration openIdProviderConfiguration;
+        private readonly IRsaHelpers rsaHelpers;
+        private UserTenantContainer userTenantContainer;
+        private UserSettingsContainer userSettingsContainer;
         private AppConfig config;
-        private IHttpContextAccessor _httpContextAccessor;
-        private readonly IOpenIdProviderConfiguration _openIdProviderConfiguration;
-        private readonly IRsaHelpers _rsaHelpers;
+        private IHttpContextAccessor httpContextAccessor;
 
         public JwtHelpers(UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, AppConfig config, IHttpContextAccessor httpContextAccessor, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
         {
-            _userTenantContainer = userTenantContainer;
-            _userSettingsContainer = userSettingsContainer;
+            this.userTenantContainer = userTenantContainer;
+            this.userSettingsContainer = userSettingsContainer;
             this.config = config;
-            _httpContextAccessor = httpContextAccessor;
-            _openIdProviderConfiguration = openIdProviderConfiguration;
-            _rsaHelpers = rsaHelpers;
+            this.httpContextAccessor = httpContextAccessor;
+            this.openIdProviderConfiguration = openIdProviderConfiguration;
+            this.rsaHelpers = rsaHelpers;
         }
 
         public async Task<JwtSecurityToken> GetIdentityToken(List<Claim> claims, string tenant, string audience, DateTime? expiration)
         {
-            //add iat claim
+            // add iat claim
             var timeSinceEpoch = DateTime.UtcNow.ToEpochTime();
             claims.Add(new Claim("iat", timeSinceEpoch.ToString(), ClaimValueTypes.Integer));
 
             var userId = claims.First(t => t.Type == "sub").Value;
+
             // Create a userTenantInput for the purpose of finding the full tenant list associated with this user
             UserTenantInput tenantInput = new UserTenantInput
             {
-                UserId = userId
+                UserId = userId,
             };
-            UserTenantListModel tenantsModel = await this._userTenantContainer.GetAllAsync(tenantInput);
-            List<UserTenantModel> tenantList = tenantsModel.models;
+            UserTenantListModel tenantsModel = await this.userTenantContainer.GetAllAsync(tenantInput);
+            List<UserTenantModel> tenantList = tenantsModel.Models;
 
-            //User did not specify the tenant to log into so get the default or last used
-            if (String.IsNullOrEmpty(tenant))
+            // User did not specify the tenant to log into so get the default or last used
+            if (string.IsNullOrEmpty(tenant))
             {
                 // authState has no tenant, so we should use either the User's last used tenant, or the first tenant available to them
                 // Create a UserSettingsInput for the purpose of finding the LastUsedTenant setting for this user
                 UserSettingsInput settingsInput = new UserSettingsInput
                 {
                     UserId = userId,
-                    SettingKey = "LastUsedTenant"
+                    SettingKey = "LastUsedTenant",
                 };
-                UserSettingsModel lastUsedSetting = await this._userSettingsContainer.GetAsync(settingsInput);
+                UserSettingsModel lastUsedSetting = await this.userSettingsContainer.GetAsync(settingsInput);
+
                 // Has last used tenant and it is in the list
-                if (lastUsedSetting != null && tenantList.Count(t=> t.TenantId == lastUsedSetting.Value) > 0)
+                if (lastUsedSetting != null && tenantList.Count(t => t.TenantId == lastUsedSetting.Value) > 0)
                 {
                     tenant = lastUsedSetting.Value;
                 }
 
-                if (String.IsNullOrEmpty(tenant) && tenantList.Count > 0)
+                if (string.IsNullOrEmpty(tenant) && tenantList.Count > 0)
                 {
                     tenant =
                         tenantList.First()
@@ -71,17 +77,19 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 }
             }
 
-            // If User not associated with Tenant then dont add claims return token without 
+            // If User not associated with Tenant then dont add claims return token without
             if (tenant != null)
             {
                 UserTenantInput input = new UserTenantInput
                 {
                     UserId = userId,
-                    Tenant = tenant
+                    Tenant = tenant,
                 };
-                UserTenantModel tenantModel = await this._userTenantContainer.GetAsync(input);
+                UserTenantModel tenantModel = await this.userTenantContainer.GetAsync(input);
+
                 // Add Tenant
                 claims.Add(new Claim("tenant", tenantModel.TenantId));
+
                 // Add Roles
                 tenantModel.RoleList.ForEach(role => claims.Add(new Claim("role", role)));
 
@@ -90,21 +98,23 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 {
                     UserId = claims.Where(c => c.Type == "sub").First().Value,
                     SettingKey = "LastUsedTenant",
-                    Value = tenant
+                    Value = tenant,
                 };
+
                 // Update if name is not the same
-                await this._userSettingsContainer.UpdateAsync(settingsInput);
+                await this.userSettingsContainer.UpdateAsync(settingsInput);
                 if (tenantModel.Name != claims.Where(c => c.Type == "name").First().Value)
                 {
                     input.Name = claims.Where(c => c.Type == "name").First().Value;
-                    await this._userTenantContainer.UpdateAsync(input);
+                    await this.userTenantContainer.UpdateAsync(input);
                 }
             }
 
             DateTime expirationDateTime = expiration ?? DateTime.Now.AddDays(30);
+
             // add all tenants they have access to
             claims.AddRange(tenantList.Select(t => new Claim("available_tenants", t.TenantId)));
-            
+
             // Token to String so you can use it in your client
             var token = this.MintToken(claims, audience, expirationDateTime);
 
@@ -113,32 +123,30 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 
         public JwtSecurityToken MintToken(List<Claim> claims, string audience, DateTime expirationDateTime)
         {
-
             string forwardedFor = null;
+
             // add issuer with forwarded for address if exists (added by reverse proxy)
-            if (_httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
+            if (this.httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
             {
-                forwardedFor = _httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value
+                forwardedFor = this.httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value
                     .First();
             }
 
             // Create Security key  using private key above:
             // not that latest version of JWT using Microsoft namespace instead of System
             var securityKey =
-                new RsaSecurityKey(_rsaHelpers.DecodeRsa(config.IdentityGatewayService.PrivateKey));
+                new RsaSecurityKey(this.rsaHelpers.DecodeRsa(this.config.IdentityGatewayService.PrivateKey));
 
             // Also note that securityKey length should be >256b
             // so you have to make sure that your private key has a proper length
-            var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials
-                (securityKey, SecurityAlgorithms.RsaSha256);
+            var credentials = new Microsoft.IdentityModel.Tokens.SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
 
             JwtSecurityToken token = new JwtSecurityToken(
-                issuer: forwardedFor ?? "https://" + this._httpContextAccessor.HttpContext.Request.Host.ToString() + "/",
+                issuer: forwardedFor ?? "https://" + this.httpContextAccessor.HttpContext.Request.Host.ToString() + "/",
                 audience: audience,
                 expires: expirationDateTime.ToUniversalTime(),
                 claims: claims.ToArray(),
-                signingCredentials: credentials
-            );
+                signingCredentials: credentials);
             return token;
         }
 
@@ -156,11 +164,11 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
                 // Validate the token signature
                 RequireSignedTokens = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKeys = _rsaHelpers.GetJsonWebKey(config.IdentityGatewayService.PublicKey).Keys,
+                IssuerSigningKeys = this.rsaHelpers.GetJsonWebKey(this.config.IdentityGatewayService.PublicKey).Keys,
 
                 // Validate the token issuer
                 ValidateIssuer = false,
-                ValidIssuer = _openIdProviderConfiguration.issuer,
+                ValidIssuer = this.openIdProviderConfiguration.Issuer,
 
                 // Validate the token audience
                 ValidateAudience = false,
@@ -168,7 +176,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.Services.Helpers
 
                 // Validate token lifetime
                 ValidateLifetime = true,
-                ClockSkew = new TimeSpan(0) // shouldnt be skewed as this is the same server that issued it.
+                ClockSkew = new TimeSpan(0), // shouldnt be skewed as this is the same server that issued it.
             };
 
             SecurityToken validated_token = null;

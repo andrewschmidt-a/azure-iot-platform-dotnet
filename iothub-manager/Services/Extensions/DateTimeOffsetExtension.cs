@@ -1,8 +1,12 @@
-﻿using System;
+// <copyright file="DateTimeOffsetExtension.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Extensions
+namespace Mmm.Iot.IoTHubManager.Services.Extensions
 {
     public static class DateTimeOffsetExtension
     {

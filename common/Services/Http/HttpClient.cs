@@ -1,19 +1,23 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="HttpClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-using Microsoft.Extensions.Logging;
 using System;
 using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
-namespace Mmm.Platform.IoT.Common.Services.Http
+namespace Mmm.Iot.Common.Services.Http
 {
     public class HttpClient : IHttpClient
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public HttpClient(ILogger<HttpClient> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         public async Task<IHttpResponse> GetAsync(IHttpRequest request)
@@ -59,7 +63,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
                 var httpRequest = new HttpRequestMessage
                 {
                     Method = httpMethod,
-                    RequestUri = request.Uri
+                    RequestUri = request.Uri,
                 };
 
                 SetServerSSLSecurity(request, clientHandler);
@@ -67,13 +71,16 @@ namespace Mmm.Platform.IoT.Common.Services.Http
                 SetContent(request, httpMethod, httpRequest);
                 SetHeaders(request, httpRequest);
 
-                _logger.LogDebug("Sending {method} request to URI {uri} with options {options}", httpMethod, request.Uri, request.Options);
+                this.logger.LogDebug("Sending {method} request to URI {uri} with options {options}", httpMethod, request.Uri, request.Options);
 
                 try
                 {
                     using (var response = await client.SendAsync(httpRequest))
                     {
-                        if (request.Options.EnsureSuccess) response.EnsureSuccessStatusCode();
+                        if (request.Options.EnsureSuccess)
+                        {
+                            response.EnsureSuccessStatusCode();
+                        }
 
                         return new HttpResponse
                         {
@@ -92,13 +99,13 @@ namespace Mmm.Platform.IoT.Common.Services.Http
                         errorMessage += " - " + e.InnerException.Message;
                     }
 
-                    _logger.LogError(e, "Request failed");
+                    this.logger.LogError(e, "Request failed");
 
                     return new HttpResponse
                     {
                         StatusCode = 0,
                         IsSuccessStatusCode = false,
-                        Content = errorMessage
+                        Content = errorMessage,
                     };
                 }
             }
@@ -106,7 +113,10 @@ namespace Mmm.Platform.IoT.Common.Services.Http
 
         private static void SetContent(IHttpRequest request, HttpMethod httpMethod, HttpRequestMessage httpRequest)
         {
-            if (httpMethod != HttpMethod.Post && httpMethod != HttpMethod.Put) return;
+            if (httpMethod != HttpMethod.Post && httpMethod != HttpMethod.Put)
+            {
+                return;
+            }
 
             httpRequest.Content = request.Content;
             if (request.ContentType != null && request.Content != null)
@@ -121,14 +131,13 @@ namespace Mmm.Platform.IoT.Common.Services.Http
             {
                 httpRequest.Headers.Add(header.Key, header.Value);
             }
-
         }
 
         private static void SetServerSSLSecurity(IHttpRequest request, HttpClientHandler clientHandler)
         {
             if (request.Options.AllowInsecureSSLServer)
             {
-                clientHandler.ServerCertificateCustomValidationCallback = delegate { return true; };
+                clientHandler.ServerCertificateCustomValidationCallback = (HttpRequestMessage a, X509Certificate2 b, X509Chain c, SslPolicyErrors d) => true;
             }
         }
 

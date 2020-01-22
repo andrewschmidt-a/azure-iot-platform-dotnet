@@ -1,4 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="HttpRequest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Net.Http;
@@ -6,26 +8,14 @@ using System.Net.Http.Headers;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.Http
+namespace Mmm.Iot.Common.Services.Http
 {
-    public class HttpRequest : IHttpRequest
+    public class HttpRequest : IHttpRequest, IDisposable
     {
         private readonly MediaTypeHeaderValue defaultMediaType = new MediaTypeHeaderValue("application/json");
         private readonly Encoding defaultEncoding = new UTF8Encoding();
-
-        // Http***Headers classes don't have a public ctor, so we use this class
-        // to hold the headers, this is also used for PUT/POST requests body
         private readonly HttpRequestMessage requestContent = new HttpRequestMessage();
-
-        public Uri Uri { get; set; }
-
-        public HttpHeaders Headers => this.requestContent.Headers;
-
-        public MediaTypeHeaderValue ContentType { get; private set; }
-
-        public HttpRequestOptions Options { get; } = new HttpRequestOptions();
-
-        public HttpContent Content => this.requestContent.Content;
+        private bool disposedValue = false;
 
         public HttpRequest()
         {
@@ -40,6 +30,16 @@ namespace Mmm.Platform.IoT.Common.Services.Http
         {
             this.SetUriFromString(uri);
         }
+
+        public Uri Uri { get; set; }
+
+        public HttpHeaders Headers => this.requestContent.Headers;
+
+        public MediaTypeHeaderValue ContentType { get; private set; }
+
+        public HttpRequestOptions Options { get; } = new HttpRequestOptions();
+
+        public HttpContent Content => this.requestContent.Content;
 
         public void AddHeader(string name, string value)
         {
@@ -106,6 +106,24 @@ namespace Mmm.Platform.IoT.Common.Services.Http
             var content = JsonConvert.SerializeObject(sourceObject, Formatting.None);
             this.requestContent.Content = new StringContent(content, encoding, mediaType.MediaType);
             this.ContentType = mediaType;
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.requestContent.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
-
+// <copyright file="ResultQuery.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -7,19 +8,14 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
     public class ResultQuery : IQuery
     {
-        private const string DEVICE_ID_KEY = "DeviceId";
+        private const string DeviceIdKey = "DeviceId";
         private readonly List<Twin> results;
         private readonly List<string> deviceQueryResults;
 
-        /// <summary>
-        /// Constructs a test set of twin query results. numResults number of
-        /// devices are created with deviceIds starting from deviceId{startIndex}
-        /// </summary>
-        /// <param name="numResults">Number of results to create</param>
         public ResultQuery(int numResults)
         {
             this.results = new List<Twin>();
@@ -27,7 +23,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
             for (int i = 0; i < numResults; i++)
             {
                 this.results.Add(ResultQuery.CreateTestTwin(i));
-                this.deviceQueryResults.Add($"{{'{DEVICE_ID_KEY}':'device{i}'}}");
+                this.deviceQueryResults.Add($"{{'{DeviceIdKey}':'device{i}'}}");
                 this.HasMoreResults = true;
             }
         }
@@ -35,9 +31,11 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
         public ResultQuery(List<Twin> twins)
         {
             this.results = twins;
-            this.deviceQueryResults = twins.Select(x => $"{{'{DEVICE_ID_KEY}':'device{x.DeviceId}'}}").ToList();
+            this.deviceQueryResults = twins.Select(x => $"{{'{DeviceIdKey}':'device{x.DeviceId}'}}").ToList();
             this.HasMoreResults = true;
         }
+
+        public bool HasMoreResults { get; set; }
 
         public Task<IEnumerable<Twin>> GetNextAsTwinAsync()
         {
@@ -64,6 +62,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
                 {
                     continuedResults = this.results.GetRange(index, count);
                 }
+
                 resultResponse = new QueryResponse<Twin>(continuedResults, "continuationToken");
             }
 
@@ -93,7 +92,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
         public Task<IEnumerable<string>> GetNextAsJsonAsync()
         {
             this.HasMoreResults = false;
-            return Task.FromResult(deviceQueryResults.AsEnumerable());
+            return Task.FromResult(this.deviceQueryResults.AsEnumerable());
         }
 
         public Task<QueryResponse<string>> GetNextAsJsonAsync(QueryOptions options)
@@ -101,13 +100,11 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
             throw new System.NotImplementedException();
         }
 
-        public bool HasMoreResults { get; set; }
-
         private static Twin CreateTestTwin(int valueToReport)
         {
             var twin = new Twin($"device{valueToReport}")
             {
-                Properties = new TwinProperties()
+                Properties = new TwinProperties(),
             };
             twin.Properties.Reported = new TwinCollection("{\"test\":\"value" + valueToReport + "\"}");
             twin.Properties.Desired = new TwinCollection("{\"test\":\"value" + valueToReport + "\"}");

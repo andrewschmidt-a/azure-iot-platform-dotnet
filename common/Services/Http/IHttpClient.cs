@@ -1,7 +1,11 @@
-﻿using System.Net.Http;
+// <copyright file="IHttpClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Common.Services.Http
+namespace Mmm.Iot.Common.Services.Http
 {
     public interface IHttpClient
     {
@@ -18,6 +22,7 @@ namespace Mmm.Platform.IoT.Common.Services.Http
         Task<IHttpResponse> HeadAsync(IHttpRequest request);
 
         Task<IHttpResponse> OptionsAsync(IHttpRequest request);
+
         Task<IHttpResponse> SendAsync(IHttpRequest request, HttpMethod method);
     }
 }

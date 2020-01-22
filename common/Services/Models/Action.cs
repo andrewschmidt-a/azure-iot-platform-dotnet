@@ -1,9 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="Action.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     public enum ActionType
     {
-        Email
+        Email,
     }
 }

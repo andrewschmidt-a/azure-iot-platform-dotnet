@@ -1,11 +1,14 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="MockFactory.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-using Mmm.Platform.IoT.Common.Services.Wrappers;
+using Mmm.Iot.Common.Services.Wrappers;
 using Moq;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
-    public class MockFactory<T> : IFactory<T> where T : class
+    public class MockFactory<T> : IFactory<T>
+        where T : class
     {
         private readonly Mock<T> mock;
 

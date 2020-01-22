@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+// <copyright file="IUserManagementClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Common.Services.External.UserManagement
+namespace Mmm.Iot.Common.Services.External.UserManagement
 {
     public interface IUserManagementClient : IStatusOperation
     {

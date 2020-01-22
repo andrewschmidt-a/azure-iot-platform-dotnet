@@ -1,8 +1,12 @@
+// <copyright file="IMessages.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.Services.External.TimeSeries;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services
+namespace Mmm.Iot.DeviceTelemetry.Services
 {
     public interface IMessages
     {

@@ -1,20 +1,20 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="TimeSeriesParseException.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.Services.Exceptions
+namespace Mmm.Iot.Common.Services.Exceptions
 {
-    /// <summary>
-    /// This exception is thrown when an error occurs while
-    /// parsing response from Time Series Insights.
-    /// </summary>
     public class TimeSeriesParseException : Exception
     {
-        public TimeSeriesParseException() : base()
+        public TimeSeriesParseException()
+            : base()
         {
         }
 
-        public TimeSeriesParseException(string message) : base(message)
+        public TimeSeriesParseException(string message)
+            : base(message)
         {
         }
 

@@ -1,35 +1,51 @@
+// <copyright file="DeviceGroupsConverter.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
-using Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager;
-using Mmm.Platform.IoT.AsaManager.Services.Models;
-using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.AsaManager.Services.External.BlobStorage;
+using Mmm.Iot.AsaManager.Services.External.IotHubManager;
+using Mmm.Iot.AsaManager.Services.Models;
+using Mmm.Iot.AsaManager.Services.Models.DeviceGroups;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services
+namespace Mmm.Iot.AsaManager.Services
 {
     public class DeviceGroupsConverter : Converter, IConverter
     {
-        private const string CSV_HEADER = "DeviceId,GroupId";
-
-        public override string Entity { get { return "devicegroups"; } }
-        public override string FileExtension { get { return "csv"; } }
-
-        private readonly IIotHubManagerClient _iotHubManager;
+        private const string CsvHeader = "DeviceId,GroupId";
+        private readonly IIotHubManagerClient iotHubManager;
 
         public DeviceGroupsConverter(
             IIotHubManagerClient iotHubManager,
             IBlobStorageClient blobClient,
             IStorageAdapterClient storageAdapterClient,
-            ILogger<DeviceGroupsConverter> log) : base(blobClient, storageAdapterClient, log)
+            ILogger<DeviceGroupsConverter> log)
+                : base(blobClient, storageAdapterClient, log)
         {
-            this._iotHubManager = iotHubManager;
+            this.iotHubManager = iotHubManager;
+        }
+
+        public override string Entity
+        {
+            get
+            {
+                return "devicegroups";
+            }
+        }
+
+        public override string FileExtension
+        {
+            get
+            {
+                return "csv";
+            }
         }
 
         public override async Task<ConversionApiModel> ConvertAsync(string tenantId, string operationId = null)
@@ -37,16 +53,17 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             ValueListApiModel deviceGroups = null;
             try
             {
-                deviceGroups = await this._storageAdapterClient.GetAllAsync(this.Entity);
+                deviceGroups = await this.StorageAdapterClient.GetAllAsync(this.Entity);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
+
             if (deviceGroups.Items.Count() == 0 || deviceGroups == null)
             {
-                _logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw new ResourceNotFoundException("No entities were receieved from storage adapter to convert to rules.");
             }
 
@@ -64,18 +81,20 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                     }
                     catch (Exception)
                     {
-                        _logger.LogInformation("Unable to convert a device group to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                        this.Logger.LogInformation("Unable to convert a device group to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                     }
                 }
+
                 if (items.Count() == 0)
                 {
                     throw new ResourceNotSupportedException("No device groups were able to be converted to the proper rule reference data model.");
                 }
+
                 deviceGroupModels.Items = items;
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to convert {entity} queried from storage adapter to appropriate data model. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to convert {entity} queried from storage adapter to appropriate data model. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
@@ -84,7 +103,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             {
                 try
                 {
-                    DeviceListModel devicesList = await this._iotHubManager.GetListAsync(deviceGroup.Conditions, tenantId);
+                    DeviceListModel devicesList = await this.iotHubManager.GetListAsync(deviceGroup.Conditions, tenantId);
                     if (devicesList.Items.Count() > 0)
                     {
                         deviceMapping.Add(deviceGroup, devicesList);
@@ -94,13 +113,14 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 {
                     // Do not throw an exception here, attempt to query other device groups instead to get as much data as possible
                     // Log all device groups that could not be retreived
-                    _logger.LogError(e, "Unable to get list of devices for devicegroup {deviceGroup} from IotHubManager. OperationId: {operationId}. TenantId: {tenantId}", deviceGroup.Id, operationId, tenantId);
+                    this.Logger.LogError(e, "Unable to get list of devices for devicegroup {deviceGroup} from IotHubManager. OperationId: {operationId}. TenantId: {tenantId}", deviceGroup.Id, operationId, tenantId);
                 }
             }
+
             if (deviceMapping.Count() == 0)
             {
-                string groups = $"[{String.Join(", ", deviceGroupModels.Items.Select(group => group.Id))}]";
-                _logger.LogError("No Devices were found for any {entity}. OperationId: {operationId}. TenantId: {tenantId}\n{deviceGroups}", this.Entity, operationId, tenantId, groups);
+                string groups = $"[{string.Join(", ", deviceGroupModels.Items.Select(group => group.Id))}]";
+                this.Logger.LogError("No Devices were found for any {entity}. OperationId: {operationId}. TenantId: {tenantId}\n{deviceGroups}", this.Entity, operationId, tenantId, groups);
                 throw new ResourceNotFoundException($"No Devices were found for any {this.Entity}.");
             }
 
@@ -111,16 +131,17 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 // deviceId,groupId
                 // mapping contains devices groups, and a list model of all devices within each device group
                 // create a new csv row for each device and device group combination
-                string fileContentRows = String.Join("\n", deviceMapping.Select(mapping =>
+                string fileContentRows = string.Join("\n", deviceMapping.Select(mapping =>
                 {
-                    return String.Join("\n", mapping.Value.Items.Select(device => $"{device.Id},{mapping.Key.Id}"));
+                    return string.Join("\n", mapping.Value.Items.Select(device => $"{device.Id},{mapping.Key.Id}"));
                 }));
+
                 // Add the rows and the header together to complete the csv file content
-                fileContent = $"{CSV_HEADER}\n{fileContentRows}";
+                fileContent = $"{CsvHeader}\n{fileContentRows}";
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to serialize the {entity} data models for the temporary file content. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to serialize the {entity} data models for the temporary file content. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
@@ -131,9 +152,9 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 TenantId = tenantId,
                 BlobFilePath = blobFilePath,
                 Entities = deviceGroups,
-                OperationId = operationId
+                OperationId = operationId,
             };
-            _logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
+            this.Logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
             return conversionResponse;
         }
     }

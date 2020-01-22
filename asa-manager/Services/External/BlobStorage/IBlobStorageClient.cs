@@ -1,7 +1,11 @@
-using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
+// <copyright file="IBlobStorageClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage
+using System.Threading.Tasks;
+using Mmm.Iot.Common.Services;
+
+namespace Mmm.Iot.AsaManager.Services.External.BlobStorage
 {
     public interface IBlobStorageClient : IStatusOperation
     {

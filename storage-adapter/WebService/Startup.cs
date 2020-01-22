@@ -1,3 +1,8 @@
+// <copyright file="Startup.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -5,21 +10,21 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using System;
-using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Auth;
 
-namespace Mmm.Platform.IoT.StorageAdapter.WebService
+namespace Mmm.Iot.StorageAdapter.WebService
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; }
-
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
-        
+
+        public IConfiguration Configuration { get; }
+
+        public IContainer ApplicationContainer { get; private set; }
+
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -30,7 +35,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
             services.AddHttpContextAccessor();
-            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);

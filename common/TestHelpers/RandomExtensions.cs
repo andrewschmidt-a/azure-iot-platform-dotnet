@@ -1,9 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="RandomExtensions.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Text;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
     public static class RandomExtensions
     {

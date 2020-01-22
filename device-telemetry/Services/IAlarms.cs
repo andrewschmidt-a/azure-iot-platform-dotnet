@@ -1,9 +1,13 @@
+// <copyright file="IAlarms.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
+using Mmm.Iot.DeviceTelemetry.Services.Models;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services
+namespace Mmm.Iot.DeviceTelemetry.Services
 {
     public interface IAlarms
     {

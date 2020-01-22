@@ -1,19 +1,21 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="TwinServiceListModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class TwinServiceListModel
     {
-        public string ContinuationToken { get; set; }
-
-        public List<TwinServiceModel> Items { get; set; }
-
         public TwinServiceListModel(IEnumerable<TwinServiceModel> twins, string continuationToken = null)
         {
             this.ContinuationToken = continuationToken;
             this.Items = new List<TwinServiceModel>(twins);
         }
+
+        public string ContinuationToken { get; set; }
+
+        public List<TwinServiceModel> Items { get; set; }
     }
 }

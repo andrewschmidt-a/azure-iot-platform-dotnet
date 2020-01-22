@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Mmm.Platform.IoT.DeviceTelemetry.Services.Test</AssemblyName>
+    <AssemblyName>Mmm.Iot.DeviceTelemetry.Services.Test</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 

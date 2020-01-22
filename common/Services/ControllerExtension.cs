@@ -1,7 +1,11 @@
+// <copyright file="ControllerExtension.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mmm.Platform.IoT.Common.Services
+namespace Mmm.Iot.Common.Services
 {
     public static class ControllerExtension
     {
@@ -10,10 +14,11 @@ namespace Mmm.Platform.IoT.Common.Services
             try
             {
                 string tenantId = controller.HttpContext.Request.GetTenant();
-                if (String.IsNullOrEmpty(tenantId))
+                if (string.IsNullOrEmpty(tenantId))
                 {
                     throw new Exception("Request Tenant was null or empty.");
                 }
+
                 return tenantId;
             }
             catch (Exception e)
