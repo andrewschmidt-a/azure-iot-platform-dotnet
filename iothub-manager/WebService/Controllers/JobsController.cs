@@ -25,15 +25,6 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
             this.jobs = jobs;
         }
 
-        /// <summary>
-        /// Get list of jobs by status/type
-        /// </summary>
-        /// <param name="jobType">The type of job</param>
-        /// <param name="jobStatus">The status of job</param>
-        /// <param name="pageSize">The page size</param>
-        /// <param name="from">Optional. The begin time of interesting period</param>
-        /// <param name="to">Optional. The end time of interesting period</param>
-        /// <returns>The list of jobs</returns>
         [HttpGet]
         [Authorize("ReadAll")]
         public async Task<IEnumerable<JobApiModel>> GetAsync(
@@ -47,13 +38,6 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
             return result.Select(r => new JobApiModel(r));
         }
 
-        /// <summary>
-        /// Get job status by jobId
-        /// </summary>
-        /// <param name="jobId">The jobId</param>
-        /// <param name="includeDeviceDetails">`true` for request per-device details</param>
-        /// <param name="deviceJobStatus">The interesting device job status. `null` means no restrict</param>
-        /// <returns>The job object</returns>
         [HttpGet("{jobId}")]
         [Authorize("ReadAll")]
         public async Task<JobApiModel> GetJobAsync(
@@ -65,11 +49,6 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
             return new JobApiModel(result);
         }
 
-        /// <summary>
-        /// Schedule job
-        /// </summary>
-        /// <param name="parameter"></param>
-        /// <returns></returns>
         [HttpPost]
         [Authorize("CreateJobs")]
         public async Task<JobApiModel> ScheduleAsync([FromBody] JobApiModel parameter)

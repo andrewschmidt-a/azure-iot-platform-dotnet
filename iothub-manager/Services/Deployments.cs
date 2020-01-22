@@ -54,10 +54,6 @@ namespace Mmm.Iot.IoTHubManager.Services
             this.tenantHelper = tenantHelper ?? throw new ArgumentNullException("tenantHelper");
         }
 
-        /// <summary>
-        /// Schedules a deployment of the provided package, to the given group.
-        /// </summary>
-        /// <returns>Scheduled deployment</returns>
         public async Task<DeploymentServiceModel> CreateAsync(DeploymentServiceModel model)
         {
             if (string.IsNullOrEmpty(model.DeviceGroupId))
@@ -101,11 +97,6 @@ namespace Mmm.Iot.IoTHubManager.Services
             return new DeploymentServiceModel(await tenantHelper.GetRegistry().AddConfigurationAsync(configuration));
         }
 
-        /// <summary>
-        /// Retrieves all deployments that have been scheduled on the iothub.
-        /// Only deployments which were created by RM will be returned.
-        /// </summary>
-        /// <returns>All scheduled deployments with RMDeployment label</returns>
         public async Task<DeploymentServiceListModel> ListAsync()
         {
             // TODO: Currently they only support 20 deployments
@@ -125,12 +116,6 @@ namespace Mmm.Iot.IoTHubManager.Services
             return new DeploymentServiceListModel(serviceModelDeployments);
         }
 
-        /// <summary>
-        /// Retrieve information on a single deployment given its id.
-        /// If includeDeviceStatus is included additional queries are created to retrieve the status of
-        /// the deployment per device.
-        /// </summary>
-        /// <returns>Deployment for the given id</returns>
         public async Task<DeploymentServiceModel> GetAsync(string deploymentId, bool includeDeviceStatus = false)
         {
             if (string.IsNullOrEmpty(deploymentId))

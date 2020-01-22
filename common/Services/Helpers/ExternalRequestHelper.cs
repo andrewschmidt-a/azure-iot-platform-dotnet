@@ -30,24 +30,11 @@ namespace Mmm.Iot.Common.Services.Helpers
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>
-        /// Special wrapper method for ProcessRequestAsync specifically for calling our storage endpoints
-        /// </summary>
-        /// <param name="uri"></param>
-        /// <returns></returns>
         public async Task<StatusServiceModel> ProcessStatusAsync(string uri)
         {
             return await this.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, $"{uri}/status");
         }
 
-        /// <summary>
-        /// Process an External Dependency Request using the given parameters to create a generic HttpRequest and deserialize the response to type T
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="url"></param>
-        /// <param name="tenantId"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public async Task<T> ProcessRequestAsync<T>(HttpMethod method, string url, string tenantId = null)
         {
             IHttpRequest request = this.CreateRequest(url, tenantId);

@@ -7,9 +7,6 @@ using Newtonsoft.Json;
 
 namespace Mmm.Iot.IoTHubManager.Services.Models
 {
-    /// <summary>
-    /// refer to Azure.Devices.DeviceJobStatistics
-    /// </summary>
     public class JobStatistics
     {
         public JobStatistics()

@@ -9,11 +9,6 @@ namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     internal class IoTHubConnectionHelper
     {
-        /// <summary>
-        /// ensure throw friendly exception if hubConnString is not valid
-        /// </summary>
-        /// <param name="hubConnString">The iotHub connectionString</param>
-        /// <param name="action">The create action using iotHub connectionString</param>
         public static void CreateUsingHubConnectionString(string hubConnString, Action<string> action)
         {
             try

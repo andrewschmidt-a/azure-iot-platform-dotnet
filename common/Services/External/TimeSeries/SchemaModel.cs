@@ -44,11 +44,6 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
         [JsonProperty("properties")]
         public List<PropertyModel> Properties { get; set; }
 
-        /// <summary>
-        /// Returns the properties needed to convert to message model
-        /// with lookup by index, excludes iothub properties.
-        /// </summary>
-        /// <returns></returns>
         public Dictionary<string, int> PropertiesByIndex()
         {
             var result = new Dictionary<string, int>();

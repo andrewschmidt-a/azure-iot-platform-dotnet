@@ -36,13 +36,6 @@ namespace Mmm.Iot.Common.Services.Filters
             }
         }
 
-        /// <summary>
-        /// Validate allowed actions of current user based on role claims against the declared actions
-        /// in the Authorize attribute of controller. The allowed action is case insensitive.
-        /// </summary>
-        /// <param name="httpContext">current context of http request</param>
-        /// <param name="allowedAction">allowed action required by controller</param>
-        /// <returns>true if validatation succeed</returns>
         private bool IsValidAuthorization(HttpContext httpContext, string allowedAction)
         {
             if (!httpContext.Request.GetAuthRequired() || !httpContext.Request.IsExternalRequest())

@@ -16,13 +16,6 @@ using Newtonsoft.Json;
 
 namespace Mmm.Iot.Common.Services.Filters
 {
-    /// <summary>
-    /// Detect all the unhandled exceptions returned by the API controllers
-    /// and decorate the response accordingly, managing the HTTP status code
-    /// and preparing a JSON response with useful error details.
-    /// When including the stack trace, split the text in multiple lines
-    /// for an easier parsing.
-    /// </summary>
     public class ExceptionsFilterAttribute : ExceptionFilterAttribute
     {
         private readonly ILogger logger;

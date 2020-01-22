@@ -4,9 +4,6 @@
 
 namespace Mmm.Iot.IoTHubManager.Services.Models
 {
-    /// <summary>
-    /// refer to Microsoft.Microsoft.Azure.Devices.JobStatus
-    /// </summary>
     public enum JobStatus
     {
         Unknown = 0,

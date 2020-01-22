@@ -75,9 +75,6 @@ namespace Mmm.Iot.Common.Services.Models
             return (List<string>)this.Parameters[RECIPIENTS];
         }
 
-        /// <summary>
-        /// Validates recipient email addresses and converts to a list of email strings
-        /// </summary>
         private List<string> ValidateAndConvertRecipientEmails(object emails)
         {
             List<string> result;

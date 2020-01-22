@@ -70,11 +70,6 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
             this.timeout = config.DeviceTelemetryService.TimeSeries.Timeout;
         }
 
-        /// <summary>
-        /// Makes a request to the environment availability API to verify
-        /// that the fqdn provided can reach Time Series Insights.
-        /// Returns a tuple with the status [bool isAvailable, string message].
-        /// </summary>
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             var result = new StatusResultServiceModel(false, "TimeSeries check failed");
@@ -185,9 +180,6 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
             }
         }
 
-        /// <summary>
-        /// Creates the request body for the Time Series get events API
-        /// </summary>
         private JObject PrepareInput(
             DateTimeOffset? from,
             DateTimeOffset? to,
@@ -249,9 +241,6 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
             return result;
         }
 
-        /// <summary>
-        /// Creates an HttpRequest for Time Series Insights with the required headers and tokens.
-        /// </summary>
         private HttpRequest PrepareRequest(
             string path,
             string accessToken,

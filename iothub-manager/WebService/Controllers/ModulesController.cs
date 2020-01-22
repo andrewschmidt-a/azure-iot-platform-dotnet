@@ -24,9 +24,6 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
             this.devices = devices;
         }
 
-        /// <summary>Retrieve module twin properties based on provided query</summary>
-        /// <param name="query">Where clause of IoTHub query</param>
-        /// <returns>List of module twins</returns>
         [HttpGet]
         [Authorize("ReadAll")]
         public async Task<TwinPropertiesListApiModel> GetModuleTwinsAsync([FromQuery] string query)
@@ -41,9 +38,6 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
                 await this.devices.GetModuleTwinsByQueryAsync(query, continuationToken));
         }
 
-        /// <summary>Retrieve module twin properties. Query in body of post request</summary>
-        /// <param name="query">Where clause of IoTHub query</param>
-        /// <returns>List of module twins</returns>
         [HttpPost("query")]
         [Authorize("ReadAll")]
         public async Task<TwinPropertiesListApiModel> QueryModuleTwinsAsync([FromBody] string query)
@@ -51,10 +45,6 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
             return await this.GetModuleTwinsAsync(query);
         }
 
-        /// <summary>Get module information for a device</summary>
-        /// <param name="deviceId">Device Id</param>
-        /// <param name="moduleId">Module Id</param>
-        /// <returns>Device information</returns>
         [HttpGet("{deviceId}/{moduleId}")]
         [Authorize("ReadAll")]
         public async Task<TwinPropertiesApiModel> GetModuleTwinAsync(string deviceId, string moduleId)

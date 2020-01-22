@@ -238,78 +238,32 @@ namespace Mmm.Iot.IoTHubManager.Services
             out DeviceTwinName fullNameWhitelist,
             out DeviceTwinName prefixWhitelist)
         {
-            /// <example>
-            /// whitelist = "tags.*, reported.Protocol, reported.SupportedMethods,
-            ///                 reported.DeviceMethodStatus, reported.FirmwareUpdateStatus"
-            /// whitelistItems = [tags.*,
-            ///                   reported.Protocol,
-            ///                   reported.SupportedMethods,
-            ///                   reported.DeviceMethodStatus,
-            ///                   reported.FirmwareUpdateStatus]
-            /// </example>
             var whitelistItems = whitelist.Split(',').Select(s => s.Trim());
 
-            /// <example>
-            /// tags = [tags.*]
-            /// </example>
             var tags = whitelistItems
                 .Where(s => s.StartsWith(WhitelistTagPrefix, StringComparison.OrdinalIgnoreCase))
                 .Select(s => s.Substring(WhitelistTagPrefix.Length));
 
-            /// <example>
-            /// reported = [reported.Protocol,
-            ///             reported.SupportedMethods,
-            ///             reported.DeviceMethodStatus,
-            ///             reported.FirmwareUpdateStatus]
-            /// </example>
             var reported = whitelistItems
                 .Where(s => s.StartsWith(WhitelistReportedPrefix, StringComparison.OrdinalIgnoreCase))
                 .Select(s => s.Substring(WhitelistReportedPrefix.Length));
 
-            /// <example>
-            /// fixedTags = []
-            /// </example>
             var fixedTags = tags.Where(s => !s.EndsWith("*"));
 
-            /// <example>
-            /// fixedReported = [reported.Protocol,
-            ///                  reported.SupportedMethods,
-            ///                  reported.DeviceMethodStatus,
-            ///                  reported.FirmwareUpdateStatus]
-            /// </example>
             var fixedReported = reported.Where(s => !s.EndsWith("*"));
 
-            /// <example>
-            /// regexTags = [tags.]
-            /// </example>
             var regexTags = tags.Where(s => s.EndsWith("*")).Select(s => s.Substring(0, s.Length - 1));
 
-            /// <example>
-            /// regexReported = []
-            /// </example>
             var regexReported = reported.
                 Where(s => s.EndsWith("*")).
                 Select(s => s.Substring(0, s.Length - 1));
 
-            /// <example>
-            /// fullNameWhitelist = {Tags = [],
-            ///                      ReportedProperties = [
-            ///                         reported.Protocol,
-            ///                         reported.SupportedMethods,
-            ///                         reported.DeviceMethodStatus,
-            ///                         reported.FirmwareUpdateStatus]
-            ///                      }
-            /// </example>
             fullNameWhitelist = new DeviceTwinName
             {
                 Tags = new HashSet<string>(fixedTags),
                 ReportedProperties = new HashSet<string>(fixedReported),
             };
 
-            /// <example>
-            /// prefixWhitelist = {Tags = [tags.],
-            ///                    ReportedProperties = []}
-            /// </example>
             prefixWhitelist = new DeviceTwinName
             {
                 Tags = new HashSet<string>(regexTags),

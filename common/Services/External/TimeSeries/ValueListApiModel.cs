@@ -20,10 +20,6 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
         [JsonProperty("events")]
         public List<ValueApiModel> Events { get; set; }
 
-        /// <summary>
-        /// Converts Time Series Events to service MessageList model.
-        /// Takes in a skip value to return messages starting from skip.
-        /// </summary>
         public MessageList ToMessageList(int skip)
         {
             var messages = new List<Message>();
@@ -86,9 +82,6 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
             return new MessageList(messages, new List<string>(properties));
         }
 
-        /// <summary>
-        /// Converts the tsi paylod for 'values' to the 'data' JObject payload for the message model.
-        /// </summary>
         private JObject GetEventAsJson(List<JValue> values, SchemaModel schema)
         {
             // Get dictionary of properties and index e.g. < propertyname, index > from schema

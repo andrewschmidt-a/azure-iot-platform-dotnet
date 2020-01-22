@@ -23,9 +23,6 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
             this.deployments = deployments;
         }
 
-        /// <summary>Create a deployment targeting a particular group</summary>
-        /// <param name="deployment">Deployment information</param>
-        /// <returns>Deployment information and initial success metrics</returns>
         [HttpPost]
         [Authorize("CreateDeployments")]
         public async Task<DeploymentApiModel> PostAsync([FromBody] DeploymentApiModel deployment)
@@ -77,10 +74,6 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
             return new DeploymentListApiModel(await this.deployments.ListAsync());
         }
 
-        /// <summary>Get one deployment</summary>
-        /// <param name="id">Deployment id</param>
-        /// <param name="includeDeviceStatus">Whether to retrieve additional details regarding device status</param>
-        /// <returns>Deployment information with metrics</returns>
         [HttpGet("{id}")]
         [Authorize("ReadAll")]
         public async Task<DeploymentApiModel> GetAsync(string id, [FromQuery] bool includeDeviceStatus = false)
