@@ -26,7 +26,7 @@ jobs:
     displayName: Set AppConfigurationConnectionString user secret
     inputs:
       command: custom
-      custom: user-secrets set --project ./common/Services/Services.csproj AppConfigurationConnectionString $(appConfigurationConnectionString)
+      custom: user-secrets set --project ./common/Services/Services.csproj AppConfigurationConnectionString "$(appConfigurationConnectionString)"
 
   - task: DotNetCoreCLI@2
     displayName: Unit Test
