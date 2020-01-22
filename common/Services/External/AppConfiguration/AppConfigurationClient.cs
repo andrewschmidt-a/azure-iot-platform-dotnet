@@ -4,7 +4,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using System.Threading.Tasks;
 using Azure.Data.AppConfiguration;
 using Mmm.Iot.Common.Services.Config;
@@ -27,15 +27,31 @@ namespace Mmm.Iot.Common.Services.External.AppConfiguration
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             // Test a key created from one of the configuration variable names
-            string statusKey = this.config.GetType().GetProperties(BindingFlags.Public)[0].Name;
+            string statusKey = string.Empty;
+            try
+            {
+                string configKey = this.config.Global
+                    .GetType()
+                    .GetProperties()
+                    .First(prop => prop.PropertyType == typeof(string))
+                    .Name;
+
+                // Append global to the retrieved configKey and append global to it, since that is its parent key name
+                statusKey = $"Global:{configKey}";
+            }
+            catch (Exception)
+            {
+                return new StatusResultServiceModel(false, $"Unable to get the status of AppConfig because no Global Configuration Key could be retrieved from the generated configuration class.");
+            }
+
             try
             {
                 await this.client.GetConfigurationSettingAsync(statusKey);
                 return new StatusResultServiceModel(true, "Alive and well!");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return new StatusResultServiceModel(false, $"Unable to retrieve basic key {statusKey} from app config.");
+                return new StatusResultServiceModel(false, $"Unable to retrieve a key from AppConfig. {e.Message}");
             }
         }
 
