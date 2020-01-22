@@ -13,6 +13,9 @@ using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Mmm.Platform.IoT.Common.Services.Config;
+using System.IO;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace Mmm.Platform.IoT.Config.Services
 {
@@ -31,6 +34,7 @@ namespace Mmm.Platform.IoT.Config.Services
         public const string PACKAGES_CONFIG_TYPE_KEY = "config-types";
         public const string AZURE_MAPS_KEY = "AzureMapsKey";
         public const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
+        public const string SOFTWARE_PACKAGE_STORE = "software-package";
 
         public Storage(
             IStorageAdapterClient client,
@@ -292,6 +296,72 @@ namespace Mmm.Platform.IoT.Config.Services
             }
             list.add(customConfigType);
             await this._client.UpdateAsync(PACKAGES_COLLECTION_ID, PACKAGES_CONFIG_TYPE_KEY, JsonConvert.SerializeObject(list), "*");
+        }
+
+        public async Task<string> UploadToBlob(string filename, Stream stream = null)
+        {
+            CloudStorageAccount storageAccount = null;
+            CloudBlobContainer cloudBlobContainer = null;
+            string url = string.Empty;
+            string storageConnectionString = config.Global.StorageAccountConnectionString;
+            string  duration = config.Global.PackageSharedAccessExpiryTime;
+
+            if (CloudStorageAccount.TryParse(storageConnectionString, out storageAccount))
+            {
+                try
+                {
+                    // Create the CloudBlobClient that represents the Blob storage endpoint for the storage account.
+                    CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
+
+                    // Create a container 
+                    cloudBlobContainer = cloudBlobClient.GetContainerReference(SOFTWARE_PACKAGE_STORE);
+                    
+                    // Create the container if it does not already exist
+                    await cloudBlobContainer.CreateIfNotExistsAsync();
+
+                    // Get a reference to the blob address, then upload the file to the blob.
+                    CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
+
+                    if (stream != null)
+                    {
+                        await cloudBlockBlob.UploadFromStreamAsync(stream);
+                    }
+                    else
+                    {
+                        _logger.LogError("Empty stream object in the UploadToBlob method.");
+                        return null;
+                    }
+                    url = Convert.ToString(GetBlobSasUri(cloudBlobClient, cloudBlobContainer.Name, filename, duration));
+                    return url;
+                }
+                catch (StorageException ex)
+                {
+                    _logger.LogError($"Exception in the UploadToBlob method- Message: {ex.Message} : Stack Trace - {ex.StackTrace.ToString()}");
+                    return null;
+                }
+            }
+            else
+            {
+                _logger.LogError("Error parsing CloudStorageAccount in UploadToBlob method");
+                return null;
+            }
+        }
+
+        private string GetBlobSasUri(CloudBlobClient cloudBlobClient,string containerName, string blobName, string timeoutDuration)
+        {
+            string[] time = timeoutDuration.Split(':');
+            CloudBlobContainer container = cloudBlobClient.GetContainerReference(containerName);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
+            SharedAccessBlobPolicy sasConstraints = new SharedAccessBlobPolicy();
+            sasConstraints.SharedAccessStartTime = DateTimeOffset.UtcNow.AddMinutes(-5);
+            sasConstraints.SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddHours(Convert.ToDouble(time[0])).AddMinutes(Convert.ToDouble(time[1])).AddSeconds(Convert.ToDouble(time[2]));
+            sasConstraints.Permissions = SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write;
+
+            //Generate the shared access signature on the blob, setting the constraints directly on the signature.
+            string sasBlobToken = blockBlob.GetSharedAccessSignature(sasConstraints);
+
+            //Return the URI string for the container, including the SAS token.
+            return blockBlob.Uri + sasBlobToken;
         }
 
         private Boolean IsValidPackage(PackageServiceModel package)

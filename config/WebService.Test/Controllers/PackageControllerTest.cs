@@ -196,6 +196,38 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     ConfigType.Firmware.ToString()),
                     Times.Once);
         }
+        
+        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [InlineData("filename", true, false)]
+        [InlineData("filename", false, true)]
+        public async Task UploadFileVerificationTest(string filename,
+                                                             bool isValidFileProvided, bool expectException)
+        {
+            // Arrange
+            IFormFile file = null;
+            //string fileName = "filename";
+            if (isValidFileProvided)
+            {
+                file = this.CreateSampleFile(filename, false);
+            }
+            
+            this.mockStorage.Setup(x => x.UploadToBlob(It.IsAny<string>(), It.IsAny<Stream>()))
+                            .ReturnsAsync(filename);
+
+            try
+            {
+                // Act
+                var uploadedFileName = await this.controller.UploadFileAsync(file);
+
+                // Assert
+                Assert.False(expectException);
+                Assert.Equal(filename, uploadedFileName);
+            }
+            catch (Exception)
+            {
+                Assert.True(expectException);
+            }
+        }
 
         private FormFile CreateSampleFile(string filename, bool isEdgePackage)
         {
@@ -212,5 +244,6 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
             return new FormFile(stream, 0, package.Length, "file", filename);
         }
+        
     }
 }

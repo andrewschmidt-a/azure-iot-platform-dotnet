@@ -128,5 +128,21 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
 
             await this.storage.DeletePackageAsync(id);
         }
+
+        [HttpPost("UploadFile")]
+        [Authorize("CreatePackages")]
+        public async Task<string> UploadFileAsync(IFormFile uploadedFile)
+        {
+            string uploadedUri = null;
+            if (uploadedFile == null || uploadedFile.Length == 0 || string.IsNullOrEmpty(uploadedFile.FileName))
+            {
+                throw new InvalidInputException("Uploaded file is missing or invalid.");
+            }
+            using (var stream = uploadedFile.OpenReadStream())
+            {
+                uploadedUri = await this.storage.UploadToBlob(uploadedFile.FileName, stream);
+            }
+            return uploadedUri;
+        }
     }
 }
