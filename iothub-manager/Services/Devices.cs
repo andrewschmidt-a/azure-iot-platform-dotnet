@@ -40,9 +40,9 @@ namespace Mmm.Iot.IoTHubManager.Services
             this.tenantConnectionHelper = tenantConnectionHelper;
         }
 
-        public Devices(ITenantConnectionHelper tenantHelper, string ioTHubHostName)
+        public Devices(ITenantConnectionHelper tenantConnectionHelper, string ioTHubHostName)
         {
-            this.tenantConnectionHelper = this.tenantConnectionHelper ?? throw new ArgumentNullException("this.tenantHelper " + ioTHubHostName);
+            this.tenantConnectionHelper = tenantConnectionHelper ?? throw new ArgumentNullException("tenantConnectionHelper " + ioTHubHostName);
         }
 
         // Ping the registry to see if the connection is healthy
