@@ -32,7 +32,7 @@ namespace Mmm.Iot.Config.WebService.Test.Controllers
         {
             this.mockStorage = new Mock<IStorage>();
             this.mockActions = new Mock<IActions>();
-            logger = new Mock<ILogger<SolutionSettingsController>>();
+            this.logger = new Mock<ILogger<SolutionSettingsController>>();
             this.mockResourceManagementClient = new Mock<IAzureResourceManagerClient>();
             this.controller = new SolutionSettingsController(
                 this.mockStorage.Object,
@@ -249,19 +249,19 @@ namespace Mmm.Iot.Config.WebService.Test.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    controller.Dispose();
+                    this.controller.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 

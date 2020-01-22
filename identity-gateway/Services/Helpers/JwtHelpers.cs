@@ -126,16 +126,16 @@ namespace Mmm.Iot.IdentityGateway.Services.Helpers
             string forwardedFor = null;
 
             // add issuer with forwarded for address if exists (added by reverse proxy)
-            if (httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
+            if (this.httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
             {
-                forwardedFor = httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value
+                forwardedFor = this.httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value
                     .First();
             }
 
             // Create Security key  using private key above:
             // not that latest version of JWT using Microsoft namespace instead of System
             var securityKey =
-                new RsaSecurityKey(rsaHelpers.DecodeRsa(config.IdentityGatewayService.PrivateKey));
+                new RsaSecurityKey(this.rsaHelpers.DecodeRsa(this.config.IdentityGatewayService.PrivateKey));
 
             // Also note that securityKey length should be >256b
             // so you have to make sure that your private key has a proper length
@@ -164,11 +164,11 @@ namespace Mmm.Iot.IdentityGateway.Services.Helpers
                 // Validate the token signature
                 RequireSignedTokens = true,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKeys = rsaHelpers.GetJsonWebKey(config.IdentityGatewayService.PublicKey).Keys,
+                IssuerSigningKeys = this.rsaHelpers.GetJsonWebKey(this.config.IdentityGatewayService.PublicKey).Keys,
 
                 // Validate the token issuer
                 ValidateIssuer = false,
-                ValidIssuer = openIdProviderConfiguration.Issuer,
+                ValidIssuer = this.openIdProviderConfiguration.Issuer,
 
                 // Validate the token audience
                 ValidateAudience = false,

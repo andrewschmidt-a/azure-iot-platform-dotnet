@@ -104,7 +104,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Models
             var device = new Device(this.Id)
             {
                 ETag = ignoreEtag ? null : this.Etag,
-                Status = Enabled ? DeviceStatus.Enabled : DeviceStatus.Disabled,
+                Status = this.Enabled ? DeviceStatus.Enabled : DeviceStatus.Disabled,
                 Authentication = this.Authentication?.ToAzureModel(),
                 Capabilities = this.IsEdgeDevice ? new DeviceCapabilities()
                 {

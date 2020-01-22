@@ -27,8 +27,8 @@ namespace Mmm.Iot.AsaManager.Services.External.IotHubManager
             try
             {
                 var query = JsonConvert.SerializeObject(conditions);
-                var url = $"{ServiceUri}/devices?query={query}";
-                return await RequestHelper.ProcessRequestAsync<DeviceListModel>(HttpMethod.Get, url, tenantId);
+                var url = $"{this.ServiceUri}/devices?query={query}";
+                return await this.RequestHelper.ProcessRequestAsync<DeviceListModel>(HttpMethod.Get, url, tenantId);
             }
             catch (Exception e)
             {

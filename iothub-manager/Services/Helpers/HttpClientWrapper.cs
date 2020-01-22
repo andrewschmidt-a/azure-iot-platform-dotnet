@@ -52,13 +52,13 @@ namespace Mmm.Iot.IoTHubManager.Services.Helpers
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Request to URI {uri} failed", uri);
+                this.logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to post {description}");
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                this.logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to post {description}");
             }
         }

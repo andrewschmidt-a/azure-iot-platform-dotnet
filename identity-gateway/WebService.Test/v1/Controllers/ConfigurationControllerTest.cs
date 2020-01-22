@@ -23,7 +23,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         private const string SomeUri = "http://azureb2caseuri.com";
         private const string SomeIssuer = "http://someissuer";
         private bool disposedValue = false;
-        private ConfigurationController configurationController;
+        private ConfigurationController controller;
         private Mock<HttpContext> mockHttpContext;
         private Mock<AppConfig> mockAppConfig;
         private Mock<OpenIdProviderConfiguration> mockOpenIdProviderConfiguration;
@@ -32,8 +32,8 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
 
         public ConfigurationControllerTest()
         {
-            InitializeController();
-            SetupDefaultBehaviors();
+            this.InitializeController();
+            this.SetupDefaultBehaviors();
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = configurationController.GetOpenIdProviderConfiguration() as OkObjectResult;
+            var result = this.controller.GetOpenIdProviderConfiguration() as OkObjectResult;
             var openIdProviderConfiguration = result.Value as IOpenIdProviderConfiguration;
 
             // Assert
@@ -57,41 +57,41 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = configurationController.GetJsonWebKeySet();
+            var result = this.controller.GetJsonWebKeySet();
             var jwks = JsonConvert.DeserializeObject<JsonWebKeySet>(result.Content);
 
             // Assert
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
-            Assert.Equal(someJwks.AdditionalData, jwks.AdditionalData);
-            Assert.Equal(someJwks.Keys, jwks.Keys);
+            Assert.Equal(this.someJwks.AdditionalData, jwks.AdditionalData);
+            Assert.Equal(this.someJwks.Keys, jwks.Keys);
             Assert.Equal(ConfigurationController.ContentType, result.ContentType.ToLowerInvariant());
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    configurationController.Dispose();
+                    this.controller.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
         private void InitializeController()
         {
-            mockAppConfig = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
-            mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
-            mockOpenIdProviderConfiguration = new Mock<OpenIdProviderConfiguration> { DefaultValue = DefaultValue.Mock };
-            mockRsaHelpers = new Mock<IRsaHelpers> { DefaultValue = DefaultValue.Mock };
-            configurationController = new ConfigurationController(mockAppConfig.Object, mockOpenIdProviderConfiguration.Object, mockRsaHelpers.Object)
+            this.mockAppConfig = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
+            this.mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
+            this.mockOpenIdProviderConfiguration = new Mock<OpenIdProviderConfiguration> { DefaultValue = DefaultValue.Mock };
+            this.mockRsaHelpers = new Mock<IRsaHelpers> { DefaultValue = DefaultValue.Mock };
+            this.controller = new ConfigurationController(this.mockAppConfig.Object, this.mockOpenIdProviderConfiguration.Object, this.mockRsaHelpers.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -102,10 +102,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
 
         private void SetupDefaultBehaviors()
         {
-            mockAppConfig.Setup(m => m.Global.AzureB2cBaseUri).Returns(SomeUri);
-            mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(SomePublicKey);
-            mockOpenIdProviderConfiguration.SetupGet(m => m.Issuer).Returns(SomeIssuer);
-            mockRsaHelpers.Setup(m => m.GetJsonWebKey(It.IsAny<string>())).Returns(someJwks);
+            this.mockAppConfig.Setup(m => m.Global.AzureB2cBaseUri).Returns(SomeUri);
+            this.mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(SomePublicKey);
+            this.mockOpenIdProviderConfiguration.SetupGet(m => m.Issuer).Returns(SomeIssuer);
+            this.mockRsaHelpers.Setup(m => m.GetJsonWebKey(It.IsAny<string>())).Returns(this.someJwks);
         }
     }
 }

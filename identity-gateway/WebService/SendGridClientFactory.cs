@@ -18,7 +18,7 @@ namespace Mmm.Iot.IdentityGateway.WebService
 
         public ISendGridClient CreateSendGridClient()
         {
-            return new SendGridClient(config.IdentityGatewayService.SendGridApiKey);
+            return new SendGridClient(this.config.IdentityGatewayService.SendGridApiKey);
         }
     }
 }

@@ -56,7 +56,7 @@ namespace Mmm.Iot.IoTHubManager.Services
             }
             catch (ResourceNotFoundException)
             {
-                logger.LogDebug($"Cache get: cache {CacheCollectioId}:{CacheKey} was not found");
+                this.logger.LogDebug($"Cache get: cache {CacheCollectioId}:{CacheKey} was not found");
             }
             catch (Exception e)
             {
@@ -107,7 +107,7 @@ namespace Mmm.Iot.IoTHubManager.Services
                 var locked = await @lock.TryLockAsync();
                 if (locked == null)
                 {
-                    logger.LogWarning("Cache rebuilding: lock failed due to conflict. Retry soon");
+                    this.logger.LogWarning("Cache rebuilding: lock failed due to conflict. Retry soon");
                     continue;
                 }
 
@@ -125,14 +125,14 @@ namespace Mmm.Iot.IoTHubManager.Services
                 }
                 catch (Exception)
                 {
-                    logger.LogWarning("Some underlying service is not ready. Retry after {interval}.", this.serviceQueryInterval);
+                    this.logger.LogWarning("Some underlying service is not ready. Retry after {interval}.", this.serviceQueryInterval);
                     try
                     {
                         await @lock.ReleaseAsync();
                     }
                     catch (Exception e)
                     {
-                        logger.LogError(e, "Cache rebuilding: Unable to release lock");
+                        this.logger.LogError(e, "Cache rebuilding: Unable to release lock");
                     }
 
                     await Task.Delay(this.serviceQueryInterval);
@@ -156,10 +156,10 @@ namespace Mmm.Iot.IoTHubManager.Services
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, "Cache rebuilding: Unable to write and release lock");
+                    this.logger.LogError(e, "Cache rebuilding: Unable to write and release lock");
                 }
 
-                logger.LogWarning("Cache rebuilding: write failed due to conflict. Retry soon");
+                this.logger.LogWarning("Cache rebuilding: write failed due to conflict. Retry soon");
             }
         }
 
@@ -180,7 +180,7 @@ namespace Mmm.Iot.IoTHubManager.Services
                 }
                 catch (ResourceNotFoundException)
                 {
-                    logger.LogInformation($"Cache updating: cache {CacheCollectioId}:{CacheKey} was not found");
+                    this.logger.LogInformation($"Cache updating: cache {CacheCollectioId}:{CacheKey} was not found");
                 }
 
                 if (model != null)
@@ -223,11 +223,11 @@ namespace Mmm.Iot.IoTHubManager.Services
                 }
                 catch (ConflictingResourceException)
                 {
-                    logger.LogInformation("Cache updating: failed due to conflict. Retry soon");
+                    this.logger.LogInformation("Cache updating: failed due to conflict. Retry soon");
                 }
                 catch (Exception e)
                 {
-                    logger.LogInformation(e, "Cache updating: failed");
+                    this.logger.LogInformation(e, "Cache updating: failed");
                     throw new Exception("Cache updating: failed");
                 }
             }
@@ -309,13 +309,13 @@ namespace Mmm.Iot.IoTHubManager.Services
         {
             if (force)
             {
-                logger.LogInformation("Cache will be rebuilt due to the force flag");
+                this.logger.LogInformation("Cache will be rebuilt due to the force flag");
                 return true;
             }
 
             if (valueApiModel == null)
             {
-                logger.LogInformation("Cache will be rebuilt since no cache was found");
+                this.logger.LogInformation("Cache will be rebuilt since no cache was found");
                 return true;
             }
 
@@ -328,7 +328,7 @@ namespace Mmm.Iot.IoTHubManager.Services
             }
             catch
             {
-                logger.LogInformation("DeviceProperties will be rebuilt because the last one is broken.");
+                this.logger.LogInformation("DeviceProperties will be rebuilt because the last one is broken.");
                 return true;
             }
 
@@ -336,12 +336,12 @@ namespace Mmm.Iot.IoTHubManager.Services
             {
                 if (timstamp.AddSeconds(this.rebuildTimeout) < DateTimeOffset.UtcNow)
                 {
-                    logger.LogDebug("Cache will be rebuilt because last rebuilding had timedout");
+                    this.logger.LogDebug("Cache will be rebuilt because last rebuilding had timedout");
                     return true;
                 }
                 else
                 {
-                    logger.LogDebug("Cache rebuilding skipped because it is being rebuilt by other instance");
+                    this.logger.LogDebug("Cache rebuilding skipped because it is being rebuilt by other instance");
                     return false;
                 }
             }
@@ -349,18 +349,18 @@ namespace Mmm.Iot.IoTHubManager.Services
             {
                 if (cacheValue.IsNullOrEmpty())
                 {
-                    logger.LogInformation("Cache will be rebuilt since it is empty");
+                    this.logger.LogInformation("Cache will be rebuilt since it is empty");
                     return true;
                 }
 
                 if (timstamp.AddSeconds(this.ttl) < DateTimeOffset.UtcNow)
                 {
-                    logger.LogInformation("Cache will be rebuilt because it has expired");
+                    this.logger.LogInformation("Cache will be rebuilt because it has expired");
                     return true;
                 }
                 else
                 {
-                    logger.LogDebug("Cache rebuilding skipped because it has not expired");
+                    this.logger.LogDebug("Cache rebuilding skipped because it has not expired");
                     return false;
                 }
             }

@@ -48,15 +48,15 @@ namespace Mmm.Iot.IoTHubManager.Services.Helpers
 
         public string GetIotHubConnectionString()
         {
-            var appConfigurationKey = TenantKey + TenantName + IotHubConnectionKey;
-            logger.LogDebug("App Configuration key for IoT Hub connection string for tenant {tenant} is {appConfigurationKey}", TenantName, appConfigurationKey);
-            return appConfig.GetValue(appConfigurationKey);
+            var appConfigurationKey = TenantKey + this.TenantName + IotHubConnectionKey;
+            this.logger.LogDebug("App Configuration key for IoT Hub connection string for tenant {tenant} is {appConfigurationKey}", this.TenantName, appConfigurationKey);
+            return this.appConfig.GetValue(appConfigurationKey);
         }
 
         public string GetIotHubName()
         {
             string currIoTHubHostName = null;
-            IoTHubConnectionHelper.CreateUsingHubConnectionString(GetIotHubConnectionString(), (conn) =>
+            IoTHubConnectionHelper.CreateUsingHubConnectionString(this.GetIotHubConnectionString(), (conn) =>
             {
                 currIoTHubHostName = IotHubConnectionStringBuilder.Create(conn).HostName;
             });
@@ -72,7 +72,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Helpers
         {
             RegistryManager registry = null;
 
-            IoTHubConnectionHelper.CreateUsingHubConnectionString(GetIotHubConnectionString(), (conn) =>
+            IoTHubConnectionHelper.CreateUsingHubConnectionString(this.GetIotHubConnectionString(), (conn) =>
             {
                 registry = RegistryManager.CreateFromConnectionString(conn);
             });
@@ -88,7 +88,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Helpers
         {
             JobClient job = null;
 
-            IoTHubConnectionHelper.CreateUsingHubConnectionString(GetIotHubConnectionString(), conn =>
+            IoTHubConnectionHelper.CreateUsingHubConnectionString(this.GetIotHubConnectionString(), conn =>
              {
                  job = JobClient.CreateFromConnectionString(conn);
              });

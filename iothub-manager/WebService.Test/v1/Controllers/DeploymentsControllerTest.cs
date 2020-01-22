@@ -28,14 +28,14 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
         private const string DeploymentId = "dvcGroupId-packageId";
         private const int Priority = 10;
         private const string ConfigurationType = "Edge";
-        private readonly DeploymentsController deploymentsController;
+        private readonly DeploymentsController controller;
         private readonly Mock<IDeployments> deploymentsMock;
         private bool disposedValue = false;
 
         public DeploymentsControllerTest()
         {
             this.deploymentsMock = new Mock<IDeployments>();
-            this.deploymentsController = new DeploymentsController(this.deploymentsMock.Object);
+            this.controller = new DeploymentsController(this.deploymentsMock.Object);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
             });
 
             // Act
-            var result = await this.deploymentsController.GetAsync(DeploymentId);
+            var result = await this.controller.GetAsync(DeploymentId);
 
             // Assert
             Assert.Equal(DeploymentId, result.DeploymentId);
@@ -94,7 +94,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
             });
 
             // Act
-            var result = await this.deploymentsController.GetAsync(DeploymentId);
+            var result = await this.controller.GetAsync(DeploymentId);
 
             // Assert
             Assert.Equal(DeploymentId, result.DeploymentId);
@@ -147,7 +147,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
                 new DeploymentServiceListModel(deploymentsList));
 
             // Act
-            var results = await this.deploymentsController.GetAsync();
+            var results = await this.controller.GetAsync();
 
             // Assert
             Assert.Equal(numDeployments, results.Items.Count);
@@ -223,11 +223,11 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
             // Act
             if (throwsException)
             {
-                await Assert.ThrowsAsync<InvalidInputException>(async () => await this.deploymentsController.PostAsync(depApiModel));
+                await Assert.ThrowsAsync<InvalidInputException>(async () => await this.controller.PostAsync(depApiModel));
             }
             else
             {
-                var result = await this.deploymentsController.PostAsync(depApiModel);
+                var result = await this.controller.PostAsync(depApiModel);
 
                 // Assert
                 Assert.Equal(deploymentId, result.DeploymentId);
@@ -265,24 +265,24 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
             };
 
             // Act
-            await Assert.ThrowsAsync<InvalidInputException>(async () => await this.deploymentsController.PostAsync(depApiModel));
+            await Assert.ThrowsAsync<InvalidInputException>(async () => await this.controller.PostAsync(depApiModel));
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    deploymentsController.Dispose();
+                    this.controller.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
     }

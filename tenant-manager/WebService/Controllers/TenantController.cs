@@ -45,7 +45,7 @@ namespace Mmm.Iot.TenantManager.WebService.Controllers
                 // If there is an error while creating the new tenant - delete all of the created tenant resources
                 // this may not be able to delete iot hub - due to the long running process
                 var deleteResponse = await this.tenantContainer.DeleteTenantAsync(tenantGuid, userId, false);
-                logger.LogInformation("The Tenant was unable to be created properly. To ensure the failed tenant does not consume resources, some of its resources were deleted after creation failed. {response}", deleteResponse);
+                this.logger.LogInformation("The Tenant was unable to be created properly. To ensure the failed tenant does not consume resources, some of its resources were deleted after creation failed. {response}", deleteResponse);
                 throw e;
             }
         }

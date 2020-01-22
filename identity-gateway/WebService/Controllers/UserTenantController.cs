@@ -179,9 +179,9 @@ namespace Mmm.Iot.IdentityGateway.WebService.Controllers
             string forwardedFor = null;
 
             // add issuer with forwarded for address if exists (added by reverse proxy)
-            if (HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
+            if (this.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").Count() > 0)
             {
-                forwardedFor = HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value
+                forwardedFor = this.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value
                     .First();
             }
 
@@ -199,12 +199,12 @@ namespace Mmm.Iot.IdentityGateway.WebService.Controllers
             msg.AddTos(recipients);
 
             msg.SetSubject("Invitation to IoT Platform");
-            Uri uri = new Uri(forwardedFor ?? "https://" + HttpContext.Request.Host.ToString());
+            Uri uri = new Uri(forwardedFor ?? "https://" + this.HttpContext.Request.Host.ToString());
             string link = uri.Host + "#invite=" + inviteToken;
             msg.AddContent(MimeType.Text, "Click here to join the tenant: ");
             msg.AddContent(MimeType.Html, "<a href=\"" + link + "\">" + link + "</a>");
 
-            var client = sendGridClientFactory.CreateSendGridClient();
+            var client = this.sendGridClientFactory.CreateSendGridClient();
             var response = await client.SendEmailAsync(msg);
 
             return await this.container.CreateAsync(input);

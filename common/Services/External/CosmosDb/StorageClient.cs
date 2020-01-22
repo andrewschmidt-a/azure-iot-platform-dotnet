@@ -119,7 +119,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error creating collection with ID {id}, database URL {databaseUrl}, and collection info {collectionInfo}", id, dbUrl, collectionInfo);
+                this.logger.LogError(e, "Error creating collection with ID {id}, database URL {databaseUrl}, and collection info {collectionInfo}", id, dbUrl, collectionInfo);
                 throw;
             }
 
@@ -146,7 +146,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error reading document in collection with collection ID {collectionId}", colId);
+                this.logger.LogError(e, "Error reading document in collection with collection ID {collectionId}", colId);
                 throw;
             }
         }
@@ -165,7 +165,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error upserting document into collection with collection ID {collectionId}", colId);
+                this.logger.LogError(e, "Error upserting document into collection with collection ID {collectionId}", colId);
                 throw;
             }
         }
@@ -190,7 +190,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error deleting document in collection with collection ID {collectionId}", colId);
+                this.logger.LogError(e, "Error deleting document in collection with collection ID {collectionId}", colId);
                 throw;
             }
         }
@@ -209,7 +209,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, "Could not connect to storage at URI {storageUri}; check connection string", storageUri);
+                    this.logger.LogError(e, "Could not connect to storage at URI {storageUri}; check connection string", this.storageUri);
                     throw new InvalidConfigurationException(
                         "Could not connect to DocumentClient, " +
                         "check connection string");
@@ -217,7 +217,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
 
                 if (this.client == null)
                 {
-                    logger.LogError("Could not connect to storage at URI {uri}", storageUri);
+                    this.logger.LogError("Could not connect to storage at URI {uri}", this.storageUri);
                     throw new InvalidConfigurationException(
                         "Could not connect to DocumentClient");
                 }
@@ -247,7 +247,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                logger.LogInformation(e, result.Message);
+                this.logger.LogInformation(e, result.Message);
             }
 
             return result;
@@ -310,7 +310,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 docs.Add(doc);
             }
 
-            logger.LogInformation("Query results count: {count}", docs.Count);
+            this.logger.LogInformation("Query results count: {count}", docs.Count);
 
             return docs;
         }
@@ -344,7 +344,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 return (int)resultList[0];
             }
 
-            logger.LogInformation("No results found for count query '{querySpec}' on collection with ID {collectionId} and database name {databaseName}", querySpec, colId, databaseName);
+            this.logger.LogInformation("No results found for count query '{querySpec}' on collection with ID {collectionId} and database name {databaseName}", querySpec, colId, databaseName);
 
             return 0;
         }
@@ -367,7 +367,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error upserting document into collection with collection ID {collectionId}", colId);
+                this.logger.LogError(e, "Error upserting document into collection with collection ID {collectionId}", colId);
                 throw;
             }
         }

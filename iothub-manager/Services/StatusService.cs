@@ -20,7 +20,7 @@ namespace Mmm.Iot.IoTHubManager.Services
             IAppConfigurationClient appConfig)
                 : base(config)
         {
-            Dependencies = new Dictionary<string, IStatusOperation>
+            this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "Storage Adapter", storageAdapter },
                 { "User Management", userManagement },

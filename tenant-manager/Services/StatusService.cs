@@ -27,7 +27,7 @@ namespace Mmm.Iot.TenantManager.Services
             IAppConfigurationClient appConfigClient)
                 : base(config)
         {
-            Dependencies = new Dictionary<string, IStatusOperation>
+            this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "CosmosDb", cosmosClient },
                 { "Tenant Runbooks", runbookHelper },

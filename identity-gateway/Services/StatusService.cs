@@ -18,7 +18,7 @@ namespace Mmm.Iot.IdentityGateway.Services
             IAzureB2cClient b2cClient)
                 : base(config)
         {
-            Dependencies = new Dictionary<string, IStatusOperation>
+            this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "Table Storage", tableStorage },
                 { "AzureB2C", b2cClient },

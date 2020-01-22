@@ -16,9 +16,9 @@ namespace Mmm.Iot.Common.Services.Models
 
         public StatusApiModel(StatusServiceModel model, string name)
         {
-            Status = new StatusResultApiModel(model.Status);
-            Dependencies = new Dictionary<string, StatusResultApiModel>();
-            Name = name;
+            this.Status = new StatusResultApiModel(model.Status);
+            this.Dependencies = new Dictionary<string, StatusResultApiModel>();
+            this.Name = name;
             foreach (KeyValuePair<string, StatusResultServiceModel> pair in model.Dependencies)
             {
                 this.Dependencies.Add(pair.Key, new StatusResultApiModel(pair.Value));

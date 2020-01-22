@@ -14,6 +14,6 @@ namespace Mmm.Iot.IoTHubManager.Services.Models
 
         public HashSet<string> Reported { get; set; }
 
-        public bool IsNullOrEmpty() => (Tags == null || Tags.Count == 0) && (Reported == null || Reported.Count == 0);
+        public bool IsNullOrEmpty() => (this.Tags == null || this.Tags.Count == 0) && (this.Reported == null || this.Reported.Count == 0);
     }
 }

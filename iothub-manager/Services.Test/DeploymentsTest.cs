@@ -162,12 +162,12 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
         public DeploymentsTest()
         {
             this.registry = new Mock<RegistryManager>();
-            tenantHelper = new Mock<ITenantConnectionHelper>();
-            tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper = new Mock<ITenantConnectionHelper>();
+            this.tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             MockIdentity.MockClaims("one");
-            this.deployments = new Deployments(tenantHelper.Object);
+            this.deployments = new Deployments(this.tenantHelper.Object);
         }
 
         [Theory]
@@ -202,7 +202,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
                 Labels = new Dictionary<string, string>()
                 {
                     { DeploymentNameLabel, deploymentName },
-                    { packageTypeLabel, PackageType.EdgeManifest.ToString() },
+                    { this.packageTypeLabel, PackageType.EdgeManifest.ToString() },
                     { DeploymentGroupIdLabel, deviceGroupId },
                     { RmCreatedLabel, bool.TrueString },
                 },
@@ -218,7 +218,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
                     c.Labels[RmCreatedLabel] == bool.TrueString)))
                 .ReturnsAsync(newConfig);
 
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             if (string.IsNullOrEmpty(expectedException))
@@ -248,7 +248,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
 
             this.registry.Setup(r => r.GetConfigurationAsync(It.IsAny<string>()))
                 .ReturnsAsync(configuration);
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act & Assert
             await Assert.ThrowsAsync(
@@ -271,7 +271,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
             }
 
             this.registry.Setup(r => r.GetConfigurationsAsync(20)).ReturnsAsync(configurations);
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployments = await this.deployments.ListAsync();
@@ -298,7 +298,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
             IQuery queryResult = new ResultQuery(3);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(queryResult);
 
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId, true);
@@ -342,7 +342,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
                 {
                     { DeploymentNameLabel, string.Empty },
                     { DeploymentGroupIdLabel, string.Empty },
-                    { packageTypeLabel, label },
+                    { this.packageTypeLabel, label },
                     { ConfigurationTypeLabel, "CustomConfig" },
                     { RmCreatedLabel, bool.TrueString },
                 },
@@ -353,7 +353,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
             this.registry.Setup(r => r.GetConfigurationAsync(deploymentId)).ReturnsAsync(configuration);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(new ResultQuery(0));
 
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId);
@@ -406,7 +406,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
                 {
                     { DeploymentNameLabel, string.Empty },
                     { DeploymentGroupIdLabel, string.Empty },
-                    { packageTypeLabel, label },
+                    { this.packageTypeLabel, label },
                     { ConfigurationTypeLabel, firmware },
                     { RmCreatedLabel, bool.TrueString },
                 },
@@ -416,7 +416,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
             var deploymentId = configuration.Id;
             this.registry.Setup(r => r.GetConfigurationAsync(deploymentId)).ReturnsAsync(configuration);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(new ResultQuery(0));
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId);
@@ -452,7 +452,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
             {
                 Labels = new Dictionary<string, string>()
                 {
-                    { packageTypeLabel, PackageType.EdgeManifest.ToString() },
+                    { this.packageTypeLabel, PackageType.EdgeManifest.ToString() },
                     { DeploymentNameLabel, deploymentName },
                     { DeploymentGroupIdLabel, deviceGroupId },
                     { RmCreatedLabel, bool.TrueString },
@@ -471,7 +471,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
                     c.Labels[RmCreatedLabel] == bool.TrueString)))
                 .ReturnsAsync(newConfig);
 
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var createdDeployment = await this.deployments.CreateAsync(depModel);
@@ -498,7 +498,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
 
             this.registry.Setup(r => r.GetConfigurationsAsync(20))
                 .ReturnsAsync(configurations);
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployments = await this.deployments.ListAsync();
@@ -514,7 +514,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
             {
                 Labels = new Dictionary<string, string>()
                 {
-                    { packageTypeLabel, PackageType.EdgeManifest.ToString() },
+                    { this.packageTypeLabel, PackageType.EdgeManifest.ToString() },
                     { DeploymentNameLabel, "deployment" + idx },
                     { DeploymentGroupIdLabel, "dvcGroupId" + idx },
                 },

@@ -19,7 +19,7 @@ namespace Mmm.Iot.IdentityGateway.Services.Models
 
         public Task<AuthenticationResult> AcquireTokenAsync(string resource, ClientCredential clientCredential)
         {
-            return authContext.AcquireTokenAsync(resource, clientCredential);
+            return this.authContext.AcquireTokenAsync(resource, clientCredential);
         }
     }
 }

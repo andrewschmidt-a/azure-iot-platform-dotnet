@@ -94,17 +94,17 @@ namespace Mmm.Iot.IoTHubManager.Services
 
             // TODO: Add specific exception handling when exception types are exposed
             // https://github.com/Azure/azure-iot-sdk-csharp/issues/649
-            return new DeploymentServiceModel(await tenantHelper.GetRegistry().AddConfigurationAsync(configuration));
+            return new DeploymentServiceModel(await this.tenantHelper.GetRegistry().AddConfigurationAsync(configuration));
         }
 
         public async Task<DeploymentServiceListModel> ListAsync()
         {
             // TODO: Currently they only support 20 deployments
-            var deployments = await tenantHelper.GetRegistry().GetConfigurationsAsync(MaxDeployments);
+            var deployments = await this.tenantHelper.GetRegistry().GetConfigurationsAsync(MaxDeployments);
 
             if (deployments == null)
             {
-                throw new ResourceNotFoundException($"No deployments found for {tenantHelper.GetIotHubName()} hub.");
+                throw new ResourceNotFoundException($"No deployments found for {this.tenantHelper.GetIotHubName()} hub.");
             }
 
             List<DeploymentServiceModel> serviceModelDeployments =
@@ -123,7 +123,7 @@ namespace Mmm.Iot.IoTHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            var deployment = await tenantHelper.GetRegistry().GetConfigurationAsync(deploymentId);
+            var deployment = await this.tenantHelper.GetRegistry().GetConfigurationAsync(deploymentId);
 
             if (deployment == null)
             {
@@ -142,7 +142,7 @@ namespace Mmm.Iot.IoTHubManager.Services
             {
                 DeploymentMetrics =
                 {
-                    DeviceMetrics = CalculateDeviceMetrics(deviceStatuses),
+                    DeviceMetrics = this.CalculateDeviceMetrics(deviceStatuses),
                     DeviceStatuses = includeDeviceStatus ? deviceStatuses : null,
                 },
             };
@@ -155,7 +155,7 @@ namespace Mmm.Iot.IoTHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            await tenantHelper.GetRegistry().RemoveConfigurationAsync(deploymentId);
+            await this.tenantHelper.GetRegistry().RemoveConfigurationAsync(deploymentId);
         }
 
         private bool CheckIfDeploymentWasMadeByRM(Configuration conf)
@@ -222,7 +222,7 @@ namespace Mmm.Iot.IoTHubManager.Services
         private HashSet<string> GetDevicesInQuery(string hubQuery, string deploymentId)
         {
             var query = string.Format(hubQuery, deploymentId);
-            var queryResponse = tenantHelper.GetRegistry().CreateQuery(query);
+            var queryResponse = this.tenantHelper.GetRegistry().CreateQuery(query);
             var deviceIds = new HashSet<string>();
 
             try
@@ -240,7 +240,7 @@ namespace Mmm.Iot.IoTHubManager.Services
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error getting status of devices in query {query}", query);
+                this.logger.LogError(ex, "Error getting status of devices in query {query}", query);
             }
 
             return deviceIds;

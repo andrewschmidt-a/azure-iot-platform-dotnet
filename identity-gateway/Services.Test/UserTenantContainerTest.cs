@@ -32,8 +32,8 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
 
         public UserTenantContainerTest()
         {
-            mockTableStorageClient = new Mock<ITableStorageClient> { DefaultValue = DefaultValue.Mock };
-            userTenantContainer = new UserTenantContainer(mockTableStorageClient.Object);
+            this.mockTableStorageClient = new Mock<ITableStorageClient> { DefaultValue = DefaultValue.Mock };
+            this.userTenantContainer = new UserTenantContainer(this.mockTableStorageClient.Object);
         }
 
         public static IEnumerable<object[]> GetRoleLists()
@@ -48,31 +48,31 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void GetAllReturnsExpectedUserTenantList()
         {
             // Arrange
-            dynamicTableEntities = DynamicTableEntityBuilder
+            this.dynamicTableEntities = DynamicTableEntityBuilder
                 .CreateListOfSize(DynamicTableEntityCount)
                 .All()
                 .WithRandomRolesProperty()
-                .TheLast(random.Next(0, DynamicTableEntityCount))
-                .Set(dte => dte.PartitionKey, someUserTenantInput.UserId)
+                .TheLast(this.random.Next(0, DynamicTableEntityCount))
+                .Set(dte => dte.PartitionKey, this.someUserTenantInput.UserId)
                 .BuildList();
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Setup(m => m.QueryAsync(
-                    It.Is<string>(n => n == userTenantContainer.TableName),
+                    It.Is<string>(n => n == this.userTenantContainer.TableName),
                     It.IsAny<TableQuery<UserTenantModel>>(),
                     It.Is<CancellationToken>(t => t == default(CancellationToken))))
-                .ReturnsAsync(dynamicTableEntities
-                    .Where(dte => dte.PartitionKey == someUserTenantInput.UserId)
+                .ReturnsAsync(this.dynamicTableEntities
+                    .Where(dte => dte.PartitionKey == this.someUserTenantInput.UserId)
                     .Select(e => new UserTenantModel(e))
                     .ToList());
 
             // Act
-            var result = await userTenantContainer.GetAllAsync(someUserTenantInput);
+            var result = await this.userTenantContainer.GetAllAsync(this.someUserTenantInput);
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Verify(
                     m => m.QueryAsync(
-                        It.Is<string>(n => n == userTenantContainer.TableName),
+                        It.Is<string>(n => n == this.userTenantContainer.TableName),
                         It.IsAny<TableQuery<UserTenantModel>>(),
                         It.Is<CancellationToken>(t => t == default(CancellationToken))),
                     Times.Once);
@@ -80,7 +80,7 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
             // Assert
             Assert.Equal("gettenants", result.BatchMethod.ToLowerInvariant());
             Assert.NotNull(result.Models);
-            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.Models.Count);
+            Assert.Equal(this.dynamicTableEntities.Count(dte => dte.PartitionKey == this.someUserTenantInput.UserId), result.Models.Count);
         }
 
         [Fact]
@@ -88,21 +88,21 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void GetAllUsersReturnsExpectedUserTenantList()
         {
             // Arrange
-            dynamicTableEntities = DynamicTableEntityBuilder
+            this.dynamicTableEntities = DynamicTableEntityBuilder
                 .CreateListOfSize(DynamicTableEntityCount)
                 .All()
                 .WithRandomRolesProperty()
-                .TheLast(random.Next(0, DynamicTableEntityCount))
-                .Set(dte => dte.RowKey, someUserTenantInput.Tenant)
+                .TheLast(this.random.Next(0, DynamicTableEntityCount))
+                .Set(dte => dte.RowKey, this.someUserTenantInput.Tenant)
                 .BuildList();
 
             // Act
-            var result = await userTenantContainer.GetAllAsync(someUserTenantInput);
+            var result = await this.userTenantContainer.GetAllAsync(this.someUserTenantInput);
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Verify(
                     m => m.QueryAsync(
-                        It.Is<string>(n => n == userTenantContainer.TableName),
+                        It.Is<string>(n => n == this.userTenantContainer.TableName),
                         It.IsAny<TableQuery<UserTenantModel>>(),
                         It.Is<CancellationToken>(t => t == default(CancellationToken))),
                     Times.Once);
@@ -110,7 +110,7 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
             // Assert
             Assert.Equal("gettenants", result.BatchMethod.ToLowerInvariant());
             Assert.NotNull(result.Models);
-            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.Models.Count);
+            Assert.Equal(this.dynamicTableEntities.Count(dte => dte.PartitionKey == this.someUserTenantInput.UserId), result.Models.Count);
         }
 
         [Fact]
@@ -118,15 +118,15 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void GetAllReturnsEmptyUserTenantList()
         {
             // Arrange
-            dynamicTableEntities = new List<DynamicTableEntity>();
+            this.dynamicTableEntities = new List<DynamicTableEntity>();
 
             // Act
-            var result = await userTenantContainer.GetAllAsync(someUserTenantInput);
+            var result = await this.userTenantContainer.GetAllAsync(this.someUserTenantInput);
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Verify(
                     m => m.QueryAsync(
-                        It.Is<string>(n => n == userTenantContainer.TableName),
+                        It.Is<string>(n => n == this.userTenantContainer.TableName),
                         It.IsAny<TableQuery<UserTenantModel>>(),
                         It.Is<CancellationToken>(t => t == default(CancellationToken))),
                     Times.Once);
@@ -142,28 +142,28 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void GetReturnsExpectedUserTenant()
         {
             // Arrange
-            dynamicTableEntities = DynamicTableEntityBuilder
+            this.dynamicTableEntities = DynamicTableEntityBuilder
                 .CreateListOfSize(DynamicTableEntityCount)
                 .All()
                 .WithRandomRolesProperty()
                 .TheLast(1)
-                .Set(dte => dte.PartitionKey, someUserTenantInput.UserId)
-                .Set(dte => dte.RowKey, someUserTenantInput.Tenant)
+                .Set(dte => dte.PartitionKey, this.someUserTenantInput.UserId)
+                .Set(dte => dte.RowKey, this.someUserTenantInput.Tenant)
                 .BuildList();
 
             // Act
-            var result = await userTenantContainer.GetAsync(someUserTenantInput);
+            var result = await this.userTenantContainer.GetAsync(this.someUserTenantInput);
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Verify(
                     m => m.RetrieveAsync<UserTenantModel>(
-                        It.Is<string>(n => n == userTenantContainer.TableName),
+                        It.Is<string>(n => n == this.userTenantContainer.TableName),
                         It.IsAny<string>(),
                         It.IsAny<string>()),
                     Times.Once);
 
             // Assert
-            AssertUserTenantMatchesInput(result);
+            this.AssertUserTenantMatchesInput(result);
         }
 
         [Fact]
@@ -171,20 +171,20 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void GetReturnsEmptyUserTenant()
         {
             // Arrange
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Setup(m => m.RetrieveAsync<UserTenantModel>(
-                    It.Is<string>(n => n == userTenantContainer.TableName),
+                    It.Is<string>(n => n == this.userTenantContainer.TableName),
                     It.IsAny<string>(),
                     It.IsAny<string>()))
                 .ReturnsAsync((UserTenantModel)null);
 
             // Act
-            var result = await userTenantContainer.GetAsync(someUserTenantInput);
+            var result = await this.userTenantContainer.GetAsync(this.someUserTenantInput);
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Verify(
                     m => m.RetrieveAsync<UserTenantModel>(
-                        It.Is<string>(n => n == userTenantContainer.TableName),
+                        It.Is<string>(n => n == this.userTenantContainer.TableName),
                         It.IsAny<string>(),
                         It.IsAny<string>()),
                     Times.Once);
@@ -198,39 +198,39 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void CreateReturnsExpectedUserTenant()
         {
             // Arrange
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Setup(m => m.RetrieveAsync<UserTenantModel>(
-                    It.Is<string>(n => n == userTenantContainer.TableName),
+                    It.Is<string>(n => n == this.userTenantContainer.TableName),
                     It.IsAny<string>(),
                     It.IsAny<string>()))
                 .ReturnsAsync((UserTenantModel)null);
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Setup(m => m.InsertAsync(
-                    It.Is<string>(n => n == userTenantContainer.TableName),
-                    It.Is<UserTenantModel>(t => t.TenantId == someUserTenantInput.Tenant && t.UserId == someUserTenantInput.UserId)))
-                .ReturnsAsync(new UserTenantModel(someUserTenantInput));
+                    It.Is<string>(n => n == this.userTenantContainer.TableName),
+                    It.Is<UserTenantModel>(t => t.TenantId == this.someUserTenantInput.Tenant && t.UserId == this.someUserTenantInput.UserId)))
+                .ReturnsAsync(new UserTenantModel(this.someUserTenantInput));
 
             // Act
-            var result = await userTenantContainer.CreateAsync(someUserTenantInput);
+            var result = await this.userTenantContainer.CreateAsync(this.someUserTenantInput);
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Verify(
                     m => m.RetrieveAsync<UserTenantModel>(
-                        It.Is<string>(n => n == userTenantContainer.TableName),
+                        It.Is<string>(n => n == this.userTenantContainer.TableName),
                         It.IsAny<string>(),
                         It.IsAny<string>()),
                     Times.Once);
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Verify(
                     m => m.InsertAsync(
-                        It.Is<string>(n => n == userTenantContainer.TableName),
-                        It.Is<UserTenantModel>(u => u.TenantId == someUserTenantInput.Tenant && u.UserId == someUserTenantInput.UserId)),
+                        It.Is<string>(n => n == this.userTenantContainer.TableName),
+                        It.Is<UserTenantModel>(u => u.TenantId == this.someUserTenantInput.Tenant && u.UserId == this.someUserTenantInput.UserId)),
                     Times.Once);
 
             // Assert
-            AssertUserTenantMatchesInput(result);
+            this.AssertUserTenantMatchesInput(result);
         }
 
         [Fact]
@@ -238,41 +238,41 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void CreateHandlesNullUserIdAndReturnsExpectedUserTenant()
         {
             // Arrange
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Setup(m => m.RetrieveAsync<UserTenantModel>(
-                    It.Is<string>(n => n == userTenantContainer.TableName),
+                    It.Is<string>(n => n == this.userTenantContainer.TableName),
                     It.IsAny<string>(),
                     It.IsAny<string>()))
                 .ReturnsAsync((UserTenantModel)null);
 
-            someUserTenantInput.UserId = null;
+            this.someUserTenantInput.UserId = null;
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Setup(m => m.InsertAsync(
-                    It.Is<string>(n => n == userTenantContainer.TableName),
-                    It.Is<UserTenantModel>(u => u.TenantId == someUserTenantInput.Tenant)))
-                .ReturnsAsync(new UserTenantModel(someUserTenantInput));
+                    It.Is<string>(n => n == this.userTenantContainer.TableName),
+                    It.Is<UserTenantModel>(u => u.TenantId == this.someUserTenantInput.Tenant)))
+                .ReturnsAsync(new UserTenantModel(this.someUserTenantInput));
 
             // Act
-            var result = await userTenantContainer.CreateAsync(someUserTenantInput);
+            var result = await this.userTenantContainer.CreateAsync(this.someUserTenantInput);
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Verify(
                     m => m.RetrieveAsync<UserTenantModel>(
-                        It.Is<string>(n => n == userTenantContainer.TableName),
+                        It.Is<string>(n => n == this.userTenantContainer.TableName),
                         It.IsAny<string>(),
                         It.IsAny<string>()),
                     Times.Once);
 
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Verify(
                     m => m.InsertAsync(
-                        It.Is<string>(n => n == userTenantContainer.TableName),
-                        It.Is<UserTenantModel>(u => u.TenantId == someUserTenantInput.Tenant && u.UserId == someUserTenantInput.UserId)),
+                        It.Is<string>(n => n == this.userTenantContainer.TableName),
+                        It.Is<UserTenantModel>(u => u.TenantId == this.someUserTenantInput.Tenant && u.UserId == this.someUserTenantInput.UserId)),
                     Times.Once);
 
             // Assert
-            AssertUserTenantMatchesInput(result);
+            this.AssertUserTenantMatchesInput(result);
         }
 
         [Fact]
@@ -280,15 +280,15 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void CreateThrowsWhenUserTenantAlreadyExist()
         {
             // Arrange
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Setup(m => m.RetrieveAsync<UserTenantModel>(
-                    It.Is<string>(n => n == userTenantContainer.TableName),
+                    It.Is<string>(n => n == this.userTenantContainer.TableName),
                     It.IsAny<string>(),
                     It.IsAny<string>()))
-                .ReturnsAsync(new UserTenantModel(someUserTenantInput));
+                .ReturnsAsync(new UserTenantModel(this.someUserTenantInput));
 
             // Act
-            Func<Task> a = async () => await userTenantContainer.CreateAsync(someUserTenantInput);
+            Func<Task> a = async () => await this.userTenantContainer.CreateAsync(this.someUserTenantInput);
 
             // Assert
             await Assert.ThrowsAsync<StorageException>(a);
@@ -299,13 +299,13 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void UpdateReturnsExpectedUserTenant()
         {
             // Arrange
-            someUserTenantInput = Builder<UserTenantInput>.CreateNew().Set(uti => uti.Roles, JsonConvert.SerializeObject(new[] { "someRole", "someOtherRole" })).Build();
+            this.someUserTenantInput = Builder<UserTenantInput>.CreateNew().Set(uti => uti.Roles, JsonConvert.SerializeObject(new[] { "someRole", "someOtherRole" })).Build();
 
             // Act
-            var result = await userTenantContainer.UpdateAsync(someUserTenantInput);
+            var result = await this.userTenantContainer.UpdateAsync(this.someUserTenantInput);
 
             // Assert
-            AssertUserTenantMatchesInput(result);
+            this.AssertUserTenantMatchesInput(result);
         }
 
         [Theory]
@@ -314,11 +314,11 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void UpdateDoesNotThrowWhenUserTenantRoleListIsNullOrEmptyOrWhitespace(string roles)
         {
             // Arrange
-            someUserTenantInput.Roles = roles;
+            this.someUserTenantInput.Roles = roles;
 
             // Act
             // Assert
-            await userTenantContainer.UpdateAsync(someUserTenantInput);
+            await this.userTenantContainer.UpdateAsync(this.someUserTenantInput);
         }
 
         [Fact]
@@ -326,18 +326,18 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void DeleteReturnsExpectedUserTenant()
         {
             // Arrange
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Setup(m => m.RetrieveAsync<UserTenantModel>(
-                    It.Is<string>(n => n == userTenantContainer.TableName),
+                    It.Is<string>(n => n == this.userTenantContainer.TableName),
                     It.IsAny<string>(),
                     It.IsAny<string>()))
-                .ReturnsAsync(new UserTenantModel(someUserTenantInput));
+                .ReturnsAsync(new UserTenantModel(this.someUserTenantInput));
 
             // Act
-            var result = await userTenantContainer.DeleteAsync(someUserTenantInput);
+            var result = await this.userTenantContainer.DeleteAsync(this.someUserTenantInput);
 
             // Assert
-            AssertUserTenantMatchesInput(result);
+            this.AssertUserTenantMatchesInput(result);
         }
 
         [Fact]
@@ -345,15 +345,15 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void DeleteThrowsWhenUserTenantDoesNotExist()
         {
             // Arrange
-            mockTableStorageClient
+            this.mockTableStorageClient
                 .Setup(m => m.RetrieveAsync<UserTenantModel>(
-                    It.Is<string>(n => n == userTenantContainer.TableName),
+                    It.Is<string>(n => n == this.userTenantContainer.TableName),
                     It.IsAny<string>(),
                     It.IsAny<string>()))
                 .ReturnsAsync((UserTenantModel)null);
 
             // Act
-            Func<Task> a = async () => await userTenantContainer.DeleteAsync(someUserTenantInput);
+            Func<Task> a = async () => await this.userTenantContainer.DeleteAsync(this.someUserTenantInput);
 
             // Assert
             await Assert.ThrowsAsync<StorageException>(a);
@@ -364,27 +364,27 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
         public async void DeleteAllReturnsExpectedUserTenantList()
         {
             // Arrange
-            dynamicTableEntities = DynamicTableEntityBuilder
+            this.dynamicTableEntities = DynamicTableEntityBuilder
                 .CreateListOfSize(DynamicTableEntityCount)
                 .All()
                 .WithRandomRolesProperty()
-                .TheLast(random.Next(0, DynamicTableEntityCount))
-                .Set(dte => dte.RowKey, someUserTenantInput.Tenant)
+                .TheLast(this.random.Next(0, DynamicTableEntityCount))
+                .Set(dte => dte.RowKey, this.someUserTenantInput.Tenant)
                 .BuildList();
 
             // Act
-            var result = await userTenantContainer.DeleteAllAsync(someUserTenantInput);
+            var result = await this.userTenantContainer.DeleteAllAsync(this.someUserTenantInput);
 
             // Assert
             Assert.Equal("delete", result.BatchMethod.ToLowerInvariant());
             Assert.NotNull(result.Models);
-            Assert.Equal(dynamicTableEntities.Count(dte => dte.PartitionKey == someUserTenantInput.UserId), result.Models.Count);
+            Assert.Equal(this.dynamicTableEntities.Count(dte => dte.PartitionKey == this.someUserTenantInput.UserId), result.Models.Count);
         }
 
         private void AssertUserTenantMatchesInput(UserTenantModel userTenant)
         {
             Assert.NotNull(userTenant);
-            userTenant = new UserTenantModel(someUserTenantInput);
+            userTenant = new UserTenantModel(this.someUserTenantInput);
             Assert.Equal(userTenant.Name, userTenant.Name);
             Assert.Equal(userTenant.RoleList, userTenant.RoleList);
             Assert.Equal(userTenant.Roles, userTenant.Roles);

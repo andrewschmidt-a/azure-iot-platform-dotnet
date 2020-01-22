@@ -48,7 +48,7 @@ namespace Mmm.Iot.TenantManager.WebService.Controllers
             if (!this.alertingContainer.SaJobExists(model) && createIfNotExists)
             {
                 // If the tenant does not have an sa job, start creating it
-                logger.LogInformation("The tenant does not already have alerting enabled and the createIfNotExists parameter was set to true. Creating a stream analytics job now. TenantId: {tenantId}", tenantId);
+                this.logger.LogInformation("The tenant does not already have alerting enabled and the createIfNotExists parameter was set to true. Creating a stream analytics job now. TenantId: {tenantId}", tenantId);
                 return await this.alertingContainer.AddAlertingAsync(tenantId);
             }
             else

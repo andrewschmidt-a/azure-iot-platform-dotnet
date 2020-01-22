@@ -62,7 +62,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
             get
             {
                 return this.appConfigurationClient.GetValue(
-                    $"{TenantInfoKey}:{httpContextAccessor.HttpContext.Request.GetTenant()}:{TelemetryCollectionKey}");
+                    $"{TenantInfoKey}:{this.httpContextAccessor.HttpContext.Request.GetTenant()}:{TelemetryCollectionKey}");
             }
         }
 
@@ -95,7 +95,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
                 devices,
                 DeviceIdKey);
 
-            logger.LogDebug("Created alarm query {sql}", sql);
+            this.logger.LogDebug("Created alarm query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -143,7 +143,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
                 devices,
                 DeviceIdKey);
 
-            logger.LogDebug("Created alarm by rule query {sql}", sql);
+            this.logger.LogDebug("Created alarm by rule query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -237,7 +237,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
             catch (AggregateException aggregateException)
             {
                 Exception inner = aggregateException.InnerExceptions[0];
-                logger.LogError(inner, "Failed to delete alarm");
+                this.logger.LogError(inner, "Failed to delete alarm");
                 throw inner;
             }
         }
@@ -278,11 +278,11 @@ namespace Mmm.Iot.DeviceTelemetry.Services
 
                     if (retryCount >= this.maxDeleteRetryCount)
                     {
-                        logger.LogError(e, "Failed to delete alarm {id}", id);
+                        this.logger.LogError(e, "Failed to delete alarm {id}", id);
                         throw new ExternalDependencyException(e.Message);
                     }
 
-                    logger.LogWarning(e, "Exception on delete alarm {id}", id);
+                    this.logger.LogWarning(e, "Exception on delete alarm {id}", id);
                     Thread.Sleep(retryTimeSpan);
                 }
             }

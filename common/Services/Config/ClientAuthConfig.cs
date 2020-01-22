@@ -6,6 +6,6 @@ namespace Mmm.Iot.Common.Services.Config
 {
     public partial class ClientAuthConfig
     {
-        public bool CorsEnabled => !string.IsNullOrEmpty(CorsWhitelist?.Trim());
+        public bool CorsEnabled => !string.IsNullOrEmpty(this.CorsWhitelist?.Trim());
     }
 }

@@ -71,7 +71,7 @@ namespace Mmm.Iot.Common.Services.Http
                 SetContent(request, httpMethod, httpRequest);
                 SetHeaders(request, httpRequest);
 
-                logger.LogDebug("Sending {method} request to URI {uri} with options {options}", httpMethod, request.Uri, request.Options);
+                this.logger.LogDebug("Sending {method} request to URI {uri} with options {options}", httpMethod, request.Uri, request.Options);
 
                 try
                 {
@@ -99,7 +99,7 @@ namespace Mmm.Iot.Common.Services.Http
                         errorMessage += " - " + e.InnerException.Message;
                     }
 
-                    logger.LogError(e, "Request failed");
+                    this.logger.LogError(e, "Request failed");
 
                     return new HttpResponse
                     {

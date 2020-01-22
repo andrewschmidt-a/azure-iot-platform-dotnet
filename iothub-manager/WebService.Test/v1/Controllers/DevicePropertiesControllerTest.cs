@@ -18,14 +18,14 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
 {
     public class DevicePropertiesControllerTest : IDisposable
     {
-        private readonly DevicePropertiesController devicePropertiesController;
+        private readonly DevicePropertiesController controller;
         private readonly Mock<IDeviceProperties> devicePropertiesMock;
         private bool disposedValue = false;
 
         public DevicePropertiesControllerTest()
         {
             this.devicePropertiesMock = new Mock<IDeviceProperties>();
-            this.devicePropertiesController = new DevicePropertiesController(this.devicePropertiesMock.Object);
+            this.controller = new DevicePropertiesController(this.devicePropertiesMock.Object);
         }
 
         [Fact]
@@ -37,7 +37,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
             DevicePropertiesApiModel expectedModel = new DevicePropertiesApiModel(this.CreateFakeList());
 
             // Act
-            DevicePropertiesApiModel model = await this.devicePropertiesController.GetAsync();
+            DevicePropertiesApiModel model = await this.controller.GetAsync();
 
             // Assert
             this.devicePropertiesMock.Verify(x => x.GetListAsync(), Times.Once);
@@ -61,24 +61,24 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
             this.devicePropertiesMock.Setup(x => x.GetListAsync()).Throws<ExternalDependencyException>();
 
             // Act - Assert
-            await Assert.ThrowsAsync<ExternalDependencyException>(() => this.devicePropertiesController.GetAsync());
+            await Assert.ThrowsAsync<ExternalDependencyException>(() => this.controller.GetAsync());
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    devicePropertiesController.Dispose();
+                    this.controller.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 

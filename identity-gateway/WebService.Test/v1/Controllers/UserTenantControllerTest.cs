@@ -33,7 +33,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         private const string SomeTenantId = "someTenantId";
         private bool disposedValue = false;
         private Mock<UserTenantContainer> mockUserTenantContainer;
-        private UserTenantController userTenantController;
+        private UserTenantController controller;
         private Mock<HttpContext> mockHttpContext;
         private UserTenantListModel someUserTenantList = new UserTenantListModel();
         private UserTenantModel someUserTenant = new UserTenantModel();
@@ -49,8 +49,8 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
 
         public UserTenantControllerTest()
         {
-            InitializeController();
-            SetupDefaultBehaviors();
+            this.InitializeController();
+            this.SetupDefaultBehaviors();
         }
 
         [Fact]
@@ -59,10 +59,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.GetAllUsersForTenantAsync();
+            var result = await this.controller.GetAllUsersForTenantAsync();
 
             // Assert
-            Assert.Equal(someUserTenantList, result);
+            Assert.Equal(this.someUserTenantList, result);
         }
 
         [Fact]
@@ -71,10 +71,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.UserClaimsGetAllTenantsForUserAsync();
+            var result = await this.controller.UserClaimsGetAllTenantsForUserAsync();
 
             // Assert
-            Assert.Equal(someUserTenantList, result);
+            Assert.Equal(this.someUserTenantList, result);
         }
 
         [Fact]
@@ -83,10 +83,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.GetAllTenantsForUserAsync(SomeUserId);
+            var result = await this.controller.GetAllTenantsForUserAsync(SomeUserId);
 
             // Assert
-            Assert.Equal(someUserTenantList, result);
+            Assert.Equal(this.someUserTenantList, result);
         }
 
         [Fact]
@@ -95,10 +95,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.UserClaimsGetAsync();
+            var result = await this.controller.UserClaimsGetAsync();
 
             // Assert
-            Assert.Equal(someUserTenant, result);
+            Assert.Equal(this.someUserTenant, result);
         }
 
         [Fact]
@@ -107,10 +107,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.GetAsync(SomeUserId);
+            var result = await this.controller.GetAsync(SomeUserId);
 
             // Assert
-            Assert.Equal(someUserTenant, result);
+            Assert.Equal(this.someUserTenant, result);
         }
 
         [Fact]
@@ -119,10 +119,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.PostAsync(SomeUserId, someUserTenant);
+            var result = await this.controller.PostAsync(SomeUserId, this.someUserTenant);
 
             // Assert
-            Assert.Equal(someUserTenant, result);
+            Assert.Equal(this.someUserTenant, result);
         }
 
         [Fact]
@@ -131,10 +131,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.UserClaimsPostAsync(someUserTenant);
+            var result = await this.controller.UserClaimsPostAsync(this.someUserTenant);
 
             // Assert
-            Assert.Equal(someUserTenant, result);
+            Assert.Equal(this.someUserTenant, result);
         }
 
         [Fact]
@@ -143,10 +143,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.PutAsync(SomeUserId, someUserTenant);
+            var result = await this.controller.PutAsync(SomeUserId, this.someUserTenant);
 
             // Assert
-            Assert.Equal(someUserTenant, result);
+            Assert.Equal(this.someUserTenant, result);
         }
 
         [Fact]
@@ -155,10 +155,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.UserClaimsPutAsync(someUserTenant);
+            var result = await this.controller.UserClaimsPutAsync(this.someUserTenant);
 
             // Assert
-            Assert.Equal(someUserTenant, result);
+            Assert.Equal(this.someUserTenant, result);
         }
 
         [Fact]
@@ -167,10 +167,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.DeleteAsync(SomeUserId);
+            var result = await this.controller.DeleteAsync(SomeUserId);
 
             // Assert
-            Assert.Equal(someUserTenant, result);
+            Assert.Equal(this.someUserTenant, result);
         }
 
         [Fact]
@@ -179,10 +179,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.UserClaimsDeleteAsync();
+            var result = await this.controller.UserClaimsDeleteAsync();
 
             // Assert
-            Assert.Equal(someUserTenant, result);
+            Assert.Equal(this.someUserTenant, result);
         }
 
         [Fact]
@@ -191,10 +191,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.DeleteAllAsync();
+            var result = await this.controller.DeleteAllAsync();
 
             // Assert
-            Assert.Equal(someUserTenantList, result);
+            Assert.Equal(this.someUserTenantList, result);
         }
 
         [Fact]
@@ -203,64 +203,64 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userTenantController.InviteAsync(someInvitation);
+            var result = await this.controller.InviteAsync(this.someInvitation);
 
             // Assert
-            Assert.Equal(someUserTenant, result);
+            Assert.Equal(this.someUserTenant, result);
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    userTenantController.Dispose();
+                    this.controller.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
         private void InitializeController()
         {
-            mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
-            mockUserTenantContainer = new Mock<UserTenantContainer>();
-            mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
-            mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
-            mockSendGridClientFactory = new Mock<ISendGridClientFactory> { DefaultValue = DefaultValue.Mock };
-            mockSendGridClient = new Mock<ISendGridClient> { DefaultValue = DefaultValue.Mock };
-            userTenantController = new UserTenantController(mockUserTenantContainer.Object, mockJwtHelper.Object, mockSendGridClientFactory.Object)
+            this.mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
+            this.mockUserTenantContainer = new Mock<UserTenantContainer>();
+            this.mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
+            this.mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
+            this.mockSendGridClientFactory = new Mock<ISendGridClientFactory> { DefaultValue = DefaultValue.Mock };
+            this.mockSendGridClient = new Mock<ISendGridClient> { DefaultValue = DefaultValue.Mock };
+            this.controller = new UserTenantController(this.mockUserTenantContainer.Object, this.mockJwtHelper.Object, this.mockSendGridClientFactory.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
-                    HttpContext = mockHttpContext.Object,
+                    HttpContext = this.mockHttpContext.Object,
                 },
             };
         }
 
         private void SetupDefaultBehaviors()
         {
-            mockUserTenantContainer.Setup(m => m.GetAllAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(someUserTenantList);
-            mockUserTenantContainer.Setup(m => m.GetAllUsersAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(someUserTenantList);
-            mockUserTenantContainer.Setup(m => m.GetAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(someUserTenant);
-            mockUserTenantContainer.Setup(m => m.CreateAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(someUserTenant);
-            mockUserTenantContainer.Setup(m => m.UpdateAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(someUserTenant);
-            mockUserTenantContainer.Setup(m => m.DeleteAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(someUserTenant);
-            mockUserTenantContainer.Setup(m => m.DeleteAllAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(someUserTenantList);
-            mockSendGridClientFactory.Setup(m => m.CreateSendGridClient()).Returns(mockSendGridClient.Object);
-            someSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", someTenant.ToString()) });
-            mockJwtHelper.Setup(m => m.MintToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<DateTime>())).Returns(someSecurityToken);
-            mockSendGridClient.Setup(m => m.SendEmailAsync(It.IsAny<SendGridMessage>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Response(HttpStatusCode.OK, new StringContent(string.Empty), null));
-            mockHttpRequest.Setup(m => m.HttpContext).Returns(mockHttpContext.Object);
-            mockHttpRequest.Setup(m => m.Host).Returns(someHost);
-            mockHttpContext.Setup(m => m.Request).Returns(mockHttpRequest.Object);
-            contextItems = new Dictionary<object, object>
+            this.mockUserTenantContainer.Setup(m => m.GetAllAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(this.someUserTenantList);
+            this.mockUserTenantContainer.Setup(m => m.GetAllUsersAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(this.someUserTenantList);
+            this.mockUserTenantContainer.Setup(m => m.GetAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(this.someUserTenant);
+            this.mockUserTenantContainer.Setup(m => m.CreateAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(this.someUserTenant);
+            this.mockUserTenantContainer.Setup(m => m.UpdateAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(this.someUserTenant);
+            this.mockUserTenantContainer.Setup(m => m.DeleteAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(this.someUserTenant);
+            this.mockUserTenantContainer.Setup(m => m.DeleteAllAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(this.someUserTenantList);
+            this.mockSendGridClientFactory.Setup(m => m.CreateSendGridClient()).Returns(this.mockSendGridClient.Object);
+            this.someSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", this.someTenant.ToString()) });
+            this.mockJwtHelper.Setup(m => m.MintToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<DateTime>())).Returns(this.someSecurityToken);
+            this.mockSendGridClient.Setup(m => m.SendEmailAsync(It.IsAny<SendGridMessage>(), It.IsAny<CancellationToken>())).ReturnsAsync(new Response(HttpStatusCode.OK, new StringContent(string.Empty), null));
+            this.mockHttpRequest.Setup(m => m.HttpContext).Returns(this.mockHttpContext.Object);
+            this.mockHttpRequest.Setup(m => m.Host).Returns(this.someHost);
+            this.mockHttpContext.Setup(m => m.Request).Returns(this.mockHttpRequest.Object);
+            this.contextItems = new Dictionary<object, object>
             {
                 {
                     RequestExtension.ContextKeyUserClaims,
@@ -270,7 +270,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
                     RequestExtension.ContextKeyTenantId, SomeTenantId
                 },
             };
-            mockHttpContext.Setup(m => m.Items).Returns(contextItems);
+            this.mockHttpContext.Setup(m => m.Items).Returns(this.contextItems);
         }
     }
 }

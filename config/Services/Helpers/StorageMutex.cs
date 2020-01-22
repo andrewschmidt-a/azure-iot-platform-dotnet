@@ -43,13 +43,13 @@ namespace Mmm.Iot.Config.Services.Helpers
                         if (model.Metadata.ContainsKey(LastModifiedKey) && DateTimeOffset.TryParse(model.Metadata[LastModifiedKey], out var lastModified))
                         {
                             // Timestamp retrieved successfully, nothing to do
-                            logger.LogInformation($"Mutex {collectionId}.{key} was occupied. Last modified = {lastModified}");
+                            this.logger.LogInformation($"Mutex {collectionId}.{key} was occupied. Last modified = {lastModified}");
                         }
                         else
                         {
                             // Treat it as timeout if the timestamp could not be retrieved
                             lastModified = DateTimeOffset.MinValue;
-                            logger.LogInformation("Mutex {collectionId}.{key} was occupied. Last modified could not be retrieved");
+                            this.logger.LogInformation("Mutex {collectionId}.{key} was occupied. Last modified could not be retrieved");
                         }
 
                         if (DateTimeOffset.UtcNow < lastModified + timeout)
@@ -59,13 +59,13 @@ namespace Mmm.Iot.Config.Services.Helpers
                     }
                     else
                     {
-                        logger.LogInformation($"Mutex {collectionId}.{key} was NOT occupied");
+                        this.logger.LogInformation($"Mutex {collectionId}.{key} was NOT occupied");
                     }
                 }
                 catch (ResourceNotFoundException)
                 {
                     // Mutex is not initialized, treat it as released
-                    logger.LogInformation($"Mutex {collectionId}.{key} was not found");
+                    this.logger.LogInformation($"Mutex {collectionId}.{key} was not found");
                 }
 
                 try

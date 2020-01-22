@@ -27,16 +27,16 @@ namespace Mmm.Iot.IdentityGateway.Services.Models
             }
 
             // checks for http vs https using _httpContext.Request.IsHttps and creates the url accordingly
-            host = forwardedFor ?? $"http{(httpContextAccessor.HttpContext.Request.IsHttps ? "s" : string.Empty)}://{httpContextAccessor.HttpContext.Request.Host.ToString()}";
+            this.host = forwardedFor ?? $"http{(httpContextAccessor.HttpContext.Request.IsHttps ? "s" : string.Empty)}://{httpContextAccessor.HttpContext.Request.Host.ToString()}";
         }
 
-        public virtual string Issuer => host;
+        public virtual string Issuer => this.host;
 
-        public virtual string JwksUri => host + "/.well-known/openid-configuration/jwks";
+        public virtual string JwksUri => this.host + "/.well-known/openid-configuration/jwks";
 
-        public virtual string AuthorizationEndpoint => host + "/connect/authorize";
+        public virtual string AuthorizationEndpoint => this.host + "/connect/authorize";
 
-        public virtual string EndSessionEndpoint => host + "/connect/logout";
+        public virtual string EndSessionEndpoint => this.host + "/connect/logout";
 
         public virtual IEnumerable<string> ScopesSupported => new List<string> { "openid", "profile" };
 

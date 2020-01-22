@@ -74,8 +74,8 @@ namespace Mmm.Iot.IdentityGateway.Services.Models
             {
                 try
                 {
-                    var rolesIsNullOrEmptyOrWhitespace = string.IsNullOrEmpty(Roles) || string.IsNullOrWhiteSpace(Roles);
-                    return rolesIsNullOrEmptyOrWhitespace ? null : JsonConvert.DeserializeObject<List<string>>(Roles);
+                    var rolesIsNullOrEmptyOrWhitespace = string.IsNullOrEmpty(this.Roles) || string.IsNullOrWhiteSpace(this.Roles);
+                    return rolesIsNullOrEmptyOrWhitespace ? null : JsonConvert.DeserializeObject<List<string>>(this.Roles);
                 }
                 catch
                 {

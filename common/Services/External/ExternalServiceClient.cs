@@ -13,8 +13,8 @@ namespace Mmm.Iot.Common.Services.External
     {
         public ExternalServiceClient(string serviceUri, IExternalRequestHelper requestHelper)
         {
-            ServiceUri = serviceUri;
-            RequestHelper = requestHelper;
+            this.ServiceUri = serviceUri;
+            this.RequestHelper = requestHelper;
         }
 
         protected string ServiceUri { get; private set; }
@@ -25,12 +25,12 @@ namespace Mmm.Iot.Common.Services.External
         {
             try
             {
-                var status = await RequestHelper.ProcessStatusAsync(ServiceUri);
+                var status = await this.RequestHelper.ProcessStatusAsync(this.ServiceUri);
                 return status.Status;
             }
             catch (Exception e)
             {
-                return new StatusResultServiceModel(false, $"Unable to get the status of external service client at {ServiceUri}/status. {e.Message}");
+                return new StatusResultServiceModel(false, $"Unable to get the status of external service client at {this.ServiceUri}/status. {e.Message}");
             }
         }
     }

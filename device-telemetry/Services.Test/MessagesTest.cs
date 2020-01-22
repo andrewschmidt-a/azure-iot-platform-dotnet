@@ -44,18 +44,18 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
                     },
                 },
             };
-            storageClient = new Mock<IStorageClient>();
-            timeSeriesClient = new Mock<ITimeSeriesClient>();
-            httpContextAccessor = new Mock<IHttpContextAccessor>();
-            appConfigHelper = new Mock<IAppConfigurationClient>();
-            logger = new Mock<ILogger<Messages>>();
-            messages = new Messages(
+            this.storageClient = new Mock<IStorageClient>();
+            this.timeSeriesClient = new Mock<ITimeSeriesClient>();
+            this.httpContextAccessor = new Mock<IHttpContextAccessor>();
+            this.appConfigHelper = new Mock<IAppConfigurationClient>();
+            this.logger = new Mock<ILogger<Messages>>();
+            this.messages = new Messages(
                 servicesConfig,
-                storageClient.Object,
-                timeSeriesClient.Object,
-                logger.Object,
-                httpContextAccessor.Object,
-                appConfigHelper.Object);
+                this.storageClient.Object,
+                this.timeSeriesClient.Object,
+                this.logger.Object,
+                this.httpContextAccessor.Object,
+                this.appConfigHelper.Object);
         }
 
         [Fact]
@@ -63,11 +63,11 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
         public async Task InitialListIsEmptyAsync()
         {
             // Arrange
-            ThereAreNoMessagesInStorage();
+            this.ThereAreNoMessagesInStorage();
             var devices = new string[] { "device1" };
 
             // Act
-            var list = await messages.ListAsync(null, null, "asc", SKIP, LIMIT, devices);
+            var list = await this.messages.ListAsync(null, null, "asc", SKIP, LIMIT, devices);
 
             // Assert
             Assert.Empty(list.Messages);
@@ -79,11 +79,11 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
         public async Task GetListWithValuesAsync()
         {
             // Arrange
-            ThereAreSomeMessagesInStorage();
+            this.ThereAreSomeMessagesInStorage();
             var devices = new string[] { "device1" };
 
             // Act
-            var list = await messages.ListAsync(null, null, "asc", SKIP, LIMIT, devices);
+            var list = await this.messages.ListAsync(null, null, "asc", SKIP, LIMIT, devices);
 
             // Assert
             Assert.NotEmpty(list.Messages);
@@ -103,12 +103,12 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
             };
 
             // Act & Assert
-            await Assert.ThrowsAsync<InvalidInputException>(async () => await messages.ListAsync(null, null, xssString, 0, LIMIT, xssList.ToArray()));
+            await Assert.ThrowsAsync<InvalidInputException>(async () => await this.messages.ListAsync(null, null, xssString, 0, LIMIT, xssList.ToArray()));
         }
 
         private void ThereAreNoMessagesInStorage()
         {
-            timeSeriesClient.Setup(x => x.QueryEventsAsync(null, null, It.IsAny<string>(), SKIP, LIMIT, It.IsAny<string[]>()))
+            this.timeSeriesClient.Setup(x => x.QueryEventsAsync(null, null, It.IsAny<string>(), SKIP, LIMIT, It.IsAny<string[]>()))
                 .ReturnsAsync(new MessageList());
         }
 
@@ -129,7 +129,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
             sampleProperties.Add("data.sample_unit");
             sampleProperties.Add("data.sample_speed");
 
-            timeSeriesClient.Setup(x => x.QueryEventsAsync(null, null, It.IsAny<string>(), SKIP, LIMIT, It.IsAny<string[]>()))
+            this.timeSeriesClient.Setup(x => x.QueryEventsAsync(null, null, It.IsAny<string>(), SKIP, LIMIT, It.IsAny<string[]>()))
                 .ReturnsAsync(new MessageList(sampleMessages, sampleProperties));
         }
     }

@@ -32,7 +32,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Controllers
         [HttpGet(".well-known/openid-configuration")]
         public IActionResult GetOpenIdProviderConfiguration()
         {
-            return new OkObjectResult(openIdProviderConfiguration) { ContentTypes = new MediaTypeCollection { ContentType } };
+            return new OkObjectResult(this.openIdProviderConfiguration) { ContentTypes = new MediaTypeCollection { ContentType } };
         }
 
         // GET api/values
@@ -41,7 +41,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Controllers
         {
             var serializerSettings = new JsonSerializerSettings();
             serializerSettings.ContractResolver = new LowercaseContractResolver();
-            return new ContentResult() { Content = JsonConvert.SerializeObject(rsaHelpers.GetJsonWebKey(config.IdentityGatewayService.PublicKey), serializerSettings), ContentType = ContentType, StatusCode = StatusCodes.Status200OK };
+            return new ContentResult() { Content = JsonConvert.SerializeObject(this.rsaHelpers.GetJsonWebKey(this.config.IdentityGatewayService.PublicKey), serializerSettings), ContentType = ContentType, StatusCode = StatusCodes.Status200OK };
         }
     }
 }

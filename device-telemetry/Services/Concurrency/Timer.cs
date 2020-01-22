@@ -46,7 +46,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Concurrency
         {
             if (this.timer == null)
             {
-                logger.LogError("The timer is not initialized");
+                this.logger.LogError("The timer is not initialized");
                 throw new TimerNotInitializedException();
             }
 
@@ -62,19 +62,19 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Concurrency
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    Stop();
+                    this.Stop();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
     }

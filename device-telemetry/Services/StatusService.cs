@@ -26,7 +26,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
             IAppConfigurationClient appConfig)
                 : base(config)
         {
-            Dependencies = new Dictionary<string, IStatusOperation>
+            this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "Storage Adapter", storageAdapter },
                 { "Storage", storageClient },

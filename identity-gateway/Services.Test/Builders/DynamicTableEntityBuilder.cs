@@ -13,17 +13,17 @@ namespace Mmm.Iot.IdentityGateway.Services.Test.Helpers.Builders
     {
         public virtual DynamicTableEntityBuilder WithRandomValueProperty()
         {
-            return Set(dte => dte.Properties, new Dictionary<string, EntityProperty> { { "Value", new EntityProperty(Any.String()) } });
+            return this.Set(dte => dte.Properties, new Dictionary<string, EntityProperty> { { "Value", new EntityProperty(this.Any.String()) } });
         }
 
         public virtual DynamicTableEntityBuilder WithRandomRolesProperty()
         {
-            return Set(dte => dte.Properties, new Dictionary<string, EntityProperty> { { "Roles", new EntityProperty(Any.String()) } });
+            return this.Set(dte => dte.Properties, new Dictionary<string, EntityProperty> { { "Roles", new EntityProperty(this.Any.String()) } });
         }
 
         protected override DynamicTableEntity BuildObject()
         {
-            return new DynamicTableEntity(Get(dte => dte.PartitionKey), Get(dte => dte.RowKey), Get(dte => dte.ETag), Get(dte => dte.Properties));
+            return new DynamicTableEntity(this.Get(dte => dte.PartitionKey), this.Get(dte => dte.RowKey), this.Get(dte => dte.ETag), this.Get(dte => dte.Properties));
         }
     }
 }

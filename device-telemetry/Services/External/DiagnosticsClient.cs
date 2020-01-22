@@ -82,7 +82,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.External
             }
             catch (Exception e)
             {
-                logger.LogWarning(e, "Cannot log to diagnostics service, diagnostics url not provided");
+                this.logger.LogWarning(e, "Cannot log to diagnostics service, diagnostics url not provided");
             }
         }
 
@@ -111,7 +111,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.External
             }
             catch (Exception e)
             {
-                logger.LogError(e, message);
+                this.logger.LogError(e, message);
             }
 
             return new StatusResultServiceModel(isHealthy, message);
@@ -129,7 +129,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.External
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
                         retries++;
-                        LogAndSleepOnFailure(retries, response.Content);
+                        this.LogAndSleepOnFailure(retries, response.Content);
                     }
                     else
                     {
@@ -139,7 +139,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.External
                 catch (Exception e)
                 {
                     retries++;
-                    LogAndSleepOnFailure(retries, e.Message);
+                    this.LogAndSleepOnFailure(retries, e.Message);
                 }
             }
         }
@@ -150,12 +150,12 @@ namespace Mmm.Iot.DeviceTelemetry.Services.External
             {
                 int retriesLeft = this.maxRetries - retries;
                 string logString = $"";
-                logger.LogWarning("Failed to log to diagnostics: {errorMessage}. {retriesLeft} retries remaining", errorMessage, retriesLeft);
+                this.logger.LogWarning("Failed to log to diagnostics: {errorMessage}. {retriesLeft} retries remaining", errorMessage, retriesLeft);
                 Thread.Sleep(RetrySleepMilliseconds);
             }
             else
             {
-                logger.LogError("Failed to log to diagnostics: {errorMessage}. Reached max retries and will not log.", errorMessage);
+                this.logger.LogError("Failed to log to diagnostics: {errorMessage}. Reached max retries and will not log.", errorMessage);
             }
         }
     }

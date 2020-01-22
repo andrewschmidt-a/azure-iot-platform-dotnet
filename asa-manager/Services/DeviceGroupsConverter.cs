@@ -57,13 +57,13 @@ namespace Mmm.Iot.AsaManager.Services
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
             if (deviceGroups.Items.Count() == 0 || deviceGroups == null)
             {
-                Logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw new ResourceNotFoundException("No entities were receieved from storage adapter to convert to rules.");
             }
 
@@ -81,7 +81,7 @@ namespace Mmm.Iot.AsaManager.Services
                     }
                     catch (Exception)
                     {
-                        Logger.LogInformation("Unable to convert a device group to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                        this.Logger.LogInformation("Unable to convert a device group to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                     }
                 }
 
@@ -94,7 +94,7 @@ namespace Mmm.Iot.AsaManager.Services
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Unable to convert {entity} queried from storage adapter to appropriate data model. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to convert {entity} queried from storage adapter to appropriate data model. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
@@ -113,14 +113,14 @@ namespace Mmm.Iot.AsaManager.Services
                 {
                     // Do not throw an exception here, attempt to query other device groups instead to get as much data as possible
                     // Log all device groups that could not be retreived
-                    Logger.LogError(e, "Unable to get list of devices for devicegroup {deviceGroup} from IotHubManager. OperationId: {operationId}. TenantId: {tenantId}", deviceGroup.Id, operationId, tenantId);
+                    this.Logger.LogError(e, "Unable to get list of devices for devicegroup {deviceGroup} from IotHubManager. OperationId: {operationId}. TenantId: {tenantId}", deviceGroup.Id, operationId, tenantId);
                 }
             }
 
             if (deviceMapping.Count() == 0)
             {
                 string groups = $"[{string.Join(", ", deviceGroupModels.Items.Select(group => group.Id))}]";
-                Logger.LogError("No Devices were found for any {entity}. OperationId: {operationId}. TenantId: {tenantId}\n{deviceGroups}", this.Entity, operationId, tenantId, groups);
+                this.Logger.LogError("No Devices were found for any {entity}. OperationId: {operationId}. TenantId: {tenantId}\n{deviceGroups}", this.Entity, operationId, tenantId, groups);
                 throw new ResourceNotFoundException($"No Devices were found for any {this.Entity}.");
             }
 
@@ -141,7 +141,7 @@ namespace Mmm.Iot.AsaManager.Services
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Unable to serialize the {entity} data models for the temporary file content. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to serialize the {entity} data models for the temporary file content. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
@@ -154,7 +154,7 @@ namespace Mmm.Iot.AsaManager.Services
                 Entities = deviceGroups,
                 OperationId = operationId,
             };
-            Logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
+            this.Logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
             return conversionResponse;
         }
     }

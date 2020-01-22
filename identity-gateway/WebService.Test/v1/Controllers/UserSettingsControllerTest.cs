@@ -27,7 +27,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         private Mock<HttpRequest> mockHttpRequest;
         private bool disposedValue = false;
         private Mock<UserSettingsContainer> mockUserSettingsContainer;
-        private UserSettingsController userSettingsController;
+        private UserSettingsController controller;
         private Mock<HttpContext> mockHttpContext;
         private UserSettingsListModel someUserSettingsList = new UserSettingsListModel();
         private UserSettingsModel someUserSettings = new UserSettingsModel();
@@ -35,8 +35,8 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
 
         public UserSettingsControllerTest()
         {
-            InitializeController();
-            SetupDefaultBehaviors();
+            this.InitializeController();
+            this.SetupDefaultBehaviors();
         }
 
         [Fact]
@@ -45,10 +45,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.GetAllAsync(SomeUserId);
+            var result = await this.controller.GetAllAsync(SomeUserId);
 
             // Assert
-            Assert.Equal(someUserSettingsList, result);
+            Assert.Equal(this.someUserSettingsList, result);
         }
 
         [Fact]
@@ -57,10 +57,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.UserClaimsGetAllAsync();
+            var result = await this.controller.UserClaimsGetAllAsync();
 
             // Assert
-            Assert.Equal(someUserSettingsList, result);
+            Assert.Equal(this.someUserSettingsList, result);
         }
 
         [Fact]
@@ -69,10 +69,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.GetAsync(SomeUserId, SomeSetting);
+            var result = await this.controller.GetAsync(SomeUserId, SomeSetting);
 
             // Assert
-            Assert.Equal(someUserSettings, result);
+            Assert.Equal(this.someUserSettings, result);
         }
 
         [Fact]
@@ -81,10 +81,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.UserClaimsGetAsync(SomeSetting);
+            var result = await this.controller.UserClaimsGetAsync(SomeSetting);
 
             // Assert
-            Assert.Equal(someUserSettings, result);
+            Assert.Equal(this.someUserSettings, result);
         }
 
         [Fact]
@@ -93,10 +93,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.PostAsync(SomeUserId, SomeSetting, SomeValue);
+            var result = await this.controller.PostAsync(SomeUserId, SomeSetting, SomeValue);
 
             // Assert
-            Assert.Equal(someUserSettings, result);
+            Assert.Equal(this.someUserSettings, result);
         }
 
         [Fact]
@@ -105,10 +105,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.UserClaimsPostAsync(SomeSetting, SomeValue);
+            var result = await this.controller.UserClaimsPostAsync(SomeSetting, SomeValue);
 
             // Assert
-            Assert.Equal(someUserSettings, result);
+            Assert.Equal(this.someUserSettings, result);
         }
 
         [Fact]
@@ -117,10 +117,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.PutAsync(SomeUserId, SomeSetting, SomeValue);
+            var result = await this.controller.PutAsync(SomeUserId, SomeSetting, SomeValue);
 
             // Assert
-            Assert.Equal(someUserSettings, result);
+            Assert.Equal(this.someUserSettings, result);
         }
 
         [Fact]
@@ -129,10 +129,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.UserClaimsPutAsync(SomeSetting, SomeValue);
+            var result = await this.controller.UserClaimsPutAsync(SomeSetting, SomeValue);
 
             // Assert
-            Assert.Equal(someUserSettings, result);
+            Assert.Equal(this.someUserSettings, result);
         }
 
         [Fact]
@@ -141,10 +141,10 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.DeleteAsync(SomeUserId, SomeSetting);
+            var result = await this.controller.DeleteAsync(SomeUserId, SomeSetting);
 
             // Assert
-            Assert.Equal(someUserSettings, result);
+            Assert.Equal(this.someUserSettings, result);
         }
 
         [Fact]
@@ -153,61 +153,61 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             // Act
-            var result = await userSettingsController.UserClaimsDeleteAsync(SomeSetting);
+            var result = await this.controller.UserClaimsDeleteAsync(SomeSetting);
 
             // Assert
-            Assert.Equal(someUserSettings, result);
+            Assert.Equal(this.someUserSettings, result);
         }
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    userSettingsController.Dispose();
+                    this.controller.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 
         private void InitializeController()
         {
-            mockUserSettingsContainer = new Mock<UserSettingsContainer>();
-            mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
-            mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
-            userSettingsController = new UserSettingsController(mockUserSettingsContainer.Object)
+            this.mockUserSettingsContainer = new Mock<UserSettingsContainer>();
+            this.mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
+            this.mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
+            this.controller = new UserSettingsController(this.mockUserSettingsContainer.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
-                    HttpContext = mockHttpContext.Object,
+                    HttpContext = this.mockHttpContext.Object,
                 },
             };
         }
 
         private void SetupDefaultBehaviors()
         {
-            mockUserSettingsContainer.Setup(m => m.GetAllAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettingsList);
-            mockUserSettingsContainer.Setup(m => m.GetAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettings);
-            mockUserSettingsContainer.Setup(m => m.CreateAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettings);
-            mockUserSettingsContainer.Setup(m => m.UpdateAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettings);
-            mockUserSettingsContainer.Setup(m => m.DeleteAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(someUserSettings);
-            mockHttpRequest.Setup(m => m.HttpContext).Returns(mockHttpContext.Object);
-            mockHttpContext.Setup(m => m.Request).Returns(mockHttpRequest.Object);
-            contextItems = new Dictionary<object, object>
+            this.mockUserSettingsContainer.Setup(m => m.GetAllAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(this.someUserSettingsList);
+            this.mockUserSettingsContainer.Setup(m => m.GetAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(this.someUserSettings);
+            this.mockUserSettingsContainer.Setup(m => m.CreateAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(this.someUserSettings);
+            this.mockUserSettingsContainer.Setup(m => m.UpdateAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(this.someUserSettings);
+            this.mockUserSettingsContainer.Setup(m => m.DeleteAsync(It.IsAny<UserSettingsInput>())).ReturnsAsync(this.someUserSettings);
+            this.mockHttpRequest.Setup(m => m.HttpContext).Returns(this.mockHttpContext.Object);
+            this.mockHttpContext.Setup(m => m.Request).Returns(this.mockHttpRequest.Object);
+            this.contextItems = new Dictionary<object, object>
             {
                 {
                     RequestExtension.ContextKeyUserClaims,
                     new List<Claim> { new Claim(RequestExtension.UserObjectIdClaimType, SomeSub) }
                 },
             };
-            mockHttpContext.Setup(m => m.Items).Returns(contextItems);
+            this.mockHttpContext.Setup(m => m.Items).Returns(this.contextItems);
         }
     }
 }

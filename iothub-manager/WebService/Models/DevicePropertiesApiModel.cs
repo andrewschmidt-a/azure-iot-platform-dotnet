@@ -16,7 +16,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Models
 
         public DevicePropertiesApiModel(List<string> model)
         {
-            Items = model;
+            this.Items = model;
             this.Metadata = new Dictionary<string, string>
             {
                 { "$type", $"DevicePropertyList;1" },

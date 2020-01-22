@@ -11,8 +11,8 @@ namespace Mmm.Iot.Common.Services.Models
         [JsonConstructor]
         public StatusResultServiceModel(bool isHealthy, string message)
         {
-            IsHealthy = isHealthy;
-            Message = message;
+            this.IsHealthy = isHealthy;
+            this.Message = message;
         }
 
         [JsonProperty(PropertyName = "IsHealthy")]

@@ -28,11 +28,11 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
         public DevicesTest()
         {
             this.registryMock = new Mock<RegistryManager>();
-            tenantHelper = new Mock<ITenantConnectionHelper>();
-            tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registryMock.Object);
+            this.tenantHelper = new Mock<ITenantConnectionHelper>();
+            this.tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registryMock.Object);
             MockIdentity.MockClaims("one");
-            this.devices = new Devices(tenantHelper.Object, ioTHubHostName);
+            this.devices = new Devices(this.tenantHelper.Object, this.ioTHubHostName);
         }
 
         [Theory]
@@ -166,8 +166,8 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
         public async Task TestConnectedEdgeDevice()
         {
             // Arrange
-            var twins = CreateTestListOfTwins();
-            var connectedTwins = CreateTestListOfTwins();
+            var twins = this.CreateTestListOfTwins();
+            var connectedTwins = this.CreateTestListOfTwins();
             connectedTwins.RemoveAt(3);
 
             this.registryMock

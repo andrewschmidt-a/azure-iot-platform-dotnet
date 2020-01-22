@@ -21,9 +21,9 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
 
         public async Task<string> GetTokenAsync()
         {
-            string keyVaultAppId = config.Global.AzureActiveDirectory.AppId;
-            string aadTenantId = config.Global.AzureActiveDirectory.TenantId;
-            string keyVaultAppKey = config.Global.AzureActiveDirectory.AppSecret;
+            string keyVaultAppId = this.config.Global.AzureActiveDirectory.AppId;
+            string aadTenantId = this.config.Global.AzureActiveDirectory.TenantId;
+            string keyVaultAppKey = this.config.Global.AzureActiveDirectory.AppSecret;
 
             // Retrieve a token from Azure AD using the application id and password.
             try

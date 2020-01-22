@@ -38,7 +38,7 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
             StreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
-                return await client.StreamingJobs.GetAsync(config.Global.ResourceGroup, saJobName);
+                return await client.StreamingJobs.GetAsync(this.config.Global.ResourceGroup, saJobName);
             }
             catch (CloudException ce)
             {
@@ -69,7 +69,7 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
             StreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
-                await client.StreamingJobs.BeginStartAsync(config.Global.ResourceGroup, saJobName);
+                await client.StreamingJobs.BeginStartAsync(this.config.Global.ResourceGroup, saJobName);
             }
             catch (Exception e)
             {
@@ -82,7 +82,7 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
             StreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
-                await client.StreamingJobs.BeginStopAsync(config.Global.ResourceGroup, saJobName);
+                await client.StreamingJobs.BeginStopAsync(this.config.Global.ResourceGroup, saJobName);
             }
             catch (Exception e)
             {
@@ -111,7 +111,7 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
                 TokenCredentials credentials = new TokenCredentials(authToken);
                 StreamAnalyticsManagementClient client = new StreamAnalyticsManagementClient(credentials)
                 {
-                    SubscriptionId = config.Global.SubscriptionId,
+                    SubscriptionId = this.config.Global.SubscriptionId,
                 };
                 return client;
             }

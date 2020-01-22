@@ -56,7 +56,7 @@ namespace Mmm.Iot.Common.Services.Filters
             }
             else
             {
-                logger.LogError(context.Exception, "Unknown exception");
+                this.logger.LogError(context.Exception, "Unknown exception");
                 base.OnException(context);
             }
         }
@@ -90,7 +90,7 @@ namespace Mmm.Iot.Common.Services.Filters
             result.StatusCode = (int)code;
             result.Formatters.Add(new JsonOutputFormatter(new JsonSerializerSettings(), ArrayPool<char>.Shared));
 
-            logger.LogError(e, "Status code was {statusCode}", result.StatusCode);
+            this.logger.LogError(e, "Status code was {statusCode}", result.StatusCode);
 
             return result;
         }

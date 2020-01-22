@@ -18,7 +18,7 @@ namespace Mmm.Iot.Config.WebService
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -40,7 +40,7 @@ namespace Mmm.Iot.Config.WebService
 
             // Prepare DI container
             services.AddHttpContextAccessor();
-            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);

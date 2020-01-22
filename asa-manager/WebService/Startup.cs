@@ -20,7 +20,7 @@ namespace Mmm.Iot.AsaManager.WebService
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -37,7 +37,7 @@ namespace Mmm.Iot.AsaManager.WebService
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
             services.AddHttpContextAccessor();
-            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
@@ -45,7 +45,7 @@ namespace Mmm.Iot.AsaManager.WebService
 
         public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
-            LogDependencyInjectionContainerRegistrations(logger);
+            this.LogDependencyInjectionContainerRegistrations(logger);
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -67,7 +67,7 @@ namespace Mmm.Iot.AsaManager.WebService
 
         private void LogDependencyInjectionContainerRegistrations(ILogger logger)
         {
-            foreach (var registration in ApplicationContainer.ComponentRegistry.Registrations)
+            foreach (var registration in this.ApplicationContainer.ComponentRegistry.Registrations)
             {
                 logger.LogDebug("Type {type} is registered in dependency injection container", registration.Activator.ToString());
             }

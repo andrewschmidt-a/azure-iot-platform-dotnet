@@ -101,13 +101,13 @@ namespace Mmm.Iot.StorageAdapter.WebService.Controllers
 
             if (!collectionId.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))
             {
-                logger.LogInformation("Invalid collectionId {collectionId}", collectionId);
+                this.logger.LogInformation("Invalid collectionId {collectionId}", collectionId);
                 throw new BadRequestException($"Invalid collectionId: '{collectionId}'");
             }
 
             if (key.Any() && !key.All(c => char.IsLetterOrDigit(c) || validCharacters.Contains(c)))
             {
-                logger.LogInformation("Invalid key {key}", key);
+                this.logger.LogInformation("Invalid key {key}", key);
                 throw new BadRequestException($"Invalid key: '{key}'");
             }
 
@@ -118,7 +118,7 @@ namespace Mmm.Iot.StorageAdapter.WebService.Controllers
             string id = DocumentIdHelper.GenerateId(collectionId, key);
             if (id.Length > 255)
             {
-                logger.LogInformation("The collectionId/Key are too long: '{collectionId}', '{key}', '{id}'", collectionId, key, id);
+                this.logger.LogInformation("The collectionId/Key are too long: '{collectionId}', '{key}', '{id}'", collectionId, key, id);
                 throw new BadRequestException($"The collectionId/Key are too long: '{collectionId}', '{key}'");
             }
         }

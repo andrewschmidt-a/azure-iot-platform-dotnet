@@ -36,7 +36,7 @@ namespace Mmm.Iot.Common.Services
             builder.RegisterInstance(appConfig).SingleInstance();
             builder.Populate(services);
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
-            AutowireAssemblies(builder);
+            this.AutowireAssemblies(builder);
             builder.RegisterType<UserManagementClient>().As<IUserManagementClient>().SingleInstance();
             builder.RegisterType<AppConfigurationClient>().As<IAppConfigurationClient>().SingleInstance();
             builder.RegisterType<StorageAdapterClient>().As<IStorageAdapterClient>().SingleInstance();
@@ -49,7 +49,7 @@ namespace Mmm.Iot.Common.Services
             builder.RegisterType<AsaManagerClient>().As<IAsaManagerClient>().SingleInstance();
             builder.RegisterType<TimeSeriesClient>().As<ITimeSeriesClient>().SingleInstance();
             builder.RegisterType<TableStorageClient>().As<ITableStorageClient>().SingleInstance();
-            SetupCustomRules(builder);
+            this.SetupCustomRules(builder);
             var container = builder.Build();
             Factory.RegisterContainer(container);
             return container;

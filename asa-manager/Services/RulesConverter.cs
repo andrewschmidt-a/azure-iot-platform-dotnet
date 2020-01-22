@@ -51,13 +51,13 @@ namespace Mmm.Iot.AsaManager.Services
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
             if (rules.Items.Count() == 0 || rules == null)
             {
-                Logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw new ResourceNotFoundException("No entities were receieved from storage adapter to convert to rules.");
             }
 
@@ -77,7 +77,7 @@ namespace Mmm.Iot.AsaManager.Services
                     }
                     catch (Exception)
                     {
-                        Logger.LogInformation("Unable to convert a rule to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                        this.Logger.LogInformation("Unable to convert a rule to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                     }
                 }
 
@@ -88,7 +88,7 @@ namespace Mmm.Iot.AsaManager.Services
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Unable to convert {entity} queried from storage adapter to appropriate data model. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to convert {entity} queried from storage adapter to appropriate data model. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
@@ -99,7 +99,7 @@ namespace Mmm.Iot.AsaManager.Services
             }
             catch (Exception e)
             {
-                Logger.LogError(e, "Unable to serialize the IEnumerable of {entity} data models for the temporary file content. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to serialize the IEnumerable of {entity} data models for the temporary file content. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
@@ -112,7 +112,7 @@ namespace Mmm.Iot.AsaManager.Services
                 Entities = rules,
                 OperationId = operationId,
             };
-            Logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
+            this.Logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
             return conversionResponse;
         }
     }

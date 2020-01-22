@@ -110,19 +110,19 @@ namespace Mmm.Iot.Common.Services.Http
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    requestContent.Dispose();
+                    this.requestContent.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
     }

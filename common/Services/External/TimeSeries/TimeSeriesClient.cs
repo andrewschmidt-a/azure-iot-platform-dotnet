@@ -101,7 +101,7 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
             }
             catch (Exception e)
             {
-                logger.LogError(e, result.Message);
+                this.logger.LogError(e, result.Message);
             }
 
             return result;
@@ -127,7 +127,7 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
             request.SetContent(
                 this.PrepareInput(from, to, order, skip, limit, deviceIds));
 
-            logger.LogInformation("Making query to time series at URI {requestUri} with body {requestContent}", request.Uri, request.Content);
+            this.logger.LogInformation("Making query to time series at URI {requestUri} with body {requestContent}", request.Uri, request.Content);
 
             var response = await this.httpClient.PostAsync(request);
             var messages = JsonConvert.DeserializeObject<ValueListApiModel>(response.Content);

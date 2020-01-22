@@ -18,7 +18,7 @@ namespace Mmm.Iot.StorageAdapter.Services
             IAppConfigurationClient appConfig)
                 : base(config)
         {
-            Dependencies = new Dictionary<string, IStatusOperation>
+            this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "CosmosDb", cosmos },
                 { "App Config", appConfig },

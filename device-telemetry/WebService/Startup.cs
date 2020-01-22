@@ -21,7 +21,7 @@ namespace Mmm.Iot.DeviceTelemetry.WebService
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -43,7 +43,7 @@ namespace Mmm.Iot.DeviceTelemetry.WebService
 
             // Prepare DI container
             services.AddHttpContextAccessor();
-            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
@@ -82,19 +82,19 @@ namespace Mmm.Iot.DeviceTelemetry.WebService
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    ApplicationContainer.Dispose();
+                    this.ApplicationContainer.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
     }

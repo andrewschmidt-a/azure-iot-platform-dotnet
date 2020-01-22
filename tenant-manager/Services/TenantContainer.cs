@@ -27,7 +27,7 @@ namespace Mmm.Iot.TenantManager.Services
         private const string LastUsedSettingKey = "LastUsedTenant";
         private const string CreatedRole = "[\"admin\"]";
         private readonly ILogger logger;
-        private readonly IIdentityGatewayClient identityClient;
+        private readonly IIdentityGatewayClient identityGatewayClient;
         private readonly IDeviceGroupsConfigClient deviceGroupClient;
         private readonly IRunbookHelper runbookHelper;
         private readonly IStorageClient cosmosClient;
@@ -59,7 +59,7 @@ namespace Mmm.Iot.TenantManager.Services
             this.runbookHelper = runbookHelper;
             this.cosmosClient = cosmosClient;
             this.tableStorageClient = tableStorageClient;
-            this.identityClient = identityGatewayClient;
+            this.identityGatewayClient = identityGatewayClient;
             this.deviceGroupClient = deviceGroupConfigClient;
             this.appConfigClient = appConfigHelper;
         }
@@ -88,7 +88,7 @@ namespace Mmm.Iot.TenantManager.Services
             // Give the requesting user an admin role to the new tenant
             try
             {
-                await identityClient.AddTenantForUserAsync(userId, tenantId, CreatedRole);
+                await this.identityGatewayClient.AddTenantForUserAsync(userId, tenantId, CreatedRole);
             }
             catch (Exception e)
             {
@@ -100,7 +100,7 @@ namespace Mmm.Iot.TenantManager.Services
 
             try
             {
-                userSettings = await identityClient.GetSettingsForUserAsync(userId, LastUsedSettingKey);
+                userSettings = await this.identityGatewayClient.GetSettingsForUserAsync(userId, LastUsedSettingKey);
             }
             catch (Exception e)
             {
@@ -112,7 +112,7 @@ namespace Mmm.Iot.TenantManager.Services
                 // Set the last used tenant to be this new tenant
                 try
                 {
-                    await identityClient.AddSettingsForUserAsync(userId, LastUsedSettingKey, tenantId);
+                    await this.identityGatewayClient.AddSettingsForUserAsync(userId, LastUsedSettingKey, tenantId);
                 }
                 catch (Exception e)
                 {
@@ -178,7 +178,7 @@ namespace Mmm.Iot.TenantManager.Services
             }
             else if (tenant == null)
             {
-                logger.LogInformation("The tenant {tenantId} could not be deleted from Table Storage because it does not exist or was not fully created.", tenantId);
+                this.logger.LogInformation("The tenant {tenantId} could not be deleted from Table Storage because it does not exist or was not fully created.", tenantId);
                 deletionRecord["tenantTableStorage"] = true;
             }
             else
@@ -190,7 +190,7 @@ namespace Mmm.Iot.TenantManager.Services
                 }
                 catch (Exception e)
                 {
-                    logger.LogInformation(e, "Unable to delete info from table storage for tenant {tenantId}", tenantId);
+                    this.logger.LogInformation(e, "Unable to delete info from table storage for tenant {tenantId}", tenantId);
                     deletionRecord["tableStorage"] = false;
                 }
             }
@@ -198,28 +198,28 @@ namespace Mmm.Iot.TenantManager.Services
             // delete the tenant from the user
             try
             {
-                await this.identityClient.DeleteTenantForAllUsersAsync(tenantId);
+                await this.identityGatewayClient.DeleteTenantForAllUsersAsync(tenantId);
                 deletionRecord["userTableStorage"] = true;
             }
             catch (Exception e)
             {
-                logger.LogInformation(e, "Unable to delete user-tenant relationships for tenant {tenantId} in the user table.", tenantId);
+                this.logger.LogInformation(e, "Unable to delete user-tenant relationships for tenant {tenantId} in the user table.", tenantId);
                 deletionRecord["userTableStorage"] = false;
             }
 
             // update userSettings table LastUsedTenant if necessary
             try
             {
-                IdentityGatewayApiSettingModel lastUsedTenant = await this.identityClient.GetSettingsForUserAsync(userId, "LastUsedTenant");
+                IdentityGatewayApiSettingModel lastUsedTenant = await this.identityGatewayClient.GetSettingsForUserAsync(userId, "LastUsedTenant");
                 if (lastUsedTenant.Value == tenantId)
                 {
                     // update the LastUsedTenant to some null
-                    await this.identityClient.UpdateSettingsForUserAsync(userId, "LastUsedTenant", string.Empty);
+                    await this.identityGatewayClient.UpdateSettingsForUserAsync(userId, "LastUsedTenant", string.Empty);
                 }
             }
             catch (Exception e)
             {
-                logger.LogInformation(e, "Unable to get the user {userId} LastUsedTenant setting, the setting will not be updated.", userId);
+                this.logger.LogInformation(e, "Unable to get the user {userId} LastUsedTenant setting, the setting will not be updated.", userId);
             }
 
             // Gather tenant information
@@ -234,7 +234,7 @@ namespace Mmm.Iot.TenantManager.Services
             }
             catch (Exception e)
             {
-                logger.LogInformation(e, "Unable to successfully trigger Delete IoTHub Runbook for tenant {tenantId}", tenantId);
+                this.logger.LogInformation(e, "Unable to successfully trigger Delete IoTHub Runbook for tenant {tenantId}", tenantId);
                 deletionRecord["iotHub"] = false;
             }
 
@@ -248,7 +248,7 @@ namespace Mmm.Iot.TenantManager.Services
             }
             catch (Exception e)
             {
-                logger.LogInformation(e, "Unable to successfully trigger Delete Alerting runbook for tenant {tenantId}", tenantId);
+                this.logger.LogInformation(e, "Unable to successfully trigger Delete Alerting runbook for tenant {tenantId}", tenantId);
                 deletionRecord["alerting"] = false;
             }
 
@@ -265,12 +265,12 @@ namespace Mmm.Iot.TenantManager.Services
                 }
                 catch (Exception e)
                 {
-                    logger.LogInformation(e, "Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantId}", collectionAppConfigKey, tenantId);
+                    this.logger.LogInformation(e, "Unable to retrieve the key {collectionKey} for a collection id in App Config for tenant {tenantId}", collectionAppConfigKey, tenantId);
                 }
 
                 if (string.IsNullOrEmpty(collectionId))
                 {
-                    logger.LogInformation("The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection", collectionAppConfigKey, tenantId);
+                    this.logger.LogInformation("The collectionId was not set properly for tenant {tenantId} while attempting to delete the {collection} collection", collectionAppConfigKey, tenantId);
 
                     // Currently, the assumption for an unknown collection id is that it has been deleted.
                     // We can come to this conclusion by assuming that the app config key containing the collection id was already deleted.
@@ -288,13 +288,13 @@ namespace Mmm.Iot.TenantManager.Services
                 }
                 catch (ResourceNotFoundException e)
                 {
-                    logger.LogInformation(e, "The {collection} collection for tenant {tenantId} does exist and cannot be deleted.", collectionId, tenantId);
+                    this.logger.LogInformation(e, "The {collection} collection for tenant {tenantId} does exist and cannot be deleted.", collectionId, tenantId);
                     deletionRecord[$"{collection}Collection"] = true;
                 }
                 catch (Exception e)
                 {
                     deletionRecord[$"{collection}Collection"] = false;
-                    logger.LogInformation(e, "An error occurred while deleting the {collection} collection for tenant {tenantId}", collectionId, tenantId);
+                    this.logger.LogInformation(e, "An error occurred while deleting the {collection} collection for tenant {tenantId}", collectionId, tenantId);
                 }
 
                 try
@@ -304,7 +304,7 @@ namespace Mmm.Iot.TenantManager.Services
                 }
                 catch (Exception e)
                 {
-                    logger.LogInformation(e, "Unable to delete {collectionKey} from App Config", collectionAppConfigKey, tenantId);
+                    this.logger.LogInformation(e, "Unable to delete {collectionKey} from App Config", collectionAppConfigKey, tenantId);
                 }
             }
 

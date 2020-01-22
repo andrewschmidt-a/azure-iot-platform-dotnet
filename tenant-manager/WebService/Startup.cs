@@ -18,7 +18,7 @@ namespace Mmm.Iot.TenantManager.WebService
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
@@ -34,7 +34,7 @@ namespace Mmm.Iot.TenantManager.WebService
 
             services.AddMvc().AddControllersAsServices();
             services.AddHttpContextAccessor();
-            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 

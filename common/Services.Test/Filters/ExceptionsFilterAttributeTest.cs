@@ -26,8 +26,8 @@ namespace Mmm.Iot.Common.Services.Test.Filters
 
         public ExceptionsFilterAttributeTest()
         {
-            logger = new Mock<ILogger<ExceptionsFilterAttribute>>();
-            this.target = new ExceptionsFilterAttribute(logger.Object);
+            this.logger = new Mock<ILogger<ExceptionsFilterAttribute>>();
+            this.target = new ExceptionsFilterAttribute(this.logger.Object);
         }
 
         [Fact]

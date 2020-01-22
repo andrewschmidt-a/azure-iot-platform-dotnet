@@ -20,7 +20,7 @@ namespace Mmm.Iot.AsaManager.Services
             IStorageAdapterClient storageAdapterClient)
                 : base(config)
         {
-            Dependencies = new Dictionary<string, IStatusOperation>
+            this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "Storage Adapter", storageAdapterClient },
                 { "IoTHub Manager", iotHubManager },

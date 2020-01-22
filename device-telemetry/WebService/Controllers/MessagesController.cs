@@ -92,7 +92,7 @@ namespace Mmm.Iot.DeviceTelemetry.WebService.Controllers
             // limit for the IN clause.
             if (deviceIds.Length > DeviceLimit)
             {
-                logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
+                this.logger.LogWarning("The client requested too many devices {count}", deviceIds.Length);
                 throw new BadRequestException("The number of devices cannot exceed " + DeviceLimit);
             }
 

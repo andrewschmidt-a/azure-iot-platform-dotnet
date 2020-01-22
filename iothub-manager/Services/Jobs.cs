@@ -47,7 +47,7 @@ namespace Mmm.Iot.IoTHubManager.Services
             var from = DateTimeOffsetExtension.Parse(queryFrom, DateTimeOffset.MinValue);
             var to = DateTimeOffsetExtension.Parse(queryTo, DateTimeOffset.MaxValue);
 
-            var query = tenantConnectionHelper.GetJobClient().CreateQuery(
+            var query = this.tenantConnectionHelper.GetJobClient().CreateQuery(
                 JobServiceModel.ToJobTypeAzureModel(jobType),
                 JobServiceModel.ToJobStatusAzureModel(jobStatus),
                 pageSize);
@@ -69,7 +69,7 @@ namespace Mmm.Iot.IoTHubManager.Services
             bool? includeDeviceDetails,
             DeviceJobStatus? deviceJobStatus)
         {
-            var result = await tenantConnectionHelper.GetJobClient().GetJobAsync(jobId);
+            var result = await this.tenantConnectionHelper.GetJobClient().GetJobAsync(jobId);
 
             if (!includeDeviceDetails.HasValue || !includeDeviceDetails.Value)
             {
@@ -82,7 +82,7 @@ namespace Mmm.Iot.IoTHubManager.Services
                 string.Format(DeviceDetailsQueryWithStatusFormat, jobId, deviceJobStatus.Value.ToString().ToLower()) :
                 string.Format(DeviceDetailsQueryFormat, jobId);
 
-            var query = tenantConnectionHelper.GetRegistry().CreateQuery(queryString);
+            var query = this.tenantConnectionHelper.GetRegistry().CreateQuery(queryString);
 
             var deviceJobs = new List<DeviceJob>();
             while (query.HasMoreResults)
@@ -100,7 +100,7 @@ namespace Mmm.Iot.IoTHubManager.Services
             DateTimeOffset startTimeUtc,
             long maxExecutionTimeInSeconds)
         {
-            var result = await tenantConnectionHelper.GetJobClient().ScheduleTwinUpdateAsync(
+            var result = await this.tenantConnectionHelper.GetJobClient().ScheduleTwinUpdateAsync(
                 jobId,
                 queryCondition,
                 twin.ToAzureModel(),
@@ -122,7 +122,7 @@ namespace Mmm.Iot.IoTHubManager.Services
                 model.Reported = new HashSet<string>(reportedRoot.GetAllLeavesPath());
             }
 
-            var unused = deviceProperties.UpdateListAsync(model);
+            var unused = this.deviceProperties.UpdateListAsync(model);
 
             return new JobServiceModel(result);
         }
@@ -134,7 +134,7 @@ namespace Mmm.Iot.IoTHubManager.Services
             DateTimeOffset startTimeUtc,
             long maxExecutionTimeInSeconds)
         {
-            var result = await tenantConnectionHelper.GetJobClient().ScheduleDeviceMethodAsync(
+            var result = await this.tenantConnectionHelper.GetJobClient().ScheduleDeviceMethodAsync(
                 jobId,
                 queryCondition,
                 parameter.ToAzureModel(),

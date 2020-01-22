@@ -65,7 +65,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
             get
             {
                 return this.appConfigurationClient.GetValue(
-                    $"{TenantInfoKey}:{httpContextAccessor.HttpContext.Request.GetTenant()}:{TelemetryCollectionKey}");
+                    $"{TenantInfoKey}:{this.httpContextAccessor.HttpContext.Request.GetTenant()}:{TelemetryCollectionKey}");
             }
         }
 
@@ -124,7 +124,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
                 devices,
                 "deviceId");
 
-            logger.LogDebug("Created message query {sql}", sql);
+            this.logger.LogDebug("Created message query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;

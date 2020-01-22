@@ -38,7 +38,7 @@ namespace Mmm.Iot.StorageAdapter.Services
             ILogger<DocumentDbKeyValueContainer> logger,
             IHttpContextAccessor httpContextAccessor)
         {
-            disposedValue = false;
+            this.disposedValue = false;
             this.client = client;
             this.exceptionChecker = exceptionChecker;
             this.appConfig = appConfig;
@@ -83,7 +83,7 @@ namespace Mmm.Iot.StorageAdapter.Services
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex, "Unable to get the CollectionId from App Config. Key: {key}. TenantId: {tenantId}", key, this.TenantId);
+                    this.logger.LogError(ex, "Unable to get the CollectionId from App Config. Key: {key}. TenantId: {tenantId}", key, this.TenantId);
                     throw;
                 }
             }
@@ -121,7 +121,7 @@ namespace Mmm.Iot.StorageAdapter.Services
                 }
 
                 const string message = "The resource requested doesn't exist.";
-                logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
+                this.logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
                 throw new ResourceNotFoundException(message);
             }
         }
@@ -155,7 +155,7 @@ namespace Mmm.Iot.StorageAdapter.Services
                 }
 
                 const string message = "There is already a value with the key specified.";
-                logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
+                this.logger.LogInformation(message + " {collection ID {collectionId}, key {key}", collectionId, key);
                 throw new ConflictingResourceException(message);
             }
         }
@@ -181,7 +181,7 @@ namespace Mmm.Iot.StorageAdapter.Services
                 }
 
                 const string message = "ETag mismatch: the resource has been updated by another client.";
-                logger.LogInformation(message + " {collection ID {collectionId}, key {key}, ETag {eTag}", collectionId, key, input.ETag);
+                this.logger.LogInformation(message + " {collection ID {collectionId}, key {key}, ETag {eTag}", collectionId, key, input.ETag);
                 throw new ConflictingResourceException(message);
             }
         }
@@ -200,7 +200,7 @@ namespace Mmm.Iot.StorageAdapter.Services
                     throw;
                 }
 
-                logger.LogDebug("Key {key} does not exist, nothing to do");
+                this.logger.LogDebug("Key {key} does not exist, nothing to do");
             }
         }
 

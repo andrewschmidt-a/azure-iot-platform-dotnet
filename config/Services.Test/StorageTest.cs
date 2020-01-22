@@ -151,7 +151,7 @@ namespace Mmm.Iot.Config.Services.Test
                 {
                     ConfigService = new ConfigServiceConfig
                     {
-                        AzureMapsKey = azureMapsKey,
+                        AzureMapsKey = this.azureMapsKey,
                     },
                 },
                 new Mock<ILogger<Storage>>().Object);
@@ -416,7 +416,7 @@ namespace Mmm.Iot.Config.Services.Test
                 Type = type,
             };
 
-            Logo result = await SetLogoHelper(logo, oldImage, oldName, oldType, false);
+            Logo result = await this.SetLogoHelper(logo, oldImage, oldName, oldType, false);
 
             this.mockClient
                 .Verify(
@@ -453,7 +453,7 @@ namespace Mmm.Iot.Config.Services.Test
                 Name = name,
             };
 
-            Logo result = await SetLogoHelper(logo, oldImage, oldName, oldType, false);
+            Logo result = await this.SetLogoHelper(logo, oldImage, oldName, oldType, false);
 
             Assert.Equal(image, result.Image.ToString());
             Assert.Equal(type, result.Type.ToString());

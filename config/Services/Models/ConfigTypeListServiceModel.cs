@@ -19,18 +19,18 @@ namespace Mmm.Iot.Config.Services.External
         {
             get
             {
-                return configTypes.ToArray<string>();
+                return this.configTypes.ToArray<string>();
             }
 
             set
             {
-                Array.ForEach<string>(value, c => configTypes.Add(c));
+                Array.ForEach<string>(value, c => this.configTypes.Add(c));
             }
         }
 
         internal void Add(string customConfig)
         {
-            configTypes.Add(customConfig.Trim());
+            this.configTypes.Add(customConfig.Trim());
         }
     }
 }

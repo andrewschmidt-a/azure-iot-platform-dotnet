@@ -75,9 +75,9 @@ namespace Mmm.Iot.IdentityGateway.Controllers
             var query = HttpUtility.ParseQueryString(uri.Query);
             query["state"] = JsonConvert.SerializeObject(new AuthState
             { ReturnUrl = redirect_uri, State = state, Tenant = tenant, Nonce = nonce, ClientId = clientId, Invitation = invite });
-            query["redirect_uri"] = openIdProviderConfiguration.Issuer + "/connect/callback"; // must be https for B2C
+            query["redirect_uri"] = this.openIdProviderConfiguration.Issuer + "/connect/callback"; // must be https for B2C
             uri.Query = query.ToString();
-            return Redirect(uri.Uri.ToString());
+            return this.Redirect(uri.Uri.ToString());
         }
 
         [HttpPost]
@@ -90,11 +90,11 @@ namespace Mmm.Iot.IdentityGateway.Controllers
 
             try
             {
-                AuthenticationResult token = await authenticationContext.AcquireTokenAsync(resourceUri, clientCredential);
+                AuthenticationResult token = await this.authenticationContext.AcquireTokenAsync(resourceUri, clientCredential);
             }
             catch (Exception e)
             {
-                return StatusCode(401, e.Message);
+                return this.StatusCode(401, e.Message);
             }
 
             UserTenantInput tenantInput = new UserTenantInput
@@ -118,7 +118,7 @@ namespace Mmm.Iot.IdentityGateway.Controllers
 
             string tokenString = jwtHandler.WriteToken(await this.jwtHelper.GetIdentityToken(claims, input.Scope, "IoTPlatform", null));
 
-            return StatusCode(200, tokenString);
+            return this.StatusCode(200, tokenString);
         }
 
         [HttpGet]
@@ -133,7 +133,7 @@ namespace Mmm.Iot.IdentityGateway.Controllers
 
             var uri = new UriBuilder(post_logout_redirect_uri);
 
-            return Redirect(
+            return this.Redirect(
                 uri.Uri.ToString());
         }
 
@@ -148,7 +148,7 @@ namespace Mmm.Iot.IdentityGateway.Controllers
             // Extract Bearer token
             string encodedToken = authHeader.Substring("Bearer ".Length).Trim();
             var jwtHandler = new JwtSecurityTokenHandler();
-            if (!jwtHelper.TryValidateToken("IoTPlatform", encodedToken, HttpContext, out JwtSecurityToken jwt))
+            if (!this.jwtHelper.TryValidateToken("IoTPlatform", encodedToken, this.HttpContext, out JwtSecurityToken jwt))
             {
                 throw new NoAuthorizationException("The given token could not be read or validated.");
             }
@@ -170,7 +170,7 @@ namespace Mmm.Iot.IdentityGateway.Controllers
                 // Everything checks out so you can mint a new token
                 var tokenString = jwtHandler.WriteToken(await this.jwtHelper.GetIdentityToken(jwt.Claims.Where(c => new List<string>() { "sub", "name", "email" }.Contains(c.Type)).ToList(), tenant, jwt.Audiences.First(), jwt.ValidTo));
 
-                return StatusCode(200, tokenString);
+                return this.StatusCode(200, tokenString);
             }
             else
             {
@@ -251,7 +251,7 @@ namespace Mmm.Iot.IdentityGateway.Controllers
                 "id_token=" + tokenString + "&state=" +
                 HttpUtility.UrlEncode(authState
                     .State); // pass token in Fragment for more security (Browser wont forward...)
-            return Redirect(returnUri.Uri.ToString());
+            return this.Redirect(returnUri.Uri.ToString());
         }
     }
 }

@@ -29,8 +29,8 @@ namespace Mmm.Iot.Config.Services
         public async Task<List<IActionSettings>> GetListAsync()
         {
             var result = new List<IActionSettings>();
-            await emailActionSettings.InitializeAsync();
-            result.Add(emailActionSettings);
+            await this.emailActionSettings.InitializeAsync();
+            result.Add(this.emailActionSettings);
 
             return result;
         }

@@ -23,13 +23,13 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test.TimeSeries
 
         public TimeSeriesClientTest()
         {
-            logger = new Mock<ILogger<TimeSeriesClient>>();
+            this.logger = new Mock<ILogger<TimeSeriesClient>>();
             this.config = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
             this.httpClient = new Mock<IHttpClient>();
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.config.Object,
-                logger.Object);
+                this.logger.Object);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test.TimeSeries
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.config.Object,
-                logger.Object);
+                this.logger.Object);
         }
 
         private void SetupClientWithConfigValues()
@@ -94,7 +94,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test.TimeSeries
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.config.Object,
-                logger.Object);
+                this.logger.Object);
         }
     }
 }

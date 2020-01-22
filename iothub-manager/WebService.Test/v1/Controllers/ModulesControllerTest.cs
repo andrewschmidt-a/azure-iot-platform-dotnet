@@ -22,7 +22,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
     public class ModulesControllerTest : IDisposable
     {
         private const string ContinuationTokenName = "x-ms-continuation";
-        private readonly ModulesController modulesController;
+        private readonly ModulesController controller;
         private readonly Mock<IDevices> devicesMock;
         private readonly HttpContext httpContext;
         private bool disposedValue = false;
@@ -31,7 +31,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
         {
             this.devicesMock = new Mock<IDevices>();
             this.httpContext = new DefaultHttpContext();
-            this.modulesController = new ModulesController(this.devicesMock.Object)
+            this.controller = new ModulesController(this.devicesMock.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -51,7 +51,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
             if (throwsException)
             {
                 await Assert.ThrowsAsync<InvalidInputException>(async () =>
-                    await this.modulesController.GetModuleTwinAsync(deviceId, moduleId));
+                    await this.controller.GetModuleTwinAsync(deviceId, moduleId));
             }
             else
             {
@@ -61,7 +61,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
                     .ReturnsAsync(twinResult);
 
                 // Act
-                var module = await this.modulesController.GetModuleTwinAsync(deviceId, moduleId);
+                var module = await this.controller.GetModuleTwinAsync(deviceId, moduleId);
 
                 // Assert
                 Assert.Equal(moduleId, module.ModuleId);
@@ -89,7 +89,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
                 new StringValues(continuationToken));
 
             // Act
-            var moduleTwins = await this.modulesController.GetModuleTwinsAsync(query);
+            var moduleTwins = await this.controller.GetModuleTwinsAsync(query);
 
             // Assert
             var moduleTwin = moduleTwins.Items[0];
@@ -102,19 +102,19 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    modulesController.Dispose();
+                    this.controller.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 

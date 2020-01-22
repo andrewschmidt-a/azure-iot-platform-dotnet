@@ -48,7 +48,7 @@ namespace Mmm.Iot.DeviceTelemetry.WebService.Test.Controllers
         {
             Mock<IStorageAdapterClient> storageAdapterClient = new Mock<IStorageAdapterClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
-            logger = new Mock<ILogger<AlarmsByRuleController>>();
+            this.logger = new Mock<ILogger<AlarmsByRuleController>>();
             this.appConfigHelper = new Mock<IAppConfigurationClient>();
             this.asaManager = new Mock<IAsaManagerClient>();
             var config = new AppConfig();
@@ -84,19 +84,19 @@ namespace Mmm.Iot.DeviceTelemetry.WebService.Test.Controllers
 
         public void Dispose()
         {
-            Dispose(true);
+            this.Dispose(true);
         }
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!this.disposedValue)
             {
                 if (disposing)
                 {
-                    controller.Dispose();
+                    this.controller.Dispose();
                 }
 
-                disposedValue = true;
+                this.disposedValue = true;
             }
         }
 

@@ -53,7 +53,7 @@ namespace Mmm.Iot.Config.Services.Models.Actions
                 // been given owner permissions to make the isEnabled check. This can be configured
                 // by an owner in the Azure Portal.
                 applicationPermissionsAssigned = false;
-                logger.LogError(notAuthorizedException, "The application is not authorized and has not been assigned owner permissions for the subscription. Go to the Azure portal and assign the application as an owner in order to retrieve the token.");
+                this.logger.LogError(notAuthorizedException, "The application is not authorized and has not been assigned owner permissions for the subscription. Go to the Azure portal and assign the application as an owner in order to retrieve the token.");
             }
 
             this.Settings.Add(IsEnabledKey, office365IsEnabled);
@@ -61,9 +61,9 @@ namespace Mmm.Iot.Config.Services.Models.Actions
 
             // Get Url for Office 365 Logic App Connector setup in portal
             // for display on the webui for one-time setup.
-            this.Settings.Add(Office365ConnectorUrlKey, config.ConfigService.ConfigServiceActions.Office365ConnectionUrl);
+            this.Settings.Add(Office365ConnectorUrlKey, this.config.ConfigService.ConfigServiceActions.Office365ConnectionUrl);
 
-            logger.LogDebug("Email action settings retrieved: {settings}. Email setup status: {status}", office365IsEnabled, Settings);
+            this.logger.LogDebug("Email action settings retrieved: {settings}. Email setup status: {status}", office365IsEnabled, this.Settings);
         }
     }
 }

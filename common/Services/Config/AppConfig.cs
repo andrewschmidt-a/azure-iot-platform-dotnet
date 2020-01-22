@@ -15,7 +15,7 @@ namespace Mmm.Iot.Common.Services.Config
         public AppConfig(IConfiguration configuration)
         {
             configuration.Bind(this);
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
 
         public AppConfig(IConfigurationBuilder configurationBuilder)

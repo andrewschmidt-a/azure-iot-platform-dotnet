@@ -206,7 +206,7 @@ namespace Mmm.Iot.Config.Services
 
         public async Task<PackageServiceModel> AddPackageAsync(PackageServiceModel package)
         {
-            bool isValidPackage = IsValidPackage(package);
+            bool isValidPackage = this.IsValidPackage(package);
             if (!isValidPackage)
             {
                 var msg = "Package provided is a invalid deployment manifest " +
@@ -266,7 +266,7 @@ namespace Mmm.Iot.Config.Services
             }
             catch (ResourceNotFoundException)
             {
-                logger.LogDebug("Document config-types has not been created.");
+                this.logger.LogDebug("Document config-types has not been created.");
 
                 // Return empty Package Config types
                 return new ConfigTypeListServiceModel();
@@ -283,7 +283,7 @@ namespace Mmm.Iot.Config.Services
             }
             catch (ResourceNotFoundException)
             {
-                logger.LogDebug("Config Types have not been created.");
+                this.logger.LogDebug("Config Types have not been created.");
 
                 // Create empty Package Config Types
                 list = new ConfigTypeListServiceModel();
@@ -297,7 +297,7 @@ namespace Mmm.Iot.Config.Services
         {
             if (theme[AzureMapsKey] == null)
             {
-                theme[AzureMapsKey] = config.ConfigService.AzureMapsKey;
+                theme[AzureMapsKey] = this.config.ConfigService.AzureMapsKey;
             }
         }
 

@@ -92,7 +92,7 @@ namespace Mmm.Iot.Common.TestHelpers
         public Task<IEnumerable<string>> GetNextAsJsonAsync()
         {
             this.HasMoreResults = false;
-            return Task.FromResult(deviceQueryResults.AsEnumerable());
+            return Task.FromResult(this.deviceQueryResults.AsEnumerable());
         }
 
         public Task<QueryResponse<string>> GetNextAsJsonAsync(QueryOptions options)

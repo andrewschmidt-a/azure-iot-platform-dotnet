@@ -27,11 +27,11 @@ namespace Mmm.Iot.Common.Services
             var errors = new List<string>();
 
             // Loop over the IStatusOperation classes and get each status - set service status based on each response
-            foreach (var dependency in Dependencies)
+            foreach (var dependency in this.Dependencies)
             {
                 var service = dependency.Value;
                 var serviceResult = await service.StatusAsync();
-                SetServiceStatus(dependency.Key, serviceResult, result, errors);
+                this.SetServiceStatus(dependency.Key, serviceResult, result, errors);
             }
 
             if (errors.Count > 0)
@@ -39,8 +39,8 @@ namespace Mmm.Iot.Common.Services
                 result.Status.Message = string.Join("; ", errors);
             }
 
-            result.Properties.AuthRequired = config.Global.AuthRequired;
-            result.Properties.Endpoint = config.ASPNETCORE_URLS;
+            result.Properties.AuthRequired = this.config.Global.AuthRequired;
+            result.Properties.Endpoint = this.config.ASPNETCORE_URLS;
 
             return result;
         }
