@@ -1,6 +1,11 @@
 #!/bin/bash
 # Copyright (c) 3M. All rights reserved.
 
+if [ -n "$1" ] ; then
+  echo "Using connection string argument in place of environment variable"
+  AppConfigurationConnectionString=$1
+fi
+
 # Fetch App configuration
 _get_configuration() {
 

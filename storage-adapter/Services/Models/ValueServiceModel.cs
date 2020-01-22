@@ -18,17 +18,18 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Models
         {
         }
 
-        public ValueServiceModel(IResourceResponse<Document> response)
+        public ValueServiceModel(Document document)
         {
-            if (response == null) return;
+            if (document == null)
+            {
+                return;
+            }
 
-            var resource = response.Resource;
-
-            this.CollectionId = resource.GetPropertyValue<string>("CollectionId");
-            this.Key = resource.GetPropertyValue<string>("Key");
-            this.Data = resource.GetPropertyValue<string>("Data");
-            this.ETag = resource.ETag;
-            this.Timestamp = resource.Timestamp;
+            this.CollectionId = document.GetPropertyValue<string>("CollectionId");
+            this.Key = document.GetPropertyValue<string>("Key");
+            this.Data = document.GetPropertyValue<string>("Data");
+            this.ETag = document.ETag;
+            this.Timestamp = document.Timestamp;
         }
 
         internal ValueServiceModel(KeyValueDocument document)

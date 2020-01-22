@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
@@ -27,7 +28,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
         private readonly Mock<ILogger<AlarmsByRuleController>> _logger;
         private readonly IStorageClient storage;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
-        private readonly Mock<IAppConfigurationHelper> appConfigHelper;
+        private readonly Mock<IAppConfigurationClient> appConfigHelper;
         private readonly Mock<IAsaManagerClient> asaManager;
 
         private List<Alarm> sampleAlarms;
@@ -53,7 +54,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
             Mock<IStorageAdapterClient> storageAdapterClient = new Mock<IStorageAdapterClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             _logger = new Mock<ILogger<AlarmsByRuleController>>();
-            this.appConfigHelper = new Mock<IAppConfigurationHelper>();
+            this.appConfigHelper = new Mock<IAppConfigurationClient>();
             this.asaManager = new Mock<IAsaManagerClient>();
             var config = new AppConfig();
             this.storage = new StorageClient(config, new Mock<ILogger<StorageClient>>().Object);

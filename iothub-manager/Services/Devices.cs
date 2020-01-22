@@ -50,7 +50,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         }
 
         // Ping the registry to see if the connection is healthy
-        public async Task<StatusResultServiceModel> PingRegistryAsync()
+        public async Task<StatusResultServiceModel> StatusAsync()
         {
             var result = new StatusResultServiceModel(false, "");
             try

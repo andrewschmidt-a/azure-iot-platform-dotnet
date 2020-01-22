@@ -9,6 +9,7 @@ using Mmm.Platform.IoT.Common.Services.Models;
 using Microsoft.Rest.Azure;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 
 namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 {
@@ -19,7 +20,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
 
         private delegate Task<T> JobOperationDelegate<T>(string rg, string saJobName);
 
-        public StreamAnalyticsHelper(AppConfig config, ITokenHelper tokenHelper, IAppConfigurationHelper appConfigHelper)
+        public StreamAnalyticsHelper(AppConfig config, ITokenHelper tokenHelper)
         {
             this.config = config;
             this._tokenHelper = tokenHelper;

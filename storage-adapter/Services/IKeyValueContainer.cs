@@ -11,7 +11,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services
     /// <summary>
     /// Common interface for underlying key-value storage services, such as Cosmos DB, Azure Storage Table and so on
     /// </summary>
-    public interface IKeyValueContainer : IStatusOperation
+    public interface IKeyValueContainer
     {
         string DocumentDataType { get; }
         string DocumentDatabaseSuffix { get; }

@@ -64,8 +64,7 @@ stages:
         releaseName: ${{parameters.service}}
 
 - stage: DeployCHIMDev
-  dependsOn:
-  - DeployCRSLQA
+  dependsOn: []
   displayName: Deploy To CHIM Dev
   jobs:
   - template: approval.yaml
@@ -103,8 +102,7 @@ stages:
         releaseName: ${{parameters.service}}
 
 - stage: DeployPSDDev
-  dependsOn:
-  - DeployCRSLQA
+  dependsOn: []
   displayName: Deploy To PSD Dev
   jobs:
   - template: approval.yaml

@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using Xunit;
 using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
 using Mmm.Platform.IoT.Common.Services.Config;
+using Mmm.Platform.IoT.Common.Services.External.UserManagement;
 
 namespace Mmm.Platform.IoT.Common.Services.Test
 {

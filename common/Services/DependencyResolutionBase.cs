@@ -20,6 +20,8 @@ using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
 using Mmm.Platform.IoT.Common.Services.External.AsaManager;
 using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
 using Mmm.Platform.IoT.Common.Services.External.TableStorage;
+using Mmm.Platform.IoT.Common.Services.External.UserManagement;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
 
 namespace Mmm.Platform.IoT.Common.Services
 {
@@ -35,7 +37,7 @@ namespace Mmm.Platform.IoT.Common.Services
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
             AutowireAssemblies(builder);
             builder.RegisterType<UserManagementClient>().As<IUserManagementClient>().SingleInstance();
-            builder.RegisterType<AppConfigurationHelper>().As<IAppConfigurationHelper>().SingleInstance();
+            builder.RegisterType<AppConfigurationClient>().As<IAppConfigurationClient>().SingleInstance();
             builder.RegisterType<StorageAdapterClient>().As<IStorageAdapterClient>().SingleInstance();
             builder.RegisterType<ExternalRequestHelper>().As<IExternalRequestHelper>().SingleInstance();
             builder.RegisterType<GuidKeyGenerator>().As<IKeyGenerator>().SingleInstance();

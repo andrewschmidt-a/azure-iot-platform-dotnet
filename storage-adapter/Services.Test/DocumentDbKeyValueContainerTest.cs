@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
@@ -12,25 +11,26 @@ using Mmm.Platform.IoT.StorageAdapter.Services.Models;
 using Microsoft.Extensions.Logging;
 using Mmm.Platform.IoT.Common.Services.Config;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
+using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
+using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
+using System.Collections.Generic;
 
 namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
 {
     public class DocumentDbKeyValueContainerTest
     {
-        private const string MOCK_TENANT_ID = "mocktenant";
         // a concatenation of the DocumentDbKeyValuteContainer DocumentDataType & DocumentDatabaseIdSuffix
         // This is the return value of the container's DocumentDbDatabaseId
-        private const string MOCK_DB_ID = "pcs-storage";
+        private const string MOCK_DB_ID = "mockdb";
         private const string MOCK_COLL_ID = "mockcoll";
-        private static readonly string mockCollectionLink = $"/dbs/{MOCK_DB_ID}/colls/{MOCK_COLL_ID}";
+        private const string MOCK_TENANT_ID = "mocktenant";
 
         private const string appConfigConnString = "";
 
-        private readonly Mock<IDocumentClient> mockClient;
+        private readonly Mock<IStorageClient> mockClient;
         private readonly Mock<IHttpContextAccessor> mockContextAccessor;
         private readonly Mock<DocumentDbKeyValueContainer> mockContainer;
         private readonly DocumentDbKeyValueContainer container;
@@ -38,39 +38,39 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
 
         public DocumentDbKeyValueContainerTest()
         {
+            var config = new AppConfig();
+            config.StorageAdapterService = new StorageAdapterServiceConfig{ DocumentDbRus = 400 };
+
             this.mockContextAccessor = new Mock<IHttpContextAccessor>();
             DefaultHttpContext context = new DefaultHttpContext();
             context.Items.Add("TenantID", MOCK_TENANT_ID);
-            this.mockContextAccessor.Setup(t => t.HttpContext).Returns(context);
+            this.mockContextAccessor
+                .Setup(t => t.HttpContext)
+                .Returns(context);
 
-            this.mockClient = new Mock<IDocumentClient>();
+            this.mockClient = new Mock<IStorageClient>();
             var database = new Mock<ResourceResponse<Database>>();
-            this.mockClient.Setup(t => t.ReadDatabaseAsync(It.IsAny<Uri>(), It.IsAny<RequestOptions>()))
-                .Returns(Task.FromResult<ResourceResponse<Database>>(new Mock<ResourceResponse<Database>>().Object));
-            this.mockClient.Setup(t => t.ReadDocumentCollectionAsync(It.IsAny<Uri>(), It.IsAny<RequestOptions>()))
-                .Returns(Task.FromResult(new Mock<ResourceResponse<DocumentCollection>>().Object));
 
             // mock a specific tenant
-            Mock<IAppConfigurationHelper> mockAppConfigHelper = new Mock<IAppConfigurationHelper>();
+            Mock<IAppConfigurationClient> mockAppConfigClient = new Mock<IAppConfigurationClient>();
+            mockAppConfigClient
+                .Setup(m => m.GetValue(It.IsAny<string>()))
+                .Returns(MOCK_COLL_ID);
 
             //Mock service returns dummy data
-
-
-            var config = new AppConfig();
             this.mockContainer = new Mock<DocumentDbKeyValueContainer>(
-                new MockFactory<IDocumentClient>(this.mockClient),
+                this.mockClient.Object,
                 new MockExceptionChecker(),
                 config,
-                mockAppConfigHelper.Object,
+                mockAppConfigClient.Object,
                 new Mock<ILogger<DocumentDbKeyValueContainer>>().Object,
                 this.mockContextAccessor.Object);
-            config.StorageAdapterService = new StorageAdapterServiceConfig{ DocumentDbRus = 400 };
-            mockAppConfigHelper.Setup(m => m.GetValue(It.IsAny<string>())).Returns(MOCK_COLL_ID);
-            this.mockContainer.Setup(t => t.DocumentDbDatabaseId)
+            this.mockContainer
+                .Setup(t => t.DocumentDbDatabaseId)
                 .Returns(MOCK_DB_ID);
-            this.mockContainer.Setup(t => t.DocumentDbCollectionId)
+            this.mockContainer
+                .Setup(t => t.DocumentDbCollectionId)
                 .Returns(MOCK_COLL_ID);
-            
             this.container = this.mockContainer.Object;
         }
 
@@ -82,6 +82,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             var data = this.rand.NextString();
             var etag = this.rand.NextString();
             var timestamp = this.rand.NextDateTimeOffset();
+            var documentId = $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}";
 
             var document = new Document();
             document.SetPropertyValue("CollectionId", collectionId);
@@ -94,8 +95,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Setup(x => x.ReadDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<RequestOptions>(),
-                    It.IsAny<CancellationToken>()))
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
                 .ReturnsAsync(response);
 
             var result = await this.container.GetAsync(collectionId, key);
@@ -108,9 +109,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
 
             this.mockClient
                 .Verify(x => x.ReadDocumentAsync(
-                        It.Is<string>(s => s == $"{mockCollectionLink}/docs/{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}"),
-                        It.IsAny<RequestOptions>(),
-                        It.IsAny<CancellationToken>()),
+                        It.Is<string>(s => s == MOCK_DB_ID),
+                        It.Is<string>(s => s == MOCK_COLL_ID),
+                        It.Is<string>(s => s == documentId)),
                     Times.Once);
         }
 
@@ -123,8 +124,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Setup(x => x.ReadDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<RequestOptions>(),
-                    It.IsAny<CancellationToken>()))
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
                 .ThrowsAsync(new ResourceNotFoundException());
 
             await Assert.ThrowsAsync<ResourceNotFoundException>(async () =>
@@ -135,40 +136,41 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
         public async Task GetAllAsyncTest()
         {
             var collectionId = this.rand.NextString();
-            var documents = new[]
+            var documents = new List<Document>();
+            foreach (int i in Enumerable.Range(0, 3))
             {
-                new KeyValueDocument(collectionId, this.rand.NextString(), this.rand.NextString()),
-                new KeyValueDocument(collectionId, this.rand.NextString(), this.rand.NextString()),
-                new KeyValueDocument(collectionId, this.rand.NextString(), this.rand.NextString()),
-            };
-            foreach (var doc in documents)
-            {
+                var key = this.rand.NextString();
+                var data = this.rand.NextString();
+                var doc = new Document();
+                doc.Id = $"{collectionId}.{key}";
+                doc.SetPropertyValue("CollectionId", collectionId);
+                doc.SetPropertyValue("Key", key);
+                doc.SetPropertyValue("Data", data);
                 doc.SetETag(this.rand.NextString());
                 doc.SetTimestamp(this.rand.NextDateTimeOffset());
+                documents.Add(doc);
             }
 
             this.mockClient
-                .Setup(x => x.CreateDocumentQuery<KeyValueDocument>(
+                .Setup(x => x.QueryAllDocumentsAsync(
                     It.IsAny<string>(),
-                    It.IsAny<FeedOptions>()))
-                .Returns(documents.AsQueryable().OrderBy(doc => doc.Id));
+                    It.IsAny<string>()))
+                .ReturnsAsync(documents);
 
             var result = (await this.container.GetAllAsync(collectionId)).ToList();
 
-            Assert.Equal(result.Count(), documents.Length);
+            Assert.Equal(result.Count(), documents.Count);
             foreach (var model in result)
             {
-                var doc = documents.Single(d => d.Key == model.Key);
-                Assert.Equal(model.CollectionId, collectionId);
-                Assert.Equal(model.Data, doc.Data);
-                Assert.Equal(model.ETag, doc.ETag);
-                Assert.Equal(model.Timestamp, doc.Timestamp);
+                string documentId = $"{collectionId}.{model.Key}";
+                var doc = documents.Single(d => documentId == d.Id);
+                Assert.Equal(doc.Id, documentId);
             }
 
             this.mockClient
-                .Verify(x => x.CreateDocumentQuery<KeyValueDocument>(
-                        It.Is<string>(s => s == mockCollectionLink),
-                        It.IsAny<FeedOptions>()),
+                .Verify(x => x.QueryAllDocumentsAsync(
+                        It.Is<string>(s => s == MOCK_DB_ID),
+                        It.Is<string>(s => s == MOCK_COLL_ID)),
                     Times.Once);
         }
 
@@ -192,10 +194,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Setup(x => x.CreateDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<object>(),
-                    It.IsAny<RequestOptions>(),
-                    It.IsAny<bool>(),
-                    It.IsAny<CancellationToken>()))
+                    It.IsAny<string>(),
+                    It.IsAny<KeyValueDocument>()))
                 .ReturnsAsync(response);
 
             var result = await this.container.CreateAsync(collectionId, key, new ValueServiceModel
@@ -211,11 +211,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
 
             this.mockClient
                 .Verify(x => x.CreateDocumentAsync(
-                        It.Is<string>(s => s == mockCollectionLink),
-                        It.Is<KeyValueDocument>(doc => doc.Id == $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}" && doc.CollectionId == collectionId && doc.Key == key && doc.Data == data),
-                        It.IsAny<RequestOptions>(),
-                        It.IsAny<bool>(),
-                        It.IsAny<CancellationToken>()),
+                        It.Is<string>(s => s == MOCK_DB_ID),
+                        It.Is<string>(s => s == MOCK_COLL_ID),
+                        It.Is<KeyValueDocument>(d => d.Id == $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}")),
                     Times.Once);
         }
 
@@ -229,10 +227,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Setup(x => x.CreateDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<object>(),
-                    It.IsAny<RequestOptions>(),
-                    It.IsAny<bool>(),
-                    It.IsAny<CancellationToken>()))
+                    It.IsAny<string>(),
+                    It.IsAny<KeyValueDocument>()))
                 .ThrowsAsync(new ConflictingResourceException());
 
             await Assert.ThrowsAsync<ConflictingResourceException>(async () =>
@@ -258,16 +254,14 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             document.SetPropertyValue("Data", data);
             document.SetETag(etagNew);
             document.SetTimestamp(timestamp);
-            var response = new ResourceResponse<Document>(document);
+            var response = new ValueServiceModel(document);
 
             this.mockClient
                 .Setup(x => x.UpsertDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<object>(),
-                    It.IsAny<RequestOptions>(),
-                    It.IsAny<bool>(),
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync(response);
+                    It.IsAny<string>(),
+                    It.IsAny<KeyValueDocument>()))
+                .ReturnsAsync(document);
 
             var result = await this.container.UpsertAsync(collectionId, key, new ValueServiceModel
             {
@@ -283,11 +277,9 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
 
             this.mockClient
                 .Verify(x => x.UpsertDocumentAsync(
-                        It.Is<string>(s => s == mockCollectionLink),
-                        It.Is<KeyValueDocument>(doc => doc.Id == $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}" && doc.CollectionId == collectionId && doc.Key == key && doc.Data == data),
-                        It.IsAny<RequestOptions>(),
-                        It.IsAny<bool>(),
-                        It.IsAny<CancellationToken>()),
+                        It.Is<string>(s => s == MOCK_DB_ID),
+                        It.Is<string>(s => s == MOCK_COLL_ID),
+                        It.Is<KeyValueDocument>(d => d.Id == $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}")),
                     Times.Once);
         }
 
@@ -302,10 +294,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Setup(x => x.UpsertDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<object>(),
-                    It.IsAny<RequestOptions>(),
-                    It.IsAny<bool>(),
-                    It.IsAny<CancellationToken>()))
+                    It.IsAny<string>(),
+                    It.IsAny<KeyValueDocument>()))
                 .ThrowsAsync(new ConflictingResourceException());
 
             await Assert.ThrowsAsync<ConflictingResourceException>(async () =>
@@ -321,21 +311,22 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
         {
             var collectionId = this.rand.NextString();
             var key = this.rand.NextString();
+            var documentId = $"{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}";
 
             this.mockClient
                 .Setup(x => x.DeleteDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<RequestOptions>(),
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync((ResourceResponse<Document>)null);
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
+                .ReturnsAsync((Document)null);
 
             await this.container.DeleteAsync(collectionId, key);
 
             this.mockClient
                 .Verify(x => x.DeleteDocumentAsync(
-                        It.Is<string>(s => s == $"{mockCollectionLink}/docs/{collectionId.ToLowerInvariant()}.{key.ToLowerInvariant()}"),
-                        It.IsAny<RequestOptions>(),
-                        It.IsAny<CancellationToken>()),
+                        It.Is<string>(s => s == MOCK_DB_ID),
+                        It.Is<string>(s => s == MOCK_COLL_ID),
+                        It.Is<string>(s => s == documentId)),
                     Times.Once);
         }
 
@@ -348,8 +339,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Test
             this.mockClient
                 .Setup(x => x.DeleteDocumentAsync(
                     It.IsAny<string>(),
-                    It.IsAny<RequestOptions>(),
-                    It.IsAny<CancellationToken>()))
+                    It.IsAny<string>(),
+                    It.IsAny<string>()))
                 .ThrowsAsync(new ResourceNotFoundException());
 
             await this.container.DeleteAsync(collectionId, key);

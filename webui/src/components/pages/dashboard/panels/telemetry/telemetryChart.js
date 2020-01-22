@@ -117,29 +117,30 @@ export class TelemetryChart extends Component {
   }
 
   componentWillUpdate({ telemetry, theme }, { telemetryKey }) {
+    var chartData = [];
     if (Object.keys(telemetry).length && telemetryKey && telemetry[telemetryKey]) {
-      const chartData = Object.keys(telemetry[telemetryKey]).map(deviceId => ({
+      chartData = Object.keys(telemetry[telemetryKey]).map(deviceId => ({
         [deviceId]: telemetry[telemetryKey][deviceId]
       }));
-      const noAnimate = telemetryKey === this.state.telemetryKey;
-      // Set a timeout to allow the panel height to be calculated before updating the graph
-      setTimeout(() => {
-        if (this && this.state && this.lineChart && this.state.renderChart) {
-          this.lineChart.render(
-            chartData,
-            {
-              grid: false,
-              legend: 'compact',
-              noAnimate, // If the telemetryKey changes, animate
-              tooltip: true,
-              yAxisState: 'shared', // Default to all values being on the same axis
-              theme
-            },
-            this.props.colors
-          );
-        }
-      }, 10);
-    }
+    }  
+    const noAnimate = telemetryKey === this.state.telemetryKey;  // will be false if there is no telemetry data
+    // Set a timeout to allow the panel height to be calculated before updating the graph
+    setTimeout(() => {
+      if (this && this.state && this.lineChart && this.state.renderChart) {
+        this.lineChart.render(
+          chartData,
+          { // Chart options object: see https://github.com/microsoft/tsiclient/blob/master/docs/UX.md#chart-options
+            noAnimate: noAnimate, // If the telemetryKey changes, animate
+            theme: (theme == 'mmm'  ? 'light' : theme),  // theme may only be light or dark, handle mmm theme setting
+            includeDots: true,
+            yAxisState: 'shared', // Default to all values being on the same axis
+            grid: false,
+            legend: 'compact',
+          },
+          this.props.colors
+        );
+      }
+    }, 10);
   }
 
   setTelemetryKey = telemetryKey => () => {
