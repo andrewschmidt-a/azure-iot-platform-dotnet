@@ -3,11 +3,14 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Mvc;
+using Mmm.Iot.Common.Services;
 using Mmm.Iot.Common.TestHelpers;
 using Mmm.Iot.Config.Services;
 using Mmm.Iot.Config.Services.Models;
@@ -20,15 +23,36 @@ namespace Mmm.Iot.Config.WebService.Test.Controllers
     public class PackageControllerTest : IDisposable
     {
         private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
+        private const string TenantId = "TenantId";
         private readonly Mock<IStorage> mockStorage;
         private readonly PackagesController controller;
         private readonly Random rand;
+        private Mock<HttpContext> mockHttpContext;
+        private Mock<HttpRequest> mockHttpRequest;
+        private IDictionary<object, object> contextItems;
         private bool disposedValue = false;
 
         public PackageControllerTest()
         {
             this.mockStorage = new Mock<IStorage>();
-            this.controller = new PackagesController(this.mockStorage.Object);
+            this.mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
+            this.mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
+            this.mockHttpRequest.Setup(m => m.HttpContext).Returns(this.mockHttpContext.Object);
+            this.mockHttpContext.Setup(m => m.Request).Returns(this.mockHttpRequest.Object);
+            this.controller = new PackagesController(this.mockStorage.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = this.mockHttpContext.Object,
+                },
+            };
+            this.contextItems = new Dictionary<object, object>
+            {
+                {
+                    RequestExtension.ContextKeyTenantId, TenantId
+                },
+            };
+            this.mockHttpContext.Setup(m => m.Items).Returns(this.contextItems);
             this.rand = new Random();
         }
 
@@ -224,9 +248,8 @@ namespace Mmm.Iot.Config.WebService.Test.Controllers
                 file = this.CreateSampleFile(filename, false);
             }
 
-            this.mockStorage.Setup(x => x.UploadToBlob(It.IsAny<string>(), It.IsAny<Stream>()))
+            this.mockStorage.Setup(x => x.UploadToBlobAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()))
                             .ReturnsAsync(filename);
-
             try
             {
                 // Act

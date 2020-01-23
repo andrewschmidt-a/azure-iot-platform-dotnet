@@ -48,6 +48,6 @@ namespace Mmm.Iot.Config.Services
 
         Task UpdateConfigTypeAsync(string customConfigType);
 
-        Task<string> UploadToBlob(string filename, Stream stream = null);
+        Task<string> UploadToBlobAsync(string tenantId, string filename, Stream stream = null);
     }
 }

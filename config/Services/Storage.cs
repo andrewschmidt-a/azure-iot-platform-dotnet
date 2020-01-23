@@ -41,20 +41,17 @@ namespace Mmm.Iot.Config.Services
         private readonly IAsaManagerClient asaManager;
         private readonly AppConfig config;
         private readonly ILogger logger;
-        private readonly IHttpContextAccessor httpContextAccessor;
 
         public Storage(
             IStorageAdapterClient client,
             IAsaManagerClient asaManager,
             AppConfig config,
-            ILogger<Storage> logger,
-            IHttpContextAccessor httpContextAcessor)
+            ILogger<Storage> logger)
         {
             this.client = client;
             this.asaManager = asaManager;
             this.config = config;
             this.logger = logger;
-            this.httpContextAccessor = httpContextAcessor;
         }
 
         public async Task<object> GetThemeAsync()
@@ -302,14 +299,13 @@ namespace Mmm.Iot.Config.Services
             await this.client.UpdateAsync(PackagesCollectionId, PackagesConfigTypeKey, JsonConvert.SerializeObject(list), "*");
         }
 
-        public async Task<string> UploadToBlob(string filename, Stream stream = null)
+        public async Task<string> UploadToBlobAsync(string tenantId, string filename, Stream stream = null)
         {
             CloudStorageAccount storageAccount;
             CloudBlobContainer cloudBlobContainer;
             string url = string.Empty;
             string storageConnectionString = this.config.Global.StorageAccountConnectionString;
             string duration = this.config.Global.PackageSharedAccessExpiryTime;
-            string tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
 
             if (string.IsNullOrEmpty(tenantId))
             {

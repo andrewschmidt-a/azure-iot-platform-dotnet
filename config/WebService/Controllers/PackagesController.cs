@@ -7,6 +7,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Iot.Common.Services;
 using Mmm.Iot.Common.Services.Exceptions;
 using Mmm.Iot.Common.Services.Filters;
 using Mmm.Iot.Config.Services;
@@ -143,7 +144,8 @@ namespace Mmm.Iot.Config.WebService.Controllers
 
             using (var stream = uploadedFile.OpenReadStream())
             {
-                uploadedUri = await this.storage.UploadToBlob(uploadedFile.FileName, stream);
+                var tenantId = this.GetTenantId();
+                uploadedUri = await this.storage.UploadToBlobAsync(tenantId, uploadedFile.FileName, stream);
             }
 
             return uploadedUri;

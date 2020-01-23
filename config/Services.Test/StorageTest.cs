@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Mmm.Iot.Common.Services.Config;
 using Mmm.Iot.Common.Services.Exceptions;
@@ -24,7 +23,6 @@ namespace Mmm.Iot.Config.Services.Test
     public class StorageTest
     {
         private const string PackagesCollectionId = "packages";
-        private const string TenantId = "test_tenant";
         private const string EdgePackageJson =
                 @"{
                     ""id"": ""tempid"",
@@ -135,7 +133,6 @@ namespace Mmm.Iot.Config.Services.Test
         private readonly Mock<IAsaManagerClient> mockAsaManager;
         private readonly Storage storage;
         private readonly Random rand;
-        private readonly Mock<IHttpContextAccessor> httpContextAccessor;
 
         public StorageTest()
         {
@@ -144,10 +141,8 @@ namespace Mmm.Iot.Config.Services.Test
             this.azureMapsKey = this.rand.NextString();
             this.mockClient = new Mock<IStorageAdapterClient>();
             this.mockAsaManager = new Mock<IAsaManagerClient>();
-            this.httpContextAccessor = new Mock<IHttpContextAccessor>();
 
             this.mockAsaManager.Setup(x => x.BeginConversionAsync(It.IsAny<string>())).ReturnsAsync(new BeginConversionApiModel());
-            this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>() { { "TenantID", StorageTest.TenantId } });
 
             this.storage = new Storage(
                 this.mockClient.Object,
@@ -159,8 +154,7 @@ namespace Mmm.Iot.Config.Services.Test
                         AzureMapsKey = this.azureMapsKey,
                     },
                 },
-                new Mock<ILogger<Storage>>().Object,
-                this.httpContextAccessor.Object);
+                new Mock<ILogger<Storage>>().Object);
         }
 
         [Fact]
