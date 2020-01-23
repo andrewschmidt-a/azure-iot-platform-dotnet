@@ -165,14 +165,15 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
 
         private async Task<HttpResponseMessage> TriggerRunbook(string webHookUrl, StringContent bodyContent)
         {
+            if (string.IsNullOrEmpty(webHookUrl))
+            {
+                throw new RunbookTriggerException($"The '{nameof(webHookUrl)}' was null or empty. It may not be configured correctly.");
+            }
+
             try
             {
-                if (string.IsNullOrEmpty(webHookUrl))
-                {
-                    throw new Exception($"The given webHookUrl string was null or empty. It may not be configured correctly.");
-                }
-
-                return await this.httpClient.PostAsync(webHookUrl, bodyContent);
+                var webHookUri = new Uri(webHookUrl);
+                return await this.httpClient.PostAsync(webHookUri, bodyContent);
             }
             catch (Exception e)
             {
