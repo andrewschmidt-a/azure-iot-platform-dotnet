@@ -1,34 +1,36 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.External;
+// <copyright file="DeviceSimulationClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Config.Services.External
+using System.Net.Http;
+using System.Threading.Tasks;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.Common.Services.Helpers;
+
+namespace Mmm.Iot.Config.Services.External
 {
     public class DeviceSimulationClient : ExternalServiceClient, IDeviceSimulationClient
     {
-        private const int DEFAULT_SIMULATION_ID = 1;
+        private const int DefaultSimulationId = 1;
 
-        public DeviceSimulationClient(
-            AppConfig config,
-            IExternalRequestHelper requestHelper) :
-            base(config.ExternalDependencies.DeviceSimulationServiceUrl, requestHelper)
+        public DeviceSimulationClient(AppConfig config, IExternalRequestHelper requestHelper)
+            : base(config.ExternalDependencies.DeviceSimulationServiceUrl, requestHelper)
         {
         }
-    
+
         public async Task<SimulationApiModel> GetDefaultSimulationAsync()
         {
-            return await this._requestHelper.ProcessRequestAsync<SimulationApiModel>(
+            return await this.RequestHelper.ProcessRequestAsync<SimulationApiModel>(
                 HttpMethod.Get,
-                $"{this.serviceUri}/simulations/{DEFAULT_SIMULATION_ID}");
+                $"{this.ServiceUri}/simulations/{DefaultSimulationId}");
         }
 
         public async Task UpdateSimulationAsync(SimulationApiModel model)
         {
-            await this._requestHelper.ProcessRequestAsync(
+            await this.RequestHelper.ProcessRequestAsync(
                 HttpMethod.Put,
-                $"{this.serviceUri}/simulations/{model.Id}");
+                $"{this.ServiceUri}/simulations/{model.Id}");
         }
     }
 }

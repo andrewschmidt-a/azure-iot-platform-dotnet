@@ -1,29 +1,27 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="StorageAdapterClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Helpers;
 
-namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
+namespace Mmm.Iot.Common.Services.External.StorageAdapter
 {
     public class StorageAdapterClient : ExternalServiceClient, IStorageAdapterClient
     {
         private readonly int timeout;
 
-        public StorageAdapterClient(
-            AppConfig config,
-            IExternalRequestHelper requestHelper) :
-            base(config.ExternalDependencies.StorageAdapterServiceUrl, requestHelper)
+        public StorageAdapterClient(AppConfig config, IExternalRequestHelper requestHelper)
+            : base(config.ExternalDependencies.StorageAdapterServiceUrl, requestHelper)
         {
             this.timeout = config.ExternalDependencies.StorageAdapterServiceTimeout;
         }
 
         public string RequestUrl(string path)
         {
-            return $"{this.serviceUri}/{path}";
+            return $"{this.ServiceUri}/{path}";
         }
 
         public async Task<ValueApiModel> CreateAsync(string collectionId, string value)
@@ -31,9 +29,9 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
             string url = this.RequestUrl($"collections/{collectionId}/values");
             ValueApiModel data = new ValueApiModel
             {
-                Data = value
+                Data = value,
             };
-            return await this._requestHelper.ProcessRequestAsync(HttpMethod.Post, url, data);
+            return await this.RequestHelper.ProcessRequestAsync(HttpMethod.Post, url, data);
         }
 
         public async Task<ValueApiModel> UpdateAsync(string collectionId, string key, string value, string etag)
@@ -42,27 +40,27 @@ namespace Mmm.Platform.IoT.Common.Services.External.StorageAdapter
             ValueApiModel data = new ValueApiModel
             {
                 Data = value,
-                ETag = etag
+                ETag = etag,
             };
-            return await this._requestHelper.ProcessRequestAsync(HttpMethod.Put, url, data);
+            return await this.RequestHelper.ProcessRequestAsync(HttpMethod.Put, url, data);
         }
 
         public async Task<ValueApiModel> GetAsync(string collectionId, string key)
         {
             string url = this.RequestUrl($"collections/{collectionId}/values/{key}");
-            return await this._requestHelper.ProcessRequestAsync<ValueApiModel>(HttpMethod.Get, url);
+            return await this.RequestHelper.ProcessRequestAsync<ValueApiModel>(HttpMethod.Get, url);
         }
 
         public async Task<ValueListApiModel> GetAllAsync(string collectionId)
         {
             string url = this.RequestUrl($"collections/{collectionId}/values");
-            return await this._requestHelper.ProcessRequestAsync<ValueListApiModel>(HttpMethod.Get, url);
+            return await this.RequestHelper.ProcessRequestAsync<ValueListApiModel>(HttpMethod.Get, url);
         }
 
         public async Task DeleteAsync(string collectionId, string key)
         {
             string url = this.RequestUrl($"collections/{collectionId}/values/{key}");
-            await this._requestHelper.ProcessRequestAsync(HttpMethod.Delete, url);
+            await this.RequestHelper.ProcessRequestAsync(HttpMethod.Delete, url);
         }
     }
 }

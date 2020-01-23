@@ -1,21 +1,23 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeviceServiceListModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class DeviceServiceListModel
     {
-        public string ContinuationToken { get; set; }
-
-        public List<DeviceServiceModel> Items { get; set; }
-
         public DeviceServiceListModel(IEnumerable<DeviceServiceModel> devices, string continuationToken = null)
         {
             this.ContinuationToken = continuationToken;
             this.Items = new List<DeviceServiceModel>(devices);
         }
+
+        public string ContinuationToken { get; set; }
+
+        public List<DeviceServiceModel> Items { get; set; }
 
         public DeviceTwinName GetDeviceTwinNames()
         {
@@ -29,6 +31,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                     {
                         this.PrepareTagNames(tagSet, item.Value, item.Key);
                     }
+
                     foreach (var item in m.Twin.ReportedProperties)
                     {
                         this.PrepareTagNames(reportedSet, item.Value, item.Key);
@@ -36,6 +39,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 });
                 return new DeviceTwinName { Tags = tagSet, ReportedProperties = reportedSet };
             }
+
             return null;
         }
 
@@ -46,6 +50,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 set.Add(prefix);
                 return;
             }
+
             foreach (var item in jToken.Values())
             {
                 string path = item.Path;

@@ -1,16 +1,18 @@
+// <copyright file="CreateEntityHelper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.AsaManager.Services.Models;
-using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
-using Mmm.Platform.IoT.AsaManager.Services.Models.Rules;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.AsaManager.Services.Models;
+using Mmm.Iot.AsaManager.Services.Models.DeviceGroups;
+using Mmm.Iot.AsaManager.Services.Models.Rules;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.TestHelpers;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
+namespace Mmm.Iot.AsaManager.Services.Test.Helpers
 {
-
     public class CreateEntityHelper
     {
         private readonly Random rand;
@@ -33,14 +35,14 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
                 Description = this.rand.NextString(),
                 GroupId = this.rand.NextString(),
                 Severity = this.rand.NextString(),
-                Calculation = this.rand.NextString()
+                Calculation = this.rand.NextString(),
             };
 
             return new ValueApiModel
             {
                 Key = this.rand.NextString(),
                 ETag = this.rand.NextString(),
-                Data = JsonConvert.SerializeObject(data)
+                Data = JsonConvert.SerializeObject(data),
             };
         }
 
@@ -49,14 +51,14 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
             DeviceGroupDataModel data = new DeviceGroupDataModel
             {
                 Conditions = new List<DeviceGroupConditionModel>(),
-                DisplayName = this.rand.NextString()
+                DisplayName = this.rand.NextString(),
             };
 
             return new ValueApiModel
             {
                 Key = this.rand.NextString(),
                 ETag = this.rand.NextString(),
-                Data = JsonConvert.SerializeObject(data)
+                Data = JsonConvert.SerializeObject(data),
             };
         }
 
@@ -66,7 +68,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
             {
                 Key = this.rand.NextString(),
                 Operator = this.rand.NextString(),
-                Value = this.rand.NextString()
+                Value = this.rand.NextString(),
             };
         }
 
@@ -74,7 +76,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Test.Helpers
         {
             return new DeviceModel
             {
-                Id = this.rand.NextString()
+                Id = this.rand.NextString(),
             };
         }
     }

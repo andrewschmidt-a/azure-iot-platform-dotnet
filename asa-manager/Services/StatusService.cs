@@ -1,28 +1,33 @@
-using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
-using Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager;
-using Mmm.Platform.IoT.Common.Services.Config;
+// <copyright file="StatusService.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.AsaManager.Services
+using System.Collections.Generic;
+using Mmm.Iot.AsaManager.Services.External.BlobStorage;
+using Mmm.Iot.AsaManager.Services.External.IotHubManager;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+
+namespace Mmm.Iot.AsaManager.Services
 {
     public class StatusService : StatusServiceBase
     {
-        public override IDictionary<string, IStatusOperation> dependencies { get; set; }
-
         public StatusService(
             AppConfig config,
             IIotHubManagerClient iotHubManager,
             IBlobStorageClient blobStorageClient,
-            IStorageAdapterClient storageAdapterClient) : base(config)
+            IStorageAdapterClient storageAdapterClient)
+                : base(config)
         {
-            dependencies = new Dictionary<string, IStatusOperation>
+            this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "Storage Adapter", storageAdapterClient },
                 { "IoTHub Manager", iotHubManager },
-                { "Blob Storage", blobStorageClient }
+                { "Blob Storage", blobStorageClient },
             };
         }
+
+        public override IDictionary<string, IStatusOperation> Dependencies { get; set; }
     }
 }

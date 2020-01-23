@@ -1,20 +1,24 @@
+// <copyright file="UserTenantModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using Microsoft.Azure.Cosmos.Table;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Models
+namespace Mmm.Iot.TenantManager.Services.Models
 {
     public class UserTenantModel : TableEntity
     {
-        public string Roles { get; set; }
-
-        public UserTenantModel() { }
+        public UserTenantModel()
+        {
+        }
 
         public UserTenantModel(string userId, string tenantId)
         {
             this.PartitionKey = userId;
             this.RowKey = tenantId;
-            this.Roles = "";
+            this.Roles = string.Empty;
         }
 
         public UserTenantModel(string userId, string tenantId, string roles)
@@ -23,6 +27,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
             this.RowKey = tenantId;
             this.Roles = roles;
         }
+
+        public string Roles { get; set; }
 
         // Define aliases for the partition and row keys
         public string UserId

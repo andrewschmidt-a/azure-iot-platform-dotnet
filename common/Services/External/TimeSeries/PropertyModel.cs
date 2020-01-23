@@ -1,8 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="PropertyModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
+namespace Mmm.Iot.Common.Services.External.TimeSeries
 {
     public class PropertyModel
     {

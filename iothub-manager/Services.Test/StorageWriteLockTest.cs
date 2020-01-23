@@ -1,29 +1,25 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="StorageWriteLockTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
+namespace Mmm.Iot.IoTHubManager.Services.Test
 {
-    public class StorageWriteLockTest
+    public partial class StorageWriteLockTest
     {
         private const string COLL = "coll";
         private const string KEY = "key";
         private readonly Random rand;
         private readonly Mock<IStorageAdapterClient> mockClient;
-
-        private class ValueModel
-        {
-            public string Value { get; set; }
-            public bool Locked { get; set; }
-        }
 
         public StorageWriteLockTest()
         {
@@ -32,7 +28,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             this.mockClient = new Mock<IStorageAdapterClient>();
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task NormalLoopTest()
         {
             var etagOriginal = this.rand.NextString();
@@ -41,7 +38,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var model = new ValueModel
             {
-                Value = this.rand.NextString()
+                Value = this.rand.NextString(),
             };
 
             model.Locked = false;
@@ -68,7 +65,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Data = dataOriginal,
-                    ETag = etagOriginal
+                    ETag = etagOriginal,
                 });
 
             this.mockClient
@@ -79,30 +76,33 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     It.Is<string>(s => s == etagOriginal)))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    ETag = etagLocked
+                    ETag = etagLocked,
                 });
 
             var lockResult = await @lock.TryLockAsync();
             Assert.True(lockResult.Value);
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY)),
                     Times.Once);
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY)),
                     Times.Once);
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY),
-                    It.Is<string>(s => s == dataLocked),
-                    It.Is<string>(s => s == etagOriginal)),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY),
+                        It.Is<string>(s => s == dataLocked),
+                        It.Is<string>(s => s == etagOriginal)),
                     Times.Once);
 
             this.mockClient
@@ -113,29 +113,31 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     It.Is<string>(s => s == etagLocked)))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    ETag = etagUpdated
+                    ETag = etagUpdated,
                 });
 
             var writeResult = await @lock.WriteAndReleaseAsync(model);
             Assert.True(writeResult);
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY),
-                    It.Is<string>(s => s == dataUpdated),
-                    It.Is<string>(s => s == etagLocked)),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY),
+                        It.Is<string>(s => s == dataUpdated),
+                        It.Is<string>(s => s == etagLocked)),
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task LockFailTest()
         {
             var etagOriginal = this.rand.NextString();
 
             var model = new ValueModel
             {
-                Value = this.rand.NextString()
+                Value = this.rand.NextString(),
             };
 
             model.Locked = true;
@@ -155,21 +157,22 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Data = dataOriginal,
-                    ETag = etagOriginal
+                    ETag = etagOriginal,
                 });
 
             var result = await @lock.TryLockAsync();
             Assert.False(result.Value);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task LockConflictTest()
         {
             var etagOriginal = this.rand.NextString();
 
             var model = new ValueModel
             {
-                Value = this.rand.NextString()
+                Value = this.rand.NextString(),
             };
 
             model.Locked = false;
@@ -192,7 +195,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Data = dataOriginal,
-                    ETag = etagOriginal
+                    ETag = etagOriginal,
                 });
 
             this.mockClient
@@ -207,7 +210,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.Null(result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task WriteConflictTest()
         {
             var etagOriginal = this.rand.NextString();
@@ -215,7 +219,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var model = new ValueModel
             {
-                Value = this.rand.NextString()
+                Value = this.rand.NextString(),
             };
 
             model.Locked = false;
@@ -242,7 +246,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Data = dataOriginal,
-                    ETag = etagOriginal
+                    ETag = etagOriginal,
                 });
 
             this.mockClient
@@ -253,30 +257,33 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     It.Is<string>(s => s == etagOriginal)))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    ETag = etagLocked
+                    ETag = etagLocked,
                 });
 
             var lockResult = await @lock.TryLockAsync();
             Assert.True(lockResult.Value);
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY)),
                     Times.Once);
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY)),
                     Times.Once);
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY),
-                    It.Is<string>(s => s == dataLocked),
-                    It.Is<string>(s => s == etagOriginal)),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY),
+                        It.Is<string>(s => s == dataLocked),
+                        It.Is<string>(s => s == etagOriginal)),
                     Times.Once);
 
             this.mockClient
@@ -291,15 +298,17 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.False(writeResult);
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                    It.Is<string>(s => s == COLL),
-                    It.Is<string>(s => s == KEY),
-                    It.Is<string>(s => s == dataUpdated),
-                    It.Is<string>(s => s == etagLocked)),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == COLL),
+                        It.Is<string>(s => s == KEY),
+                        It.Is<string>(s => s == dataUpdated),
+                        It.Is<string>(s => s == etagLocked)),
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ReleaseAsyncWithoutLockTest()
         {
             var @lock = new StorageWriteLock<ValueModel>(
@@ -312,7 +321,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             await Assert.ThrowsAsync<ResourceOutOfDateException>(() => @lock.ReleaseAsync());
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ReleaseAndWriteAsyncWithoutLockTest()
         {
             var @lock = new StorageWriteLock<ValueModel>(

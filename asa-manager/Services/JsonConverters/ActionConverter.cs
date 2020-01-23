@@ -1,18 +1,21 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ActionConverter.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
-using Mmm.Platform.IoT.AsaManager.Services.Models.Rules;
+using Mmm.Iot.AsaManager.Services.Models.Rules;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.JsonConverters
+namespace Mmm.Iot.AsaManager.Services.JsonConverters
 {
     public class ActionConverter : JsonConverter
     {
-        public override bool CanWrite => false;
-        public override bool CanRead => true;
+        private const string TypeKey = "Type";
 
-        private const string TYPE_KEY = "Type";
+        public override bool CanWrite => false;
+
+        public override bool CanRead => true;
 
         public override bool CanConvert(Type objectType)
         {
@@ -25,7 +28,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services.JsonConverters
             var action = default(EmailActionModel);
             var actionType = Enum.Parse(
                 typeof(ActionType),
-                jsonObject.GetValue(TYPE_KEY).Value<string>(),
+                jsonObject.GetValue(TypeKey).Value<string>(),
                 true);
 
             switch (actionType)

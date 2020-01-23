@@ -1,14 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="MessageList.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
+namespace Mmm.Iot.Common.Services.External.TimeSeries
 {
     public class MessageList
     {
-        public List<Message> Messages { get; set; }
-        public List<string> Properties { get; set; }
-
         public MessageList()
         {
             this.Messages = new List<Message>();
@@ -19,8 +18,19 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             List<Message> messages,
             List<string> properties)
         {
-            if (messages != null) this.Messages = messages;
-            if (properties != null) this.Properties = properties;
+            if (messages != null)
+            {
+                this.Messages = messages;
+            }
+
+            if (properties != null)
+            {
+                this.Properties = properties;
+            }
         }
+
+        public List<Message> Messages { get; set; }
+
+        public List<string> Properties { get; set; }
     }
 }

@@ -1,43 +1,47 @@
-﻿using System;
+// <copyright file="Storage.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Helpers.PackageValidation;
-using Mmm.Platform.IoT.Config.Services.Models;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Mmm.Platform.IoT.Common.Services.Config;
-using System.IO;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Config.Services.External;
+using Mmm.Iot.Config.Services.Helpers.PackageValidation;
+using Mmm.Iot.Config.Services.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.Config.Services
+namespace Mmm.Iot.Config.Services
 {
     public class Storage : IStorage
     {
-        private readonly IStorageAdapterClient _client;
-        private readonly IAsaManagerClient _asaManager;
+        public const string SolutionCollectionId = "solution-settings";
+        public const string ThemeKey = "theme";
+        public const string LogoKey = "logo";
+        public const string UserCollectionId = "user-settings";
+        public const string DeviceGroupCollectionId = "devicegroups";
+        public const string PackagesCollectionId = "packages";
+        public const string PackagesConfigTypeKey = "config-types";
+        public const string AzureMapsKey = "AzureMapsKey";
+        public const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
+        public const string SoftwarePackageStore = "software-package";
+        private readonly IStorageAdapterClient client;
+        private readonly IAsaManagerClient asaManager;
         private readonly AppConfig config;
-        private readonly ILogger _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        public const string SOLUTION_COLLECTION_ID = "solution-settings";
-        public const string THEME_KEY = "theme";
-        public const string LOGO_KEY = "logo";
-        public const string USER_COLLECTION_ID = "user-settings";
-        public const string DEVICE_GROUP_COLLECTION_ID = "devicegroups";
-        public const string PACKAGES_COLLECTION_ID = "packages";
-        public const string PACKAGES_CONFIG_TYPE_KEY = "config-types";
-        public const string AZURE_MAPS_KEY = "AzureMapsKey";
-        public const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
-        public const string SOFTWARE_PACKAGE_STORE = "software-package";
+        private readonly ILogger logger;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public Storage(
             IStorageAdapterClient client,
@@ -46,19 +50,20 @@ namespace Mmm.Platform.IoT.Config.Services
             ILogger<Storage> logger,
             IHttpContextAccessor httpContextAcessor)
         {
-            this._client = client;
-            this._asaManager = asaManager;
+            this.client = client;
+            this.asaManager = asaManager;
             this.config = config;
-            this._logger = logger;
-            this._httpContextAccessor = httpContextAcessor;
+            this.logger = logger;
+            this.httpContextAccessor = httpContextAcessor;
         }
+
         public async Task<object> GetThemeAsync()
         {
             string data;
 
             try
             {
-                var response = await this._client.GetAsync(SOLUTION_COLLECTION_ID, THEME_KEY);
+                var response = await this.client.GetAsync(SolutionCollectionId, ThemeKey);
                 data = response.Data;
             }
             catch (ResourceNotFoundException)
@@ -74,25 +79,17 @@ namespace Mmm.Platform.IoT.Config.Services
         public async Task<object> SetThemeAsync(object themeIn)
         {
             var value = JsonConvert.SerializeObject(themeIn);
-            var response = await this._client.UpdateAsync(SOLUTION_COLLECTION_ID, THEME_KEY, value, "*");
+            var response = await this.client.UpdateAsync(SolutionCollectionId, ThemeKey, value, "*");
             var themeOut = JsonConvert.DeserializeObject(response.Data) as JToken ?? new JObject();
             this.AppendAzureMapsKey(themeOut);
             return themeOut;
-        }
-
-        private void AppendAzureMapsKey(JToken theme)
-        {
-            if (theme[AZURE_MAPS_KEY] == null)
-            {
-                theme[AZURE_MAPS_KEY] = config.ConfigService.AzureMapsKey;
-            }
         }
 
         public async Task<object> GetUserSetting(string id)
         {
             try
             {
-                var response = await this._client.GetAsync(USER_COLLECTION_ID, id);
+                var response = await this.client.GetAsync(UserCollectionId, id);
                 return JsonConvert.DeserializeObject(response.Data);
             }
             catch (ResourceNotFoundException)
@@ -104,7 +101,7 @@ namespace Mmm.Platform.IoT.Config.Services
         public async Task<object> SetUserSetting(string id, object setting)
         {
             var value = JsonConvert.SerializeObject(setting);
-            var response = await this._client.UpdateAsync(USER_COLLECTION_ID, id, value, "*");
+            var response = await this.client.UpdateAsync(UserCollectionId, id, value, "*");
             return JsonConvert.DeserializeObject(response.Data);
         }
 
@@ -112,7 +109,7 @@ namespace Mmm.Platform.IoT.Config.Services
         {
             try
             {
-                var response = await this._client.GetAsync(SOLUTION_COLLECTION_ID, LOGO_KEY);
+                var response = await this.client.GetAsync(SolutionCollectionId, LogoKey);
                 return JsonConvert.DeserializeObject<Logo>(response.Data);
             }
             catch (ResourceNotFoundException)
@@ -123,7 +120,7 @@ namespace Mmm.Platform.IoT.Config.Services
 
         public async Task<Logo> SetLogoAsync(Logo model)
         {
-            //Do not overwrite existing name or image with null
+            // Do not overwrite existing name or image with null
             if (model.Name == null || model.Image == null)
             {
                 Logo current = await this.GetLogoAsync();
@@ -139,57 +136,57 @@ namespace Mmm.Platform.IoT.Config.Services
             }
 
             var value = JsonConvert.SerializeObject(model);
-            var response = await this._client.UpdateAsync(SOLUTION_COLLECTION_ID, LOGO_KEY, value, "*");
+            var response = await this.client.UpdateAsync(SolutionCollectionId, LogoKey, value, "*");
             return JsonConvert.DeserializeObject<Logo>(response.Data);
         }
 
         public async Task<IEnumerable<DeviceGroup>> GetAllDeviceGroupsAsync()
         {
-            var response = await this._client.GetAllAsync(DEVICE_GROUP_COLLECTION_ID);
+            var response = await this.client.GetAllAsync(DeviceGroupCollectionId);
             return response.Items.Select(this.CreateGroupServiceModel);
         }
 
         public async Task<DeviceGroup> GetDeviceGroupAsync(string id)
         {
-            var response = await this._client.GetAsync(DEVICE_GROUP_COLLECTION_ID, id);
+            var response = await this.client.GetAsync(DeviceGroupCollectionId, id);
             return this.CreateGroupServiceModel(response);
         }
 
         public async Task<DeviceGroup> CreateDeviceGroupAsync(DeviceGroup input)
         {
             var value = JsonConvert.SerializeObject(input, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            var response = await this._client.CreateAsync(DEVICE_GROUP_COLLECTION_ID, value);
+            var response = await this.client.CreateAsync(DeviceGroupCollectionId, value);
             var responseModel = this.CreateGroupServiceModel(response);
-            await this._asaManager.BeginConversionAsync(DEVICE_GROUP_COLLECTION_ID);
+            await this.asaManager.BeginConversionAsync(DeviceGroupCollectionId);
             return responseModel;
         }
 
         public async Task<DeviceGroup> UpdateDeviceGroupAsync(string id, DeviceGroup input, string etag)
         {
             var value = JsonConvert.SerializeObject(input, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
-            var response = await this._client.UpdateAsync(DEVICE_GROUP_COLLECTION_ID, id, value, etag);
-            await this._asaManager.BeginConversionAsync(DEVICE_GROUP_COLLECTION_ID);
+            var response = await this.client.UpdateAsync(DeviceGroupCollectionId, id, value, etag);
+            await this.asaManager.BeginConversionAsync(DeviceGroupCollectionId);
             return this.CreateGroupServiceModel(response);
         }
 
         public async Task DeleteDeviceGroupAsync(string id)
         {
-            await this._client.DeleteAsync(DEVICE_GROUP_COLLECTION_ID, id);
-            await this._asaManager.BeginConversionAsync(DEVICE_GROUP_COLLECTION_ID);
+            await this.client.DeleteAsync(DeviceGroupCollectionId, id);
+            await this.asaManager.BeginConversionAsync(DeviceGroupCollectionId);
         }
 
         public async Task<IEnumerable<PackageServiceModel>> GetAllPackagesAsync()
         {
-            var response = await this._client.GetAllAsync(PACKAGES_COLLECTION_ID);
-            return response.Items.AsParallel().Where(r => r.Key != PACKAGES_CONFIG_TYPE_KEY)
+            var response = await this.client.GetAllAsync(PackagesCollectionId);
+            return response.Items.AsParallel().Where(r => r.Key != PackagesConfigTypeKey)
                 .Select(this.CreatePackageServiceModel);
         }
 
         public async Task<IEnumerable<PackageServiceModel>> GetFilteredPackagesAsync(string packageType, string configType)
         {
-            var response = await this._client.GetAllAsync(PACKAGES_COLLECTION_ID);
+            var response = await this.client.GetAllAsync(PackagesCollectionId);
             IEnumerable<PackageServiceModel> packages = response.Items.AsParallel()
-                .Where(r => r.Key != PACKAGES_CONFIG_TYPE_KEY)
+                .Where(r => r.Key != PackagesConfigTypeKey)
                 .Select(this.CreatePackageServiceModel);
 
             bool isPackageTypeEmpty = string.IsNullOrEmpty(packageType);
@@ -218,7 +215,7 @@ namespace Mmm.Platform.IoT.Config.Services
 
         public async Task<PackageServiceModel> AddPackageAsync(PackageServiceModel package)
         {
-            bool isValidPackage = IsValidPackage(package);
+            bool isValidPackage = this.IsValidPackage(package);
             if (!isValidPackage)
             {
                 var msg = "Package provided is a invalid deployment manifest " +
@@ -239,18 +236,18 @@ namespace Mmm.Platform.IoT.Config.Services
                 throw new InvalidInputException("Package provided is not a valid deployment manifest");
             }
 
-            package.DateCreated = DateTimeOffset.UtcNow.ToString(DATE_FORMAT);
-            var value = JsonConvert.SerializeObject(package,
-                                                    Formatting.Indented,
-                                                    new JsonSerializerSettings
-                                                    {
-                                                        NullValueHandling = NullValueHandling.Ignore
-                                                    });
+            package.DateCreated = DateTimeOffset.UtcNow.ToString(DateFormat);
+            var value = JsonConvert.SerializeObject(
+                package,
+                Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                });
 
-            var response = await this._client.CreateAsync(PACKAGES_COLLECTION_ID, value);
+            var response = await this.client.CreateAsync(PackagesCollectionId, value);
 
-            if (!(string.IsNullOrEmpty(package.ConfigType))
-                && package.PackageType.Equals(PackageType.DeviceConfiguration))
+            if (!string.IsNullOrEmpty(package.ConfigType) && package.PackageType.Equals(PackageType.DeviceConfiguration))
             {
                 await this.UpdateConfigTypeAsync(package.ConfigType);
             }
@@ -260,12 +257,12 @@ namespace Mmm.Platform.IoT.Config.Services
 
         public async Task DeletePackageAsync(string id)
         {
-            await this._client.DeleteAsync(PACKAGES_COLLECTION_ID, id);
+            await this.client.DeleteAsync(PackagesCollectionId, id);
         }
 
         public async Task<PackageServiceModel> GetPackageAsync(string id)
         {
-            var response = await this._client.GetAsync(PACKAGES_COLLECTION_ID, id);
+            var response = await this.client.GetAsync(PackagesCollectionId, id);
             return this.CreatePackageServiceModel(response);
         }
 
@@ -273,12 +270,13 @@ namespace Mmm.Platform.IoT.Config.Services
         {
             try
             {
-                var response = await this._client.GetAsync(PACKAGES_COLLECTION_ID, PACKAGES_CONFIG_TYPE_KEY);
+                var response = await this.client.GetAsync(PackagesCollectionId, PackagesConfigTypeKey);
                 return JsonConvert.DeserializeObject<ConfigTypeListServiceModel>(response.Data);
             }
             catch (ResourceNotFoundException)
             {
-                _logger.LogDebug("Document config-types has not been created.");
+                this.logger.LogDebug("Document config-types has not been created.");
+
                 // Return empty Package Config types
                 return new ConfigTypeListServiceModel();
             }
@@ -289,31 +287,33 @@ namespace Mmm.Platform.IoT.Config.Services
             ConfigTypeListServiceModel list;
             try
             {
-                var response = await this._client.GetAsync(PACKAGES_COLLECTION_ID, PACKAGES_CONFIG_TYPE_KEY);
+                var response = await this.client.GetAsync(PackagesCollectionId, PackagesConfigTypeKey);
                 list = JsonConvert.DeserializeObject<ConfigTypeListServiceModel>(response.Data);
             }
             catch (ResourceNotFoundException)
             {
-                _logger.LogDebug("Config Types have not been created.");
+                this.logger.LogDebug("Config Types have not been created.");
+
                 // Create empty Package Config Types
                 list = new ConfigTypeListServiceModel();
             }
-            list.add(customConfigType);
-            await this._client.UpdateAsync(PACKAGES_COLLECTION_ID, PACKAGES_CONFIG_TYPE_KEY, JsonConvert.SerializeObject(list), "*");
+
+            list.Add(customConfigType);
+            await this.client.UpdateAsync(PackagesCollectionId, PackagesConfigTypeKey, JsonConvert.SerializeObject(list), "*");
         }
 
         public async Task<string> UploadToBlob(string filename, Stream stream = null)
         {
-            CloudStorageAccount storageAccount = null;
-            CloudBlobContainer cloudBlobContainer = null;
+            CloudStorageAccount storageAccount;
+            CloudBlobContainer cloudBlobContainer;
             string url = string.Empty;
-            string storageConnectionString = config.Global.StorageAccountConnectionString;
-            string  duration = config.Global.PackageSharedAccessExpiryTime;
-            string  tenantId = _httpContextAccessor.HttpContext.Request.GetTenant();
+            string storageConnectionString = this.config.Global.StorageAccountConnectionString;
+            string duration = this.config.Global.PackageSharedAccessExpiryTime;
+            string tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
 
-            if(string.IsNullOrEmpty(tenantId))
+            if (string.IsNullOrEmpty(tenantId))
             {
-                _logger.LogError("Tenant ID is blank, cannot create container without tenandId.");
+                this.logger.LogError("Tenant ID is blank, cannot create container without tenandId.");
                 return null;
             }
 
@@ -324,9 +324,9 @@ namespace Mmm.Platform.IoT.Config.Services
                     // Create the CloudBlobClient that represents the Blob storage endpoint for the storage account.
                     CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
 
-                    // Create a container 
-                    cloudBlobContainer = cloudBlobClient.GetContainerReference($"{tenantId}-{SOFTWARE_PACKAGE_STORE}");
-                    
+                    // Create a container
+                    cloudBlobContainer = cloudBlobClient.GetContainerReference($"{tenantId}-{SoftwarePackageStore}");
+
                     // Create the container if it does not already exist
                     await cloudBlobContainer.CreateIfNotExistsAsync();
 
@@ -339,26 +339,27 @@ namespace Mmm.Platform.IoT.Config.Services
                     }
                     else
                     {
-                        _logger.LogError("Empty stream object in the UploadToBlob method.");
+                        this.logger.LogError("Empty stream object in the UploadToBlob method.");
                         return null;
                     }
-                    url = Convert.ToString(GetBlobSasUri(cloudBlobClient, cloudBlobContainer.Name, filename, duration));
+
+                    url = Convert.ToString(this.GetBlobSasUri(cloudBlobClient, cloudBlobContainer.Name, filename, duration));
                     return url;
                 }
                 catch (StorageException ex)
                 {
-                    _logger.LogError($"Exception in the UploadToBlob method- Message: {ex.Message} : Stack Trace - {ex.StackTrace.ToString()}");
+                    this.logger.LogError($"Exception in the UploadToBlob method- Message: {ex.Message} : Stack Trace - {ex.StackTrace.ToString()}");
                     return null;
                 }
             }
             else
             {
-                _logger.LogError("Error parsing CloudStorageAccount in UploadToBlob method");
+                this.logger.LogError("Error parsing CloudStorageAccount in UploadToBlob method");
                 return null;
             }
         }
 
-        private string GetBlobSasUri(CloudBlobClient cloudBlobClient,string containerName, string blobName, string timeoutDuration)
+        private string GetBlobSasUri(CloudBlobClient cloudBlobClient, string containerName, string blobName, string timeoutDuration)
         {
             string[] time = timeoutDuration.Split(':');
             CloudBlobContainer container = cloudBlobClient.GetContainerReference(containerName);
@@ -368,14 +369,14 @@ namespace Mmm.Platform.IoT.Config.Services
             sasConstraints.SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddHours(Convert.ToDouble(time[0])).AddMinutes(Convert.ToDouble(time[1])).AddSeconds(Convert.ToDouble(time[2]));
             sasConstraints.Permissions = SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write;
 
-            //Generate the shared access signature on the blob, setting the constraints directly on the signature.
+            // Generate the shared access signature on the blob, setting the constraints directly on the signature.
             string sasBlobToken = blockBlob.GetSharedAccessSignature(sasConstraints);
 
-            //Return the URI string for the container, including the SAS token.
+            // Return the URI string for the container, including the SAS token.
             return blockBlob.Uri + sasBlobToken;
         }
 
-        private Boolean IsValidPackage(PackageServiceModel package)
+        private bool IsValidPackage(PackageServiceModel package)
         {
             IPackageValidator validator = PackageValidatorFactory.GetValidator(
                 package.PackageType,
@@ -398,6 +399,14 @@ namespace Mmm.Platform.IoT.Config.Services
             var output = JsonConvert.DeserializeObject<PackageServiceModel>(input.Data);
             output.Id = input.Key;
             return output;
+        }
+
+        private void AppendAzureMapsKey(JToken theme)
+        {
+            if (theme[AzureMapsKey] == null)
+            {
+                theme[AzureMapsKey] = this.config.ConfigService.AzureMapsKey;
+            }
         }
     }
 }

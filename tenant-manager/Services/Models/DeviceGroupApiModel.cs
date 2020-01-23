@@ -1,8 +1,10 @@
-// Copyright (c) Microsoft. All rights reserved.
-using System.Collections.Generic;
-using Newtonsoft.Json;
+// <copyright file="DeviceGroupApiModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Models
+using System.Collections.Generic;
+
+namespace Mmm.Iot.TenantManager.Services.Models
 {
     public class DeviceGroupApiModel
     {

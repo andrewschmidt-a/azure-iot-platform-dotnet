@@ -1,90 +1,58 @@
+// <copyright file="ExternalRequestHelper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Models;
 using Newtonsoft.Json;
-using HttpRequest = Mmm.Platform.IoT.Common.Services.Http.HttpRequest;
+using HttpRequest = Mmm.Iot.Common.Services.Http.HttpRequest;
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+namespace Mmm.Iot.Common.Services.Helpers
 {
     public class ExternalRequestHelper : IExternalRequestHelper
     {
-        private const string TENANT_HEADER = "ApplicationTenantID";
-        private const string AZDS_ROUTE_KEY = "azds-route-as";
+        private const string TenantHeader = "ApplicationTenantID";
+        private const string AzdsRouteKey = "azds-route-as";
 
-        private readonly IHttpClient _httpClient;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IHttpClient httpClient;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public ExternalRequestHelper(IHttpClient httpClient, IHttpContextAccessor httpContextAccessor)
         {
-            this._httpClient = httpClient;
-            this._httpContextAccessor = httpContextAccessor;
+            this.httpClient = httpClient;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
-        /// <summary>
-        /// Special wrapper method for ProcessRequestAsync specifically for calling our storage endpoints
-        /// </summary>
-        /// <param name="uri"></param>
-        /// <returns></returns>
         public async Task<StatusServiceModel> ProcessStatusAsync(string uri)
         {
             return await this.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, $"{uri}/status");
         }
 
-        /// <summary>
-        /// Process an External Dependency Request using the given parameters to create a generic HttpRequest and deserialize the response to type T
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="url"></param>
-        /// <param name="tenantId"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public async Task<T> ProcessRequestAsync<T>(HttpMethod method, string url, string tenantId = null)
         {
             IHttpRequest request = this.CreateRequest(url, tenantId);
             return await this.SendRequestAsync<T>(method, request);
         }
 
-        /// <summary>
-        /// Process an External Dependency Request using the given parameters to create a generic HttpRequest and deserialize the body and response to type T 
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="url"></param>
-        /// <param name="content"></param>
-        /// <param name="tenantId"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public async Task<T> ProcessRequestAsync<T>(HttpMethod method, string url, T content, string tenantId = null)
         {
             IHttpRequest request = this.CreateRequest(url, content, tenantId);
             return await this.SendRequestAsync<T>(method, request);
         }
 
-        /// <summary>
-        /// Process an External Dependency Request using the given parameters to create a generic HttpRequest and return the response.
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="url"></param>
-        /// <param name="tenantId"></param>
-        /// <returns></returns>
         public async Task<IHttpResponse> ProcessRequestAsync(HttpMethod method, string url, string tenantId = null)
         {
             IHttpRequest request = this.CreateRequest(url, tenantId);
             return await this.SendRequestAsync(method, request);
         }
 
-        /// <summary>
-        /// Send an HttpRequest using the given HTTP method, deserialize the response to type T
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="request"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public async Task<T> SendRequestAsync<T>(HttpMethod method, IHttpRequest request)
         {
             IHttpResponse response = await this.SendRequestAsync(method, request);
@@ -99,18 +67,12 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             }
         }
 
-        /// <summary>
-        /// Send an HttpRequest using the given HTTP method 
-        /// </summary>
-        /// <param name="method"></param>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public async Task<IHttpResponse> SendRequestAsync(HttpMethod method, IHttpRequest request)
         {
             IHttpResponse response = null;
             try
             {
-                response = await this._httpClient.SendAsync(request, method);
+                response = await this.httpClient.SendAsync(request, method);
             }
             catch (Exception e)
             {
@@ -121,22 +83,16 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
             return response;
         }
 
-        /// <summary>
-        /// Create an HttpRequest with the necessary parameters for an External Dependency API request
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="tenantId"></param>
-        /// <returns></returns>
         private IHttpRequest CreateRequest(string url, string tenantId = null)
         {
             var request = new HttpRequest();
             request.SetUriFromString(url);
 
-            if (String.IsNullOrEmpty(tenantId))
+            if (string.IsNullOrEmpty(tenantId))
             {
                 try
                 {
-                    tenantId = this._httpContextAccessor.HttpContext.Request.GetTenant();
+                    tenantId = this.httpContextAccessor.HttpContext.Request.GetTenant();
                 }
                 catch (Exception e)
                 {
@@ -144,37 +100,29 @@ namespace Mmm.Platform.IoT.Common.Services.Helpers
                 }
             }
 
-            request.AddHeader(TENANT_HEADER, tenantId);
+            request.AddHeader(TenantHeader, tenantId);
 
             if (url.ToLowerInvariant().StartsWith("https:"))
             {
                 request.Options.AllowInsecureSSLServer = true;
             }
 
-            if (this._httpContextAccessor.HttpContext != null && this._httpContextAccessor.HttpContext.Request.Headers.ContainsKey(AZDS_ROUTE_KEY))
+            if (this.httpContextAccessor.HttpContext != null && this.httpContextAccessor.HttpContext.Request.Headers.ContainsKey(AzdsRouteKey))
             {
                 try
                 {
-                    var azdsRouteAs = this._httpContextAccessor.HttpContext.Request.Headers.First(p => String.Equals(p.Key, AZDS_ROUTE_KEY, StringComparison.OrdinalIgnoreCase));
-                    request.Headers.Add(AZDS_ROUTE_KEY, azdsRouteAs.Value.First());  // azdsRouteAs.Value returns an iterable of strings, take the first
+                    var azdsRouteAs = this.httpContextAccessor.HttpContext.Request.Headers.First(p => string.Equals(p.Key, AzdsRouteKey, StringComparison.OrdinalIgnoreCase));
+                    request.Headers.Add(AzdsRouteKey, azdsRouteAs.Value.First());  // azdsRouteAs.Value returns an iterable of strings, take the first
                 }
                 catch (Exception e)
                 {
-                    throw new Exception($"Unable to attach the {AZDS_ROUTE_KEY} header to the IdentityGatewayClient Request.", e);
+                    throw new Exception($"Unable to attach the {AzdsRouteKey} header to the IdentityGatewayClient Request.", e);
                 }
             }
 
             return request;
         }
 
-        /// <summary>
-        /// Create an HttpRequest with the necessary parameters for an External Dependency API request
-        /// </summary>
-        /// <param name="url"></param>
-        /// <param name="content"></param>
-        /// <param name="tenantId"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         private IHttpRequest CreateRequest<T>(string url, T content, string tenantId)
         {
             IHttpRequest request = this.CreateRequest(url, tenantId);

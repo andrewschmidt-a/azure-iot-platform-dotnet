@@ -1,9 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="Program.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using Microsoft.AspNetCore.Hosting;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Iot.Common.Services;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
+namespace Mmm.Iot.DeviceTelemetry.WebService
 {
     public static class Program
     {

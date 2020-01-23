@@ -1,7 +1,11 @@
+// <copyright file="Permissions.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
 
-namespace Mmm.Platform.IoT.Common.Services.Auth
+namespace Mmm.Iot.Common.Services.Auth
 {
     public static class Permissions
     {
@@ -32,15 +36,15 @@ namespace Mmm.Platform.IoT.Common.Services.Auth
                     "UpdateDevices",
                     "UpdateRules",
                     "UpdateSimManagement",
-                    "UserManage"
+                    "UserManage",
                 }
             },
             {
-                "ReadOnly", new List<string> 
+                "ReadOnly", new List<string>
                 {
-                    "ReadAll"
+                    "ReadAll",
                 }
-            }
+            },
         };
     }
 }

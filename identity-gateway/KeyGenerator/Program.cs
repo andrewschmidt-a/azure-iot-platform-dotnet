@@ -1,38 +1,38 @@
-﻿using Org.BouncyCastle.Asn1.Pkcs;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.OpenSsl;
-using Org.BouncyCastle.Pkcs;
-using Org.BouncyCastle.Security;
+// <copyright file="Program.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.IO;
 using System.Security.Cryptography;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Security;
 
-namespace Mmm.Platform.IoT.IdentityGateway.KeyGenerator
+namespace Mmm.Iot.IdentityGateway.KeyGenerator
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-
-            string key = "";
+            string key = string.Empty;
             using (var memStream = new MemoryStream())
             {
-                //Generate a public/private key pair.  
+                // Generate a public/private key pair.
                 RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(2048);
-                //Save the public key information to an RSAParameters structure.  
+
+                // Save the public key information to an RSAParameters structure.
                 RSAParameters rsaKeyInfo = rsa.ExportParameters(true);
 
-                AsymmetricCipherKeyPair KeyPair = DotNetUtilities.GetRsaKeyPair(rsaKeyInfo);
+                AsymmetricCipherKeyPair keyPair = DotNetUtilities.GetRsaKeyPair(rsaKeyInfo);
                 TextWriter textWriter = new StringWriter();
                 PemWriter pemWriter = new PemWriter(textWriter);
-                pemWriter.WriteObject(KeyPair.Private);
-                pemWriter.WriteObject(KeyPair.Public);
+                pemWriter.WriteObject(keyPair.Private);
+                pemWriter.WriteObject(keyPair.Public);
                 pemWriter.Writer.Flush();
                 key = textWriter.ToString();
             }
 
-            
             Console.WriteLine(key);
             Console.WriteLine(key.Replace("\r\n", "\\n"));
             Console.ReadLine();

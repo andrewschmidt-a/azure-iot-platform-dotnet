@@ -1,10 +1,12 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ValueApiModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
+namespace Mmm.Iot.Common.Services.External.TimeSeries
 {
     public class ValueApiModel
     {

@@ -1,24 +1,27 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeviceGroupControllerTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Config.Services;
-using Mmm.Platform.IoT.Config.Services.Models;
-using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
-using Mmm.Platform.IoT.Config.WebService.v1.Models;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.Config.Services;
+using Mmm.Iot.Config.Services.Models;
+using Mmm.Iot.Config.WebService.Controllers;
+using Mmm.Iot.Config.WebService.Models;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
+namespace Mmm.Iot.Config.WebService.Test.Controllers
 {
-    public class DeviceGroupControllerTest
+    public class DeviceGroupControllerTest : IDisposable
     {
         private readonly Mock<IStorage> mockStorage;
         private readonly DeviceGroupController controller;
         private readonly Random rand;
+        private bool disposedValue = false;
 
         public DeviceGroupControllerTest()
         {
@@ -42,10 +45,10 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
+                            Value = this.rand.NextString(),
+                        },
                     },
-                    ETag = this.rand.NextString()
+                    ETag = this.rand.NextString(),
                 },
                 new DeviceGroup
                 {
@@ -57,10 +60,10 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
+                            Value = this.rand.NextString(),
+                        },
                     },
-                    ETag = this.rand.NextString()
+                    ETag = this.rand.NextString(),
                 },
                 new DeviceGroup
                 {
@@ -72,11 +75,11 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
+                            Value = this.rand.NextString(),
+                        },
                     },
-                    ETag = this.rand.NextString()
-                }
+                    ETag = this.rand.NextString(),
+                },
             };
 
             this.mockStorage
@@ -109,8 +112,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etag = this.rand.NextString();
 
@@ -121,14 +124,15 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     Id = groupId,
                     DisplayName = displayName,
                     Conditions = conditions,
-                    ETag = etag
+                    ETag = etag,
                 });
 
             var result = await this.controller.GetAsync(groupId);
 
             this.mockStorage
-                .Verify(x => x.GetDeviceGroupAsync(
-                    It.Is<string>(s => s == groupId)),
+                .Verify(
+                    x => x.GetDeviceGroupAsync(
+                        It.Is<string>(s => s == groupId)),
                     Times.Once);
 
             Assert.Equal(result.DisplayName, displayName);
@@ -147,8 +151,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etag = this.rand.NextString();
 
@@ -159,18 +163,19 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     Id = groupId,
                     DisplayName = displayName,
                     Conditions = conditions,
-                    ETag = etag
+                    ETag = etag,
                 });
 
             var result = await this.controller.CreateAsync(new DeviceGroupApiModel
             {
                 DisplayName = displayName,
-                Conditions = conditions
+                Conditions = conditions,
             });
 
             this.mockStorage
-                .Verify(x => x.CreateDeviceGroupAsync(
-                    It.Is<DeviceGroup>(m => m.DisplayName == displayName && m.Conditions.First() == conditions.First())),
+                .Verify(
+                    x => x.CreateDeviceGroupAsync(
+                        It.Is<DeviceGroup>(m => m.DisplayName == displayName && m.Conditions.First() == conditions.First())),
                     Times.Once);
 
             Assert.Equal(result.Id, groupId);
@@ -190,8 +195,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etagOld = this.rand.NextString();
             var etagNew = this.rand.NextString();
@@ -203,22 +208,24 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     Id = groupId,
                     DisplayName = displayName,
                     Conditions = conditions,
-                    ETag = etagNew
+                    ETag = etagNew,
                 });
 
-            var result = await this.controller.UpdateAsync(groupId,
+            var result = await this.controller.UpdateAsync(
+                groupId,
                 new DeviceGroupApiModel
                 {
                     DisplayName = displayName,
                     Conditions = conditions,
-                    ETag = etagOld
+                    ETag = etagOld,
                 });
 
             this.mockStorage
-                .Verify(x => x.UpdateDeviceGroupAsync(
-                    It.Is<string>(s => s == groupId),
-                    It.Is<DeviceGroup>(m => m.DisplayName == displayName && m.Conditions.First() == conditions.First()),
-                    It.Is<string>(s => s == etagOld)),
+                .Verify(
+                    x => x.UpdateDeviceGroupAsync(
+                        It.Is<string>(s => s == groupId),
+                        It.Is<DeviceGroup>(m => m.DisplayName == displayName && m.Conditions.First() == conditions.First()),
+                        It.Is<string>(s => s == etagOld)),
                     Times.Once);
 
             Assert.Equal(result.Id, groupId);
@@ -239,9 +246,28 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             await this.controller.DeleteAsync(groupId);
 
             this.mockStorage
-                .Verify(x => x.DeleteDeviceGroupAsync(
-                    It.Is<string>(s => s == groupId)),
+                .Verify(
+                    x => x.DeleteDeviceGroupAsync(
+                        It.Is<string>(s => s == groupId)),
                     Times.Once);
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.controller.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
         }
     }
 }

@@ -1,20 +1,14 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="MethodParameterServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using Microsoft.Azure.Devices;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class MethodParameterServiceModel
     {
-        public string Name { get; set; }
-
-        public TimeSpan? ResponseTimeout { get; set; }
-
-        public TimeSpan? ConnectionTimeout { get; set; }
-
-        public string JsonPayload { get; set; }
-
         public MethodParameterServiceModel()
         {
         }
@@ -26,6 +20,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             this.ConnectionTimeout = azureModel.ConnectionTimeout;
             this.JsonPayload = azureModel.GetPayloadAsJson();
         }
+
+        public string Name { get; set; }
+
+        public TimeSpan? ResponseTimeout { get; set; }
+
+        public TimeSpan? ConnectionTimeout { get; set; }
+
+        public string JsonPayload { get; set; }
 
         public CloudToDeviceMethod ToAzureModel()
         {

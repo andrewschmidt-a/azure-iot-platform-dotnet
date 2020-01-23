@@ -1,8 +1,11 @@
-namespace Mmm.Platform.IoT.Common.Services.Test.Models
+// <copyright file="ExternalRequestModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+namespace Mmm.Iot.Common.Services.Test.Models
 {
     public class ExternalRequestModel
     {
-        public string value { get; set; }
+        public string Value { get; set; }
     }
-    
 }

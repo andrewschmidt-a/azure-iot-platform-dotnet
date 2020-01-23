@@ -1,26 +1,30 @@
-﻿using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.IdentityGateway.Services.External;
+// <copyright file="StatusService.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services
+using System.Collections.Generic;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.TableStorage;
+using Mmm.Iot.IdentityGateway.Services.External;
+
+namespace Mmm.Iot.IdentityGateway.Services
 {
     public class StatusService : StatusServiceBase
     {
-        public override IDictionary<string, IStatusOperation> dependencies { get; set; }
-
         public StatusService(
             AppConfig config,
             ITableStorageClient tableStorage,
-            IAzureB2cClient b2cClient) :
-            base(config)
+            IAzureB2cClient b2cClient)
+                : base(config)
         {
-            this.dependencies = new Dictionary<string, IStatusOperation>
+            this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "Table Storage", tableStorage },
-                { "AzureB2C", b2cClient }
+                { "AzureB2C", b2cClient },
             };
         }
+
+        public override IDictionary<string, IStatusOperation> Dependencies { get; set; }
     }
 }

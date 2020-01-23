@@ -1,9 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DiagnosticsRequestModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
+namespace Mmm.Iot.DeviceTelemetry.Services.External
 {
     public class DiagnosticsRequestModel
     {

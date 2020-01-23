@@ -1,37 +1,23 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeploymentsTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
+namespace Mmm.Iot.IoTHubManager.Services.Test
 {
     public class DeploymentsTest
     {
-        private readonly Deployments deployments;
-        private readonly Mock<RegistryManager> registry;
-        private Mock<ITenantConnectionHelper> tenantHelper;
-        private readonly string ioTHubHostName = "mockIoTHub";
-
-        private const string DEPLOYMENT_NAME_LABEL = "Name";
-        private const string DEPLOYMENT_GROUP_ID_LABEL = "DeviceGroupId";
-        private const string DEPLOYMENT_GROUP_NAME_LABEL = "DeviceGroupName";
-        private const string DEPLOYMENT_PACKAGE_NAME_LABEL = "PackageName";
-        private string PACKAGE_TYPE_LABEL = "Type";
-        private const string CONFIG_TYPE_LABEL = "ConfigType";
-        private const string RM_CREATED_LABEL = "RMDeployment";
-        private const string RESOURCE_NOT_FOUND_EXCEPTION =
-            "Mmm.Platform.IoT.Common.Services.Exceptions.ResourceNotSupportedException, Mmm.Platform.IoT.Common.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
-
-        private const string TEST_EDGE_PACKAGE_JSON =
+        private const string TestEdgePackageJson =
                 @"{
                     ""id"": ""tempid"",
                     ""schemaVersion"": ""1.0"",
@@ -95,7 +81,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     }
                  }";
 
-        private const string TEST_ADM_PACKAGE_JSON =
+        private const string TestAdmPackageJson =
                 @"{
                     ""id"": ""tempid"",
                     ""schemaVersion"": ""1.0"",
@@ -159,27 +145,46 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     }mockIoTHub
                  }";
 
+        private const string DeploymentNameLabel = "Name";
+        private const string DeploymentGroupIdLabel = "DeviceGroupId";
+        private const string DeploymentGroupNameLabel = "DeviceGroupName";
+        private const string ConfigurationTypeLabel = "ConfigType";
+        private const string RmCreatedLabel = "RMDeployment";
+        private const string ResourceNotFoundException = "Mmm.Iot.Common.Services.Exceptions.ResourceNotSupportedException, Mmm.Iot.Common.Services, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null";
+        private const string DeploymentPackageNameLabel = "PackageName";
+
+        private readonly Deployments deployments;
+        private readonly Mock<RegistryManager> registry;
+        private readonly string ioTHubHostName = "mockIoTHub";
+        private Mock<ITenantConnectionHelper> tenantHelper;
+        private string packageTypeLabel = "Type";
+
         public DeploymentsTest()
         {
             this.registry = new Mock<RegistryManager>();
-            tenantHelper = new Mock<ITenantConnectionHelper>();
-            tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper = new Mock<ITenantConnectionHelper>();
+            this.tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
-            MockIdentity.mockClaims("one");
-            this.deployments = new Deployments(tenantHelper.Object);
+            MockIdentity.MockClaims("one");
+            this.deployments = new Deployments(this.tenantHelper.Object);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        [InlineData("depname", "dvcgroupid", "dvcquery", TEST_EDGE_PACKAGE_JSON, 10, "")]
-        [InlineData("", "dvcgroupid", "dvcquery", TEST_EDGE_PACKAGE_JSON, 10, "System.ArgumentNullException")]
-        [InlineData("depname", "", "dvcquery", TEST_EDGE_PACKAGE_JSON, 10, "System.ArgumentNullException")]
-        [InlineData("depname", "dvcgroupid", "", TEST_EDGE_PACKAGE_JSON, 10, "System.ArgumentNullException")]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        [InlineData("depname", "dvcgroupid", "dvcquery", TestEdgePackageJson, 10, "")]
+        [InlineData("", "dvcgroupid", "dvcquery", TestEdgePackageJson, 10, "System.ArgumentNullException")]
+        [InlineData("depname", "", "dvcquery", TestEdgePackageJson, 10, "System.ArgumentNullException")]
+        [InlineData("depname", "dvcgroupid", "", TestEdgePackageJson, 10, "System.ArgumentNullException")]
         [InlineData("depname", "dvcgroupid", "dvcquery", "", 10, "System.ArgumentNullException")]
-        [InlineData("depname", "dvcgroupid", "dvcquery", TEST_EDGE_PACKAGE_JSON, -1, "System.ArgumentOutOfRangeException")]
-        public async Task CreateDeploymentTest(string deploymentName, string deviceGroupId,
-                                               string deviceGroupQuery, string packageContent,
-                                               int priority, string expectedException)
+        [InlineData("depname", "dvcgroupid", "dvcquery", TestEdgePackageJson, -1, "System.ArgumentOutOfRangeException")]
+        public async Task CreateDeploymentTest(
+            string deploymentName,
+            string deviceGroupId,
+            string deviceGroupQuery,
+            string packageContent,
+            int priority,
+            string expectedException)
         {
             // Arrange
             var depModel = new DeploymentServiceModel()
@@ -189,31 +194,31 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 DeviceGroupQuery = deviceGroupQuery,
                 PackageContent = packageContent,
                 PackageType = PackageType.EdgeManifest,
-                Priority = priority
+                Priority = priority,
             };
 
             var newConfig = new Configuration("test-config")
             {
                 Labels = new Dictionary<string, string>()
                 {
-                    { DEPLOYMENT_NAME_LABEL, deploymentName },
-                    { PACKAGE_TYPE_LABEL , PackageType.EdgeManifest.ToString() },
-                    { DEPLOYMENT_GROUP_ID_LABEL, deviceGroupId },
-                    { RM_CREATED_LABEL, bool.TrueString },
+                    { DeploymentNameLabel, deploymentName },
+                    { this.packageTypeLabel, PackageType.EdgeManifest.ToString() },
+                    { DeploymentGroupIdLabel, deviceGroupId },
+                    { RmCreatedLabel, bool.TrueString },
                 },
-                Priority = priority
+                Priority = priority,
             };
 
             this.registry.Setup(r => r.AddConfigurationAsync(It.Is<Configuration>(c =>
-                    c.Labels.ContainsKey(DEPLOYMENT_NAME_LABEL) &&
-                    c.Labels.ContainsKey(DEPLOYMENT_GROUP_ID_LABEL) &&
-                    c.Labels.ContainsKey(RM_CREATED_LABEL) &&
-                    c.Labels[DEPLOYMENT_NAME_LABEL] == deploymentName &&
-                    c.Labels[DEPLOYMENT_GROUP_ID_LABEL] == deviceGroupId &&
-                    c.Labels[RM_CREATED_LABEL] == bool.TrueString)))
+                    c.Labels.ContainsKey(DeploymentNameLabel) &&
+                    c.Labels.ContainsKey(DeploymentGroupIdLabel) &&
+                    c.Labels.ContainsKey(RmCreatedLabel) &&
+                    c.Labels[DeploymentNameLabel] == deploymentName &&
+                    c.Labels[DeploymentGroupIdLabel] == deviceGroupId &&
+                    c.Labels[RmCreatedLabel] == bool.TrueString)))
                 .ReturnsAsync(newConfig);
 
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             if (string.IsNullOrEmpty(expectedException))
@@ -228,12 +233,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
             else
             {
-                await Assert.ThrowsAsync(Type.GetType(expectedException),
+                await Assert.ThrowsAsync(
+                    Type.GetType(expectedException),
                     async () => await this.deployments.CreateAsync(depModel));
             }
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task InvalidRmConfigurationTest()
         {
             // Arrange
@@ -241,14 +248,16 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             this.registry.Setup(r => r.GetConfigurationAsync(It.IsAny<string>()))
                 .ReturnsAsync(configuration);
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act & Assert
-            await Assert.ThrowsAsync(Type.GetType(RESOURCE_NOT_FOUND_EXCEPTION),
-                    async () => await this.deployments.GetAsync(configuration.Id));
+            await Assert.ThrowsAsync(
+                Type.GetType(ResourceNotFoundException),
+                async () => await this.deployments.GetAsync(configuration.Id));
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData(0)]
         [InlineData(1)]
         [InlineData(5)]
@@ -262,7 +271,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
 
             this.registry.Setup(r => r.GetConfigurationsAsync(20)).ReturnsAsync(configurations);
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployments = await this.deployments.ListAsync();
@@ -277,7 +286,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetDeploymentsWithDeviceStatusTest()
         {
             // Arrange
@@ -288,19 +298,21 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             IQuery queryResult = new ResultQuery(3);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(queryResult);
 
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId, true);
             var deviceStatuses = returnedDeployment.DeploymentMetrics.DeviceStatuses;
             Assert.Equal(3, deviceStatuses.Count);
 
-            //Assert
+            // Assert
             returnedDeployment = await this.deployments.GetAsync(deploymentId);
             deviceStatuses = returnedDeployment.DeploymentMetrics.DeviceStatuses;
             Assert.Null(deviceStatuses);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData(true, true, true)]
         [InlineData(false, true)]
         [InlineData(true, true)]
@@ -313,7 +325,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var content = new ConfigurationContent()
             {
                 ModulesContent = isEdgeContent ? new Dictionary<string, IDictionary<string, object>>() : null,
-                DeviceContent = !(isEdgeContent) ? new Dictionary<string, object>() : null
+                DeviceContent = !isEdgeContent ? new Dictionary<string, object>() : null,
             };
 
             var label = string.Empty;
@@ -328,20 +340,21 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             {
                 Labels = new Dictionary<string, string>()
                 {
-                    { DEPLOYMENT_NAME_LABEL, string.Empty },
-                    { DEPLOYMENT_GROUP_ID_LABEL, string.Empty },
-                    { PACKAGE_TYPE_LABEL , label},
-                    { CONFIG_TYPE_LABEL, "CustomConfig" },
-                    { RM_CREATED_LABEL, bool.TrueString },
+                    { DeploymentNameLabel, string.Empty },
+                    { DeploymentGroupIdLabel, string.Empty },
+                    { this.packageTypeLabel, label },
+                    { ConfigurationTypeLabel, "CustomConfig" },
+                    { RmCreatedLabel, bool.TrueString },
                 },
-                Content = content
+                Content = content,
             };
 
             var deploymentId = configuration.Id;
             this.registry.Setup(r => r.GetConfigurationAsync(deploymentId)).ReturnsAsync(configuration);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(new ResultQuery(0));
 
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId);
 
@@ -370,7 +383,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData(true)]
         [InlineData(false)]
         public async Task GetDeploymentMetricsTest(bool isEdgeDeployment)
@@ -379,30 +393,30 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var content = new ConfigurationContent()
             {
                 ModulesContent = isEdgeDeployment ? new Dictionary<string, IDictionary<string, object>>() : null,
-                DeviceContent = !(isEdgeDeployment) ? new Dictionary<string, object>() : null
+                DeviceContent = !isEdgeDeployment ? new Dictionary<string, object>() : null,
             };
 
             var label = isEdgeDeployment ? PackageType.EdgeManifest.ToString() : PackageType.DeviceConfiguration.ToString();
 
-            var Firmware = "Firmware";
+            var firmware = "Firmware";
 
             var configuration = new Configuration("test-config")
             {
                 Labels = new Dictionary<string, string>()
                 {
-                    { DEPLOYMENT_NAME_LABEL, string.Empty },
-                    { DEPLOYMENT_GROUP_ID_LABEL, string.Empty },
-                    { PACKAGE_TYPE_LABEL , label},
-                    { CONFIG_TYPE_LABEL, Firmware },
-                    { RM_CREATED_LABEL, bool.TrueString },
+                    { DeploymentNameLabel, string.Empty },
+                    { DeploymentGroupIdLabel, string.Empty },
+                    { this.packageTypeLabel, label },
+                    { ConfigurationTypeLabel, firmware },
+                    { RmCreatedLabel, bool.TrueString },
                 },
-                Content = content
+                Content = content,
             };
 
             var deploymentId = configuration.Id;
             this.registry.Setup(r => r.GetConfigurationAsync(deploymentId)).ReturnsAsync(configuration);
             this.registry.Setup(r => r.CreateQuery(It.IsAny<string>())).Returns(new ResultQuery(0));
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployment = await this.deployments.GetAsync(deploymentId);
@@ -412,7 +426,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.Equal(3, returnedDeployment.DeploymentMetrics.DeviceMetrics.Count());
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task VerifyGroupAndPackageNameLabelsTest()
         {
             // Arrange
@@ -428,35 +443,35 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 DeviceGroupId = deviceGroupId,
                 DeviceGroupName = deviceGroupName,
                 DeviceGroupQuery = deviceGroupQuery,
-                PackageContent = TEST_EDGE_PACKAGE_JSON,
+                PackageContent = TestEdgePackageJson,
                 PackageName = packageName,
-                Priority = priority
+                Priority = priority,
             };
 
             var newConfig = new Configuration("test-config")
             {
                 Labels = new Dictionary<string, string>()
                 {
-                    { PACKAGE_TYPE_LABEL , PackageType.EdgeManifest.ToString() },
-                    { DEPLOYMENT_NAME_LABEL, deploymentName },
-                    { DEPLOYMENT_GROUP_ID_LABEL, deviceGroupId },
-                    { RM_CREATED_LABEL, bool.TrueString },
-                    { DEPLOYMENT_GROUP_NAME_LABEL, deviceGroupName },
-                    { DEPLOYMENT_PACKAGE_NAME_LABEL, packageName }
+                    { this.packageTypeLabel, PackageType.EdgeManifest.ToString() },
+                    { DeploymentNameLabel, deploymentName },
+                    { DeploymentGroupIdLabel, deviceGroupId },
+                    { RmCreatedLabel, bool.TrueString },
+                    { DeploymentGroupNameLabel, deviceGroupName },
+                    { DeploymentPackageNameLabel, packageName },
                 },
-                Priority = priority
+                Priority = priority,
             };
 
             this.registry.Setup(r => r.AddConfigurationAsync(It.Is<Configuration>(c =>
-                    c.Labels.ContainsKey(DEPLOYMENT_NAME_LABEL) &&
-                    c.Labels.ContainsKey(DEPLOYMENT_GROUP_ID_LABEL) &&
-                    c.Labels.ContainsKey(RM_CREATED_LABEL) &&
-                    c.Labels[DEPLOYMENT_NAME_LABEL] == deploymentName &&
-                    c.Labels[DEPLOYMENT_GROUP_ID_LABEL] == deviceGroupId &&
-                    c.Labels[RM_CREATED_LABEL] == bool.TrueString)))
+                    c.Labels.ContainsKey(DeploymentNameLabel) &&
+                    c.Labels.ContainsKey(DeploymentGroupIdLabel) &&
+                    c.Labels.ContainsKey(RmCreatedLabel) &&
+                    c.Labels[DeploymentNameLabel] == deploymentName &&
+                    c.Labels[DeploymentGroupIdLabel] == deviceGroupId &&
+                    c.Labels[RmCreatedLabel] == bool.TrueString)))
                 .ReturnsAsync(newConfig);
 
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var createdDeployment = await this.deployments.CreateAsync(depModel);
@@ -470,19 +485,20 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.Equal(packageName, createdDeployment.PackageName);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task FilterOutNonRmDeploymentsTest()
         {
             // Arrange
             var configurations = new List<Configuration>
             {
                 this.CreateConfiguration(0, true),
-                this.CreateConfiguration(1, false)
+                this.CreateConfiguration(1, false),
             };
 
             this.registry.Setup(r => r.GetConfigurationsAsync(20))
                 .ReturnsAsync(configurations);
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registry.Object);
 
             // Act
             var returnedDeployments = await this.deployments.ListAsync();
@@ -498,16 +514,16 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             {
                 Labels = new Dictionary<string, string>()
                 {
-                    { PACKAGE_TYPE_LABEL , PackageType.EdgeManifest.ToString() },
-                    { DEPLOYMENT_NAME_LABEL, "deployment" + idx },
-                    { DEPLOYMENT_GROUP_ID_LABEL, "dvcGroupId" + idx }
+                    { this.packageTypeLabel, PackageType.EdgeManifest.ToString() },
+                    { DeploymentNameLabel, "deployment" + idx },
+                    { DeploymentGroupIdLabel, "dvcGroupId" + idx },
                 },
-                Priority = 10
+                Priority = 10,
             };
 
             if (addCreatedByRmLabel)
             {
-                conf.Labels.Add(RM_CREATED_LABEL, "true");
+                conf.Labels.Add(RmCreatedLabel, "true");
             }
 
             return conf;

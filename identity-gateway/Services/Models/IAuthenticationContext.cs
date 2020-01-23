@@ -1,10 +1,11 @@
-﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+// <copyright file="IAuthenticationContext.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.Models
+using System.Threading.Tasks;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+
+namespace Mmm.Iot.IdentityGateway.Services.Models
 {
     public interface IAuthenticationContext
     {

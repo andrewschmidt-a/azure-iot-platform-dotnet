@@ -1,4 +1,6 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ExternalRequestHelperTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
@@ -6,22 +8,21 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Test.Models;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Test.Models;
+using Mmm.Iot.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
+using HttpResponse = Mmm.Iot.Common.Services.Http.HttpResponse;
 
-namespace Mmm.Platform.IoT.Common.Services.Test
+namespace Mmm.Iot.Common.Services.Test
 {
     public class ExternalRequestHelperTest
     {
-        private const string MOCK_SERVICE_URI = @"http://mockuri";
-        private const string AZDS_ROUTE_KEY = "azds-route-as";
-
+        private const string MockServiceUri = @"http://mockuri";
+        private const string AzdsRouteKey = "azds-route-as";
         private readonly Mock<IHttpClient> mockHttpClient;
         private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
         private readonly IExternalRequestHelper externalRequestHelper;
@@ -34,10 +35,10 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
             this.mockHttpContextAccessor
                 .Setup(t => t.HttpContext.Request.HttpContext.Items)
-                .Returns(new Dictionary<object, object>(){{"TenantID", "test_tenant"}});
+                .Returns(new Dictionary<object, object>() { { "TenantID", "test_tenant" } });
             this.mockHttpContextAccessor
                 .Setup(t => t.HttpContext.Request.Headers)
-                .Returns(new HeaderDictionary() { { AZDS_ROUTE_KEY, "mockDevSpace" } });
+                .Returns(new HeaderDictionary() { { AzdsRouteKey, "mockDevSpace" } });
             this.rand = new Random();
 
             this.externalRequestHelper = new ExternalRequestHelper(
@@ -45,11 +46,12 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 this.mockHttpContextAccessor.Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ProcessNoModelRequest()
         {
             string path = this.rand.NextString();
-            string url = $"{MOCK_SERVICE_URI}/{path}";
+            string url = $"{MockServiceUri}/{path}";
 
             HttpMethod method = HttpMethod.Get;
 
@@ -62,27 +64,28 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpClient
                 .Setup(x => x.SendAsync(It.IsAny<IHttpRequest>(), It.IsAny<HttpMethod>()))
                 .ReturnsAsync(response);
-            
+
             await this.externalRequestHelper.ProcessRequestAsync(method, url);
 
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check(url)),
-                    It.Is<HttpMethod>(r => r == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check(url)),
+                        It.Is<HttpMethod>(r => r == method)),
+                    Times.Once);
         }
 
-
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ProcessModelRequest()
         {
             string path = this.rand.NextString();
-            string url = $"{MOCK_SERVICE_URI}/{path}";
+            string url = $"{MockServiceUri}/{path}";
 
             string value = this.rand.NextString();
             ExternalRequestModel content = new ExternalRequestModel
             {
-                value = value
+                Value = value,
             };
 
             HttpMethod method = HttpMethod.Get;
@@ -91,7 +94,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             {
                 StatusCode = HttpStatusCode.OK,
                 IsSuccessStatusCode = true,
-                Content = JsonConvert.SerializeObject(content)
+                Content = JsonConvert.SerializeObject(content),
             };
 
             this.mockHttpClient
@@ -99,16 +102,17 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                     It.IsAny<IHttpRequest>(),
                     It.IsAny<HttpMethod>()))
                 .ReturnsAsync(response);
-            
+
             ExternalRequestModel processedResponse = await this.externalRequestHelper.ProcessRequestAsync(method, url, content);
 
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check(url)),
-                    It.Is<HttpMethod>(r => r == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check(url)),
+                        It.Is<HttpMethod>(r => r == method)),
+                    Times.Once);
 
-            Assert.Equal(processedResponse.value, value);
+            Assert.Equal(processedResponse.Value, value);
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="AuthenticationMechanismServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using Microsoft.Azure.Devices;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class AuthenticationMechanismServiceModel
     {
@@ -55,60 +57,45 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                     auth.SymmetricKey = new SymmetricKey()
                     {
                         PrimaryKey = this.PrimaryKey,
-                        SecondaryKey = this.SecondaryKey
+                        SecondaryKey = this.SecondaryKey,
                     };
 
                     auth.Type = Microsoft.Azure.Devices.AuthenticationType.Sas;
 
                     break;
                 }
+
                 case AuthenticationType.SelfSigned:
                 {
                     auth.X509Thumbprint = new X509Thumbprint()
                     {
                         PrimaryThumbprint = this.PrimaryThumbprint,
-                        SecondaryThumbprint = this.SecondaryThumbprint
+                        SecondaryThumbprint = this.SecondaryThumbprint,
                     };
 
                     auth.Type = Microsoft.Azure.Devices.AuthenticationType.SelfSigned;
 
                     break;
                 }
+
                 case AuthenticationType.CertificateAuthority:
                 {
                     auth.X509Thumbprint = new X509Thumbprint()
                     {
                         PrimaryThumbprint = this.PrimaryThumbprint,
-                        SecondaryThumbprint = this.SecondaryThumbprint
+                        SecondaryThumbprint = this.SecondaryThumbprint,
                     };
 
                     auth.Type = Microsoft.Azure.Devices.AuthenticationType.CertificateAuthority;
 
                     break;
                 }
+
                 default:
                     throw new ArgumentException("Not supported authentcation type");
             }
 
             return auth;
         }
-    }
-
-    public enum AuthenticationType
-    {
-        //
-        // Summary:
-        //     Shared Access Key
-        Sas = 0,
-
-        //
-        // Summary:
-        //     Self-signed certificate
-        SelfSigned = 1,
-
-        //
-        // Summary:
-        //     Certificate Authority
-        CertificateAuthority = 2
     }
 }

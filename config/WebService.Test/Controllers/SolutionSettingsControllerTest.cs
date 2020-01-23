@@ -1,35 +1,38 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="SolutionSettingsControllerTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Config.Services;
-using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Models;
-using Mmm.Platform.IoT.Config.Services.Models.Actions;
-using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.Config.Services;
+using Mmm.Iot.Config.Services.External;
+using Mmm.Iot.Config.Services.Models;
+using Mmm.Iot.Config.Services.Models.Actions;
+using Mmm.Iot.Config.WebService.Controllers;
 using Moq;
 using Xunit;
-using Mmm.Platform.IoT.Common.Services.Config;
 
-namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
+namespace Mmm.Iot.Config.WebService.Test.Controllers
 {
-    public class SolutionControllerTest
+    public class SolutionSettingsControllerTest : IDisposable
     {
         private readonly Mock<IStorage> mockStorage;
         private readonly Mock<IActions> mockActions;
-        private readonly Mock<ILogger<SolutionSettingsController>> _logger;
+        private readonly Mock<ILogger<SolutionSettingsController>> logger;
         private readonly Mock<IAzureResourceManagerClient> mockResourceManagementClient;
         private readonly SolutionSettingsController controller;
         private readonly Random rand;
+        private bool disposedValue = false;
 
-        public SolutionControllerTest()
+        public SolutionSettingsControllerTest()
         {
             this.mockStorage = new Mock<IStorage>();
             this.mockActions = new Mock<IActions>();
-            _logger = new Mock<ILogger<SolutionSettingsController>>();
+            this.logger = new Mock<ILogger<SolutionSettingsController>>();
             this.mockResourceManagementClient = new Mock<IAzureResourceManagerClient>();
             this.controller = new SolutionSettingsController(
                 this.mockStorage.Object,
@@ -48,7 +51,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 .ReturnsAsync(new
                 {
                     Name = name,
-                    Description = description
+                    Description = description,
                 });
 
             var result = await this.controller.GetThemeAsync() as dynamic;
@@ -71,28 +74,23 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 .ReturnsAsync(new
                 {
                     Name = name,
-                    Description = description
+                    Description = description,
                 });
 
             var result = await this.controller.SetThemeAsync(new
             {
                 Name = name,
-                Description = description
+                Description = description,
             }) as dynamic;
 
             this.mockStorage
-                .Verify(x => x.SetThemeAsync(
-                    It.Is<object>(o => this.CheckTheme(o, name, description))),
+                .Verify(
+                    x => x.SetThemeAsync(
+                        It.Is<object>(o => this.CheckTheme(o, name, description))),
                     Times.Once);
 
             Assert.Equal(result.Name.ToString(), name);
             Assert.Equal(result.Description.ToString(), description);
-        }
-
-        private bool CheckTheme(object obj, string name, string description)
-        {
-            var dynamiceObj = obj as dynamic;
-            return dynamiceObj.Name.ToString() == name && dynamiceObj.Description.ToString() == description;
         }
 
         [Fact]
@@ -108,7 +106,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                     {
                         Image = Logo.Default.Image,
                         Type = Logo.Default.Type,
-                        IsDefault = true
+                        IsDefault = true,
                     });
 
                 await this.controller.GetLogoAsync();
@@ -118,7 +116,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
                 Assert.Equal(Logo.Default.Image, mockContext.GetBody());
                 Assert.Equal(Logo.Default.Type, mockContext.Object.Response.ContentType);
-                Assert.Equal("True", mockContext.GetHeader(Logo.IS_DEFAULT_HEADER));
+                Assert.Equal("True", mockContext.GetHeader(Logo.IsDefaultHeader));
             }
         }
 
@@ -140,7 +138,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                         Image = image,
                         Type = type,
                         Name = name,
-                        IsDefault = false
+                        IsDefault = false,
                     });
 
                 await this.controller.GetLogoAsync();
@@ -150,8 +148,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
                 Assert.Equal(image, mockContext.GetBody());
                 Assert.Equal(type, mockContext.Object.Response.ContentType);
-                Assert.Equal(name, mockContext.GetHeader(Logo.NAME_HEADER));
-                Assert.Equal("False", mockContext.GetHeader(Logo.IS_DEFAULT_HEADER));
+                Assert.Equal(name, mockContext.GetHeader(Logo.NameHeader));
+                Assert.Equal("False", mockContext.GetHeader(Logo.IsDefaultHeader));
             }
         }
 
@@ -175,13 +173,14 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 await this.controller.SetLogoAsync();
 
                 this.mockStorage
-                    .Verify(x => x.SetLogoAsync(
-                        It.Is<Logo>(m => m.Image == image && m.Type == type && !m.IsDefault)),
+                    .Verify(
+                        x => x.SetLogoAsync(
+                            It.Is<Logo>(m => m.Image == image && m.Type == type && !m.IsDefault)),
                         Times.Once);
 
                 Assert.Equal(image, mockContext.GetBody());
                 Assert.Equal(type, mockContext.Object.Response.ContentType);
-                Assert.Equal("False", mockContext.GetHeader(Logo.IS_DEFAULT_HEADER));
+                Assert.Equal("False", mockContext.GetHeader(Logo.IsDefaultHeader));
             }
         }
 
@@ -202,19 +201,20 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
                 mockContext.Object.Request.ContentType = type;
                 mockContext.SetBody(image);
-                mockContext.SetHeader(Logo.NAME_HEADER, name);
+                mockContext.SetHeader(Logo.NameHeader, name);
 
                 await this.controller.SetLogoAsync();
 
                 this.mockStorage
-                    .Verify(x => x.SetLogoAsync(
-                        It.Is<Logo>(m => m.Image == image && m.Type == type && m.Name == name && !m.IsDefault)),
+                    .Verify(
+                        x => x.SetLogoAsync(
+                            It.Is<Logo>(m => m.Image == image && m.Type == type && m.Name == name && !m.IsDefault)),
                         Times.Once);
 
                 Assert.Equal(image, mockContext.GetBody());
                 Assert.Equal(type, mockContext.Object.Response.ContentType);
-                Assert.Equal(name, mockContext.GetHeader(Logo.NAME_HEADER));
-                Assert.Equal("False", mockContext.GetHeader(Logo.IS_DEFAULT_HEADER));
+                Assert.Equal(name, mockContext.GetHeader(Logo.NameHeader));
+                Assert.Equal("False", mockContext.GetHeader(Logo.IsDefaultHeader));
             }
         }
 
@@ -230,7 +230,7 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 var action = new EmailActionSettings(this.mockResourceManagementClient.Object, config, new Mock<ILogger<EmailActionSettings>>().Object);
                 var actionsList = new List<IActionSettings>
                 {
-                    action
+                    action,
                 };
                 this.mockActions
                     .Setup(x => x.GetListAsync())
@@ -245,6 +245,30 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 Assert.NotEmpty(result.Items);
                 Assert.Equal(actionsList.Count, result.Items.Count);
             }
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.controller.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
+        }
+
+        private bool CheckTheme(object obj, string name, string description)
+        {
+            var dynamiceObj = obj as dynamic;
+            return dynamiceObj.Name.ToString() == name && dynamiceObj.Description.ToString() == description;
         }
     }
 }

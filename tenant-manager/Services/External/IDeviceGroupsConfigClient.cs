@@ -1,8 +1,12 @@
-using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
+// <copyright file="IDeviceGroupsConfigClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.TenantManager.Services.External
+using System.Threading.Tasks;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.TenantManager.Services.Models;
+
+namespace Mmm.Iot.TenantManager.Services.External
 {
     public interface IDeviceGroupsConfigClient : IExternalServiceClient
     {

@@ -7,6 +7,8 @@ EXPOSE 80
 WORKDIR /src
 ARG AppConfigurationConnectionString=
 COPY Directory.Build.props .
+COPY StyleCop.json .
+COPY Mmm.Iot.ruleset .
 COPY common/Services/Services.csproj common/Services/
 COPY asa-manager/Services/Services.csproj asa-manager/Services/
 COPY asa-manager/WebService/WebService.csproj asa-manager/WebService/

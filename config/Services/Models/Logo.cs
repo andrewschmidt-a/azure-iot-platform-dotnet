@@ -1,23 +1,20 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="Logo.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.IO;
 using System.Reflection;
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
     public class Logo
     {
-        public string Image { get; set; }
-        public string Type { get; set; }
-        public string Name { get; set; }
-        public bool IsDefault { get; set; }
-
+        public const string NameHeader = "Name";
+        public const string IsDefaultHeader = "IsDefault";
         public static readonly Logo Default;
-        public const string NAME_HEADER = "Name";
-        public const string IS_DEFAULT_HEADER = "IsDefault";
-        private const string SVG_TYPE = "image/svg+xml";
-        private const string DEFAULT_LOGO_NAME = "Default Logo";
+        private const string SvgType = "image/svg+xml";
+        private const string DefaultLogoName = "Default Logo";
 
         static Logo()
         {
@@ -27,13 +24,21 @@ namespace Mmm.Platform.IoT.Config.Services.Models
             Default = new Logo
             {
                 Image = Convert.ToBase64String(bytes),
-                Type = Logo.SVG_TYPE,
-                Name = Logo.DEFAULT_LOGO_NAME,
-                IsDefault = true
+                Type = Logo.SvgType,
+                Name = Logo.DefaultLogoName,
+                IsDefault = true,
             };
         }
 
-        /* Converts image from base 64 string to byte array */   
+        public string Image { get; set; }
+
+        public string Type { get; set; }
+
+        public string Name { get; set; }
+
+        public bool IsDefault { get; set; }
+
+        /* Converts image from base 64 string to byte array */
         public byte[] ConvertImageToBytes()
         {
             return Convert.FromBase64String(this.Image);

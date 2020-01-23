@@ -1,4 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DevicesTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
@@ -6,16 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
-using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Moq;
 using Xunit;
-using AuthenticationType = Mmm.Platform.IoT.IoTHubManager.Services.Models.AuthenticationType;
+using AuthenticationType = Mmm.Iot.IoTHubManager.Services.Models.AuthenticationType;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
+namespace Mmm.Iot.IoTHubManager.Services.Test
 {
     public class DevicesTest
     {
@@ -26,28 +27,22 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
         public DevicesTest()
         {
-
             this.registryMock = new Mock<RegistryManager>();
-            tenantHelper = new Mock<ITenantConnectionHelper>();
-
-
-            tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
-            tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registryMock.Object);
-
-            MockIdentity.mockClaims("one");
-
-            this.devices = new Devices(tenantHelper.Object, ioTHubHostName);
-
+            this.tenantHelper = new Mock<ITenantConnectionHelper>();
+            this.tenantHelper.Setup(e => e.GetIotHubName()).Returns(this.ioTHubHostName);
+            this.tenantHelper.Setup(e => e.GetRegistry()).Returns(this.registryMock.Object);
+            MockIdentity.MockClaims("one");
+            this.devices = new Devices(this.tenantHelper.Object, this.ioTHubHostName);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("", "", true)]
         [InlineData("asdf", "", true)]
         [InlineData("", "qwer", true)]
         [InlineData("asdf", "qwer", false)]
         public async Task GetModuleTwinTest(string deviceId, string moduleId, bool throwsException)
         {
-
             if (throwsException)
             {
                 // Act & Assert
@@ -70,7 +65,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("", 5)]
         [InlineData("2", 5)]
         [InlineData("6", 5)]
@@ -82,7 +78,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .Returns(new ResultQuery(numResults));
 
             // Act
-            var queryResult = await this.devices.GetModuleTwinsByQueryAsync("", continuationToken);
+            var queryResult = await this.devices.GetModuleTwinsByQueryAsync(string.Empty, continuationToken);
 
             // Assert
             Assert.Equal("continuationToken", queryResult.ContinuationToken);
@@ -99,7 +95,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             }
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("", "SELECT * FROM devices.modules")]
         [InlineData("deviceId='test'", "SELECT * FROM devices.modules where deviceId='test'")]
         public async Task GetTwinByQueryTest(string query, string queryToMatch)
@@ -110,14 +107,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .Returns(new ResultQuery(3));
 
             // Act
-            var queryResult = await this.devices.GetModuleTwinsByQueryAsync(query, "");
+            var queryResult = await this.devices.GetModuleTwinsByQueryAsync(query, string.Empty);
 
             // Assert
             Assert.Equal("continuationToken", queryResult.ContinuationToken);
             Assert.Equal(3, queryResult.Items.Count);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetEdgeDeviceTest()
         {
             // Arrange
@@ -163,12 +161,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.True(dvc3.IsEdgeDevice, "Edge device from twin reporting not edge device");
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task TestConnectedEdgeDevice()
         {
             // Arrange
-            var twins = CreateTestListOfTwins();
-            var connectedTwins = CreateTestListOfTwins();
+            var twins = this.CreateTestListOfTwins();
+            var connectedTwins = this.CreateTestListOfTwins();
             connectedTwins.RemoveAt(3);
 
             this.registryMock
@@ -183,7 +182,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 .Returns(new ResultQuery(connectedTwins));
 
             // Act
-            var allDevices = await this.devices.GetListAsync("", "");
+            var allDevices = await this.devices.GetListAsync(string.Empty, string.Empty);
 
             // Assert
             Assert.Equal(4, allDevices.Items.Count);
@@ -192,7 +191,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.False(allDevices.Items[3].Connected);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [InlineData("SelfSigned")]
         [InlineData("CertificateAuthority")]
         public async Task InvalidAuthenticationTypeForEdgeDevice(string authTypeString)
@@ -202,11 +202,10 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             var auth = new AuthenticationMechanismServiceModel()
             {
-                AuthenticationType = authType
+                AuthenticationType = authType,
             };
 
-            DeviceServiceModel model = new DeviceServiceModel
-            (
+            DeviceServiceModel model = new DeviceServiceModel(
                 etag: "etag",
                 id: "deviceId",
                 c2DMessageCount: 0,
@@ -217,8 +216,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 lastStatusUpdated: DateTime.Now,
                 twin: null,
                 ioTHubHostName: this.ioTHubHostName,
-                authentication: auth
-            );
+                authentication: auth);
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidInputException>(async () =>
@@ -230,7 +228,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var twin = new Twin()
             {
                 Properties = new TwinProperties(),
-                Capabilities = isEdgeDevice ? new DeviceCapabilities() { IotEdge = true } : null
+                Capabilities = isEdgeDevice ? new DeviceCapabilities() { IotEdge = true } : null,
             };
             twin.DeviceId = $"device{valueToReport}";
             twin.Properties.Reported = new TwinCollection("{\"test\":\"value" + valueToReport + "\"}");
@@ -248,18 +246,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     SymmetricKey = new SymmetricKey
                     {
                         PrimaryKey = Convert.ToBase64String(Encoding.UTF8.GetBytes("SomeTestPrimaryKey")),
-                        SecondaryKey = Convert.ToBase64String(Encoding.UTF8.GetBytes("SomeTestSecondaryKey"))
-                    }
+                        SecondaryKey = Convert.ToBase64String(Encoding.UTF8.GetBytes("SomeTestSecondaryKey")),
+                    },
                 },
-                Capabilities = isEdgeDevice ? new DeviceCapabilities() { IotEdge = true } : null
+                Capabilities = isEdgeDevice ? new DeviceCapabilities() { IotEdge = true } : null,
             };
             return dvc;
         }
 
-        /// <summary>
-        /// Returns a set of edge and non-edge twins
-        /// </summary>
-        /// <returns></returns>
         private List<Twin> CreateTestListOfTwins()
         {
             return new List<Twin>()
@@ -267,7 +261,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                 DevicesTest.CreateTestTwin(0, false),
                 DevicesTest.CreateTestTwin(1, false),
                 DevicesTest.CreateTestTwin(2, true),
-                DevicesTest.CreateTestTwin(3, true)
+                DevicesTest.CreateTestTwin(3, true),
             };
         }
     }

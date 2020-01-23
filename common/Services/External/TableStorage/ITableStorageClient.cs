@@ -1,16 +1,20 @@
+// <copyright file="ITableStorageClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
+namespace Mmm.Iot.Common.Services.External.TableStorage
 {
     public interface ITableStorageClient : IStatusOperation
     {
         Task<CloudTable> GetTableAsync(
             string tableName);
-            
+
         Task<T> InsertAsync<T>(
             string tableName,
             T entity)
@@ -28,12 +32,12 @@ namespace Mmm.Platform.IoT.Common.Services.External.TableStorage
 
         Task<T> RetrieveAsync<T>(
             string tableName,
-            string partitionKey, 
+            string partitionKey,
             string rowKey)
             where T : ITableEntity;
 
         Task<T> DeleteAsync<T>(
-            string tableName, 
+            string tableName,
             T entity)
             where T : ITableEntity;
 

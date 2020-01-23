@@ -1,39 +1,42 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="TimeSeriesClientTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.TestHelpers;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
+namespace Mmm.Iot.DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesClientTest
     {
-        private readonly Mock<ILogger<TimeSeriesClient>> _logger;
+        private readonly Mock<ILogger<TimeSeriesClient>> logger;
         private readonly Mock<IHttpClient> httpClient;
         private Mock<AppConfig> config;
         private TimeSeriesClient client;
 
         public TimeSeriesClientTest()
         {
-            _logger = new Mock<ILogger<TimeSeriesClient>>();
-            this.config = new Mock<AppConfig> { DefaultValue =  DefaultValue.Mock };
+            this.logger = new Mock<ILogger<TimeSeriesClient>>();
+            this.config = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
             this.httpClient = new Mock<IHttpClient>();
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.config.Object,
-                _logger.Object);
+                this.logger.Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task QueryThrowsInvalidConfiguration_WhenConfigValuesAreNull()
         {
-            // Arrange 
+            // Arrange
             this.SetupClientWithNullConfigValues();
 
             // Act & Assert
@@ -41,7 +44,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
                  this.client.QueryEventsAsync(null, null, "desc", 0, 1000, new string[0]));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PingReturnsFalse_WhenConfigValuesAreNull()
         {
             // Arrange
@@ -55,7 +59,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
             Assert.Contains("TimeSeries check failed", result.Message);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task QueryThrows_IfInvalidAuthParams()
         {
             // Arrange
@@ -72,7 +77,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.config.Object,
-                _logger.Object);
+                this.logger.Object);
         }
 
         private void SetupClientWithConfigValues()
@@ -89,7 +94,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
                 this.config.Object,
-                _logger.Object);
+                this.logger.Object);
         }
     }
 }

@@ -1,8 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DevicePropertyServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class DevicePropertyServiceModel
     {
@@ -12,6 +14,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
 
         public HashSet<string> Reported { get; set; }
 
-        public bool IsNullOrEmpty() => (Tags == null || Tags.Count == 0) && (Reported == null || Reported.Count == 0);
+        public bool IsNullOrEmpty() => (this.Tags == null || this.Tags.Count == 0) && (this.Reported == null || this.Reported.Count == 0);
     }
 }

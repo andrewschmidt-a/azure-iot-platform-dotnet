@@ -1,10 +1,12 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeviceGroupCondition.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
     public class DeviceGroupCondition
     {
@@ -16,24 +18,6 @@ namespace Mmm.Platform.IoT.Config.Services.Models
         public OperatorType Operator { get; set; }
 
         [JsonProperty("Value")]
-        public Object Value { get; set; }
-    }
-
-    public enum OperatorType
-    {
-        // ReSharper disable once InconsistentNaming
-        EQ, // =
-        // ReSharper disable once InconsistentNaming
-        NE, // !=
-        // ReSharper disable once InconsistentNaming
-        LT, // <
-        // ReSharper disable once InconsistentNaming
-        GT, // >
-        // ReSharper disable once InconsistentNaming
-        LE, // <=
-        // ReSharper disable once InconsistentNaming
-        GE, // >=
-        // ReSharper disable once InconsistentNaming
-        IN // IN
+        public object Value { get; set; }
     }
 }

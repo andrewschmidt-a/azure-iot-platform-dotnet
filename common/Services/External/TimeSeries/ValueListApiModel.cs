@@ -1,27 +1,25 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ValueListApiModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
+namespace Mmm.Iot.Common.Services.External.TimeSeries
 {
     public class ValueListApiModel
     {
-        [JsonProperty("events")]
-        public List<ValueApiModel> Events { get; set; }
-
         public ValueListApiModel()
         {
             this.Events = new List<ValueApiModel>();
         }
 
-        /// <summary>
-        /// Converts Time Series Events to service MessageList model.
-        /// Takes in a skip value to return messages starting from skip.
-        /// </summary>
+        [JsonProperty("events")]
+        public List<ValueApiModel> Events { get; set; }
+
         public MessageList ToMessageList(int skip)
         {
             var messages = new List<Message>();
@@ -60,7 +58,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
                         {
                             DeviceId = tsiEvent.Values[schema.GetDeviceIdIndex()].ToString(),
                             Time = DateTimeOffset.Parse(tsiEvent.Timestamp),
-                            Data = this.GetEventAsJson(tsiEvent.Values, schema)
+                            Data = this.GetEventAsJson(tsiEvent.Values, schema),
                         };
                         messages.Add(message);
                     }
@@ -84,9 +82,6 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
             return new MessageList(messages, new List<string>(properties));
         }
 
-        /// <summary>
-        /// Converts the tsi paylod for 'values' to the 'data' JObject payload for the message model.
-        /// </summary>
         private JObject GetEventAsJson(List<JValue> values, SchemaModel schema)
         {
             // Get dictionary of properties and index e.g. < propertyname, index > from schema

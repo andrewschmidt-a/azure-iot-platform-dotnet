@@ -1,24 +1,28 @@
+// <copyright file="DeviceGroupsConfigClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Models;
+using Mmm.Iot.TenantManager.Services.Models;
 using Newtonsoft.Json;
-using Mmm.Platform.IoT.Common.Services.Config;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.External
+namespace Mmm.Iot.TenantManager.Services.External
 {
     public class DeviceGroupsConfigClient : IDeviceGroupsConfigClient
     {
-        private readonly IExternalRequestHelper _requestHelper;
+        private readonly IExternalRequestHelper requestHelper;
         private readonly string serviceUri;
 
         public DeviceGroupsConfigClient(AppConfig config, IExternalRequestHelper requestHelper)
         {
             this.serviceUri = config.ExternalDependencies.ConfigServiceUrl;
-            this._requestHelper = requestHelper;
+            this.requestHelper = requestHelper;
         }
 
         public string RequestUrl(string path)
@@ -26,16 +30,12 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
             return $"{this.serviceUri}/{path}";
         }
 
-        /// <summary>
-        /// Ping the DeviceGroups for its status
-        /// </summary>
-        /// <returns></returns>
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             try
             {
                 string url = this.RequestUrl("status/");
-                var result = await this._requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, url);
+                var result = await this.requestHelper.ProcessRequestAsync<StatusServiceModel>(HttpMethod.Get, url);
                 if (result == null || result.Status == null || !result.Status.IsHealthy)
                 {
                     // bad status
@@ -61,10 +61,10 @@ namespace Mmm.Platform.IoT.TenantManager.Services.External
             DeviceGroupApiModel defaultGroup = new DeviceGroupApiModel
             {
                 DisplayName = "Default",
-                Conditions = new List<DeviceGroupConditionModel>()
+                Conditions = new List<DeviceGroupConditionModel>(),
             };
             string url = this.RequestUrl("devicegroups/");
-            return await this._requestHelper.ProcessRequestAsync(HttpMethod.Post, url, defaultGroup, tenantId);
+            return await this.requestHelper.ProcessRequestAsync(HttpMethod.Post, url, defaultGroup, tenantId);
         }
     }
 }

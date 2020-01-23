@@ -1,9 +1,13 @@
+// <copyright file="DependencyResolution.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Reflection;
 using Autofac;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.IdentityGateway.Services;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.IdentityGateway.Services;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService
+namespace Mmm.Iot.IdentityGateway.WebService
 {
     public class DependencyResolution : DependencyResolutionBase
     {
