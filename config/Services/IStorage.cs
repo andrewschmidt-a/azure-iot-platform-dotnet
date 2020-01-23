@@ -26,6 +26,6 @@ namespace Mmm.Platform.IoT.Config.Services
         Task<PackageServiceModel> AddPackageAsync(PackageServiceModel package);
         Task DeletePackageAsync(string id);
         Task UpdateConfigTypeAsync(string customConfigType);
-        Task<string> UploadToBlob(string filename, Stream stream = null);
+        Task<string> UploadToBlobAsync(string tenantId, string filename, Stream stream = null);
     }
 }

@@ -13,6 +13,9 @@ using Mmm.Platform.IoT.Config.WebService.v1.Controllers;
 using Mmm.Platform.IoT.Common.TestHelpers;
 using Moq;
 using Xunit;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using Mmm.Platform.IoT.Common.Services;
 
 namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
@@ -20,13 +23,34 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
     {
         private readonly Mock<IStorage> mockStorage;
         private readonly PackagesController controller;
+        private Mock<HttpContext> mockHttpContext;
+        private Mock<HttpRequest> mockHttpRequest;
+        private IDictionary<object, object> contextItems;
+        private const string tenantId = "TenantId";
         private readonly Random rand;
         private const string DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:sszzz";
 
         public PackageControllerTest()
         {
             this.mockStorage = new Mock<IStorage>();
-            this.controller = new PackagesController(this.mockStorage.Object);
+            this.mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
+            this.mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
+            this.mockHttpRequest.Setup(m => m.HttpContext).Returns(mockHttpContext.Object);
+            this.mockHttpContext.Setup(m => m.Request).Returns(mockHttpRequest.Object);
+            this.controller = new PackagesController(this.mockStorage.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = mockHttpContext.Object
+                }
+            };
+            contextItems = new Dictionary<object, object>
+            {
+                {
+                    RequestExtension.ContextKeyTenantId, tenantId
+                }
+            };
+            mockHttpContext.Setup(m => m.Items).Returns(contextItems);
             this.rand = new Random();
         }
 
@@ -210,9 +234,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
                 file = this.CreateSampleFile(filename, false);
             }
             
-            this.mockStorage.Setup(x => x.UploadToBlob(It.IsAny<string>(), It.IsAny<Stream>()))
+            this.mockStorage.Setup(x => x.UploadToBlobAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()))
                             .ReturnsAsync(filename);
-
             try
             {
                 // Act

@@ -27,7 +27,6 @@ namespace Mmm.Platform.IoT.Config.Services
         private readonly IAsaManagerClient _asaManager;
         private readonly AppConfig config;
         private readonly ILogger _logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         public const string SOLUTION_COLLECTION_ID = "solution-settings";
         public const string THEME_KEY = "theme";
         public const string LOGO_KEY = "logo";
@@ -43,14 +42,12 @@ namespace Mmm.Platform.IoT.Config.Services
             IStorageAdapterClient client,
             IAsaManagerClient asaManager,
             AppConfig config,
-            ILogger<Storage> logger,
-            IHttpContextAccessor httpContextAcessor)
+            ILogger<Storage> logger)
         {
             this._client = client;
             this._asaManager = asaManager;
             this.config = config;
             this._logger = logger;
-            this._httpContextAccessor = httpContextAcessor;
         }
         public async Task<object> GetThemeAsync()
         {
@@ -302,14 +299,13 @@ namespace Mmm.Platform.IoT.Config.Services
             await this._client.UpdateAsync(PACKAGES_COLLECTION_ID, PACKAGES_CONFIG_TYPE_KEY, JsonConvert.SerializeObject(list), "*");
         }
 
-        public async Task<string> UploadToBlob(string filename, Stream stream = null)
+        public async Task<string> UploadToBlobAsync(string tenantId, string filename, Stream stream = null)
         {
             CloudStorageAccount storageAccount = null;
             CloudBlobContainer cloudBlobContainer = null;
             string url = string.Empty;
             string storageConnectionString = config.Global.StorageAccountConnectionString;
             string  duration = config.Global.PackageSharedAccessExpiryTime;
-            string  tenantId = _httpContextAccessor.HttpContext.Request.GetTenant();
 
             if(string.IsNullOrEmpty(tenantId))
             {

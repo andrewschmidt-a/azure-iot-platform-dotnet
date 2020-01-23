@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Filters;
 using Mmm.Platform.IoT.Config.Services;
@@ -140,7 +141,8 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
             }
             using (var stream = uploadedFile.OpenReadStream())
             {
-                uploadedUri = await this.storage.UploadToBlob(uploadedFile.FileName, stream);
+                var tenantId = this.GetTenantId();
+                uploadedUri = await this.storage.UploadToBlobAsync(tenantId, uploadedFile.FileName, stream);
             }
             return uploadedUri;
         }
