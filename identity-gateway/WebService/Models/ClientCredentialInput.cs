@@ -2,14 +2,19 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
+using Newtonsoft.Json;
+
 namespace Mmm.Iot.IdentityGateway.WebService.Models
 {
     public class ClientCredentialInput
     {
+        [JsonProperty("client_id")]
         public string ClientId { get; set; }
 
+        [JsonProperty("client_secret")]
         public string ClientSecret { get; set; }
 
+        [JsonProperty("scope")]
         public string Scope { get; set; }
     }
 }
