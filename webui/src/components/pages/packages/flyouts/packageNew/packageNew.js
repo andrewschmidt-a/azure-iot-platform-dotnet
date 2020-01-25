@@ -100,6 +100,12 @@ export class PackageNew extends LinkedComponent {
 
     if (configType == "Firmware" && !uploadedFirmwareSuccessfully){
       ConfigService.uploadFirmware(packageFile).subscribe((blobData,error)=> {
+        if(error){
+          this.setState({
+            fileError: error
+          })
+          return;
+        }
         console.log(blobData);
         // Replace all invalid configuration id values
         packageJson.id = packageFile.name.toLowerCase().replace(/[^a-z0-9\[\]\-\+\%\_\*\!\']/gi, "_")+"-"+uuid();
