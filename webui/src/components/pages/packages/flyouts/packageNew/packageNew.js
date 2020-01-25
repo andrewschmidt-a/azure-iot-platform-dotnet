@@ -95,7 +95,7 @@ export class PackageNew extends LinkedComponent {
   }
   apply = (event) => {
     event.preventDefault();
-    const { createPackage, uploadFirmware } = this.props;
+    const { createPackage} = this.props;
     const { packageType, configType, customConfigName, packageFile, fileError, packageJson, uploadedFirmwareSuccessfully } = this.state;
 
     if (configType == "Firmware" && !uploadedFirmwareSuccessfully){
