@@ -3,7 +3,8 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 import { Link } from "react-router-dom";
-
+import JSONInput from 'react-json-editor-ajrm';
+import locale    from 'react-json-editor-ajrm/locale/en';
 import {
   packageTypeOptions,
   packagesEnum,
@@ -30,8 +31,12 @@ import {
 } from 'components/shared';
 
 import './packageNew.scss';
+import { ConfigService } from 'services';
+import {dataURLtoFile} from 'utilities'
+import uuid from 'uuid/v4';
 
 const fileInputAccept = ".json,application/json";
+const firmwareFileInputAccept = "*.zip,*.tar,*.bin,*.ipa,*.rar,*.gz,*.bz2,*.tgz,*.swu";
 
 export class PackageNew extends LinkedComponent {
   constructor(props) {
@@ -42,19 +47,80 @@ export class PackageNew extends LinkedComponent {
       configType: '',
       customConfigName: '',
       packageFile: undefined,
+      firmwarePackageName: "",
+      firmwareFile: undefined,
       changesApplied: undefined,
-      fileError: undefined
-    };
+      fileError: undefined,
+      uploadedFirmwareSuccessfully: false,
+      packageJson: {
+        "id": "sampleConfigId",
+        "content": {
+          "deviceContent": {
+            "properties.desired.softwareConfig": {
+              "softwareName": "Firmware",
+              "version": "1.0.0",
+              "softwareURL": "blob_uri",
+              "fileName": "filename",
+              "serialNumber": "",
+              "checkSum": ""
+            }
+          }
+        },
+        "metrics": {
+          "queries": {
+            "current": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='Success'",
+            "applying": "SELECT deviceId FROM devices WHERE ( properties.reported.softwareConfig.status='Downloading' OR properties.reported.softwareConfig.status='Verifying' OR properties.reported.softwareConfig.status='Applying')",
+            "rebooting": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='Rebooting'",
+            "error": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='Error'",
+            "rolledback": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='RolledBack'"
+          }
+        },
+        "targetCondition": "",
+        "priority": 20
+      }
+    }
   }
 
   componentWillUnmount() {
     this.props.resetPackagesPendingError();
   }
-
+  packageJSONUpdated = (changeObject) => {
+    console.log(changeObject)
+    var file = undefined;
+    if(changeObject.jsObject){
+      file = dataURLtoFile("data:application/json;base64,"+btoa(JSON.stringify(changeObject.jsObject)), this.state.firmwarePackageName);
+    }
+    console.log(file)
+    this.setState({packageJson: changeObject.jsObject, packageFile:file})
+  }
   apply = (event) => {
     event.preventDefault();
-    const { createPackage } = this.props;
-    const { packageType, configType, customConfigName, packageFile, fileError } = this.state;
+    const { createPackage, uploadFirmware } = this.props;
+    const { packageType, configType, customConfigName, packageFile, fileError, packageJson, uploadedFirmwareSuccessfully } = this.state;
+
+    if (configType == "Firmware" && !uploadedFirmwareSuccessfully){
+      ConfigService.uploadFirmware(packageFile).subscribe((blobData,error)=> {
+        console.log(blobData);
+        // Replace all invalid configuration id values
+        packageJson.id = packageFile.name.toLowerCase().replace(/[^a-z0-9\[\]\-\+\%\_\*\!\']/gi, "_")+"-"+uuid();
+        packageJson.content.deviceContent["properties.desired.softwareConfig"].fileName = packageFile.name;
+        packageJson.content.deviceContent["properties.desired.softwareConfig"].softwareURL = blobData.FileUri;
+        packageJson.content.deviceContent["properties.desired.softwareConfig"].checkSum = blobData.CheckSum;
+        
+        // Replace Configuration Ids in metrics
+        for(const [key, value] of Object.entries(packageJson.metrics.queries) ){
+          packageJson.metrics.queries[key] = value.replace("firmware285", packageJson.id)
+        }
+        this.setState({
+          packageJson: packageJson,
+          uploadedFirmwareSuccessfully: true,
+          firmwarePackageName: packageFile.name,
+          packageFile: dataURLtoFile("data:application/json;base64,"+btoa(JSON.stringify(packageJson)), packageFile.name)
+        })
+      })
+      return;
+    }
+
 
     // If configType is 'Custom' concatenate 'Custom' with customConfigName.
     let configName = '';
@@ -89,7 +155,17 @@ export class PackageNew extends LinkedComponent {
   customConfigNameChange = ({ target: { value = {} } }) => {
     this.props.logEvent(toSinglePropertyDiagnosticsModel('NewPackage_CustomConfigType', 'customConfigName', value));
   }
+  onFirmwareFileSelected = (e) => {
+    let file = e.target.files[0];
+    if (file.name.length > 50) {
+      this.setState({ fileError: this.props.t('packages.flyouts.new.validation.fileName') });
+      return;
+    }
 
+    this.setState({ packageFile: file, fileError: undefined });
+    this.props.logEvent(toSinglePropertyDiagnosticsModel('NewPackage_FileFirmwareSelect', 'FileName', file.name));
+
+  }
   onFileSelected = (e) => {
     let file = e.target.files[0];
     if (file.name.length > 50) {
@@ -121,7 +197,12 @@ export class PackageNew extends LinkedComponent {
   onKeyEvent = (event) => {
     if (event.keyCode === 32 || event.keyCode === 13) {
       event.preventDefault();
-      this.inputElement.click();
+      if(this.configType == "Firmware"){
+        this.firmwareInputElement.click()
+      }else{
+        this.inputElement.click();
+      }
+      
     }
   }
 
@@ -137,7 +218,10 @@ export class PackageNew extends LinkedComponent {
       configType,
       packageFile,
       changesApplied,
-      fileError } = this.state;
+      fileError,
+      firmwarePackageName,
+      packageJson,
+      uploadedFirmwareSuccessfully } = this.state;
 
     const summaryCount = 1;
     const packageOptions = packageTypeOptions.map(value => ({
@@ -194,6 +278,7 @@ export class PackageNew extends LinkedComponent {
                   options={packageOptions}
                   placeholder={t('packages.flyouts.new.packageTypePlaceholder')}
                   clearable={false}
+                  disabled = {uploadedFirmwareSuccessfully}
                   searchable={false} />
               }
               {
@@ -214,6 +299,7 @@ export class PackageNew extends LinkedComponent {
                     options={configOptions}
                     placeholder={t('packages.flyouts.new.configTypePlaceholder')}
                     clearable={false}
+                    disabled = {uploadedFirmwareSuccessfully}
                     searchable={false} />
                 }
                 {configTypesIsPending && <Indicator />}
@@ -235,11 +321,12 @@ export class PackageNew extends LinkedComponent {
                   className="long"
                   onBlur={this.customConfigNameChange}
                   link={this.customConfigNameLink}
+                  disabled = {uploadedFirmwareSuccessfully}
                   placeholder={t('packages.flyouts.new.customTextPlaceholder')} />
               </FormGroup>
             }
             {
-              !completedSuccessfully &&
+              !completedSuccessfully && (configType && configType !== "Firmware" || packageType == "EdgeManifest") &&
               <div className="new-package-upload-container">
                 <label htmlFor="hidden-input-id" className="new-package-browse-click">
                   <span
@@ -256,15 +343,52 @@ export class PackageNew extends LinkedComponent {
                   accept={fileInputAccept}
                   ref={input => this.inputElement = input}
                   className="new-package-hidden-input"
-                  onChange={this.onFileSelected} />
+                  onChange={this.onFileSelected}
+                  disabled = {uploadedFirmwareSuccessfully} />
                 {t('packages.flyouts.new.browseText')}
+              </div>
+            }
+            {
+              !completedSuccessfully && configType == "Firmware" &&
+              <div>
+                <div className="new-package-upload-container">
+                  <label htmlFor="hidden-input-id" className="new-package-browse-click">
+                    <span
+                      role="button"
+                      aria-controls="hidden-input-id"
+                      tabIndex="0"
+                      onKeyUp={this.onKeyEvent}>
+                      {t('packages.flyouts.new.browse')}
+                    </span>
+                  </label>
+                  <input
+                    type="file"
+                    id="hidden-input-id"
+                    accept={firmwareFileInputAccept}
+                    ref={input => this.inputElement = input}
+                    className="new-package-hidden-input"
+                    onChange={this.onFirmwareFileSelected} 
+                    disabled = {uploadedFirmwareSuccessfully}/>
+                  {t('packages.flyouts.new.browseFirmwareText')}
+                  
+                </div>
+                { uploadedFirmwareSuccessfully && <div><JSONInput
+                    id          = 'id'
+                    placeholder = { packageJson }
+                    locale      = { locale }
+                    height      = '550px'
+                    width       = '100%'
+                    onChange    = {this.packageJSONUpdated}
+                />
+                </div>
+                }
               </div>
             }
             {fileError && <AjaxError className="new-package-flyout-error" t={t} error={{ message: fileError }} />}
 
             <SummarySection className="new-package-summary">
               <SummaryBody>
-                {packageFile && <SummaryCount>{summaryCount}</SummaryCount>}
+                {packageFile && (configType !== "Firmware" || uploadedFirmwareSuccessfully) && <SummaryCount>{summaryCount}</SummaryCount>}
                 {packageFile && <SectionDesc>{t('packages.flyouts.new.package')}</SectionDesc>}
                 {isPending && <Indicator />}
                 {completedSuccessfully && <Svg className="summary-icon" path={svgs.apply} />}

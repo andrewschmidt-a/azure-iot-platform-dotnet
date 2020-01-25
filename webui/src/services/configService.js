@@ -11,7 +11,9 @@ import {
   toNewPackageRequestModel,
   toPackagesModel,
   toPackageModel,
-  toConfigTypesModel
+  toConfigTypesModel,
+  toNewFirmwareUploadRequestModel,
+  toFirmwareModel
 } from './models';
 import { Observable } from '../../node_modules/rxjs';
 
@@ -106,6 +108,18 @@ export class ConfigService {
     }
     return HttpClient.post(`${ENDPOINT}packages`, toNewPackageRequestModel(packageModel), options)
       .map(toPackageModel);
+  }
+  /** Creates a new package */
+  static uploadFirmware(firmwareFile) {
+    var options = {
+      headers: {
+        'Accept': undefined,
+        'Content-Type': undefined
+      }
+    }
+    //return HttpClient.post(`${ENDPOINT}packages/UploadFile`, toNewFirmwareUploadRequestModel(firmwareFile), options)
+    return Observable.of({FileUri: "http://google.com", CheckSum: "3434324343"})
+    .map(toFirmwareModel);
   }
 
   /** Returns all the account's packages */
