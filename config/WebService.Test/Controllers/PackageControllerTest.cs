@@ -16,6 +16,7 @@ using Xunit;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 {
@@ -229,13 +230,17 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
             // Arrange
             IFormFile file = null;
             //string fileName = "filename";
+            UploadFileServiceModel uploadFileModel = new UploadFileServiceModel();
+            uploadFileModel.SoftwarePackageURL = "filename";
+            uploadFileModel.MD5CheckSum = "checkSum";
+
             if (isValidFileProvided)
             {
                 file = this.CreateSampleFile(filename, false);
             }
             
             this.mockStorage.Setup(x => x.UploadToBlobAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()))
-                            .ReturnsAsync(filename);
+                            .ReturnsAsync(uploadFileModel);
             try
             {
                 // Act
@@ -243,7 +248,8 @@ namespace Mmm.Platform.IoT.Config.WebService.Test.Controllers
 
                 // Assert
                 Assert.False(expectException);
-                Assert.Equal(filename, uploadedFileName);
+                Assert.Equal(filename, uploadedFileName.SoftwarePackageURL);
+                Assert.Equal("checkSum", uploadedFileName.CheckSum.MD5);
             }
             catch (Exception)
             {

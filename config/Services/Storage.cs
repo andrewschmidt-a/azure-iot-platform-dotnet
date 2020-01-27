@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,8 +16,9 @@ using Mmm.Platform.IoT.Common.Services.Config;
 using System.IO;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Platform.IoT.Common.Services.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Mmm.Platform.IoT.Config.Services
 {
@@ -299,11 +300,16 @@ namespace Mmm.Platform.IoT.Config.Services
             await this._client.UpdateAsync(PACKAGES_COLLECTION_ID, PACKAGES_CONFIG_TYPE_KEY, JsonConvert.SerializeObject(list), "*");
         }
 
-        public async Task<string> UploadToBlobAsync(string tenantId, string filename, Stream stream = null)
+        public async Task<UploadFileServiceModel> UploadToBlobAsync(string tenantId, string filename, Stream stream = null)
         {
             CloudStorageAccount storageAccount = null;
             CloudBlobContainer cloudBlobContainer = null;
+            UploadFileServiceModel uploadFileModel = new UploadFileServiceModel();
+            
+
             string url = string.Empty;
+            string md5CheckSum = string.Empty;
+            string sha1CheckSum = string.Empty;
             string storageConnectionString = config.Global.StorageAccountConnectionString;
             string  duration = config.Global.PackageSharedAccessExpiryTime;
 
@@ -332,6 +338,12 @@ namespace Mmm.Platform.IoT.Config.Services
                     if (stream != null)
                     {
                         await cloudBlockBlob.UploadFromStreamAsync(stream);
+                        md5CheckSum = cloudBlockBlob.Properties.ContentMD5;
+                        using (var sha = SHA1.Create())
+                        {
+                            var hash = sha.ComputeHash(stream);
+                            cloudBlockBlob.Metadata["SHA1"] = sha1CheckSum = Convert.ToBase64String(hash);
+                        }
                     }
                     else
                     {
@@ -339,7 +351,11 @@ namespace Mmm.Platform.IoT.Config.Services
                         return null;
                     }
                     url = Convert.ToString(GetBlobSasUri(cloudBlobClient, cloudBlobContainer.Name, filename, duration));
-                    return url;
+                    uploadFileModel.CheckSum = new CheckSumModel();
+                    uploadFileModel.SoftwarePackageURL = url;
+                    uploadFileModel.CheckSum.MD5 = md5CheckSum;
+                    uploadFileModel.CheckSum.SHA1 = sha1CheckSum;
+                    return uploadFileModel;
                 }
                 catch (StorageException ex)
                 {

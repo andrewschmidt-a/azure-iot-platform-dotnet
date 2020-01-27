@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mmm.Platform.IoT.Common.Services;
 using Mmm.Platform.IoT.Common.Services.Exceptions;
 using Mmm.Platform.IoT.Common.Services.Filters;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Config.Services;
 using Mmm.Platform.IoT.Config.Services.Models;
 using Mmm.Platform.IoT.Config.WebService.v1.Helpers;
@@ -132,9 +133,9 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
 
         [HttpPost("UploadFile")]
         [Authorize("CreatePackages")]
-        public async Task<string> UploadFileAsync(IFormFile uploadedFile)
+        public async Task<UploadFileServiceModel> UploadFileAsync(IFormFile uploadedFile)
         {
-            string uploadedUri = null;
+            UploadFileServiceModel uploadFileModel = null;
             if (uploadedFile == null || uploadedFile.Length == 0 || string.IsNullOrEmpty(uploadedFile.FileName))
             {
                 throw new InvalidInputException("Uploaded file is missing or invalid.");
@@ -142,9 +143,9 @@ namespace Mmm.Platform.IoT.Config.WebService.v1.Controllers
             using (var stream = uploadedFile.OpenReadStream())
             {
                 var tenantId = this.GetTenantId();
-                uploadedUri = await this.storage.UploadToBlobAsync(tenantId, uploadedFile.FileName, stream);
+                uploadFileModel = await this.storage.UploadToBlobAsync(tenantId, uploadedFile.FileName, stream);
             }
-            return uploadedUri;
+            return uploadFileModel;
         }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Mmm.Platform.IoT.Config.Services.External;
 using Mmm.Platform.IoT.Config.Services.Models;
 
@@ -26,6 +27,6 @@ namespace Mmm.Platform.IoT.Config.Services
         Task<PackageServiceModel> AddPackageAsync(PackageServiceModel package);
         Task DeletePackageAsync(string id);
         Task UpdateConfigTypeAsync(string customConfigType);
-        Task<string> UploadToBlobAsync(string tenantId, string filename, Stream stream = null);
+        Task<UploadFileServiceModel> UploadToBlobAsync(string tenantId, string filename, Stream stream = null);
     }
 }
