@@ -7,9 +7,25 @@ parameters:
   keyVaultName: ''
   userObjId: ''
   defaultSASKeyName: ''
-  SendGridApiKey: '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'
+  applicationCode: ''
+  crslplatformKeyvault: ''
+  platformOperationServiceConnection: ''
 
 steps:
+
+- task: AzureCLI@1
+  displayName: Get Sendgrid API key from Operation Keyvault
+  inputs:
+    azureSubscription: ${{ parameters.platformOperationServiceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      KeyVault=${{ parameters.crslplatformKeyvault }}
+      SendGridSecret=${{ parameters.applicationCode }}-sendgridapikey    
+      SendGridApiKey=$(az keyvault secret show --name $SendGridSecret --vault-name $KeyVault | grep value | awk -F '\"' '{print $4}')
+      
+      echo "##vso[task.setvariable variable=SendGridApiKey]$SendGridApiKey"      
+    addSpnToEnvironment: true
+
 - task: AzureCLI@1
   displayName: Get ObjectId of Service Principal
   inputs:
@@ -75,6 +91,6 @@ steps:
       az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--LifecycleEventHubConnectionString' --value $lifecycleEvConn
       az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--TelemetryEventHubConnectionString' --value $telemetryEvConn
       az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--TwinChangeEventHubConnectionString' --value $twinchangeEvConn
-      az keyvault secret set --vault-name $kVaultName --name 'IdentityGatewayService--SendGridApiKey' --value ${{ parameters.SendGridApiKey }}
+      az keyvault secret set --vault-name $kVaultName --name 'IdentityGatewayService--SendGridApiKey' --value $(SendGridApiKey)
       az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--EventHubAccessPolicyKey' --value $evAccessPolicyKey
     addSpnToEnvironment: true
