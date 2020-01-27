@@ -117,8 +117,7 @@ export class ConfigService {
         'Content-Type': undefined
       }
     }
-    //return HttpClient.post(`${ENDPOINT}packages/UploadFile`, toNewFirmwareUploadRequestModel(firmwareFile), options)
-    return Observable.of({FileUri: "http://google.com", CheckSum: "3434324343"})
+    return HttpClient.post(`${ENDPOINT}packages/UploadFile`, toNewFirmwareUploadRequestModel(firmwareFile), options)
     .map(toFirmwareModel);
   }
 
