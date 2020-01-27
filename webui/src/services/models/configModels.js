@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft. All rights reserved.
 
 import update from 'immutability-helper';
-import { camelCaseReshape, reshape, getItems, stringToBoolean } from 'utilities';
+import { camelCaseReshape, reshape, getItems, stringToBoolean, base64toHEX } from 'utilities';
 
 export const toDeviceGroupModel = (deviceGroup = {}) => camelCaseReshape(deviceGroup, {
   'id': 'id',
@@ -99,10 +99,10 @@ export const toNewPackageRequestModel = ({
 }
 export const toNewFirmwareUploadRequestModel = (firmwareFile) => {
   const data = new FormData();
-  data.append(firmwareFile.name, firmwareFile);
+  data.append("uploadedFile", firmwareFile);
   return data;
 }
-export const toFirmwareModel = (response ={}) => { return {FileUri: response.softwarePackageURL || "", CheckSum: response.CheckSum.shA1 || "" }}
+export const toFirmwareModel = (response ={}) => { return {FileUri: response.SoftwarePackageURL || "", CheckSum: base64toHEX(response.CheckSum.SHA1).toLowerCase() || "" }}
 
 export const toPackagesModel = (response = {}) => getItems(response)
   .map(toPackageModel);
