@@ -1,31 +1,31 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ConfigurationsHelper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using Newtonsoft.Json;
 using System.Text.RegularExpressions;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Microsoft.Azure.Devices;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.IoTHubManager.Services.Models;
+using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     public static class ConfigurationsHelper
     {
-        private const string DEVICE_GROUP_ID_PARAM = "deviceGroupId";
-        private const string DEVICE_GROUP_QUERY_PARAM = "deviceGroupQuery";
-        private const string NAME_PARAM = "name";
-        private const string PACKAGE_CONTENT_PARAM = "packageContent";
-        private const string PRIORITY_PARAM = "priority";
-
-        public const string PACKAGE_TYPE_LABEL = "Type";
-        public const string CONFIG_TYPE_LABEL = "ConfigType";
-        public const string DEPLOYMENT_NAME_LABEL = "Name";
-        public const string DEPLOYMENT_GROUP_ID_LABEL = "DeviceGroupId";
-        public const string DEPLOYMENT_GROUP_NAME_LABEL = "DeviceGroupName";
-        public const string DEPLOYMENT_PACKAGE_NAME_LABEL = "PackageName";
-        public const string RM_CREATED_LABEL = "RMDeployment";
+        public const string PackageTypeLabel = "Type";
+        public const string ConfigTypeLabel = "ConfigType";
+        public const string DeploymentNameLabel = "Name";
+        public const string DeploymentGroupIdLabel = "DeviceGroupId";
+        public const string DeploymentGroupNameLabel = "DeviceGroupName";
+        public const string DeploymentPackageNameLabel = "PackageName";
+        public const string RmCreatedLabel = "RMDeployment";
+        private const string DeviceGroupIdParameter = "deviceGroupId";
+        private const string DeviceGroupQueryParameter = "deviceGroupQuery";
+        private const string NameParameter = "name";
+        private const string PackageContentParameter = "packageContent";
+        private const string PriorityParameter = "priority";
 
         public static Configuration ToHubConfiguration(DeploymentServiceModel model)
         {
@@ -53,13 +53,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             configuration.Labels = packageConfiguration.Labels ?? new Dictionary<string, string>();
 
             // Required labels
-            configuration.Labels[PACKAGE_TYPE_LABEL] = model.PackageType.ToString();
-            configuration.Labels[DEPLOYMENT_NAME_LABEL] = model.Name;
-            configuration.Labels[DEPLOYMENT_GROUP_ID_LABEL] = model.DeviceGroupId;
-            configuration.Labels[RM_CREATED_LABEL] = bool.TrueString;
-            if (!String.IsNullOrEmpty(model.ConfigType))
+            configuration.Labels[PackageTypeLabel] = model.PackageType.ToString();
+            configuration.Labels[DeploymentNameLabel] = model.Name;
+            configuration.Labels[DeploymentGroupIdLabel] = model.DeviceGroupId;
+            configuration.Labels[RmCreatedLabel] = bool.TrueString;
+            if (!string.IsNullOrEmpty(model.ConfigType))
             {
-                configuration.Labels[CONFIG_TYPE_LABEL] = model.ConfigType;
+                configuration.Labels[ConfigTypeLabel] = model.ConfigType;
             }
 
             var customMetrics = packageConfiguration.Metrics?.Queries;
@@ -73,28 +73,28 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             // Add optional labels
             if (model.DeviceGroupName != null)
             {
-                configuration.Labels[DEPLOYMENT_GROUP_NAME_LABEL] = model.DeviceGroupName;
+                configuration.Labels[DeploymentGroupNameLabel] = model.DeviceGroupName;
             }
 
             if (model.PackageName != null)
             {
-                configuration.Labels[DEPLOYMENT_PACKAGE_NAME_LABEL] = model.PackageName;
+                configuration.Labels[DeploymentPackageNameLabel] = model.PackageName;
             }
 
             return configuration;
         }
 
-        public static Boolean IsEdgeDeployment(Configuration deployment)
+        public static bool IsEdgeDeployment(Configuration deployment)
         {
             string deploymentLabel = null;
 
             if (deployment.Labels != null &&
-                deployment.Labels.ContainsKey(ConfigurationsHelper.PACKAGE_TYPE_LABEL))
+                deployment.Labels.ContainsKey(ConfigurationsHelper.PackageTypeLabel))
             {
-                deploymentLabel = deployment.Labels[ConfigurationsHelper.PACKAGE_TYPE_LABEL];
+                deploymentLabel = deployment.Labels[ConfigurationsHelper.PackageTypeLabel];
             }
 
-            if (!(string.IsNullOrEmpty(deploymentLabel)))
+            if (!string.IsNullOrEmpty(deploymentLabel))
             {
                 if (deployment.Labels.Values.Contains(PackageType.EdgeManifest.ToString()))
                 {
@@ -129,7 +129,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             }
         }
 
-        // Replaces DeploymentId, if present, in the custom metrics query 
+        // Replaces DeploymentId, if present, in the custom metrics query
         public static IDictionary<string, string> SubstituteDeploymentIdIfPresent(
             IDictionary<string, string> customMetrics,
             string deploymentId)

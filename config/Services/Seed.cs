@@ -1,34 +1,37 @@
-﻿using System;
+// <copyright file="Seed.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Helpers;
-using Mmm.Platform.IoT.Config.Services.Models;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Config.Services.External;
+using Mmm.Iot.Config.Services.Helpers;
+using Mmm.Iot.Config.Services.Models;
 using Newtonsoft.Json;
-using Mmm.Platform.IoT.Common.Services.Config;
 
-namespace Mmm.Platform.IoT.Config.Services
+namespace Mmm.Iot.Config.Services
 {
     public class Seed : ISeed
     {
-        private const string SEED_COLLECTION_ID = "solution-settings";
-        private const string MUTEX_KEY = "seedMutex";
-        private const string COMPLETED_FLAG_KEY = "seedCompleted";
+        private const string SeedCollectionId = "solution-settings";
+        private const string MutexKey = "seedMutex";
+        private const string CompletedFlagKey = "seedCompleted";
         private readonly TimeSpan mutexTimeout = TimeSpan.FromMinutes(5);
-
         private readonly AppConfig config;
         private readonly IStorageMutex mutex;
         private readonly IStorage storage;
         private readonly IStorageAdapterClient storageClient;
         private readonly IDeviceSimulationClient simulationClient;
         private readonly IDeviceTelemetryClient telemetryClient;
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public Seed(
             AppConfig config,
@@ -45,39 +48,39 @@ namespace Mmm.Platform.IoT.Config.Services
             this.storageClient = storageClient;
             this.simulationClient = simulationClient;
             this.telemetryClient = telemetryClient;
-            _logger = logger;
+            this.logger = logger;
         }
 
         public async Task TrySeedAsync()
         {
-            if (string.IsNullOrEmpty(config.ConfigService.SeedTemplate))
+            if (string.IsNullOrEmpty(this.config.ConfigService.SeedTemplate))
             {
                 return;
             }
 
-            if (!await this.mutex.EnterAsync(SEED_COLLECTION_ID, MUTEX_KEY, this.mutexTimeout))
+            if (!await this.mutex.EnterAsync(SeedCollectionId, MutexKey, this.mutexTimeout))
             {
-                _logger.LogInformation("Seed skipped (conflict)");
+                this.logger.LogInformation("Seed skipped (conflict)");
                 return;
             }
 
             if (await this.CheckCompletedFlagAsync())
             {
-                _logger.LogInformation("Seed skipped (completed)");
+                this.logger.LogInformation("Seed skipped (completed)");
                 return;
             }
 
-            _logger.LogInformation("Seed begin");
+            this.logger.LogInformation("Seed begin");
             try
             {
                 await this.SeedAsync();
-                _logger.LogInformation("Seed end");
+                this.logger.LogInformation("Seed end");
                 await this.SetCompletedFlagAsync();
-                _logger.LogInformation("Seed completed flag set");
+                this.logger.LogInformation("Seed completed flag set");
             }
             finally
             {
-                await this.mutex.LeaveAsync(SEED_COLLECTION_ID, MUTEX_KEY);
+                await this.mutex.LeaveAsync(SeedCollectionId, MutexKey);
             }
         }
 
@@ -85,7 +88,7 @@ namespace Mmm.Platform.IoT.Config.Services
         {
             try
             {
-                await this.storageClient.GetAsync(SEED_COLLECTION_ID, COMPLETED_FLAG_KEY);
+                await this.storageClient.GetAsync(SeedCollectionId, CompletedFlagKey);
                 return true;
             }
             catch (ResourceNotFoundException)
@@ -96,12 +99,12 @@ namespace Mmm.Platform.IoT.Config.Services
 
         private async Task SetCompletedFlagAsync()
         {
-            await this.storageClient.UpdateAsync(SEED_COLLECTION_ID, COMPLETED_FLAG_KEY, "true", "*");
+            await this.storageClient.UpdateAsync(SeedCollectionId, CompletedFlagKey, "true", "*");
         }
 
         private async Task SeedAsync()
         {
-            if (config.ConfigService.SolutionType.StartsWith("devicesimulation", StringComparison.OrdinalIgnoreCase))
+            if (this.config.ConfigService.SolutionType.StartsWith("devicesimulation", StringComparison.OrdinalIgnoreCase))
             {
                 await this.SeedSimulationAsync();
             }
@@ -114,23 +117,23 @@ namespace Mmm.Platform.IoT.Config.Services
         // Seed single template for Remote Monitoring solution
         private async Task SeedSingleTemplateAsync()
         {
-            var template = this.GetSeedContent(config.ConfigService.SeedTemplate);
+            var template = this.GetSeedContent(this.config.ConfigService.SeedTemplate);
 
             if (template.Groups.Select(g => g.Id).Distinct().Count() != template.Groups.Count())
             {
-                _logger.LogWarning("Found duplicated group ID {groups}", template.Groups);
+                this.logger.LogWarning("Found duplicated group ID {groups}", template.Groups);
             }
 
             if (template.Rules.Select(r => r.Id).Distinct().Count() != template.Rules.Count())
             {
-                _logger.LogWarning("Found duplicated rule ID {rules}", template.Rules);
+                this.logger.LogWarning("Found duplicated rule ID {rules}", template.Rules);
             }
 
             var groupIds = new HashSet<string>(template.Groups.Select(g => g.Id));
             var rulesWithInvalidGroupId = template.Rules.Where(r => !groupIds.Contains(r.GroupId));
             if (rulesWithInvalidGroupId.Any())
             {
-                _logger.LogWarning("Invalid group ID found in rules {rules}", rulesWithInvalidGroupId);
+                this.logger.LogWarning("Invalid group ID found in rules {rules}", rulesWithInvalidGroupId);
             }
 
             foreach (var group in template.Groups)
@@ -141,7 +144,7 @@ namespace Mmm.Platform.IoT.Config.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to seed default group {group}", group);
+                    this.logger.LogError(ex, "Failed to seed default group {group}", group);
                     throw;
                 }
             }
@@ -154,7 +157,7 @@ namespace Mmm.Platform.IoT.Config.Services
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Failed to seed default rule {rule}", rule);
+                    this.logger.LogError(ex, "Failed to seed default rule {rule}", rule);
                     throw;
                 }
             }
@@ -171,11 +174,11 @@ namespace Mmm.Platform.IoT.Config.Services
 
                 if (simulationModel != null)
                 {
-                    _logger.LogInformation("Skip seed simulation since there is already one simulation {simulationModel}", simulationModel);
+                    this.logger.LogInformation("Skip seed simulation since there is already one simulation {simulationModel}", simulationModel);
                 }
                 else
                 {
-                    var template = this.GetSeedContent(config.ConfigService.SeedTemplate);
+                    var template = this.GetSeedContent(this.config.ConfigService.SeedTemplate);
 
                     foreach (var simulation in template.Simulations)
                     {
@@ -185,7 +188,7 @@ namespace Mmm.Platform.IoT.Config.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to seed default simulations");
+                this.logger.LogError(ex, "Failed to seed default simulations");
                 throw;
             }
         }
@@ -199,7 +202,6 @@ namespace Mmm.Platform.IoT.Config.Services
             if (!File.Exists(file))
             {
                 // ToDo: Check if `template` is a valid URL and try to load the content
-
                 throw new ResourceNotFoundException($"Template {templateName} does not exist");
             }
             else

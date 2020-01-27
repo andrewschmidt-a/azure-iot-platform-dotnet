@@ -1,21 +1,20 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ResourceOutOfDateException.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.Services.Exceptions
+namespace Mmm.Iot.Common.Services.Exceptions
 {
-    /// <summary>
-    /// This exception is thrown when a client attempts to update a resource
-    /// providing the wrong Etag value. The client should retrieve the
-    /// resource again, to have the new Etag, and retry.
-    /// </summary>
     public class ResourceOutOfDateException : Exception
     {
-        public ResourceOutOfDateException() : base()
+        public ResourceOutOfDateException()
+            : base()
         {
         }
 
-        public ResourceOutOfDateException(string message) : base(message)
+        public ResourceOutOfDateException(string message)
+            : base(message)
         {
         }
 

@@ -1,15 +1,18 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="AuthorizeActionFilterAttribute.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Exceptions;
 
-namespace Mmm.Platform.IoT.Common.Services.Filters
+namespace Mmm.Iot.Common.Services.Filters
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Enum | AttributeTargets.Interface | AttributeTargets.Delegate)]
     public class AuthorizeActionFilterAttribute : Attribute, IAsyncActionFilter
     {
         private readonly string allowedAction;
@@ -33,18 +36,17 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             }
         }
 
-        /// <summary>
-        /// Validate allowed actions of current user based on role claims against the declared actions
-        /// in the Authorize attribute of controller. The allowed action is case insensitive.
-        /// </summary>
-        /// <param name="httpContext">current context of http request</param>
-        /// <param name="allowedAction">allowed action required by controller</param>
-        /// <returns>true if validatation succeed</returns>
         private bool IsValidAuthorization(HttpContext httpContext, string allowedAction)
         {
-            if (!httpContext.Request.GetAuthRequired() || !httpContext.Request.IsExternalRequest()) return true;
+            if (!httpContext.Request.GetAuthRequired() || !httpContext.Request.IsExternalRequest())
+            {
+                return true;
+            }
 
-            if (allowedAction == null || !allowedAction.Any()) return true;
+            if (allowedAction == null || !allowedAction.Any())
+            {
+                return true;
+            }
 
             var userAllowedActions = httpContext.Request.GetCurrentUserAllowedActions();
             if (userAllowedActions == null || !userAllowedActions.Any())

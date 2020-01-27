@@ -1,29 +1,30 @@
+// <copyright file="DependencyResolutionBase.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
+using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using System.Reflection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
-using Mmm.Platform.IoT.Common.Services.Config;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using System;
-using Mmm.Platform.IoT.Common.Services.Auth;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.Common.Services.External.UserManagement;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.External.TableStorage;
+using Mmm.Iot.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.Services.External.UserManagement;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.Services.Wrappers;
 
-namespace Mmm.Platform.IoT.Common.Services
+namespace Mmm.Iot.Common.Services
 {
     public abstract class DependencyResolutionBase
     {
@@ -35,7 +36,7 @@ namespace Mmm.Platform.IoT.Common.Services
             builder.RegisterInstance(appConfig).SingleInstance();
             builder.Populate(services);
             builder.RegisterGeneric(typeof(Logger<>)).As(typeof(ILogger<>));
-            AutowireAssemblies(builder);
+            this.AutowireAssemblies(builder);
             builder.RegisterType<UserManagementClient>().As<IUserManagementClient>().SingleInstance();
             builder.RegisterType<AppConfigurationClient>().As<IAppConfigurationClient>().SingleInstance();
             builder.RegisterType<StorageAdapterClient>().As<IStorageAdapterClient>().SingleInstance();
@@ -48,16 +49,10 @@ namespace Mmm.Platform.IoT.Common.Services
             builder.RegisterType<AsaManagerClient>().As<IAsaManagerClient>().SingleInstance();
             builder.RegisterType<TimeSeriesClient>().As<ITimeSeriesClient>().SingleInstance();
             builder.RegisterType<TableStorageClient>().As<ITableStorageClient>().SingleInstance();
-            SetupCustomRules(builder);
+            this.SetupCustomRules(builder);
             var container = builder.Build();
             Factory.RegisterContainer(container);
             return container;
-        }
-
-        private void AutowireAssemblies(ContainerBuilder builder)
-        {
-            var assembly = Assembly.GetEntryAssembly();
-            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
         }
 
         protected abstract void SetupCustomRules(ContainerBuilder builder);
@@ -84,8 +79,14 @@ namespace Mmm.Platform.IoT.Common.Services
 
                 // The minimum time between retrievals, in the event that a retrieval
                 // failed, or that a refresh is explicitly requested. Default is 30 seconds.
-                RefreshInterval = TimeSpan.FromMinutes(1)
+                RefreshInterval = TimeSpan.FromMinutes(1),
             };
+        }
+
+        private void AutowireAssemblies(ContainerBuilder builder)
+        {
+            var assembly = Assembly.GetEntryAssembly();
+            builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
         }
     }
 }

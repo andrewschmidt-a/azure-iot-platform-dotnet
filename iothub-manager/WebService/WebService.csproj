@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <AssemblyName>Mmm.Platform.IoT.IoTHubManager.WebService</AssemblyName>
+    <AssemblyName>Mmm.Iot.IoTHubManager.WebService</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 
@@ -13,5 +13,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Services\Services.csproj" />
   </ItemGroup>
-  
+
 </Project>

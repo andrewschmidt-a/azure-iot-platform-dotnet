@@ -1,11 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="RuleTemplateValidator.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.IO;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers
+namespace Mmm.Iot.DeviceTelemetry.Services.Helpers
 {
     public class RuleTemplateValidator
     {
@@ -55,12 +57,18 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Helpers
 
             JArray rulesList = (JArray)json["Rules"];
 
-            if (rulesList == null) return false;
+            if (rulesList == null)
+            {
+                return false;
+            }
 
             foreach (var rule in rulesList)
             {
                 // TODO: IsValid is obsolete - see http://www.newtonsoft.com/jsonschema for more details
-                if (!rule.IsValid(fileSchema)) return false;
+                if (!rule.IsValid(fileSchema))
+                {
+                    return false;
+                }
             }
 
             return true;

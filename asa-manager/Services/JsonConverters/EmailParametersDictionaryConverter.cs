@@ -1,18 +1,21 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="EmailParametersDictionaryConverter.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.JsonConverters
+namespace Mmm.Iot.AsaManager.Services.JsonConverters
 {
     public class EmailParametersDictionaryConverter : JsonConverter
     {
-        public override bool CanWrite => false;
-        public override bool CanRead => true;
+        private const string RecipientsKey = "Recipients";
 
-        private const string RECIPIENTS_KEY = "Recipients";
+        public override bool CanWrite => false;
+
+        public override bool CanRead => true;
 
         public override bool CanConvert(Type objectType)
         {
@@ -27,9 +30,9 @@ namespace Mmm.Platform.IoT.AsaManager.Services.JsonConverters
             Dictionary<string, object> returnDictionary =
                 new Dictionary<string, object>(jsonObject.ToObject<Dictionary<string, object>>(), StringComparer.OrdinalIgnoreCase);
 
-            if (returnDictionary.ContainsKey(RECIPIENTS_KEY) && returnDictionary[RECIPIENTS_KEY] != null)
+            if (returnDictionary.ContainsKey(RecipientsKey) && returnDictionary[RecipientsKey] != null)
             {
-                returnDictionary[RECIPIENTS_KEY] = ((JArray)returnDictionary[RECIPIENTS_KEY]).ToObject<List<string>>();
+                returnDictionary[RecipientsKey] = ((JArray)returnDictionary[RecipientsKey]).ToObject<List<string>>();
             }
 
             return returnDictionary;

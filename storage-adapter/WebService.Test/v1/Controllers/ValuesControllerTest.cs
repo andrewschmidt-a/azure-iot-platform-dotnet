@@ -1,28 +1,31 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ValuesControllerTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.TestHelpers;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
-using Mmm.Platform.IoT.StorageAdapter.Services;
-using Mmm.Platform.IoT.StorageAdapter.Services.Models;
-using Mmm.Platform.IoT.StorageAdapter.WebService.v1.Controllers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Wrappers;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.StorageAdapter.Services;
+using Mmm.Iot.StorageAdapter.Services.Models;
+using Mmm.Iot.StorageAdapter.WebService.Controllers;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
+namespace Mmm.Iot.StorageAdapter.WebService.Test.Controllers
 {
-    public class ValuesControllerTest
+    public class ValuesControllerTest : IDisposable
     {
         private readonly Mock<IKeyValueContainer> mockContainer;
         private readonly Mock<IKeyGenerator> mockGenerator;
         private readonly ValuesController controller;
         private readonly Random rand = new Random();
+        private bool disposedValue = false;
 
         public ValuesControllerTest()
         {
@@ -35,7 +38,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                 new Mock<ILogger<ValuesController>>().Object);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetTest()
         {
             var collectionId = this.rand.NextString();
@@ -50,7 +54,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                 Key = key,
                 Data = data,
                 ETag = etag,
-                Timestamp = timestamp
+                Timestamp = timestamp,
             };
 
             this.mockContainer
@@ -68,13 +72,15 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
 
             this.mockContainer
-                .Verify(x => x.GetAsync(
+                .Verify(
+                    x => x.GetAsync(
                         It.Is<string>(s => s == collectionId),
                         It.Is<string>(s => s == key)),
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllTest()
         {
             var collectionId = this.rand.NextString();
@@ -87,7 +93,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     Key = this.rand.NextString(),
                     Data = this.rand.NextString(),
                     ETag = this.rand.NextString(),
-                    Timestamp = this.rand.NextDateTimeOffset()
+                    Timestamp = this.rand.NextDateTimeOffset(),
                 },
                 new ValueServiceModel
                 {
@@ -95,7 +101,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     Key = this.rand.NextString(),
                     Data = this.rand.NextString(),
                     ETag = this.rand.NextString(),
-                    Timestamp = this.rand.NextDateTimeOffset()
+                    Timestamp = this.rand.NextDateTimeOffset(),
                 },
                 new ValueServiceModel
                 {
@@ -103,8 +109,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     Key = this.rand.NextString(),
                     Data = this.rand.NextString(),
                     ETag = this.rand.NextString(),
-                    Timestamp = this.rand.NextDateTimeOffset()
-                }
+                    Timestamp = this.rand.NextDateTimeOffset(),
+                },
             };
 
             this.mockContainer
@@ -134,7 +140,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     It.Is<string>(s => s == collectionId)));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PostTest()
         {
             var collectionId = this.rand.NextString();
@@ -145,7 +152,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
 
             var modelIn = new ValueServiceModel
             {
-                Data = data
+                Data = data,
             };
 
             var modelOut = new ValueServiceModel
@@ -154,7 +161,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                 Key = key,
                 Data = data,
                 ETag = etag,
-                Timestamp = timestamp
+                Timestamp = timestamp,
             };
 
             this.mockGenerator
@@ -183,7 +190,8 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                     It.Is<ValueServiceModel>(m => m.Equals(modelIn))));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PutNewTest()
         {
             var collectionId = this.rand.NextString();
@@ -194,7 +202,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
 
             var modelIn = new ValueServiceModel
             {
-                Data = data
+                Data = data,
             };
 
             var modelOut = new ValueServiceModel
@@ -203,7 +211,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                 Key = key,
                 Data = data,
                 ETag = etag,
-                Timestamp = timestamp
+                Timestamp = timestamp,
             };
 
             this.mockContainer
@@ -222,14 +230,16 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(modelOut.Timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
 
             this.mockContainer
-                .Verify(x => x.CreateAsync(
+                .Verify(
+                    x => x.CreateAsync(
                         It.Is<string>(s => s == collectionId),
                         It.Is<string>(s => s == key),
                         It.Is<ValueServiceModel>(m => m.Equals(modelIn))),
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task PutUpdateTest()
         {
             var collectionId = this.rand.NextString();
@@ -242,7 +252,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             var modelIn = new ValueServiceModel
             {
                 Data = data,
-                ETag = etagOld
+                ETag = etagOld,
             };
 
             var modelOut = new ValueServiceModel
@@ -251,7 +261,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
                 Key = key,
                 Data = data,
                 ETag = etagNew,
-                Timestamp = timestamp
+                Timestamp = timestamp,
             };
 
             this.mockContainer
@@ -270,14 +280,16 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             Assert.Equal(modelOut.Timestamp.ToString(CultureInfo.InvariantCulture), result.Metadata["$modified"]);
 
             this.mockContainer
-                .Verify(x => x.UpsertAsync(
+                .Verify(
+                    x => x.UpsertAsync(
                         It.Is<string>(s => s == collectionId),
                         It.Is<string>(s => s == key),
                         It.Is<ValueServiceModel>(m => m.Equals(modelIn))),
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task DeleteTest()
         {
             var collectionId = this.rand.NextString();
@@ -292,13 +304,15 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
             await this.controller.Delete(collectionId, key);
 
             this.mockContainer
-                .Verify(x => x.DeleteAsync(
+                .Verify(
+                    x => x.DeleteAsync(
                         It.Is<string>(s => s == collectionId),
                         It.Is<string>(s => s == key)),
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task ValidateKeyTest()
         {
             await Assert.ThrowsAsync<BadRequestException>(async () =>
@@ -306,6 +320,24 @@ namespace Mmm.Platform.IoT.StorageAdapter.WebService.Test.v1.Controllers
 
             await Assert.ThrowsAsync<BadRequestException>(async () =>
                 await this.controller.Delete("collection", new string('a', 256)));
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.controller.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
         }
     }
 }

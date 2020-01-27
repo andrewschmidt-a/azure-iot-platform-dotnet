@@ -1,19 +1,21 @@
-using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.External.TableStorage;
-using Mmm.Platform.IoT.TenantManager.Services.External;
-using Mmm.Platform.IoT.TenantManager.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
+// <copyright file="StatusService.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.TenantManager.Services
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.External.TableStorage;
+using Mmm.Iot.TenantManager.Services.External;
+using Mmm.Iot.TenantManager.Services.Helpers;
+
+namespace Mmm.Iot.TenantManager.Services
 {
     public class StatusService : StatusServiceBase
     {
-        public override IDictionary<string, IStatusOperation> dependencies { get; set; }
-
         public StatusService(
             AppConfig config,
             ILogger<StatusService> logger,
@@ -21,19 +23,21 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             IDeviceGroupsConfigClient deviceGroupsConfigClient,
             IStorageClient cosmosClient,
             ITableStorageClient tableStorageClient,
-            IRunbookHelper RunbookHelper,
-            IAppConfigurationClient appConfigClient) :
-            base(config)
+            IRunbookHelper runbookHelper,
+            IAppConfigurationClient appConfigClient)
+                : base(config)
         {
-            dependencies = new Dictionary<string, IStatusOperation>
+            this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "CosmosDb", cosmosClient },
-                { "Tenant Runbooks", RunbookHelper },
+                { "Tenant Runbooks", runbookHelper },
                 { "Table Storage", tableStorageClient },
                 { "Identity Gateway", identityGatewayClient },
                 { "Config", deviceGroupsConfigClient },
-                { "App Config", appConfigClient }
+                { "App Config", appConfigClient },
             };
         }
+
+        public override IDictionary<string, IStatusOperation> Dependencies { get; set; }
     }
 }

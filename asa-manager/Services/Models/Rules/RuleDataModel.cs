@@ -1,11 +1,13 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="RuleDataModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Azure.Documents;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
+namespace Mmm.Iot.AsaManager.Services.Models.Rules
 {
     // see https://github.com/Azure/device-telemetry-dotnet/blob/master/WebService/v1/Models/RuleModel.cs
     public class RuleDataModel

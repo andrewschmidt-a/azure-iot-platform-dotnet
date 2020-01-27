@@ -1,8 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Models;
+// <copyright file="ITimeSeriesClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
+using System;
+using System.Threading.Tasks;
+using Mmm.Iot.Common.Services.Models;
+
+namespace Mmm.Iot.Common.Services.External.TimeSeries
 {
     public interface ITimeSeriesClient : IStatusOperation
     {

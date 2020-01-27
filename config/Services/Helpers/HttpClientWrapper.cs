@@ -1,17 +1,21 @@
-﻿using System;
+// <copyright file="HttpClientWrapper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Http;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Config.Services.Helpers
+namespace Mmm.Iot.Config.Services.Helpers
 {
     public class HttpClientWrapper : IHttpClientWrapper
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly IHttpClient client;
         private Dictionary<string, string> headers;
 
@@ -20,7 +24,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             IHttpClient client,
             Dictionary<string, string> headers = null)
         {
-            _logger = logger;
+            this.logger = logger;
             this.client = client;
             this.headers = headers;
             if (this.headers == null)
@@ -54,7 +58,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Request to URI {uri} failed", uri);
+                this.logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to load {description}");
             }
 
@@ -65,7 +69,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                this.logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to load {description}");
             }
 
@@ -75,7 +79,7 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError($"Could not parse result from {uri}: {e.Message}");
+                this.logger.LogError($"Could not parse result from {uri}: {e.Message}");
                 throw new ExternalDependencyException($"Could not parse result from {uri}");
             }
         }
@@ -109,13 +113,13 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Request to URI {uri} failed", uri);
+                this.logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to post {description}");
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                this.logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to post {description}");
             }
         }
@@ -150,15 +154,20 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Request to URI {uri} failed", uri);
+                this.logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to put {description}");
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                this.logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to put {description}");
             }
+        }
+
+        public void SetHeaders(Dictionary<string, string> headers)
+        {
+            this.headers = headers;
         }
 
         private void AddDefaultHeaders(HttpRequest request)
@@ -167,10 +176,6 @@ namespace Mmm.Platform.IoT.Config.Services.Helpers
             {
                 request.Headers.Add(key, this.headers[key]);
             }
-        }
-        public void SetHeaders(Dictionary<string, string> headers)
-        {
-            this.headers = headers;
         }
     }
 }

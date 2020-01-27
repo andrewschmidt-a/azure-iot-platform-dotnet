@@ -1,4 +1,9 @@
-﻿using Newtonsoft.Json;
+// <copyright file="UploadFileServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using Mmm.Iot.Config.Services.Models;
+using Newtonsoft.Json;
 
 namespace Mmm.Platform.IoT.Common.Services.Models
 {
@@ -9,13 +14,5 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 
         [JsonProperty(PropertyName = "CheckSum")]
         public CheckSumModel CheckSum { get; set; }
-    }
-
-    public class CheckSumModel
-    {
-        [JsonProperty(PropertyName = "MD5")]
-        public string MD5 { get; set; }
-        [JsonProperty(PropertyName = "SHA1")]
-        public string SHA1 { get; set; }
     }
 }

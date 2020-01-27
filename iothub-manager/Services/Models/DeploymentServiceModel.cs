@@ -1,28 +1,15 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeploymentServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class DeploymentServiceModel
     {
-
-        public DateTime CreatedDateTimeUtc { get; set; }
-        public string Id { get; set; }
-        public DeploymentMetricsServiceModel DeploymentMetrics { get; set; }
-        public string DeviceGroupId { get; set; }
-        public string DeviceGroupName { get; set; }
-        public string DeviceGroupQuery { get; set; }
-        public string Name { get; set; }
-        public string PackageContent { get; set; }
-        public string PackageName { get; set; }
-        public int Priority { get; set; }
-        public PackageType PackageType { get; set; }
-        public string ConfigType { get; set; }
-
-        // IoT SDK's configurations is a deployment for RM.
         public DeploymentServiceModel(Configuration deployment)
         {
             if (string.IsNullOrEmpty(deployment.Id))
@@ -30,23 +17,23 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 throw new ArgumentException($"Invalid deploymentId provided {deployment.Id}");
             }
 
-            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.DEPLOYMENT_NAME_LABEL);
-            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.DEPLOYMENT_GROUP_ID_LABEL);
-            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.RM_CREATED_LABEL);
+            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.DeploymentNameLabel);
+            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.DeploymentGroupIdLabel);
+            this.VerifyConfigurationLabel(deployment, ConfigurationsHelper.RmCreatedLabel);
 
             this.Id = deployment.Id;
-            this.Name = deployment.Labels[ConfigurationsHelper.DEPLOYMENT_NAME_LABEL];
+            this.Name = deployment.Labels[ConfigurationsHelper.DeploymentNameLabel];
             this.CreatedDateTimeUtc = deployment.CreatedTimeUtc;
-            this.DeviceGroupId = deployment.Labels[ConfigurationsHelper.DEPLOYMENT_GROUP_ID_LABEL];
+            this.DeviceGroupId = deployment.Labels[ConfigurationsHelper.DeploymentGroupIdLabel];
 
-            if (deployment.Labels.ContainsKey(ConfigurationsHelper.DEPLOYMENT_GROUP_NAME_LABEL))
+            if (deployment.Labels.ContainsKey(ConfigurationsHelper.DeploymentGroupNameLabel))
             {
-                this.DeviceGroupName = deployment.Labels[ConfigurationsHelper.DEPLOYMENT_GROUP_NAME_LABEL];
+                this.DeviceGroupName = deployment.Labels[ConfigurationsHelper.DeploymentGroupNameLabel];
             }
 
-            if (deployment.Labels.ContainsKey(ConfigurationsHelper.DEPLOYMENT_PACKAGE_NAME_LABEL))
+            if (deployment.Labels.ContainsKey(ConfigurationsHelper.DeploymentPackageNameLabel))
             {
-                this.PackageName = deployment.Labels[ConfigurationsHelper.DEPLOYMENT_PACKAGE_NAME_LABEL];
+                this.PackageName = deployment.Labels[ConfigurationsHelper.DeploymentPackageNameLabel];
             }
 
             this.Priority = deployment.Priority;
@@ -60,13 +47,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 this.PackageType = PackageType.DeviceConfiguration;
             }
 
-            if (deployment.Labels.ContainsKey(ConfigurationsHelper.CONFIG_TYPE_LABEL))
+            if (deployment.Labels.ContainsKey(ConfigurationsHelper.ConfigTypeLabel))
             {
-                this.ConfigType = deployment.Labels[ConfigurationsHelper.CONFIG_TYPE_LABEL];
+                this.ConfigType = deployment.Labels[ConfigurationsHelper.ConfigTypeLabel];
             }
             else
             {
-                this.ConfigType = String.Empty;
+                this.ConfigType = string.Empty;
             }
 
             this.DeploymentMetrics = new DeploymentMetricsServiceModel(deployment.SystemMetrics, deployment.Metrics);
@@ -76,6 +63,30 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         {
         }
 
+        public DateTime CreatedDateTimeUtc { get; set; }
+
+        public string Id { get; set; }
+
+        public DeploymentMetricsServiceModel DeploymentMetrics { get; set; }
+
+        public string DeviceGroupId { get; set; }
+
+        public string DeviceGroupName { get; set; }
+
+        public string DeviceGroupQuery { get; set; }
+
+        public string Name { get; set; }
+
+        public string PackageContent { get; set; }
+
+        public string PackageName { get; set; }
+
+        public int Priority { get; set; }
+
+        public PackageType PackageType { get; set; }
+
+        public string ConfigType { get; set; }
+
         private void VerifyConfigurationLabel(Configuration deployment, string labelName)
         {
             if (!deployment.Labels.ContainsKey(labelName))
@@ -83,17 +94,5 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 throw new ArgumentException($"Configuration is missing necessary label {labelName}");
             }
         }
-    }
-
-    // Sync these variables with PackageType in Config 
-    public enum PackageType
-    {
-        EdgeManifest,
-        DeviceConfiguration
-    }
-
-    public enum ConfigType
-    {
-        Firmware
     }
 }

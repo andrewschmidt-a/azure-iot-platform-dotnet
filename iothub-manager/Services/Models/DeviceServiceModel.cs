@@ -1,25 +1,15 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeviceServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using Microsoft.Azure.Devices;
 using Microsoft.Azure.Devices.Shared;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class DeviceServiceModel
     {
-        public string Etag { get; set; }
-        public string Id { get; set; }
-        public int C2DMessageCount { get; set; }
-        public DateTime LastActivity { get; set; }
-        public bool Connected { get; set; }
-        public bool Enabled { get; set; }
-        public bool IsEdgeDevice { get; set; }
-        public DateTime LastStatusUpdated { get; set; }
-        public TwinServiceModel Twin { get; set; }
-        public string IoTHubHostName { get; set; }
-        public AuthenticationMechanismServiceModel Authentication { get; set; }
-
         public DeviceServiceModel(
             string etag,
             string id,
@@ -46,18 +36,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             this.Authentication = authentication;
         }
 
-        /// <summary>
-        /// Additional constructor which allows passing an additional isConnected field.
-        /// This allows providing a different method of checking whether a device is connected or
-        /// not for edge devices.
-        /// </summary>
-        /// <param name="azureDevice">Device from service</param>
-        /// <param name="azureTwin">Device's twin</param>
-        /// <param name="ioTHubHostName">IoT Hub name</param>
-        /// <param name="isConnected">If this is true OR azureDevice.ConnectionState is Connected
-        /// then the device is said to be connected.</param>
-        public DeviceServiceModel(Device azureDevice, Twin azureTwin, string ioTHubHostName, bool isConnected) :
-            this(
+        public DeviceServiceModel(Device azureDevice, Twin azureTwin, string ioTHubHostName, bool isConnected)
+            : this(
                 etag: azureDevice.ETag,
                 id: azureDevice.Id,
                 c2DMessageCount: azureDevice.CloudToDeviceMessageCount,
@@ -72,8 +52,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         {
         }
 
-        public DeviceServiceModel(Device azureDevice, Twin azureTwin, string ioTHubHostName) :
-            this(
+        public DeviceServiceModel(Device azureDevice, Twin azureTwin, string ioTHubHostName)
+            : this(
                 azureDevice,
                 azureTwin,
                 ioTHubHostName,
@@ -81,36 +61,56 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
         {
         }
 
-        public DeviceServiceModel(Twin azureTwin, string ioTHubHostName, bool isConnected) :
-            this(
+        public DeviceServiceModel(Twin azureTwin, string ioTHubHostName, bool isConnected)
+            : this(
                 etag: azureTwin.ETag,
                 id: azureTwin.DeviceId,
                 c2DMessageCount: azureTwin.CloudToDeviceMessageCount ?? azureTwin.CloudToDeviceMessageCount ?? 0,
-                lastActivity: azureTwin.LastActivityTime ?? azureTwin.LastActivityTime ?? new DateTime(),
+                lastActivity: azureTwin.LastActivityTime ?? azureTwin.LastActivityTime ?? default,
                 connected: isConnected || azureTwin.ConnectionState.Equals(DeviceConnectionState.Connected),
                 enabled: azureTwin.Status.Equals(DeviceStatus.Enabled),
                 isEdgeDevice: azureTwin.Capabilities?.IotEdge ?? azureTwin.Capabilities?.IotEdge ?? false,
-                lastStatusUpdated: azureTwin.StatusUpdatedTime ?? azureTwin.StatusUpdatedTime ?? new DateTime(),
+                lastStatusUpdated: azureTwin.StatusUpdatedTime ?? azureTwin.StatusUpdatedTime ?? default,
                 twin: new TwinServiceModel(azureTwin),
                 ioTHubHostName: ioTHubHostName,
-                authentication: null
-            )
+                authentication: null)
         {
         }
-        
-        
+
+        public string Etag { get; set; }
+
+        public string Id { get; set; }
+
+        public int C2DMessageCount { get; set; }
+
+        public DateTime LastActivity { get; set; }
+
+        public bool Connected { get; set; }
+
+        public bool Enabled { get; set; }
+
+        public bool IsEdgeDevice { get; set; }
+
+        public DateTime LastStatusUpdated { get; set; }
+
+        public TwinServiceModel Twin { get; set; }
+
+        public string IoTHubHostName { get; set; }
+
+        public AuthenticationMechanismServiceModel Authentication { get; set; }
 
         public Device ToAzureModel(bool ignoreEtag = true)
         {
             var device = new Device(this.Id)
             {
                 ETag = ignoreEtag ? null : this.Etag,
-                Status = Enabled ? DeviceStatus.Enabled : DeviceStatus.Disabled,
-                Authentication = this.Authentication == null ? null : this.Authentication.ToAzureModel(),
+                Status = this.Enabled ? DeviceStatus.Enabled : DeviceStatus.Disabled,
+                Authentication = this.Authentication?.ToAzureModel(),
                 Capabilities = this.IsEdgeDevice ? new DeviceCapabilities()
                 {
-                    IotEdge = this.IsEdgeDevice
-                } : null
+                    IotEdge = this.IsEdgeDevice,
+                }
+                : null,
             };
 
             return device;

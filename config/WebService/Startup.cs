@@ -1,3 +1,7 @@
+// <copyright file="Startup.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -6,19 +10,20 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Auth;
 
-namespace Mmm.Platform.IoT.Config.WebService
+namespace Mmm.Iot.Config.WebService
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; }
-
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            this.Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
+
+        public IContainer ApplicationContainer { get; private set; }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -27,7 +32,7 @@ namespace Mmm.Platform.IoT.Config.WebService
                 c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Config API", Version = "v1" });
             });
 
-            // Setup (not enabling yet) CORS 
+            // Setup (not enabling yet) CORS
             services.AddCors();
 
             // Add controllers as services so they'll be resolved.
@@ -35,7 +40,7 @@ namespace Mmm.Platform.IoT.Config.WebService
 
             // Prepare DI container
             services.AddHttpContextAccessor();
-            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
@@ -64,8 +69,8 @@ namespace Mmm.Platform.IoT.Config.WebService
             // Enable CORS - Must be before UseMvc
             // see: https://docs.microsoft.com/en-us/aspnet/core/security/cors
             corsSetup.UseMiddleware(app);
-            //app.UseAuthentication();
 
+            // app.UseAuthentication();
             app.UseMvc();
         }
     }

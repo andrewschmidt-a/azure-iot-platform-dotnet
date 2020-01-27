@@ -1,34 +1,36 @@
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
+// <copyright file="ExternalServiceClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Common.Services.External
+using System;
+using System.Threading.Tasks;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Models;
+
+namespace Mmm.Iot.Common.Services.External
 {
     public class ExternalServiceClient : IExternalServiceClient
     {
-        protected readonly string serviceUri;
-        protected readonly IExternalRequestHelper _requestHelper;
-
         public ExternalServiceClient(string serviceUri, IExternalRequestHelper requestHelper)
         {
-            this.serviceUri = serviceUri;
-            this._requestHelper = requestHelper;
+            this.ServiceUri = serviceUri;
+            this.RequestHelper = requestHelper;
         }
+
+        protected string ServiceUri { get; private set; }
+
+        protected IExternalRequestHelper RequestHelper { get; private set; }
 
         public virtual async Task<StatusResultServiceModel> StatusAsync()
         {
             try
             {
-                StatusServiceModel status = await this._requestHelper.ProcessStatusAsync(this.serviceUri);
+                var status = await this.RequestHelper.ProcessStatusAsync(this.ServiceUri);
                 return status.Status;
             }
             catch (Exception e)
             {
-                return new StatusResultServiceModel(false, $"Unable to get the status of external service client at {this.serviceUri}/status. {e.Message}");
+                return new StatusResultServiceModel(false, $"Unable to get the status of external service client at {this.ServiceUri}/status. {e.Message}");
             }
         }
     }

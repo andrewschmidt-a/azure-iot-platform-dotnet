@@ -1,17 +1,20 @@
-﻿using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Config.Services.External;
-using Mmm.Platform.IoT.Config.Services.Models.Actions;
+// <copyright file="Actions.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Mmm.Iot.Config.Services.External;
+using Mmm.Iot.Config.Services.Models.Actions;
 
-namespace Mmm.Platform.IoT.Config.Services
+namespace Mmm.Iot.Config.Services
 {
     public class Actions : IActions
     {
         private readonly IAzureResourceManagerClient resourceManagerClient;
-        private readonly ILogger _logger;
-        private readonly IActionSettings _emailActionSettings;
+        private readonly ILogger logger;
+        private readonly IActionSettings emailActionSettings;
 
         public Actions(
             IAzureResourceManagerClient resourceManagerClient,
@@ -19,15 +22,15 @@ namespace Mmm.Platform.IoT.Config.Services
             IActionSettings emailActionSettings)
         {
             this.resourceManagerClient = resourceManagerClient;
-            _logger = logger;
-            _emailActionSettings = emailActionSettings;
+            this.logger = logger;
+            this.emailActionSettings = emailActionSettings;
         }
 
         public async Task<List<IActionSettings>> GetListAsync()
         {
             var result = new List<IActionSettings>();
-            await _emailActionSettings.InitializeAsync();
-            result.Add(_emailActionSettings);
+            await this.emailActionSettings.InitializeAsync();
+            result.Add(this.emailActionSettings);
 
             return result;
         }

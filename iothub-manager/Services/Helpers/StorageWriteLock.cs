@@ -1,15 +1,18 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="StorageWriteLock.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
-    /// <summary>This class is used to lock, write or release a document in  CosmosDB</summary>
-    public class StorageWriteLock<T> where T : class, new()
+    public class StorageWriteLock<T>
+        where T : class,
+        new()
     {
         private readonly string collectionId;
         private readonly string key;

@@ -1,15 +1,17 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="SchemaModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
+namespace Mmm.Iot.Common.Services.External.TimeSeries
 {
     public class SchemaModel
     {
-        private const string DEVICE_ID_KEY = "iothub-connection-device-id";
+        private const string DeviceIdKey = "iothub-connection-device-id";
         private readonly HashSet<string> excludeProperties;
 
         public SchemaModel()
@@ -29,7 +31,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
                 "iothub-creation-time-utc",
                 "iothub-enqueuedtime",
                 "iothub-message-schema",
-                "iothub-message-source"
+                "iothub-message-source",
             };
         }
 
@@ -42,11 +44,6 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         [JsonProperty("properties")]
         public List<PropertyModel> Properties { get; set; }
 
-        /// <summary>
-        /// Returns the properties needed to convert to message model
-        /// with lookup by index, excludes iothub properties.
-        /// </summary>
-        /// <returns></returns>
         public Dictionary<string, int> PropertiesByIndex()
         {
             var result = new Dictionary<string, int>();
@@ -68,14 +65,14 @@ namespace Mmm.Platform.IoT.Common.Services.External.TimeSeries
         {
             for (int i = 0; i < this.Properties.Count; i++)
             {
-                if (this.Properties[i].Name.Equals(DEVICE_ID_KEY, StringComparison.OrdinalIgnoreCase))
+                if (this.Properties[i].Name.Equals(DeviceIdKey, StringComparison.OrdinalIgnoreCase))
                 {
                     return i;
                 }
             }
 
             throw new TimeSeriesParseException("No device id found in message schema from Time Series Insights. " +
-                                            $"Device id property '{DEVICE_ID_KEY}' is missing.");
+                                            $"Device id property '{DeviceIdKey}' is missing.");
         }
     }
 }

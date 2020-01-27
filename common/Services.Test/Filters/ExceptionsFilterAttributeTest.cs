@@ -1,4 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ExceptionsFilterAttributeTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
@@ -10,34 +12,31 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Filters;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Filters;
+using Mmm.Iot.Common.TestHelpers;
 using Moq;
 using Xunit;
 
-namespace Mmm.Platform.IoT.Common.Services.Test.Filters
+namespace Mmm.Iot.Common.Services.Test.Filters
 {
     public class ExceptionsFilterAttributeTest
     {
         private readonly ExceptionsFilterAttribute target;
-        private readonly Mock<ILogger<ExceptionsFilterAttribute>> _logger;
+        private readonly Mock<ILogger<ExceptionsFilterAttribute>> logger;
 
         public ExceptionsFilterAttributeTest()
         {
-            _logger = new Mock<ILogger<ExceptionsFilterAttribute>>();
-            this.target = new ExceptionsFilterAttribute(_logger.Object);
+            this.logger = new Mock<ILogger<ExceptionsFilterAttribute>>();
+            this.target = new ExceptionsFilterAttribute(this.logger.Object);
         }
 
-        /// <summary>
-        /// When handling unknown/unexpected exceptions, the stack trace could be null,
-        /// the filter must support this scenario.
-        /// </summary>
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void Doesnt_Fail_When_StackTraces_AreNull()
         {
             // Arrange
             var internalException = new Mock<Exception>();
-            var exception = new Exception("", internalException.Object);
+            var exception = new Exception(string.Empty, internalException.Object);
             internalException.SetupGet(x => x.StackTrace).Returns((string)null);
 
             var context = new ExceptionContext(

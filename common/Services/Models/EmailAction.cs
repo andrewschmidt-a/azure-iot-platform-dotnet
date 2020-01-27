@@ -1,16 +1,18 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="EmailAction.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
-using Mmm.Platform.IoT.Common.Services.Converters;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Converters;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
     public class EmailAction : IAction
     {
@@ -18,19 +20,12 @@ namespace Mmm.Platform.IoT.Common.Services.Models
         private const string NOTES = "Notes";
         private const string RECIPIENTS = "Recipients";
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public ActionType Type { get; }
-
-        // Note: Parameters should always be initialized as a case-insensitive dictionary
-        [JsonConverter(typeof(EmailParametersConverter))]
-        public IDictionary<string, object> Parameters { get; }
-
         public EmailAction(IDictionary<string, object> parameters)
         {
             this.Type = ActionType.Email;
             this.Parameters = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase)
             {
-                [NOTES] = string.Empty
+                [NOTES] = string.Empty,
             };
 
             // Ensure input is in case-insensitive dictionary
@@ -53,6 +48,13 @@ namespace Mmm.Platform.IoT.Common.Services.Models
             this.Parameters[RECIPIENTS] = this.ValidateAndConvertRecipientEmails(parameters[RECIPIENTS]);
         }
 
+        [JsonConverter(typeof(StringEnumConverter))]
+        public ActionType Type { get; }
+
+        // Note: Parameters should always be initialized as a case-insensitive dictionary
+        [JsonConverter(typeof(EmailParametersConverter))]
+        public IDictionary<string, object> Parameters { get; }
+
         public string GetNotes()
         {
             if (this.Parameters.ContainsKey(NOTES))
@@ -60,7 +62,7 @@ namespace Mmm.Platform.IoT.Common.Services.Models
                 return this.Parameters[NOTES].ToString();
             }
 
-            return "";
+            return string.Empty;
         }
 
         public string GetSubject()
@@ -70,13 +72,10 @@ namespace Mmm.Platform.IoT.Common.Services.Models
 
         public List<string> GetRecipients()
         {
-            return (List<String>)this.Parameters[RECIPIENTS];
+            return (List<string>)this.Parameters[RECIPIENTS];
         }
 
-        /// <summary>
-        /// Validates recipient email addresses and converts to a list of email strings
-        /// </summary>
-        private List<string> ValidateAndConvertRecipientEmails(Object emails)
+        private List<string> ValidateAndConvertRecipientEmails(object emails)
         {
             List<string> result;
 

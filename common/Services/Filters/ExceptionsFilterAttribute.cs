@@ -1,4 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ExceptionsFilterAttribute.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Buffers;
@@ -9,25 +11,18 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Common.Services.Filters
+namespace Mmm.Iot.Common.Services.Filters
 {
-    /// <summary>
-    /// Detect all the unhandled exceptions returned by the API controllers
-    /// and decorate the response accordingly, managing the HTTP status code
-    /// and preparing a JSON response with useful error details.
-    /// When including the stack trace, split the text in multiple lines
-    /// for an easier parsing.
-    /// </summary>
     public class ExceptionsFilterAttribute : ExceptionFilterAttribute
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
 
         public ExceptionsFilterAttribute(ILogger<ExceptionsFilterAttribute> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
 
         public override void OnException(ExceptionContext context)
@@ -61,23 +56,9 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             }
             else
             {
-                _logger.LogError(context.Exception, "Unknown exception");
+                this.logger.LogError(context.Exception, "Unknown exception");
                 base.OnException(context);
             }
-        }
-
-        public override Task OnExceptionAsync(ExceptionContext context)
-        {
-            try
-            {
-                this.OnException(context);
-            }
-            catch (Exception)
-            {
-                return base.OnExceptionAsync(context);
-            }
-
-            return Task.FromResult(new object());
         }
 
         private ObjectResult GetResponse(
@@ -89,7 +70,7 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             {
                 ["Message"] = "An error has occurred.",
                 ["ExceptionMessage"] = e.Message,
-                ["ExceptionType"] = e.GetType().FullName
+                ["ExceptionType"] = e.GetType().FullName,
             };
 
             if (stackTrace)
@@ -109,7 +90,7 @@ namespace Mmm.Platform.IoT.Common.Services.Filters
             result.StatusCode = (int)code;
             result.Formatters.Add(new JsonOutputFormatter(new JsonSerializerSettings(), ArrayPool<char>.Shared));
 
-            _logger.LogError(e, "Status code was {statusCode}", result.StatusCode);
+            this.logger.LogError(e, "Status code was {statusCode}", result.StatusCode);
 
             return result;
         }

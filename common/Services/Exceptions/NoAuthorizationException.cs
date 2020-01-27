@@ -1,23 +1,25 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="NoAuthorizationException.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.Services.Exceptions
+namespace Mmm.Iot.Common.Services.Exceptions
 {
-    /// <summary>
-    /// This exception is thrown when the user is not authorized to perform the action.
-    /// </summary>
     public class NoAuthorizationException : Exception
     {
-        public NoAuthorizationException() : base()
+        public NoAuthorizationException()
+            : base()
         {
         }
 
-        public NoAuthorizationException(string message) : base(message)
+        public NoAuthorizationException(string message)
+            : base(message)
         {
         }
 
-        public NoAuthorizationException(string message, Exception innerException) : base(message, innerException)
+        public NoAuthorizationException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }

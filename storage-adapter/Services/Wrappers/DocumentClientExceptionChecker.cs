@@ -1,11 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DocumentClientExceptionChecker.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Net;
 using Microsoft.Azure.Documents;
-using Mmm.Platform.IoT.Common.Services.Wrappers;
+using Mmm.Iot.Common.Services.Wrappers;
 
-namespace Mmm.Platform.IoT.StorageAdapter.Services.Wrappers
+namespace Mmm.Iot.StorageAdapter.Services.Wrappers
 {
     public class DocumentClientExceptionChecker : IExceptionChecker
     {

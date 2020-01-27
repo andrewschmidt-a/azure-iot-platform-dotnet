@@ -1,9 +1,11 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="IActionSettings.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.Config.Services.Models.Actions
+namespace Mmm.Iot.Config.Services.Models.Actions
 {
     public interface IActionSettings
     {

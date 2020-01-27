@@ -1,144 +1,63 @@
-﻿using System;
+// <copyright file="AuthorizeControllerTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
-using Mmm.Platform.IoT.IdentityGateway.Controllers;
-using Mmm.Platform.IoT.IdentityGateway.Services;
-using Mmm.Platform.IoT.IdentityGateway.Services.Helpers;
-using Mmm.Platform.IoT.IdentityGateway.Services.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IdentityGateway.Controllers;
+using Mmm.Iot.IdentityGateway.Services;
+using Mmm.Iot.IdentityGateway.Services.Helpers;
+using Mmm.Iot.IdentityGateway.Services.Models;
+using Mmm.Iot.IdentityGateway.WebService.Models;
 using Moq;
 using Newtonsoft.Json.Linq;
 using Xunit;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Mmm.Platform.IoT.IdentityGateway.WebService.Models;
-using Mmm.Platform.IoT.Common.Services.Config;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
+namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
 {
-    public class AuthorizeControllerTest
+    public class AuthorizeControllerTest : IDisposable
     {
+        public static readonly string ValidAuthHeader = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+        private const string SomeIssuer = "http://someIssuer";
+        private const string SomePublicKey = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAryQICCl6NZ5gDKrnSztO\r\n3Hy8PEUcuyvg/ikC+VcIo2SFFSf18a3IMYldIugqqqZCs4/4uVW3sbdLs/6PfgdX\r\n7O9D22ZiFWHPYA2k2N744MNiCD1UE+tJyllUhSblK48bn+v1oZHCM0nYQ2NqUkvS\r\nj+hwUU3RiWl7x3D2s9wSdNt7XUtW05a/FXehsPSiJfKvHJJnGOX0BgTvkLnkAOTd\r\nOrUZ/wK69Dzu4IvrN4vs9Nes8vbwPa/ddZEzGR0cQMt0JBkhk9kU/qwqUseP1QRJ\r\n5I1jR4g8aYPL/ke9K35PxZWuDp3U0UPAZ3PjFAh+5T+fc7gzCs9dPzSHloruU+gl\r\nFQIDAQAB\r\n-----END PUBLIC KEY-----";
+        private const string SomeUri = "http://azureb2caseuri.com";
+        private string invite = "someInvite";
+        private bool disposedValue = false;
         private Mock<IUserContainer<UserSettingsModel, UserSettingsInput>> mockUserSettingsContainer;
         private Mock<UserTenantContainer> mockUserTenantContainer;
-        private AuthorizeController authorizeController;
+        private AuthorizeController controller;
         private string someUiRedirectUri = new Uri("http://valid-uri.com").AbsoluteUri;
         private Guid someTenant = Guid.NewGuid();
         private Mock<HttpContext> mockHttpContext;
         private string state = "someState";
         private string clientId = "someClientId";
         private string nonce = "someNonce";
-        private const string someIssuer = "http://someIssuer";
-        private string invite = "someInvite";
-        private const string somePublicKey = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAryQICCl6NZ5gDKrnSztO\r\n3Hy8PEUcuyvg/ikC+VcIo2SFFSf18a3IMYldIugqqqZCs4/4uVW3sbdLs/6PfgdX\r\n7O9D22ZiFWHPYA2k2N744MNiCD1UE+tJyllUhSblK48bn+v1oZHCM0nYQ2NqUkvS\r\nj+hwUU3RiWl7x3D2s9wSdNt7XUtW05a/FXehsPSiJfKvHJJnGOX0BgTvkLnkAOTd\r\nOrUZ/wK69Dzu4IvrN4vs9Nes8vbwPa/ddZEzGR0cQMt0JBkhk9kU/qwqUseP1QRJ\r\n5I1jR4g8aYPL/ke9K35PxZWuDp3U0UPAZ3PjFAh+5T+fc7gzCs9dPzSHloruU+gl\r\nFQIDAQAB\r\n-----END PUBLIC KEY-----";
-        private const string someUri = "http://azureb2caseuri.com";
         private Mock<AppConfig> mockAppConfig;
         private Mock<IJwtHelpers> mockJwtHelper;
         private Mock<IAuthenticationContext> mockAuthContext;
         private JwtSecurityToken someSecurityToken;
-        public static readonly string ValidAuthHeader = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
         private Mock<IOpenIdProviderConfiguration> mockOpenIdProviderConfiguration;
 
         public AuthorizeControllerTest()
         {
-            InitializeController();
-            SetupDefaultBehaviors();
+            this.InitializeController();
+            this.SetupDefaultBehaviors();
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        [InlineData("not-a-valid-uri")]
-        [InlineData(null)]
-        [InlineData("")]
-        public void AuthorizeThrowsWhenRedirectUriNotValid(string invalidUri)
+        public static IEnumerable<object[]> GetJwtSecurityTokens()
         {
-            // Arrange
-            // Act
-            Action a = () => authorizeController.Get(invalidUri, null, null, null, null, null);
-
-            // Assert
-            Assert.Throws<Exception>(a);
-        }
-
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        [InlineData("x")]
-        [InlineData("7")]
-        [InlineData("")]
-        [InlineData("not-a-valid-guid")]
-        public void AuthorizeThrowsWhenTenantNotValid(string invalidTenant)
-        {
-            // Arrange
-            // Act
-            Action a = () => authorizeController.Get(someUiRedirectUri, null, null, null, invalidTenant, null);
-
-            // Assert
-            Assert.Throws<Exception>(a);
-        }
-
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        public void AuthorizeRedirectsToRedirectUri()
-        {
-            // Arrange
-            // Act
-            var redirectResult = authorizeController.Get(someUiRedirectUri, state, clientId, nonce, someTenant.ToString(), invite) as RedirectResult;
-
-            // Assert
-            Assert.NotNull(redirectResult);
-            var uriResult = new Uri(redirectResult.Url);
-            Assert.NotNull(uriResult.Query);
-            Assert.NotEmpty(uriResult.Query);
-            var queryStrings = HttpUtility.ParseQueryString(uriResult.Query);
-            Assert.Contains("state", queryStrings.AllKeys);
-            var returnedState = JObject.Parse(queryStrings["state"]);
-            Assert.Equal(someUiRedirectUri, returnedState["returnUrl"]);
-            Assert.Equal(state, returnedState["state"]);
-            Assert.Equal(someTenant, returnedState["tenant"]);
-            Assert.Equal(nonce, returnedState["nonce"]);
-            Assert.Equal(clientId, returnedState["client_id"]);
-            Assert.Equal($"{someIssuer}/connect/callback", queryStrings["redirect_uri"]);
-            Assert.Equal(invite, returnedState["invitation"]);
-        }
-
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        [InlineData("not-a-valid-uri")]
-        [InlineData(null)]
-        [InlineData("")]
-        public void LogoutThrowsWhenRedirectUriNotValid(string invalidUri)
-        {
-            // Arrange
-            // Act
-            Action a = () => authorizeController.Get(invalidUri);
-
-            // Assert
-            Assert.Throws<Exception>(a);
-        }
-
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        public void LogoutRedirectsToRedirectUri()
-        {
-            // Arrange
-            // Act
-            var redirectResult = authorizeController.Get(someUiRedirectUri) as RedirectResult;
-
-            // Assert
-            Assert.Equal(someUiRedirectUri, redirectResult.Url);
-        }
-
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        [InlineData("not-a-valid-auth-header")]
-        [InlineData(null)]
-        [InlineData("")]
-        public async Task SwitchTenantThrowsWhenAuthorizationHeaderNotValid(string invalidAuthHeader)
-        {
-            // Arrange
-            // Act
-            Func<Task> a = async () => await authorizeController.PostAsync(invalidAuthHeader, null);
-
-            // Assert
-            await Assert.ThrowsAsync<NoAuthorizationException>(a);
+            yield return new object[] { null };
+            yield return new object[] { new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", Guid.NewGuid().ToString()) }) };
         }
 
         public static IEnumerable<object[]> GetInvalidAuthHeaders()
@@ -148,48 +67,143 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             yield return new object[] { ValidAuthHeader };
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
-        [MemberData(nameof(GetInvalidAuthHeaders))]
-        public async Task SwitchTenantThrowsWhenAuthorizationHeaderTokenNotReadableOrValid(string invalidAuthHeader)
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        [InlineData("not-a-valid-uri")]
+        [InlineData(null)]
+        [InlineData("")]
+        public void AuthorizeThrowsWhenRedirectUriNotValid(string invalidUri)
         {
             // Arrange
-            JwtSecurityToken jwtSecurityToken = null;
-            mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out jwtSecurityToken)).Returns(false);
-
             // Act
-            Func<Task> a = async () => await authorizeController.PostAsync(invalidAuthHeader, null);
+            Action a = () => this.controller.Get(invalidUri, null, null, null, null, null);
+
+            // Assert
+            Assert.Throws<Exception>(a);
+        }
+
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        [InlineData("x")]
+        [InlineData("7")]
+        [InlineData("")]
+        [InlineData("not-a-valid-guid")]
+        public void AuthorizeThrowsWhenTenantNotValid(string invalidTenant)
+        {
+            // Arrange
+            // Act
+            Action a = () => this.controller.Get(this.someUiRedirectUri, null, null, null, invalidTenant, null);
+
+            // Assert
+            Assert.Throws<Exception>(a);
+        }
+
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        public void AuthorizeRedirectsToRedirectUri()
+        {
+            // Arrange
+            // Act
+            var redirectResult = this.controller.Get(this.someUiRedirectUri, this.state, this.clientId, this.nonce, this.someTenant.ToString(), this.invite) as RedirectResult;
+
+            // Assert
+            Assert.NotNull(redirectResult);
+            var uriResult = new Uri(redirectResult.Url);
+            Assert.NotNull(uriResult.Query);
+            Assert.NotEmpty(uriResult.Query);
+            var queryStrings = HttpUtility.ParseQueryString(uriResult.Query);
+            Assert.Contains("state", queryStrings.AllKeys);
+            var returnedState = JObject.Parse(queryStrings["state"]);
+            Assert.Equal(this.someUiRedirectUri, returnedState["returnUrl"]);
+            Assert.Equal(this.state, returnedState["state"]);
+            Assert.Equal(this.someTenant, returnedState["tenant"]);
+            Assert.Equal(this.nonce, returnedState["nonce"]);
+            Assert.Equal(this.clientId, returnedState["client_id"]);
+            Assert.Equal($"{SomeIssuer}/connect/callback", queryStrings["redirect_uri"]);
+            Assert.Equal(this.invite, returnedState["invitation"]);
+        }
+
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        [InlineData("not-a-valid-uri")]
+        [InlineData(null)]
+        [InlineData("")]
+        public void LogoutThrowsWhenRedirectUriNotValid(string invalidUri)
+        {
+            // Arrange
+            // Act
+            Action a = () => this.controller.Get(invalidUri);
+
+            // Assert
+            Assert.Throws<Exception>(a);
+        }
+
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        public void LogoutRedirectsToRedirectUri()
+        {
+            // Arrange
+            // Act
+            var redirectResult = this.controller.Get(this.someUiRedirectUri) as RedirectResult;
+
+            // Assert
+            Assert.Equal(this.someUiRedirectUri, redirectResult.Url);
+        }
+
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        [InlineData("not-a-valid-auth-header")]
+        [InlineData(null)]
+        [InlineData("")]
+        public async Task SwitchTenantThrowsWhenAuthorizationHeaderNotValid(string invalidAuthHeader)
+        {
+            // Arrange
+            // Act
+            Func<Task> a = async () => await this.controller.PostAsync(invalidAuthHeader, null);
 
             // Assert
             await Assert.ThrowsAsync<NoAuthorizationException>(a);
         }
 
-        public static IEnumerable<object[]> GetJwtSecurityTokens()
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        [MemberData(nameof(GetInvalidAuthHeaders))]
+        public async Task SwitchTenantThrowsWhenAuthorizationHeaderTokenNotReadableOrValid(string invalidAuthHeader)
         {
-            yield return new object[] { null };
-            yield return new object[] { new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", Guid.NewGuid().ToString()) }) };
+            // Arrange
+            JwtSecurityToken jwtSecurityToken = null;
+            this.mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out jwtSecurityToken)).Returns(false);
+
+            // Act
+            Func<Task> a = async () => await this.controller.PostAsync(invalidAuthHeader, null);
+
+            // Assert
+            await Assert.ThrowsAsync<NoAuthorizationException>(a);
         }
 
-        [Theory, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
         [MemberData(nameof(GetJwtSecurityTokens))]
 #pragma warning disable xUnit1026
         public async Task SwitchTenantThrowsWhenTenantAccessNotAllowed(JwtSecurityToken jwtSecurityToken)
 #pragma warning restore xUnit1026
         {
             // Arrange
-            mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out jwtSecurityToken)).Returns(true);
+            this.mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out jwtSecurityToken)).Returns(true);
 
             // Act
-            Func<Task> a = async () => await authorizeController.PostAsync(ValidAuthHeader, someTenant.ToString());
+            Func<Task> a = async () => await this.controller.PostAsync(ValidAuthHeader, this.someTenant.ToString());
 
             // Assert
             await Assert.ThrowsAsync<NoAuthorizationException>(a);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task SwitchTenantMintsNewTokenWithNewTenant()
         {
             // Arrange
-            var currentTenant = someTenant;
+            var currentTenant = this.someTenant;
             var availableTenant = Guid.NewGuid();
             var claimWithCurrentTenant = new Claim("available_tenants", currentTenant.ToString());
             var claimWithAvailableTenant = new Claim("available_tenants", availableTenant.ToString());
@@ -199,74 +213,95 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService.Test.v1.Controllers
             var jwtSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { claimWithCurrentTenant, claimWithAvailableTenant, subClaim, audClaim, expClaim });
 
             // return sucessfully a UserTenant
-            mockUserTenantContainer.Setup(s => s.GetAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(new UserTenantModel("test", "test"));
+            this.mockUserTenantContainer.Setup(s => s.GetAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(new UserTenantModel("test", "test"));
 
-            mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out jwtSecurityToken)).Returns(true);
-            mockJwtHelper.Setup(m => m.GetIdentityToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(jwtSecurityToken);
+            this.mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out jwtSecurityToken)).Returns(true);
+            this.mockJwtHelper.Setup(m => m.GetIdentityToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(jwtSecurityToken);
 
             // Act
-            var objectResult = await authorizeController.PostAsync(ValidAuthHeader, availableTenant.ToString()) as ObjectResult;
+            var objectResult = await this.controller.PostAsync(ValidAuthHeader, availableTenant.ToString()) as ObjectResult;
 
             // Assert
             Assert.Equal(StatusCodes.Status200OK, objectResult.StatusCode);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
 #pragma warning disable xUnit1026
         public async Task ErrorInClientCredentialsAuthentication()
 #pragma warning restore xUnit1026
         {
             // Arrange
-            mockAuthContext.Setup(m => m.AcquireTokenAsync(It.IsAny<string>(), It.IsAny<ClientCredential>())).Throws(new Exception("Authentication Failed!"));
+            this.mockAuthContext.Setup(m => m.AcquireTokenAsync(It.IsAny<string>(), It.IsAny<ClientCredential>())).Throws(new Exception("Authentication Failed!"));
 
             // Act
-            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F" }) as ObjectResult;
+            var result = await this.controller.PostTokenAsync(new ClientCredentialInput { ClientId = Guid.NewGuid().ToString(), ClientSecret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F" }) as ObjectResult;
 
             // Assert
             Assert.Equal(StatusCodes.Status401Unauthorized, result.StatusCode);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task SuccessClientCredentialsAuthentication()
         {
             // Arrange
-            mockAuthContext.Setup(m => m.AcquireTokenAsync(It.IsAny<string>(), It.IsAny<ClientCredential>())).Returns(Task.FromResult<AuthenticationResult>(null));
-            mockJwtHelper.Setup(m => m.GetIdentityToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new JwtSecurityToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"));
+            this.mockAuthContext.Setup(m => m.AcquireTokenAsync(It.IsAny<string>(), It.IsAny<ClientCredential>())).Returns(Task.FromResult<AuthenticationResult>(null));
+            this.mockJwtHelper.Setup(m => m.GetIdentityToken(It.IsAny<List<Claim>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<DateTime?>())).ReturnsAsync(new JwtSecurityToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"));
+            var tenantId = Guid.NewGuid().ToString();
+            this.mockUserTenantContainer.Setup(s => s.GetAllAsync(It.IsAny<UserTenantInput>())).ReturnsAsync(new UserTenantListModel(new List<UserTenantModel> { new UserTenantModel("test", tenantId) }));
 
             // Act
-            var result = await authorizeController.PostTokenAsync(new ClientCredentialInput { client_id = Guid.NewGuid().ToString(), client_secret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F" }) as ObjectResult;
+            var result = await this.controller.PostTokenAsync(new ClientCredentialInput { ClientId = Guid.NewGuid().ToString(), ClientSecret = "djdhafkjda6Z0TWSm6lyPHKsx7H*F", Scope = tenantId }) as ObjectResult;
 
             // Assert
             Assert.Equal(StatusCodes.Status200OK, result.StatusCode);
             Assert.IsType<string>(result.Value);
         }
 
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.controller.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
+        }
 
         private void InitializeController()
         {
-            mockAppConfig = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
-            mockUserTenantContainer = new Mock<UserTenantContainer>();
-            mockUserSettingsContainer = new Mock<IUserContainer<UserSettingsModel, UserSettingsInput>>();
-            mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
-            mockAuthContext = new Mock<IAuthenticationContext> { DefaultValue = DefaultValue.Mock };
-            mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
-            mockOpenIdProviderConfiguration = new Mock<IOpenIdProviderConfiguration> { DefaultValue = DefaultValue.Mock };
-            authorizeController = new AuthorizeController(mockAppConfig.Object, mockUserTenantContainer.Object, mockUserSettingsContainer.Object as UserSettingsContainer, mockJwtHelper.Object, mockOpenIdProviderConfiguration.Object, mockAuthContext.Object)
+            this.mockAppConfig = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
+            this.mockUserTenantContainer = new Mock<UserTenantContainer>();
+            this.mockUserSettingsContainer = new Mock<IUserContainer<UserSettingsModel, UserSettingsInput>>();
+            this.mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
+            this.mockAuthContext = new Mock<IAuthenticationContext> { DefaultValue = DefaultValue.Mock };
+            this.mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
+            this.mockOpenIdProviderConfiguration = new Mock<IOpenIdProviderConfiguration> { DefaultValue = DefaultValue.Mock };
+            this.controller = new AuthorizeController(this.mockAppConfig.Object, this.mockUserTenantContainer.Object, this.mockUserSettingsContainer.Object as UserSettingsContainer, this.mockJwtHelper.Object, this.mockOpenIdProviderConfiguration.Object, this.mockAuthContext.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
-                    HttpContext = this.mockHttpContext.Object
-                }
+                    HttpContext = this.mockHttpContext.Object,
+                },
             };
         }
 
         private void SetupDefaultBehaviors()
         {
-            mockAppConfig.Setup(m => m.Global.AzureB2cBaseUri).Returns(someUri);
-            mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(somePublicKey);
-            someSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", someTenant.ToString()) });
-            mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out someSecurityToken)).Returns(true);
-            mockOpenIdProviderConfiguration.Setup(m => m.issuer).Returns(someIssuer);
+            this.mockAppConfig.Setup(m => m.Global.AzureB2cBaseUri).Returns(SomeUri);
+            this.mockAppConfig.Setup(m => m.IdentityGatewayService.PublicKey).Returns(SomePublicKey);
+            this.someSecurityToken = new JwtSecurityToken(null, null, new List<Claim> { new Claim("available_tenants", this.someTenant.ToString()) });
+            this.mockJwtHelper.Setup(m => m.TryValidateToken(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<HttpContext>(), out this.someSecurityToken)).Returns(true);
+            this.mockOpenIdProviderConfiguration.Setup(m => m.Issuer).Returns(SomeIssuer);
         }
     }
 }

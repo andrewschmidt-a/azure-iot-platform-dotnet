@@ -1,6 +1,10 @@
-﻿using Autofac;
+// <copyright file="Factory.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Common.Services
+using Autofac;
+
+namespace Mmm.Iot.Common.Services
 {
     public class Factory : IFactory
     {

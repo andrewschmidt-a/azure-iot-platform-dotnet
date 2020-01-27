@@ -1,22 +1,25 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="TimeSeriesValueListApiModelTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.IO;
-using Mmm.Platform.IoT.Common.Services.External.TimeSeries;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.External.TimeSeries;
+using Mmm.Iot.Common.TestHelpers;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
+namespace Mmm.Iot.DeviceTelemetry.Services.Test.TimeSeries
 {
     public class TimeSeriesValueListApiModelTest
     {
-        private readonly string TSI_SAMPLE_EVENTS_FILE = $"TimeSeries{Path.DirectorySeparatorChar}TimeSeriesEvents.json";
+        private readonly string tsiSampleEventsFile = $"TimeSeries{Path.DirectorySeparatorChar}TimeSeriesEvents.json";
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void ConvertsToMessageList_WhenMultipleDeviceTypes()
         {
-            // Arrange 
+            // Arrange
             var events = this.GetTimeSeriesEvents();
 
             // Act
@@ -28,10 +31,11 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
             Assert.Equal(4, result.Messages.Count);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void ConvertsToMessageList_WithSkipValue()
         {
-            // Arrange 
+            // Arrange
             var events = this.GetTimeSeriesEvents();
 
             // Act
@@ -47,7 +51,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test.TimeSeries
         {
             var path = AppDomain.CurrentDomain.BaseDirectory +
                        Path.DirectorySeparatorChar +
-                       this.TSI_SAMPLE_EVENTS_FILE;
+                       this.tsiSampleEventsFile;
 
             string data = File.ReadAllText(path);
 

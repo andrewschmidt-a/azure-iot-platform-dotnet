@@ -1,34 +1,36 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ConfigTypeListServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Mmm.Platform.IoT.Config.Services.Models;
+using Mmm.Iot.Config.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.Config.Services.External
+namespace Mmm.Iot.Config.Services.External
 {
     public class ConfigTypeListServiceModel
     {
-        private HashSet<String> configTypes = new HashSet<String>();
+        private HashSet<string> configTypes = new HashSet<string>();
 
         [JsonProperty("configtypes")]
         public string[] ConfigTypes
         {
             get
             {
-                return configTypes.ToArray<String>();
+                return this.configTypes.ToArray<string>();
             }
+
             set
             {
-                Array.ForEach<String>(value, (c => configTypes.Add(c)));
+                Array.ForEach<string>(value, c => this.configTypes.Add(c));
             }
         }
 
-        internal void add(string customConfig)
+        internal void Add(string customConfig)
         {
-            configTypes.Add(customConfig.Trim());
+            this.configTypes.Add(customConfig.Trim());
         }
-
     }
 }

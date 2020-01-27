@@ -1,9 +1,13 @@
+// <copyright file="IIotHubManagerClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.AsaManager.Services.Models.DeviceGroups;
-using Mmm.Platform.IoT.Common.Services.External;
+using Mmm.Iot.AsaManager.Services.Models.DeviceGroups;
+using Mmm.Iot.Common.Services.External;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.External.IotHubManager
+namespace Mmm.Iot.AsaManager.Services.External.IotHubManager
 {
     public interface IIotHubManagerClient : IExternalServiceClient
     {

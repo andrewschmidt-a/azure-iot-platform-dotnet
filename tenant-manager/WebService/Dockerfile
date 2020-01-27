@@ -5,6 +5,8 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS restore
 WORKDIR /src
 COPY Directory.Build.props .
+COPY StyleCop.json .
+COPY Mmm.Iot.ruleset .
 COPY common/Services/Services.csproj common/Services/
 COPY tenant-manager/Services/Services.csproj tenant-manager/Services/
 COPY tenant-manager/WebService/WebService.csproj tenant-manager/WebService/
@@ -24,4 +26,4 @@ RUN dotnet publish WebService.csproj \
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Mmm.Platform.IoT.TenantManager.WebService.dll"]
+ENTRYPOINT ["dotnet", "Mmm.Iot.TenantManager.WebService.dll"]

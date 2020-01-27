@@ -1,21 +1,28 @@
-﻿using Microsoft.ApplicationInsights;
+// <copyright file="AppInsightsExceptionHelper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
+using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.Kubernetes.Debugging;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Text;
 
-namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
+namespace Mmm.Iot.StorageAdapter.Services.Helpers
 {
     public static class AppInsightsExceptionHelper
     {
         private static TelemetryConfiguration configuration;
         private static TelemetryClient client;
+        private static JsonSerializerSettings jsonSettings = new JsonSerializerSettings()
+        {
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        };
 
         public static void Initialize(string instrumentationKey)
         {
@@ -27,12 +34,6 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
             client = new TelemetryClient();
             client.InstrumentationKey = instrumentationKey;
         }
-
-        //prevent self referencing looping
-        private static JsonSerializerSettings jsonSettings = new JsonSerializerSettings()
-        {
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-        };
 
         public static void LogException(Exception exception, Dictionary<string, string> traceDetails)
         {
@@ -63,6 +64,7 @@ namespace Mmm.Platform.IoT.StorageAdapter.Services.Helpers
             {
             }
         }
+
         public static void LogTrace(string message, int severity, Dictionary<string, string> traceDetails)
         {
             try

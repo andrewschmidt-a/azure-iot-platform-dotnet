@@ -1,4 +1,6 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="Startup.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Threading;
@@ -9,21 +11,22 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Mmm.Platform.IoT.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Auth;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
+namespace Mmm.Iot.DeviceTelemetry.WebService
 {
-    public class Startup
+    public class Startup : IDisposable
     {
-        public IConfiguration Configuration { get; }
-        public IContainer ApplicationContainer { get; private set; }
-        private readonly CancellationTokenSource agentsRunState;
+        private bool disposedValue = false;
 
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
-            this.agentsRunState = new CancellationTokenSource();
+            this.Configuration = configuration;
         }
+
+        public IConfiguration Configuration { get; }
+
+        public IContainer ApplicationContainer { get; private set; }
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -40,14 +43,12 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
 
             // Prepare DI container
             services.AddHttpContextAccessor();
-            this.ApplicationContainer = new DependencyResolution().Setup(services, Configuration);
+            this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
 
             // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        // This method is called by the runtime, after the ConfigureServices
-        // method above. Use this method to add middleware.
         public void Configure(
             IApplicationBuilder app,
             IHostingEnvironment env,
@@ -73,10 +74,28 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService
             corsSetup.UseMiddleware(app);
 
             app.UseMvc();
-            
+
             // If you want to dispose of resources that have been resolved in the
             // application container, register for the "ApplicationStopped" event.
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+        }
+
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.ApplicationContainer.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
         }
     }
 }

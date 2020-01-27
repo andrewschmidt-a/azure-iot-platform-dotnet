@@ -1,4 +1,8 @@
-﻿using System;
+﻿// <copyright file="Alarms.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
@@ -7,51 +11,35 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.Models;
-using Mmm.Platform.IoT.Common.Services.Helpers;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.DeviceTelemetry.Services.Models;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services
+namespace Mmm.Iot.DeviceTelemetry.Services
 {
     public class Alarms : IAlarms
     {
-        private readonly ILogger _logger;
-        private readonly IStorageClient storageClient;
-        private readonly AppConfig config;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IAppConfigurationClient _appConfigurationClient;
-
+        private const string MessageReceivedKey = "device.msg.received";
+        private const string RuleIdKey = "rule.id";
+        private const string DeviceIdKey = "device.id";
+        private const string StatusKey = "status";
+        private const string AlarmSchemaKey = "alarm";
+        private const string AlarmStatusOpen = "open";
+        private const string AlarmStatusAcknowledged = "acknowledged";
+        private const string TenantInfoKey = "tenant";
+        private const string TelemetryCollectionKey = "telemetry-collection";
+        private const int DocumentQueryLimit = 1000;
         private readonly string databaseName;
         private readonly int maxDeleteRetryCount;
-
-        // constants for storage keys
-        private const string MESSAGE_RECEIVED_KEY = "device.msg.received";
-        private const string RULE_ID_KEY = "rule.id";
-        private const string DEVICE_ID_KEY = "device.id";
-        private const string STATUS_KEY = "status";
-        private const string ALARM_SCHEMA_KEY = "alarm";
-
-        private const string ALARM_STATUS_OPEN = "open";
-        private const string ALARM_STATUS_ACKNOWLEDGED = "acknowledged";
-
-        private const string TENANT_INFO_KEY = "tenant";
-        private const string TELEMETRY_COLLECTION_KEY = "telemetry-collection";
-
-        private const int DOC_QUERY_LIMIT = 1000;
-
-
-        private string collectionId
-        {
-            get
-            {
-                return this._appConfigurationClient.GetValue(
-                    $"{TENANT_INFO_KEY}:{_httpContextAccessor.HttpContext.Request.GetTenant()}:{TELEMETRY_COLLECTION_KEY}");
-            }
-        }
+        private readonly ILogger logger;
+        private readonly IStorageClient storageClient;
+        private readonly AppConfig config;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IAppConfigurationClient appConfigurationClient;
 
         public Alarms(
             AppConfig config,
@@ -62,12 +50,20 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
         {
             this.storageClient = storageClient;
             this.databaseName = config.DeviceTelemetryService.Alarms.Database;
-            _logger = logger;
+            this.logger = logger;
             this.maxDeleteRetryCount = config.DeviceTelemetryService.Alarms.MaxDeleteRetries;
             this.config = config;
-            this._httpContextAccessor = contextAccessor;
-            this._appConfigurationClient = appConfigurationClient;
+            this.httpContextAccessor = contextAccessor;
+            this.appConfigurationClient = appConfigurationClient;
+        }
 
+        private string CollectionId
+        {
+            get
+            {
+                return this.appConfigurationClient.GetValue(
+                    $"{TenantInfoKey}:{this.httpContextAccessor.HttpContext.Request.GetTenant()}:{TelemetryCollectionKey}");
+            }
         }
 
         public async Task<Alarm> GetAsync(string id)
@@ -85,16 +81,21 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             string[] devices)
         {
             var sql = QueryBuilder.GetDocumentsSql(
-                ALARM_SCHEMA_KEY,
-                null, null,
-                from, MESSAGE_RECEIVED_KEY,
-                to, MESSAGE_RECEIVED_KEY,
-                order, MESSAGE_RECEIVED_KEY,
+                AlarmSchemaKey,
+                null,
+                null,
+                from,
+                MessageReceivedKey,
+                to,
+                MessageReceivedKey,
+                order,
+                MessageReceivedKey,
                 skip,
                 limit,
-                devices, DEVICE_ID_KEY);
+                devices,
+                DeviceIdKey);
 
-            _logger.LogDebug("Created alarm query {sql}", sql);
+            this.logger.LogDebug("Created alarm query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -102,7 +103,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             List<Document> docs = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 queryOptions,
                 sql,
                 skip,
@@ -128,16 +129,21 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             string[] devices)
         {
             var sql = QueryBuilder.GetDocumentsSql(
-                ALARM_SCHEMA_KEY,
-                id, RULE_ID_KEY,
-                from, MESSAGE_RECEIVED_KEY,
-                to, MESSAGE_RECEIVED_KEY,
-                order, MESSAGE_RECEIVED_KEY,
+                AlarmSchemaKey,
+                id,
+                RuleIdKey,
+                from,
+                MessageReceivedKey,
+                to,
+                MessageReceivedKey,
+                order,
+                MessageReceivedKey,
                 skip,
                 limit,
-                devices, DEVICE_ID_KEY);
+                devices,
+                DeviceIdKey);
 
-            _logger.LogDebug("Created alarm by rule query {sql}", sql);
+            this.logger.LogDebug("Created alarm by rule query {sql}", sql);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -145,7 +151,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
 
             List<Document> docs = await this.storageClient.QueryDocumentsAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 queryOptions,
                 sql,
                 skip,
@@ -167,14 +173,19 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             string[] devices)
         {
             // build sql query to get open/acknowledged alarm count for rule
-            string[] statusList = { ALARM_STATUS_OPEN, ALARM_STATUS_ACKNOWLEDGED };
+            string[] statusList = { AlarmStatusOpen, AlarmStatusAcknowledged };
             var sql = QueryBuilder.GetCountSql(
-                ALARM_SCHEMA_KEY,
-                id, RULE_ID_KEY,
-                from, MESSAGE_RECEIVED_KEY,
-                to, MESSAGE_RECEIVED_KEY,
-                devices, DEVICE_ID_KEY,
-                statusList, STATUS_KEY);
+                AlarmSchemaKey,
+                id,
+                RuleIdKey,
+                from,
+                MessageReceivedKey,
+                to,
+                MessageReceivedKey,
+                devices,
+                DeviceIdKey,
+                statusList,
+                StatusKey);
 
             FeedOptions queryOptions = new FeedOptions();
             queryOptions.EnableCrossPartitionQuery = true;
@@ -183,7 +194,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             // request count of alarms for a rule id with given parameters
             var result = await this.storageClient.QueryCountAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 queryOptions,
                 sql);
 
@@ -196,41 +207,14 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             InputValidator.Validate(status);
 
             Document document = await this.GetDocumentByIdAsync(id);
-            document.SetPropertyValue(STATUS_KEY, status);
+            document.SetPropertyValue(StatusKey, status);
 
             document = await this.storageClient.UpsertDocumentAsync(
                 this.databaseName,
-                this.collectionId,
+                this.CollectionId,
                 document);
 
             return new Alarm(document);
-        }
-
-        private async Task<Document> GetDocumentByIdAsync(string id)
-        {
-            InputValidator.Validate(id);
-
-            var query = new SqlQuerySpec(
-                "SELECT * FROM c WHERE c.id=@id",
-                new SqlParameterCollection(new SqlParameter[] {
-                    new SqlParameter { Name = "@id", Value = id }
-                })
-            );
-            // Retrieve the document using the DocumentClient.
-            List<Document> documentList = await this.storageClient.QueryDocumentsAsync(
-                this.databaseName,
-                this.collectionId,
-                null,
-                query,
-                0,
-                DOC_QUERY_LIMIT);
-
-            if (documentList.Count > 0)
-            {
-                return documentList[0];
-            }
-
-            return null;
         }
 
         public async Task Delete(List<string> ids)
@@ -253,7 +237,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
             catch (AggregateException aggregateException)
             {
                 Exception inner = aggregateException.InnerExceptions[0];
-                _logger.LogError(inner, "Failed to delete alarm");
+                this.logger.LogError(inner, "Failed to delete alarm");
                 throw inner;
             }
         }
@@ -273,7 +257,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                 {
                     await this.storageClient.DeleteDocumentAsync(
                         this.databaseName,
-                        this.collectionId,
+                        this.CollectionId,
                         id);
                     return;
                 }
@@ -289,18 +273,47 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services
                     {
                         retryTimeSpan = ((DocumentClientException)e).RetryAfter;
                     }
+
                     retryCount++;
 
                     if (retryCount >= this.maxDeleteRetryCount)
                     {
-                        _logger.LogError(e, "Failed to delete alarm {id}", id);
+                        this.logger.LogError(e, "Failed to delete alarm {id}", id);
                         throw new ExternalDependencyException(e.Message);
                     }
 
-                    _logger.LogWarning(e, "Exception on delete alarm {id}", id);
+                    this.logger.LogWarning(e, "Exception on delete alarm {id}", id);
                     Thread.Sleep(retryTimeSpan);
                 }
             }
+        }
+
+        private async Task<Document> GetDocumentByIdAsync(string id)
+        {
+            InputValidator.Validate(id);
+
+            var query = new SqlQuerySpec(
+                "SELECT * FROM c WHERE c.id=@id",
+                new SqlParameterCollection(new SqlParameter[]
+                {
+                    new SqlParameter { Name = "@id", Value = id },
+                }));
+
+            // Retrieve the document using the DocumentClient.
+            List<Document> documentList = await this.storageClient.QueryDocumentsAsync(
+                this.databaseName,
+                this.CollectionId,
+                null,
+                query,
+                0,
+                DocumentQueryLimit);
+
+            if (documentList.Count > 0)
+            {
+                return documentList[0];
+            }
+
+            return null;
         }
     }
 }

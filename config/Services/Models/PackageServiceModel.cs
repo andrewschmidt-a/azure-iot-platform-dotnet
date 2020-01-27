@@ -1,9 +1,11 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="PackageServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
     public class PackageServiceModel
     {
@@ -20,19 +22,5 @@ namespace Mmm.Platform.IoT.Config.Services.Models
         public string Content { get; set; }
 
         public string DateCreated { get; set; }
-    }
-
-    // Sync these variables with PackageType in IotHubManager
-    public enum PackageType
-    {
-        EdgeManifest,
-        DeviceConfiguration
-    }
-
-    // Used for validation, these are pre-defined constants for configuration type
-    public enum ConfigType
-    {
-        Custom,
-        Firmware
     }
 }

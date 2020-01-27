@@ -1,44 +1,41 @@
+// <copyright file="Deployments.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Newtonsoft.Json;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Config.Services.Models;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Newtonsoft.Json.Linq;
-using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
-using Mmm.Platform.IoT.Common.Services.Config;
+using static Mmm.Iot.Config.Services.Models.DeviceStatusQueries;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services
+namespace Mmm.Iot.IoTHubManager.Services
 {
     public class Deployments : IDeployments
     {
-        private const int MAX_DEPLOYMENTS = 20;
-
-        private const string DEPLOYMENT_NAME_LABEL = "Name";
-        private const string DEPLOYMENT_GROUP_ID_LABEL = "DeviceGroupId";
-        private const string DEPLOYMENT_GROUP_NAME_LABEL = "DeviceGroupName";
-        private const string DEPLOYMENT_PACKAGE_NAME_LABEL = "PackageName";
-        private const string RM_CREATED_LABEL = "RMDeployment";
-
-        private const string DEVICE_GROUP_ID_PARAM = "deviceGroupId";
-        private const string DEVICE_GROUP_QUERY_PARAM = "deviceGroupQuery";
-        private const string NAME_PARAM = "name";
-        private const string PACKAGE_CONTENT_PARAM = "packageContent";
-        private const string CONFIG_TYPE_PARAM = "configType";
-        private const string PRIORITY_PARAM = "priority";
-
-        private const string DEVICE_ID_KEY = "DeviceId";
-        private const string EDGE_MANIFEST_SCHEMA = "schemaVersion";
-
-        private readonly ILogger _logger;
-
-        private ITenantConnectionHelper _tenantHelper;
+        private const int MaxDeployments = 20;
+        private const string DeploymentNameLabel = "Name";
+        private const string DeploymentGroupIdLabel = "DeviceGroupId";
+        private const string DeploymentGroupNameLabel = "DeviceGroupName";
+        private const string DeploymentPackageNameLabel = "PackageName";
+        private const string RmCreatedLabel = "RMDeployment";
+        private const string DeviceGroupIdParameter = "deviceGroupId";
+        private const string DeviceGroupQueryParameter = "deviceGroupQuery";
+        private const string NameParameter = "name";
+        private const string PackageContentParameter = "packageContent";
+        private const string ConfigurationTypeParameter = "configType";
+        private const string PriorityParameter = "priority";
+        private const string DeviceIdKey = "DeviceId";
+        private const string EdgeManifestSchema = "schemaVersion";
+        private readonly ILogger logger;
+        private ITenantConnectionHelper tenantHelper;
 
         public Deployments(AppConfig config, ILogger<Deployments> logger, ITenantConnectionHelper tenantConnectionHelper)
         {
@@ -47,74 +44,67 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 throw new ArgumentNullException("config");
             }
 
-            this._tenantHelper = tenantConnectionHelper;
+            this.tenantHelper = tenantConnectionHelper;
 
-            _logger = logger;
+            this.logger = logger;
         }
 
-        public Deployments(ITenantConnectionHelper _tenantHelper)
+        public Deployments(ITenantConnectionHelper tenantHelper)
         {
-            this._tenantHelper = _tenantHelper ?? throw new ArgumentNullException("tenantHelper");
+            this.tenantHelper = tenantHelper ?? throw new ArgumentNullException("tenantHelper");
         }
 
-        /// <summary>
-        /// Schedules a deployment of the provided package, to the given group.
-        /// </summary>
-        /// <returns>Scheduled deployment</returns>
         public async Task<DeploymentServiceModel> CreateAsync(DeploymentServiceModel model)
         {
             if (string.IsNullOrEmpty(model.DeviceGroupId))
             {
-                throw new ArgumentNullException(DEVICE_GROUP_ID_PARAM);
+                throw new ArgumentNullException(DeviceGroupIdParameter);
             }
 
             if (string.IsNullOrEmpty(model.DeviceGroupQuery))
             {
-                throw new ArgumentNullException(DEVICE_GROUP_QUERY_PARAM);
+                throw new ArgumentNullException(DeviceGroupQueryParameter);
             }
 
             if (string.IsNullOrEmpty(model.Name))
             {
-                throw new ArgumentNullException(NAME_PARAM);
+                throw new ArgumentNullException(NameParameter);
             }
 
             if (string.IsNullOrEmpty(model.PackageContent))
             {
-                throw new ArgumentNullException(PACKAGE_CONTENT_PARAM);
+                throw new ArgumentNullException(PackageContentParameter);
             }
 
             if (model.PackageType.Equals(PackageType.DeviceConfiguration)
                 && string.IsNullOrEmpty(model.ConfigType))
             {
-                throw new ArgumentNullException(CONFIG_TYPE_PARAM);
+                throw new ArgumentNullException(ConfigurationTypeParameter);
             }
 
             if (model.Priority < 0)
             {
-                throw new ArgumentOutOfRangeException(PRIORITY_PARAM,
+                throw new ArgumentOutOfRangeException(
+                    PriorityParameter,
                     model.Priority,
                     "The priority provided should be 0 or greater");
             }
 
             var configuration = ConfigurationsHelper.ToHubConfiguration(model);
+
             // TODO: Add specific exception handling when exception types are exposed
             // https://github.com/Azure/azure-iot-sdk-csharp/issues/649
-            return new DeploymentServiceModel(await _tenantHelper.GetRegistry().AddConfigurationAsync(configuration));
+            return new DeploymentServiceModel(await this.tenantHelper.GetRegistry().AddConfigurationAsync(configuration));
         }
 
-        /// <summary>
-        /// Retrieves all deployments that have been scheduled on the iothub.
-        /// Only deployments which were created by RM will be returned.
-        /// </summary>
-        /// <returns>All scheduled deployments with RMDeployment label</returns>
         public async Task<DeploymentServiceListModel> ListAsync()
         {
             // TODO: Currently they only support 20 deployments
-            var deployments = await _tenantHelper.GetRegistry().GetConfigurationsAsync(MAX_DEPLOYMENTS);
+            var deployments = await this.tenantHelper.GetRegistry().GetConfigurationsAsync(MaxDeployments);
 
             if (deployments == null)
             {
-                throw new ResourceNotFoundException($"No deployments found for {_tenantHelper.GetIotHubName()} hub.");
+                throw new ResourceNotFoundException($"No deployments found for {this.tenantHelper.GetIotHubName()} hub.");
             }
 
             List<DeploymentServiceModel> serviceModelDeployments =
@@ -126,12 +116,6 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             return new DeploymentServiceListModel(serviceModelDeployments);
         }
 
-        /// <summary>
-        /// Retrieve information on a single deployment given its id.
-        /// If includeDeviceStatus is included additional queries are created to retrieve the status of
-        /// the deployment per device.
-        /// </summary>
-        /// <returns>Deployment for the given id</returns>
         public async Task<DeploymentServiceModel> GetAsync(string deploymentId, bool includeDeviceStatus = false)
         {
             if (string.IsNullOrEmpty(deploymentId))
@@ -139,7 +123,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            var deployment = await _tenantHelper.GetRegistry().GetConfigurationAsync(deploymentId);
+            var deployment = await this.tenantHelper.GetRegistry().GetConfigurationAsync(deploymentId);
 
             if (deployment == null)
             {
@@ -148,7 +132,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
 
             if (!this.CheckIfDeploymentWasMadeByRM(deployment))
             {
-                throw new ResourceNotSupportedException($"Deployment with id {deploymentId}" + @" was 
+                throw new ResourceNotSupportedException($"Deployment with id {deploymentId}" + @" was
                                                         created externally and therefore not supported");
             }
 
@@ -158,16 +142,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             {
                 DeploymentMetrics =
                 {
-                    DeviceMetrics = CalculateDeviceMetrics(deviceStatuses),
-                    DeviceStatuses = includeDeviceStatus ? deviceStatuses : null
-                }
+                    DeviceMetrics = this.CalculateDeviceMetrics(deviceStatuses),
+                    DeviceStatuses = includeDeviceStatus ? deviceStatuses : null,
+                },
             };
         }
 
-        /// <summary>
-        /// Delete a given deployment by id.
-        /// </summary>
-        /// <returns></returns>
         public async Task DeleteAsync(string deploymentId)
         {
             if (string.IsNullOrEmpty(deploymentId))
@@ -175,14 +155,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 throw new ArgumentNullException(nameof(deploymentId));
             }
 
-            await _tenantHelper.GetRegistry().RemoveConfigurationAsync(deploymentId);
+            await this.tenantHelper.GetRegistry().RemoveConfigurationAsync(deploymentId);
         }
 
         private bool CheckIfDeploymentWasMadeByRM(Configuration conf)
         {
             return conf.Labels != null &&
-                   conf.Labels.ContainsKey(RM_CREATED_LABEL) &&
-                   bool.TryParse(conf.Labels[RM_CREATED_LABEL], out var res) && res;
+                   conf.Labels.ContainsKey(RmCreatedLabel) &&
+                   bool.TryParse(conf.Labels[RmCreatedLabel], out var res) && res;
         }
 
         private IDictionary<string, DeploymentStatus> GetDeviceStatuses(Configuration deployment)
@@ -197,16 +177,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 deploymentType = PackageType.DeviceConfiguration.ToString();
             }
 
-            deployment.Labels.TryGetValue(ConfigurationsHelper.CONFIG_TYPE_LABEL, out string configType);
-            IDictionary<QueryType, String> Queries = GetQueries(deploymentType, configType);
+            deployment.Labels.TryGetValue(ConfigurationsHelper.ConfigTypeLabel, out string configType);
+            var queries = GetQueries(deploymentType, configType);
 
             string deploymentId = deployment.Id;
-            var appliedDevices = this.GetDevicesInQuery(Queries[QueryType.APPLIED], deploymentId);
+            var appliedDevices = this.GetDevicesInQuery(queries[QueryType.APPLIED], deploymentId);
 
             var deviceWithStatus = new Dictionary<string, DeploymentStatus>();
 
-            if (!(ConfigurationsHelper.IsEdgeDeployment(deployment)) &&
-                    !(configType.Equals(ConfigType.Firmware.ToString())))
+            if (!ConfigurationsHelper.IsEdgeDeployment(deployment) && !configType.Equals(ConfigType.Firmware.ToString()))
             {
                 foreach (var devices in appliedDevices)
                 {
@@ -216,8 +195,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 return deviceWithStatus;
             }
 
-            var successfulDevices = this.GetDevicesInQuery(Queries[QueryType.SUCCESSFUL], deploymentId);
-            var failedDevices = this.GetDevicesInQuery(Queries[QueryType.FAILED], deploymentId);
+            var successfulDevices = this.GetDevicesInQuery(queries[QueryType.SUCCESSFUL], deploymentId);
+            var failedDevices = this.GetDevicesInQuery(queries[QueryType.FAILED], deploymentId);
 
             foreach (var successfulDevice in successfulDevices)
             {
@@ -243,7 +222,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
         private HashSet<string> GetDevicesInQuery(string hubQuery, string deploymentId)
         {
             var query = string.Format(hubQuery, deploymentId);
-            var queryResponse = _tenantHelper.GetRegistry().CreateQuery(query);
+            var queryResponse = this.tenantHelper.GetRegistry().CreateQuery(query);
             var deviceIds = new HashSet<string>();
 
             try
@@ -254,14 +233,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                     var resultSet = queryResponse.GetNextAsJsonAsync();
                     foreach (var result in resultSet.Result)
                     {
-                        var deviceId = JToken.Parse(result)[DEVICE_ID_KEY];
+                        var deviceId = JToken.Parse(result)[DeviceIdKey];
                         deviceIds.Add(deviceId.ToString());
                     }
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting status of devices in query {query}", query);
+                this.logger.LogError(ex, "Error getting status of devices in query {query}", query);
             }
 
             return deviceIds;

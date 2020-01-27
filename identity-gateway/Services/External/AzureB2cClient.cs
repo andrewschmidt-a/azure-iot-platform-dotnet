@@ -1,32 +1,35 @@
+// <copyright file="AzureB2cClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services.External
+namespace Mmm.Iot.IdentityGateway.Services.External
 {
     public class AzureB2cClient : IAzureB2cClient
     {
-        public string serviceUri;
+        private readonly string serviceUri;
 
-        private readonly IExternalRequestHelper _requestHelper;
+        private readonly IExternalRequestHelper requestHelper;
 
         public AzureB2cClient(
             AppConfig config,
             IExternalRequestHelper requestHelper)
         {
             this.serviceUri = config.Global.AzureB2cBaseUri;
-            this._requestHelper = requestHelper;
+            this.requestHelper = requestHelper;
         }
 
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             try
             {
-                var response = await this._requestHelper.ProcessRequestAsync(HttpMethod.Get, this.serviceUri);
+                var response = await this.requestHelper.ProcessRequestAsync(HttpMethod.Get, this.serviceUri);
                 if (response.IsSuccessStatusCode)
                 {
                     return new StatusResultServiceModel(response.IsSuccessStatusCode, "Alive and well!");

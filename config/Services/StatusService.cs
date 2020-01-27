@@ -1,35 +1,35 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="StatusService.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services;
-using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Config.Services.External;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Config.Services.External;
 
-namespace Mmm.Platform.IoT.Config.Services
+namespace Mmm.Iot.Config.Services
 {
     public class StatusService : StatusServiceBase
     {
-        public override IDictionary<string, IStatusOperation> dependencies { get; set; }
-
         public StatusService(
             AppConfig config,
             IAsaManagerClient asaManager,
             IStorageAdapterClient storageAdapter,
             IDeviceTelemetryClient deviceTelemetry,
-            IDeviceSimulationClient deviceSimulation) :
-            base(config)
+            IDeviceSimulationClient deviceSimulation)
+                : base(config)
         {
-            this.dependencies = new Dictionary<string, IStatusOperation>
+            this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "Storage Adapter", storageAdapter },
                 { "Device Telemetry", deviceTelemetry },
                 { "Device Simulation", deviceSimulation },
-                { "Asa Manager", asaManager }
+                { "Asa Manager", asaManager },
             };
         }
+
+        public override IDictionary<string, IStatusOperation> Dependencies { get; set; }
     }
 }

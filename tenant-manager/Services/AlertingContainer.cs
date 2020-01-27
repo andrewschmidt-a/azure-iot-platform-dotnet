@@ -1,48 +1,35 @@
+// <copyright file="AlertingContainer.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.TenantManager.Services.Helpers;
-using Mmm.Platform.IoT.TenantManager.Services.Models;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.TenantManager.Services.Helpers;
+using Mmm.Iot.TenantManager.Services.Models;
 
-namespace Mmm.Platform.IoT.TenantManager.Services
+namespace Mmm.Iot.TenantManager.Services
 {
     public class AlertingContainer : IAlertingContainer
     {
-        private const string SA_NAME_FORMAT = "sa-{0}";
-
-        // collection and iothub naming 
-        public readonly ITenantContainer _tenantContainer;
-        public readonly IStreamAnalyticsHelper _streamAnalyticsHelper;
-        public readonly IRunbookHelper _runbookHelper;
+        private const string SaNameFormat = "sa-{0}";
+        private readonly ITenantContainer tenantContainer;
+        private readonly IStreamAnalyticsHelper streamAnalyticsHelper;
+        private readonly IRunbookHelper runbookHelper;
 
         public AlertingContainer(
             ITenantContainer tenantContainer,
             IStreamAnalyticsHelper streamAnalyticsHelper,
-            IRunbookHelper RunbookHelper)
+            IRunbookHelper runbookHelper)
         {
-            this._tenantContainer = tenantContainer;
-            this._streamAnalyticsHelper = streamAnalyticsHelper;
-            this._runbookHelper = RunbookHelper;
-        }
-
-        private async Task<TenantModel> GetTenantFromContainerAsync(string tenantId)
-        {
-            TenantModel tenant = await this._tenantContainer.GetTenantAsync(tenantId);
-            if (tenant == null)
-            {
-                throw new Exception("The given tenant does not exist.");
-            }
-            bool tenantReady = await this._tenantContainer.TenantIsReadyAsync(tenantId);
-            if (!tenantReady)
-            {
-                throw new Exception("The tenant is not fully deployed yet. Please wait for the tenant to fully deploy before performing alerting operations");
-            }
-            return tenant;
+            this.tenantContainer = tenantContainer;
+            this.streamAnalyticsHelper = streamAnalyticsHelper;
+            this.runbookHelper = runbookHelper;
         }
 
         public bool SaJobExists(StreamAnalyticsJobModel saJobModel)
         {
-            return !String.IsNullOrEmpty(saJobModel.StreamAnalyticsJobName) && !String.IsNullOrEmpty(saJobModel.JobState);
+            return !string.IsNullOrEmpty(saJobModel.StreamAnalyticsJobName) && !string.IsNullOrEmpty(saJobModel.JobState);
         }
 
         public async Task<StreamAnalyticsJobModel> AddAlertingAsync(string tenantId)
@@ -54,27 +41,27 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             }
 
             TenantModel tenant = await this.GetTenantFromContainerAsync(tenantId);
-            string saJobName = String.Format(SA_NAME_FORMAT, tenantId.Substring(0, 8));
-            await this._runbookHelper.CreateAlerting(tenantId, saJobName, tenant.IotHubName);
+            string saJobName = string.Format(SaNameFormat, tenantId.Substring(0, 8));
+            await this.runbookHelper.CreateAlerting(tenantId, saJobName, tenant.IotHubName);
             return new StreamAnalyticsJobModel
             {
                 TenantId = tenant.TenantId,
-                StreamAnalyticsJobName = saJobName, 
+                StreamAnalyticsJobName = saJobName,
                 IsActive = false,
-                JobState = "Creating"
+                JobState = "Creating",
             };
         }
 
         public async Task<StreamAnalyticsJobModel> RemoveAlertingAsync(string tenantId)
         {
             TenantModel tenant = await this.GetTenantFromContainerAsync(tenantId);
-            await this._runbookHelper.DeleteAlerting(tenantId, tenant.SAJobName);
+            await this.runbookHelper.DeleteAlerting(tenantId, tenant.SAJobName);
             return new StreamAnalyticsJobModel
             {
                 TenantId = tenant.TenantId,
-                StreamAnalyticsJobName = tenant.SAJobName, 
+                StreamAnalyticsJobName = tenant.SAJobName,
                 IsActive = false,
-                JobState = "Deleting"
+                JobState = "Deleting",
             };
         }
 
@@ -83,22 +70,22 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             TenantModel tenant = await this.GetTenantFromContainerAsync(tenantId);
             try
             {
-                var job = await this._streamAnalyticsHelper.GetJobAsync(tenant.SAJobName);
-                return new StreamAnalyticsJobModel 
+                var job = await this.streamAnalyticsHelper.GetJobAsync(tenant.SAJobName);
+                return new StreamAnalyticsJobModel
                 {
                     TenantId = tenant.TenantId,
                     JobState = job.JobState,
-                    IsActive = this._streamAnalyticsHelper.JobIsActive(job),
+                    IsActive = this.streamAnalyticsHelper.JobIsActive(job),
                     StreamAnalyticsJobName = job.Name,
                 };
             }
             catch (ResourceNotFoundException)
             {
                 // Return a model with null information regarding the stream analytics job if it does not exist
-                return new StreamAnalyticsJobModel 
+                return new StreamAnalyticsJobModel
                 {
                     TenantId = tenant.TenantId,
-                    IsActive = false
+                    IsActive = false,
                 };
             }
             catch (Exception e)
@@ -114,7 +101,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 throw new Exception("There is no StreamAnalyticsJob is available to start for this tenant.");
             }
-            await this._streamAnalyticsHelper.StartAsync(saJobModel.StreamAnalyticsJobName);
+
+            await this.streamAnalyticsHelper.StartAsync(saJobModel.StreamAnalyticsJobName);
             return saJobModel;
         }
 
@@ -125,8 +113,26 @@ namespace Mmm.Platform.IoT.TenantManager.Services
             {
                 throw new Exception("There is no StreamAnalyticsJob is available to stop for this tenant.");
             }
-            await this._streamAnalyticsHelper.StopAsync(saJobModel.StreamAnalyticsJobName);
+
+            await this.streamAnalyticsHelper.StopAsync(saJobModel.StreamAnalyticsJobName);
             return saJobModel;
+        }
+
+        private async Task<TenantModel> GetTenantFromContainerAsync(string tenantId)
+        {
+            TenantModel tenant = await this.tenantContainer.GetTenantAsync(tenantId);
+            if (tenant == null)
+            {
+                throw new Exception("The given tenant does not exist.");
+            }
+
+            bool tenantReady = await this.tenantContainer.TenantIsReadyAsync(tenantId);
+            if (!tenantReady)
+            {
+                throw new Exception("The tenant is not fully deployed yet. Please wait for the tenant to fully deploy before performing alerting operations");
+            }
+
+            return tenant;
         }
     }
 }

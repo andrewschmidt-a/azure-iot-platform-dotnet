@@ -2,5 +2,5 @@
 
 cd /app/
 
-cd webservice && dotnet Mmm.Platform.IoT.IoTHubManager.WebService.dll && \
+cd webservice && dotnet Mmm.Iot.IoTHubManager.WebService.dll && \
     fg
