@@ -357,7 +357,8 @@ export class PackageNew extends LinkedComponent {
             {
               !completedSuccessfully && configType == "Firmware" &&
               <div>
-                <div className="new-package-upload-container">
+                {
+                !uploadedFirmwareSuccessfully && <div className="new-package-upload-container">
                   <label htmlFor="hidden-input-id" className="new-package-browse-click">
                     <span
                       role="button"
@@ -378,7 +379,10 @@ export class PackageNew extends LinkedComponent {
                   {t('packages.flyouts.new.browseFirmwareText')}
                   
                 </div>
-                { uploadedFirmwareSuccessfully && <div><JSONInput
+                }
+                { uploadedFirmwareSuccessfully && <div>
+                  <br/>
+                  <JSONInput
                     id          = 'id'
                     placeholder = { packageJson }
                     locale      = { locale }
