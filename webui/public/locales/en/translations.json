@@ -142,6 +142,44 @@
       "tenantActionColumn": "Action"
     }
   },
+  "createDeviceQueryFlyout": {
+    "title": "Query Devices",
+    "create": "Query",
+    "reset": "Reset",
+    "createDeviceGroup": "Create New Device Group"
+  },
+  "deviceQueryConditions": {
+    "condition": "Condition {{headerCount}}",
+    "delete": "Delete",
+    "field": "Field",
+    "fieldPlaceholder": "Select field",
+    "operator": "Operator",
+    "operatorPlaceholder": "Select operator",
+    "operatorOptions": {
+      "EQ": "= Equals",
+      "GT": "> Greater than",
+      "LT": "< Less than",
+      "GE": ">= Greater than or equal",
+      "LE": "<= Less than or equal"
+    },
+    "value": "Value",
+    "valuePlaceholder": "Enter value",
+    "type": "Type",
+    "typePlaceholder": "Select type",
+    "typeOptions": {
+      "Number": "Number",
+      "Text": "Text"
+    },
+    "remove": "Remove condition",
+    "add": "Add condition",
+    "errorMsg": {
+      "fieldCantBeEmpty": "Field is required",
+      "operatorCantBeEmpty": "Operator is required",
+      "valueCantBeEmpty": "Value is required",
+      "typeCantBeEmpty": "Type is required",
+      "selectedType": "Must be of the selected type"
+    }
+  },
   "deviceGroupsFlyout": {
     "actions": "Actions",
     "cancel": "Cancel",
@@ -152,39 +190,9 @@
     "edit": "Edit a device group",
     "name": "Name",
     "namePlaceHolder": "Device group name",
-    "addCondition": "Add condition",
     "save": "Save",
     "errorMsg": {
-      "nameCantBeEmpty": "Name is required",
-      "fieldCantBeEmpty": "Field is required",
-      "operatorCantBeEmpty": "Operator is required",
-      "valueCantBeEmpty": "Value is required",
-      "typeCantBeEmpty": "Type is required",
-      "selectedType": "Must be of the selected type"
-    },
-    "conditions": {
-      "condition": "Condition {{headerCount}}",
-      "delete": "Delete",
-      "field": "Field",
-      "fieldPlaceholder": "Select field",
-      "operator": "Operator",
-      "operatorPlaceholder": "Select operator",
-      "operatorOptions": {
-        "EQ": "= Equals",
-        "GT": "> Greater than",
-        "LT": "< Less than",
-        "GE": ">= Greater than or equal",
-        "LE": "<= Less than or equal"
-      },
-      "value": "Value",
-      "valuePlaceholder": "Enter value",
-      "type": "Type",
-      "typePlaceholder": "Select type",
-      "typeOptions": {
-        "Number": "Number",
-        "Text": "Text"
-      },
-      "remove": "Remove condition"
+      "nameCantBeEmpty": "Name is required"
     }
   },
   "dashboard": {
@@ -302,6 +310,9 @@
       "yes": "Yes"
     },
     "flyouts": {
+      "createDeviceQuery": {
+        "title": "Query Devices"
+      },
       "details": {
         "title": "Device Details",
         "noDevice": "Oops, we were not able to find the device.",

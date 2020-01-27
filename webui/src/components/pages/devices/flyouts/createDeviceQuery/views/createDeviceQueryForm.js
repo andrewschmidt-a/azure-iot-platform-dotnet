@@ -3,6 +3,7 @@
 import React from 'react';
 
 import { permissions, toDiagnosticsModel } from 'services/models';
+import { toConditionQueryModel } from 'services/models/iotHubManagerModels';
 import { svgs, LinkedComponent, Validator } from 'utilities';
 import {
   AjaxError,
@@ -12,12 +13,10 @@ import {
   FormGroup,
   FormLabel,
   Indicator,
-  Protected
 } from 'components/shared';
 import { ConfigService } from 'services';
 import {
   toCreateDeviceGroupRequestModel,
-  toUpdateDeviceGroupRequestModel
 } from 'services/models';
 
 import Flyout from 'components/shared/flyout';
@@ -39,92 +38,59 @@ const newCondition = () => ({
 const operators = ['EQ', 'GT', 'LT', 'GE', 'LE'];
 const valueTypes = ['Number', 'Text'];
 
-class DeviceGroupForm extends LinkedComponent {
+class CreateDeviceQueryForm extends LinkedComponent {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      id: undefined,
-      eTag: undefined,
-      displayName: '',
-      conditions: [newCondition()],
+      deviceQueryConditions: this.props.activeDeviceQueryConditions.length == 0 ? [newCondition()] : this.props.activeDeviceQueryConditions,
       isPending: false,
       error: undefined,
-      isEdit: this.props.selectedDeviceGroup
     };
 
     // State to input links
-    this.nameLink = this.linkTo('displayName')
-      .check(Validator.notEmpty, () => this.props.t('deviceGroupsFlyout.errorMsg.nameCantBeEmpty'));
-
-    this.conditionsLink = this.linkTo('conditions');
+    this.conditionsLink = this.linkTo('deviceQueryConditions');
     this.subscriptions = [];
+  }
+
+  conditionIsNew(condition) {
+    return !condition.field && !condition.operator && !condition.type && !condition.value;
   }
 
   formIsValid() {
     return [
-      this.nameLink,
       this.conditionsLink
     ].every(link => !link.error);
-  }
-
-  componentDidMount() {
-    if (this.state.isEdit) this.computeState(this.props);
   }
 
   componentWillUnmount() {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  computeState = ({
-    selectedDeviceGroup: {
-      id, eTag, conditions, displayName
-    }
-  }) => {
-    if (this.state.isEdit) {
-      this.setState({
-        id,
-        eTag,
-        displayName,
-        conditions: conditions.map(condition => ({
-          field: condition.key,
-          operator: condition.operator,
-          type: isNaN(condition.value) ? 'Text' : 'Number',
-          value: condition.value,
-          key: conditionKey++
-        }))
-      });
-    }
-  }
-
-  toSelectOption = ({ id, name }) => ({ value: id, label: name });
-
-  selectServiceCall = () => {
-    if (this.state.isEdit) {
-      return ConfigService.updateDeviceGroup(this.state.id, toUpdateDeviceGroupRequestModel(this.state));
-    }
-    return ConfigService.createDeviceGroup(toCreateDeviceGroupRequestModel(this.state));
-  };
-
   apply = (event) => {
-    this.props.logEvent(toDiagnosticsModel('DeviceGroup_Save', {}));
+    this.props.logEvent(toDiagnosticsModel('CreateDeviceQuery_Create', {}));
     event.preventDefault();
     this.setState({ error: undefined, isPending: true });
-    this.subscriptions.push(
-      this.selectServiceCall()
-        .subscribe(
-          deviceGroup => {
-            this.props.insertDeviceGroups([deviceGroup]);
-            this.props.cancel();
-          },
-          error => this.setState({ error, isPending: false }),
-        )
-    );
+    var rawQueryConditions = this.state.deviceQueryConditions.filter(condition => {
+      // remove conditions that are new (have not been edited)
+      return !this.conditionIsNew(condition)
+    });
+    const queryConditions = toConditionQueryModel(rawQueryConditions);
+    const deviceGroupConditions = this.props.activeDeviceGroupConditions.map(condition => {
+      // convert models to conditionQueryModel if they are still in the raw state
+      // DG condition may be in raw state if the device group was changed while the flyout is open
+      return ('field' in condition) ? toConditionQueryModel(condition) : condition
+    });
+
+    this.props.queryDevices(queryConditions, deviceGroupConditions);
+
+    this.props.setActiveDeviceQueryConditions(rawQueryConditions);
+    this.setState({ error: undefined, isPending: false });
   };
 
   addCondition = () => {
-    this.props.logEvent(toDiagnosticsModel('DeviceGroup_AddCondition', {}));
+    this.props.logEvent(toDiagnosticsModel('CreateDeviceQuery_AddCondition', {}));
     return this.conditionsLink.set([
       ...this.conditionsLink.value,
       newCondition()
@@ -133,26 +99,32 @@ class DeviceGroupForm extends LinkedComponent {
 
   deleteCondition = (index) =>
     () => {
-      this.props.logEvent(toDiagnosticsModel('DeviceGroup_RemoveCondition', {}));
+      this.props.logEvent(toDiagnosticsModel('CreateDeviceQuery_RemoveCondition', {}));
       return this.conditionsLink.set(this.conditionsLink.value.filter((_, idx) => index !== idx));
     }
 
-  deleteDeviceGroup = () => {
-    this.props.logEvent(toDiagnosticsModel('DeviceGroup_Delete', {}));
-    this.setState({ error: undefined, isPending: true });
-    ConfigService.deleteDeviceGroup(this.state.id)
-      .subscribe(
-        deletedGroupId => {
-          this.props.deleteDeviceGroups([deletedGroupId]);
-          this.props.cancel();
-        },
-        error => this.setState({ error, isPending: false }),
-      );
-  };
+  onReset = () => {
+    const resetConditions = [newCondition()];
+    this.setState({ deviceGroupConditions: resetConditions, error: undefined, isPending: true });
+    this.props.setActiveDeviceQueryConditions(resetConditions);
+    this.props.fetchDevices();  // reload the devices grid with a blank query
+    this.render();
+    this.setState({ error: undefined, isPending: false});
+  }
 
-  onCancel = () => {
-    this.props.logEvent(toDiagnosticsModel('DeviceGroup_Cancel', {}));
-    this.props.cancel();
+  createDeviceGroupFromQuery = () => {
+    this.setState({ error: undefined, isPending: true });
+    // Create the name based on the query
+    const queryConditions = this.state.deviceQueryConditions.filter(condition => !this.conditionIsNew(condition));
+    var deviceQueryConditionName = queryConditions
+      .map(condition => condition.field + condition.operator + condition.value)
+      .join(';');
+    var deviceGroup = {
+      displayName: deviceQueryConditionName || 'All Devices',
+      conditions: queryConditions
+    };
+    this.props.insertDeviceGroup(deviceGroup);
+    this.setState({ error: undefined, isPending: false });
   }
 
   render () {
@@ -166,13 +138,13 @@ class DeviceGroupForm extends LinkedComponent {
         .map(({ value }) => value)
         .check(Validator.notEmpty, t('deviceQueryConditions.errorMsg.operatorCantBeEmpty'));
       const type = conditionLink.forkTo('type')
-      .map(({ value }) => value)
+        .map(({ value }) => value)
         .check(Validator.notEmpty, t('deviceQueryConditions.errorMsg.typeCantBeEmpty'));
       const value = conditionLink.forkTo('value')
         .check(Validator.notEmpty, t('deviceQueryConditions.errorMsg.valueCantBeEmpty'))
         .check(val => type.value === 'Number' ? !isNaN(val): true, t('deviceQueryConditions.errorMsg.selectedType'));
       const edited = !(!field.value && !operator.value && !value.value && !type.value);
-      const error = (edited && (field.error || operator.error || value.error || type.error)) || '';
+      var error = (edited && (field.error || operator.error || value.error || type.error)) || '';
       return { field, operator, value, type, edited, error };
     });
 
@@ -191,30 +163,13 @@ class DeviceGroupForm extends LinkedComponent {
     return (
       <form onSubmit={this.apply}>
         <Section.Container collapsable={false} className="borderless">
-          <Section.Header>
-            {
-              this.state.isEdit
-                ? t('deviceGroupsFlyout.edit')
-                : t('deviceGroupsFlyout.new')
-            }
-          </Section.Header>
+          <Btn className="add-btn" svg={svgs.plus} onClick={this.addCondition}>
+            {t(`deviceQueryConditions.add`)}
+          </Btn>
           <Section.Content>
-            <FormGroup>
-              <FormLabel isRequired="true">
-                {t('deviceGroupsFlyout.name')}
-              </FormLabel>
-              <FormControl
-                type="text"
-                className="long"
-                placeholder={t('deviceGroupsFlyout.namePlaceHolder')}
-                link={this.nameLink} />
-            </FormGroup>
-            <Btn className="add-btn" svg={svgs.plus} onClick={this.addCondition}>
-              {t(`deviceQueryConditions.add`)}
-            </Btn>
             {
               conditionLinks.map((condition, idx) => (
-                <Section.Container key={this.state.conditions[idx].key}>
+                <Section.Container key={this.state.deviceQueryConditions[idx].key}>
                   <Section.Header>
                     {t('deviceQueryConditions.condition', { headerCount: idx + 1 })}
                   </Section.Header>
@@ -283,26 +238,24 @@ class DeviceGroupForm extends LinkedComponent {
             }
             { this.state.isPending && <Indicator pattern="bar" size="medium" />}
             <BtnToolbar>
-              <Protected permission={permissions.updateDeviceGroups}>
-                <Btn
-                  primary
-                  disabled={!this.formIsValid() || conditionHasErrors || this.state.isPending}
-                  type="submit">
-                  {t('deviceGroupsFlyout.save')}
-                </Btn>
-              </Protected>
-              <Btn svg={svgs.cancelX} onClick={this.onCancel}>{t('deviceGroupsFlyout.cancel')}</Btn>
-              {
-                // Don't show delete btn if it is a new group or the group is currently active
-                this.state.isEdit &&
-                <Protected permission={permissions.deleteDeviceGroups}>
-                  <Btn svg={svgs.trash}
-                    onClick={this.deleteDeviceGroup}
-                    disabled={this.props.activeDeviceGroupId === this.state.id || this.state.isPending}>
-                    {t('deviceQueryConditions.delete')}
-                  </Btn>
-                </Protected>
-              }
+              <Btn
+                primary
+                disabled={!this.formIsValid() || conditionHasErrors || this.state.isPending}
+                type="submit">
+                {t('createDeviceQueryFlyout.create')}
+              </Btn>
+              <Btn
+                disabled={this.state.isPending}
+                svg={svgs.plus}
+                onClick={this.createDeviceGroupFromQuery}>
+                {t('createDeviceQueryFlyout.createDeviceGroup')}
+              </Btn>
+              <Btn
+                disabled={this.state.isPending}
+                svg={svgs.cancelX}
+                onClick={this.onReset}>
+                {t('createDeviceQueryFlyout.reset')}
+              </Btn>
             </BtnToolbar>
             { this.state.error && <AjaxError t={t} error={this.state.error} /> }
           </Section.Content>
@@ -312,4 +265,4 @@ class DeviceGroupForm extends LinkedComponent {
   }
 }
 
-export default DeviceGroupForm;
+export default CreateDeviceQueryForm;

@@ -9,6 +9,7 @@ import { DeviceJobsContainer } from '../flyouts/deviceJobs';
 import { DeviceDetailsContainer } from '../flyouts/deviceDetails';
 import { isFunc, svgs, translateColumnDefs } from 'utilities';
 import { checkboxColumn } from 'components/shared/pcsGrid/pcsGridConfig';
+import { CreateDeviceQueryContainer } from '../flyouts/createDeviceQuery';
 
 const closedFlyoutState = {
   openFlyoutName: undefined,

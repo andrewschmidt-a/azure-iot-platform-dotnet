@@ -25,6 +25,7 @@ import {
 import { svgs, compareByProperty } from 'utilities';
 import { toSinglePropertyDiagnosticsModel } from 'services/models';
 import { stat } from 'fs';
+import { create } from 'domain';
 
 // ========================= Epics - START
 const HandleErrorAlerting = (fromAction) => (error) => {
@@ -240,6 +241,7 @@ const initialState = {
   ...errorPendingInitialState,
   deviceGroups: {},
   deviceGroupFilters: {},
+  activeDeviceQueryConditions: [],
   activeDeviceGroupId: undefined,
   theme: 'mmm',
   version: undefined,
@@ -249,6 +251,7 @@ const initialState = {
   name: 'header.companyName',
   isDefaultLogo: true,
   deviceGroupFlyoutIsOpen: false,
+  createDeviceQueryFlyoutIsOpen: false,
   timeInterval: 'PT1H',
   settings: {
     azureMapsKey: '',
@@ -376,6 +379,14 @@ const setDeviceGroupFlyoutReducer = (state, { payload }) => update(state, {
   deviceGroupFlyoutIsOpen: { $set: !!payload }
 });
 
+const setCreateDeviceQueryFlyoutReducer = (state, { payload }) => update(state, {
+  createDeviceQueryFlyoutIsOpen: { $set: !!payload }
+});
+
+const setActiveDeviceQueryConditionsReducer = (state, { payload }) => update(state, {
+  activeDeviceQueryConditions: { $set: payload }
+});
+
 const updateCurrentWindow = (state, { payload }) => update(state,
   { currentWindow: { $set: payload } }
 );
@@ -409,6 +420,8 @@ export const redux = createReducerScenario({
   updateActionPollingTimeout: { type: 'APP_UPDATE_ACTION_POLLING_TIMEOUT', reducer: updateActionPollingTimeoutReducer },
   getReleaseInformation: { type: 'APP_GET_VERSION', reducer: releaseReducer },
   setDeviceGroupFlyoutStatus: { type: 'APP_SET_DEVICE_GROUP_FLYOUT_STATUS', reducer: setDeviceGroupFlyoutReducer },
+  setActiveDeviceQueryConditions: { type: 'APP_DEVICE_QUERY_CONDITIONS_UPDATE', reducer: setActiveDeviceQueryConditionsReducer },
+  setCreateDeviceQueryFlyoutStatus: { type: 'APP_SET_CREATE_DEVICE_QUERY_FLYOUT_STATUS', reducer: setCreateDeviceQueryFlyoutReducer },
   updateTimeInterval: { type: 'APP_UPDATE_TIME_INTERVAL', reducer: updateTimeInterval },
   updateCurrentWindow: { type: 'APP_UPDATE_CURRENT_WINDOW', reducer: updateCurrentWindow },
   isFetching: { multiType: fetchableTypes, reducer: pendingReducer }
@@ -424,10 +437,12 @@ export const getTheme = state => getAppReducer(state).theme;
 export const getTimeSeriesExplorerUrl = state => getAppReducer(state).timeSeriesExplorerUrl;
 export const getDeviceGroupEntities = state => getAppReducer(state).deviceGroups;
 export const getActiveDeviceGroupId = state => getAppReducer(state).activeDeviceGroupId;
+export const getActiveDeviceQueryConditions = state => getAppReducer(state).activeDeviceQueryConditions;
 export const getSettings = state => getAppReducer(state).settings;
 export const getAzureMapsKey = state => getSettings(state).azureMapsKey;
 export const getDiagnosticsOptIn = state => getSettings(state).diagnosticsOptIn;
 export const getDeviceGroupFlyoutStatus = state => getAppReducer(state).deviceGroupFlyoutIsOpen;
+export const getCreateDeviceQueryFlyoutStatus = state => getAppReducer(state).createDeviceQueryFlyoutIsOpen;
 export const getDeviceGroupsError = state =>
   getError(getAppReducer(state), epics.actionTypes.fetchDeviceGroups);
 export const getDeviceGroupsPendingStatus = state =>

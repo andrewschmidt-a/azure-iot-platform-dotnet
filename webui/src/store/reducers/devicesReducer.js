@@ -30,7 +30,14 @@ export const epics = createEpicScenario({
   fetchDevices: {
     type: 'DEVICES_FETCH',
     epic: (fromAction, store) => {
-      const conditions = getActiveDeviceGroupConditions(store.getState());
+      var conditions = [];
+      if (fromAction.payload) {
+        // override conditions by using the payload params
+        conditions = fromAction.payload;
+      } else {
+        // if not payload params, just take the active device group conditions
+        conditions = getActiveDeviceGroupConditions(store.getState());
+      }
       return IoTHubManagerService.getDevices(conditions)
         .map(toActionCreator(redux.actions.updateDevices, fromAction))
         .catch(handleError(fromAction))

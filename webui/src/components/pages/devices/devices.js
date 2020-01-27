@@ -20,6 +20,7 @@ import {
 } from 'components/shared';
 import { DeviceNewContainer } from './flyouts/deviceNew';
 import { SIMManagementContainer } from './flyouts/SIMManagement';
+import { CreateDeviceQueryContainer } from './flyouts/createDeviceQuery';
 import { svgs } from 'utilities';
 
 import './devices.scss';
@@ -40,8 +41,14 @@ export class Devices extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isPending && nextProps.isPending !== this.props.isPending) {
-      // If the grid data refreshes, hide the flyout and deselect soft selections
-      this.setState(closedFlyoutState);
+      // If the grid data refreshes, hide most flyouts and deselect soft selections
+      switch (this.state.openFlyoutName) {
+        case 'create-device-query':
+          // leave this flyout open even on grid refresh
+          break;;
+        default:
+          this.setState(closedFlyoutState);
+      }
     }
   }
 
@@ -51,6 +58,11 @@ export class Devices extends Component {
   openNewDeviceFlyout = () => {
     this.setState({ openFlyoutName: 'new-device' });
     this.props.logEvent(toDiagnosticsModel('Devices_NewClick', {}));
+  }
+
+  openCreateDeviceQueryFlyout = () => {
+    this.setState({openFlyoutName: 'create-device-query' });
+    this.props.logEvent(toDiagnosticsModel('CreateDeviceQuery_Click'));
   }
 
   onContextMenuChange = contextBtns => this.setState({
@@ -78,6 +90,7 @@ export class Devices extends Component {
     };
     const newDeviceFlyoutOpen = this.state.openFlyoutName === 'new-device';
     const simManagementFlyoutOpen = this.state.openFlyoutName === 'sim-management';
+    const createDeviceQueryFlyoutOpen = this.state.openFlyoutName === 'create-device-query';
 
     const error = deviceGroupError || deviceError;
 
@@ -91,6 +104,7 @@ export class Devices extends Component {
             </Protected>
           </ContextMenuAlign>
           <ContextMenuAlign>
+            <Btn svg={svgs.manageFilters} onClick={this.openCreateDeviceQueryFlyout}>{t('devices.flyouts.createDeviceQuery.title')}</Btn>
             <SearchInput
             onChange={this.searchOnChange}
             onClick={this.onSearchClick}
@@ -112,6 +126,7 @@ export class Devices extends Component {
           {!error && <DevicesGridContainer {...gridProps} />}
           {newDeviceFlyoutOpen && <DeviceNewContainer onClose={this.closeFlyout} />}
           {simManagementFlyoutOpen && <SIMManagementContainer onClose={this.closeFlyout} />}
+          {createDeviceQueryFlyoutOpen && <CreateDeviceQueryContainer onClose={this.closeFlyout} fetchDevices={fetchDevices} />}
         </PageContent>
       </ComponentArray>
     );
