@@ -34,6 +34,9 @@ namespace Mmm.Iot.IoTHubManager.Services
         private const string PriorityParameter = "priority";
         private const string DeviceIdKey = "DeviceId";
         private const string EdgeManifestSchema = "schemaVersion";
+        private const string FailedQueryName = "error";
+        private const string SuccessQueryName = "current";
+
         private readonly ILogger logger;
         private ITenantConnectionHelper tenantHelper;
 
@@ -195,8 +198,9 @@ namespace Mmm.Iot.IoTHubManager.Services
                 return deviceWithStatus;
             }
 
-            var successfulDevices = this.GetDevicesInQuery(queries[QueryType.SUCCESSFUL], deploymentId);
-            var failedDevices = this.GetDevicesInQuery(queries[QueryType.FAILED], deploymentId);
+            // Get reported status from custom Metrics if available otherwise use default queries
+            var successfulDevices = this.GetDevicesInQuery(deployment.Metrics.Queries.ContainsKey(SuccessQueryName) ? deployment.Metrics.Queries[SuccessQueryName] : queries[QueryType.SUCCESSFUL], deploymentId);
+            var failedDevices = this.GetDevicesInQuery(deployment.Metrics.Queries.ContainsKey(FailedQueryName) ? deployment.Metrics.Queries[FailedQueryName] : queries[QueryType.FAILED], deploymentId);
 
             foreach (var successfulDevice in successfulDevices)
             {

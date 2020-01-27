@@ -97,6 +97,12 @@ export const toNewPackageRequestModel = ({
   data.append('Package', packageFile);
   return data;
 }
+export const toNewFirmwareUploadRequestModel = (firmwareFile) => {
+  const data = new FormData();
+  data.append(firmwareFile.name, firmwareFile);
+  return data;
+}
+export const toFirmwareModel = (response ={}) => { return {FileUri: response.softwarePackageURL || "", CheckSum: response.CheckSum.shA1 || "" }}
 
 export const toPackagesModel = (response = {}) => getItems(response)
   .map(toPackageModel);

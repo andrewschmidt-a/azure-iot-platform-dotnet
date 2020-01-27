@@ -134,7 +134,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Helpers
             IDictionary<string, string> customMetrics,
             string deploymentId)
         {
-            const string deploymentClause = @"configurations\.\[\[[a-zA-Z0-9\-]+\]\]";
+            const string deploymentClause = @"configurations\.\[\[.+\]\]"; // replace all configuration clauses in custom metrics
             string updatedDeploymentClause = $"configurations.[[{deploymentId}]]";
             IDictionary<string, string> metrics = new Dictionary<string, string>();
 
