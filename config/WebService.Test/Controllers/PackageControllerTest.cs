@@ -3,15 +3,19 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.AspNetCore.Mvc;
+using Mmm.Iot.Common.Services;
 using Mmm.Iot.Common.TestHelpers;
 using Mmm.Iot.Config.Services;
 using Mmm.Iot.Config.Services.Models;
 using Mmm.Iot.Config.WebService.Controllers;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Moq;
 using Xunit;
 
@@ -20,15 +24,36 @@ namespace Mmm.Iot.Config.WebService.Test.Controllers
     public class PackageControllerTest : IDisposable
     {
         private const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
+        private const string TenantId = "TenantId";
         private readonly Mock<IStorage> mockStorage;
         private readonly PackagesController controller;
         private readonly Random rand;
+        private Mock<HttpContext> mockHttpContext;
+        private Mock<HttpRequest> mockHttpRequest;
+        private IDictionary<object, object> contextItems;
         private bool disposedValue = false;
 
         public PackageControllerTest()
         {
             this.mockStorage = new Mock<IStorage>();
-            this.controller = new PackagesController(this.mockStorage.Object);
+            this.mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
+            this.mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
+            this.mockHttpRequest.Setup(m => m.HttpContext).Returns(this.mockHttpContext.Object);
+            this.mockHttpContext.Setup(m => m.Request).Returns(this.mockHttpRequest.Object);
+            this.controller = new PackagesController(this.mockStorage.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = this.mockHttpContext.Object,
+                },
+            };
+            this.contextItems = new Dictionary<object, object>
+            {
+                {
+                    RequestExtension.ContextKeyTenantId, TenantId
+                },
+            };
+            this.mockHttpContext.Setup(m => m.Items).Returns(this.contextItems);
             this.rand = new Random();
         }
 
@@ -207,6 +232,43 @@ namespace Mmm.Iot.Config.WebService.Test.Controllers
         public void Dispose()
         {
             this.Dispose(true);
+        }
+
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        [InlineData("filename", true, false)]
+        [InlineData("filename", false, true)]
+        public async Task UploadFileVerificationTest(string filename, bool isValidFileProvided, bool expectException)
+        {
+            // Arrange
+            IFormFile file = null;
+
+            UploadFileServiceModel uploadFileModel = new UploadFileServiceModel();
+            uploadFileModel.CheckSum = new CheckSumModel();
+            uploadFileModel.SoftwarePackageURL = "filename";
+            uploadFileModel.CheckSum.MD5 = "checkSum";
+
+            if (isValidFileProvided)
+            {
+                file = this.CreateSampleFile(filename, false);
+            }
+
+            this.mockStorage.Setup(x => x.UploadToBlobAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Stream>()))
+                            .ReturnsAsync(uploadFileModel);
+            try
+            {
+                // Act
+                var uploadedFileName = await this.controller.UploadFileAsync(file);
+
+                // Assert
+                Assert.False(expectException);
+                Assert.Equal(filename, uploadedFileName.SoftwarePackageURL);
+                Assert.Equal("checkSum", uploadedFileName.CheckSum.MD5);
+            }
+            catch (Exception)
+            {
+                Assert.True(expectException);
+            }
         }
 
         protected virtual void Dispose(bool disposing)

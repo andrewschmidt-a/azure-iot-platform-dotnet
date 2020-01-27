@@ -7,12 +7,14 @@ using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Iot.Common.Services;
 using Mmm.Iot.Common.Services.Exceptions;
 using Mmm.Iot.Common.Services.Filters;
 using Mmm.Iot.Config.Services;
 using Mmm.Iot.Config.Services.Models;
 using Mmm.Iot.Config.WebService.Helpers;
 using Mmm.Iot.Config.WebService.Models;
+using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Iot.Config.WebService.Controllers
 {
@@ -129,6 +131,25 @@ namespace Mmm.Iot.Config.WebService.Controllers
             }
 
             await this.storage.DeletePackageAsync(id);
+        }
+
+        [HttpPost("UploadFile")]
+        [Authorize("CreatePackages")]
+        public async Task<UploadFileServiceModel> UploadFileAsync(IFormFile uploadedFile)
+        {
+            UploadFileServiceModel uploadFileModel = null;
+            if (uploadedFile == null || uploadedFile.Length == 0 || string.IsNullOrEmpty(uploadedFile.FileName))
+            {
+                throw new InvalidInputException("Uploaded file is missing or invalid.");
+            }
+
+            using (var stream = uploadedFile.OpenReadStream())
+            {
+                var tenantId = this.GetTenantId();
+                uploadFileModel = await this.storage.UploadToBlobAsync(tenantId, uploadedFile.FileName, stream);
+            }
+
+            return uploadFileModel;
         }
     }
 }

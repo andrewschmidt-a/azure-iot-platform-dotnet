@@ -4,10 +4,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.Azure.Devices;
 using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Mmm.Iot.Common.Services.Config;
 using Mmm.Iot.Common.Services.Exceptions;
 using Mmm.Iot.Common.Services.External.AsaManager;
@@ -15,6 +19,7 @@ using Mmm.Iot.Common.Services.External.StorageAdapter;
 using Mmm.Iot.Config.Services.External;
 using Mmm.Iot.Config.Services.Helpers.PackageValidation;
 using Mmm.Iot.Config.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -31,6 +36,7 @@ namespace Mmm.Iot.Config.Services
         public const string PackagesConfigTypeKey = "config-types";
         public const string AzureMapsKey = "AzureMapsKey";
         public const string DateFormat = "yyyy-MM-dd'T'HH:mm:sszzz";
+        public const string SoftwarePackageStore = "software-package";
         private readonly IStorageAdapterClient client;
         private readonly IAsaManagerClient asaManager;
         private readonly AppConfig config;
@@ -293,12 +299,91 @@ namespace Mmm.Iot.Config.Services
             await this.client.UpdateAsync(PackagesCollectionId, PackagesConfigTypeKey, JsonConvert.SerializeObject(list), "*");
         }
 
-        private void AppendAzureMapsKey(JToken theme)
+        public async Task<UploadFileServiceModel> UploadToBlobAsync(string tenantId, string filename, Stream stream = null)
         {
-            if (theme[AzureMapsKey] == null)
+            CloudStorageAccount storageAccount = null;
+            CloudBlobContainer cloudBlobContainer = null;
+            UploadFileServiceModel uploadFileModel = new UploadFileServiceModel();
+
+            string url = string.Empty;
+            string md5CheckSum = string.Empty;
+            string sha1CheckSum = string.Empty;
+            string storageConnectionString = this.config.Global.StorageAccountConnectionString;
+            string duration = this.config.Global.PackageSharedAccessExpiryTime;
+
+            if (string.IsNullOrEmpty(tenantId))
             {
-                theme[AzureMapsKey] = this.config.ConfigService.AzureMapsKey;
+                this.logger.LogError("Tenant ID is blank, cannot create container without tenandId.");
+                return null;
             }
+
+            if (CloudStorageAccount.TryParse(storageConnectionString, out storageAccount))
+            {
+                try
+                {
+                    // Create the CloudBlobClient that represents the Blob storage endpoint for the storage account.
+                    CloudBlobClient cloudBlobClient = storageAccount.CreateCloudBlobClient();
+
+                    // Create a container
+                    cloudBlobContainer = cloudBlobClient.GetContainerReference($"{tenantId}-{SoftwarePackageStore}");
+
+                    // Create the container if it does not already exist
+                    await cloudBlobContainer.CreateIfNotExistsAsync();
+
+                    // Get a reference to the blob address, then upload the file to the blob.
+                    CloudBlockBlob cloudBlockBlob = cloudBlobContainer.GetBlockBlobReference(filename);
+
+                    if (stream != null)
+                    {
+                        await cloudBlockBlob.UploadFromStreamAsync(stream);
+                        md5CheckSum = cloudBlockBlob.Properties.ContentMD5;
+                        using (var sha = SHA1.Create())
+                        {
+                            var hash = sha.ComputeHash(stream);
+                            cloudBlockBlob.Metadata["SHA1"] = sha1CheckSum = Convert.ToBase64String(hash);
+                        }
+                    }
+                    else
+                    {
+                        this.logger.LogError("Empty stream object in the UploadToBlob method.");
+                        return null;
+                    }
+
+                    url = Convert.ToString(this.GetBlobSasUri(cloudBlobClient, cloudBlobContainer.Name, filename, duration));
+                    uploadFileModel.CheckSum = new CheckSumModel();
+                    uploadFileModel.SoftwarePackageURL = url;
+                    uploadFileModel.CheckSum.MD5 = md5CheckSum;
+                    uploadFileModel.CheckSum.SHA1 = sha1CheckSum;
+                    return uploadFileModel;
+                }
+                catch (StorageException ex)
+                {
+                    this.logger.LogError($"Exception in the UploadToBlob method- Message: {ex.Message} : Stack Trace - {ex.StackTrace.ToString()}");
+                    return null;
+                }
+            }
+            else
+            {
+                this.logger.LogError("Error parsing CloudStorageAccount in UploadToBlob method");
+                return null;
+            }
+        }
+
+        private string GetBlobSasUri(CloudBlobClient cloudBlobClient, string containerName, string blobName, string timeoutDuration)
+        {
+            string[] time = timeoutDuration.Split(':');
+            CloudBlobContainer container = cloudBlobClient.GetContainerReference(containerName);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
+            SharedAccessBlobPolicy sasConstraints = new SharedAccessBlobPolicy();
+            sasConstraints.SharedAccessStartTime = DateTimeOffset.UtcNow.AddMinutes(-5);
+            sasConstraints.SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddHours(Convert.ToDouble(time[0])).AddMinutes(Convert.ToDouble(time[1])).AddSeconds(Convert.ToDouble(time[2]));
+            sasConstraints.Permissions = SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write;
+
+            // Generate the shared access signature on the blob, setting the constraints directly on the signature.
+            string sasBlobToken = blockBlob.GetSharedAccessSignature(sasConstraints);
+
+            // Return the URI string for the container, including the SAS token.
+            return blockBlob.Uri + sasBlobToken;
         }
 
         private bool IsValidPackage(PackageServiceModel package)
@@ -324,6 +409,14 @@ namespace Mmm.Iot.Config.Services
             var output = JsonConvert.DeserializeObject<PackageServiceModel>(input.Data);
             output.Id = input.Key;
             return output;
+        }
+
+        private void AppendAzureMapsKey(JToken theme)
+        {
+            if (theme[AzureMapsKey] == null)
+            {
+                theme[AzureMapsKey] = this.config.ConfigService.AzureMapsKey;
+            }
         }
     }
 }

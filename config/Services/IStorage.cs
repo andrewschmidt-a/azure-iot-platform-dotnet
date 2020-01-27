@@ -3,9 +3,11 @@
 // </copyright>
 
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Mmm.Iot.Config.Services.External;
 using Mmm.Iot.Config.Services.Models;
+using Mmm.Platform.IoT.Common.Services.Models;
 
 namespace Mmm.Iot.Config.Services
 {
@@ -46,5 +48,7 @@ namespace Mmm.Iot.Config.Services
         Task DeletePackageAsync(string id);
 
         Task UpdateConfigTypeAsync(string customConfigType);
+
+        Task<UploadFileServiceModel> UploadToBlobAsync(string tenantId, string filename, Stream stream = null);
     }
 }

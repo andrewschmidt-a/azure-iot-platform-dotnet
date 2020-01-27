@@ -6,7 +6,8 @@
         <LangVersion>latest</LangVersion>
         <UserSecretsId>dacb9904-60b9-40ee-94bd-747694b2cef9</UserSecretsId>
         <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)Mmm.Iot.ruleset</CodeAnalysisRuleSet>
-        <NoWarn>$(NoWarn);CS1591</NoWarn>
+        <NoWarn>$(NoWarn);CS1591</NoWarn> <!-- Suppressed because it interferes with StyleCop SA16xx rules which provide finer-grained control over which elememts are required to have XML documentation -->
+        <NoWarn>$(NoWarn);CA5377</NoWarn> <!-- Suppressed temporarily until the warning can be understood and addressed -->
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <NoWarn>$(NoWarn);CA1031;CA1032;CA1036;CA1041;CA1051;CA1052;CA1054;CA1055;CA1056;CA1062;CA1063</NoWarn>
         <NoWarn>$(NoWarn);CA1303;CA1304;CA1305;CA1307;CA1308</NoWarn>
@@ -16,6 +17,7 @@
         <NoWarn>$(NoWarn);CA2000;CA2007;CA2008</NoWarn>
         <NoWarn>$(NoWarn);CA2200;CA2208;CA2211;CA2221;CA2225;CA2227</NoWarn>
         <NoWarn>$(NoWarn);VSTHRD002;VSTHRD100;VSTHRD103;VSTHRD105;VSTHRD110;VSTHRD200</NoWarn>
+        <NoWarn>$(NoWarn);CA5350</NoWarn> <!-- Suppressed the error Do Not Use Weak Cryptographic Algorithms as PSD needed SHA1-->
     </PropertyGroup>
 
     <ItemGroup>
