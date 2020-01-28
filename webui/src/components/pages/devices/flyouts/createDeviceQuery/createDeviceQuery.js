@@ -4,8 +4,7 @@ import React from 'react';
 
 import { IoTHubManagerService } from 'services';
 import { toDiagnosticsModel } from 'services/models';
-import { Btn, Protected } from 'components/shared';
-import { svgs, LinkedComponent } from 'utilities';
+import { LinkedComponent } from 'utilities';
 import Flyout from 'components/shared/flyout';
 import CreateDeviceQueryForm from './views/createDeviceQueryForm';
 

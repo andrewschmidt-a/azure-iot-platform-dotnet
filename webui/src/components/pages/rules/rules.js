@@ -6,6 +6,7 @@ import { permissions, toDiagnosticsModel } from 'services/models';
 import { RulesGrid } from './rulesGrid';
 import { DeviceGroupDropdownContainer as DeviceGroupDropdown } from 'components/shell/deviceGroupDropdown';
 import { ManageDeviceGroupsBtnContainer as ManageDeviceGroupsBtn } from 'components/shell/manageDeviceGroupsBtn';
+import { ResetActiveDeviceQueryBtnContainer as ResetActiveDeviceQueryBtn } from 'components/shell/resetActiveDeviceQueryBtn';
 import {
   AjaxError,
   Btn,
@@ -110,14 +111,17 @@ export class Rules extends Component {
     };
     return (
       <ComponentArray>
-        
-      { alerting.jobState == "Running" && 
+
+      { alerting.jobState == "Running" &&
         <ContextMenu>
           <ContextMenuAlign left={true}>
             <DeviceGroupDropdown />
             <Protected permission={permissions.updateDeviceGroups}>
               <ManageDeviceGroupsBtn />
             </Protected>
+            {
+              this.props.activeDeviceQueryConditions.length != 0 ? <ResetActiveDeviceQueryBtn /> : null
+            }
           </ContextMenuAlign>
           <ContextMenuAlign>
             <SearchInput
@@ -132,7 +136,7 @@ export class Rules extends Component {
           </ContextMenuAlign>
         </ContextMenu>
       }
-      { alerting.jobState == "Running" && 
+      { alerting.jobState == "Running" &&
         <PageContent className="rules-container">
           <PageTitle titleValue={t('rules.title')} />
           {!!error && <AjaxError t={t} error={error} />}
@@ -140,13 +144,13 @@ export class Rules extends Component {
           {this.state.openFlyoutName === 'newRule' && <NewRuleFlyout t={t} onClose={this.closeFlyout} logEvent={logEvent} />}
         </PageContent>
       }
-      
-      { alerting.jobState !== "Running" && 
+
+      { alerting.jobState !== "Running" &&
         <center>
           <h1>Alerting must be turned on to use Rules</h1>
           <h2>You may turn this feature on by clicking the settings menu (gear icon) at the top right of the screen</h2>
         </center>
-      } 
+      }
       </ComponentArray>
     );
   }

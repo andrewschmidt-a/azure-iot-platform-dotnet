@@ -13,7 +13,8 @@ import {
   getTheme,
   getTimeInterval,
   getTimeSeriesExplorerUrl,
-  getAlerting
+  getAlerting,
+  getActiveDeviceQueryConditions
 } from 'store/reducers/appReducer';
 import {
   epics as rulesEpics,
@@ -47,7 +48,8 @@ const mapStateToProps = state => ({
   rulesIsPending: getRulesPendingStatus(state),
   theme: getTheme(state),
   timeInterval: getTimeInterval(state),
-  timeSeriesExplorerUrl: getTimeSeriesExplorerUrl(state)
+  timeSeriesExplorerUrl: getTimeSeriesExplorerUrl(state),
+  activeDeviceQueryConditions: getActiveDeviceQueryConditions(state)
 });
 
 // Wrap the dispatch method

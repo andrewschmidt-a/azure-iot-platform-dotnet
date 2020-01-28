@@ -6,6 +6,7 @@ import { permissions, toDiagnosticsModel } from 'services/models';
 import { DevicesGridContainer } from './devicesGrid';
 import { DeviceGroupDropdownContainer as DeviceGroupDropdown } from 'components/shell/deviceGroupDropdown';
 import { ManageDeviceGroupsBtnContainer as ManageDeviceGroupsBtn } from 'components/shell/manageDeviceGroupsBtn';
+import { ResetActiveDeviceQueryBtnContainer as ResetActiveDeviceQueryBtn } from 'components/shell/resetActiveDeviceQueryBtn';
 import {
   AjaxError,
   Btn,
@@ -62,7 +63,7 @@ export class Devices extends Component {
 
   openCreateDeviceQueryFlyout = () => {
     this.setState({openFlyoutName: 'create-device-query' });
-    this.props.logEvent(toDiagnosticsModel('CreateDeviceQuery_Click'));
+    this.props.logEvent(toDiagnosticsModel('CreateDeviceQuery_Click', {}));
   }
 
   onContextMenuChange = contextBtns => this.setState({
@@ -102,6 +103,9 @@ export class Devices extends Component {
             <Protected permission={permissions.updateDeviceGroups}>
               <ManageDeviceGroupsBtn />
             </Protected>
+            {
+              this.props.activeDeviceQueryConditions.length != 0 ? <ResetActiveDeviceQueryBtn /> : null
+            }
           </ContextMenuAlign>
           <ContextMenuAlign>
             <Btn svg={svgs.manageFilters} onClick={this.openCreateDeviceQueryFlyout}>{t('devices.flyouts.createDeviceQuery.title')}</Btn>

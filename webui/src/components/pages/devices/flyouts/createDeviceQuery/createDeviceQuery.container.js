@@ -8,23 +8,19 @@ import {
   redux as appRedux,
   epics as appEpics,
   getActiveDeviceQueryConditions,
-  getActiveDeviceGroupConditions
+  getActiveDeviceGroupConditions,
+  getActiveDeviceGroup
 } from 'store/reducers/appReducer';
-
-const processQuery = (queryConditions, activeDeviceGroupConditions, dispatch) => {
-  const conditions = queryConditions.concat(activeDeviceGroupConditions);
-  dispatch(devicesEpics.actions.fetchDevices(conditions));
-}
 
 const mapStateToProps = state => ({
   activeDeviceQueryConditions: getActiveDeviceQueryConditions(state),
-  activeDeviceGroupConditions: getActiveDeviceGroupConditions(state)
+  activeDeviceGroupConditions: getActiveDeviceGroupConditions(state),
+  activeDeviceGroup: getActiveDeviceGroup(state)
 });
 
 const mapDispatchToProps = dispatch => ({
   closeFlyout: () => dispatch(appRedux.actions.setCreateDeviceQueryFlyoutStatus(false)),
   setActiveDeviceQueryConditions: queryConditions => dispatch(appRedux.actions.setActiveDeviceQueryConditions(queryConditions)),
-  queryDevices: (queryConditions, activeDeviceGroupConditions) => processQuery(queryConditions, activeDeviceGroupConditions, dispatch),
   insertDeviceGroup: (deviceGroup) => dispatch(appRedux.actions.insertDeviceGroups([deviceGroup])),
   logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel))
 });

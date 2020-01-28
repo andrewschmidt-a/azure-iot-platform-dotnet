@@ -143,10 +143,13 @@
     }
   },
   "createDeviceQueryFlyout": {
-    "title": "Query Devices",
+    "title": "Query devices",
     "create": "Query",
     "reset": "Reset",
-    "createDeviceGroup": "Create New Device Group"
+    "createDeviceGroup": "Device group"
+  },
+  "resetActiveDeviceQuery": {
+      "title": "Reset query"
   },
   "deviceQueryConditions": {
     "condition": "Condition {{headerCount}}",

@@ -10,9 +10,9 @@ import uuid from 'uuid/v4';
 
 export const toConditionQueryModel = (conditions = []) => {
   return conditions.map(condition => reshape(condition, {
-    'field': 'Key',
-    'operator': 'Operator',
-    'value': 'Value'
+    'field': 'key',
+    'operator': 'operator',
+    'value': 'value'
   }));
 }
 

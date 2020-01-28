@@ -16,6 +16,7 @@ import {
 } from 'components/shared';
 import { DeviceGroupDropdownContainer as DeviceGroupDropdown } from 'components/shell/deviceGroupDropdown';
 import { ManageDeviceGroupsBtnContainer as ManageDeviceGroupsBtn } from 'components/shell/manageDeviceGroupsBtn';
+import { ResetActiveDeviceQueryBtnContainer as ResetActiveDeviceQueryBtn } from 'components/shell/resetActiveDeviceQueryBtn';
 import { DeploymentsGrid } from './deploymentsGrid';
 import { DeploymentNewContainer } from './flyouts';
 import { svgs } from 'utilities';
@@ -92,6 +93,9 @@ export class Deployments extends Component {
             <Protected permission={permissions.updateDeviceGroups}>
               <ManageDeviceGroupsBtn />
             </Protected>
+            {
+              this.props.activeDeviceQueryConditions.length != 0 ? <ResetActiveDeviceQueryBtn /> : null
+            }
           </ContextMenuAlign>
           <ContextMenuAlign>
             {this.state.contextBtns}
