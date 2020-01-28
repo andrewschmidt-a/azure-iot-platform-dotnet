@@ -826,6 +826,7 @@
         "configType": "Configuration type",
         "customType": "Custom configuration type",
         "browse": "Browse",
+        "browseFirmwareText": "for a firmware file",
         "browseText": "for a package file",
         "packageTypePlaceholder": "Select package type",
         "configTypePlaceholder": "Select configuration type",
