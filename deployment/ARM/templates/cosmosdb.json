@@ -114,10 +114,6 @@
           "locationName": "[parameters('primaryRegion')]",
           "failoverPriority": 0
         }
-        // {
-        //     "locationName": "[parameters('secondaryRegion')]",
-        //     "failoverPriority": 1
-        // }
       ]
     },
     "resources": [
