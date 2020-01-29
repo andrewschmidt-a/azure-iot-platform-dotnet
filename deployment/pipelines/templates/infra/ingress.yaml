@@ -27,6 +27,7 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     scriptLocation: 'inlineScript'
     inlineScript: |-
+      helm version
       helm repo add stable https://kubernetes-charts.storage.googleapis.com/
       helm repo update
       n=0
