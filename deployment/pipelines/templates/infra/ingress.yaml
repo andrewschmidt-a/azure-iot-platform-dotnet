@@ -18,8 +18,9 @@ steps:
     kubernetesCluster: ${{ parameters.aksName }}
     namespace: 'default'
     command: 'init'
-    upgradeTiller: false
+    upgradeTiller: true
     waitForExecution: false
+    arguments: --force-upgrade
     
 - task: AzureCLI@1
   displayName: "CLI: install ingress-controller"
