@@ -136,6 +136,7 @@ stages:
       subscriptionId: 1d0a4e20-e44d-43b5-97b0-9b577f5bf048
       applicationCode: psdiot
       deployEnvironment: dev
+      environment: IoT_PSD_Environment_DEV
       platformOperationServiceConnection: '3M-CRSLBL01-CRSL-Digital-Platforms-Bluebird'
       
 - stage: DebugEnv
