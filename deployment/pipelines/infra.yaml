@@ -25,7 +25,7 @@ stages:
 ## CRSL QA ----
 - stage: DeployCRSLQA
   dependsOn: []
-  #- DeployCRSLDev
+  - DeployCRSLDev
   displayName: Deploy To CRSL QA
   jobs:
   - template: templates/approval.yaml
