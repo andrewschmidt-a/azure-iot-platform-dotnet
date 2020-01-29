@@ -24,7 +24,7 @@ stages:
 
 ## CRSL QA ----
 - stage: DeployCRSLQA
-  dependsOn: []
+  dependsOn:
   - DeployCRSLDev
   displayName: Deploy To CRSL QA
   jobs:
