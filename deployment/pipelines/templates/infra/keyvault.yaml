@@ -57,9 +57,6 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |-
       rg=${{ parameters.resourceGroup }}
-      appInsightName=$(az resource list -g $rg --resource-type "Microsoft.Insights/components" | grep name | grep appinsight | awk -F "\"" '{print $4}')
-      appInsightKey=$(az resource show -g $rg -n $appInsightName --resource-type "Microsoft.Insights/components" --query properties.InstrumentationKey)
-      appInsightKey="${appInsightKey//\"}"
       kVaultName=${{ parameters.keyVaultName }}
       blobStorageAccountName=$(az storage account list -g $rg | grep name | grep storage | awk -F "\"" '{print $4}')
       blobStorageKey=$(az storage account keys list -g $rg -n $blobStorageAccountName | grep value | head -n1 | awk -F "\"" '{print $4}')
@@ -84,7 +81,6 @@ steps:
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbAuthKey' --value $cosmosDBAuthKey
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbConnectionString' --value $cosmosDBConnection
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbEndpoint' --value $cosmosDBUri
-      az keyvault secret set --vault-name $kVaultName --name 'Global--InstrumentationKey' --value $appInsightKey
       az keyvault secret set --vault-name $kVaultName --name 'Global--ServicePrincipalId' --value $servicePrincipalId
       az keyvault secret set --vault-name $kVaultName --name 'Global--StorageAccountConnectionString' --value $blobStorageConnString
       az keyvault secret set --vault-name $kVaultName --name 'Global--ServicePrincipalKey' --value $servicePrincipalKey
