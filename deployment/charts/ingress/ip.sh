@@ -6,7 +6,7 @@ IP=""
 until [ $n -ge 6 ]
 do
   IP=$(kubectl get service -l app=nginx-ingress -l component=controller --namespace ingress-basic -o json | jq -r .items[0].status.loadBalancer.ingress[0].ip)
-  if [ "$IP" -eq "null" ] 
+  if [ -z "$IP"] || [ "null" -eq "$IP" ]
   then
     echo "IP not available...waiting another minute...try $n"
     sleep 1m
