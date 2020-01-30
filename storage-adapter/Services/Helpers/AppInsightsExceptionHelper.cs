@@ -18,7 +18,7 @@ namespace Mmm.Iot.StorageAdapter.Services.Helpers
     public static class AppInsightsExceptionHelper
     {
         private static TelemetryConfiguration configuration;
-        private static TelemetryClient client;
+        private static TelemetryClient client = null;
         private static JsonSerializerSettings jsonSettings = new JsonSerializerSettings()
         {
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
@@ -31,8 +31,9 @@ namespace Mmm.Iot.StorageAdapter.Services.Helpers
             ApplicationInsightsKubernetesDiagnosticSource.Instance.Observable.SubscribeWithAdapter(observer);
 
             configuration.AddApplicationInsightsKubernetesEnricher(applyOptions: null);
-            client = new TelemetryClient();
-            client.InstrumentationKey = instrumentationKey;
+
+            // client = new TelemetryClient();
+            // client.InstrumentationKey = instrumentationKey;
         }
 
         public static void LogException(Exception exception, Dictionary<string, string> traceDetails)
