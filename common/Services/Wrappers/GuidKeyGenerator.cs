@@ -1,8 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="GuidKeyGenerator.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.Services.Wrappers
+namespace Mmm.Iot.Common.Services.Wrappers
 {
     public class GuidKeyGenerator : IKeyGenerator
     {

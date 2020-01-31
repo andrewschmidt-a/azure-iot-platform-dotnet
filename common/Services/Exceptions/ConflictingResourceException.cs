@@ -1,22 +1,20 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="ConflictingResourceException.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 
-namespace Mmm.Platform.IoT.Common.Services.Exceptions
+namespace Mmm.Iot.Common.Services.Exceptions
 {
-    /// <summary>
-    /// This exception is thrown when a client attempts to create a resource
-    /// which would conflict with an existing one, for instance using the same
-    /// identifier. The client should change the identifier or assume the
-    /// resource has already been created.
-    /// </summary>
     public class ConflictingResourceException : Exception
     {
-        public ConflictingResourceException() : base()
+        public ConflictingResourceException()
+            : base()
         {
         }
 
-        public ConflictingResourceException(string message) : base(message)
+        public ConflictingResourceException(string message)
+            : base(message)
         {
         }
 

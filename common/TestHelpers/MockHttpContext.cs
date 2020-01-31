@@ -1,11 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="MockHttpContext.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Moq;
 
-namespace Mmm.Platform.IoT.Common.TestHelpers
+namespace Mmm.Iot.Common.TestHelpers
 {
     public sealed class MockHttpContext : IDisposable
     {
@@ -14,6 +16,7 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
         private readonly MemoryStream requestBody = new MemoryStream();
         private readonly MemoryStream responseBody = new MemoryStream();
         private readonly Mock<HttpContext> mockContext = new Mock<HttpContext>();
+        private bool disposedValue;
 
         public MockHttpContext()
         {
@@ -32,6 +35,8 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
             this.mockContext.SetupGet(x => x.Request).Returns(request.Object);
             this.mockContext.SetupGet(x => x.Response).Returns(response.Object);
         }
+
+        public HttpContext Object => this.mockContext.Object;
 
         public void SetHeader(string key, string value)
         {
@@ -57,10 +62,10 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
             return Convert.ToBase64String(bytes);
         }
 
-        public HttpContext Object => this.mockContext.Object;
-
-        #region IDisposable Support
-        private bool disposedValue;
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
 
         private void Dispose(bool disposing)
         {
@@ -75,11 +80,5 @@ namespace Mmm.Platform.IoT.Common.TestHelpers
                 this.disposedValue = true;
             }
         }
-
-        public void Dispose()
-        {
-            this.Dispose(true);
-        }
-        #endregion
     }
 }

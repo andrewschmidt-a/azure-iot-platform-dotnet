@@ -1,76 +1,62 @@
-﻿using System;
+// <copyright file="DeviceProperties.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IoTHubManager.Services.Helpers;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.IoTHubManager.Services.Helpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Newtonsoft.Json;
-using Mmm.Platform.IoT.Common.Services.Config;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services
+namespace Mmm.Iot.IoTHubManager.Services
 {
-    /// <summary>  
-    /// This class creates/reads cache of deviceProperties in/from CosmosDB.
-    /// </summary> 
-    /// <remarks>
-    /// This is done to avoid request throttling when deviceProperties are queried directly from IOT-Hub.
-    /// This class is called "deviceProperties" even though it deals with both properties
-    /// and tags of devices.
-    /// </remarks>
     public class DeviceProperties : IDeviceProperties
     {
-        public readonly IStorageAdapterClient storageClient;
-        public readonly IDevices devices;
-        public readonly ILogger _logger;
-        /// Hardcoded in appsettings.ini
-        public readonly string whitelist;
-        /// Hardcoded in appsettings.ini
-        public readonly long ttl;
-        /// Hardcoded in appsettings.ini
-        public readonly long rebuildTimeout;
-        public readonly TimeSpan serviceQueryInterval = TimeSpan.FromSeconds(10);
-        public const string CACHE_COLLECTION_ID = "device-twin-properties";
-        public const string CACHE_KEY = "cache";
+        public const string CacheCollectioId = "device-twin-properties";
+        public const string CacheKey = "cache";
+        private const string WhitelistTagPrefix = "tags.";
+        private const string WhitelistReportedPrefix = "reported.";
+        private const string TagPrefix = "Tags.";
+        private const string ReportedPrefix = "Properties.Reported.";
+        private readonly IStorageAdapterClient storageClient;
+        private readonly IDevices devices;
+        private readonly ILogger logger;
+        private readonly string whitelist;
+        private readonly long ttl;
+        private readonly long rebuildTimeout;
+        private readonly TimeSpan serviceQueryInterval = TimeSpan.FromSeconds(10);
+        private DateTime devicePropertiesLastUpdated;
 
-        public const string WHITELIST_TAG_PREFIX = "tags.";
-        public const string WHITELIST_REPORTED_PREFIX = "reported.";
-        public const string TAG_PREFIX = "Tags.";
-        public const string REPORTED_PREFIX = "Properties.Reported.";
-
-        private DateTime DevicePropertiesLastUpdated;
-
-        /// <summary>
-        /// The constructor.
-        /// </summary>
-        public DeviceProperties(IStorageAdapterClient storageClient,
+        public DeviceProperties(
+            IStorageAdapterClient storageClient,
             AppConfig config,
             ILogger<DeviceProperties> logger,
             IDevices devices)
         {
             this.storageClient = storageClient;
-            _logger = logger;
+            this.logger = logger;
             this.whitelist = config.IotHubManagerService.DevicePropertiesCache.Whitelist;
             this.ttl = config.IotHubManagerService.DevicePropertiesCache.Ttl;
             this.rebuildTimeout = config.IotHubManagerService.DevicePropertiesCache.RebuildTimeout;
             this.devices = devices;
         }
 
-        /// <summary>
-        /// Get List of deviceProperties from cache
-        /// </summary>
         public async Task<List<string>> GetListAsync()
         {
             ValueApiModel response = new ValueApiModel();
             try
             {
-                response = await this.storageClient.GetAsync(CACHE_COLLECTION_ID, CACHE_KEY);
+                response = await this.storageClient.GetAsync(CacheCollectioId, CacheKey);
             }
             catch (ResourceNotFoundException)
             {
-                _logger.LogDebug($"Cache get: cache {CACHE_COLLECTION_ID}:{CACHE_KEY} was not found");
+                this.logger.LogDebug($"Cache get: cache {CacheCollectioId}:{CacheKey} was not found");
             }
             catch (Exception e)
             {
@@ -78,9 +64,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                     $"Cache get: unable to get device-twin-properties cache", e);
             }
 
-            if (String.IsNullOrEmpty(response?.Data))
+            if (string.IsNullOrEmpty(response?.Data))
             {
-                throw new Exception($"StorageAdapter did not return any data for {CACHE_COLLECTION_ID}:{CACHE_KEY}. The DeviceProperties cache has not been created for this tenant yet.");
+                throw new Exception($"StorageAdapter did not return any data for {CacheCollectioId}:{CacheKey}. The DeviceProperties cache has not been created for this tenant yet.");
             }
 
             DevicePropertyServiceModel properties = new DevicePropertyServiceModel();
@@ -96,24 +82,23 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             List<string> result = new List<string>();
             foreach (string tag in properties.Tags)
             {
-                result.Add(TAG_PREFIX + tag);
+                result.Add(TagPrefix + tag);
             }
+
             foreach (string reported in properties.Reported)
             {
-                result.Add(REPORTED_PREFIX + reported);
+                result.Add(ReportedPrefix + reported);
             }
+
             return result;
         }
 
-        /// <summary>
-        /// Try to create cache of deviceProperties if lock failed retry after 10 seconds
-        /// </summary>
         public async Task<bool> TryRecreateListAsync(bool force = false)
         {
             var @lock = new StorageWriteLock<DevicePropertyServiceModel>(
                 this.storageClient,
-                CACHE_COLLECTION_ID,
-                CACHE_KEY,
+                CacheCollectioId,
+                CacheKey,
                 (c, b) => c.Rebuilding = b,
                 m => this.ShouldCacheRebuild(force, m));
 
@@ -122,7 +107,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 var locked = await @lock.TryLockAsync();
                 if (locked == null)
                 {
-                    _logger.LogWarning("Cache rebuilding: lock failed due to conflict. Retry soon");
+                    this.logger.LogWarning("Cache rebuilding: lock failed due to conflict. Retry soon");
                     continue;
                 }
 
@@ -140,15 +125,16 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 }
                 catch (Exception)
                 {
-                    _logger.LogWarning("Some underlying service is not ready. Retry after {interval}.", this.serviceQueryInterval);
+                    this.logger.LogWarning("Some underlying service is not ready. Retry after {interval}.", this.serviceQueryInterval);
                     try
                     {
                         await @lock.ReleaseAsync();
                     }
                     catch (Exception e)
                     {
-                        _logger.LogError(e, "Cache rebuilding: Unable to release lock");
+                        this.logger.LogError(e, "Cache rebuilding: Unable to release lock");
                     }
+
                     await Task.Delay(this.serviceQueryInterval);
                     continue;
                 }
@@ -160,25 +146,23 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                         new DevicePropertyServiceModel
                         {
                             Tags = twinNames.Tags,
-                            Reported = twinNames.ReportedProperties
+                            Reported = twinNames.ReportedProperties,
                         });
                     if (updated)
                     {
-                        this.DevicePropertiesLastUpdated = DateTime.Now;
+                        this.devicePropertiesLastUpdated = DateTime.Now;
                         return true;
                     }
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Cache rebuilding: Unable to write and release lock");
+                    this.logger.LogError(e, "Cache rebuilding: Unable to write and release lock");
                 }
-                _logger.LogWarning("Cache rebuilding: write failed due to conflict. Retry soon");
+
+                this.logger.LogWarning("Cache rebuilding: write failed due to conflict. Retry soon");
             }
         }
 
-        /// <summary>
-        /// Update Cache when devices are modified/created
-        /// </summary>
         public async Task<DevicePropertyServiceModel> UpdateListAsync(
             DevicePropertyServiceModel deviceProperties)
         {
@@ -192,11 +176,11 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 ValueApiModel model = null;
                 try
                 {
-                    model = await this.storageClient.GetAsync(CACHE_COLLECTION_ID, CACHE_KEY);
+                    model = await this.storageClient.GetAsync(CacheCollectioId, CacheKey);
                 }
                 catch (ResourceNotFoundException)
                 {
-                    _logger.LogInformation($"Cache updating: cache {CACHE_COLLECTION_ID}:{CACHE_KEY} was not found");
+                    this.logger.LogInformation($"Cache updating: cache {CacheCollectioId}:{CacheKey} was not found");
                 }
 
                 if (model != null)
@@ -212,6 +196,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                     {
                         devicePropertiesFromStorage = new DevicePropertyServiceModel();
                     }
+
                     devicePropertiesFromStorage.Tags = devicePropertiesFromStorage.Tags ??
                         new HashSet<string>();
                     devicePropertiesFromStorage.Reported = devicePropertiesFromStorage.Reported ??
@@ -220,6 +205,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                     deviceProperties.Tags.UnionWith(devicePropertiesFromStorage.Tags);
                     deviceProperties.Reported.UnionWith(devicePropertiesFromStorage.Reported);
                     etag = model.ETag;
+
                     // If the new set of deviceProperties are already there in cache, return
                     if (deviceProperties.Tags.Count == devicePropertiesFromStorage.Tags.Count &&
                         deviceProperties.Reported.Count == devicePropertiesFromStorage.Reported.Count)
@@ -232,27 +218,59 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 try
                 {
                     var response = await this.storageClient.UpdateAsync(
-                        CACHE_COLLECTION_ID, CACHE_KEY, value, etag);
+                        CacheCollectioId, CacheKey, value, etag);
                     return JsonConvert.DeserializeObject<DevicePropertyServiceModel>(response.Data);
                 }
                 catch (ConflictingResourceException)
                 {
-                    _logger.LogInformation("Cache updating: failed due to conflict. Retry soon");
+                    this.logger.LogInformation("Cache updating: failed due to conflict. Retry soon");
                 }
                 catch (Exception e)
                 {
-                    _logger.LogInformation(e, "Cache updating: failed");
+                    this.logger.LogInformation(e, "Cache updating: failed");
                     throw new Exception("Cache updating: failed");
                 }
             }
         }
 
-        /// <summary>
-        /// Get list of DeviceTwinNames from IOT-hub and whitelist it.
-        /// </summary>
-        /// <remarks>
-        /// List of Twin Names to be whitelisted is hardcoded in appsettings.ini
-        /// </remarks>
+        private static void ParseWhitelist(
+            string whitelist,
+            out DeviceTwinName fullNameWhitelist,
+            out DeviceTwinName prefixWhitelist)
+        {
+            var whitelistItems = whitelist.Split(',').Select(s => s.Trim());
+
+            var tags = whitelistItems
+                .Where(s => s.StartsWith(WhitelistTagPrefix, StringComparison.OrdinalIgnoreCase))
+                .Select(s => s.Substring(WhitelistTagPrefix.Length));
+
+            var reported = whitelistItems
+                .Where(s => s.StartsWith(WhitelistReportedPrefix, StringComparison.OrdinalIgnoreCase))
+                .Select(s => s.Substring(WhitelistReportedPrefix.Length));
+
+            var fixedTags = tags.Where(s => !s.EndsWith("*"));
+
+            var fixedReported = reported.Where(s => !s.EndsWith("*"));
+
+            var regexTags = tags.Where(s => s.EndsWith("*")).Select(s => s.Substring(0, s.Length - 1));
+
+            var regexReported = reported.
+                Where(s => s.EndsWith("*")).
+                Select(s => s.Substring(0, s.Length - 1));
+
+            fullNameWhitelist = new DeviceTwinName
+            {
+                Tags = new HashSet<string>(fixedTags),
+                ReportedProperties = new HashSet<string>(fixedReported),
+            };
+
+            prefixWhitelist = new DeviceTwinName
+            {
+                Tags = new HashSet<string>(regexTags),
+                ReportedProperties = new HashSet<string>(regexReported),
+            };
+        }
+
         private async Task<DeviceTwinName> GetValidNamesAsync()
         {
             ParseWhitelist(this.whitelist, out var fullNameWhitelist, out var prefixWhitelist);
@@ -260,7 +278,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             var validNames = new DeviceTwinName
             {
                 Tags = fullNameWhitelist.Tags,
-                ReportedProperties = fullNameWhitelist.ReportedProperties
+                ReportedProperties = fullNameWhitelist.ReportedProperties,
             };
 
             if (prefixWhitelist.Tags.Any() || prefixWhitelist.ReportedProperties.Any())
@@ -268,13 +286,14 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
                 DeviceTwinName allNames = new DeviceTwinName();
                 try
                 {
-                    /// Get list of DeviceTwinNames from IOT-hub
+                    // Get list of DeviceTwinNames from IOT-hub
                     allNames = await this.devices.GetDeviceTwinNamesAsync();
                 }
                 catch (Exception e)
                 {
                     throw new ExternalDependencyException("Unable to fetch IoT devices", e);
                 }
+
                 validNames.Tags.UnionWith(allNames.Tags.
                     Where(s => prefixWhitelist.Tags.Any(s.StartsWith)));
 
@@ -286,119 +305,22 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             return validNames;
         }
 
-        /// <summary>
-        /// Parse the comma seperated string "whitelist" and create two separate list
-        /// One with regex(*) and one without regex(*)
-        /// </summary>
-        /// <param name="whitelist">Comma seperated list of deviceTwinName to be 
-        /// whitlisted which is hardcoded in appsettings.ini.</param>
-        /// <param name="fullNameWhitelist">An out paramenter which is a list of
-        /// deviceTwinName to be whitlisted without regex.</param>
-        /// <param name="prefixWhitelist">An out paramenter which is a list of 
-        /// deviceTwinName to be whitlisted with regex.</param>
-        private static void ParseWhitelist(string whitelist,
-            out DeviceTwinName fullNameWhitelist,
-            out DeviceTwinName prefixWhitelist)
-        {
-            /// <example>
-            /// whitelist = "tags.*, reported.Protocol, reported.SupportedMethods,
-            ///                 reported.DeviceMethodStatus, reported.FirmwareUpdateStatus"
-            /// whitelistItems = [tags.*,
-            ///                   reported.Protocol,
-            ///                   reported.SupportedMethods,
-            ///                   reported.DeviceMethodStatus,
-            ///                   reported.FirmwareUpdateStatus]
-            /// </example>
-            var whitelistItems = whitelist.Split(',').Select(s => s.Trim());
-
-            /// <example>
-            /// tags = [tags.*]
-            /// </example>
-            var tags = whitelistItems
-                .Where(s => s.StartsWith(WHITELIST_TAG_PREFIX, StringComparison.OrdinalIgnoreCase))
-                .Select(s => s.Substring(WHITELIST_TAG_PREFIX.Length));
-
-            /// <example>
-            /// reported = [reported.Protocol,
-            ///             reported.SupportedMethods,
-            ///             reported.DeviceMethodStatus,
-            ///             reported.FirmwareUpdateStatus]
-            /// </example>
-            var reported = whitelistItems
-                .Where(s => s.StartsWith(WHITELIST_REPORTED_PREFIX, StringComparison.OrdinalIgnoreCase))
-                .Select(s => s.Substring(WHITELIST_REPORTED_PREFIX.Length));
-
-            /// <example>
-            /// fixedTags = []
-            /// </example>
-            var fixedTags = tags.Where(s => !s.EndsWith("*"));
-            /// <example>
-            /// fixedReported = [reported.Protocol,
-            ///                  reported.SupportedMethods,
-            ///                  reported.DeviceMethodStatus,
-            ///                  reported.FirmwareUpdateStatus]
-            /// </example>
-            var fixedReported = reported.Where(s => !s.EndsWith("*"));
-
-            /// <example>
-            /// regexTags = [tags.]
-            /// </example>
-            var regexTags = tags.Where(s => s.EndsWith("*")).Select(s => s.Substring(0, s.Length - 1));
-            /// <example>
-            /// regexReported = []
-            /// </example>
-            var regexReported = reported.
-                Where(s => s.EndsWith("*")).
-                Select(s => s.Substring(0, s.Length - 1));
-
-            /// <example>
-            /// fullNameWhitelist = {Tags = [],
-            ///                      ReportedProperties = [
-            ///                         reported.Protocol, 
-            ///                         reported.SupportedMethods,
-            ///                         reported.DeviceMethodStatus,
-            ///                         reported.FirmwareUpdateStatus]
-            ///                      }
-            /// </example>
-            fullNameWhitelist = new DeviceTwinName
-            {
-                Tags = new HashSet<string>(fixedTags),
-                ReportedProperties = new HashSet<string>(fixedReported)
-            };
-
-            /// <example>
-            /// prefixWhitelist = {Tags = [tags.],
-            ///                    ReportedProperties = []}
-            /// </example>
-            prefixWhitelist = new DeviceTwinName
-            {
-                Tags = new HashSet<string>(regexTags),
-                ReportedProperties = new HashSet<string>(regexReported)
-            };
-        }
-
-        /// <summary>
-        /// A function to decide whether or not cache needs to be rebuilt based on force flag and existing
-        /// cache's validity
-        /// </summary>
-        /// <param name="force">A boolean flag to decide if cache needs to be rebuilt.</param>
-        /// <param name="valueApiModel">An existing valueApiModel to check whether or not cache 
-        /// has expired</param>
         private bool ShouldCacheRebuild(bool force, ValueApiModel valueApiModel)
         {
             if (force)
             {
-                _logger.LogInformation("Cache will be rebuilt due to the force flag");
+                this.logger.LogInformation("Cache will be rebuilt due to the force flag");
                 return true;
             }
 
             if (valueApiModel == null)
             {
-                _logger.LogInformation("Cache will be rebuilt since no cache was found");
+                this.logger.LogInformation("Cache will be rebuilt since no cache was found");
                 return true;
             }
+
             DevicePropertyServiceModel cacheValue = new DevicePropertyServiceModel();
-            DateTimeOffset timstamp = new DateTimeOffset();
+            DateTimeOffset timstamp;
             try
             {
                 cacheValue = JsonConvert.DeserializeObject<DevicePropertyServiceModel>(valueApiModel.Data);
@@ -406,7 +328,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             }
             catch
             {
-                _logger.LogInformation("DeviceProperties will be rebuilt because the last one is broken.");
+                this.logger.LogInformation("DeviceProperties will be rebuilt because the last one is broken.");
                 return true;
             }
 
@@ -414,12 +336,12 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             {
                 if (timstamp.AddSeconds(this.rebuildTimeout) < DateTimeOffset.UtcNow)
                 {
-                    _logger.LogDebug("Cache will be rebuilt because last rebuilding had timedout");
+                    this.logger.LogDebug("Cache will be rebuilt because last rebuilding had timedout");
                     return true;
                 }
                 else
                 {
-                    _logger.LogDebug("Cache rebuilding skipped because it is being rebuilt by other instance");
+                    this.logger.LogDebug("Cache rebuilding skipped because it is being rebuilt by other instance");
                     return false;
                 }
             }
@@ -427,18 +349,18 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services
             {
                 if (cacheValue.IsNullOrEmpty())
                 {
-                    _logger.LogInformation("Cache will be rebuilt since it is empty");
+                    this.logger.LogInformation("Cache will be rebuilt since it is empty");
                     return true;
                 }
 
                 if (timstamp.AddSeconds(this.ttl) < DateTimeOffset.UtcNow)
                 {
-                    _logger.LogInformation("Cache will be rebuilt because it has expired");
+                    this.logger.LogInformation("Cache will be rebuilt because it has expired");
                     return true;
                 }
                 else
                 {
-                    _logger.LogDebug("Cache rebuilding skipped because it has not expired");
+                    this.logger.LogDebug("Cache rebuilding skipped because it has not expired");
                     return false;
                 }
             }

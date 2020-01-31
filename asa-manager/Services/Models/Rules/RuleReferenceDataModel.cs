@@ -1,72 +1,74 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="RuleReferenceDataModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.AsaManager.Services.Models;
+using Mmm.Iot.AsaManager.Services.Models;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
+namespace Mmm.Iot.AsaManager.Services.Models.Rules
 {
     // Note: all the constants below are meant to be not case sensitive
-    public class RuleReferenceDataModel
+    public partial class RuleReferenceDataModel
     {
+        private const string AsaInstantValue = "";
+        private const string AsaAverageValue = ".avg";
+        private const string AsaMinimumValue = ".min";
+        private const string AsaMaximumValue = ".max";
+        private const string AsaCountValue = ".count";
+
         // Value used by the Rules web service to indicate that
         // a rule doesn't use aggregation and has no time window.
         // See https://github.com/Azure/device-telemetry-dotnet/blob/master/Services/Models/Rule.cs
-        private const string SOURCE_NO_AGGREGATION = "instant";
+        private const string SourceNoAggregation = "instant";
 
         // Used to tell ASA TSQL which aggregation to use
-        private const string ASA_AGGREGATION_NONE = "instant";
-        private const string ASA_AGGREGATION_WINDOW_TUMBLING_1MIN = "tumblingwindow1minutes";
-        private const string ASA_AGGREGATION_WINDOW_TUMBLING_5MINS = "tumblingwindow5minutes";
-        private const string ASA_AGGREGATION_WINDOW_TUMBLING_10MINS = "tumblingwindow10minutes";
-        private const string ASA_AGGREGATION_WINDOW_TUMBLING_20MINS = "tumblingwindow20minutes";
-        private const string ASA_AGGREGATION_WINDOW_TUMBLING_30MINS = "tumblingwindow30minutes";
-        private const string ASA_AGGREGATION_WINDOW_TUMBLING_1HOUR = "tumblingwindow1hours";
+        private const string AsaAggregationNone = "instant";
+        private const string AsaAggregationWindowTumbling1Minute = "tumblingwindow1minutes";
+        private const string AsaAggregationWindowTumbling5Minutes = "tumblingwindow5minutes";
+        private const string AsaAggregationWindowTumbling10Minutes = "tumblingwindow10minutes";
+        private const string AsaAggregationWindowTumbling20Minutes = "tumblingwindow20minutes";
+        private const string AsaAggregationWindowTumbling30Minutes = "tumblingwindow30minutes";
+        private const string AsaAggregationWindowTumbling1Hour = "tumblingwindow1hours";
 
         // Map from values used in the Device Telemetry web service
         // to the corresponding ASA constant. Some extra values added
         // in case we want to add more options.
         // See https://github.com/Azure/device-telemetry-dotnet/blob/master/Services/Models/Rule.cs
-        private static readonly Dictionary<long, string> timePeriodMap =
+        private static readonly Dictionary<long, string> TimePeriodMap =
             new Dictionary<long, string>
             {
-                {   60000, ASA_AGGREGATION_WINDOW_TUMBLING_1MIN },
-                {  300000, ASA_AGGREGATION_WINDOW_TUMBLING_5MINS },
-                {  600000, ASA_AGGREGATION_WINDOW_TUMBLING_10MINS },
-                { 1200000, ASA_AGGREGATION_WINDOW_TUMBLING_20MINS },
-                { 1800000, ASA_AGGREGATION_WINDOW_TUMBLING_30MINS },
-                { 3600000, ASA_AGGREGATION_WINDOW_TUMBLING_1HOUR },
+                { 60000, AsaAggregationWindowTumbling1Minute },
+                { 300000, AsaAggregationWindowTumbling5Minutes },
+                { 600000, AsaAggregationWindowTumbling10Minutes },
+                { 1200000, AsaAggregationWindowTumbling20Minutes },
+                { 1800000, AsaAggregationWindowTumbling30Minutes },
+                { 3600000, AsaAggregationWindowTumbling1Hour },
             };
-
-        private const string ASA_INSTANT_VALUE = "";
-        private const string ASA_AVG_VALUE = ".avg";
-        private const string ASA_MIN_VALUE = ".min";
-        private const string ASA_MAX_VALUE = ".max";
-        private const string ASA_COUNT_VALUE = ".count";
 
         // Map from values used in the Device Telemetry web service to the
         // corresponding Javascript field. Some extra values added
         // in case we want to add more options.
         // See https://github.com/Azure/device-telemetry-dotnet/blob/master/Services/Models/Rule.cs
-        private static readonly Dictionary<string, string> jsFieldsMap =
+        private static readonly Dictionary<string, string> JsFieldsMap =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
-                { SOURCE_NO_AGGREGATION, ASA_INSTANT_VALUE },
-                { "avg", ASA_AVG_VALUE },
-                { "average", ASA_AVG_VALUE },
-                { "min", ASA_MIN_VALUE },
-                { "minimum", ASA_MIN_VALUE },
-                { "max", ASA_MAX_VALUE },
-                { "maximum", ASA_MAX_VALUE },
-                { "count", ASA_COUNT_VALUE },
+                { SourceNoAggregation, AsaInstantValue },
+                { "avg", AsaAverageValue },
+                { "average", AsaAverageValue },
+                { "min", AsaMinimumValue },
+                { "minimum", AsaMinimumValue },
+                { "max", AsaMaximumValue },
+                { "maximum", AsaMaximumValue },
+                { "count", AsaCountValue },
             };
 
         // Map from values used in the Device Telemetry web service to the
         // corresponding Javascript symbols.
         // For flexibility, the keys are case insensitive, and also symbol-to-symbol mapping is supported.
         // See also https://github.com/Azure/device-telemetry-dotnet/blob/master/Services/Models/Condition.cs
-        private static readonly Dictionary<string, string> operatorsMap =
+        private static readonly Dictionary<string, string> OperatorsMap =
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 { "GreaterThan", ">" },
@@ -85,12 +87,46 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         // Internal data structure needed to serialize the model to JSON
         private readonly List<Condition> conditions;
 
-        private struct Condition
+        public RuleReferenceDataModel()
         {
-            internal string Calculation { get; set; }
-            internal string Field { get; set; }
-            internal string Operator { get; set; }
-            internal string Value { get; set; }
+            this.conditions = new List<Condition>();
+            this.Fields = new List<string>();
+        }
+
+        public RuleReferenceDataModel(RuleModel rule)
+            : this()
+        {
+            if (!rule.Enabled || rule.Deleted)
+            {
+                return;
+            }
+
+            this.Id = rule.Id;
+            this.Name = rule.Name;
+            this.Description = rule.Description;
+            this.GroupId = rule.GroupId;
+            this.Severity = rule.Severity;
+            this.AggregationWindow = GetAggregationWindowValue(rule.Calculation, rule.TimePeriod);
+
+            this.Fields = new List<string>();
+            this.conditions = new List<Condition>();
+            foreach (var c in rule.Conditions)
+            {
+                var condition = new Condition
+                {
+                    Calculation = rule.Calculation,
+                    Field = c.Field,
+                    Operator = c.Operator,
+                    Value = c.Value,
+                };
+                this.conditions.Add(condition);
+                this.Fields.Add(c.Field);
+            }
+
+            if (rule.Actions != null && rule.Actions.Count >= 0)
+            {
+                this.Actions = rule.Actions;
+            }
         }
 
         [JsonProperty("Id")]
@@ -120,42 +156,26 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
         [JsonProperty("__rulefilterjs")]
         public string RuleFilterJs => this.ConditionsToJavascript();
 
-        public RuleReferenceDataModel()
+        private static string GetFieldName(string field, string calculation)
         {
-            this.conditions = new List<Condition>();
-            this.Fields = new List<string>();
+            // Do not remove. This would be a bug, to be detected at development time.
+            if (!JsFieldsMap.ContainsKey(calculation))
+            {
+                throw new ApplicationException("Unknown calculation: " + calculation);
+            }
+
+            return field + JsFieldsMap[calculation];
         }
 
-        public RuleReferenceDataModel(RuleModel rule) : this()
+        private static string GetJsOperator(string op)
         {
-            if (!rule.Enabled || rule.Deleted) return;
-
-            this.Id = rule.Id;
-            this.Name = rule.Name;
-            this.Description = rule.Description;
-            this.GroupId = rule.GroupId;
-            this.Severity = rule.Severity;
-            this.AggregationWindow = GetAggregationWindowValue(rule.Calculation, rule.TimePeriod);
-
-            this.Fields = new List<string>();
-            this.conditions = new List<Condition>();
-            foreach (var c in rule.Conditions)
+            if (OperatorsMap.ContainsKey(op))
             {
-                var condition = new Condition
-                {
-                    Calculation = rule.Calculation,
-                    Field = c.Field,
-                    Operator = c.Operator,
-                    Value = c.Value
-                };
-                this.conditions.Add(condition);
-                this.Fields.Add(c.Field);
+                return OperatorsMap[op];
             }
 
-            if (rule.Actions != null && rule.Actions.Count >= 0)
-            {
-                this.Actions = rule.Actions;
-            }
+            // This is an overall bug in the solution, to be detected at development time
+            throw new ApplicationException("Unknown operator: " + op);
         }
 
         private static string GetAggregationWindowValue(string calculation, long timePeriod)
@@ -165,18 +185,18 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
                 return null;
             }
 
-            if (calculation.ToLowerInvariant() == SOURCE_NO_AGGREGATION)
+            if (calculation.ToLowerInvariant() == SourceNoAggregation)
             {
-                return ASA_AGGREGATION_NONE;
+                return AsaAggregationNone;
             }
 
             // Do not remove. This would be a bug, to be detected at development time.
-            if (!timePeriodMap.ContainsKey(timePeriod))
+            if (!TimePeriodMap.ContainsKey(timePeriod))
             {
                 throw new ApplicationException("Unknown time period: " + timePeriod);
             }
 
-            return timePeriodMap[timePeriod];
+            return TimePeriodMap[timePeriod];
         }
 
         private string ConditionsToJavascript()
@@ -191,7 +211,10 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
             foreach (var c in this.conditions)
             {
                 // Concatenate conditions with AND
-                if (!string.IsNullOrEmpty(result)) result += " && ";
+                if (!string.IsNullOrEmpty(result))
+                {
+                    result += " && ";
+                }
 
                 result += $"record.__aggregates." + GetFieldName(c.Field, c.Calculation);
                 result += " " + GetJsOperator(c.Operator) + " ";
@@ -199,25 +222,6 @@ namespace Mmm.Platform.IoT.AsaManager.Services.Models.Rules
             }
 
             return $"return ({result}) ? true : false;";
-        }
-
-        private static string GetFieldName(string field, string calculation)
-        {
-            // Do not remove. This would be a bug, to be detected at development time.
-            if (!jsFieldsMap.ContainsKey(calculation))
-            {
-                throw new ApplicationException("Unknown calculation: " + calculation);
-            }
-
-            return field + jsFieldsMap[calculation];
-        }
-
-        private static string GetJsOperator(string op)
-        {
-            if (operatorsMap.ContainsKey(op)) return operatorsMap[op];
-
-            // This is an overall bug in the solution, to be detected at development time
-            throw new ApplicationException("Unknown operator: " + op);
         }
     }
 }

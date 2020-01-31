@@ -1,12 +1,9 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="IFactory{T}.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-
-namespace Mmm.Platform.IoT.Common.Services.Wrappers
+namespace Mmm.Iot.Common.Services.Wrappers
 {
-    /// <summary>
-    /// Mock support
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
     public interface IFactory<out T>
     {
         T Create();

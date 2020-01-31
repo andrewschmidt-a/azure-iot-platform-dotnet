@@ -1,8 +1,12 @@
+// <copyright file="IDiagnosticsClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
+using Mmm.Iot.Common.Services;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.External
+namespace Mmm.Iot.DeviceTelemetry.Services.External
 {
     public interface IDiagnosticsClient : IStatusOperation
     {

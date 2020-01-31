@@ -1,12 +1,19 @@
+// <copyright file="IUserContainer.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System.Threading.Tasks;
 
-namespace Mmm.Platform.IoT.IdentityGateway.Services
+namespace Mmm.Iot.IdentityGateway.Services
 {
-    public interface IUserContainer<TModel, UInput>
+    public interface IUserContainer<TModel, TUiInput>
     {
-        Task<TModel> GetAsync(UInput input);
-        Task<TModel> CreateAsync(UInput input);
-        Task<TModel> UpdateAsync(UInput input);
-        Task<TModel> DeleteAsync(UInput input);
+        Task<TModel> GetAsync(TUiInput input);
+
+        Task<TModel> CreateAsync(TUiInput input);
+
+        Task<TModel> UpdateAsync(TUiInput input);
+
+        Task<TModel> DeleteAsync(TUiInput input);
     }
 }

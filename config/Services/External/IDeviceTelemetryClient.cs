@@ -1,8 +1,12 @@
-using System.Threading.Tasks;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.External;
+// <copyright file="IDeviceTelemetryClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Config.Services.External
+using System.Threading.Tasks;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.External;
+
+namespace Mmm.Iot.Config.Services.External
 {
     public interface IDeviceTelemetryClient : IExternalServiceClient
     {

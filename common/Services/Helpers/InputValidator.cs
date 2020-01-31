@@ -1,16 +1,20 @@
-﻿using System.Text.RegularExpressions;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+// <copyright file="InputValidator.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Common.Services.Helpers
+using System.Text.RegularExpressions;
+using Mmm.Iot.Common.Services.Exceptions;
+
+namespace Mmm.Iot.Common.Services.Helpers
 {
     public class InputValidator
     {
-        private const string INVALID_CHARACTER = @"[^A-Za-z0-9:;.!,_\-*@ ]";
+        private const string InvalidCharacterRegex = @"[^A-Za-z0-9:;.!,_\-*@ ]";
 
         // Check illegal characters in input
         public static void Validate(string input)
         {
-            if (Regex.IsMatch(input.Trim(), INVALID_CHARACTER))
+            if (Regex.IsMatch(input.Trim(), InvalidCharacterRegex))
             {
                 throw new InvalidInputException($"Input '{input}' contains invalid characters.");
             }

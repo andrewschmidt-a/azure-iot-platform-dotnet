@@ -1,22 +1,26 @@
-﻿using System;
+// <copyright file="HttpClientWrapper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Http;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Http;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     public class HttpClientWrapper : IHttpClientWrapper
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly IHttpClient client;
 
         public HttpClientWrapper(
             ILogger<HttpClientWrapper> logger,
             IHttpClient client)
         {
-            _logger = logger;
+            this.logger = logger;
             this.client = client;
         }
 
@@ -48,13 +52,13 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Request to URI {uri} failed", uri);
+                this.logger.LogError(e, "Request to URI {uri} failed", uri);
                 throw new ExternalDependencyException($"Failed to post {description}");
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                _logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                this.logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
                 throw new ExternalDependencyException($"Unable to post {description}");
             }
         }

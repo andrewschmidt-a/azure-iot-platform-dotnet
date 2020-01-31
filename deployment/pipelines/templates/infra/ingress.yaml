@@ -8,7 +8,7 @@ parameters:
 steps:
 - task: HelmInstaller@1
   inputs:
-    helmVersionToInstall: 'latest'
+    helmVersionToInstall: 'v2.14.3'
 - task: HelmDeploy@0
   displayName: Helm init (set up tiller)
   inputs:
@@ -18,8 +18,9 @@ steps:
     kubernetesCluster: ${{ parameters.aksName }}
     namespace: 'default'
     command: 'init'
-    upgradeTiller: false
+    upgradeTiller: true
     waitForExecution: false
+    arguments: --force-upgrade
     
 - task: AzureCLI@1
   displayName: "CLI: install ingress-controller"
@@ -27,6 +28,7 @@ steps:
     azureSubscription: ${{ parameters.serviceConnection }}
     scriptLocation: 'inlineScript'
     inlineScript: |-
+      helm version
       helm repo add stable https://kubernetes-charts.storage.googleapis.com/
       helm repo update
       n=0

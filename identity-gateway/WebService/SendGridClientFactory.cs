@@ -1,7 +1,11 @@
-﻿using Mmm.Platform.IoT.Common.Services.Config;
+// <copyright file="SendGridClientFactory.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using Mmm.Iot.Common.Services.Config;
 using SendGrid;
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService
+namespace Mmm.Iot.IdentityGateway.WebService
 {
     public class SendGridClientFactory : ISendGridClientFactory
     {
@@ -14,7 +18,7 @@ namespace Mmm.Platform.IoT.IdentityGateway.WebService
 
         public ISendGridClient CreateSendGridClient()
         {
-            return new SendGridClient(config.IdentityGatewayService.SendGridApiKey);
+            return new SendGridClient(this.config.IdentityGatewayService.SendGridApiKey);
         }
     }
 }

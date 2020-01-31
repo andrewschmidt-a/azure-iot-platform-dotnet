@@ -1,27 +1,45 @@
+// <copyright file="RulesConverter.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.AsaManager.Services.External.BlobStorage;
-using Mmm.Platform.IoT.AsaManager.Services.Models;
-using Mmm.Platform.IoT.AsaManager.Services.Models.Rules;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.AsaManager.Services.External.BlobStorage;
+using Mmm.Iot.AsaManager.Services.Models;
+using Mmm.Iot.AsaManager.Services.Models.Rules;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.AsaManager.Services
+namespace Mmm.Iot.AsaManager.Services
 {
     public class RulesConverter : Converter, IConverter
     {
-        public override string Entity { get { return "rules"; } }
-        public override string FileExtension { get { return "json"; } }
-
         public RulesConverter(
             IBlobStorageClient blobClient,
             IStorageAdapterClient storageAdapterClient,
-            ILogger<RulesConverter> log) : base(blobClient, storageAdapterClient, log)
+            ILogger<RulesConverter> log)
+                : base(blobClient, storageAdapterClient, log)
         {
+        }
+
+        public override string Entity
+        {
+            get
+            {
+                return "rules";
+            }
+        }
+
+        public override string FileExtension
+        {
+            get
+            {
+                return "json";
+            }
         }
 
         public override async Task<ConversionApiModel> ConvertAsync(string tenantId, string operationId = null)
@@ -29,16 +47,17 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             ValueListApiModel rules = null;
             try
             {
-                rules = await this._storageAdapterClient.GetAllAsync(this.Entity);
+                rules = await this.StorageAdapterClient.GetAllAsync(this.Entity);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to query {entity} using storage adapter. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
+
             if (rules.Items.Count() == 0 || rules == null)
             {
-                _logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw new ResourceNotFoundException("No entities were receieved from storage adapter to convert to rules.");
             }
 
@@ -51,15 +70,17 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                     {
                         RuleDataModel dataModel = JsonConvert.DeserializeObject<RuleDataModel>(item.Data);
                         RuleModel ruleModel = new RuleModel(item.Key, dataModel);
+
                         // return a RuleReferenceModel which is a conversion from the RuleModel into a SAjob readable format with additional metadata
                         RuleReferenceDataModel referenceModel = new RuleReferenceDataModel(ruleModel);
                         jsonRulesList.Add(referenceModel);
                     }
                     catch (Exception)
                     {
-                        _logger.LogInformation("Unable to convert a rule to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                        this.Logger.LogInformation("Unable to convert a rule to the proper reference data model for {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                     }
                 }
+
                 if (jsonRulesList.Count() == 0)
                 {
                     throw new ResourceNotSupportedException("No rules were able to be converted to the proper rule reference data model.");
@@ -67,7 +88,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to convert {entity} queried from storage adapter to appropriate data model. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to convert {entity} queried from storage adapter to appropriate data model. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
@@ -78,7 +99,7 @@ namespace Mmm.Platform.IoT.AsaManager.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Unable to serialize the IEnumerable of {entity} data models for the temporary file content. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                this.Logger.LogError(e, "Unable to serialize the IEnumerable of {entity} data models for the temporary file content. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
                 throw e;
             }
 
@@ -89,9 +110,9 @@ namespace Mmm.Platform.IoT.AsaManager.Services
                 TenantId = tenantId,
                 BlobFilePath = blobFilePath,
                 Entities = rules,
-                OperationId = operationId
+                OperationId = operationId,
             };
-            _logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
+            this.Logger.LogInformation("Successfully Completed {entity} conversion\n{model}", this.Entity, JsonConvert.SerializeObject(conversionResponse));
             return conversionResponse;
         }
     }

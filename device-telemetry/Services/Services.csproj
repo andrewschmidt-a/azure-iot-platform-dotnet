@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>Mmm.Platform.IoT.DeviceTelemetry.Services</AssemblyName>
+    <AssemblyName>Mmm.Iot.DeviceTelemetry.Services</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
   </PropertyGroup>
 
@@ -23,5 +23,5 @@
   <ItemGroup>
     <Folder Include="Converters\" />
   </ItemGroup>
-  
+
 </Project>

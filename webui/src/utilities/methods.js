@@ -181,3 +181,34 @@ export const formatTime = (value) => {
   }
   return value;
 }
+
+export const dataURLtoFile = (dataurl, filename) => {
+ 
+  var arr = dataurl.split(','),
+      mime = arr[0].match(/:(.*?);/)[1],
+      bstr = atob(arr[1]), 
+      n = bstr.length, 
+      u8arr = new Uint8Array(n);
+      
+  while(n--){
+      u8arr[n] = bstr.charCodeAt(n);
+  }
+  
+  return new File([u8arr], filename, {type:mime});
+}
+export const base64toHEX = (base64) => {
+
+  var raw = atob(base64);
+
+  var HEX = '';
+
+  for ( var i = 0; i < raw.length; i++ ) {
+
+    var _hex = raw.charCodeAt(i).toString(16)
+
+    HEX += (_hex.length==2?_hex:'0'+_hex);
+
+  }
+  return HEX.toUpperCase();
+
+}

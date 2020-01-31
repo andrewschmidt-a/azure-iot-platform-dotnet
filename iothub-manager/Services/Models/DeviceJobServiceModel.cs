@@ -1,21 +1,14 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeviceJobServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using Microsoft.Azure.Devices;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class DeviceJobServiceModel
     {
-        public string DeviceId { get; }
-        public DeviceJobStatus Status { get; }
-        public DateTime StartTimeUtc { get; }
-        public DateTime EndTimeUtc { get; }
-        public DateTime CreatedDateTimeUtc { get; }
-        public DateTime LastUpdatedDateTimeUtc { get; }
-        public MethodResultServiceModel Outcome { get; }
-        public DeviceJobErrorServiceModel Error { get; }
-
         public DeviceJobServiceModel(DeviceJob deviceJob)
         {
             this.DeviceId = deviceJob.DeviceId;
@@ -62,18 +55,21 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
                 this.Error = new DeviceJobErrorServiceModel(deviceJob.Error);
             }
         }
-    }
 
-    /// <summary>
-    /// refer to Microsoft.Microsoft.Azure.Devices.DeviceJobStatus
-    /// </summary>
-    public enum DeviceJobStatus
-    {
-        Pending = 0,
-        Scheduled = 1,
-        Running = 2,
-        Completed = 3,
-        Failed = 4,
-        Canceled = 5
+        public string DeviceId { get; }
+
+        public DeviceJobStatus Status { get; }
+
+        public DateTime StartTimeUtc { get; }
+
+        public DateTime EndTimeUtc { get; }
+
+        public DateTime CreatedDateTimeUtc { get; }
+
+        public DateTime LastUpdatedDateTimeUtc { get; }
+
+        public MethodResultServiceModel Outcome { get; }
+
+        public DeviceJobErrorServiceModel Error { get; }
     }
 }

@@ -470,3 +470,4 @@ bld/
 # Overrides
 **/lcov.info
 webui/build
+webui/package-lock.json

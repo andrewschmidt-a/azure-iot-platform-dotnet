@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+// <copyright file="ClientCredentialInput.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.IdentityGateway.WebService.Models
+using Newtonsoft.Json;
+
+namespace Mmm.Iot.IdentityGateway.WebService.Models
 {
     public class ClientCredentialInput
     {
-        public string client_id { get; set; }
-        public string client_secret { get; set; }
-        public string scope { get; set; }
+        [JsonProperty("client_id")]
+        public string ClientId { get; set; }
+
+        [JsonProperty("client_secret")]
+        public string ClientSecret { get; set; }
+
+        [JsonProperty("scope")]
+        public string Scope { get; set; }
     }
 }

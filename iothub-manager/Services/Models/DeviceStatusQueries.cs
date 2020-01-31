@@ -1,67 +1,22 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeviceStatusQueries.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
-using static Mmm.Platform.IoT.Config.Services.Models.DeviceStatusQueries;
+using Mmm.Iot.IoTHubManager.Services.Models;
 
-namespace Mmm.Platform.IoT.Config.Services.Models
+namespace Mmm.Iot.Config.Services.Models
 {
-    public class FirmwareStatusQueries
+    public partial class DeviceStatusQueries
     {
-        public static IDictionary<QueryType, string> Queries = new Dictionary<QueryType, string>()
-        {
-            { QueryType.APPLIED, @"SELECT deviceId from devices where configurations.[[{0}]].status   
-                  = 'Applied'"},
-            { QueryType.SUCCESSFUL, @"SELECT deviceId FROM devices WHERE  
-                 configurations.[[{0}]].status = 'Applied'  
-                 AND properties.reported.firmware.fwUpdateStatus='Current'  
-                 AND properties.reported.firmware.type='IoTDevKit'"},
-            { QueryType.FAILED, @"SELECT deviceId FROM devices WHERE 
-                 configurations.[[{0}]].status = 'Applied' 
-                 AND properties.reported.firmware.fwUpdateStatus='Error'  
-                 AND properties.reported.firmware.type='IoTDevKit'"}
-        };
-    }
-
-    public class EdgeDeviceStatusQueries
-    {
-        public static IDictionary<QueryType, string> Queries = new Dictionary<QueryType, string>()
-        {
-            { QueryType.APPLIED, @"SELECT deviceId from devices.modules WHERE 
-                moduleId = '$edgeAgent' 
-                AND configurations.[[{0}]].status = 'Applied'" },
-            { QueryType.SUCCESSFUL, @"SELECT deviceId from devices.modules WHERE 
-                moduleId = '$edgeAgent' 
-                AND configurations.[[{0}]].status = 'Applied' 
-                AND properties.desired.$version = properties.reported.lastDesiredVersion  
-                AND properties.reported.lastDesiredStatus.code = 200" },
-            { QueryType.FAILED, @"SELECT deviceId FROM devices.modules WHERE 
-                moduleId = '$edgeAgent' 
-                AND configurations.[[{0}]].status = 'Applied' 
-                AND properties.desired.$version = properties.reported.lastDesiredVersion 
-                AND properties.reported.lastDesiredStatus.code != 200" }
-        };
-    }
-
-    public class DefaultDeviceStatusQueries
-    {
-        public static IDictionary<QueryType, string> Queries = new Dictionary<QueryType, string>()
-        {
-            { QueryType.APPLIED, @"SELECT deviceId from devices where 
-                 configurations.[[{0}]].status = 'Applied'" },
-            { QueryType.SUCCESSFUL, String.Empty },
-            { QueryType.FAILED, String.Empty }
-        };
-    }
-
-    public class DeviceStatusQueries {
-
-        private static Dictionary<string, IDictionary<QueryType, string>> AdmQueryMapping =
+        private static Dictionary<string, IDictionary<QueryType, string>> admQueryMapping =
             new Dictionary<string, IDictionary<QueryType, string>>()
         {
-            { ConfigType.Firmware.ToString(),
-                    FirmwareStatusQueries.Queries }
+            {
+                ConfigType.Firmware.ToString(),
+                FirmwareStatusQueries.Queries
+            },
         };
 
         internal static IDictionary<QueryType, string> GetQueries(string deploymentType, string configType)
@@ -71,10 +26,9 @@ namespace Mmm.Platform.IoT.Config.Services.Models
                 return EdgeDeviceStatusQueries.Queries;
             }
 
-            return AdmQueryMapping.TryGetValue(configType, 
-                    out IDictionary<QueryType, string> value) ? value : DefaultDeviceStatusQueries.Queries;
+            return admQueryMapping.TryGetValue(
+                configType,
+                out IDictionary<QueryType, string> value) ? value : DefaultDeviceStatusQueries.Queries;
         }
-
-        public enum QueryType { APPLIED, SUCCESSFUL, FAILED };
     }
 }

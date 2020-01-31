@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using Mmm.Platform.IoT.Common.Services.Converters;
+// <copyright file="IAction.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System.Collections.Generic;
+using Mmm.Iot.Common.Services.Converters;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace Mmm.Platform.IoT.Common.Services.Models
+namespace Mmm.Iot.Common.Services.Models
 {
-    /// <summary>
-    /// Interface for all Actions that can be added as part of a Rule.
-    /// New action types should implement IAction and be added to the ActionType enum.
-    /// Parameters should be a case-insensitive dictionary used to pass additional
-    /// information required for any given action type.
-    /// </summary>
     [JsonConverter(typeof(ActionConverter))]
     public interface IAction
     {

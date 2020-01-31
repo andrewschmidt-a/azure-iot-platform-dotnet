@@ -1,15 +1,13 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="MethodResultServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using Microsoft.Azure.Devices;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class MethodResultServiceModel
     {
-        public int Status { get; set; }
-
-        public string JsonPayload { get; set; }
-
         public MethodResultServiceModel()
         {
         }
@@ -19,5 +17,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
             this.Status = result.Status;
             this.JsonPayload = result.GetPayloadAsJson();
         }
+
+        public int Status { get; set; }
+
+        public string JsonPayload { get; set; }
     }
 }

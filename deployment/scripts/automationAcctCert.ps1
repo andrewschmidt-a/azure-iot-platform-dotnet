@@ -99,7 +99,7 @@ function Get-RandomCharacters($length, $characters) {
     return [String]$characters[$random]
 }
 function ScrambletheString([string]$inputString){
-    $characterArray = $inputString.ToCharArray()   
+    $characterArray = $inputstring.ToCharArray()   
     $scrambledStringArray = $characterArray | Get-Random -Count $characterArray.Length     
     $outputString = -join $scrambledStringArray
     return $outputString 

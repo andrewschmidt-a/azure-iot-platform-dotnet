@@ -1,4 +1,6 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="UserManagementClientTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
@@ -6,25 +8,24 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External;
-using Mmm.Platform.IoT.Common.Services.Http;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External;
+using Mmm.Iot.Common.Services.External.UserManagement;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.Services.Http;
+using Mmm.Iot.Common.TestHelpers;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-using HttpResponse = Mmm.Platform.IoT.Common.Services.Http.HttpResponse;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.UserManagement;
+using HttpResponse = Mmm.Iot.Common.Services.Http.HttpResponse;
 
-namespace Mmm.Platform.IoT.Common.Services.Test
+namespace Mmm.Iot.Common.Services.Test
 {
     public class UserManagementClientTest
     {
-        private const string MOCK_SERVICE_URI = @"http://mockauth";
-        private const string AZDS_ROUTE_KEY = "azds-route-as";
-
+        private const string MockServiceUri = @"http://mockauth";
+        private const string AzdsRouteKey = "azds-route-as";
         private readonly Mock<IHttpClient> mockHttpClient;
         private readonly Mock<IHttpContextAccessor> mockHttpContextAccessor;
         private readonly Mock<ExternalRequestHelper> mockRequestHelper;
@@ -38,10 +39,10 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
             this.mockHttpContextAccessor
                 .Setup(t => t.HttpContext.Request.HttpContext.Items)
-                .Returns(new Dictionary<object, object>(){{"TenantID", "test_tenant"}});
+                .Returns(new Dictionary<object, object>() { { "TenantID", "test_tenant" } });
             this.mockHttpContextAccessor
                 .Setup(t => t.HttpContext.Request.Headers)
-                .Returns(new HeaderDictionary() { { AZDS_ROUTE_KEY, "mockDevSpace" } });
+                .Returns(new HeaderDictionary() { { AzdsRouteKey, "mockDevSpace" } });
             this.mockRequestHelper = new Mock<ExternalRequestHelper>(
                 this.mockHttpClient.Object,
                 this.mockHttpContextAccessor.Object);
@@ -49,7 +50,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.mockConfig = new Mock<AppConfig>();
             this.mockConfig
                 .Setup(x => x.ExternalDependencies.AuthServiceUrl)
-                .Returns(MOCK_SERVICE_URI);
+                .Returns(MockServiceUri);
 
             this.client = new UserManagementClient(
                 this.mockConfig.Object,
@@ -57,7 +58,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             this.rand = new Random();
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllowedActions_ReturnValues()
         {
             var userObjectId = this.rand.NextString();
@@ -69,7 +71,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             {
                 StatusCode = HttpStatusCode.OK,
                 IsSuccessStatusCode = true,
-                Content = JsonConvert.SerializeObject(allowedActions)
+                Content = JsonConvert.SerializeObject(allowedActions),
             };
 
             this.mockHttpClient
@@ -80,15 +82,17 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
             var result = await this.client.GetAllowedActionsAsync(userObjectId, roles);
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/users/{userObjectId}/allowedActions")),
-                    It.Is<HttpMethod>(m => m == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check($"{MockServiceUri}/users/{userObjectId}/allowedActions")),
+                        It.Is<HttpMethod>(m => m == method)),
+                    Times.Once);
 
             Assert.Equal(allowedActions, result);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllowedActions_ReturnNotFound()
         {
             var userObjectId = this.rand.NextString();
@@ -98,7 +102,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             var response = new HttpResponse
             {
                 StatusCode = HttpStatusCode.NotFound,
-                IsSuccessStatusCode = false
+                IsSuccessStatusCode = false,
             };
 
             this.mockHttpClient
@@ -111,7 +115,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 await this.client.GetAllowedActionsAsync(userObjectId, roles));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetAllowedActions_ReturnError()
         {
             var userObjectId = this.rand.NextString();
@@ -121,7 +126,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             var response = new HttpResponse
             {
                 StatusCode = HttpStatusCode.InternalServerError,
-                IsSuccessStatusCode = false
+                IsSuccessStatusCode = false,
             };
 
             this.mockHttpClient
@@ -134,7 +139,8 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 await this.client.GetAllowedActionsAsync(userObjectId, roles));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetToken_ReturnsValue()
         {
             // Arrange
@@ -143,7 +149,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
                 AccessToken = "1234ExampleToken",
                 AccessTokenType = "Bearer",
                 Audience = "https://management.azure.com/",
-                Authority = "https://login.microsoftonline.com/12345/"
+                Authority = "https://login.microsoftonline.com/12345/",
             };
 
             var method = HttpMethod.Get;
@@ -151,7 +157,7 @@ namespace Mmm.Platform.IoT.Common.Services.Test
             {
                 StatusCode = HttpStatusCode.OK,
                 IsSuccessStatusCode = true,
-                Content = JsonConvert.SerializeObject(token)
+                Content = JsonConvert.SerializeObject(token),
             };
 
             this.mockHttpClient
@@ -165,10 +171,11 @@ namespace Mmm.Platform.IoT.Common.Services.Test
 
             // Assert
             this.mockHttpClient
-                .Verify(x => x.SendAsync(
-                    It.Is<IHttpRequest>(r => r.Check($"{MOCK_SERVICE_URI}/users/default/token")),
-                    It.Is<HttpMethod>(m => m == method)),
-                Times.Once);
+                .Verify(
+                    x => x.SendAsync(
+                        It.Is<IHttpRequest>(r => r.Check($"{MockServiceUri}/users/default/token")),
+                        It.Is<HttpMethod>(m => m == method)),
+                    Times.Once);
 
             Assert.Equal(token.AccessToken, result);
         }

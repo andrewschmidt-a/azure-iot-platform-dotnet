@@ -1,6 +1,8 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="HttpRequestOptions.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Common.Services.Http
+namespace Mmm.Iot.Common.Services.Http
 {
     public class HttpRequestOptions
     {

@@ -13,6 +13,7 @@ import {
 import {
   redux as appRedux,
   epics as appEpics,
+  getActiveDeviceQueryConditions
 } from 'store/reducers/appReducer';
 
 // Pass the global info needed
@@ -20,7 +21,8 @@ const mapStateToProps = state => ({
   isPending: getDeploymentsPendingStatus(state),
   error: getDeploymentsError(state),
   deployments: getDeployments(state),
-  lastUpdated: getDeploymentsLastUpdated(state)
+  lastUpdated: getDeploymentsLastUpdated(state),
+  activeDeviceQueryConditions: getActiveDeviceQueryConditions(state)
 });
 
 // Wrap the dispatch methods

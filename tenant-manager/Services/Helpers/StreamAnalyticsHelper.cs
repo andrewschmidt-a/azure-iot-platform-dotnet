@@ -1,61 +1,31 @@
+// <copyright file="StreamAnalyticsHelper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Threading.Tasks;
-using Microsoft.Rest;
 using Microsoft.Azure.Management.StreamAnalytics;
 using Microsoft.Azure.Management.StreamAnalytics.Models;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Models;
+using Microsoft.Rest;
 using Microsoft.Rest.Azure;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
+namespace Mmm.Iot.TenantManager.Services.Helpers
 {
     public class StreamAnalyticsHelper : IStreamAnalyticsHelper
     {
         private readonly AppConfig config;
-        private readonly ITokenHelper _tokenHelper;
-
-        private delegate Task<T> JobOperationDelegate<T>(string rg, string saJobName);
+        private readonly ITokenHelper tokenHelper;
 
         public StreamAnalyticsHelper(AppConfig config, ITokenHelper tokenHelper)
         {
             this.config = config;
-            this._tokenHelper = tokenHelper;
+            this.tokenHelper = tokenHelper;
         }
 
-        private async Task<StreamAnalyticsManagementClient> GetClientAsync()
-        {
-            try
-            {
-                string authToken = "";
-                try
-                {
-                    authToken = await this._tokenHelper.GetTokenAsync();
-                    if (String.IsNullOrEmpty(authToken))
-                    {
-                        throw new Exception("Auth Token from tokenHelper returned a null response.");
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw new Exception("Unable to get an authorization token for creating a Stream Analytics Management Client.", e);
-                }
-
-                TokenCredentials credentials = new TokenCredentials(authToken);
-                StreamAnalyticsManagementClient client = new StreamAnalyticsManagementClient(credentials)
-                {
-                    SubscriptionId = config.Global.SubscriptionId
-                };
-                return client;
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Unable to get a new Stream Analytics Management Client.", e);
-            }
-        }
+        private delegate Task<T> JobOperationDelegate<T>(string rg, string saJobName);
 
         public async Task<StatusResultServiceModel> StatusAsync()
         {
@@ -68,7 +38,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             StreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
-                return await client.StreamingJobs.GetAsync(config.Global.ResourceGroup, saJobName);
+                return await client.StreamingJobs.GetAsync(this.config.Global.ResourceGroup, saJobName);
             }
             catch (CloudException ce)
             {
@@ -99,7 +69,7 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             StreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
-                await client.StreamingJobs.BeginStartAsync(config.Global.ResourceGroup, saJobName);
+                await client.StreamingJobs.BeginStartAsync(this.config.Global.ResourceGroup, saJobName);
             }
             catch (Exception e)
             {
@@ -112,11 +82,42 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Helpers
             StreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
-                await client.StreamingJobs.BeginStopAsync(config.Global.ResourceGroup, saJobName);
+                await client.StreamingJobs.BeginStopAsync(this.config.Global.ResourceGroup, saJobName);
             }
             catch (Exception e)
             {
                 throw new Exception($"Unable to stop the Stream Analytics Job {saJobName}.", e);
+            }
+        }
+
+        private async Task<StreamAnalyticsManagementClient> GetClientAsync()
+        {
+            try
+            {
+                string authToken = string.Empty;
+                try
+                {
+                    authToken = await this.tokenHelper.GetTokenAsync();
+                    if (string.IsNullOrEmpty(authToken))
+                    {
+                        throw new Exception("Auth Token from tokenHelper returned a null response.");
+                    }
+                }
+                catch (Exception e)
+                {
+                    throw new Exception("Unable to get an authorization token for creating a Stream Analytics Management Client.", e);
+                }
+
+                TokenCredentials credentials = new TokenCredentials(authToken);
+                StreamAnalyticsManagementClient client = new StreamAnalyticsManagementClient(credentials)
+                {
+                    SubscriptionId = this.config.Global.SubscriptionId,
+                };
+                return client;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to get a new Stream Analytics Management Client.", e);
             }
         }
     }

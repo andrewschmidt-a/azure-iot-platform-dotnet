@@ -1,18 +1,21 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeviceJobErrorServiceModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using Microsoft.Azure.Devices;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
     public class DeviceJobErrorServiceModel
     {
-        public string Code { get; }
-        public string Description { get; }
-
         public DeviceJobErrorServiceModel(DeviceJobError error)
         {
             this.Code = error.Code;
             this.Description = error.Description;
         }
+
+        public string Code { get; }
+
+        public string Description { get; }
     }
 }

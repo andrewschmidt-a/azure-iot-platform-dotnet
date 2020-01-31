@@ -25,6 +25,7 @@ import { DeviceGroupDropdownContainer as DeviceGroupDropdown } from 'components/
 import { ManageDeviceGroupsBtnContainer as ManageDeviceGroupsBtn } from 'components/shell/manageDeviceGroupsBtn';
 import { TimeIntervalDropdownContainer as TimeIntervalDropdown } from 'components/shell/timeIntervalDropdown';
 import { TelemetryChartContainer as TelemetryChart, transformTelemetryResponse, chartColorObjects } from 'components/pages/dashboard/panels/telemetry';
+import { ResetActiveDeviceQueryBtnContainer as ResetActiveDeviceQueryBtn } from 'components/shell/resetActiveDeviceQueryBtn';
 import { TelemetryService } from 'services';
 import { TimeRenderer, SeverityRenderer } from 'components/shared/cellRenderers';
 import { AlertOccurrencesGrid } from 'components/pages/maintenance/grids';
@@ -303,6 +304,9 @@ export class RuleDetails extends Component {
             <Protected permission={permissions.updateDeviceGroups}>
               <ManageDeviceGroupsBtn />
             </Protected>
+            {
+              this.props.activeDeviceQueryConditions.length != 0 ? <ResetActiveDeviceQueryBtn /> : null
+            }
           </ContextMenuAlign>
           <ContextMenuAlign>
             {

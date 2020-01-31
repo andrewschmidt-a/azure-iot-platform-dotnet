@@ -1,42 +1,43 @@
-﻿using System;
+// <copyright file="TenantConnectionHelper.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
-using Mmm.Platform.IoT.Common.Services;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Config;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
     public class TenantConnectionHelper : ITenantConnectionHelper
     {
+        private const string TenantKey = "tenant:";
+        private const string IotHubConnectionKey = ":iotHubConnectionString";
         private readonly IAppConfigurationClient appConfig;
         private readonly ILogger<TenantConnectionHelper> logger;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        private const string TENANT_KEY = "tenant:";
-        private const string IOTHUBCONNECTION_KEY = ":iotHubConnectionString";
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public TenantConnectionHelper(
             IAppConfigurationClient appConfigurationClient,
             IHttpContextAccessor httpContextAccessor,
             ILogger<TenantConnectionHelper> logger)
         {
-            this._httpContextAccessor = httpContextAccessor;
+            this.httpContextAccessor = httpContextAccessor;
             this.appConfig = appConfigurationClient;
             this.logger = logger;
         }
 
-        //Gets the tenant name from the threads current token.
+        // Gets the tenant name from the threads current token.
         private string TenantName
         {
             get
             {
                 try
                 {
-                    return this._httpContextAccessor.HttpContext.Request.GetTenant();
+                    return this.httpContextAccessor.HttpContext.Request.GetTenant();
                 }
                 catch (Exception ex)
                 {
@@ -47,22 +48,23 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
 
         public string GetIotHubConnectionString()
         {
-            var appConfigurationKey = TENANT_KEY + TenantName + IOTHUBCONNECTION_KEY;
-            logger.LogDebug("App Configuration key for IoT Hub connection string for tenant {tenant} is {appConfigurationKey}", TenantName, appConfigurationKey);
-            return appConfig.GetValue(appConfigurationKey);
+            var appConfigurationKey = TenantKey + this.TenantName + IotHubConnectionKey;
+            this.logger.LogDebug("App Configuration key for IoT Hub connection string for tenant {tenant} is {appConfigurationKey}", this.TenantName, appConfigurationKey);
+            return this.appConfig.GetValue(appConfigurationKey);
         }
 
         public string GetIotHubName()
         {
             string currIoTHubHostName = null;
-            IoTHubConnectionHelper.CreateUsingHubConnectionString(GetIotHubConnectionString(), (conn) =>
+            IoTHubConnectionHelper.CreateUsingHubConnectionString(this.GetIotHubConnectionString(), (conn) =>
             {
                 currIoTHubHostName = IotHubConnectionStringBuilder.Create(conn).HostName;
             });
             if (currIoTHubHostName == null)
             {
-                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionString.");
+                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionstring.");
             }
+
             return currIoTHubHostName;
         }
 
@@ -70,14 +72,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
         {
             RegistryManager registry = null;
 
-            IoTHubConnectionHelper.CreateUsingHubConnectionString(GetIotHubConnectionString(), (conn) =>
+            IoTHubConnectionHelper.CreateUsingHubConnectionString(this.GetIotHubConnectionString(), (conn) =>
             {
                 registry = RegistryManager.CreateFromConnectionString(conn);
             });
             if (registry == null)
             {
-                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionString.");
+                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionstring.");
             }
+
             return registry;
         }
 
@@ -85,14 +88,15 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
         {
             JobClient job = null;
 
-            IoTHubConnectionHelper.CreateUsingHubConnectionString(GetIotHubConnectionString(), conn =>
+            IoTHubConnectionHelper.CreateUsingHubConnectionString(this.GetIotHubConnectionString(), conn =>
              {
                  job = JobClient.CreateFromConnectionString(conn);
              });
             if (job == null)
             {
-                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionString.");
+                throw new InvalidConfigurationException($"Invalid tenant information for HubConnectionstring.");
             }
+
             return job;
         }
     }

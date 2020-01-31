@@ -7,9 +7,25 @@ parameters:
   keyVaultName: ''
   userObjId: ''
   defaultSASKeyName: ''
-  SendGridApiKey: ''
+  applicationCode: ''
+  crslplatformKeyvault: ''
+  platformOperationServiceConnection: ''
 
 steps:
+
+- task: AzureCLI@1
+  displayName: Get Sendgrid API key from Operation Keyvault
+  inputs:
+    azureSubscription: ${{ parameters.platformOperationServiceConnection }}
+    scriptLocation: 'inlineScript'
+    inlineScript: |-
+      KeyVault=${{ parameters.crslplatformKeyvault }}
+      SendGridSecret=${{ parameters.applicationCode }}-sendgridapikey    
+      SendGridApiKey=$(az keyvault secret show --name $SendGridSecret --vault-name $KeyVault | grep value | awk -F '\"' '{print $4}')
+      
+      echo "##vso[task.setvariable variable=SendGridApiKey]$SendGridApiKey"      
+    addSpnToEnvironment: true
+
 - task: AzureCLI@1
   displayName: Get ObjectId of Service Principal
   inputs:
@@ -41,9 +57,6 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |-
       rg=${{ parameters.resourceGroup }}
-      appInsightName=$(az resource list -g $rg --resource-type "Microsoft.Insights/components" | grep name | grep appinsight | awk -F "\"" '{print $4}')
-      appInsightKey=$(az resource show -g $rg -n $appInsightName --resource-type "Microsoft.Insights/components" --query properties.InstrumentationKey)
-      appInsightKey="${appInsightKey//\"}"
       kVaultName=${{ parameters.keyVaultName }}
       blobStorageAccountName=$(az storage account list -g $rg | grep name | grep storage | awk -F "\"" '{print $4}')
       blobStorageKey=$(az storage account keys list -g $rg -n $blobStorageAccountName | grep value | head -n1 | awk -F "\"" '{print $4}')
@@ -68,13 +81,12 @@ steps:
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbAuthKey' --value $cosmosDBAuthKey
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbConnectionString' --value $cosmosDBConnection
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbEndpoint' --value $cosmosDBUri
-      az keyvault secret set --vault-name $kVaultName --name 'Global--InstrumentationKey' --value $appInsightKey
       az keyvault secret set --vault-name $kVaultName --name 'Global--ServicePrincipalId' --value $servicePrincipalId
       az keyvault secret set --vault-name $kVaultName --name 'Global--StorageAccountConnectionString' --value $blobStorageConnString
       az keyvault secret set --vault-name $kVaultName --name 'Global--ServicePrincipalKey' --value $servicePrincipalKey
       az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--LifecycleEventHubConnectionString' --value $lifecycleEvConn
       az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--TelemetryEventHubConnectionString' --value $telemetryEvConn
       az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--TwinChangeEventHubConnectionString' --value $twinchangeEvConn
-      az keyvault secret set --vault-name $kVaultName --name 'IdentityGatewayService--SendGridApiKey' --value ${{ parameters.SendGridApiKey }}
+      az keyvault secret set --vault-name $kVaultName --name 'IdentityGatewayService--SendGridApiKey' --value $(SendGridApiKey)
       az keyvault secret set --vault-name $kVaultName --name 'TenantManagerService--EventHubAccessPolicyKey' --value $evAccessPolicyKey
     addSpnToEnvironment: true

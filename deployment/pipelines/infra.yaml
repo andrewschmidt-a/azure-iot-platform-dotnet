@@ -20,11 +20,12 @@ stages:
       subscriptionId: c36fb2f8-f98d-40d0-90a9-d65e93acb428
       applicationCode: crsliot
       deployEnvironment: dev
+      platformOperationServiceConnection: '3M-CRSLBL01-CRSL-Digital-Platforms-Bluebird'
 
 ## CRSL QA ----
 - stage: DeployCRSLQA
-  dependsOn: []
-  #- DeployCRSLDev
+  dependsOn:
+  - DeployCRSLDev
   displayName: Deploy To CRSL QA
   jobs:
   - template: templates/approval.yaml
@@ -38,7 +39,8 @@ stages:
       environment: IoT_CRSL_Environment_QA
       subscriptionId: f27c7c03-1ea8-49b8-9878-106e434b8a23
       applicationCode: crsliot
-      deployEnvironment: qa      
+      deployEnvironment: qa
+      platformOperationServiceConnection: '3M-CRSLBL01-CRSL-Digital-Platforms-Bluebird'      
       
 ## CRSL CT ----
 # - stage: DeployCRSLCT
@@ -57,11 +59,12 @@ stages:
 #       environment: IoT_CRSL_Environment_CT
 #       subscriptionId: c6236fd8-0a23-42f3-b997-76d2721591da
 #       applicationCode: crsliot
-#       deployEnvironment: ct      
+#       deployEnvironment: ct  
+
 ## CRSL WKBNCH ----
 - stage: DeployCRSLWkBnch
-  dependsOn: []
-  #- DeployCRSLQA
+  dependsOn: 
+  - DeployCRSLQA
   displayName: Deploy To CRSL WorkBench
   jobs:
   - template: templates/approval.yaml
@@ -75,11 +78,12 @@ stages:
       environment: IoT_CRSL_Environment_WKBNCH
       subscriptionId: dcb37438-95ca-4a68-812d-39ce0d591df2
       applicationCode: crsliot
-      deployEnvironment: wkbnch      
+      deployEnvironment: wkbnch
+      platformOperationServiceConnection: '3M-CRSLBL01-CRSL-Digital-Platforms-Bluebird'      
       
 - stage: DeployCHIMDev
-  dependsOn: []
-  #- DeployCRSLQA
+  dependsOn:
+  # - DeployCRSLWkBnch
   displayName: Deploy To CHIM Dev
   jobs:
   - template: templates/approval.yaml
@@ -94,9 +98,11 @@ stages:
       subscriptionId: 28299656-8110-4dc4-a33f-82a6cc3d05c2
       applicationCode: chimiot
       deployEnvironment: dev   
+      platformOperationServiceConnection: '3M-CRSLBL01-CRSL-Digital-Platforms-Bluebird'
+
 - stage: DeployCHIMQA
-  dependsOn: []
-  #- DeployCRSLQA
+  dependsOn: 
+  # - DeployCRSLWkBnch
   displayName: Deploy To CHIM QA
   jobs:
   - template: templates/approval.yaml
@@ -111,9 +117,12 @@ stages:
       subscriptionId: 30975220-85e1-4769-8bc1-4542ec8569a0
       applicationCode: chimiot
       deployEnvironment: qa  
-# PSD
+      platformOperationServiceConnection: '3M-CRSLBL01-CRSL-Digital-Platforms-Bluebird'
+
+# PSD Dev
 - stage: DeployPSDDev
-  dependsOn: []
+  dependsOn: 
+  - DeployCRSLWkBnch
   displayName: Deploy To PSD Dev
   jobs:
   - template: templates/approval.yaml
@@ -127,6 +136,8 @@ stages:
       subscriptionId: 1d0a4e20-e44d-43b5-97b0-9b577f5bf048
       applicationCode: psdiot
       deployEnvironment: dev
+      environment: IoT_PSD_Environment_DEV
+      platformOperationServiceConnection: '3M-CRSLBL01-CRSL-Digital-Platforms-Bluebird'
       
 - stage: DebugEnv
   dependsOn: []

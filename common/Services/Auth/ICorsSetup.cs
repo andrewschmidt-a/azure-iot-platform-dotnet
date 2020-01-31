@@ -1,6 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+// <copyright file="ICorsSetup.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-namespace Mmm.Platform.IoT.Common.Services.Auth
+using Microsoft.AspNetCore.Builder;
+
+namespace Mmm.Iot.Common.Services.Auth
 {
     public interface ICorsSetup
     {

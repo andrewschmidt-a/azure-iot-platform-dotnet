@@ -1,26 +1,28 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DevicePropertiesTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.IoTHubManager.Services;
-using Mmm.Platform.IoT.IoTHubManager.Services.Models;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.IoTHubManager.Services.Models;
 using Moq;
 using Newtonsoft.Json;
 using Xunit;
-using Mmm.Platform.IoT.Common.Services.Config;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
+namespace Mmm.Iot.IoTHubManager.Services.Test
 {
     public class DevicePropertiesTest
     {
         private Random rand = new Random();
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task GetListAsyncTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -36,7 +38,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             {
                 Rebuilding = false,
                 Tags = new HashSet<string> { "ccc", "aaaa", "yyyy", "zzzz" },
-                Reported = new HashSet<string> { "1111", "9999", "2222", "3333" }
+                Reported = new HashSet<string> { "1111", "9999", "2222", "3333" },
             };
 
             mockStorageAdapterClient
@@ -46,12 +48,18 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             var result = await cache.GetListAsync();
             Assert.Equal(result.Count, cacheValue.Tags.Count + cacheValue.Reported.Count);
             foreach (string tag in cacheValue.Tags)
+            {
                 Assert.Contains(result, s => s.Contains(tag));
+            }
+
             foreach (string reported in cacheValue.Reported)
+            {
                 Assert.Contains(result, s => s.Contains(reported));
+            }
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task UpdateListAsyncTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -67,19 +75,19 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             {
                 Rebuilding = false,
                 Tags = new HashSet<string> { "c", "a", "y", "z" },
-                Reported = new HashSet<string> { "1", "9", "2", "3" }
+                Reported = new HashSet<string> { "1", "9", "2", "3" },
             };
 
             var cachePatch = new DevicePropertyServiceModel
             {
                 Tags = new HashSet<string> { "a", "y", "z", "@", "#" },
-                Reported = new HashSet<string> { "9", "2", "3", "11", "12" }
+                Reported = new HashSet<string> { "9", "2", "3", "11", "12" },
             };
 
             var newCacheValue = new DevicePropertyServiceModel
             {
                 Tags = new HashSet<string> { "c", "a", "y", "z", "@", "#" },
-                Reported = new HashSet<string> { "1", "9", "2", "3", "12", "11" }
+                Reported = new HashSet<string> { "1", "9", "2", "3", "12", "11" },
             };
 
             mockStorageAdapterClient
@@ -96,7 +104,8 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
             Assert.True(result.Reported.SetEquals(newCacheValue.Reported));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task TryRecreateListAsyncSkipByTimeTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -110,42 +119,44 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                     {
                         DevicePropertiesCache = new DevicePropertiesCacheConfig
                         {
-                            Ttl = 60
-                        }
-                    }
+                            Ttl = 60,
+                        },
+                    },
                 },
                 new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
             mockStorageAdapterClient
                 .Setup(x => x.GetAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY)))
+                    It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                    It.Is<string>(s => s == DeviceProperties.CacheKey)))
                 .ReturnsAsync(new ValueApiModel
                 {
                     ETag = this.rand.NextString(),
                     Data = JsonConvert.SerializeObject(new DevicePropertyServiceModel
                     {
                         Rebuilding = false,
-                        Tags = new HashSet<string> { "tags.IsSimulated" }
+                        Tags = new HashSet<string> { "tags.IsSimulated" },
                     }),
                     Metadata = new Dictionary<string, string>
                     {
-                        { "$modified", DateTimeOffset.UtcNow.ToString(CultureInfo.InvariantCulture) }
-                    }
+                        { "$modified", DateTimeOffset.UtcNow.ToString(CultureInfo.InvariantCulture) },
+                    },
                 });
 
             var result = await cache.TryRecreateListAsync();
             Assert.False(result);
 
             mockStorageAdapterClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                        It.Is<string>(s => s == DeviceProperties.CacheKey)),
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task TryRecreateListAsyncSkipByConflictTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -160,41 +171,43 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                         DevicePropertiesCache = new DevicePropertiesCacheConfig
                         {
                             Ttl = 60,
-                            RebuildTimeout = 300
-                        }
-                    }
+                            RebuildTimeout = 300,
+                        },
+                    },
                 },
                 new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
 
             mockStorageAdapterClient
                 .Setup(x => x.GetAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY)))
+                    It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                    It.Is<string>(s => s == DeviceProperties.CacheKey)))
                 .ReturnsAsync(new ValueApiModel
                 {
                     ETag = this.rand.NextString(),
                     Data = JsonConvert.SerializeObject(new DevicePropertyServiceModel
                     {
-                        Rebuilding = true
+                        Rebuilding = true,
                     }),
                     Metadata = new Dictionary<string, string>
                     {
-                        { "$modified", (DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1)).ToString(CultureInfo.InvariantCulture) }
-                    }
+                        { "$modified", (DateTimeOffset.UtcNow - TimeSpan.FromMinutes(1)).ToString(CultureInfo.InvariantCulture) },
+                    },
                 });
 
             var result = await cache.TryRecreateListAsync();
             Assert.False(result);
 
             mockStorageAdapterClient
-                .Verify(x => x.GetAsync(
-                        It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                        It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                        It.Is<string>(s => s == DeviceProperties.CacheKey)),
                     Times.Once);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public async Task TryRecreateListAsyncTest()
         {
             var mockStorageAdapterClient = new Mock<IStorageAdapterClient>();
@@ -209,9 +222,9 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
                         DevicePropertiesCache = new DevicePropertiesCacheConfig
                         {
                             Whitelist = "tags.*, reported.Type, reported.Config.*",
-                            Ttl = 3600
-                        }
-                    }
+                            Ttl = 3600,
+                        },
+                    },
                 },
                 new Mock<ILogger<DeviceProperties>>().Object,
                 mockDevices.Object);
@@ -222,79 +235,81 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Test
 
             mockStorageAdapterClient
                 .Setup(x => x.GetAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY)))
+                    It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                    It.Is<string>(s => s == DeviceProperties.CacheKey)))
                 .ReturnsAsync(new ValueApiModel
                 {
                     ETag = etagOld,
                     Data = JsonConvert.SerializeObject(new DevicePropertyServiceModel
                     {
-                        Rebuilding = false
+                        Rebuilding = false,
                     }),
                     Metadata = new Dictionary<string, string>
                     {
-                        { "$modified", (DateTimeOffset.UtcNow - TimeSpan.FromDays(1)).ToString(CultureInfo.InvariantCulture) }
-                    }
+                        { "$modified", (DateTimeOffset.UtcNow - TimeSpan.FromDays(1)).ToString(CultureInfo.InvariantCulture) },
+                    },
                 });
             mockDevices.Setup(x => x.GetDeviceTwinNamesAsync())
                 .ReturnsAsync(new DeviceTwinName
                 {
                     Tags = new HashSet<string> { "Building", "Group" },
-                    ReportedProperties = new HashSet<string> { "Config.Interval", "otherProperty" }
+                    ReportedProperties = new HashSet<string> { "Config.Interval", "otherProperty" },
                 });
 
             mockStorageAdapterClient
                 .Setup(x => x.UpdateAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY),
+                    It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                    It.Is<string>(s => s == DeviceProperties.CacheKey),
                     It.Is<string>(s => Rebuilding(s)),
                     It.Is<string>(s => s == etagOld)))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    ETag = etagLock
+                    ETag = etagLock,
                 });
 
             mockStorageAdapterClient
                 .Setup(x => x.UpdateAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY),
+                    It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                    It.Is<string>(s => s == DeviceProperties.CacheKey),
                     It.Is<string>(s => !Rebuilding(s)),
                     It.Is<string>(s => s == etagLock)))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    ETag = etagNew
+                    ETag = etagNew,
                 });
 
             var expiredNames = new DeviceTwinName
             {
                 Tags = new HashSet<string>
                 {
-                    "Building", "Group"
+                    "Building", "Group",
                 },
                 ReportedProperties = new HashSet<string>
                 {
-                    "Type", "Config.Interval", "MethodStatus", "UpdateStatus"
-                }
+                    "Type", "Config.Interval", "MethodStatus", "UpdateStatus",
+                },
             };
 
             var result = await cache.TryRecreateListAsync();
             Assert.True(result);
 
             mockStorageAdapterClient
-                .Verify(x => x.GetAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                        It.Is<string>(s => s == DeviceProperties.CacheKey)),
                     Times.Once);
 
             mockDevices
                 .Verify(x => x.GetDeviceTwinNamesAsync(), Times.Once);
 
             mockStorageAdapterClient
-                .Verify(x => x.UpdateAsync(
-                    It.Is<string>(s => s == DeviceProperties.CACHE_COLLECTION_ID),
-                    It.Is<string>(s => s == DeviceProperties.CACHE_KEY),
-                    It.Is<string>(s => Rebuilding(s)),
-                    It.Is<string>(s => s == etagOld)),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == DeviceProperties.CacheCollectioId),
+                        It.Is<string>(s => s == DeviceProperties.CacheKey),
+                        It.Is<string>(s => Rebuilding(s)),
+                        It.Is<string>(s => s == etagOld)),
                     Times.Once);
         }
 

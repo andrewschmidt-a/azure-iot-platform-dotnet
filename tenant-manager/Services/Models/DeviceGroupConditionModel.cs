@@ -1,13 +1,17 @@
-// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="DeviceGroupConditionModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Models
+namespace Mmm.Iot.TenantManager.Services.Models
 {
     public class DeviceGroupConditionModel
     {
         public string Field { get; set; }
+
         public string Operator { get; set; }
+
         public string Value { get; set; }
     }
 }

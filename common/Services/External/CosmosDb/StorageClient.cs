@@ -1,77 +1,39 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="StorageClient.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
-using Microsoft.Azure.Documents;
-using Microsoft.Azure.Documents.Client;
-using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Text.RegularExpressions;
-using Mmm.Platform.IoT.Common.Services.Config;
+using System.Threading.Tasks;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
+using Microsoft.Extensions.Logging;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Models;
 
-namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
+namespace Mmm.Iot.Common.Services.External.CosmosDb
 {
     public class StorageClient : IStorageClient, IDisposable
     {
-        private const string CONNECTION_STRING_VALUE_REGEX = @"^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$";
-        private const string STORAGE_PARTITION_KEY = "/deviceId";
-
-        private readonly ILogger _logger;
+        private const string ConnectionStringValueRegex = @"^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$";
+        private const string StoragePartitionKey = "/deviceId";
+        private readonly ILogger logger;
         private Uri storageUri;
         private string storagePrimaryKey;
         private int storageThroughput;
         private DocumentClient client;
 
-        public StorageClient(
-            AppConfig config,
-            ILogger<StorageClient> logger)
+        public StorageClient(AppConfig config, ILogger<StorageClient> logger)
         {
             this.SetValuesFromConfig(config);
-            _logger = logger;
+            this.logger = logger;
             this.client = this.GetDocumentClient();
         }
 
-        private void SetValuesFromConfig(AppConfig config)
-        {
-            if (String.IsNullOrEmpty(config.Global.CosmosDb.DocumentDbConnectionString))
-            {
-                throw new ArgumentNullException("The CosmosDbConnectionString in the IStorageClientConfig was null or empty. The StorageClient cannot be created with an empty connection string.");
-            }
-
-            try
-            {
-                Match match = Regex.Match(config.Global.CosmosDb.DocumentDbConnectionString, CONNECTION_STRING_VALUE_REGEX);
-
-                // Get the storage uri from the regular expression match
-                Uri storageUriEndpoint;
-                Uri.TryCreate(match.Groups["endpoint"].Value, UriKind.RelativeOrAbsolute, out storageUriEndpoint);
-                this.storageUri = storageUriEndpoint;
-                if (String.IsNullOrEmpty(this.storageUri.ToString()))
-                {
-                    throw new Exception("The StorageUri dissected from the connection string was null. The connection string may be null or not formatted correctly.");
-                }
-
-                // Get the PrimaryKey from the connection string
-                this.storagePrimaryKey = match.Groups["key"]?.Value;
-                if (String.IsNullOrEmpty(this.storagePrimaryKey))
-                {
-                    throw new Exception("The StoragePrimaryKey dissected from the connection string was null. The connection string may be null or not formatted correctly.");
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception("Unable to create required StorageClient fields using the connection string from the IStorageClientConfig instance.", e);
-            }
-
-            // handling exceptions is not necessary here - the value can be left null if not configured.
-            this.storageThroughput = config.Global.CosmosDb.Rus;
-        }
-
-        public async Task DeleteDatabaseAsync(
-            string databaseName)
+        public async Task DeleteDatabaseAsync(string databaseName)
         {
             try
             {
@@ -79,7 +41,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                this._logger.LogError(e, "Unable to delete database {databaseName}", databaseName);
+                this.logger.LogError(e, "Unable to delete database {databaseName}", databaseName);
                 throw;
             }
         }
@@ -98,7 +60,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                this._logger.LogError(e, "Unable to create database {databaseName}", databaseName);
+                this.logger.LogError(e, "Unable to create database {databaseName}", databaseName);
                 throw;
             }
         }
@@ -114,7 +76,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                this._logger.LogError(e, "Unable to delete collection {id}.", databaseName);
+                this.logger.LogError(e, "Unable to delete collection {id}.", databaseName);
                 throw;
             }
         }
@@ -128,7 +90,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             collectionInfo.IndexingPolicy = new IndexingPolicy(
                 new Index[] { index });
             collectionInfo.Id = id;
-            collectionInfo.PartitionKey.Paths.Add(STORAGE_PARTITION_KEY);
+            collectionInfo.PartitionKey.Paths.Add(StoragePartitionKey);
 
             // Azure Cosmos DB collections can be reserved with
             // throughput specified in request units/second.
@@ -157,7 +119,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error creating collection with ID {id}, database URL {databaseUrl}, and collection info {collectionInfo}", id, dbUrl, collectionInfo);
+                this.logger.LogError(e, "Error creating collection with ID {id}, database URL {databaseUrl}, and collection info {collectionInfo}", id, dbUrl, collectionInfo);
                 throw;
             }
 
@@ -184,7 +146,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error reading document in collection with collection ID {collectionId}", colId);
+                this.logger.LogError(e, "Error reading document in collection with collection ID {collectionId}", colId);
                 throw;
             }
         }
@@ -203,7 +165,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error upserting document into collection with collection ID {collectionId}", colId);
+                this.logger.LogError(e, "Error upserting document into collection with collection ID {collectionId}", colId);
                 throw;
             }
         }
@@ -228,7 +190,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error deleting document in collection with collection ID {collectionId}", colId);
+                this.logger.LogError(e, "Error deleting document in collection with collection ID {collectionId}", colId);
                 throw;
             }
         }
@@ -247,7 +209,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Could not connect to storage at URI {storageUri}; check connection string", storageUri);
+                    this.logger.LogError(e, "Could not connect to storage at URI {storageUri}; check connection string", this.storageUri);
                     throw new InvalidConfigurationException(
                         "Could not connect to DocumentClient, " +
                         "check connection string");
@@ -255,7 +217,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
 
                 if (this.client == null)
                 {
-                    _logger.LogError("Could not connect to storage at URI {uri}", storageUri);
+                    this.logger.LogError("Could not connect to storage at URI {uri}", this.storageUri);
                     throw new InvalidConfigurationException(
                         "Could not connect to DocumentClient");
                 }
@@ -285,7 +247,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                _logger.LogInformation(e, result.Message);
+                this.logger.LogInformation(e, result.Message);
             }
 
             return result;
@@ -307,7 +269,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                this._logger.LogError(e, "Unable to query collection {colId} for All documents", colId);
+                this.logger.LogError(e, "Unable to query collection {colId} for All documents", colId);
                 throw;
             }
         }
@@ -348,7 +310,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
                 docs.Add(doc);
             }
 
-            _logger.LogInformation("Query results count: {count}", docs.Count);
+            this.logger.LogInformation("Query results count: {count}", docs.Count);
 
             return docs;
         }
@@ -382,7 +344,7 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
                 return (int)resultList[0];
             }
 
-            _logger.LogInformation("No results found for count query '{querySpec}' on collection with ID {collectionId} and database name {databaseName}", querySpec, colId, databaseName);
+            this.logger.LogInformation("No results found for count query '{querySpec}' on collection with ID {collectionId} and database name {databaseName}", querySpec, colId, databaseName);
 
             return 0;
         }
@@ -392,18 +354,20 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             string colId,
             object document)
         {
-            string colUrl = string.Format("/dbs/{0}/colls/{1}",
-                databaseName, colId);
+            string colUrl = string.Format("/dbs/{0}/colls/{1}", databaseName, colId);
 
             await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
             try
             {
-                return await this.client.UpsertDocumentAsync(colUrl, document,
-                    new RequestOptions(), false);
+                return await this.client.UpsertDocumentAsync(
+                    colUrl,
+                    document,
+                    new RequestOptions(),
+                    false);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error upserting document into collection with collection ID {collectionId}", colId);
+                this.logger.LogError(e, "Error upserting document into collection with collection ID {collectionId}", colId);
                 throw;
             }
         }
@@ -414,6 +378,42 @@ namespace Mmm.Platform.IoT.Common.Services.External.CosmosDb
             {
                 this.client.Dispose();
             }
+        }
+
+        private void SetValuesFromConfig(AppConfig config)
+        {
+            if (string.IsNullOrEmpty(config.Global.CosmosDb.DocumentDbConnectionString))
+            {
+                throw new ArgumentNullException("The CosmosDbConnectionString in the IStorageClientConfig was null or empty. The StorageClient cannot be created with an empty connection string.");
+            }
+
+            try
+            {
+                Match match = Regex.Match(config.Global.CosmosDb.DocumentDbConnectionString, ConnectionStringValueRegex);
+
+                // Get the storage uri from the regular expression match
+                Uri storageUriEndpoint;
+                Uri.TryCreate(match.Groups["endpoint"].Value, UriKind.RelativeOrAbsolute, out storageUriEndpoint);
+                this.storageUri = storageUriEndpoint;
+                if (string.IsNullOrEmpty(this.storageUri.ToString()))
+                {
+                    throw new Exception("The StorageUri dissected from the connection string was null. The connection string may be null or not formatted correctly.");
+                }
+
+                // Get the PrimaryKey from the connection string
+                this.storagePrimaryKey = match.Groups["key"]?.Value;
+                if (string.IsNullOrEmpty(this.storagePrimaryKey))
+                {
+                    throw new Exception("The StoragePrimaryKey dissected from the connection string was null. The connection string may be null or not formatted correctly.");
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Unable to create required StorageClient fields using the connection string from the IStorageClientConfig instance.", e);
+            }
+
+            // handling exceptions is not necessary here - the value can be left null if not configured.
+            this.storageThroughput = config.Global.CosmosDb.Rus;
         }
     }
 }

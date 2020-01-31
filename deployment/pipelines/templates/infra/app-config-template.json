@@ -80,6 +80,7 @@
       "Name": "OVERWRITTEN_IN_DEPLOYMENT"
     },
     "Location": "centralus",
+    "PackageSharedAccessExpiryTime": "24:00:00",
     "ResourceGroup": "OVERWRITTEN_IN_DEPLOYMENT",
     "StorageAccount": {
       "Name": "OVERWRITTEN_IN_DEPLOYMENT"

@@ -1,4 +1,8 @@
-﻿namespace Mmm.Platform.IoT.Common.Services
+// <copyright file="EnvironmentName.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+namespace Mmm.Iot.Common.Services
 {
     public static class EnvironmentName
     {

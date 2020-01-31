@@ -1,13 +1,12 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="JobStatistics.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using Microsoft.Azure.Devices;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Models
+namespace Mmm.Iot.IoTHubManager.Services.Models
 {
-    /// <summary>
-    /// refer to Azure.Devices.DeviceJobStatistics
-    /// </summary>
     public class JobStatistics
     {
         public JobStatistics()

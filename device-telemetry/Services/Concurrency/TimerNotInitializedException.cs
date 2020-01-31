@@ -1,8 +1,10 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="TimerNotInitializedException.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Concurrency
+namespace Mmm.Iot.DeviceTelemetry.Services.Concurrency
 {
     public class TimerNotInitializedException : Exception
     {

@@ -1,17 +1,19 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="QueryConditionTranslator.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Exceptions;
 using Newtonsoft.Json;
 
-namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
+namespace Mmm.Iot.IoTHubManager.Services.Helpers
 {
-    static class QueryConditionTranslator
+    public static class QueryConditionTranslator
     {
-        private static readonly Dictionary<string, string> operatorMap = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> OperatorMap = new Dictionary<string, string>
         {
             { "EQ", "=" },
             { "NE", "!=" },
@@ -19,7 +21,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             { "LE", "<=" },
             { "GT", ">" },
             { "GE", ">=" },
-            { "IN", "IN" }
+            { "IN", "IN" },
         };
 
         public static string ToQueryString(string conditions)
@@ -44,7 +46,7 @@ namespace Mmm.Platform.IoT.IoTHubManager.Services.Helpers
             var clauseStrings = clauses.Select(c =>
             {
                 string op;
-                if (!operatorMap.TryGetValue(c.Operator.ToUpperInvariant(), out op))
+                if (!OperatorMap.TryGetValue(c.Operator.ToUpperInvariant(), out op))
                 {
                     throw new InvalidInputException();
                 }

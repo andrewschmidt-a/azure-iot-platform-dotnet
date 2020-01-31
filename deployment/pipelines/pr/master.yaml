@@ -1,21 +1,22 @@
-# Trigger on PRs into master 
+# Trigger on PRs into master
 pr:
 - master
 
-# Don't trigger any CI 
+# Don't trigger any CI
 trigger: none
 
 
 resources:
   - repo: self
 
-  
+
 variables:
-  tag: '$(Build.BuildId)' 
+  tag: '$(Build.BuildId)'
   azureSubscription: 3M-CRSLAD16-BBIoTP-Dev
   resourceGroup: rg-iot-crsl-dev
   aksCluster: crsliot-aks-dev
-  devSpace: pr-$(System.PullRequest.PullRequestNumber)-build-$(Build.BuildId) 
+  devSpace: pr-$(System.PullRequest.PullRequestNumber)-build-$(Build.BuildId)
+  appConfigurationName: crsliot-appconfig-dev
 
 
 stages:
@@ -90,7 +91,7 @@ stages:
       resourceGroup: ${{variables.resourceGroup}}
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
-      
+
 - stage: Test_Services_that_Changed
   jobs:
   - template: testServiceIfChangedTemplate.yaml
@@ -100,6 +101,7 @@ stages:
       resourceGroup: ${{variables.resourceGroup}}
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
+      appConfigurationName: ${{variables.appConfigurationName}}
 
   - template: testServiceIfChangedTemplate.yaml
     parameters:
@@ -108,6 +110,7 @@ stages:
       resourceGroup: ${{variables.resourceGroup}}
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
+      appConfigurationName: ${{variables.appConfigurationName}}
 
   - template: testServiceIfChangedTemplate.yaml
     parameters:
@@ -116,6 +119,7 @@ stages:
       resourceGroup: ${{variables.resourceGroup}}
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
+      appConfigurationName: ${{variables.appConfigurationName}}
 
   - template: testServiceIfChangedTemplate.yaml
     parameters:
@@ -124,6 +128,7 @@ stages:
       resourceGroup: ${{variables.resourceGroup}}
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
+      appConfigurationName: ${{variables.appConfigurationName}}
 
   - template: testServiceIfChangedTemplate.yaml
     parameters:
@@ -132,6 +137,7 @@ stages:
       resourceGroup: ${{variables.resourceGroup}}
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
+      appConfigurationName: ${{variables.appConfigurationName}}
 
   - template: testServiceIfChangedTemplate.yaml
     parameters:
@@ -140,6 +146,7 @@ stages:
       resourceGroup: ${{variables.resourceGroup}}
       aksCluster: ${{variables.aksCluster}}
       devSpace: ${{variables.devSpace}}
+      appConfigurationName: ${{variables.appConfigurationName}}
 
 - stage: Delete_Dev_Space
   condition: always()

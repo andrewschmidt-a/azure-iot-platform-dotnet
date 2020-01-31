@@ -38,6 +38,6 @@ configurations:
       - "!**/*.{sln,csproj}"
       command: [dotnet, run, --no-restore, --no-build, --no-launch-profile, -c, "${BUILD_CONFIGURATION:-Debug}"]
       iterate:
-        processesToKill: [dotnet, vsdbg, Mmm.Platform.IoT.DeviceTelemetry.WebService]
+        processesToKill: [dotnet, vsdbg, Mmm.Iot.DeviceTelemetry.WebService]
         buildCommands:
         - [dotnet, build, --no-restore, -c, "${BUILD_CONFIGURATION:-Debug}"]

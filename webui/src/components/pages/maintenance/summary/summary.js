@@ -9,6 +9,7 @@ import { permissions, toDiagnosticsModel } from 'services/models';
 import { DeviceGroupDropdownContainer as DeviceGroupDropdown } from 'components/shell/deviceGroupDropdown';
 import { ManageDeviceGroupsBtnContainer as ManageDeviceGroupsBtn } from 'components/shell/manageDeviceGroupsBtn';
 import { TimeIntervalDropdownContainer as TimeIntervalDropdown } from 'components/shell/timeIntervalDropdown';
+import { ResetActiveDeviceQueryBtnContainer as ResetActiveDeviceQueryBtn } from 'components/shell/resetActiveDeviceQueryBtn';
 import { Notifications } from './notifications';
 import { Jobs } from './jobs';
 import {
@@ -42,6 +43,9 @@ export class Summary extends Component {
           <Protected permission={permissions.updateDeviceGroups}>
             <ManageDeviceGroupsBtn />
           </Protected>
+          {
+            this.props.activeDeviceQueryConditions.length != 0 ? <ResetActiveDeviceQueryBtn /> : null
+          }
         </ContextMenuAlign>
         <ContextMenuAlign>
           <TimeIntervalDropdown
@@ -58,7 +62,7 @@ export class Summary extends Component {
       <PageContent className="maintenance-container summary-container">
         <PageTitle titleValue={this.props.t('maintenance.title')} />
         <StatSection className="summary-stat-container">
-          {this.props.alerting.jobState == "Running" && 
+          {this.props.alerting.jobState == "Running" &&
           <StatGroup>
             <StatProperty
               value={renderUndefined(this.props.alertCount)}
@@ -66,7 +70,7 @@ export class Summary extends Component {
               size="large" />
           </StatGroup>
           }
-          {this.props.alerting.jobState == "Running" && 
+          {this.props.alerting.jobState == "Running" &&
           <StatGroup>
             <StatProperty
               value={renderUndefined(this.props.criticalAlertCount)}
@@ -96,16 +100,16 @@ export class Summary extends Component {
           </StatGroup>
         </StatSection>
         <div className="tab-container">
-          
-          {this.props.alerting.jobState == "Running"  && 
+
+          {this.props.alerting.jobState == "Running"  &&
             <NavLink to={'/maintenance/notifications'} className="tab" activeClassName="active" onClick={this.tabClickHandler.bind(this, 'AlertsTab')}>{this.props.t('maintenance.notifications')}</NavLink>
           }
           <NavLink to={'/maintenance/jobs'} className="tab" activeClassName="active" onClick={this.tabClickHandler.bind(this, 'JobsTab')}>{this.props.t('maintenance.jobs')}</NavLink>
         </div>
         <div className="grid-container">
           <Switch>
-            
-        {this.props.alerting.jobState == "Running"  && 
+
+        {this.props.alerting.jobState == "Running"  &&
             <Route exact path={'/maintenance/notifications'} render={() => <Notifications {...this.props} {...this.props.alertProps} />} />
         }
             <Route exact path={'/maintenance/jobs'} render={() => <Jobs {...this.props} {...this.props.jobProps} />} />

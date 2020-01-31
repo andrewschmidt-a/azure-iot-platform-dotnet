@@ -6,7 +6,7 @@ import moment from 'moment';
 import { schema, normalize } from 'normalizr';
 import update from 'immutability-helper';
 import { createSelector } from 'reselect';
-import { redux as appRedux, getActiveDeviceGroupConditions } from './appReducer';
+import { redux as appRedux, getActiveDeviceGroupConditions, getActiveDeviceQueryConditions } from './appReducer';
 import { IoTHubManagerService } from 'services';
 import {
   createReducerScenario,
@@ -30,7 +30,10 @@ export const epics = createEpicScenario({
   fetchDevices: {
     type: 'DEVICES_FETCH',
     epic: (fromAction, store) => {
-      const conditions = getActiveDeviceGroupConditions(store.getState());
+      const rawConditions = getActiveDeviceGroupConditions(store.getState()).concat(getActiveDeviceQueryConditions(store.getState()));
+      const conditions = rawConditions.filter(condition => {
+        return !!condition.key && !!condition.operator && !!condition.value;
+      });
       return IoTHubManagerService.getDevices(conditions)
         .map(toActionCreator(redux.actions.updateDevices, fromAction))
         .catch(handleError(fromAction))

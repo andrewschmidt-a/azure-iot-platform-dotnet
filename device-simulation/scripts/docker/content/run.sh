@@ -8,4 +8,4 @@ echo "Setting environment variables."
 . set_env.sh PCS_IOTHUB_CONNSTRING iotHubConnectionString PCS_STORAGEADAPTER_WEBSERVICE_URL storageAdapterWebServiceUrl
 
 echo "Starting service."
-cd webservice && dotnet Mmm.Platform.IoT.DeviceSimulation.WebService.dll
+cd webservice && dotnet Mmm.Iot.DeviceSimulation.WebService.dll

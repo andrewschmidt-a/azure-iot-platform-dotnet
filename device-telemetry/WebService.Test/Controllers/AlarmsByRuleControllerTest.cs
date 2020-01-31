@@ -1,50 +1,45 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="AlarmsByRuleControllerTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using Mmm.Platform.IoT.Common.Services.External.AppConfiguration;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.CosmosDb;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.Services.Runtime;
-using Mmm.Platform.IoT.DeviceTelemetry.Services;
-using Mmm.Platform.IoT.DeviceTelemetry.Services.External;
-using Mmm.Platform.IoT.DeviceTelemetry.WebService.v1.Controllers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.CosmosDb;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.DeviceTelemetry.Services;
+using Mmm.Iot.DeviceTelemetry.Services.External;
+using Mmm.Iot.DeviceTelemetry.WebService.Controllers;
 using Moq;
 using Xunit;
-using Alarm = Mmm.Platform.IoT.DeviceTelemetry.Services.Models.Alarm;
+using Alarm = Mmm.Iot.DeviceTelemetry.Services.Models.Alarm;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
+namespace Mmm.Iot.DeviceTelemetry.WebService.Test.Controllers
 {
-    class AlarmsByRuleControllerTest
+    public class AlarmsByRuleControllerTest : IDisposable
     {
-        private AlarmsByRuleController controller;
-
-        private readonly Mock<ILogger<AlarmsByRuleController>> _logger;
+        private readonly Mock<ILogger<AlarmsByRuleController>> logger;
         private readonly IStorageClient storage;
         private readonly Mock<IHttpContextAccessor> httpContextAccessor;
         private readonly Mock<IAppConfigurationClient> appConfigHelper;
         private readonly Mock<IAsaManagerClient> asaManager;
-
+        private bool disposedValue = false;
+        private AlarmsByRuleController controller;
         private List<Alarm> sampleAlarms;
-
         private string docSchemaKey = "doc.schema";
         private string docSchemaValue = "alarm";
-
         private string docSchemaVersionKey = "doc.schemaVersion";
         private int docSchemaVersionValue = 1;
-
         private string createdKey = "created";
         private string modifiedKey = "modified";
         private string descriptionKey = "description";
         private string statusKey = "status";
         private string deviceIdKey = "device.id";
-
         private string ruleIdKey = "rule.id";
         private string ruleSeverityKey = "rule.severity";
         private string ruleDescriptionKey = "rule.description";
@@ -53,30 +48,30 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
         {
             Mock<IStorageAdapterClient> storageAdapterClient = new Mock<IStorageAdapterClient>();
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
-            _logger = new Mock<ILogger<AlarmsByRuleController>>();
+            this.logger = new Mock<ILogger<AlarmsByRuleController>>();
             this.appConfigHelper = new Mock<IAppConfigurationClient>();
             this.asaManager = new Mock<IAsaManagerClient>();
             var config = new AppConfig();
             this.storage = new StorageClient(config, new Mock<ILogger<StorageClient>>().Object);
-            this.storage.CreateCollectionIfNotExistsAsync(config.DeviceTelemetryService.Alarms.Database, "");
+            this.storage.CreateCollectionIfNotExistsAsync(config.DeviceTelemetryService.Alarms.Database, string.Empty);
 
-            this.sampleAlarms = this.getSampleAlarms();
+            this.sampleAlarms = this.GetSampleAlarms();
             foreach (Alarm sampleAlarm in this.sampleAlarms)
             {
                 this.storage.UpsertDocumentAsync(
                     config.DeviceTelemetryService.Alarms.Database,
-                    "",
+                    string.Empty,
                     this.AlarmToDocument(sampleAlarm));
             }
 
             Alarms alarmService = new Alarms(config, this.storage, new Mock<ILogger<Alarms>>().Object, this.httpContextAccessor.Object, this.appConfigHelper.Object);
             Rules rulesService = new Rules(storageAdapterClient.Object, this.asaManager.Object, new Mock<ILogger<Rules>>().Object, alarmService, new Mock<IDiagnosticsClient>().Object);
-            this.controller = new AlarmsByRuleController(alarmService, rulesService, this._logger.Object);
+            this.controller = new AlarmsByRuleController(alarmService, rulesService, this.logger.Object);
         }
 
-        // Ignoring test. Updating .net core and xunit version wants this class to be public. However, this test fails when the class is made public. 
+        // Ignoring test. Updating .net core and xunit version wants this class to be public. However, this test fails when the class is made public.
         // Created issue https://github.com/Azure/device-telemetry-dotnet/issues/65 to address this better.
-        //[Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        // [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
         public void ProvideAlarmsByRuleResult()
         {
             // Act
@@ -87,11 +82,29 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
             Assert.NotEmpty(response.Result.Items);
         }
 
+        public void Dispose()
+        {
+            this.Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposedValue)
+            {
+                if (disposing)
+                {
+                    this.controller.Dispose();
+                }
+
+                this.disposedValue = true;
+            }
+        }
+
         private Document AlarmToDocument(Alarm alarm)
         {
             Document document = new Document()
             {
-                Id = Guid.NewGuid().ToString()
+                Id = Guid.NewGuid().ToString(),
             };
 
             document.SetPropertyValue(this.docSchemaKey, this.docSchemaValue);
@@ -111,7 +124,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
             return document;
         }
 
-        private List<Alarm> getSampleAlarms()
+        private List<Alarm> GetSampleAlarms()
         {
             List<Alarm> list = new List<Alarm>();
 
@@ -126,8 +139,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
                 "open",
                 "1",
                 "critical",
-                "HVAC temp > 50"
-            );
+                "HVAC temp > 50");
 
             Alarm alarm2 = new Alarm(
                 null,
@@ -189,8 +201,7 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.WebService.Test.Controllers
                 "open",
                 "1234",
                 "critical",
-                "HVAC temp > 75"
-            );
+                "HVAC temp > 75");
         }
     }
 }

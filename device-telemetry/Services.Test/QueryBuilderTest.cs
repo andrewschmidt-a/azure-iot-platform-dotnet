@@ -1,16 +1,19 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="QueryBuilderTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.Helpers;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.Helpers;
+using Mmm.Iot.Common.TestHelpers;
 using Xunit;
 
-namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
+namespace Mmm.Iot.DeviceTelemetry.Services.Test
 {
     public class QueryBuilderTest
     {
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void GetDocumentsSql_WithValidInput()
         {
             // Arrange
@@ -47,7 +50,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Equal("device.msg.received", querySpec.Parameters[9].Value);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void GetDocumentsSql_WithNullIdProperty()
         {
             // Arrange
@@ -82,7 +86,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Equal("device.msg.received", querySpec.Parameters[7].Value);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void FailToGetDocumentsSql_WithInvalidInput()
         {
             // Arrange
@@ -106,7 +111,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
                 "deviceId"));
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void GetCountSql_WithValidInput()
         {
             // Arrange
@@ -142,7 +148,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Equal("acknowledged", querySpec.Parameters[10].Value);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void GetCountSql_WithNullIdProperty()
         {
             // Arrange
@@ -176,7 +183,8 @@ namespace Mmm.Platform.IoT.DeviceTelemetry.Services.Test
             Assert.Equal("acknowledged", querySpec.Parameters[8].Value);
         }
 
-        [Fact, Trait(Constants.TYPE, Constants.UNIT_TEST)]
+        [Fact]
+        [Trait(Constants.Type, Constants.UnitTest)]
         public void FailToGetCountSql_WithInvalidInput()
         {
             // Arrange

@@ -161,16 +161,16 @@ class DeviceGroupForm extends LinkedComponent {
     const conditionLinks = this.conditionsLink.getLinkedChildren(conditionLink => {
       const field = conditionLink.forkTo('field')
         .map(({ value }) => value)
-        .check(Validator.notEmpty, t('deviceGroupsFlyout.errorMsg.fieldCantBeEmpty'));
+        .check(Validator.notEmpty, t('deviceQueryConditions.errorMsg.fieldCantBeEmpty'));
       const operator = conditionLink.forkTo('operator')
         .map(({ value }) => value)
-        .check(Validator.notEmpty, t('deviceGroupsFlyout.errorMsg.operatorCantBeEmpty'));
+        .check(Validator.notEmpty, t('deviceQueryConditions.errorMsg.operatorCantBeEmpty'));
       const type = conditionLink.forkTo('type')
       .map(({ value }) => value)
-        .check(Validator.notEmpty, t('deviceGroupsFlyout.errorMsg.typeCantBeEmpty'));
+        .check(Validator.notEmpty, t('deviceQueryConditions.errorMsg.typeCantBeEmpty'));
       const value = conditionLink.forkTo('value')
-        .check(Validator.notEmpty, t('deviceGroupsFlyout.errorMsg.valueCantBeEmpty'))
-        .check(val => type.value === 'Number' ? !isNaN(val): true, t('deviceGroupsFlyout.errorMsg.selectedType'));
+        .check(Validator.notEmpty, t('deviceQueryConditions.errorMsg.valueCantBeEmpty'))
+        .check(val => type.value === 'Number' ? !isNaN(val): true, t('deviceQueryConditions.errorMsg.selectedType'));
       const edited = !(!field.value && !operator.value && !value.value && !type.value);
       const error = (edited && (field.error || operator.error || value.error || type.error)) || '';
       return { field, operator, value, type, edited, error };
@@ -180,11 +180,11 @@ class DeviceGroupForm extends LinkedComponent {
     const conditionHasErrors = editedConditions.some(({ error }) => !!error);
 
     const operatorOptions = operators.map(value => ({
-      label: t(`deviceGroupsFlyout.conditions.operatorOptions.${value}`),
+      label: t(`deviceQueryConditions.operatorOptions.${value}`),
       value
     }));
     const typeOptions = valueTypes.map(value => ({
-      label: t(`deviceGroupsFlyout.conditions.typeOptions.${value}`),
+      label: t(`deviceQueryConditions.typeOptions.${value}`),
       value
     }));
 
@@ -210,72 +210,72 @@ class DeviceGroupForm extends LinkedComponent {
                 link={this.nameLink} />
             </FormGroup>
             <Btn className="add-btn" svg={svgs.plus} onClick={this.addCondition}>
-              {t(`deviceGroupsFlyout.addCondition`)}
+              {t(`deviceQueryConditions.add`)}
             </Btn>
             {
               conditionLinks.map((condition, idx) => (
                 <Section.Container key={this.state.conditions[idx].key}>
                   <Section.Header>
-                    {t('deviceGroupsFlyout.conditions.condition', { headerCount: idx + 1 })}
+                    {t('deviceQueryConditions.condition', { headerCount: idx + 1 })}
                   </Section.Header>
                   <Section.Content>
                     <FormGroup>
                       <FormLabel isRequired="true">
-                        {t('deviceGroupsFlyout.conditions.field')}
+                        {t('deviceQueryConditions.field')}
                       </FormLabel>
                       {
                         this.props.filtersError
                           ? <AjaxError t={t} error={this.props.filtersError} />
                           : <FormControl
                               type="select"
-                              ariaLabel={t('deviceGroupsFlyout.conditions.field')}
+                              ariaLabel={t('deviceQueryConditions.field')}
                               className="long"
                               searchable={false}
                               clearable={false}
-                              placeholder={t('deviceGroupsFlyout.conditions.fieldPlaceholder')}
+                              placeholder={t('deviceQueryConditions.fieldPlaceholder')}
                               options={this.props.filterOptions}
                               link={condition.field} />
                       }
                     </FormGroup>
                     <FormGroup>
                       <FormLabel isRequired="true">
-                        {t('deviceGroupsFlyout.conditions.operator')}
+                        {t('deviceQueryConditions.operator')}
                       </FormLabel>
                       <FormControl
                         type="select"
-                        ariaLabel={t('deviceGroupsFlyout.conditions.operator')}
+                        ariaLabel={t('deviceQueryConditions.operator')}
                         className="long"
                         searchable={false}
                         clearable={false}
                         options={operatorOptions}
-                        placeholder={t('deviceGroupsFlyout.conditions.operatorPlaceholder')}
+                        placeholder={t('deviceQueryConditions.operatorPlaceholder')}
                         link={condition.operator} />
                     </FormGroup>
                     <FormGroup>
                       <FormLabel isRequired="true">
-                        {t('deviceGroupsFlyout.conditions.value')}
+                        {t('deviceQueryConditions.value')}
                       </FormLabel>
                       <FormControl
                         type="text"
-                        placeholder={t('deviceGroupsFlyout.conditions.valuePlaceholder')}
+                        placeholder={t('deviceQueryConditions.valuePlaceholder')}
                         link={condition.value} />
                     </FormGroup>
                     <FormGroup>
                       <FormLabel isRequired="true">
-                        {t('deviceGroupsFlyout.conditions.type')}
+                        {t('deviceQueryConditions.type')}
                       </FormLabel>
                       <FormControl
                         type="select"
-                        ariaLabel={t('deviceGroupsFlyout.conditions.type')}
+                        ariaLabel={t('deviceQueryConditions.type')}
                         className="short"
                         clearable={false}
                         searchable={false}
                         options={typeOptions}
-                        placeholder={t('deviceGroupsFlyout.conditions.typePlaceholder')}
+                        placeholder={t('deviceQueryConditions.typePlaceholder')}
                         link={condition.type} />
                     </FormGroup>
                     <BtnToolbar>
-                      <Btn onClick={this.deleteCondition(idx)}>{t('deviceGroupsFlyout.conditions.remove')}</Btn>
+                      <Btn onClick={this.deleteCondition(idx)}>{t('deviceQueryConditions.remove')}</Btn>
                     </BtnToolbar>
                   </Section.Content>
                 </Section.Container>
@@ -299,7 +299,7 @@ class DeviceGroupForm extends LinkedComponent {
                   <Btn svg={svgs.trash}
                     onClick={this.deleteDeviceGroup}
                     disabled={this.props.activeDeviceGroupId === this.state.id || this.state.isPending}>
-                    {t('deviceGroupsFlyout.conditions.delete')}
+                    {t('deviceQueryConditions.delete')}
                   </Btn>
                 </Protected>
               }

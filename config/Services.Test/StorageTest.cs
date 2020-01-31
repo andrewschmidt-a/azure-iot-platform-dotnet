@@ -1,32 +1,29 @@
-﻿// Copyright (c) Microsoft. All rights reserved.
+// <copyright file="StorageTest.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Mmm.Platform.IoT.Config.Services.Models;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Exceptions;
-using Mmm.Platform.IoT.Common.Services.External.AsaManager;
-using Mmm.Platform.IoT.Common.Services.External.StorageAdapter;
-using Mmm.Platform.IoT.Common.TestHelpers;
+using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.AsaManager;
+using Mmm.Iot.Common.Services.External.StorageAdapter;
+using Mmm.Iot.Common.TestHelpers;
+using Mmm.Iot.Config.Services.Models;
 using Moq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;
-using Mmm.Platform.IoT.Common.Services.Config;
 
-namespace Mmm.Platform.IoT.Config.Services.Test
+namespace Mmm.Iot.Config.Services.Test
 {
     public class StorageTest
     {
-        private readonly string azureMapsKey;
-        private readonly Mock<IStorageAdapterClient> mockClient;
-        private readonly Mock<IAsaManagerClient> mockAsaManager;
-        private readonly Storage storage;
-        private readonly Random rand;
-        private const string PACKAGES_COLLECTION_ID = "packages";
-        private const string EDGE_PACKAGE_JSON =
+        private const string PackagesCollectionId = "packages";
+        private const string EdgePackageJson =
                 @"{
                     ""id"": ""tempid"",
                     ""schemaVersion"": ""1.0"",
@@ -90,7 +87,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     }
                  }";
 
-        private const string ADM_PACKAGE_JSON =
+        private const string AdmPackageJson =
                 @"{
                     ""id"": ""9a9690df-f037-4c3a-8fc0-8eaba687609d"",
                     ""schemaVersion"": ""1.0"",
@@ -131,6 +128,12 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     ""etag"": ""MQ==""
                     }";
 
+        private readonly string azureMapsKey;
+        private readonly Mock<IStorageAdapterClient> mockClient;
+        private readonly Mock<IAsaManagerClient> mockAsaManager;
+        private readonly Storage storage;
+        private readonly Random rand;
+
         public StorageTest()
         {
             this.rand = new Random();
@@ -148,8 +151,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     ConfigService = new ConfigServiceConfig
                     {
-                        AzureMapsKey = azureMapsKey
-                    }
+                        AzureMapsKey = this.azureMapsKey,
+                    },
                 },
                 new Mock<ILogger<Storage>>().Object);
         }
@@ -167,16 +170,17 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     Data = JsonConvert.SerializeObject(new
                     {
                         Name = name,
-                        Description = description
-                    })
+                        Description = description,
+                    }),
                 });
 
             var result = await this.storage.GetThemeAsync() as dynamic;
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                        It.Is<string>(s => s == Storage.SOLUTION_COLLECTION_ID),
-                        It.Is<string>(s => s == Storage.THEME_KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == Storage.SolutionCollectionId),
+                        It.Is<string>(s => s == Storage.ThemeKey)),
                     Times.Once);
 
             Assert.Equal(result.Name.ToString(), name);
@@ -194,9 +198,10 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var result = await this.storage.GetThemeAsync() as dynamic;
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                        It.Is<string>(s => s == Storage.SOLUTION_COLLECTION_ID),
-                        It.Is<string>(s => s == Storage.THEME_KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == Storage.SolutionCollectionId),
+                        It.Is<string>(s => s == Storage.ThemeKey)),
                     Times.Once);
 
             Assert.Equal(result.Name.ToString(), Theme.Default.Name);
@@ -213,22 +218,23 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var theme = new
             {
                 Name = name,
-                Description = description
+                Description = description,
             };
 
             this.mockClient
                 .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    Data = JsonConvert.SerializeObject(theme)
+                    Data = JsonConvert.SerializeObject(theme),
                 });
 
             var result = await this.storage.SetThemeAsync(theme) as dynamic;
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                        It.Is<string>(s => s == Storage.SOLUTION_COLLECTION_ID),
-                        It.Is<string>(s => s == Storage.THEME_KEY),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == Storage.SolutionCollectionId),
+                        It.Is<string>(s => s == Storage.ThemeKey),
                         It.Is<string>(s => s == JsonConvert.SerializeObject(theme)),
                         It.Is<string>(s => s == "*")),
                     Times.Once);
@@ -252,15 +258,16 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     Data = JsonConvert.SerializeObject(new
                     {
                         Name = name,
-                        Description = description
-                    })
+                        Description = description,
+                    }),
                 });
 
             var result = await this.storage.GetUserSetting(id) as dynamic;
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                        It.Is<string>(s => s == Storage.USER_COLLECTION_ID),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == Storage.UserCollectionId),
                         It.Is<string>(s => s == id)),
                     Times.Once);
 
@@ -278,21 +285,22 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var setting = new
             {
                 Name = name,
-                Description = description
+                Description = description,
             };
 
             this.mockClient
                 .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(new ValueApiModel
                 {
-                    Data = JsonConvert.SerializeObject(setting)
+                    Data = JsonConvert.SerializeObject(setting),
                 });
 
             var result = await this.storage.SetUserSetting(id, setting) as dynamic;
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                        It.Is<string>(s => s == Storage.USER_COLLECTION_ID),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == Storage.UserCollectionId),
                         It.Is<string>(s => s == id),
                         It.Is<string>(s => s == JsonConvert.SerializeObject(setting)),
                         It.Is<string>(s => s == "*")),
@@ -316,16 +324,17 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     {
                         Image = image,
                         Type = type,
-                        IsDefault = false
-                    })
+                        IsDefault = false,
+                    }),
                 });
 
             var result = await this.storage.GetLogoAsync() as dynamic;
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                        It.Is<string>(s => s == Storage.SOLUTION_COLLECTION_ID),
-                        It.Is<string>(s => s == Storage.LOGO_KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == Storage.SolutionCollectionId),
+                        It.Is<string>(s => s == Storage.LogoKey)),
                     Times.Once);
 
             Assert.Equal(image, result.Image.ToString());
@@ -350,16 +359,17 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         Image = image,
                         Type = type,
                         Name = name,
-                        IsDefault = false
-                    })
+                        IsDefault = false,
+                    }),
                 });
 
             var result = await this.storage.GetLogoAsync() as dynamic;
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                        It.Is<string>(s => s == Storage.SOLUTION_COLLECTION_ID),
-                        It.Is<string>(s => s == Storage.LOGO_KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == Storage.SolutionCollectionId),
+                        It.Is<string>(s => s == Storage.LogoKey)),
                     Times.Once);
 
             Assert.Equal(image, result.Image.ToString());
@@ -378,9 +388,10 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var result = await this.storage.GetLogoAsync() as dynamic;
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                        It.Is<string>(s => s == Storage.SOLUTION_COLLECTION_ID),
-                        It.Is<string>(s => s == Storage.LOGO_KEY)),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == Storage.SolutionCollectionId),
+                        It.Is<string>(s => s == Storage.LogoKey)),
                     Times.Once);
 
             Assert.Equal(Logo.Default.Image, result.Image.ToString());
@@ -402,21 +413,23 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var logo = new Logo
             {
                 Image = image,
-                Type = type
+                Type = type,
             };
 
-            Logo result = await SetLogoHelper(logo, oldImage, oldName, oldType, false);
+            Logo result = await this.SetLogoHelper(logo, oldImage, oldName, oldType, false);
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                        It.Is<string>(s => s == Storage.SOLUTION_COLLECTION_ID),
-                        It.Is<string>(s => s == Storage.LOGO_KEY),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == Storage.SolutionCollectionId),
+                        It.Is<string>(s => s == Storage.LogoKey),
                         It.Is<string>(s => s == JsonConvert.SerializeObject(logo)),
                         It.Is<string>(s => s == "*")),
                     Times.Once);
 
             Assert.Equal(image, result.Image.ToString());
             Assert.Equal(type, result.Type.ToString());
+
             // If name is not set, old name should remain
             Assert.Equal(oldName, result.Name.ToString());
             Assert.False(result.IsDefault);
@@ -437,10 +450,10 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             {
                 Image = image,
                 Type = type,
-                Name = name
+                Name = name,
             };
 
-            Logo result = await SetLogoHelper(logo, oldImage, oldName, oldType, false);
+            Logo result = await this.SetLogoHelper(logo, oldImage, oldName, oldType, false);
 
             Assert.Equal(image, result.Image.ToString());
             Assert.Equal(type, result.Type.ToString());
@@ -462,9 +475,9 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
-                    }
+                            Value = this.rand.NextString(),
+                        },
+                    },
                 },
                 new DeviceGroup
                 {
@@ -475,9 +488,9 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
-                    }
+                            Value = this.rand.NextString(),
+                        },
+                    },
                 },
                 new DeviceGroup
                 {
@@ -488,17 +501,17 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                         {
                             Key = this.rand.NextString(),
                             Operator = OperatorType.EQ,
-                            Value = this.rand.NextString()
-                        }
-                    }
-                }
+                            Value = this.rand.NextString(),
+                        },
+                    },
+                },
             };
 
             var items = groups.Select(g => new ValueApiModel
             {
                 Key = this.rand.NextString(),
                 Data = JsonConvert.SerializeObject(g),
-                ETag = this.rand.NextString()
+                ETag = this.rand.NextString(),
             }).ToList();
 
             this.mockClient
@@ -508,8 +521,9 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var result = (await this.storage.GetAllDeviceGroupsAsync()).ToList();
 
             this.mockClient
-                .Verify(x => x.GetAllAsync(
-                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID)),
+                .Verify(
+                    x => x.GetAllAsync(
+                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId)),
                     Times.Once);
 
             Assert.Equal(result.Count, groups.Length);
@@ -535,8 +549,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etag = this.rand.NextString();
 
@@ -548,16 +562,17 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     Data = JsonConvert.SerializeObject(new DeviceGroup
                     {
                         DisplayName = displayName,
-                        Conditions = conditions
+                        Conditions = conditions,
                     }),
-                    ETag = etag
+                    ETag = etag,
                 });
 
             var result = await this.storage.GetDeviceGroupAsync(groupId);
 
             this.mockClient
-                .Verify(x => x.GetAsync(
-                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID),
+                .Verify(
+                    x => x.GetAsync(
+                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId),
                         It.Is<string>(s => s == groupId)),
                     Times.Once);
 
@@ -578,15 +593,15 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etag = this.rand.NextString();
 
             var group = new DeviceGroup
             {
                 DisplayName = displayName,
-                Conditions = conditions
+                Conditions = conditions,
             };
 
             this.mockClient
@@ -595,20 +610,22 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     Key = groupId,
                     Data = JsonConvert.SerializeObject(group),
-                    ETag = etag
+                    ETag = etag,
                 });
 
             var result = await this.storage.CreateDeviceGroupAsync(group);
 
             this.mockClient
-                .Verify(x => x.CreateAsync(
-                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID),
+                .Verify(
+                    x => x.CreateAsync(
+                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId),
                         It.Is<string>(s => s == JsonConvert.SerializeObject(group, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }))),
                     Times.Once);
 
             this.mockAsaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID)),
+                .Verify(
+                    x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId)),
                     Times.Once);
 
             Assert.Equal(result.Id, groupId);
@@ -630,8 +647,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     Key = this.rand.NextString(),
                     Operator = OperatorType.EQ,
-                    Value = this.rand.NextString()
-                }
+                    Value = this.rand.NextString(),
+                },
             };
             var etagOld = this.rand.NextString();
             var etagNew = this.rand.NextString();
@@ -639,7 +656,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var group = new DeviceGroup
             {
                 DisplayName = displayName,
-                Conditions = conditions
+                Conditions = conditions,
             };
 
             this.mockClient
@@ -648,22 +665,24 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 {
                     Key = groupId,
                     Data = JsonConvert.SerializeObject(group),
-                    ETag = etagNew
+                    ETag = etagNew,
                 });
 
             var result = await this.storage.UpdateDeviceGroupAsync(groupId, group, etagOld);
 
             this.mockClient
-                .Verify(x => x.UpdateAsync(
-                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID),
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId),
                         It.Is<string>(s => s == groupId),
                         It.Is<string>(s => s == JsonConvert.SerializeObject(group, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore })),
                         It.Is<string>(s => s == etagOld)),
                     Times.Once);
 
             this.mockAsaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID)),
+                .Verify(
+                    x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId)),
                     Times.Once);
 
             Assert.Equal(result.Id, groupId);
@@ -686,49 +705,17 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             await this.storage.DeleteDeviceGroupAsync(groupId);
 
             this.mockClient
-                .Verify(x => x.DeleteAsync(
-                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID),
+                .Verify(
+                    x => x.DeleteAsync(
+                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId),
                         It.Is<string>(s => s == groupId)),
                     Times.Once);
 
             this.mockAsaManager
-                .Verify(x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Storage.DEVICE_GROUP_COLLECTION_ID)),
+                .Verify(
+                    x => x.BeginConversionAsync(
+                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId)),
                     Times.Once);
-        }
-
-        private async Task<Logo> SetLogoHelper(Logo logo, string oldImage, string oldName, string oldType, bool isDefault)
-        {
-            this.mockClient
-                .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync((string id, string key, string value, string etag) => new ValueApiModel
-                {
-                    Data = value
-                });
-
-            this.mockClient.Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<string>()))
-                .ReturnsAsync(new ValueApiModel
-                {
-                    Data = JsonConvert.SerializeObject(new Logo
-                    {
-                        Image = oldImage,
-                        Type = oldType,
-                        Name = oldName,
-                        IsDefault = false
-                    })
-                });
-
-            Logo result = await this.storage.SetLogoAsync(logo);
-
-            this.mockClient
-                .Verify(x => x.UpdateAsync(
-                        It.Is<string>(s => s == Storage.SOLUTION_COLLECTION_ID),
-                        It.Is<string>(s => s == Storage.LOGO_KEY),
-                        It.Is<string>(s => s == JsonConvert.SerializeObject(logo)),
-                        It.Is<string>(s => s == "*")),
-                    Times.Once);
-
-            return result;
         }
 
         [Fact]
@@ -743,7 +730,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 Name = key,
                 PackageType = PackageType.EdgeManifest,
                 ConfigType = string.Empty,
-                Content = EDGE_PACKAGE_JSON
+                Content = EdgePackageJson,
             };
             var value = JsonConvert.SerializeObject(pkg);
 
@@ -754,7 +741,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Key = key,
-                    Data = value
+                    Data = value,
                 });
 
             // Act
@@ -769,7 +756,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
-        public async Task AddADMPackageTest(Boolean isCustomConfigType)
+        public async Task AddADMPackageTest(bool isCustomConfigType)
         {
             // Arrange
             const string collectionId = "packages";
@@ -781,8 +768,8 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 Id = string.Empty,
                 Name = key,
                 PackageType = PackageType.DeviceConfiguration,
-                Content = ADM_PACKAGE_JSON,
-                ConfigType = configType
+                Content = AdmPackageJson,
+                ConfigType = configType,
             };
 
             var value = JsonConvert.SerializeObject(pkg);
@@ -794,7 +781,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Key = key,
-                    Data = value
+                    Data = value,
                 });
 
             const string configKey = "config-types";
@@ -808,7 +795,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 .ReturnsAsync(new ValueApiModel
                 {
                     Key = key,
-                    Data = value
+                    Data = value,
                 });
 
             this.mockClient
@@ -830,7 +817,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
         [Theory]
         [InlineData(false)]
         [InlineData(true)]
-        public async Task ListPackagesTest(Boolean isEdgeManifest)
+        public async Task ListPackagesTest(bool isEdgeManifest)
         {
             // Arrange
             const string collectionId = "packages";
@@ -845,8 +832,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 Name = name + i,
                 Content = content + i,
                 PackageType = (i == 0) ? PackageType.DeviceConfiguration : PackageType.EdgeManifest,
-                ConfigType = (i == 0) ? ConfigType.Firmware.ToString() : string.Empty
-
+                ConfigType = (i == 0) ? ConfigType.Firmware.ToString() : string.Empty,
             }).ToList();
 
             this.mockClient
@@ -857,12 +843,12 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                     Items = new List<ValueApiModel>()
                     {
                         new ValueApiModel()
-                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[0])},
+                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[0]) },
                         new ValueApiModel()
-                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[1])},
+                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[1]) },
                         new ValueApiModel()
-                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[2])}
-                    }
+                        { Key = string.Empty, Data = JsonConvert.SerializeObject(packages[2]) },
+                    },
                 });
 
             // Act
@@ -876,6 +862,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 var resultPackages = await this.storage.GetFilteredPackagesAsync(
                                                     packageType,
                                                     configType);
+
                 // Assert
                 var pkg = resultPackages.First();
                 Assert.Equal(PackageType.EdgeManifest, pkg.PackageType);
@@ -916,7 +903,7 @@ namespace Mmm.Platform.IoT.Config.Services.Test
                 Id = string.Empty,
                 Name = "testpackage",
                 PackageType = PackageType.EdgeManifest,
-                Content = "InvalidPackage"
+                Content = "InvalidPackage",
             };
 
             // Act & Assert
@@ -931,8 +918,9 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             var packageId = this.rand.NextString();
 
             this.mockClient
-                .Setup(x => x.DeleteAsync(It.Is<string>(s => s == PACKAGES_COLLECTION_ID),
-                                          It.Is<string>(s => s == packageId)))
+                .Setup(x => x.DeleteAsync(
+                    It.Is<string>(s => s == PackagesCollectionId),
+                    It.Is<string>(s => s == packageId)))
                 .Returns(Task.FromResult(0));
 
             // Act
@@ -940,8 +928,9 @@ namespace Mmm.Platform.IoT.Config.Services.Test
 
             // Assert
             this.mockClient
-                .Verify(x => x.DeleteAsync(
-                        It.Is<string>(s => s == PACKAGES_COLLECTION_ID),
+                .Verify(
+                    x => x.DeleteAsync(
+                        It.Is<string>(s => s == PackagesCollectionId),
                         It.Is<string>(s => s == packageId)),
                     Times.Once);
         }
@@ -965,6 +954,41 @@ namespace Mmm.Platform.IoT.Config.Services.Test
             originalPkg.Remove(dateCreatedField);
 
             return JToken.DeepEquals(createdPkg, originalPkg);
+        }
+
+        private async Task<Logo> SetLogoHelper(Logo logo, string oldImage, string oldName, string oldType, bool isDefault)
+        {
+            this.mockClient
+                .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync((string id, string key, string value, string etag) => new ValueApiModel
+                {
+                    Data = value,
+                });
+
+            this.mockClient.Setup(x => x.GetAsync(It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync(new ValueApiModel
+                {
+                    Data = JsonConvert.SerializeObject(new Logo
+                    {
+                        Image = oldImage,
+                        Type = oldType,
+                        Name = oldName,
+                        IsDefault = false,
+                    }),
+                });
+
+            Logo result = await this.storage.SetLogoAsync(logo);
+
+            this.mockClient
+                .Verify(
+                    x => x.UpdateAsync(
+                        It.Is<string>(s => s == Storage.SolutionCollectionId),
+                        It.Is<string>(s => s == Storage.LogoKey),
+                        It.Is<string>(s => s == JsonConvert.SerializeObject(logo)),
+                        It.Is<string>(s => s == "*")),
+                    Times.Once);
+
+            return result;
         }
     }
 }

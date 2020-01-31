@@ -1,15 +1,22 @@
-﻿using Microsoft.AspNetCore.Hosting;
+// <copyright file="WebHost.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
+using System.IO;
+using System.Reflection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Logging;
-using Mmm.Platform.IoT.Common.Services.Config;
-using System.IO;
-using System.Reflection;
+using Microsoft.Extensions.Logging.ApplicationInsights;
+using Mmm.Iot.Common.Services.Config;
 
-namespace Mmm.Platform.IoT.Common.Services
+namespace Mmm.Iot.Common.Services
 {
     public class WebHost
     {
+        private static AppConfig azureAppConfig;
+
         public static IWebHostBuilder CreateDefaultBuilder(string[] args)
         {
             var builder = new WebHostBuilder();
@@ -34,7 +41,11 @@ namespace Mmm.Platform.IoT.Common.Services
                 logging.ClearProviders();
                 logging.AddConsole();
                 logging.AddDebug();
+                logging.AddApplicationInsights(azureAppConfig.Global.InstrumentationKey);
                 logging.SetMinimumLevel(LogLevel.Debug);
+
+                // The following configures LogLevel Information or above to be sent to Application Insights for all categories.
+                logging.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
             });
         }
 
@@ -70,6 +81,7 @@ namespace Mmm.Platform.IoT.Common.Services
                     azureAppConfigConfig.Global.AzureActiveDirectory.AppId,
                     azureAppConfigConfig.Global.AzureActiveDirectory.AppSecret);
                 config.AddConfiguration(initialAppConfig.Configuration);
+                azureAppConfig = azureAppConfigConfig;
             });
         }
 

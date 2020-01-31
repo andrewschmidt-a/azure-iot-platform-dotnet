@@ -1,12 +1,16 @@
+// <copyright file="UserSettingsModel.cs" company="3M">
+// Copyright (c) 3M. All rights reserved.
+// </copyright>
+
 using Microsoft.Azure.Cosmos.Table;
 
-namespace Mmm.Platform.IoT.TenantManager.Services.Models
+namespace Mmm.Iot.TenantManager.Services.Models
 {
     public class UserSettingsModel : TableEntity
     {
-        public string Value { get; set; }
-
-        public UserSettingsModel() { }
+        public UserSettingsModel()
+        {
+        }
 
         public UserSettingsModel(string userId, string settingKey, string value)
         {
@@ -14,6 +18,8 @@ namespace Mmm.Platform.IoT.TenantManager.Services.Models
             this.RowKey = settingKey;
             this.Value = value;
         }
+
+        public string Value { get; set; }
 
         // Define aliases for the partition and row keys
         public string UserId
