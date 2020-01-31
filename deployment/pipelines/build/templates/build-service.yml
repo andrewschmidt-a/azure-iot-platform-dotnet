@@ -19,7 +19,6 @@ stages:
         vmImage: 'ubuntu-latest'
     displayName: Build
     steps:
-    
     - task: AzureCLI@1
       inputs:
         azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
