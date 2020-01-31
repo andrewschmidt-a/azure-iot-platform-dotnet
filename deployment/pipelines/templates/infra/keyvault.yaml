@@ -7,7 +7,7 @@ parameters:
   keyVaultName: ''
   userObjId: ''
   defaultSASKeyName: ''
-  SendGridApiKey: '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'
+  SendGridApiKey: ''
 
 steps:
 - task: AzureCLI@1

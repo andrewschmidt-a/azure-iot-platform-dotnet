@@ -19,6 +19,12 @@ stages:
         vmImage: 'ubuntu-latest'
     displayName: Build
     steps:
+
+    - task: DotNetCoreCLI@2
+      inputs:
+      command: 'test'
+      projects: '$(Build.SourcesDirectory)/${{ parameters.service }}/**/WebService.Test.csproj'
+
     - task: AzureCLI@1
       inputs:
         azureSubscription: '3M-CRSLAD16-BBIoTP-Dev'
