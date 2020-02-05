@@ -17,5 +17,5 @@ schedules:
 
 steps:
   - script: |-
-      echo "This pipeline serves only to trigger other pipelines that may exist in other repositories"
-    displayName: Trigger other pipelines
+      echo "This pipeline serves only to signal other pipelines to run (even if they exist in other repositories)"
+    displayName: Signal other pipelines
