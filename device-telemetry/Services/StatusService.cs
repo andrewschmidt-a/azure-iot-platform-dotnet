@@ -22,7 +22,6 @@ namespace Mmm.Iot.DeviceTelemetry.Services
             ITimeSeriesClient timeSeriesClient,
             IAsaManagerClient asaManager,
             IStorageAdapterClient storageAdapter,
-            IDiagnosticsClient diagnosticsClient,
             IAppConfigurationClient appConfig)
                 : base(config)
         {
@@ -31,8 +30,6 @@ namespace Mmm.Iot.DeviceTelemetry.Services
                 { "Storage Adapter", storageAdapter },
                 { "Storage", storageClient },
                 { "Asa Manager", asaManager },
-                { "Time Series", timeSeriesClient },
-                { "Diagnostics", diagnosticsClient },
                 { "App Config", appConfig },
             };
         }
