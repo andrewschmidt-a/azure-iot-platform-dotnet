@@ -1,0 +1,28 @@
+dependencies:
+  - name: asa-manager
+    version: 0.1.1
+    repository: file://../asa-manager
+  - name: config
+    version: 0.1.1
+    repository: file://../config
+  - name: device-telemetry
+    version: 0.1.0
+    repository: file://../device-telemetry
+  - name: identity-gateway
+    version: 0.1.0
+    repository: file://../identity-gateway
+  - name: iothub-manager
+    version: 0.1.0
+    repository: file://../iothub-manager
+  - name: storage-adapter
+    version: 0.1.0
+    repository: file://../storage-adapter
+  - name: tenant-manager
+    version: 0.1.0
+    repository: file://../tenant-manager
+  - name: webui
+    version: 0.1.0
+    repository: file://../webui
+  - name: reverse-proxy
+    version: 0.1.0
+    repository: file://../reverse-proxy

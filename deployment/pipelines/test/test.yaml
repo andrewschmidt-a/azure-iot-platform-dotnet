@@ -1,0 +1,326 @@
+variables:
+  azure.subscription.name: 3M-CRSLAD16-BBIoTP-Dev
+  azure.resourceGroup.name: rg-iot-crsl-dev
+  azure.appConfiguration.name: crsliot-appconfig-dev
+  azure.aksCluster.name: crsliot-aks-dev
+  azure.devSpace.name: build-$(Build.BuildId)
+  kubernetes.namespace.name: build-$(Build.BuildId)
+  dotnet.configuration: Release
+  dotnet.sdk.version: 2.2.x
+  git.serenityRepository.name: azure-iot-services-dotnet
+  dockerHub.serviceConnection.name: OdinDockerHub
+  dockerHub.repository.name: azureiot3m
+  dotnet.targetFrameworkMoniker: netcoreapp2.2
+  dotnet.runtimeId.production: linux-musl-x64
+  dockerfile.path: Dockerfile
+  helm.chart.name: serenity
+
+pool:
+  vmImage: ubuntu-latest
+
+resources:
+  repositories:
+    - repository: azure-iot-services-dotnet
+      type: githubenterprise
+      endpoint: GithubMMM
+      name: MMM/azure-iot-services-dotnet
+      ref: master
+  pipelines:
+    - pipeline: azure-iot-services-dotnet
+      source: signal
+      trigger:
+        branches:
+          - '*'
+
+trigger:
+  - master
+
+pr:
+  - master
+
+stages:
+  - stage: unitTest
+    displayName: Unit test stage
+    jobs:
+      - job: unitTest
+        displayName: Unit test job
+        steps:
+          - checkout: azure-iot-services-dotnet
+            displayName: Checkout repository
+
+          - task: UseDotNet@2
+            displayName: Install .NET Core SDK
+            inputs:
+              packageType: sdk
+              version: ${{variables.dotnet.sdk.version}}
+              installationPath: $(Agent.ToolsDirectory)/dotnet
+
+          - task: AzureCLI@2
+            displayName: Setup environment variables
+            inputs:
+              azureSubscription: $(azure.subscription.name)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |-
+                appConfigConnString=`az appconfig credential list --name $(azure.appConfiguration.name) --resource-group $(azure.resourceGroup.name) --query "[?name=='Primary'].connectionString | [0]" --output tsv`
+                echo "##vso[task.setvariable variable=AppConfigurationConnectionString]$appConfigConnString"
+
+          - script: |-
+              dotnet restore --force --no-cache --no-dependencies --packages .nuget --runtime $(dotnet.runtimeId.production) /p:TargetLatestRuntimePatch=true
+            displayName: Restore dependencies
+
+          - script: |-
+              dotnet publish --nologo --no-restore --no-dependencies --no-self-contained --configuration $(dotnet.configuration) --runtime $(dotnet.runtimeId.production) /p:TargetLatestRuntimePatch=true
+            displayName: Build assemblies
+
+          - script: |-
+              dotnet test --nologo --no-build --configuration $(dotnet.configuration) --runtime $(dotnet.runtimeId.production) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura "/p:Exclude=\"[Mmm.*.Test*]*\""
+              dotnet tool install --global dotnet-reportgenerator-globaltool
+              reportgenerator -reports:**/coverage.cobertura.xml -targetdir:. -reporttypes:"Cobertura"
+            displayName: Run unit tests
+
+          - task: PublishCodeCoverageResults@1
+            displayName: Publish test coverage
+            inputs:
+              codeCoverageTool: Cobertura
+              summaryFileLocation: Cobertura.xml
+
+          - task: CopyFiles@2
+            displayName: Prepare file artifacts
+            inputs:
+              contents: |
+                **/WebService.csproj
+                **/bin/$(dotnet.configuration)/**/publish/**/*
+              targetFolder: publishFiles
+              cleanTargetFolder: true
+
+          - publish: publishFiles
+            artifact: publishFiles
+            displayName: Publish file artifacts
+
+  - stage: buildContainers
+    displayName: Build containers stage
+    dependsOn:
+      - unitTest
+    jobs:
+      - job: buildFrontendContainers
+        displayName: Build front-end containers job
+        strategy:
+          matrix:
+            reverse-proxy:
+              serviceName: reverse-proxy
+            webui:
+              serviceName: webui
+        steps:
+          - checkout: azure-iot-services-dotnet
+            displayName: Checkout repository
+
+          - task: Docker@2
+            displayName: Build and push container
+            inputs:
+              containerRegistry: $(dockerHub.serviceConnection.name)
+              repository: $(dockerHub.repository.name)/$(serviceName)
+              command: buildAndPush
+              dockerfile: $(serviceName)/$(dockerfile.path)
+              buildContext: $(serviceName)
+              tags: |-
+                $(Build.BuildId)
+                latest
+
+      - job: buildServiceContainers
+        displayName: Build service containers job
+        strategy:
+          matrix:
+            asa-manager:
+              serviceName: asa-manager
+            config:
+              serviceName: config
+            device-telemetry:
+              serviceName: device-telemetry
+            identity-gateway:
+              serviceName: identity-gateway
+            iothub-manager:
+              serviceName: iothub-manager
+            storage-adapter:
+              serviceName: storage-adapter
+            tenant-manager:
+              serviceName: tenant-manager
+        steps:
+          - checkout: none
+
+          - download: current
+            artifact: publishFiles
+            displayName: Download artifacts
+
+          - pwsh: |-
+              $assemblyName = (Get-Content .\$(serviceName)\WebService\WebService.csproj | Select-String '(?<=<AssemblyName>).*(?=</AssemblyName>)').Matches[0].Value
+              $dockerfileContents = "FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-alpine AS base`nWORKDIR /app`nEXPOSE 80`nCOPY . .`nENTRYPOINT [`"dotnet`", `"$assemblyName.dll`"]"
+              Set-Content -Value $dockerfileContents -Path $(dockerfile.path) -NoNewline -Encoding utf8
+            displayName: Generate Dockerfile
+            workingDirectory: $(Pipeline.Workspace)/publishFiles
+
+          - task: Docker@2
+            displayName: Build and push container
+            inputs:
+              containerRegistry: $(dockerHub.serviceConnection.name)
+              repository: $(dockerHub.repository.name)/$(serviceName)
+              command: buildAndPush
+              dockerfile: $(Pipeline.Workspace)/publishFiles/$(dockerfile.path)
+              buildContext: $(Pipeline.Workspace)/publishFiles/$(serviceName)/WebService/bin/$(dotnet.configuration)/$(dotnet.targetFrameworkMoniker)/$(dotnet.runtimeId.production)/publish
+              tags: |-
+                $(Build.BuildId)
+                latest
+
+  - stage: deploy
+    displayName: Deploy stage
+    dependsOn:
+      - buildContainers
+    jobs:
+      - job: deploy
+        displayName: Deploy job
+        steps:
+          - checkout: self
+            displayName: Checkout repository
+
+          - task: Kubernetes@1
+            displayName: Create namespace
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: $(azure.subscription.name)
+              azureResourceGroup: $(azure.resourceGroup.name)
+              kubernetesCluster: $(azure.aksCluster.name)
+              command: create
+              arguments: namespace $(kubernetes.namespace.name)
+
+          - task: HelmInstaller@1
+            displayName: Install Helm
+            inputs:
+              helmVersionToInstall: 2.14.3
+
+          - task: HelmDeploy@0
+            displayName: Initialize Helm
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: $(azure.subscription.name)
+              azureResourceGroup: $(azure.resourceGroup.name)
+              kubernetesCluster: $(azure.aksCluster.name)
+              useClusterAdmin: false
+              namespace: $(kubernetes.namespace.name)
+              command: init
+              arguments: --force-upgrade --history-max 200
+
+          - task: AzureCLI@2
+            displayName: Get secret value
+            inputs:
+              azureSubscription: $(azure.subscription.name)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |-
+                az appconfig credential list --name $(azure.appConfiguration.name) --resource-group $(azure.resourceGroup.name) --query "[?name=='Primary'].connectionString | [0]" --output tsv > accs
+
+          - task: HelmDeploy@0
+            displayName: Install Serenity chart
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: $(azure.subscription.name)
+              azureResourceGroup: $(azure.resourceGroup.name)
+              kubernetesCluster: $(azure.aksCluster.name)
+              useClusterAdmin: false
+              namespace: $(kubernetes.namespace.name)
+              command: install
+              chartName: charts/$(helm.chart.name)
+              updatedependency: true
+              arguments: --set-file secrets.globalsecrets.AppConfigurationConnectionString=accs
+
+  - stage: integrationTest
+    displayName: Integration test stage
+    dependsOn:
+      - deploy
+    jobs:
+      - job: getClusterIp
+        displayName: Get cluster IP job
+        steps:
+          - checkout: none
+
+          - task: AzureCLI@2
+            displayName: Get cluster IP
+            name: getClusterIp
+            inputs:
+              azureSubscription: $(azure.subscription.name)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |-
+                az aks get-credentials --resource-group $(azure.resourceGroup.name) --name $(azure.aksCluster.name)
+                clusterIp=`kubectl get services --all-namespaces --selector=app=nginx-ingress,component=controller --output=jsonpath='{.items[*].status.loadBalancer.ingress[*].ip}'`
+                clusterIp="http://$clusterIp/"
+                echo $clusterIp
+                echo "##vso[task.setvariable variable=clusterIp;isOutput=true]$clusterIp"
+
+      - job: integrationTest
+        displayName: Integration test job
+        dependsOn:
+          - getClusterIp
+        variables:
+          clusterIp: $[ dependencies.getClusterIp.outputs['getClusterIp.clusterIp'] ]
+        strategy:
+          matrix:
+            config:
+              serviceName: config
+              uriPath: config/
+            device-telemetry:
+              serviceName: device-telemetry
+              uriPath: telemetry/
+            identity-gateway:
+              serviceName: identity-gateway
+              uriPath: auth/
+            iothub-manager:
+              serviceName: iothub-manager
+              uriPath: iothubmanager/
+            # tenant-manager:
+            #   serviceName: tenant-manager
+            #   uriPath: tenantmanager
+        steps:
+          - checkout: azure-iot-services-dotnet
+            displayName: Checkout repository
+
+          - script: |-
+              echo $(clusterIp)
+              jq -r --arg baseUrl "$(clusterIp)$(uriPath)" '.values[0].value |= $baseUrl' $(serviceName)/WebService.Test/newmanEnvironment.json > temp.json && mv temp.json $(serviceName)/WebService.Test/newmanEnvironment.json
+              sudo npm install newman -g
+            displayName: Initialize Newman CLI
+
+          - task: NewmanPostman@4
+            displayName: Integration test
+            inputs:
+              collectionSourceType: file
+              Contents: $(serviceName)/WebService.Test/testCollection.json
+              environment: $(serviceName)/WebService.Test/newmanEnvironment.json
+              reporters: cli,junit
+              reporterJUnitExport: $(System.DefaultWorkingDirectory)/$(serviceName)-integration-test-report.xml
+
+          - task: PublishTestResults@2
+            displayName: Publish results
+            inputs:
+              testResultsFormat: JUnit
+              testResultsFiles: "**/$(serviceName)-integration-test-report.xml"
+
+  - stage: cleanup
+    displayName: Cleanup stage
+    dependsOn:
+      - integrationTest
+    condition: always()
+    jobs:
+      - job: cleanup
+        displayName: Cleanup job
+        steps:
+          - checkout: none
+
+          - task: Kubernetes@1
+            displayName: Delete namespace
+            inputs:
+              connectionType: Azure Resource Manager
+              azureSubscriptionEndpoint: $(azure.subscription.name)
+              azureResourceGroup: $(azure.resourceGroup.name)
+              kubernetesCluster: $(azure.aksCluster.name)
+              command: delete
+              arguments: namespace $(kubernetes.namespace.name)

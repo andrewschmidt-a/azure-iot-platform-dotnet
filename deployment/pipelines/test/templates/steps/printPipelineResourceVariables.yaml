@@ -1,0 +1,19 @@
+parameters:
+  pipeline.resource.id:
+
+steps:
+  - script: |-
+      echo resources.pipeline.$(pipeline.resource.id).projectName: $(resources.pipeline.$(pipeline.resource.id).projectName)
+      echo resources.pipeline.$(pipeline.resource.id).projectID: $(resources.pipeline.$(pipeline.resource.id).projectID)
+      echo resources.pipeline.$(pipeline.resource.id).pipelineName: $(resources.pipeline.$(pipeline.resource.id).pipelineName)
+      echo resources.pipeline.$(pipeline.resource.id).pipelineID: $(resources.pipeline.$(pipeline.resource.id).pipelineID)
+      echo resources.pipeline.$(pipeline.resource.id).runName: $(resources.pipeline.$(pipeline.resource.id).runName)
+      echo resources.pipeline.$(pipeline.resource.id).runID: $(resources.pipeline.$(pipeline.resource.id).runID)
+      echo resources.pipeline.$(pipeline.resource.id).runURI: $(resources.pipeline.$(pipeline.resource.id).runURI)
+      echo resources.pipeline.$(pipeline.resource.id).sourceBranch: $(resources.pipeline.$(pipeline.resource.id).sourceBranch)
+      echo resources.pipeline.$(pipeline.resource.id).sourceCommit: $(resources.pipeline.$(pipeline.resource.id).sourceCommit)
+      echo resources.pipeline.$(pipeline.resource.id).sourceProvider: $(resources.pipeline.$(pipeline.resource.id).sourceProvider)
+      echo resources.pipeline.$(pipeline.resource.id).requestedFor: $(resources.pipeline.$(pipeline.resource.id).requestedFor)
+      echo resources.pipeline.$(pipeline.resource.id).requestedForID: $(resources.pipeline.$(pipeline.resource.id).requestedForID)
+    displayName: Print pipeline resource variables
+    continueOnError: true
