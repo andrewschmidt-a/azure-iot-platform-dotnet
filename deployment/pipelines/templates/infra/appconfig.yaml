@@ -7,6 +7,7 @@ parameters:
   aksName: ''
   keyVaultName: ''
   storageAccountName: ''
+  automationName: ''
 
 steps:
 - task: AzureResourceGroupDeployment@2
@@ -100,6 +101,7 @@ steps:
       # set the keys
       az appconfig kv set --key Global:ClientAuth:Jwt:AuthIssuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:CosmosDb:AccountName --value $cosmosDbAccountName --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:AutomationAccountName --value ${{ parameters.automationName }} --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:LifecycleEventHubConnectionString --value $lifecycleEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:TelemetryEventHubConnectionString --value $telemetryEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:TwinChangeEventHubConnectionString --value $twinchangeEvConn --name ${{ parameters.appConfigName }} --yes
