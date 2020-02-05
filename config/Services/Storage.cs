@@ -313,7 +313,7 @@ namespace Mmm.Iot.Config.Services
 
             if (string.IsNullOrEmpty(tenantId))
             {
-                this.logger.LogError("Tenant ID is blank, cannot create container without tenandId.");
+                this.logger.LogError(new Exception("Tenant ID is blank, cannot create container without tenandId."), "Tenant ID is blank, cannot create container without tenandId.");
                 return null;
             }
 
@@ -345,7 +345,7 @@ namespace Mmm.Iot.Config.Services
                     }
                     else
                     {
-                        this.logger.LogError("Empty stream object in the UploadToBlob method.");
+                        this.logger.LogError(new Exception("Empty stream object in the UploadToBlob method."), "Empty stream object in the UploadToBlob method.");
                         return null;
                     }
 
@@ -358,13 +358,13 @@ namespace Mmm.Iot.Config.Services
                 }
                 catch (StorageException ex)
                 {
-                    this.logger.LogError($"Exception in the UploadToBlob method- Message: {ex.Message} : Stack Trace - {ex.StackTrace.ToString()}");
+                    this.logger.LogError(new Exception($"Exception in the UploadToBlob method- Message: {ex.Message} : Stack Trace - {ex.StackTrace.ToString()}"), $"Exception in the UploadToBlob method- Message: {ex.Message} : Stack Trace - {ex.StackTrace.ToString()}");
                     return null;
                 }
             }
             else
             {
-                this.logger.LogError("Error parsing CloudStorageAccount in UploadToBlob method");
+                this.logger.LogError(new Exception("Error parsing CloudStorageAccount in UploadToBlob method"), "Error parsing CloudStorageAccount in UploadToBlob method");
                 return null;
             }
         }

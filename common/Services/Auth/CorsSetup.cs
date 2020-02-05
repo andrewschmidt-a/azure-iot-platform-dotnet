@@ -44,7 +44,7 @@ namespace Mmm.Iot.Common.Services.Auth
                 model = JsonConvert.DeserializeObject<CorsWhitelistModel>(this.config.Global.ClientAuth.CorsWhitelist);
                 if (model == null)
                 {
-                    this.logger.LogError("Ignoring invalid CORS whitelist: '{whitelist}'", this.config.Global.ClientAuth.CorsWhitelist);
+                    this.logger.LogError(new Exception($"Ignoring invalid CORS whitelist: '{this.config.Global.ClientAuth.CorsWhitelist}'"),  $"Ignoring invalid CORS whitelist: '{this.config.Global.ClientAuth.CorsWhitelist}'");
                     return;
                 }
             }
