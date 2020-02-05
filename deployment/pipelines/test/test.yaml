@@ -7,7 +7,6 @@ variables:
   kubernetes.namespace.name: build-$(Build.BuildId)
   dotnet.configuration: Release
   dotnet.sdk.version: 2.2.x
-  git.serenityRepository.name: azure-iot-services-dotnet
   dockerHub.serviceConnection.name: OdinDockerHub
   dockerHub.repository.name: azureiot3m
   dotnet.targetFrameworkMoniker: netcoreapp2.2
@@ -18,22 +17,9 @@ variables:
 pool:
   vmImage: ubuntu-latest
 
-resources:
-  repositories:
-    - repository: azure-iot-services-dotnet
-      type: githubenterprise
-      endpoint: GithubMMM
-      name: MMM/azure-iot-services-dotnet
-      ref: master
-  pipelines:
-    - pipeline: azure-iot-services-dotnet
-      source: signal
-      trigger:
-        branches:
-          - '*'
-
 trigger:
   - master
+  - kestes/new-test-pipeline
 
 pr:
   - master
@@ -45,7 +31,7 @@ stages:
       - job: unitTest
         displayName: Unit test job
         steps:
-          - checkout: azure-iot-services-dotnet
+          - checkout: self
             displayName: Checkout repository
 
           - task: UseDotNet@2
@@ -112,7 +98,7 @@ stages:
             webui:
               serviceName: webui
         steps:
-          - checkout: azure-iot-services-dotnet
+          - checkout: self
             displayName: Checkout repository
 
           - task: Docker@2
@@ -153,7 +139,7 @@ stages:
             displayName: Download artifacts
 
           - pwsh: |-
-              $assemblyName = (Get-Content .\$(serviceName)\WebService\WebService.csproj | Select-String '(?<=<AssemblyName>).*(?=</AssemblyName>)').Matches[0].Value
+              $assemblyName = (Get-Content ./$(serviceName)/WebService/WebService.csproj | Select-String '(?<=<AssemblyName>).*(?=</AssemblyName>)').Matches[0].Value
               $dockerfileContents = "FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-alpine AS base`nWORKDIR /app`nEXPOSE 80`nCOPY . .`nENTRYPOINT [`"dotnet`", `"$assemblyName.dll`"]"
               Set-Content -Value $dockerfileContents -Path $(dockerfile.path) -NoNewline -Encoding utf8
             displayName: Generate Dockerfile
@@ -228,7 +214,7 @@ stages:
               useClusterAdmin: false
               namespace: $(kubernetes.namespace.name)
               command: install
-              chartName: charts/$(helm.chart.name)
+              chartName: deployment/pipelines/test/charts/$(helm.chart.name)
               updatedependency: true
               arguments: --set-file secrets.globalsecrets.AppConfigurationConnectionString=accs
 
@@ -280,7 +266,7 @@ stages:
             #   serviceName: tenant-manager
             #   uriPath: tenantmanager
         steps:
-          - checkout: azure-iot-services-dotnet
+          - checkout: self
             displayName: Checkout repository
 
           - script: |-
