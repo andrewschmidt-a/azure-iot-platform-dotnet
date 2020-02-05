@@ -18,11 +18,17 @@ pool:
   vmImage: ubuntu-latest
 
 trigger:
-  - master
-  - kestes/new-test-pipeline
+  batch: true
+  branches:
+    include:
+    - master
+    - kestes/new-test-pipeline
 
 pr:
-  - master
+  autoCancel: true
+  branches:
+    include:
+    - master
 
 schedules:
   - cron: 0 0 * * *
