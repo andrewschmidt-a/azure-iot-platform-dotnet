@@ -24,6 +24,14 @@ trigger:
 pr:
   - master
 
+schedules:
+  - cron: 0 0 * * *
+    displayName: Daily midnight build
+    branches:
+      include:
+        - master
+    always: true
+
 stages:
   - stage: unitTest
     displayName: Unit test stage
