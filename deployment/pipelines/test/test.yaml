@@ -22,7 +22,6 @@ trigger:
   branches:
     include:
     - master
-    - kestes/new-test-pipeline
 
 pr:
   autoCancel: true
