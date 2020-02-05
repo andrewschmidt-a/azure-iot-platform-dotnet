@@ -13,6 +13,7 @@ variables:
   dotnet.runtimeId.production: linux-musl-x64
   dockerfile.path: Dockerfile
   helm.chart.name: serenity
+  artifact.publishedFiles.name: publishFiles
 
 pool:
   vmImage: ubuntu-latest
@@ -38,21 +39,15 @@ schedules:
     always: true
 
 stages:
-  - stage: unitTest
-    displayName: Unit test stage
+  - stage: build
+    displayName: Build stage
+    dependsOn: []
     jobs:
-      - job: unitTest
-        displayName: Unit test job
+      - job: build
+        displayName: Build job
         steps:
           - checkout: self
             displayName: Checkout repository
-
-          - task: UseDotNet@2
-            displayName: Install .NET Core SDK
-            inputs:
-              packageType: sdk
-              version: ${{variables.dotnet.sdk.version}}
-              installationPath: $(Agent.ToolsDirectory)/dotnet
 
           - task: AzureCLI@2
             displayName: Setup environment variables
@@ -72,6 +67,53 @@ stages:
               dotnet publish --nologo --no-restore --no-dependencies --no-self-contained --configuration $(dotnet.configuration) --runtime $(dotnet.runtimeId.production) /p:TargetLatestRuntimePatch=true
             displayName: Build assemblies
 
+          - task: CopyFiles@2
+            displayName: Prepare file artifacts
+            inputs:
+              contents: |
+                *.sln
+                *.props
+                *.ruleset
+                .nuget/**/*
+                asa-manager/**/*
+                common/**/*
+                config/**/*
+                device-telemetry/**/*
+                identity-gateway/**/*
+                iothub-manager/**/*
+                storage-adapter/**/*
+                tenant-manager/**/*
+              targetFolder: $(artifact.publishedFiles.name)
+              cleanTargetFolder: true
+
+          - publish: $(artifact.publishedFiles.name)
+            artifact: $(artifact.publishedFiles.name)
+            displayName: Publish file artifacts
+
+  - stage: unitTest
+    displayName: Unit test stage
+    dependsOn:
+      - build
+    jobs:
+      - job: unitTest
+        displayName: Unit test job
+        steps:
+          - checkout: none
+
+          - task: UseDotNet@2
+            displayName: Install .NET Core SDK
+            inputs:
+              packageType: sdk
+              version: ${{variables.dotnet.sdk.version}}
+              installationPath: $(Agent.ToolsDirectory)/dotnet
+
+          - task: DownloadPipelineArtifact@2
+            displayName: Download artifacts
+            inputs:
+              source: current
+              artifact: $(artifact.publishedFiles.name)
+              path: $(Build.SourcesDirectory)
+
           - script: |-
               dotnet test --nologo --no-build --configuration $(dotnet.configuration) --runtime $(dotnet.runtimeId.production) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura "/p:Exclude=\"[Mmm.*.Test*]*\""
               dotnet tool install --global dotnet-reportgenerator-globaltool
@@ -84,25 +126,11 @@ stages:
               codeCoverageTool: Cobertura
               summaryFileLocation: Cobertura.xml
 
-          - task: CopyFiles@2
-            displayName: Prepare file artifacts
-            inputs:
-              contents: |
-                **/WebService.csproj
-                **/bin/$(dotnet.configuration)/**/publish/**/*
-              targetFolder: publishFiles
-              cleanTargetFolder: true
-
-          - publish: publishFiles
-            artifact: publishFiles
-            displayName: Publish file artifacts
-
-  - stage: buildContainers
-    displayName: Build containers stage
-    dependsOn:
-      - unitTest
+  - stage: buildFrontEndContainers
+    displayName: Build front-end containers stage
+    dependsOn: []
     jobs:
-      - job: buildFrontendContainers
+      - job: buildFrontEndContainers
         displayName: Build front-end containers job
         strategy:
           matrix:
@@ -114,8 +142,15 @@ stages:
           - checkout: self
             displayName: Checkout repository
 
+          - script: |
+              continue=`git diff origin/master... --name-only | cut -d / -f 1 | grep $(serviceName) -cim1`
+              echo "continue: $continue"
+              echo "##vso[task.setvariable variable=continue]$continue"
+            displayName: Should continue?
+
           - task: Docker@2
             displayName: Build and push container
+            condition: eq(variables['continue'], '1')
             inputs:
               containerRegistry: $(dockerHub.serviceConnection.name)
               repository: $(dockerHub.repository.name)/$(serviceName)
@@ -126,6 +161,11 @@ stages:
                 $(Build.BuildId)
                 latest
 
+  - stage: buildServiceContainers
+    displayName: Build service containers stage
+    dependsOn:
+      - build
+    jobs:
       - job: buildServiceContainers
         displayName: Build service containers job
         strategy:
@@ -148,7 +188,7 @@ stages:
           - checkout: none
 
           - download: current
-            artifact: publishFiles
+            artifact: $(artifact.publishedFiles.name)
             displayName: Download artifacts
 
           - pwsh: |-
@@ -156,7 +196,7 @@ stages:
               $dockerfileContents = "FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-alpine AS base`nWORKDIR /app`nEXPOSE 80`nCOPY . .`nENTRYPOINT [`"dotnet`", `"$assemblyName.dll`"]"
               Set-Content -Value $dockerfileContents -Path $(dockerfile.path) -NoNewline -Encoding utf8
             displayName: Generate Dockerfile
-            workingDirectory: $(Pipeline.Workspace)/publishFiles
+            workingDirectory: $(Pipeline.Workspace)/$(artifact.publishedFiles.name)
 
           - task: Docker@2
             displayName: Build and push container
@@ -164,8 +204,8 @@ stages:
               containerRegistry: $(dockerHub.serviceConnection.name)
               repository: $(dockerHub.repository.name)/$(serviceName)
               command: buildAndPush
-              dockerfile: $(Pipeline.Workspace)/publishFiles/$(dockerfile.path)
-              buildContext: $(Pipeline.Workspace)/publishFiles/$(serviceName)/WebService/bin/$(dotnet.configuration)/$(dotnet.targetFrameworkMoniker)/$(dotnet.runtimeId.production)/publish
+              dockerfile: $(Pipeline.Workspace)/$(artifact.publishedFiles.name)/$(dockerfile.path)
+              buildContext: $(Pipeline.Workspace)/$(artifact.publishedFiles.name)/$(serviceName)/WebService/bin/$(dotnet.configuration)/$(dotnet.targetFrameworkMoniker)/$(dotnet.runtimeId.production)/publish
               tags: |-
                 $(Build.BuildId)
                 latest
@@ -173,7 +213,8 @@ stages:
   - stage: deploy
     displayName: Deploy stage
     dependsOn:
-      - buildContainers
+      - buildFrontEndContainers
+      - buildServiceContainers
     jobs:
       - job: deploy
         displayName: Deploy job
