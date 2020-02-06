@@ -235,7 +235,7 @@ stages:
           - task: HelmInstaller@1
             displayName: Install Helm
             inputs:
-              helmVersionToInstall: 2.14.3
+              helmVersionToInstall: 2.16.1
 
           - task: HelmDeploy@0
             displayName: Initialize Helm
@@ -271,6 +271,7 @@ stages:
               chartName: deployment/pipelines/test/charts/$(helm.chart.name)
               updatedependency: true
               arguments: --set-file secrets.globalsecrets.AppConfigurationConnectionString=accs
+              valueFile: deployment/pipelines/test/serenity-values.yaml
 
   - stage: integrationTest
     displayName: Integration test stage

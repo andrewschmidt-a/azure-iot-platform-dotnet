@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "storage-adapter.fullname" . }}
+  name: {{ include "mmm-iot-service.fullname" . }}
   labels:
-{{ include "storage-adapter.labels" . | indent 4 }}
+{{ include "mmm-iot-service.labels" . | indent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.deployment.replicaCount }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "storage-adapter.name" . }}
+      app.kubernetes.io/name: {{ include "mmm-iot-service.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "storage-adapter.name" . }}
+        app.kubernetes.io/name: {{ include "mmm-iot-service.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-    {{- with .Values.imagePullSecrets }}
+    {{- with .Values.deployment.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: {{ include "mmm-iot-service.name" . }}
+          image: {{ cat (include "mmm-iot-service.image.repository" .) ":" .Values.deployment.image.tag }}
+          imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           resources:
             limits:
               cpu: "0.5"
@@ -33,12 +33,15 @@ spec:
               memory: 300M
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.deployment.port.http }}
               protocol: TCP
-          {{- if .Values.probes.enabled }}
+            - name: https
+              containerPort: {{ .Values.deployment.port.https }}
+              protocol: TCP
+          {{- if .Values.deployment.probes.enabled }}
           livenessProbe:
             httpGet:
-              path: /v1/status/ping
+              path: {{ .Values.deployment.probes.livenessPath }}
               port: http
             initialDelaySeconds: 5
             timeoutSeconds: 10
@@ -47,7 +50,7 @@ spec:
             failureThreshold: 3
           readinessProbe:
             httpGet:
-              path: /v1/status/ping
+              path: {{ .Values.deployment.probes.readinessPath }}
               port: http
             initialDelaySeconds: 5
             timeoutSeconds: 10
@@ -57,16 +60,7 @@ spec:
           {{- end }}
           env:
             {{- $root := . }}
-            {{- range $ref, $values := .Values.secrets }}
-            {{- range $key, $value := $values }}
-            - name: {{ $ref }}_{{ $key }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ template "storage-adapter.name" $root }}-{{ $ref | lower }}
-                  key: {{ $key }}
-            {{- end }}
-            {{- end }}
-            {{- range $ref := .Values.secretsRef }}
+            {{- range $ref := .Values.deployment.secretsRef }}
             - name: {{ $ref }}
               valueFrom:
                 secretKeyRef:
@@ -74,16 +68,16 @@ spec:
                   key: {{ $ref }}
             {{- end }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.deployment.resources | nindent 12 }}
+      {{- with .Values.deployment.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+    {{- with .Values.deployment.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.tolerations }}
+    {{- with .Values.deployment.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

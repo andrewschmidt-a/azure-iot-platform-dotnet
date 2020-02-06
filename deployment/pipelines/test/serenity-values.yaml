@@ -1,0 +1,32 @@
+asa-manager:
+  nameOverride: asa-manager
+config:
+  nameOverride: config
+device-telemetry:
+  nameOverride: device-telemetry
+identity-gateway:
+  nameOverride: identity-gateway
+iothub-manager:
+  nameOverride: iothub-manager
+reverse-proxy:
+  nameOverride: reverse-proxy
+  service:
+    port: 10080
+  deployment:
+    port:
+      http: 10080
+    probes:
+      enabled: false
+storage-adapter:
+  nameOverride: storage-adapter
+tenant-manager:
+  nameOverride: tenant-manager
+webui:
+  nameOverride: webui
+  service:
+    port: 10080
+  deployment:
+    port:
+      http: 10080
+    probes:
+      enabled: false
