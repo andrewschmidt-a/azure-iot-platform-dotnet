@@ -217,7 +217,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
 
                 if (this.client == null)
                 {
-                    this.logger.LogError("Could not connect to storage at URI {uri}", this.storageUri);
+                    this.logger.LogError(new Exception($"Could not connect to storage at URI {this.storageUri}"), $"Could not connect to storage at URI {this.storageUri}");
                     throw new InvalidConfigurationException(
                         "Could not connect to DocumentClient");
                 }
