@@ -22,7 +22,7 @@ spec:
     {{- end }}
       containers:
         - name: {{ include "mmm-iot-service.name" . }}
-          image: {{ cat (include "mmm-iot-service.image.repository" .) ":" .Values.deployment.image.tag }}
+          image: {{ cat (include "mmm-iot-service.image.repository" .) ":" .Values.deployment.image.tag | nospace }}
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           resources:
             limits:
@@ -67,17 +67,13 @@ spec:
                   name: globalsecrets
                   key: {{ $ref }}
             {{- end }}
-          resources:
-            {{- toYaml .Values.deployment.resources | nindent 12 }}
+          resources: {{ toYaml .Values.deployment.resources | nindent 12 }}
       {{- with .Values.deployment.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
+      nodeSelector: {{ toYaml . | nindent 8 }}
       {{- end }}
     {{- with .Values.deployment.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
+      affinity: {{ toYaml . | nindent 8 }}
     {{- end }}
     {{- with .Values.deployment.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
+      tolerations: {{ toYaml . | nindent 8 }}
     {{- end }}

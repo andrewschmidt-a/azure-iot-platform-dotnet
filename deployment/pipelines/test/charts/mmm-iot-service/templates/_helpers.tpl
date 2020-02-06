@@ -22,5 +22,5 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{- define "mmm-iot-service.image.repository" -}}
-  {{- include "mmm-iot-service.name" . | cat "azureiot3m/" -}}
+  {{- include "mmm-iot-service.name" . | cat "azureiot3m/" | nospace -}}
 {{- end -}}
