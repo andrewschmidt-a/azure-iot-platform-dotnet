@@ -82,12 +82,12 @@ export const epics = createEpicScenario({
   /** Get the Alerting Status */
   fetchAlerting: {
     type: 'APP_ALERTING_FETCH',
-    epic: (fromAction, store) => 
-      
+    epic: (fromAction, store) =>
+
       TenantService.getAlertingStatus(true)
         .map(toActionCreator(redux.actions.updateAlerting, fromAction))
         .catch(handleError(fromAction))
-    
+
   },
   /** Get solution settings */
   fetchSolutionSettings: {

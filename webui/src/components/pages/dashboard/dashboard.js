@@ -13,6 +13,7 @@ import { PanelErrorBoundary } from './panel';
 import { DeviceGroupDropdownContainer as DeviceGroupDropdown } from 'components/shell/deviceGroupDropdown';
 import { ManageDeviceGroupsBtnContainer as ManageDeviceGroupsBtn } from 'components/shell/manageDeviceGroupsBtn';
 import { TimeIntervalDropdownContainer as TimeIntervalDropdown } from 'components/shell/timeIntervalDropdown';
+import { ResetActiveDeviceQueryBtnContainer as ResetActiveDeviceQueryBtn } from 'components/shell/resetActiveDeviceQueryBtn';
 import {
   OverviewPanel,
   AlertsPanelContainer as AlertsPanel,
@@ -379,6 +380,9 @@ export class Dashboard extends Component {
             <Protected permission={permissions.updateDeviceGroups}>
               <ManageDeviceGroupsBtn />
             </Protected>
+            {
+              this.props.activeDeviceQueryConditions.length != 0 ? <ResetActiveDeviceQueryBtn /> : null
+            }
           </ContextMenuAlign>
           <ContextMenuAlign>
             <TimeIntervalDropdown

@@ -4,8 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -198,12 +201,28 @@ namespace Mmm.Iot.IdentityGateway.WebService.Controllers
             };
             msg.AddTos(recipients);
 
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Mmm.Iot.IdentityGateway.WebService.files.InviteEmail.html";
+            Func<IDictionary<string, object>, string> template;
+
+            // Load the email template from file
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                template = Mustachio.Parser.Parse(reader.ReadToEnd());
+            }
+
             msg.SetSubject("Invitation to IoT Platform");
             Uri uri = new Uri(forwardedFor ?? "https://" + this.HttpContext.Request.Host.ToString());
-            string link = uri.Host + "#invite=" + inviteToken;
-            msg.AddContent(MimeType.Text, "Click here to join the tenant: ");
-            msg.AddContent(MimeType.Html, "<a href=\"" + link + "\">" + link + "</a>");
 
+            // Set the model for the template
+            dynamic model = new ExpandoObject();
+            model.link = uri.AbsoluteUri + "#invite=" + inviteToken;
+
+            // Set the content by doing a render on the template with the model
+            msg.AddContent(MimeType.Html, template(model));
+
+            // Send email
             var client = this.sendGridClientFactory.CreateSendGridClient();
             var response = await client.SendEmailAsync(msg);
 

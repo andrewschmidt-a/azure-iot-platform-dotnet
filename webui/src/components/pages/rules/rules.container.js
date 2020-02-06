@@ -16,7 +16,8 @@ import {
   redux as appRedux,
   getDeviceGroups,
   getApplicationPermissionsAssigned,
-  getAlerting
+  getAlerting,
+  getActiveDeviceQueryConditions
 } from 'store/reducers/appReducer';
 
 // Pass the devices status
@@ -28,7 +29,8 @@ const mapStateToProps = state => ({
   isPending: getRulesPendingStatus(state),
   deviceGroups: getDeviceGroups(state),
   lastUpdated: getRulesLastUpdated(state),
-  applicationPermissionsAssigned: getApplicationPermissionsAssigned(state)
+  applicationPermissionsAssigned: getApplicationPermissionsAssigned(state),
+  activeDeviceQueryConditions: getActiveDeviceQueryConditions(state)
 });
 
 // Wrap the dispatch method

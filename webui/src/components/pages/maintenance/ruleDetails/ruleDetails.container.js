@@ -2,11 +2,15 @@
 
 import { connect } from 'react-redux';
 import { RuleDetails } from './ruleDetails';
-import { epics as appEpics } from 'store/reducers/appReducer';
+import { epics as appEpics, getActiveDeviceQueryConditions } from 'store/reducers/appReducer';
+
+const mapStateToProps = state => ({
+  activeDeviceQueryConditions: getActiveDeviceQueryConditions(state)
+})
 
 // Wrap the dispatch method
 const mapDispatchToProps = dispatch => ({
   logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel))
 });
 
-export const RuleDetailsContainer = connect(null, mapDispatchToProps)(RuleDetails);
+export const RuleDetailsContainer = connect(mapStateToProps, mapDispatchToProps)(RuleDetails);

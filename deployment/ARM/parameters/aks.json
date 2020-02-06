@@ -11,7 +11,7 @@
         "servicePrincipalClientSecret": { "value": "" },
         "kubernetesVersion": { "value": "1.14.8" },
         "networkPlugin": { "value": "kubenet" },
-        "omsworkspaceName":{ "value": "" },
+        "omsWorkspaceName": { "value": "" },
         "enableRBAC": { "value": false },
         "enableOmsAgent": { "value": true },
         "enableHttpApplicationRouting": { "value": false }

@@ -17,15 +17,13 @@ namespace Mmm.Iot.Config.Services
             AppConfig config,
             IAsaManagerClient asaManager,
             IStorageAdapterClient storageAdapter,
-            IDeviceTelemetryClient deviceTelemetry,
-            IDeviceSimulationClient deviceSimulation)
+            IDeviceTelemetryClient deviceTelemetry)
                 : base(config)
         {
             this.Dependencies = new Dictionary<string, IStatusOperation>
             {
                 { "Storage Adapter", storageAdapter },
                 { "Device Telemetry", deviceTelemetry },
-                { "Device Simulation", deviceSimulation },
                 { "Asa Manager", asaManager },
             };
         }

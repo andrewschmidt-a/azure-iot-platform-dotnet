@@ -102,7 +102,7 @@
     "StorageType": "documentDb"
   },
   "TenantManagerService": {
-    "AutomationAccountName": "automation-odin",
+    "AutomationAccountName": "OVERWRITTEN_IN_DEPLOYMENT",
     "CreateIotHubWebHookName": "CreateIotHub",
     "CreateSaWebHookName": "createSAJob",
     "DeleteIotHubWebHookName": "DeleteIotHub",

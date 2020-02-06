@@ -37,9 +37,9 @@ namespace Mmm.Iot.Config.WebService
             // Setup (not enabling yet) CORS
             services.AddCors();
 
-            var aiOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
-            aiOptions.EnableAdaptiveSampling = false;
-            services.AddApplicationInsightsTelemetry(aiOptions);
+            var applicationInsightsOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
+            applicationInsightsOptions.EnableAdaptiveSampling = false;
+            services.AddApplicationInsightsTelemetry(applicationInsightsOptions);
 
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();

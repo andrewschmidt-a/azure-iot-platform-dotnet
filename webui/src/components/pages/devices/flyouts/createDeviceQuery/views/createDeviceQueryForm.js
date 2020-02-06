@@ -13,6 +13,7 @@ import {
   FormGroup,
   FormLabel,
   Indicator,
+  Protected
 } from 'components/shared';
 import { ConfigService } from 'services';
 import {
@@ -26,6 +27,9 @@ const Section = Flyout.Section;
 // A counter for creating unique keys per new condition
 let conditionKey = 0;
 
+const operators = ['EQ', 'GT', 'LT', 'GE', 'LE'];
+const valueTypes = ['Number', 'Text'];
+
 // Creates a state object for a condition
 const newCondition = () => ({
   field: undefined,
@@ -35,8 +39,17 @@ const newCondition = () => ({
   key: conditionKey++ // Used by react to track the rendered elements
 });
 
-const operators = ['EQ', 'GT', 'LT', 'GE', 'LE'];
-const valueTypes = ['Number', 'Text'];
+const toFormConditionModels = (models = []) => {
+  return models.map(model => {
+    return {
+      field: model.key,
+      operator: model.operator,
+      value: model.value || '',
+      type: model.value ? (isNaN(model.value) ? 'Text' : 'Number') : undefined,
+      key: conditionKey++
+    };
+  });
+};
 
 class CreateDeviceQueryForm extends LinkedComponent {
 
@@ -44,7 +57,7 @@ class CreateDeviceQueryForm extends LinkedComponent {
     super(props);
 
     this.state = {
-      deviceQueryConditions: this.props.activeDeviceQueryConditions.length == 0 ? [newCondition()] : this.props.activeDeviceQueryConditions,
+      deviceQueryConditions: this.props.activeDeviceQueryConditions.length == 0 ? [newCondition()] : toFormConditionModels(this.props.activeDeviceQueryConditions),
       isPending: false,
       error: undefined,
     };
@@ -68,25 +81,35 @@ class CreateDeviceQueryForm extends LinkedComponent {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
+  queryDevices = () => {
+    return new Promise((resolve, reject) => {
+      try {
+        this.setState({ error: undefined, isPending: true }, () => {
+          const rawQueryConditions = this.state.deviceQueryConditions.filter(condition => {
+            // remove conditions that are new (have not been edited)
+            return !this.conditionIsNew(condition)
+          });
+          this.props.setActiveDeviceQueryConditions(toConditionQueryModel(rawQueryConditions));
+          this.props.fetchDevices()
+          resolve();
+        });
+      }
+      catch (error) {
+        reject(error);
+      }
+    })
+  }
+
   apply = (event) => {
     this.props.logEvent(toDiagnosticsModel('CreateDeviceQuery_Create', {}));
     event.preventDefault();
-    this.setState({ error: undefined, isPending: true });
-    var rawQueryConditions = this.state.deviceQueryConditions.filter(condition => {
-      // remove conditions that are new (have not been edited)
-      return !this.conditionIsNew(condition)
-    });
-    const queryConditions = toConditionQueryModel(rawQueryConditions);
-    const deviceGroupConditions = this.props.activeDeviceGroupConditions.map(condition => {
-      // convert models to conditionQueryModel if they are still in the raw state
-      // DG condition may be in raw state if the device group was changed while the flyout is open
-      return ('field' in condition) ? toConditionQueryModel(condition) : condition
-    });
-
-    this.props.queryDevices(queryConditions, deviceGroupConditions);
-
-    this.props.setActiveDeviceQueryConditions(rawQueryConditions);
-    this.setState({ error: undefined, isPending: false });
+    this.queryDevices()
+      .then(() => {
+        this.setState({ error: undefined, isPending: false });
+      })
+      .catch(error => {
+        this.setState({ error: error, isPending: false });
+      });
   };
 
   addCondition = () => {
@@ -103,16 +126,36 @@ class CreateDeviceQueryForm extends LinkedComponent {
       return this.conditionsLink.set(this.conditionsLink.value.filter((_, idx) => index !== idx));
     }
 
+  resetFlyoutAndDevices = () => {
+    return new Promise((resolve, reject) => {
+      const resetConditions = [newCondition()];
+      try {
+        this.setState({ deviceQueryConditions: resetConditions, error: undefined, isPending: true }, () => {
+          this.props.setActiveDeviceQueryConditions([]);
+          this.props.fetchDevices();  // reload the devices grid with a blank query
+          this.render();
+          resolve();
+        });
+      }
+      catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   onReset = () => {
-    const resetConditions = [newCondition()];
-    this.setState({ deviceGroupConditions: resetConditions, error: undefined, isPending: true });
-    this.props.setActiveDeviceQueryConditions(resetConditions);
-    this.props.fetchDevices();  // reload the devices grid with a blank query
-    this.render();
-    this.setState({ error: undefined, isPending: false});
+    this.props.logEvent(toDiagnosticsModel('CreateDeviceQuery_Reset', {}));
+    this.resetFlyoutAndDevices()
+      .then(() => {
+        this.setState({ error: undefined, isPending: false });
+      })
+      .catch(error => {
+        this.setState({ error: error, isPending: false });
+      });;
   }
 
   createDeviceGroupFromQuery = () => {
+    this.props.logEvent(toDiagnosticsModel('CreateDeviceQuery_CreateDeviceGroupFromQuery', {}));
     this.setState({ error: undefined, isPending: true });
     // Create the name based on the query
     const queryConditions = this.state.deviceQueryConditions.filter(condition => !this.conditionIsNew(condition));
@@ -120,14 +163,22 @@ class CreateDeviceQueryForm extends LinkedComponent {
       .map(condition => condition.field + condition.operator + condition.value)
       .join(';');
     var deviceGroup = {
-      displayName: deviceQueryConditionName || 'All Devices',
+      displayName: this.props.activeDeviceGroup.displayName + ": " + (deviceQueryConditionName || 'All Devices'),
       conditions: queryConditions
     };
-    this.props.insertDeviceGroup(deviceGroup);
-    this.setState({ error: undefined, isPending: false });
+    this.subscriptions.push(
+      ConfigService.createDeviceGroup(toCreateDeviceGroupRequestModel(deviceGroup))
+        .subscribe(
+          deviceGroup => {
+            this.props.insertDeviceGroup(deviceGroup);
+            this.setState({ error: undefined, isPending: false });
+          },
+          error => this.setState({ error, isPending: false }),
+        )
+    );
   }
 
-  render () {
+  render() {
     const { t } = this.props;
     // Create the state link for the dynamic form elements
     const conditionLinks = this.conditionsLink.getLinkedChildren(conditionLink => {
@@ -142,7 +193,7 @@ class CreateDeviceQueryForm extends LinkedComponent {
         .check(Validator.notEmpty, t('deviceQueryConditions.errorMsg.typeCantBeEmpty'));
       const value = conditionLink.forkTo('value')
         .check(Validator.notEmpty, t('deviceQueryConditions.errorMsg.valueCantBeEmpty'))
-        .check(val => type.value === 'Number' ? !isNaN(val): true, t('deviceQueryConditions.errorMsg.selectedType'));
+        .check(val => type.value === 'Number' ? !isNaN(val) : true, t('deviceQueryConditions.errorMsg.selectedType'));
       const edited = !(!field.value && !operator.value && !value.value && !type.value);
       var error = (edited && (field.error || operator.error || value.error || type.error)) || '';
       return { field, operator, value, type, edited, error };
@@ -182,14 +233,14 @@ class CreateDeviceQueryForm extends LinkedComponent {
                         this.props.filtersError
                           ? <AjaxError t={t} error={this.props.filtersError} />
                           : <FormControl
-                              type="select"
-                              ariaLabel={t('deviceQueryConditions.field')}
-                              className="long"
-                              searchable={false}
-                              clearable={false}
-                              placeholder={t('deviceQueryConditions.fieldPlaceholder')}
-                              options={this.props.filterOptions}
-                              link={condition.field} />
+                            type="select"
+                            ariaLabel={t('deviceQueryConditions.field')}
+                            className="long"
+                            searchable={false}
+                            clearable={false}
+                            placeholder={t('deviceQueryConditions.fieldPlaceholder')}
+                            options={this.props.filterOptions}
+                            link={condition.field} />
                       }
                     </FormGroup>
                     <FormGroup>
@@ -236,7 +287,7 @@ class CreateDeviceQueryForm extends LinkedComponent {
                 </Section.Container>
               ))
             }
-            { this.state.isPending && <Indicator pattern="bar" size="medium" />}
+            {this.state.isPending && <Indicator pattern="bar" size="medium" />}
             <BtnToolbar>
               <Btn
                 primary
@@ -244,12 +295,14 @@ class CreateDeviceQueryForm extends LinkedComponent {
                 type="submit">
                 {t('createDeviceQueryFlyout.create')}
               </Btn>
-              <Btn
-                disabled={this.state.isPending}
-                svg={svgs.plus}
-                onClick={this.createDeviceGroupFromQuery}>
-                {t('createDeviceQueryFlyout.createDeviceGroup')}
-              </Btn>
+              <Protected permission={permissions.deleteDeviceGroups}>
+                <Btn
+                  disabled={!this.formIsValid() || conditionHasErrors || this.state.isPending}
+                  svg={svgs.plus}
+                  onClick={this.createDeviceGroupFromQuery}>
+                  {t('createDeviceQueryFlyout.createDeviceGroup')}
+                </Btn>
+              </Protected>
               <Btn
                 disabled={this.state.isPending}
                 svg={svgs.cancelX}
@@ -257,7 +310,7 @@ class CreateDeviceQueryForm extends LinkedComponent {
                 {t('createDeviceQueryFlyout.reset')}
               </Btn>
             </BtnToolbar>
-            { this.state.error && <AjaxError t={t} error={this.state.error} /> }
+            {this.state.error && <AjaxError t={t} error={this.state.error} />}
           </Section.Content>
         </Section.Container>
       </form>
