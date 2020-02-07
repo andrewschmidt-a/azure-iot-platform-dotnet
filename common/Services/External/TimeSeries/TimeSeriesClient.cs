@@ -49,7 +49,7 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
         private readonly string fqdn;
         private readonly string host;
         private readonly string apiVersion;
-        private readonly bool timeSeriesEnabled;
+        private readonly bool? timeSeriesEnabled = null;
         private readonly string timeout;
         private readonly IHttpClient httpClient;
         private readonly ILogger logger;
@@ -70,14 +70,20 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
             this.host = config.DeviceTelemetryService.TimeSeries.Audience;
             this.apiVersion = config.DeviceTelemetryService.TimeSeries.ApiVersion;
             this.timeout = config.DeviceTelemetryService.TimeSeries.Timeout;
-            this.timeSeriesEnabled = config.DeviceTelemetryService.Messages.TelemetryStorageType.Equals(
-                TsiStorageTypeKey, StringComparison.OrdinalIgnoreCase);
+            if (!string.IsNullOrEmpty(config.DeviceTelemetryService.Messages.TelemetryStorageType))
+            {
+                this.timeSeriesEnabled = config.DeviceTelemetryService.Messages.TelemetryStorageType.Equals(TsiStorageTypeKey, StringComparison.OrdinalIgnoreCase);
+            }
+            else
+            {
+                this.timeSeriesEnabled = null;
+            }
         }
 
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             var result = new StatusResultServiceModel(false, "TimeSeries check failed");
-            if (this.timeSeriesEnabled)
+            if (this.timeSeriesEnabled ?? false)
             {
                 // Acquire an access token.
                 string accessToken = string.Empty;

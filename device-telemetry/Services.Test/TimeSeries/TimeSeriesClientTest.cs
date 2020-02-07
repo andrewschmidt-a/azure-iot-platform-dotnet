@@ -46,7 +46,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test.TimeSeries
 
         [Fact]
         [Trait(Constants.Type, Constants.UnitTest)]
-        public async Task PingReturnsFalse_WhenConfigValuesAreNull()
+        public async Task PingReturns_ServiceDisabled_WhenConfigValuesAreNull()
         {
             // Arrange
             this.SetupClientWithNullConfigValues();
@@ -55,8 +55,8 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test.TimeSeries
             var result = await this.client.StatusAsync();
 
             // Assert
-            Assert.False(result.IsHealthy);
-            Assert.Contains("TimeSeries check failed", result.Message);
+            Assert.True(result.IsHealthy);
+            Assert.Contains("Service disabled not in use", result.Message);
         }
 
         [Fact]
@@ -90,6 +90,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test.TimeSeries
             this.config.Setup(f => f.Global.AzureActiveDirectory.AppId).Returns("test123");
             this.config.Setup(f => f.Global.AzureActiveDirectory.AppSecret).Returns("test123");
             this.config.Setup(f => f.DeviceTelemetryService.TimeSeries.Authority).Returns("https://login.testing.net/");
+            this.config.Setup(f => f.DeviceTelemetryService.Messages.TelemetryStorageType).Returns("tsi");
 
             this.client = new TimeSeriesClient(
                 this.httpClient.Object,
