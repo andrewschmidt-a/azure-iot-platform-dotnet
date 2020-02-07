@@ -1,4 +1,4 @@
-﻿// <copyright file="Alarms.cs" company="3M">
+// <copyright file="Alarms.cs" company="3M">
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
