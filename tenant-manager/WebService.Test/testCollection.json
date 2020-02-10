@@ -1,0 +1,46 @@
+{
+    "info": {
+        "_postman_id": "fab9adea-c786-45fd-a4ca-2fd29544154d",
+        "name": "Test Service",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Get service status",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "id": "159eea66-217d-4bb9-ab27-e035c679d82b",
+                        "exec": [
+                            "pm.test(\"Check if response is 200\", function() {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test(\"Check if status is healthy\", function() {",
+                            "    var jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.Status.IsHealthy).to.equal(true);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}v1/status",
+                    "host": [
+                        "{{base_url}}v1"
+                    ],
+                    "path": [
+                        "status"
+                    ]
+                }
+            },
+            "response": []
+        }
+    ],
+    "protocolProfileBehavior": {}
+}
