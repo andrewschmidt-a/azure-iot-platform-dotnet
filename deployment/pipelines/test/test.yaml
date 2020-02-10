@@ -227,32 +227,11 @@ stages:
                 $(Build.BuildId)
                 latest
 
-  # - stage: allocatePublicIp
-  #   displayName: Allocate public IP address stage
-  #   dependsOn: []
-  #   jobs:
-  #     - job: allocatePublicIp
-  #       displayName: Allocate public IP address job
-  #       steps:
-  #         - checkout: none
-
-  #         - task: AzureCLI@2
-  #           displayName: Allocate public IP address
-  #           inputs:
-  #             azureSubscription: $(azure.subscription.name)
-  #             scriptType: bash
-  #             scriptLocation: inlineScript
-  #             inlineScript: |-
-  #               clusterResourceGroup=`az aks show --resource-group $(azure.resourceGroup.name) --name $(azure.aksCluster.name) --query nodeResourceGroup -o tsv`
-  #               clusterIp=`az network public-ip create --resource-group $(clusterResourceGroup) --name crsliot-publicip-build-$(Build.BuildId) --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv`
-  #               az storage entity insert --entity PartitionKey=$(azure.tableStorage.partitionKey) RowKey=$(azure.tableStorage.rowKeyPrefix)clusterIp Content=$clusterIp --table-name $(azure.tableStorage.name) --account-name $(azure.storageAccount.name)
-
   - stage: deploy
     displayName: Deploy stage
     dependsOn:
       - buildFrontEndContainers
       - buildServiceContainers
-      # - allocatePublicIp
     jobs:
       - job: getPipelineVariables
         displayName: Get pipeline variables job
@@ -304,15 +283,6 @@ stages:
               command: init
               arguments: --force-upgrade --history-max 200
 
-          # - task: AzureCLI@2
-          #   displayName: Put App Configuration connection string into file
-          #   inputs:
-          #     azureSubscription: $(azure.subscription.name)
-          #     scriptType: bash
-          #     scriptLocation: inlineScript
-          #     inlineScript: |-
-          #       echo $(appConfigurationConnectionString) > accs
-
           - task: HelmDeploy@0
             displayName: Install Serenity chart
             inputs:
@@ -326,7 +296,6 @@ stages:
               chartName: deployment/pipelines/test/charts/$(helm.chart.name)
               updatedependency: true
               overrideValues: "secrets.globalsecrets.AppConfigurationConnectionString=\"$(appConfigurationConnectionString)\",nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId)"
-              # arguments: --set-file secrets.globalsecrets.AppConfigurationConnectionString=accs
               valueFile: deployment/pipelines/test/serenity-values.yaml
 
   - stage: integrationTest
@@ -373,9 +342,6 @@ stages:
             iothub-manager:
               serviceName: iothub-manager
               uriPath: iothubmanager/
-            # tenant-manager:
-            #   serviceName: tenant-manager
-            #   uriPath: tenantmanager
         steps:
           - checkout: self
             displayName: Checkout repository
