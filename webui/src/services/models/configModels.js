@@ -10,27 +10,26 @@ export const toDeviceGroupModel = (deviceGroup = {}) => camelCaseReshape(deviceG
   'eTag': 'eTag'
 });
 
+export const toDeviceConditionModel = (condition = {}) => ({
+  key: condition.field,
+  operator: condition.operator,
+  // parse the value as a number or string depending on the value of condition.type and condition.value.
+  value: condition.type == 'Number' && !isNaN(condition.value) ? parseFloat(condition.value) : String(condition.value)
+});
+
 export const toDeviceGroupsModel = (response = {}) => getItems(response)
   .map(toDeviceGroupModel);
 
 export const toCreateDeviceGroupRequestModel = (params = {}) => ({
   DisplayName: params.displayName,
-  Conditions: (params.conditions || []).map(condition => reshape(condition, {
-    'field': 'Key',
-    'operator': 'Operator',
-    'value': 'Value'
-  }))
+  Conditions: (params.conditions || []).map(condition => toDeviceConditionModel(condition))
 });
 
 export const toUpdateDeviceGroupRequestModel = (params = {}) => ({
   Id: params.id,
   ETag: params.eTag,
   DisplayName: params.displayName,
-  Conditions: (params.conditions || []).map(condition => reshape(condition, {
-    'field': 'Key',
-    'operator': 'Operator',
-    'value': 'Value'
-  }))
+  Conditions: (params.conditions || []).map(condition => toDeviceConditionModel(condition))
 });
 
 export const prepareLogoResponse = ({ xhr, response }) => {

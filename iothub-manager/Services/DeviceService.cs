@@ -18,8 +18,23 @@ namespace Mmm.Iot.IoTHubManager.Services
 
         public DeviceService(ITenantConnectionHelper tenantConnectionHelper)
         {
+            string iotHubConnectionString = string.Empty;
+            try
+            {
+                iotHubConnectionString = tenantConnectionHelper.GetIotHubConnectionString();
+            }
+            catch (Autofac.Core.DependencyResolutionException re)
+            {
+                throw new Exception("Unable to get the IotHub Connection String from the tenantConnectionHelper. This may be caused by a missing tenant id in the request, or a misconfigured App Configuration.", re);
+            }
+
+            if (string.IsNullOrEmpty(iotHubConnectionString))
+            {
+                throw new Exception("The IotHubConnectionString returned by App Config was null or empty.");
+            }
+
             IoTHubConnectionHelper.CreateUsingHubConnectionString(
-                tenantConnectionHelper.GetIotHubConnectionString(),
+                iotHubConnectionString,
                 conn => { this.serviceClient = ServiceClient.CreateFromConnectionString(conn); });
         }
 

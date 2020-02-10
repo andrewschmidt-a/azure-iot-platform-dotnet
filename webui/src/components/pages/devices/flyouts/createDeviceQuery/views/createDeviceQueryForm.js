@@ -3,7 +3,7 @@
 import React from 'react';
 
 import { permissions, toDiagnosticsModel } from 'services/models';
-import { toConditionQueryModel } from 'services/models/iotHubManagerModels';
+import { toDeviceConditionModel } from 'services/models/configModels.js';
 import { svgs, LinkedComponent, Validator } from 'utilities';
 import {
   AjaxError,
@@ -89,7 +89,7 @@ class CreateDeviceQueryForm extends LinkedComponent {
             // remove conditions that are new (have not been edited)
             return !this.conditionIsNew(condition)
           });
-          this.props.setActiveDeviceQueryConditions(toConditionQueryModel(rawQueryConditions));
+          this.props.setActiveDeviceQueryConditions(toDeviceConditionModel(rawQueryConditions));
           this.props.fetchDevices()
           resolve();
         });
