@@ -348,7 +348,7 @@ stages:
               scriptLocation: inlineScript
               inlineScript: |-
                 az aks get-credentials --resource-group $(azure.resourceGroup.name) --name $(azure.aksCluster.name)
-                clusterIp=`kubectl get services --all-namespaces --selector=app=nginx-ingress,component=controller --output=jsonpath='{.items[*].status.loadBalancer.ingress[*].ip}'`
+                clusterIp=`kubectl get services --namespace $(kubernetes.namespace.name) --selector=app=nginx-ingress,component=controller --output=jsonpath='{.items[*].status.loadBalancer.ingress[*].ip}'`
                 clusterIp="http://$clusterIp/"
                 echo $clusterIp
                 echo "##vso[task.setvariable variable=clusterIp;isOutput=true]$clusterIp"
