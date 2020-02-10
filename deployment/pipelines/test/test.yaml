@@ -1,6 +1,12 @@
 variables:
   azure.subscription.name: 3M-CRSLAD16-BBIoTP-Dev
   azure.resourceGroup.name: rg-iot-crsl-dev
+  azure.storageAccount.name: crsliotstorageacctdev
+  azure.tableStorage.name: pipeline
+  azure.tableStorage.partitionKey: test
+  azure.tableStorage.rowKeyPrefix: "build-$(Build.BuildId):"
+  azure.tableStorage.appConfigurationConnectionStringRowKey: appConfigurationConnectionString
+  azure.tableStorage.clusterIpRowKey: clusterIp
   azure.appConfiguration.name: crsliot-appconfig-dev
   azure.aksCluster.name: crsliot-aks-dev
   azure.devSpace.name: build-$(Build.BuildId)
@@ -43,21 +49,32 @@ stages:
     displayName: Build stage
     dependsOn: []
     jobs:
-      - job: build
-        displayName: Build job
+      - job: preBuild
+        displayName: Pre-build job
         steps:
-          - checkout: self
-            displayName: Checkout repository
+          - checkout: none
 
           - task: AzureCLI@2
-            displayName: Setup environment variables
+            displayName: Get App Configuration connection string
+            name: getAppConfigurationConnectionString
             inputs:
               azureSubscription: $(azure.subscription.name)
               scriptType: bash
               scriptLocation: inlineScript
               inlineScript: |-
-                appConfigConnString=`az appconfig credential list --name $(azure.appConfiguration.name) --resource-group $(azure.resourceGroup.name) --query "[?name=='Primary'].connectionString | [0]" --output tsv`
-                echo "##vso[task.setvariable variable=AppConfigurationConnectionString]$appConfigConnString"
+                appConfigurationConnectionString=`az appconfig credential list --name $(azure.appConfiguration.name) --resource-group $(azure.resourceGroup.name) --query "[?name=='Primary'].connectionString | [0]" --output tsv`
+                echo "##vso[task.setvariable variable=AppConfigurationConnectionString;isOutput=true]$appConfigurationConnectionString"
+                az storage entity insert --entity PartitionKey=$(azure.tableStorage.partitionKey) RowKey=$(azure.tableStorage.rowKeyPrefix)$(azure.tableStorage.appConfigurationConnectionStringRowKey) Content="$appConfigurationConnectionString" --table-name $(azure.tableStorage.name) --account-name $(azure.storageAccount.name)
+
+      - job: build
+        displayName: Build job
+        dependsOn:
+          - preBuild
+        variables:
+          AppConfigurationConnectionString: $[dependencies.preBuild.outputs['getAppConfigurationConnectionString.appConfigurationConnectionString']]
+        steps:
+          - checkout: self
+            displayName: Checkout repository
 
           - script: |-
               dotnet restore --force --no-cache --no-dependencies --packages .nuget --runtime $(dotnet.runtimeId.production) /p:TargetLatestRuntimePatch=true
@@ -210,14 +227,52 @@ stages:
                 $(Build.BuildId)
                 latest
 
+  # - stage: allocatePublicIp
+  #   displayName: Allocate public IP address stage
+  #   dependsOn: []
+  #   jobs:
+  #     - job: allocatePublicIp
+  #       displayName: Allocate public IP address job
+  #       steps:
+  #         - checkout: none
+
+  #         - task: AzureCLI@2
+  #           displayName: Allocate public IP address
+  #           inputs:
+  #             azureSubscription: $(azure.subscription.name)
+  #             scriptType: bash
+  #             scriptLocation: inlineScript
+  #             inlineScript: |-
+  #               clusterResourceGroup=`az aks show --resource-group $(azure.resourceGroup.name) --name $(azure.aksCluster.name) --query nodeResourceGroup -o tsv`
+  #               clusterIp=`az network public-ip create --resource-group $(clusterResourceGroup) --name crsliot-publicip-build-$(Build.BuildId) --sku Standard --allocation-method static --query publicIp.ipAddress -o tsv`
+  #               az storage entity insert --entity PartitionKey=$(azure.tableStorage.partitionKey) RowKey=$(azure.tableStorage.rowKeyPrefix)clusterIp Content=$clusterIp --table-name $(azure.tableStorage.name) --account-name $(azure.storageAccount.name)
+
   - stage: deploy
     displayName: Deploy stage
     dependsOn:
       - buildFrontEndContainers
       - buildServiceContainers
+      # - allocatePublicIp
     jobs:
+      - job: getPipelineVariables
+        displayName: Get pipeline variables job
+        steps:
+          - task: AzureCLI@2
+            displayName: Get pipeline variables
+            name: getPipelineVariables
+            inputs:
+              azureSubscription: $(azure.subscription.name)
+              scriptType: bash
+              scriptLocation: inlineScript
+              inlineScript: |-
+                appConfigurationConnectionString=`az storage entity query --filter "PartitionKey eq '$(azure.tableStorage.partitionKey)' and RowKey eq '$(azure.tableStorage.rowKeyPrefix)$(azure.tableStorage.appConfigurationConnectionStringRowKey)'" --select Content --query items[].Content --output tsv --table-name $(azure.tableStorage.name) --account-name $(azure.storageAccount.name)`
+                echo "##vso[task.setvariable variable=appConfigurationConnectionString;isOutput=true]$appConfigurationConnectionString"
       - job: deploy
         displayName: Deploy job
+        dependsOn:
+          - getPipelineVariables
+        variables:
+          appConfigurationConnectionString: $[dependencies.getPipelineVariables.outputs['getPipelineVariables.appConfigurationConnectionString']]
         steps:
           - checkout: self
             displayName: Checkout repository
@@ -249,14 +304,14 @@ stages:
               command: init
               arguments: --force-upgrade --history-max 200
 
-          - task: AzureCLI@2
-            displayName: Get secret value
-            inputs:
-              azureSubscription: $(azure.subscription.name)
-              scriptType: bash
-              scriptLocation: inlineScript
-              inlineScript: |-
-                az appconfig credential list --name $(azure.appConfiguration.name) --resource-group $(azure.resourceGroup.name) --query "[?name=='Primary'].connectionString | [0]" --output tsv > accs
+          # - task: AzureCLI@2
+          #   displayName: Put App Configuration connection string into file
+          #   inputs:
+          #     azureSubscription: $(azure.subscription.name)
+          #     scriptType: bash
+          #     scriptLocation: inlineScript
+          #     inlineScript: |-
+          #       echo $(appConfigurationConnectionString) > accs
 
           - task: HelmDeploy@0
             displayName: Install Serenity chart
@@ -270,7 +325,8 @@ stages:
               command: install
               chartName: deployment/pipelines/test/charts/$(helm.chart.name)
               updatedependency: true
-              arguments: --set-file secrets.globalsecrets.AppConfigurationConnectionString=accs
+              overrideValues: secrets.globalsecrets.AppConfigurationConnectionString="$(appConfigurationConnectionString)",nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId)
+              # arguments: --set-file secrets.globalsecrets.AppConfigurationConnectionString=accs
               valueFile: deployment/pipelines/test/serenity-values.yaml
 
   - stage: integrationTest
@@ -302,7 +358,7 @@ stages:
         dependsOn:
           - getClusterIp
         variables:
-          clusterIp: $[ dependencies.getClusterIp.outputs['getClusterIp.clusterIp'] ]
+          clusterIp: $[dependencies.getClusterIp.outputs['getClusterIp.clusterIp']]
         strategy:
           matrix:
             config:
