@@ -325,7 +325,7 @@ stages:
               command: install
               chartName: deployment/pipelines/test/charts/$(helm.chart.name)
               updatedependency: true
-              overrideValues: secrets.globalsecrets.AppConfigurationConnectionString="$(appConfigurationConnectionString)",nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId)
+              overrideValues: "secrets.globalsecrets.AppConfigurationConnectionString=\"$(appConfigurationConnectionString)\",nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId)"
               # arguments: --set-file secrets.globalsecrets.AppConfigurationConnectionString=accs
               valueFile: deployment/pipelines/test/serenity-values.yaml
 
