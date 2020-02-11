@@ -7,6 +7,7 @@ parameters:
   aksName: ''
   keyVaultName: ''
   storageAccountName: ''
+  automationName: ''
 
 steps:
 - task: AzureResourceGroupDeployment@2
@@ -72,6 +73,9 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |-
       rg=${{ parameters.resourceGroup }}
+      appInsightName=$(az resource list -g $rg --resource-type "Microsoft.Insights/components" | grep name | grep appinsight | awk -F "\"" '{print $4}')
+      appInsightKey=$(az resource show -g $rg -n $appInsightName --resource-type "Microsoft.Insights/components" --query properties.InstrumentationKey)
+      appInsightKey="${appInsightKey//\"}"
       # cosmos db connection string
       cosmosDbAccountName=$(az cosmosdb list --resource-group $rg | grep name | awk -F "\"" '{print $4}')
       cosmosDbEndpoint="https://$cosmosDbAccountName.documents.azure.com:443/"
@@ -97,6 +101,7 @@ steps:
       # set the keys
       az appconfig kv set --key Global:ClientAuth:Jwt:AuthIssuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:CosmosDb:AccountName --value $cosmosDbAccountName --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:AutomationAccountName --value ${{ parameters.automationName }} --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:LifecycleEventHubConnectionString --value $lifecycleEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:TelemetryEventHubConnectionString --value $telemetryEvConn --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:TwinChangeEventHubConnectionString --value $twinchangeEvConn --name ${{ parameters.appConfigName }} --yes
@@ -106,4 +111,5 @@ steps:
       az appconfig kv set --key TenantManagerService:TelemetryFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:LifecycleFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:EventHubNamespaceName --value $evNamespace --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key Global:InstrumentationKey --value $appInsightKey --name ${{ parameters.appConfigName }} --yes
     addSpnToEnvironment: true

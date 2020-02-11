@@ -129,7 +129,7 @@ namespace Mmm.Iot.Common.Services.Auth
             }
             else
             {
-                this.logger.LogError("Authorization header not found");
+                this.logger.LogError(new Exception("Authorization header not found"), "Authorization header not found");
             }
 
             if (header != null && header.StartsWith(AuthHeaderPrefix))
@@ -138,7 +138,7 @@ namespace Mmm.Iot.Common.Services.Auth
             }
             else
             {
-                this.logger.LogError("Authorization header prefix not found");
+                this.logger.LogError(new Exception("Authorization header prefix not found"), "Authorization header prefix not found");
             }
 
             if (this.ValidateToken(token, context) || !this.authRequired)
@@ -185,7 +185,7 @@ namespace Mmm.Iot.Common.Services.Auth
                     return true;
                 }
 
-                this.logger.LogError("JWT token signature algorithm '{signatureAlgorithm}' is not allowed.", jwtToken.SignatureAlgorithm);
+                this.logger.LogError(new Exception($"JWT token signature algorithm '{jwtToken.SignatureAlgorithm}' is not allowed."), $"JWT token signature algorithm '{jwtToken.SignatureAlgorithm}' is not allowed.");
             }
             catch (Exception e)
             {

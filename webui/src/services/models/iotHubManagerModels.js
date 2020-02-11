@@ -8,14 +8,6 @@ import uuid from 'uuid/v4';
 // Contains methods for converting service response
 // object to UI friendly objects
 
-export const toConditionQueryModel = (conditions = []) => {
-  return conditions.map(condition => reshape(condition, {
-    'field': 'key',
-    'operator': 'operator',
-    'value': 'value'
-  }));
-}
-
 export const toDevicesModel = (response = {}) => getItems(response)
   .map(toDeviceModel);
 

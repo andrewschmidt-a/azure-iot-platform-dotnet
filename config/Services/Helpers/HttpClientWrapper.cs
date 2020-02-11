@@ -69,7 +69,7 @@ namespace Mmm.Iot.Config.Services.Helpers
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                this.logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                this.logger.LogError(new Exception($"Request to URI {uri} failed with response {response}"), $"Request to URI {uri} failed with response {response}");
                 throw new ExternalDependencyException($"Unable to load {description}");
             }
 
@@ -79,7 +79,7 @@ namespace Mmm.Iot.Config.Services.Helpers
             }
             catch (Exception e)
             {
-                this.logger.LogError($"Could not parse result from {uri}: {e.Message}");
+                this.logger.LogError(new Exception($"Could not parse result from {uri}: {e.Message}"), $"Could not parse result from {uri}: {e.Message}");
                 throw new ExternalDependencyException($"Could not parse result from {uri}");
             }
         }
@@ -119,7 +119,7 @@ namespace Mmm.Iot.Config.Services.Helpers
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                this.logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                this.logger.LogError(new Exception($"Request to URI {uri} failed with response {response}"), $"Request to URI {uri} failed with response {response}");
                 throw new ExternalDependencyException($"Unable to post {description}");
             }
         }
@@ -160,7 +160,7 @@ namespace Mmm.Iot.Config.Services.Helpers
 
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                this.logger.LogError("Request to URI {uri} failed with response {response}", uri, response);
+                this.logger.LogError(new Exception($"Request to URI {uri} failed with response {response}"),  $"Request to URI {uri} failed with response {response}");
                 throw new ExternalDependencyException($"Unable to put {description}");
             }
         }
