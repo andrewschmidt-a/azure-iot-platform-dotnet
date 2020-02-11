@@ -284,7 +284,6 @@ stages:
 
           - script: |-
               sed -i -e 's/replace_this/$(Build.BuildId)/g' deployment/pipelines/test/serenity-values.yaml
-              cat deployment/pipelines/test/serenity-values.yaml
             displayName: Set image tag
 
           - task: HelmDeploy@0
@@ -299,7 +298,7 @@ stages:
               command: install
               chartName: deployment/pipelines/test/charts/$(helm.chart.name)
               updatedependency: true
-              overrideValues: secrets.globalsecrets.AppConfigurationConnectionString=$(appConfigurationConnectionString),nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId)
+              overrideValues: secrets.globalsecrets.AppConfigurationConnectionString=$(appConfigurationConnectionString),nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId),reverse-proxy.deployment.image.tag=latest,webui.deployment.image.tag=latest
               valueFile: deployment/pipelines/test/serenity-values.yaml
 
   - stage: integrationTest
