@@ -386,4 +386,4 @@ stages:
               azureResourceGroup: $(azure.resourceGroup.name)
               kubernetesCluster: $(azure.aksCluster.name)
               command: delete
-              arguments: namespace $(kubernetes.namespace.name)
+              arguments: namespace $(kubernetes.namespace.name) --now=true --ignore-not-found=true
