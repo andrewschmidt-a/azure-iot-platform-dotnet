@@ -366,6 +366,47 @@ stages:
               testResultsFormat: JUnit
               testResultsFiles: "**/$(serviceName)-integration-test-report.xml"
 
+  - stage: tagLatest
+    displayName: Apply 'latest' tag stage
+    dependsOn:
+      - buildFrontEndContainers
+      - buildServiceContainers
+      - unitTest
+      - integrationTest
+    jobs:
+      - job: tagLatest
+        displayName: Apply 'latest' tag job
+        strategy:
+          matrix:
+            asa-manager:
+              serviceName: asa-manager
+            config:
+              serviceName: config
+            device-telemetry:
+              serviceName: device-telemetry
+            identity-gateway:
+              serviceName: identity-gateway
+            iothub-manager:
+              serviceName: iothub-manager
+            reverse-proxy:
+              serviceName: reverse-proxy
+            storage-adapter:
+              serviceName: storage-adapter
+            tenant-manager:
+              serviceName: tenant-manager
+            webui:
+              serviceName: webui
+        steps:
+          - checkout: none
+
+          - task: Docker@2
+            displayName: Apply 'latest' tag
+            inputs:
+              containerRegistry: $(dockerHub.serviceConnection.name)
+              repository: $(dockerHub.repository.name)/$(serviceName)
+              command: tag
+              arguments: $(dockerHub.repository.name)/$(serviceName):$(Build.BuildId) $(dockerHub.repository.name)/$(serviceName):latest
+
   - stage: cleanup
     displayName: Cleanup stage
     dependsOn:
