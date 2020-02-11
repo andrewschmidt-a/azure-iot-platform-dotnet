@@ -21,6 +21,7 @@ variables:
   helm.chart.name: serenity
   artifact.publishedFiles.name: publishFiles
   System.Debug: true
+  helm.installTimeout.seconds: 600
 
 pool:
   vmImage: ubuntu-latest
@@ -315,6 +316,7 @@ stages:
               updatedependency: true
               overrideValues: secrets.globalsecrets.AppConfigurationConnectionString=$(appConfigurationConnectionString),nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId),reverse-proxy.deployment.image.tag=latest,webui.deployment.image.tag=latest
               valueFile: deployment/pipelines/test/serenity-values.yaml
+              arguments: --timeout $(helm.installTimeout.seconds)
 
   - stage: integrationTest
     displayName: Integration test stage
