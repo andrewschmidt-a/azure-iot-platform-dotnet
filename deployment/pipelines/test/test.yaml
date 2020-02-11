@@ -175,15 +175,8 @@ stages:
           - checkout: self
             displayName: Checkout repository
 
-          - script: |
-              continue=`git diff origin/master... --name-only | cut -d / -f 1 | grep $(serviceName) -cim1`
-              echo "continue: $continue"
-              echo "##vso[task.setvariable variable=continue]$continue"
-            displayName: Should continue?
-
           - task: Docker@2
             displayName: Build and push container
-            condition: eq(variables['continue'], '1')
             inputs:
               containerRegistry: $(dockerHub.serviceConnection.name)
               repository: $(dockerHub.repository.name)/$(serviceName)
@@ -192,7 +185,6 @@ stages:
               buildContext: $(serviceName)
               tags: |-
                 $(Build.BuildId)
-                latest
 
   - stage: buildServiceContainers
     displayName: Build service containers stage
@@ -314,7 +306,7 @@ stages:
               command: install
               chartName: deployment/pipelines/test/charts/$(helm.chart.name)
               updatedependency: true
-              overrideValues: secrets.globalsecrets.AppConfigurationConnectionString=$(appConfigurationConnectionString),nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId),reverse-proxy.deployment.image.tag=latest,webui.deployment.image.tag=latest
+              overrideValues: secrets.globalsecrets.AppConfigurationConnectionString=$(appConfigurationConnectionString),nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId)
               valueFile: deployment/pipelines/test/serenity-values.yaml
               arguments: --timeout $(helm.installTimeout.seconds)
 
@@ -386,48 +378,6 @@ stages:
             inputs:
               testResultsFormat: JUnit
               testResultsFiles: "**/$(serviceName)-integration-test-report.xml"
-
-  - stage: tagLatest
-    displayName: Apply 'latest' tag stage
-    dependsOn:
-      - buildFrontEndContainers
-      - buildServiceContainers
-      - unitTest
-      - integrationTest
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
-    jobs:
-      - job: tagLatest
-        displayName: Apply 'latest' tag job
-        strategy:
-          matrix:
-            asa-manager:
-              serviceName: asa-manager
-            config:
-              serviceName: config
-            device-telemetry:
-              serviceName: device-telemetry
-            identity-gateway:
-              serviceName: identity-gateway
-            iothub-manager:
-              serviceName: iothub-manager
-            reverse-proxy:
-              serviceName: reverse-proxy
-            storage-adapter:
-              serviceName: storage-adapter
-            tenant-manager:
-              serviceName: tenant-manager
-            webui:
-              serviceName: webui
-        steps:
-          - checkout: none
-
-          - task: Docker@2
-            displayName: Apply 'latest' tag
-            inputs:
-              containerRegistry: $(dockerHub.serviceConnection.name)
-              repository: $(dockerHub.repository.name)/$(serviceName)
-              command: tag
-              arguments: $(dockerHub.repository.name)/$(serviceName):$(Build.BuildId) $(dockerHub.repository.name)/$(serviceName):latest
 
   - stage: cleanup
     displayName: Cleanup stage
