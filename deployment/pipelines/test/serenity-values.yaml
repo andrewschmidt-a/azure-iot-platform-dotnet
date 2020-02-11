@@ -1,4 +1,4 @@
-imageTag: &imageTag
+imageTag: &imageTag replace_this
 asa-manager:
   nameOverride: asa-manager
   deployment:

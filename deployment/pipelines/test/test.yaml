@@ -283,9 +283,9 @@ stages:
               arguments: --force-upgrade --history-max 200
 
           - script: |-
-              echo "&imageTag $(Build.BuildId)" >> imageTag
-              echo $(appConfigurationConnectionString) >> appConfigurationConnectionString
-            displayName: Set values files
+              sed -i -e 's/replace_this/$(Build.BuildId)/g' deployment/pipelines/test/serenity-values.yaml
+              cat deployment/pipelines/test/serenity-values.yaml
+            displayName: Set image tag
 
           - task: HelmDeploy@0
             displayName: Install Serenity chart
@@ -299,9 +299,8 @@ stages:
               command: install
               chartName: deployment/pipelines/test/charts/$(helm.chart.name)
               updatedependency: true
-              overrideValues: nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId)
+              overrideValues: secrets.globalsecrets.AppConfigurationConnectionString=$(appConfigurationConnectionString),nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId)
               valueFile: deployment/pipelines/test/serenity-values.yaml
-              arguments: --set-file imageTag=imageTag --set-file secrets.globalsecrets.AppConfigurationConnectionString=appConfigurationConnectionString
 
   - stage: integrationTest
     displayName: Integration test stage
