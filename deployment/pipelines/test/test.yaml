@@ -294,7 +294,7 @@ stages:
               command: install
               chartName: deployment/pipelines/test/charts/$(helm.chart.name)
               updatedependency: true
-              overrideValues: "secrets.globalsecrets.AppConfigurationConnectionString=\"$(appConfigurationConnectionString)\",nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId),imageTag=\"&imageTag $(Build.BuildId)\""
+              overrideValues: 'secrets.globalsecrets.AppConfigurationConnectionString="$(appConfigurationConnectionString)",nginx-ingress.controller.ingressClass=build-$(Build.BuildId),ingress.class=build-$(Build.BuildId),imageTag="&imageTag $(Build.BuildId)"'
               valueFile: deployment/pipelines/test/serenity-values.yaml
 
   - stage: integrationTest
