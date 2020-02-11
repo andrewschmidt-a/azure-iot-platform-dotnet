@@ -32,6 +32,9 @@ namespace Mmm.Iot.IdentityGateway.WebService
                 c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Identity Gateway API", Version = "v1" });
             });
 
+            // Setup (not enabling yet) CORS
+            services.AddCors();
+
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
 
@@ -43,7 +46,7 @@ namespace Mmm.Iot.IdentityGateway.WebService
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ICorsSetup corsSetup)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -55,6 +58,10 @@ namespace Mmm.Iot.IdentityGateway.WebService
                 c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
                 c.RoutePrefix = string.Empty;
             });
+
+            // Enable CORS - Must be before UseMvc
+            // see: https://docs.microsoft.com/en-us/aspnet/core/security/cors
+            corsSetup.UseMiddleware(app);
 
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();
