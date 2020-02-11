@@ -20,6 +20,7 @@ variables:
   dockerfile.path: Dockerfile
   helm.chart.name: serenity
   artifact.publishedFiles.name: publishFiles
+  System.Debug: true
 
 pool:
   vmImage: ubuntu-latest
@@ -131,11 +132,25 @@ stages:
               artifact: $(artifact.publishedFiles.name)
               path: $(Build.SourcesDirectory)
 
+          - task: DotNetCoreCLI@2
+            displayName: Run unit tests
+            inputs:
+              command: test
+              workingDirectory: $(Build.SourcesDirectory)
+              arguments: >-
+                --nologo
+                --no-build
+                --configuration $(dotnet.configuration)
+                --runtime $(dotnet.runtimeId.production)
+                --logger trx
+                /p:CollectCoverage=true
+                /p:CoverletOutputFormat=cobertura
+                "/p:Exclude=\"[Mmm.*.Test*]*\""
+
           - script: |-
-              dotnet test --nologo --no-build --configuration $(dotnet.configuration) --runtime $(dotnet.runtimeId.production) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura "/p:Exclude=\"[Mmm.*.Test*]*\""
               dotnet tool install --global dotnet-reportgenerator-globaltool
               reportgenerator -reports:**/coverage.cobertura.xml -targetdir:. -reporttypes:"Cobertura"
-            displayName: Run unit tests
+            displayName: Generate coverage report
 
           - task: PublishCodeCoverageResults@1
             displayName: Publish test coverage
