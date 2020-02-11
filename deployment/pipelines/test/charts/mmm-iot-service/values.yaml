@@ -17,5 +17,5 @@ deployment:
   imagePullSecrets: []
   replicaCount: 1
   image:
-    tag: latest
+    tag:
     pullPolicy: Always

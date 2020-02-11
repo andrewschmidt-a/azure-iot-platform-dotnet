@@ -22,7 +22,7 @@ spec:
     {{- end }}
       containers:
         - name: {{ include "mmm-iot-service.name" . }}
-          image: {{ cat (include "mmm-iot-service.image.repository" .) ":" .Values.deployment.image.tag | nospace }}
+          image: {{ cat (include "mmm-iot-service.image.repository" .) ":" (required "Error: missing required value .Values.deployment.image.tag" .Values.deployment.image.tag) | nospace }}
           imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
           resources:
             limits:
