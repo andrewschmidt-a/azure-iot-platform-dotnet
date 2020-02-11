@@ -420,7 +420,7 @@ stages:
             displayName: Pull image
             inputs:
               containerRegistry: $(dockerHub.serviceConnection.name)
-              repository: $(dockerHub.repository.name)/$(serviceName)
+              repository: $(dockerHub.repository.name)
               command: pull
               arguments: $(dockerHub.repository.name)/$(serviceName):$(Build.BuildId)
 
@@ -428,17 +428,17 @@ stages:
             displayName: Apply 'latest' tag
             inputs:
               containerRegistry: $(dockerHub.serviceConnection.name)
-              repository: $(dockerHub.repository.name)/$(serviceName)
+              repository: $(dockerHub.repository.name)
               command: tag
-              arguments: $(dockerHub.repository.name)/$(serviceName):$(Build.BuildId) $(dockerHub.repository.name)/$(serviceName):latest
+              arguments: $(serviceName):$(Build.BuildId) $(dockerHub.repository.name)/$(serviceName):latest
 
           - task: Docker@2
             displayName: Push image
             inputs:
               containerRegistry: $(dockerHub.serviceConnection.name)
-              repository: $(dockerHub.repository.name)/$(serviceName)
+              repository: $(dockerHub.repository.name)
               command: push
-              arguments: $(dockerHub.repository.name)/$(serviceName):latest
+              arguments: $(serviceName):latest
 
   - stage: cleanup
     displayName: Cleanup stage
