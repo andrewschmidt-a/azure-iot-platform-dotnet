@@ -15,7 +15,7 @@ RUN \
   pip --no-cache-dir install azure-cli && \
   apk del --purge build
 
-# RUN echo "Install App Configuration"     && RUN /bin/sh -c  "az extension add -n appconfig" 
+# RUN echo "Install App Configuration"     && RUN /bin/sh -c  "az extension add -n appconfig"
 
 
 MAINTAINER Andrew Schmidt (https://github.com/andrewschmidt-a)
@@ -34,7 +34,8 @@ EXPOSE 10080
 RUN touch /app/logs/error.log
 WORKDIR /app
 COPY ./set_env.sh .
-RUN chmod +x ./set_env.sh
+# CORS logic was moved to the common C# class library
+# RUN chmod +x ./set_env.sh
 COPY ./run.sh .
 RUN chmod +x ./run.sh
 COPY ./content/nginx.conf /app/nginx.conf
