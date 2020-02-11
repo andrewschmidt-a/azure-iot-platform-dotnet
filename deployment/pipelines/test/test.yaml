@@ -354,6 +354,9 @@ stages:
             iothub-manager:
               serviceName: iothub-manager
               uriPath: iothubmanager/
+            tenant-manager:
+              serviceName: tenant-manager
+              uriPath: tenantmanager/
         steps:
           - checkout: self
             displayName: Checkout repository
