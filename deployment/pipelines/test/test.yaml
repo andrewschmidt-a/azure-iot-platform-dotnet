@@ -373,6 +373,7 @@ stages:
       - buildServiceContainers
       - unitTest
       - integrationTest
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI'))
     jobs:
       - job: tagLatest
         displayName: Apply 'latest' tag job
