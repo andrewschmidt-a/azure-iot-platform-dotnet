@@ -7,9 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{368A52
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "../common/Services/Services.csproj", "{22C69357-542E-4A43-B031-4D8867BA3E42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "../common/Services.Test/Services.Test.csproj", "{0A47EDE3-1AB7-4D7A-8D41-B3EDF69AE170}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "../../../test/services/common/Services.Test/Services.Test.csproj", "{0A47EDE3-1AB7-4D7A-8D41-B3EDF69AE170}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "../common/TestHelpers/TestHelpers.csproj", "{716C1217-55CA-47FF-9F51-C8AE0D3A9D4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "../../../test/services/common/TestHelpers/TestHelpers.csproj", "{716C1217-55CA-47FF-9F51-C8AE0D3A9D4A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "WebService/WebService.csproj", "{F305CAD5-BE38-4391-A692-580C526A0CB1}"
 EndProject

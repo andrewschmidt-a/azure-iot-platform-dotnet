@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services/Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService", "WebService/WebService.csproj", "{13C93E90-5E70-4B28-88C2-581D35A938D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Test", "Services.Test/Services.Test.csproj", "{34ED4906-AA1D-406E-B844-51E348478D57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Test", "../../../test/services/diagnostics/Services.Test/Services.Test.csproj", "{34ED4906-AA1D-406E-B844-51E348478D57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService.Test", "WebService.Test/WebService.Test.csproj", "{FE8027CE-8FC9-4273-96AD-9E877A5E52B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService.Test", "../../../test/services/diagnostics/WebService.Test/WebService.Test.csproj", "{FE8027CE-8FC9-4273-96AD-9E877A5E52B8}"
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution

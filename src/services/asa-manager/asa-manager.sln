@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "WebService/We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "../common/Services/Services.csproj", "{93015F84-7A6F-498A-9231-E464F4F8D6D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "../common/Services.Test/Services.Test.csproj", "{76957A15-9EEF-4101-84DC-D969FD4BDEA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "../../../test/services/asa-manager/Services.Test/Services.Test.csproj", "{76957A15-9EEF-4101-84DC-D969FD4BDEA3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "../common/TestHelpers/TestHelpers.csproj", "{D106C755-6DC7-4207-A26B-73099E2468E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "../../../test/services/common/TestHelpers/TestHelpers.csproj", "{D106C755-6DC7-4207-A26B-73099E2468E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService.Test", "WebService.Test\WebService.Test.csproj", "{7ACEE93F-CF3F-4543-BC2B-F61D45532FF8}"
 EndProject
