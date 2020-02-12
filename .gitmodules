@@ -1,7 +1,0 @@
-[submodule "azure-iot-messaging-functions"]
-	path = azure-iot-messaging-functions
-	url = git@github.mmm.com:MMM/azure-iot-messaging-functions.git
-[submodule "azure-iot-appconfig-function"]
-	path = azure-iot-appconfig-function
-	url = git@github.mmm.com:MMM/azure-iot-appconfig-function.git
-	branch = master
