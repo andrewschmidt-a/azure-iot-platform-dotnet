@@ -14,6 +14,11 @@ device-telemetry:
   deployment:
     image:
       tag: *imageTag
+diagnostics:
+  nameOverride: diagnostics
+  deployment:
+    image:
+      tag: *imageTag
 identity-gateway:
   nameOverride: identity-gateway
   deployment:

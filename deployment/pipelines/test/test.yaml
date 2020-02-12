@@ -98,6 +98,7 @@ stages:
                 common/**/*
                 config/**/*
                 device-telemetry/**/*
+                diagnostics/**/*
                 identity-gateway/**/*
                 iothub-manager/**/*
                 storage-adapter/**/*
@@ -201,6 +202,8 @@ stages:
               serviceName: config
             device-telemetry:
               serviceName: device-telemetry
+            diagnostics:
+              serviceName: diagnostics
             identity-gateway:
               serviceName: identity-gateway
             iothub-manager:
