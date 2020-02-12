@@ -97,7 +97,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
                 existing.Id,
                 item,
                 existing.ETag);
-            await this.asaManager.BeginConversionAsync(StorageCollection);
+            await this.asaManager.BeginRulesConversionAsync();
             this.LogEventAndRuleCountToDiagnostics("Rule_Deleted");
         }
 
@@ -239,7 +239,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
 
             var item = JsonConvert.SerializeObject(rule);
             var result = await this.storage.CreateAsync(StorageCollection, item);
-            await this.asaManager.BeginConversionAsync(StorageCollection);
+            await this.asaManager.BeginRulesConversionAsync();
 
             Rule newRule = this.Deserialize(result.Data);
             newRule.ETag = result.ETag;
@@ -319,7 +319,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
                 rule.Id,
                 item,
                 rule.ETag);
-            await this.asaManager.BeginConversionAsync(StorageCollection);
+            await this.asaManager.BeginRulesConversionAsync();
 
             Rule updatedRule = this.Deserialize(result.Data);
 

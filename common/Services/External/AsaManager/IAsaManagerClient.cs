@@ -8,6 +8,8 @@ namespace Mmm.Iot.Common.Services.External.AsaManager
 {
     public interface IAsaManagerClient : IExternalServiceClient
     {
-        Task<BeginConversionApiModel> BeginConversionAsync(string entity);
+        Task<BeginConversionApiModel> BeginRulesConversionAsync();
+
+        Task<BeginConversionApiModel> BeginDeviceGroupsConversionAsync();
     }
 }

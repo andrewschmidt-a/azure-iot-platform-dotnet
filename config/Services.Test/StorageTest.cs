@@ -142,7 +142,9 @@ namespace Mmm.Iot.Config.Services.Test
             this.mockClient = new Mock<IStorageAdapterClient>();
             this.mockAsaManager = new Mock<IAsaManagerClient>();
 
-            this.mockAsaManager.Setup(x => x.BeginConversionAsync(It.IsAny<string>())).ReturnsAsync(new BeginConversionApiModel());
+            this.mockAsaManager
+                .Setup(x => x.BeginDeviceGroupsConversionAsync())
+                .ReturnsAsync(new BeginConversionApiModel());
 
             this.storage = new Storage(
                 this.mockClient.Object,
@@ -624,8 +626,7 @@ namespace Mmm.Iot.Config.Services.Test
 
             this.mockAsaManager
                 .Verify(
-                    x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId)),
+                    x => x.BeginDeviceGroupsConversionAsync(),
                     Times.Once);
 
             Assert.Equal(result.Id, groupId);
@@ -681,8 +682,7 @@ namespace Mmm.Iot.Config.Services.Test
 
             this.mockAsaManager
                 .Verify(
-                    x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId)),
+                    x => x.BeginDeviceGroupsConversionAsync(),
                     Times.Once);
 
             Assert.Equal(result.Id, groupId);
@@ -713,8 +713,7 @@ namespace Mmm.Iot.Config.Services.Test
 
             this.mockAsaManager
                 .Verify(
-                    x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Storage.DeviceGroupCollectionId)),
+                    x => x.BeginDeviceGroupsConversionAsync(),
                     Times.Once);
         }
 

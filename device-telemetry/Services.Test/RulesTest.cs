@@ -58,9 +58,15 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
             this.httpContextAccessor = new Mock<IHttpContextAccessor>();
             this.diagnosticsClient = new DiagnosticsClient(this.httpClientMock.Object, this.config, new Mock<ILogger<DiagnosticsClient>>().Object, this.httpContextAccessor.Object);
 
-            this.httpContextAccessor.Setup(t => t.HttpContext.Request.HttpContext.Items).Returns(new Dictionary<object, object>()
-                { { "TenantID", TenantId } });
-            this.asaManager.Setup(t => t.BeginConversionAsync(It.IsAny<string>())).ReturnsAsync(new BeginConversionApiModel());
+            this.httpContextAccessor
+                .Setup(t => t.HttpContext.Request.HttpContext.Items)
+                .Returns(new Dictionary<object, object>()
+                    {
+                        { "TenantID", TenantId },
+                    });
+            this.asaManager
+                .Setup(t => t.BeginRulesConversionAsync())
+                .ReturnsAsync(new BeginConversionApiModel());
 
             this.rules = new Rules(this.storageAdapter.Object, this.asaManager.Object, this.logger.Object, this.alarms.Object, this.diagnosticsClient);
         }
@@ -122,8 +128,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
 
             this.asaManager
                 .Verify(
-                    x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.StorageCollection)),
+                    x => x.BeginRulesConversionAsync(),
                     Times.Once);
         }
 
@@ -151,8 +156,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
 
             this.asaManager
                 .Verify(
-                    x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.StorageCollection)),
+                    x => x.BeginRulesConversionAsync(),
                     Times.Never);
         }
 
@@ -182,8 +186,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
 
             this.asaManager
                 .Verify(
-                    x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.StorageCollection)),
+                    x => x.BeginRulesConversionAsync(),
                     Times.Never);
         }
 
@@ -213,8 +216,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
 
             this.asaManager
                 .Verify(
-                    x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.StorageCollection)),
+                    x => x.BeginRulesConversionAsync(),
                     Times.Never);
         }
 
@@ -244,8 +246,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
 
             this.asaManager
                 .Verify(
-                    x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.StorageCollection)),
+                    x => x.BeginRulesConversionAsync(),
                     Times.Never);
         }
 
@@ -429,8 +430,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
 
             this.asaManager
                 .Verify(
-                    x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.StorageCollection)),
+                    x => x.BeginRulesConversionAsync(),
                     Times.Once);
         }
 
@@ -467,8 +467,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Test
 
             this.asaManager
                 .Verify(
-                    x => x.BeginConversionAsync(
-                        It.Is<string>(s => s == Rules.StorageCollection)),
+                    x => x.BeginRulesConversionAsync(),
                     Times.Once);
         }
 

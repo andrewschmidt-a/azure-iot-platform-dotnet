@@ -16,7 +16,17 @@ namespace Mmm.Iot.Common.Services.External.AsaManager
         {
         }
 
-        public async Task<BeginConversionApiModel> BeginConversionAsync(string entity)
+        public async Task<BeginConversionApiModel> BeginRulesConversionAsync()
+        {
+            return await this.BeginConversionAsync("rules");
+        }
+
+        public async Task<BeginConversionApiModel> BeginDeviceGroupsConversionAsync()
+        {
+            return await this.BeginConversionAsync("devicegroups");
+        }
+
+        private async Task<BeginConversionApiModel> BeginConversionAsync(string entity)
         {
             string url = $"{this.ServiceUri}/{entity}";
             return await this.RequestHelper.ProcessRequestAsync<BeginConversionApiModel>(HttpMethod.Post, url);
