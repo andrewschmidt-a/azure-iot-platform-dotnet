@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
+using Microsoft.Extensions.Logging;
 using Mmm.Iot.Common.Services.External.TableStorage;
 using Mmm.Iot.Common.TestHelpers;
 using Mmm.Iot.IdentityGateway.Services.Models;
@@ -22,6 +23,7 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
     public class UserSettingsContainerTest
     {
         private const int DynamicTableEntityCount = 100;
+        private readonly Mock<ILogger<UserSettingsContainer>> logger;
         private UserSettingsContainer userSettingsContainer;
         private Mock<ITableStorageClient> mockTableStorageClient;
         private Random random = new Random();
@@ -30,8 +32,9 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
 
         public UserSettingsContainerTest()
         {
+            this.logger = new Mock<ILogger<UserSettingsContainer>>();
             this.mockTableStorageClient = new Mock<ITableStorageClient> { DefaultValue = DefaultValue.Mock };
-            this.userSettingsContainer = new UserSettingsContainer(this.mockTableStorageClient.Object);
+            this.userSettingsContainer = new UserSettingsContainer(this.mockTableStorageClient.Object, this.logger.Object);
         }
 
         [Fact]

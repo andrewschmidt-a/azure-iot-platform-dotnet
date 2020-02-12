@@ -5,6 +5,7 @@
 using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Mmm.Iot.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Config;
 
 namespace Mmm.Iot.IoTHubManager.WebService
 {
@@ -36,6 +38,10 @@ namespace Mmm.Iot.IoTHubManager.WebService
             // Setup (not enabling yet) CORS
             services.AddCors();
 
+            var applicationInsightsOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
+            applicationInsightsOptions.EnableAdaptiveSampling = false;
+            services.AddApplicationInsightsTelemetry(applicationInsightsOptions);
+
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
 
@@ -51,7 +57,8 @@ namespace Mmm.Iot.IoTHubManager.WebService
             IApplicationBuilder app,
             ICorsSetup corsSetup,
             IApplicationLifetime appLifetime,
-            ILogger<Startup> logger)
+            ILogger<Startup> logger,
+            AppConfig config)
         {
             this.LogDependencyInjectionContainerRegistrations(logger);
 
@@ -72,6 +79,15 @@ namespace Mmm.Iot.IoTHubManager.WebService
             // Enable CORS - Must be before UseMvc
             // see: https://docs.microsoft.com/en-us/aspnet/core/security/cors
             corsSetup.UseMiddleware(app);
+
+            var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
+
+            var builder = configuration.DefaultTelemetrySink.TelemetryProcessorChainBuilder;
+
+            // Using fixed rate sampling
+            double fixedSamplingPercentage = config.Global.FixedSamplingPercentage == 0 ? 10 : config.Global.FixedSamplingPercentage;
+            builder.UseSampling(fixedSamplingPercentage);
+            builder.Build();
 
             app.UseMvc();
 

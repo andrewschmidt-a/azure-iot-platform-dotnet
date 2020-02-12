@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Mmm.Iot.Common.Services.Config;
 using Mmm.Iot.IdentityGateway.Services.Models;
@@ -20,12 +21,20 @@ namespace Mmm.Iot.IdentityGateway.Services.Helpers
     {
         private readonly IOpenIdProviderConfiguration openIdProviderConfiguration;
         private readonly IRsaHelpers rsaHelpers;
+        private readonly ILogger logger;
         private UserTenantContainer userTenantContainer;
         private UserSettingsContainer userSettingsContainer;
         private AppConfig config;
         private IHttpContextAccessor httpContextAccessor;
 
-        public JwtHelpers(UserTenantContainer userTenantContainer, UserSettingsContainer userSettingsContainer, AppConfig config, IHttpContextAccessor httpContextAccessor, IOpenIdProviderConfiguration openIdProviderConfiguration, IRsaHelpers rsaHelpers)
+        public JwtHelpers(
+                        UserTenantContainer userTenantContainer,
+                        UserSettingsContainer userSettingsContainer,
+                        AppConfig config,
+                        IHttpContextAccessor httpContextAccessor,
+                        IOpenIdProviderConfiguration openIdProviderConfiguration,
+                        IRsaHelpers rsaHelpers,
+                        ILogger<JwtHelpers> logger)
         {
             this.userTenantContainer = userTenantContainer;
             this.userSettingsContainer = userSettingsContainer;
@@ -33,6 +42,7 @@ namespace Mmm.Iot.IdentityGateway.Services.Helpers
             this.httpContextAccessor = httpContextAccessor;
             this.openIdProviderConfiguration = openIdProviderConfiguration;
             this.rsaHelpers = rsaHelpers;
+            this.logger = logger;
         }
 
         public async Task<JwtSecurityToken> GetIdentityToken(List<Claim> claims, string tenant, string audience, DateTime? expiration)
@@ -56,6 +66,7 @@ namespace Mmm.Iot.IdentityGateway.Services.Helpers
             {
                 // authState has no tenant, so we should use either the User's last used tenant, or the first tenant available to them
                 // Create a UserSettingsInput for the purpose of finding the LastUsedTenant setting for this user
+                this.logger.LogInformation("User did not specify Tenant so default/last used tenant is set.");
                 UserSettingsInput settingsInput = new UserSettingsInput
                 {
                     UserId = userId,
@@ -130,6 +141,7 @@ namespace Mmm.Iot.IdentityGateway.Services.Helpers
             {
                 forwardedFor = this.httpContextAccessor.HttpContext.Request.Headers.Where(t => t.Key == "X-Forwarded-For").FirstOrDefault().Value
                     .First();
+                this.logger.LogInformation("Added issuer with X-Forwarded-For address.");
             }
 
             // Create Security key  using private key above:
@@ -156,6 +168,8 @@ namespace Mmm.Iot.IdentityGateway.Services.Helpers
             var jwtHandler = new JwtSecurityTokenHandler();
             if (!jwtHandler.CanReadToken(encodedToken))
             {
+                string errorMessage = "Cannot read token validation failed";
+                this.logger.LogError(new Exception(errorMessage), errorMessage);
                 return false;
             }
 
@@ -183,6 +197,8 @@ namespace Mmm.Iot.IdentityGateway.Services.Helpers
             jwtHandler.ValidateToken(encodedToken, tokenValidationParams, out validated_token);
             if (validated_token == null)
             {
+                string errorMessage = "Validate Token method failed to return valid value.";
+                this.logger.LogError(new Exception(errorMessage), errorMessage);
                 return false;
             }
 

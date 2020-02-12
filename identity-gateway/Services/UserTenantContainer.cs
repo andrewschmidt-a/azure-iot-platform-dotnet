@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
+using Microsoft.Extensions.Logging;
 using Mmm.Iot.Common.Services.External.TableStorage;
 using Mmm.Iot.IdentityGateway.Services.Models;
 
@@ -14,13 +15,17 @@ namespace Mmm.Iot.IdentityGateway.Services
 {
     public class UserTenantContainer : UserContainer, IUserContainer<UserTenantModel, UserTenantInput>
     {
-        public UserTenantContainer()
+        private readonly ILogger logger;
+
+        public UserTenantContainer(ILogger<UserTenantContainer> logger)
         {
+            this.logger = logger;
         }
 
-        public UserTenantContainer(ITableStorageClient tableStorageClient)
+        public UserTenantContainer(ITableStorageClient tableStorageClient, ILogger<UserTenantContainer> logger)
             : base(tableStorageClient)
         {
+            this.logger = logger;
         }
 
         public override string TableName => "user";
@@ -56,10 +61,12 @@ namespace Mmm.Iot.IdentityGateway.Services
             UserTenantModel existingModel = await this.GetAsync(input);
             if (existingModel != null)
             {
+                string errorMessage = $"That UserTenant record already exists with value {existingModel.Roles}." + " Use PUT instead to update this setting instead.";
+                StorageException exception = new StorageException(errorMessage);
+                this.logger.LogError(exception, errorMessage);
+
                 // If this record already exists, return it without continuing with the insert operation
-                throw new StorageException(
-                    $"That UserTenant record already exists with value {existingModel.Roles}." +
-                    " Use PUT instead to update this setting instead.");
+                throw exception;
             }
 
             UserTenantModel user = new UserTenantModel(input);
@@ -71,8 +78,12 @@ namespace Mmm.Iot.IdentityGateway.Services
             UserTenantModel model = new UserTenantModel(input);
             if (model.RoleList != null && !model.RoleList.Any())
             {
+                string errorMessage = "The UserTenant update model must contain a serialized role array.";
+                ArgumentException exception = new ArgumentException(errorMessage);
+                this.logger.LogError(exception, errorMessage);
+
                 // If the RoleList of the model is empty, throw an exception. The RoleList is the only updateable feature of the UserTenant Table
-                throw new ArgumentException("The UserTenant update model must contain a serialized role array.");
+                throw exception;
             }
 
             model.ETag = "*";  // An ETag is required for updating - this allows any etag to be used
@@ -85,7 +96,10 @@ namespace Mmm.Iot.IdentityGateway.Services
             UserTenantModel user = await this.GetAsync(input);
             if (user == null)
             {
-                throw new StorageException($"That UserTenant does not exist");
+                string errorMessage = $"That UserTenant does not exist";
+                StorageException exception = new StorageException(errorMessage);
+                this.logger.LogError(exception, errorMessage);
+                throw exception;
             }
 
             user.ETag = "*";  // An ETag is required for deleting - this allows any etag to be used

@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Mmm.Iot.Common.Services;
 using Mmm.Iot.Common.TestHelpers;
 using Mmm.Iot.IdentityGateway.Services;
@@ -27,6 +28,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         private Mock<HttpRequest> mockHttpRequest;
         private bool disposedValue = false;
         private Mock<UserSettingsContainer> mockUserSettingsContainer;
+        private Mock<ILogger<UserSettingsContainer>> logger;
         private UserSettingsController controller;
         private Mock<HttpContext> mockHttpContext;
         private UserSettingsListModel someUserSettingsList = new UserSettingsListModel();
@@ -179,7 +181,8 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
 
         private void InitializeController()
         {
-            this.mockUserSettingsContainer = new Mock<UserSettingsContainer>();
+            this.logger = new Mock<ILogger<UserSettingsContainer>>();
+            this.mockUserSettingsContainer = new Mock<UserSettingsContainer>(this.logger.Object);
             this.mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
             this.mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
             this.controller = new UserSettingsController(this.mockUserSettingsContainer.Object)

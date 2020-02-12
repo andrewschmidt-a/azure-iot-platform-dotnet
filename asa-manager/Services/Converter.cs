@@ -50,7 +50,8 @@ namespace Mmm.Iot.AsaManager.Services
         {
             if (string.IsNullOrEmpty(fileContent))
             {
-                this.Logger.LogError("The temporary file content was null or empty for {entity}. Blank files will not be written to Blob storage. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                string errorMessage = $"The temporary file content was null or empty for {this.Entity}. Blank files will not be written to Blob storage. OperationId: {operationId}. TenantId: {tenantId}";
+                this.Logger.LogError(new Exception(errorMessage), errorMessage);
                 throw new BlankFileContentException($"The temporary file content serialized from the converted {this.Entity} queried from storage adapter was null or empty. Empty files will not be written to Blob storage.");
             }
 
