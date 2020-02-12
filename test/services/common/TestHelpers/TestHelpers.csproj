@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Services\Services.csproj" />
+        <ProjectReference Include="../../../../src/services/common/Services/Services.csproj" />
     </ItemGroup>
 
 </Project>
