@@ -1,19 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{368A52C5-8C52-49FD-AF0B-ECFC61A55CAC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{CECA1099-BC56-47D9-9CF0-801A012703C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services/Services.csproj", "{CECA1099-BC56-47D9-9CF0-801A012703C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "WebService\WebService.csproj", "{DB5B3EC1-F032-4CDA-A019-A5A2628A26F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "WebService/WebService.csproj", "{DB5B3EC1-F032-4CDA-A019-A5A2628A26F1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "..\common\Services\Services.csproj", "{93015F84-7A6F-498A-9231-E464F4F8D6D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "../common/Services/Services.csproj", "{93015F84-7A6F-498A-9231-E464F4F8D6D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "..\common\Services.Test\Services.Test.csproj", "{76957A15-9EEF-4101-84DC-D969FD4BDEA3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "../common/Services.Test/Services.Test.csproj", "{76957A15-9EEF-4101-84DC-D969FD4BDEA3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "..\common\TestHelpers\TestHelpers.csproj", "{D106C755-6DC7-4207-A26B-73099E2468E9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "../common/TestHelpers/TestHelpers.csproj", "{D106C755-6DC7-4207-A26B-73099E2468E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService.Test", "WebService.Test\WebService.Test.csproj", "{7ACEE93F-CF3F-4543-BC2B-F61D45532FF8}"
 EndProject

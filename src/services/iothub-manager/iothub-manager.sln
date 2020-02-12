@@ -5,19 +5,19 @@ VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{368A52C5-8C52-49FD-AF0B-ECFC61A55CAC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "..\common\Services\Services.csproj", "{22C69357-542E-4A43-B031-4D8867BA3E42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "../common/Services/Services.csproj", "{22C69357-542E-4A43-B031-4D8867BA3E42}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "..\common\Services.Test\Services.Test.csproj", "{0A47EDE3-1AB7-4D7A-8D41-B3EDF69AE170}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "../common/Services.Test/Services.Test.csproj", "{0A47EDE3-1AB7-4D7A-8D41-B3EDF69AE170}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "..\common\TestHelpers\TestHelpers.csproj", "{716C1217-55CA-47FF-9F51-C8AE0D3A9D4A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "../common/TestHelpers/TestHelpers.csproj", "{716C1217-55CA-47FF-9F51-C8AE0D3A9D4A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "WebService\WebService.csproj", "{56ABDCA6-B685-49F3-8713-66314131C5B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "WebService/WebService.csproj", "{56ABDCA6-B685-49F3-8713-66314131C5B7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{E01BF895-3142-48C3-961A-47B69A1B7BB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services/Services.csproj", "{E01BF895-3142-48C3-961A-47B69A1B7BB8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "Services.Test\Services.Test.csproj", "{E63F76BA-215E-499E-92FF-A7489635256B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "Services.Test/Services.Test.csproj", "{E63F76BA-215E-499E-92FF-A7489635256B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService.Test", "WebService.Test\WebService.Test.csproj", "{43C9B9D2-C5F3-4816-B1B8-CC7C4B86DFAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService.Test", "WebService.Test/WebService.Test.csproj", "{43C9B9D2-C5F3-4816-B1B8-CC7C4B86DFAA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
