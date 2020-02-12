@@ -428,7 +428,7 @@ stages:
             inputs:
               containerRegistry: $(dockerHub.serviceConnection.name)
               command: tag
-              arguments: $(serviceName):$(Build.BuildId) $(dockerHub.repository.name)/$(serviceName):latest
+              arguments: $(dockerHub.repository.name)/$(serviceName):$(Build.BuildId) $(dockerHub.repository.name)/$(serviceName):latest
 
           - task: Docker@2
             displayName: Push image
