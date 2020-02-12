@@ -83,7 +83,7 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             var result = new StatusResultServiceModel(false, "TimeSeries check failed");
-            if (this.timeSeriesEnabled ?? false)
+            if (this.timeSeriesEnabled == true)
             {
                 // Acquire an access token.
                 string accessToken = string.Empty;
