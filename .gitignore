@@ -34,7 +34,7 @@ out/
 
 # Icon must end with two \r
 Icon
-!webui/azure-iot-ux-fluent-controls/lib/components/Icon
+!src/webui/azure-iot-ux-fluent-controls/lib/components/Icon
 
 # Thumbnails
 ._*
@@ -309,7 +309,7 @@ PublishScripts/
 *.nupkg
 # The packages folder can be ignored because of Package Restore
 **/packages/*
-!webui/src/components/pages/packages
+!src/webui/src/components/pages/packages
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
@@ -469,5 +469,5 @@ bld/
 
 # Overrides
 **/lcov.info
-webui/build
-webui/package-lock.json
+src/webui/build
+src/webui/package-lock.json

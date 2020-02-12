@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../../src/services/common/TestHelpers/TestHelpers.csproj" />
-    <ProjectReference Include="../WebService/WebService.csproj" />
+    <ProjectReference Include="../../common/TestHelpers/TestHelpers.csproj" />
+    <ProjectReference Include="../../../../src/services/iothub-manager/WebService/WebService.csproj" />
   </ItemGroup>
 
 </Project>

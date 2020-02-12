@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <AssemblyName>Mmm.Iot.Config.WebService.Test</AssemblyName>
+        <AssemblyName>Mmm.Iot.AsaManager.WebService.Test</AssemblyName>
         <RootNamespace>$(AssemblyName)</RootNamespace>
     </PropertyGroup>
 
@@ -13,7 +13,7 @@
 
     <ItemGroup>
         <ProjectReference Include="../../common/TestHelpers/TestHelpers.csproj" />
-        <ProjectReference Include="../../../../src/services/config/WebService/WebService.csproj" />
+        <ProjectReference Include="../../../../src/services/asa-manager/WebService/WebService.csproj" />
         <PackageReference Include="coverlet.msbuild" Version="2.8.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

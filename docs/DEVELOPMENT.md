@@ -46,7 +46,7 @@ dotnet user-secrets list --project common/Services/Services.csproj --json | sed 
 # Building
 ## Build all services
 ```
-dotnet build remote-monitoring.sln
+dotnet build Mmm.Iot.sln
 ```
 ## Build an individual service
 ```

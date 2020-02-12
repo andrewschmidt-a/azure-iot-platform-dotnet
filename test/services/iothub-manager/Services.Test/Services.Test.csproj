@@ -14,7 +14,7 @@
     <ItemGroup>
         <ProjectReference Include="../../common/Services.Test/Services.Test.csproj" />
         <ProjectReference Include="../../../../src/services/common/Services/Services.csproj" />
-        <ProjectReference Include="../../TestHelpers/TestHelpers.csproj" />
+        <ProjectReference Include="../../common/TestHelpers/TestHelpers.csproj" />
         <ProjectReference Include="../../../../src/services/iothub-manager/Services/Services.csproj" />
         <PackageReference Include="coverlet.msbuild" Version="2.8.0">
             <PrivateAssets>all</PrivateAssets>

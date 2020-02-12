@@ -12,8 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../../../src/services/common/TestHelpers/TestHelpers.csproj" />
-        <ProjectReference Include="../WebService/WebService.csproj" />
+        <ProjectReference Include="../../common/TestHelpers/TestHelpers.csproj" />
+        <ProjectReference Include="../../../../src/services/tenant-manager/WebService/WebService.csproj" />
         <PackageReference Include="coverlet.msbuild" Version="2.8.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
