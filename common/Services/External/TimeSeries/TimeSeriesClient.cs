@@ -41,6 +41,7 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
         private const string AadClientIdKey = "ApplicationClientId";
         private const string AadClientSecretKey = "ApplicationClientSecret";
         private const string AadTenantKey = "Tenant";
+        private const string TsiStorageTypeKey = "tsi";
         private readonly string authority;
         private readonly string applicationId;
         private readonly string applicationSecret;
@@ -48,6 +49,7 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
         private readonly string fqdn;
         private readonly string host;
         private readonly string apiVersion;
+        private readonly bool? timeSeriesEnabled = null;
         private readonly string timeout;
         private readonly IHttpClient httpClient;
         private readonly ILogger logger;
@@ -68,40 +70,55 @@ namespace Mmm.Iot.Common.Services.External.TimeSeries
             this.host = config.DeviceTelemetryService.TimeSeries.Audience;
             this.apiVersion = config.DeviceTelemetryService.TimeSeries.ApiVersion;
             this.timeout = config.DeviceTelemetryService.TimeSeries.Timeout;
+            if (!string.IsNullOrEmpty(config.DeviceTelemetryService.Messages.TelemetryStorageType))
+            {
+                this.timeSeriesEnabled = config.DeviceTelemetryService.Messages.TelemetryStorageType.Equals(TsiStorageTypeKey, StringComparison.OrdinalIgnoreCase);
+            }
+            else
+            {
+                this.timeSeriesEnabled = null;
+            }
         }
 
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             var result = new StatusResultServiceModel(false, "TimeSeries check failed");
-
-            // Acquire an access token.
-            string accessToken = string.Empty;
-            try
+            if (this.timeSeriesEnabled == true)
             {
-                accessToken = await this.AcquireAccessTokenAsync();
-
-                // Prepare request
-                HttpRequest request = this.PrepareRequest(
-                    AvailabilityKey,
-                    accessToken,
-                    new[] { TimeSeriesTimeoutPrefix + "=" + this.timeout });
-
-                var response = await this.httpClient.GetAsync(request);
-
-                // Return status
-                if (!response.IsError)
+                // Acquire an access token.
+                string accessToken = string.Empty;
+                try
                 {
-                    result.IsHealthy = true;
-                    result.Message = "Alive and well!";
+                    accessToken = await this.AcquireAccessTokenAsync();
+
+                    // Prepare request
+                    HttpRequest request = this.PrepareRequest(
+                        AvailabilityKey,
+                        accessToken,
+                        new[] { TimeSeriesTimeoutPrefix + "=" + this.timeout });
+
+                    var response = await this.httpClient.GetAsync(request);
+
+                    // Return status
+                    if (!response.IsError)
+                    {
+                        result.IsHealthy = true;
+                        result.Message = "Alive and well!";
+                    }
+                    else
+                    {
+                        result.Message = $"Status code: {response.StatusCode}; Response: {response.Content}";
+                    }
                 }
-                else
+                catch (Exception e)
                 {
-                    result.Message = $"Status code: {response.StatusCode}; Response: {response.Content}";
+                    this.logger.LogError(e, result.Message);
                 }
             }
-            catch (Exception e)
+            else
             {
-                this.logger.LogError(e, result.Message);
+                result.IsHealthy = true;
+                result.Message = "Service disabled not in use";
             }
 
             return result;

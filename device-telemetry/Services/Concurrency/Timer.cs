@@ -44,9 +44,10 @@ namespace Mmm.Iot.DeviceTelemetry.Services.Concurrency
 
         public ITimer StartIn(TimeSpan delay)
         {
+            string errorMessage = "The timer is not initialized";
             if (this.timer == null)
             {
-                this.logger.LogError("The timer is not initialized");
+                this.logger.LogError(new Exception(errorMessage), errorMessage);
                 throw new TimerNotInitializedException();
             }
 

@@ -150,12 +150,14 @@ namespace Mmm.Iot.DeviceTelemetry.Services.External
             {
                 int retriesLeft = this.maxRetries - retries;
                 string logString = $"";
-                this.logger.LogWarning("Failed to log to diagnostics: {errorMessage}. {retriesLeft} retries remaining", errorMessage, retriesLeft);
+                string errorText = $"Failed to log to diagnostics: {errorMessage}. {retriesLeft} retries remaining";
+                this.logger.LogWarning(new Exception(errorText), errorText);
                 Thread.Sleep(RetrySleepMilliseconds);
             }
             else
             {
-                this.logger.LogError("Failed to log to diagnostics: {errorMessage}. Reached max retries and will not log.", errorMessage);
+                string errorText = $"Failed to log to diagnostics: {errorMessage}. Reached max retries and will not log.";
+                this.logger.LogError(new Exception(errorText), errorText);
             }
         }
     }

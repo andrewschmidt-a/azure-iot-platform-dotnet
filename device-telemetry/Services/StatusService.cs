@@ -30,6 +30,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
                 { "Storage Adapter", storageAdapter },
                 { "Storage", storageClient },
                 { "Asa Manager", asaManager },
+                { "Time Series", timeSeriesClient },
                 { "App Config", appConfig },
             };
         }

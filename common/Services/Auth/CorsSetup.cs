@@ -39,18 +39,19 @@ namespace Mmm.Iot.Common.Services.Auth
         private void BuildCorsPolicy(CorsPolicyBuilder builder)
         {
             CorsWhitelistModel model;
+            string errorMessage = $"Ignoring invalid CORS whitelist: '{this.config.Global.ClientAuth.CorsWhitelist}'";
             try
             {
                 model = JsonConvert.DeserializeObject<CorsWhitelistModel>(this.config.Global.ClientAuth.CorsWhitelist);
                 if (model == null)
                 {
-                    this.logger.LogError(new Exception($"Ignoring invalid CORS whitelist: '{this.config.Global.ClientAuth.CorsWhitelist}'"),  $"Ignoring invalid CORS whitelist: '{this.config.Global.ClientAuth.CorsWhitelist}'");
+                    this.logger.LogError(new Exception(errorMessage), errorMessage);
                     return;
                 }
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, "Ignoring invalid CORS whitelist: '{whitelist}'", this.config.Global.ClientAuth.CorsWhitelist);
+                this.logger.LogError(ex, errorMessage);
                 return;
             }
 
