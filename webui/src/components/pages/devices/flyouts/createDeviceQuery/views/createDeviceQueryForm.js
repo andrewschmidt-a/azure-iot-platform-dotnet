@@ -89,7 +89,13 @@ class CreateDeviceQueryForm extends LinkedComponent {
             // remove conditions that are new (have not been edited)
             return !this.conditionIsNew(condition)
           });
-          this.props.setActiveDeviceQueryConditions(toDeviceConditionModel(rawQueryConditions));
+          this.props.setActiveDeviceQueryConditions(
+            rawQueryConditions.map(
+              condition => {
+                return toDeviceConditionModel(condition)
+              }
+            )
+          );
           this.props.fetchDevices()
           resolve();
         });
