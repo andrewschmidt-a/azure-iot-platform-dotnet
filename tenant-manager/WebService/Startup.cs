@@ -5,12 +5,14 @@
 using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Mmm.Iot.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Config;
 
 namespace Mmm.Iot.TenantManager.WebService
 {
@@ -32,6 +34,10 @@ namespace Mmm.Iot.TenantManager.WebService
                 c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Tenant Manager API", Version = "v1" });
             });
 
+            var applicationInsightsOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
+            applicationInsightsOptions.EnableAdaptiveSampling = false;
+            services.AddApplicationInsightsTelemetry(applicationInsightsOptions);
+
             services.AddMvc().AddControllersAsServices();
             services.AddHttpContextAccessor();
             this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
@@ -39,7 +45,7 @@ namespace Mmm.Iot.TenantManager.WebService
         }
 
         [Obsolete]
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppConfig config)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -54,6 +60,14 @@ namespace Mmm.Iot.TenantManager.WebService
 
             // Check for Authorization header before dispatching requests
             app.UseMiddleware<AuthMiddleware>();
+
+            var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
+
+            var builder = configuration.DefaultTelemetrySink.TelemetryProcessorChainBuilder;
+
+            double fixedSamplingPercentage = config.Global.FixedSamplingPercentage == 0 ? 10 : config.Global.FixedSamplingPercentage;
+            builder.UseSampling(fixedSamplingPercentage);
+            builder.Build();
 
             app.UseMvc();
         }
