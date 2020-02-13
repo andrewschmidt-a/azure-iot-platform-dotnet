@@ -1,0 +1,7 @@
+variables:
+  azureSubscriptionName: 3M-CRSLAD16-BBIoTP-Dev
+  azureResourceGroupName: rg-iot-crsl-dev
+  azureAppConfigurationName: crsliot-appconfig-dev
+  dotnetConfiguration: Release
+  dotnetSdkVersion: 2.2.x
+  gitSerenityRepositoryName: azure-iot-services-dotnet

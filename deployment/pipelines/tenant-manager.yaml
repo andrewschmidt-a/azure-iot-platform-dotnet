@@ -1,8 +1,13 @@
 trigger: none
-pr: none 
-
+pr: none
+resources:
+  pipelines:
+  - pipeline: test
+    source: test
+    trigger:
+      branches:
+      - master
 stages:
 - template: 'templates/service-deploy-env.yaml'
   parameters:
     service: tenant-manager
- 

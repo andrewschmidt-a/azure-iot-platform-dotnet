@@ -59,7 +59,7 @@ stages:
       parameters:
         serviceConnection: '3M-CRSLAD19-BBIoTP-Prod'
         resourceGroup: rg-iot-crsl-wkbnch
-        aksName: crsliot-aks-wkbnch
+        aksName: crsliot-aks-wkbnch2
         chartLocation: 'deployment/charts/${{parameters.service}}'
         releaseName: ${{parameters.service}}
 

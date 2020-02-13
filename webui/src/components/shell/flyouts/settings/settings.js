@@ -82,7 +82,7 @@ export class Settings extends LinkedComponent {
     this.setState({ [name]: value });
   };
 
-  onSimulationChange = ( value ) => {
+  onSimulationChange = (value) => {
     const { toggledSimulation } = this.state;
     const etag = this.props.simulationEtag;
     this.setState({
@@ -94,41 +94,83 @@ export class Settings extends LinkedComponent {
       });
     this.props.toggleSimulationStatus(etag, value);
   }
-  onAlertingStatusChange = ( value ) => {
+
+  onAlertingStatusChange = (value) => {
+    //set state of getAlertingPending to true to disable the button while call is being made
+    //set state of alertingState to pending to give user feedback on status of call
+    //set desiredAlertingState to value as value is the end state once the call is complete
+    this.setState({
+      getAlertingPending: true,
+      alertingState: "Pending",
+      desiredAlertingState: value
+    });
+
     var getStatus = (retry) => {
       TenantService.getAlertingStatus().subscribe((statusModel) => {
-        if(statusModel.jobState == "Starting" || statusModel.jobState == "Stopping" ){
+        if (statusModel.jobState == "Starting" || statusModel.jobState == "Stopping") {
           setTimeout(function () {
-              getStatus(retry - 1);
+            getStatus(retry - 1);
           }, 2000);
-        }else{
+        }
+        else {
           changeStatus(statusModel)
         }
       })
     }
 
     var changeStatus = (statusModel) => {
-      console.log(statusModel)
-      this.setState({
-        alerting: statusModel
-      },
-        () => {
-          this.props.logEvent(toSinglePropertyDiagnosticsModel('Settings_Alerting', value?'isStarted': 'isStopped', statusModel));
-        });
+      this.setState({ alerting: statusModel }, () => {
+        this.props.logEvent(toSinglePropertyDiagnosticsModel('Settings_Alerting', value ? 'isStarted' : 'isStopped', statusModel));
+      });
       this.props.updateAlerting(statusModel)
-      if(statusModel.jobState == "Starting" || statusModel.jobState == "Stopping"){
+      if (statusModel.jobState == "Starting" || statusModel.jobState == "Stopping") {
         getStatus(40);
       }
-      
     }
-    
-    if(value){
-      TenantService.alertingStart().subscribe(changeStatus)
-    }else{
-      TenantService.alertingStop().subscribe(changeStatus)
+
+    if (value) {
+      TenantService.alertingStart().subscribe(
+        changeStatus,
+        (err) => {
+          //Subscribe onError handling call
+          console.log(err);
+          this.setState({
+            getAlertingPending: false,
+            alertingState: "Failed",
+            desiredAlertingState: !value
+          });
+        },
+        () => {
+          //subscribe onComplete call 
+          this.setState({
+            getAlertingPending: false,
+            alertingState: "Started"
+          });
+        }
+      );
+    }
+    else {
+      TenantService.alertingStop().subscribe(
+        changeStatus,
+        (err) => {
+          //Subscribe onError handling call
+          console.log(err);
+          this.setState({
+            getAlertingPending: false,
+            alertingState: "Failed",
+            desiredAlertingState: !value
+          });
+        },
+        () => {
+          //subscribe onComplete call 
+          this.setState({
+            getAlertingPending: false,
+            alertingState: "Stopped"
+          });
+        }
+      );
     }
   }
-
 
   onThemeChange = (nextTheme) => {
     this.props.logEvent(toSinglePropertyDiagnosticsModel('Settings_ThemeChanged', 'nextTheme', nextTheme));
@@ -181,7 +223,6 @@ export class Settings extends LinkedComponent {
       t,
       theme,
       version,
-      alerting,
       releaseNotesUrl,
       isSimulationEnabled,
       simulationToggleError,
@@ -193,6 +234,9 @@ export class Settings extends LinkedComponent {
     } = this.props;
     const {
       desiredSimulationState,
+      desiredAlertingState,
+      alertingState,
+      getAlertingPending,
       loading,
       logoFile,
       applicationName,
@@ -262,25 +306,25 @@ export class Settings extends LinkedComponent {
               </Section.Content>
             </Section.Container>
             <Section.Container collapsable={false} className="app-alerting">
-              <Section.Header>{t('settingsFlyout.alerting')}: {this.state.alerting.jobState}</Section.Header>
+              <Section.Header>{t('settingsFlyout.alerting')}: {alertingState}</Section.Header>
               <Section.Content className="release-notes">
                 {t('settingsFlyout.alertingDescription')}
                 <br></br>
                 <br></br>
                 <Toggle
-                        className="alerting-toggle-button"
-                        name={t('settingsFlyout.alertingToggle')}
-                        attr={{
-                          button: {
-                            'aria-label': t('settingsFlyout.alertingToggle'),
-                            'type': 'button'
-                          }
-                        }}
-                        on={this.state.alerting.jobState == "Running" || this.state.alerting.jobState == "Starting"}
-                        disabled={this.state.alerting.jobState == "Not Enabled" || this.state.alerting.jobState == "Starting" || this.state.alerting.jobState == "Stopping"}
-                        onChange={this.onAlertingStatusChange}
-                        onLabel={t('settingsFlyout.stop')}
-                        offLabel={t('settingsFlyout.start')} />
+                  className="alerting-toggle-button"
+                  name={t('settingsFlyout.alertingToggle')}
+                  attr={{
+                    button: {
+                      'aria-label': t('settingsFlyout.alertingToggle'),
+                      'type': 'button'
+                    }
+                  }}
+                  on={desiredAlertingState}
+                  disabled={getAlertingPending}
+                  onChange={this.onAlertingStatusChange}
+                  onLabel={t('settingsFlyout.start')}
+                  offLabel={t('settingsFlyout.stop')} />
               </Section.Content>
             </Section.Container>
             <Section.Container className="simulation-toggle-container">

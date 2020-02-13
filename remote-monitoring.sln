@@ -3,7 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29411.108
 MinimumVisualStudioVersion = 15.0.26124.0
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "common", "common", "{368A52C5-8C52-49FD-AF0B-ECFC61A55CAC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "common\Services\Services.csproj", "{22C69357-542E-4A43-B031-4D8867BA3E42}"
@@ -12,7 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "common\Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestHelpers", "common\TestHelpers\TestHelpers.csproj", "{716C1217-55CA-47FF-9F51-C8AE0D3A9D4A}"
 EndProject
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "asa-manager", "asa-manager", "{2C6BD869-D7C8-4B4A-BAB6-5CF026B3844E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "asa-manager\Services\Services.csproj", "{ED49822D-2376-4AEE-AA83-A13EA90AA2D1}"
@@ -21,7 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "asa-manager\W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "asa-manager\Services.Test\Services.Test.csproj", "{BE4D193E-E146-4CE9-8C1F-721940D8F70A}"
 EndProject
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "config", "config", "{C3ACFC91-515E-4229-9CF5-1D12FBF14CF3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "config\Services\Services.csproj", "{FA95E536-75D1-4346-963E-920DDA0B5146}"
@@ -32,7 +29,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "config\WebSer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService.Test", "config\WebService.Test\WebService.Test.csproj", "{8630CEE5-CAA9-42A2-BBEE-22937D5C1AD0}"
 EndProject
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "device-telemetry", "device-telemetry", "{1E149DA3-0A5A-41A3-809B-EC9546336F8F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "device-telemetry\Services\Services.csproj", "{4CB77D8E-DD70-481F-B7C5-639A66809AC9}"
@@ -43,7 +39,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "device-teleme
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService.Test", "device-telemetry\WebService.Test\WebService.Test.csproj", "{AD868687-C27D-41E4-BA37-464E1513008C}"
 EndProject
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iothub-manager", "iothub-manager", "{3D5ADBC7-89F4-4C08-8CC0-809D87FA152A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "iothub-manager\Services\Services.csproj", "{F47A3C18-D996-41C0-988D-901B782F0892}"
@@ -54,7 +49,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "iothub-manage
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService.Test", "iothub-manager\WebService.Test\WebService.Test.csproj", "{D11EBE09-C8F3-4168-97CD-8D64E764A780}"
 EndProject
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "identity-gateway", "identity-gateway", "{8BB47880-8BA1-486E-8709-42B59E9CC5B0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "identity-gateway\WebService\WebService.csproj", "{F71C4D0E-EC39-4CE7-930B-F11EADD5AD2B}"
@@ -65,7 +59,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "identity-g
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService.Test", "identity-gateway\WebService.Test\WebService.Test.csproj", "{AE2E32B2-17AD-4B38-9A56-71EBFD4D8C1D}"
 EndProject
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "storage-adapter", "storage-adapter", "{AAF4FB3E-29B8-4A42-89AD-CA7687FC0A79}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "storage-adapter\Services\Services.csproj", "{2BA6AC78-7778-493D-8A71-30ED71401C7C}"
@@ -76,14 +69,22 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "storage-adapt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService.Test", "storage-adapter\WebService.Test\WebService.Test.csproj", "{225A9E49-1F60-403A-9405-C6E578097126}"
 EndProject
-
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tenant-manager", "tenant-manager", "{5189373E-EC70-416D-BE18-C9B19C2A5250}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "tenant-manager\WebService\WebService.csproj", "{53D708EB-2DDD-485B-B90B-8A16874DB5DE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "tenant-manager\Services\Services.csproj", "{0662B27C-D894-4EF5-9ABD-447D8FB21A2D}"
 EndProject
-
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "diagnostics", "diagnostics", "{FB25CB90-3FFE-4321-A454-86EF4E361545}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "diagnostics\Services\Services.csproj", "{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService", "diagnostics\WebService\WebService.csproj", "{A11FC68C-7672-4705-B486-B5CB651230A8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "diagnostics\Services.Test\Services.Test.csproj", "{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService.Test", "diagnostics\WebService.Test\WebService.Test.csproj", "{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -430,6 +431,54 @@ Global
 		{BE4D193E-E146-4CE9-8C1F-721940D8F70A}.Release|x64.Build.0 = Release|Any CPU
 		{BE4D193E-E146-4CE9-8C1F-721940D8F70A}.Release|x86.ActiveCfg = Release|Any CPU
 		{BE4D193E-E146-4CE9-8C1F-721940D8F70A}.Release|x86.Build.0 = Release|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Debug|x64.Build.0 = Debug|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Debug|x86.Build.0 = Debug|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Release|x64.ActiveCfg = Release|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Release|x64.Build.0 = Release|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Release|x86.ActiveCfg = Release|Any CPU
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162}.Release|x86.Build.0 = Release|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Debug|x64.Build.0 = Debug|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Debug|x86.Build.0 = Debug|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Release|x64.ActiveCfg = Release|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Release|x64.Build.0 = Release|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Release|x86.ActiveCfg = Release|Any CPU
+		{A11FC68C-7672-4705-B486-B5CB651230A8}.Release|x86.Build.0 = Release|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Debug|x64.Build.0 = Debug|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Debug|x86.Build.0 = Debug|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Release|x64.ActiveCfg = Release|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Release|x64.Build.0 = Release|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Release|x86.ActiveCfg = Release|Any CPU
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C}.Release|x86.Build.0 = Release|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Debug|x64.Build.0 = Debug|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Debug|x86.Build.0 = Debug|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Release|x64.ActiveCfg = Release|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Release|x64.Build.0 = Release|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Release|x86.ActiveCfg = Release|Any CPU
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -463,6 +512,10 @@ Global
 		{ED49822D-2376-4AEE-AA83-A13EA90AA2D1} = {2C6BD869-D7C8-4B4A-BAB6-5CF026B3844E}
 		{6128A222-D7FC-4A69-8378-2C27358A1135} = {2C6BD869-D7C8-4B4A-BAB6-5CF026B3844E}
 		{BE4D193E-E146-4CE9-8C1F-721940D8F70A} = {2C6BD869-D7C8-4B4A-BAB6-5CF026B3844E}
+		{3E58884D-4246-44FB-ADD4-0BCD9A1C2162} = {FB25CB90-3FFE-4321-A454-86EF4E361545}
+		{A11FC68C-7672-4705-B486-B5CB651230A8} = {FB25CB90-3FFE-4321-A454-86EF4E361545}
+		{3374CC44-E4A7-4533-B55B-BD1AF44CFF4C} = {FB25CB90-3FFE-4321-A454-86EF4E361545}
+		{3EE480B1-1EE1-43B1-A5EA-D71D54E13047} = {FB25CB90-3FFE-4321-A454-86EF4E361545}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE5A6A54-C5FC-423B-88B0-E891CDC68C46}

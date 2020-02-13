@@ -15,5 +15,7 @@ cd $DIR/tenant-manager/WebService
 azds up -d
 cd $DIR/asa-manager/WebService
 azds up -d
+cd $DIR/diagnostics/WebService
+azds up -d
 cd $DIR/webui
 azds up -d
