@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Mmm.Iot.Common.Services;
 using Mmm.Iot.Common.TestHelpers;
 using Mmm.Iot.IdentityGateway.Services;
@@ -35,6 +36,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         private Mock<UserTenantContainer> mockUserTenantContainer;
         private UserTenantController controller;
         private Mock<HttpContext> mockHttpContext;
+        private Mock<ILogger<UserTenantContainer>> logger;
         private UserTenantListModel someUserTenantList = new UserTenantListModel();
         private UserTenantModel someUserTenant = new UserTenantModel();
         private Mock<HttpRequest> mockHttpRequest;
@@ -230,7 +232,8 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         private void InitializeController()
         {
             this.mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
-            this.mockUserTenantContainer = new Mock<UserTenantContainer>();
+            this.logger = new Mock<ILogger<UserTenantContainer>>();
+            this.mockUserTenantContainer = new Mock<UserTenantContainer>(this.logger.Object);
             this.mockHttpContext = new Mock<HttpContext> { DefaultValue = DefaultValue.Mock };
             this.mockHttpRequest = new Mock<HttpRequest> { DefaultValue = DefaultValue.Mock };
             this.mockSendGridClientFactory = new Mock<ISendGridClientFactory> { DefaultValue = DefaultValue.Mock };

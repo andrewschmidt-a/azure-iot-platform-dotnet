@@ -57,7 +57,8 @@ namespace Mmm.Iot.AsaManager.Services
 
             if (rules.Items.Count() == 0 || rules == null)
             {
-                this.Logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                string errorMessage = $"No entities were receieved from storage adapter to convert to {this.Entity}. OperationId: {operationId}. TenantId: {tenantId}";
+                this.Logger.LogError(new Exception(errorMessage), errorMessage);
                 throw new ResourceNotFoundException("No entities were receieved from storage adapter to convert to rules.");
             }
 

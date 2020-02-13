@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
+using Microsoft.Extensions.Logging;
 using Mmm.Iot.Common.Services.External.TableStorage;
 using Mmm.Iot.Common.TestHelpers;
 using Mmm.Iot.IdentityGateway.Services.Models;
@@ -23,6 +24,7 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
     public class UserTenantContainerTest
     {
         private const int DynamicTableEntityCount = 100;
+        private readonly Mock<ILogger<UserTenantContainer>> logger;
         private UserTenantContainer userTenantContainer;
         private Mock<ITableStorageClient> mockTableStorageClient;
         private Random random = new Random();
@@ -32,8 +34,9 @@ namespace Mmm.Iot.IdentityGateway.Services.Test
 
         public UserTenantContainerTest()
         {
+            this.logger = new Mock<ILogger<UserTenantContainer>>();
             this.mockTableStorageClient = new Mock<ITableStorageClient> { DefaultValue = DefaultValue.Mock };
-            this.userTenantContainer = new UserTenantContainer(this.mockTableStorageClient.Object);
+            this.userTenantContainer = new UserTenantContainer(this.mockTableStorageClient.Object, this.logger.Object);
         }
 
         public static IEnumerable<object[]> GetRoleLists()

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto; // Because why wouldnt you use a bouncy castle??? #NeverTooOld
@@ -17,6 +18,13 @@ namespace Mmm.Iot.IdentityGateway.Services.Helpers
 {
     public class RsaHelpers : IRsaHelpers
     {
+        private readonly ILogger logger;
+
+        public RsaHelpers(ILogger<RsaHelpers> logger)
+        {
+            this.logger = logger;
+        }
+
         public RSA DecodeRsa(string privateRsaKey)
         {
             RSAParameters rsaParams;
@@ -26,14 +34,17 @@ namespace Mmm.Iot.IdentityGateway.Services.Helpers
                 var keyPair = pemReader.ReadObject() as AsymmetricCipherKeyPair;
                 if (keyPair == null)
                 {
-                    throw new Exception("Could not read RSA private key");
+                    string errorMessage = "Could not read RSA private key";
+                    Exception exception = new Exception(errorMessage);
+                    this.logger.LogError(exception, errorMessage);
+                    throw exception;
                 }
 
                 var privateRsaParams = keyPair.Private as RsaPrivateCrtKeyParameters;
                 rsaParams = DotNetUtilities.ToRSAParameters(privateRsaParams);
             }
 
-            System.Security.Cryptography.RSA rsa = System.Security.Cryptography.RSA.Create();
+            RSA rsa = RSA.Create();
             rsa.ImportParameters(rsaParams);
             return rsa;
         }

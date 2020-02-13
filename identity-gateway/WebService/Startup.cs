@@ -5,12 +5,14 @@
 using System;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Mmm.Iot.Common.Services.Auth;
+using Mmm.Iot.Common.Services.Config;
 
 namespace Mmm.Iot.IdentityGateway.WebService
 {
@@ -32,8 +34,9 @@ namespace Mmm.Iot.IdentityGateway.WebService
                 c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Identity Gateway API", Version = "v1" });
             });
 
-            // Setup (not enabling yet) CORS
-            services.AddCors();
+            var applicationInsightsOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
+            applicationInsightsOptions.EnableAdaptiveSampling = false;
+            services.AddApplicationInsightsTelemetry(applicationInsightsOptions);
 
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
@@ -46,7 +49,7 @@ namespace Mmm.Iot.IdentityGateway.WebService
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ICorsSetup corsSetup)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppConfig config)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -59,9 +62,13 @@ namespace Mmm.Iot.IdentityGateway.WebService
                 c.RoutePrefix = string.Empty;
             });
 
-            // Enable CORS - Must be before UseMvc
-            // see: https://docs.microsoft.com/en-us/aspnet/core/security/cors
-            corsSetup.UseMiddleware(app);
+            var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
+            var builder = configuration.DefaultTelemetrySink.TelemetryProcessorChainBuilder;
+
+            // Using fixed rate sampling
+            double fixedSamplingPercentage = config.Global.FixedSamplingPercentage == 0 ? 10 : config.Global.FixedSamplingPercentage;
+            builder.UseSampling(fixedSamplingPercentage);
+            builder.Build();
 
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();

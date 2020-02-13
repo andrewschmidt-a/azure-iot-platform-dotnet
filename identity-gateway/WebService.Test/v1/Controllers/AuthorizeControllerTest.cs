@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Mmm.Iot.Common.Services.Config;
 using Mmm.Iot.Common.Services.Exceptions;
@@ -31,6 +32,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         private const string SomeIssuer = "http://someIssuer";
         private const string SomePublicKey = "-----BEGIN PUBLIC KEY-----\r\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAryQICCl6NZ5gDKrnSztO\r\n3Hy8PEUcuyvg/ikC+VcIo2SFFSf18a3IMYldIugqqqZCs4/4uVW3sbdLs/6PfgdX\r\n7O9D22ZiFWHPYA2k2N744MNiCD1UE+tJyllUhSblK48bn+v1oZHCM0nYQ2NqUkvS\r\nj+hwUU3RiWl7x3D2s9wSdNt7XUtW05a/FXehsPSiJfKvHJJnGOX0BgTvkLnkAOTd\r\nOrUZ/wK69Dzu4IvrN4vs9Nes8vbwPa/ddZEzGR0cQMt0JBkhk9kU/qwqUseP1QRJ\r\n5I1jR4g8aYPL/ke9K35PxZWuDp3U0UPAZ3PjFAh+5T+fc7gzCs9dPzSHloruU+gl\r\nFQIDAQAB\r\n-----END PUBLIC KEY-----";
         private const string SomeUri = "http://azureb2caseuri.com";
+        private Mock<ILogger<UserTenantContainer>> logger;
         private string invite = "someInvite";
         private bool disposedValue = false;
         private Mock<IUserContainer<UserSettingsModel, UserSettingsInput>> mockUserSettingsContainer;
@@ -280,7 +282,8 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         private void InitializeController()
         {
             this.mockAppConfig = new Mock<AppConfig> { DefaultValue = DefaultValue.Mock };
-            this.mockUserTenantContainer = new Mock<UserTenantContainer>();
+            this.logger = new Mock<ILogger<UserTenantContainer>>();
+            this.mockUserTenantContainer = new Mock<UserTenantContainer>(this.logger.Object);
             this.mockUserSettingsContainer = new Mock<IUserContainer<UserSettingsModel, UserSettingsInput>>();
             this.mockJwtHelper = new Mock<IJwtHelpers> { DefaultValue = DefaultValue.Mock };
             this.mockAuthContext = new Mock<IAuthenticationContext> { DefaultValue = DefaultValue.Mock };

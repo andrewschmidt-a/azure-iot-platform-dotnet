@@ -63,7 +63,8 @@ namespace Mmm.Iot.AsaManager.Services
 
             if (deviceGroups.Items.Count() == 0 || deviceGroups == null)
             {
-                this.Logger.LogError("No entities were receieved from storage adapter to convert to {entity}. OperationId: {operationId}. TenantId: {tenantId}", this.Entity, operationId, tenantId);
+                string errorMessage = $"No entities were receieved from storage adapter to convert to {this.Entity}. OperationId: {operationId}. TenantId: {tenantId}";
+                this.Logger.LogError(new Exception(errorMessage), errorMessage);
                 throw new ResourceNotFoundException("No entities were receieved from storage adapter to convert to rules.");
             }
 
@@ -120,7 +121,8 @@ namespace Mmm.Iot.AsaManager.Services
             if (deviceMapping.Count() == 0)
             {
                 string groups = $"[{string.Join(", ", deviceGroupModels.Items.Select(group => group.Id))}]";
-                this.Logger.LogError("No Devices were found for any {entity}. OperationId: {operationId}. TenantId: {tenantId}\n{deviceGroups}", this.Entity, operationId, tenantId, groups);
+                string errorMessage = $"No Devices were found for any {this.Entity}. OperationId: {operationId}. TenantId: {tenantId}\n{groups}";
+                this.Logger.LogError(new Exception(errorMessage), errorMessage);
                 throw new ResourceNotFoundException($"No Devices were found for any {this.Entity}.");
             }
 

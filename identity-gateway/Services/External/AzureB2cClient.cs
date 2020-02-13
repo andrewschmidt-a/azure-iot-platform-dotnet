@@ -5,6 +5,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Mmm.Iot.Common.Services.Config;
 using Mmm.Iot.Common.Services.Helpers;
 using Mmm.Iot.Common.Services.Models;
@@ -16,13 +17,16 @@ namespace Mmm.Iot.IdentityGateway.Services.External
         private readonly string serviceUri;
 
         private readonly IExternalRequestHelper requestHelper;
+        private readonly ILogger logger;
 
         public AzureB2cClient(
             AppConfig config,
-            IExternalRequestHelper requestHelper)
+            IExternalRequestHelper requestHelper,
+            ILogger<AzureB2cClient> logger)
         {
             this.serviceUri = config.Global.AzureB2cBaseUri;
             this.requestHelper = requestHelper;
+            this.logger = logger;
         }
 
         public async Task<StatusResultServiceModel> StatusAsync()
@@ -41,6 +45,7 @@ namespace Mmm.Iot.IdentityGateway.Services.External
             }
             catch (Exception e)
             {
+                this.logger.LogError(e, "Exception in the AzureB2cClient Status Check");
                 return new StatusResultServiceModel(false, e.Message);
             }
         }
