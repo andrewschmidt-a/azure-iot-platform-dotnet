@@ -11,6 +11,9 @@ parameters:
   crslplatformKeyvault: ''
   platformOperationServiceConnection: ''
   storageAccountName: ''
+  eventHubName: ''
+  cosmosDBAccount: ''
+  mapsName: ''
 
 steps:
 
@@ -62,11 +65,11 @@ steps:
       blobStorageAccountName=${{ parameters.storageAccountName }}
       blobStorageKey=$(az storage account keys list -g $rg -n $blobStorageAccountName | grep value | head -n1 | awk -F "\"" '{print $4}')
       blobStorageConnString="DefaultEndpointsProtocol=https;AccountName=$blobStorageAccountName;AccountKey=$blobStorageKey;EndpointSuffix=core.windows.net"
-      cosmosDbAccountName=$(az cosmosdb list --resource-group $rg | grep name | awk -F "\"" '{print $4}')
+      cosmosDbAccountName=${{ parameters.cosmosDBAccount }}
       cosmosDBUri=$(az cosmosdb show -g $rg -n $cosmosDbAccountName | jq -r ".documentEndpoint")
       cosmosDBAuthKey=$(az cosmosdb list-keys --resource-group $rg --name $cosmosDbAccountName | grep primaryMasterKey | awk -F "\"" '{print $4}')
       cosmosDBConnection="AccountEndpoint=$cosmosDBUri;AccountKey=$cosmosDBAuthKey;"
-      eventhubNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhub| cut -d "/" -f1| awk -F "\"" '{print $4}')
+      eventhubNamespace=${{ parameters.eventHubName }}
       ehQueueAuthRule='iothubroutes'
       evAccessKeyName=${{ parameters.defaultSASKeyName }}
       evAccessPolicyKey=$(az eventhubs namespace authorization-rule keys list -n $evAccessKeyName -g $rg --namespace-name $eventhubNamespace --query primaryKey -o tsv)
@@ -76,7 +79,7 @@ steps:
       telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
       twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace| grep name |grep twin-change| awk -F "\"" '{print $4}'| cut -d "/" -f1)
       twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
-      mapsacct=$(az maps account list --resource-group $rg| grep name | grep map | awk -F "\"" '{print $4}')
+      mapsacct=${{ parameters.mapsName }}
       mapskey=$(az maps account keys list --name $mapsacct --resource-group $rg | grep primaryKey | awk -F "\"" '{print $4}'| head -1)
       az keyvault secret set --vault-name $kVaultName --name 'ConfigService--AzureMapsKey' --value $mapskey
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbAuthKey' --value $cosmosDBAuthKey

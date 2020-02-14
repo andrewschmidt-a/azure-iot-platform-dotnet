@@ -121,6 +121,9 @@ jobs:
       crslplatformKeyvault: ${{ parameters.crslplatformKeyvault }}
       platformOperationServiceConnection: ${{ parameters.platformOperationServiceConnection }}
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
+      cosmosDBAccount: ${{ parameters.applicationCode }}-cosmos-${{ parameters.deployEnvironment }}
+      mapsName: ${{ parameters.applicationCode }}-mapsacct-${{ parameters.deployEnvironment }}
 
 ## Create Private/Public Key Pair for Identity Gateway
   - template: infra/identitygateway.yaml
