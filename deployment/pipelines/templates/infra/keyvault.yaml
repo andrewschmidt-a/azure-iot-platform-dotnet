@@ -21,10 +21,10 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |-
       KeyVault=${{ parameters.crslplatformKeyvault }}
-      SendGridSecret=${{ parameters.applicationCode }}-sendgridapikey    
+      SendGridSecret=${{ parameters.applicationCode }}-sendgridapikey
       SendGridApiKey=$(az keyvault secret show --name $SendGridSecret --vault-name $KeyVault | grep value | awk -F '\"' '{print $4}')
-      
-      echo "##vso[task.setvariable variable=SendGridApiKey]$SendGridApiKey"      
+
+      echo "##vso[task.setvariable variable=SendGridApiKey]$SendGridApiKey"
     addSpnToEnvironment: true
 
 - task: AzureCLI@1

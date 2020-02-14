@@ -26,7 +26,10 @@ parameters:
   crslplatformKeyvault: 'crsliot-platform-akv'
   platformOperationServiceConnection: ''
   userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
-  
+
+variables:
+  storageAccountResourceName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+
 jobs:
 - job: aks
   displayName: Deploy AKS
@@ -52,7 +55,7 @@ jobs:
       aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
       omsWorkspaceName: ${{ parameters.applicationCode }}-${{ parameters.omsWorkspaceName }}-${{ parameters.deployEnvironment }}
-     
+
 - job: resources
   displayName: Deploy Resources
   dependsOn: aks
@@ -87,7 +90,7 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       location: ${{ parameters.location }}
-      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
+      storageAccountName: $(storageAccountResourceName)
       blobContainerName: ${{ parameters.blobContainerName }}
 
 ## Deploys EventHubs
@@ -97,7 +100,7 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       subscriptionId: ${{ parameters.subscriptionId }}
       eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
-      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
+      storageAccountName: $(storageAccountResourceName)
       location: ${{ parameters.location }}
 
 ## Deploys Azure Maps
@@ -120,7 +123,7 @@ jobs:
       applicationCode: ${{ parameters.applicationCode }}
       crslplatformKeyvault: ${{ parameters.crslplatformKeyvault }}
       platformOperationServiceConnection: ${{ parameters.platformOperationServiceConnection }}
-      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
+      storageAccountName: $(storageAccountResourceName)
 
 ## Create Private/Public Key Pair for Identity Gateway
   - template: infra/identitygateway.yaml
@@ -138,9 +141,9 @@ jobs:
       functionApp2Name: ${{ parameters.applicationCode }}-appconfigfuncapp-${{ parameters.deployEnvironment }}
       appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
-      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
+      storageAccountName: $(storageAccountResourceName)
       location: ${{ parameters.location }}
-      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }} 
+      appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
 
 ## Deploys App Config
   - template: infra/appconfig.yaml
@@ -150,17 +153,17 @@ jobs:
       aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
-      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      storageAccountName: $(storageAccountResourceName)
       location: ${{ parameters.location }}
       automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
 
 ## Deploys Automation Account, Runbook, webhook
-- job: automationacct 
+- job: automationacct
   displayName: Create Automation Acct
-  dependsOn: 
+  dependsOn:
     - aks
     - resources
-  pool: 
+  pool:
     vmImage: 'windows-latest'
   steps:
   - template: infra/automation.yaml
