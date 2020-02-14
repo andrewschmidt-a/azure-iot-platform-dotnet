@@ -87,7 +87,7 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       location: ${{ parameters.location }}
-      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
       blobContainerName: ${{ parameters.blobContainerName }}
 
 ## Deploys EventHubs
@@ -97,7 +97,7 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       subscriptionId: ${{ parameters.subscriptionId }}
       eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
-      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
 
 ## Deploys Azure Maps
@@ -120,8 +120,9 @@ jobs:
       applicationCode: ${{ parameters.applicationCode }}
       crslplatformKeyvault: ${{ parameters.crslplatformKeyvault }}
       platformOperationServiceConnection: ${{ parameters.platformOperationServiceConnection }}
-      
-## Create Private/Public Key Pair for Identity Gateway 
+      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
+
+## Create Private/Public Key Pair for Identity Gateway
   - template: infra/identitygateway.yaml
     parameters:
       serviceConnection: ${{ parameters.serviceConnection }}
@@ -137,7 +138,7 @@ jobs:
       functionApp2Name: ${{ parameters.applicationCode }}-appconfigfuncapp-${{ parameters.deployEnvironment }}
       appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
-      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
+      storageAccountName: ${{ parameters.applicationCode }}-${{ parameters.storageAccountName }}-${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }} 
 

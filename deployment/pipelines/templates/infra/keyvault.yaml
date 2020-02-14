@@ -10,6 +10,7 @@ parameters:
   applicationCode: ''
   crslplatformKeyvault: ''
   platformOperationServiceConnection: ''
+  storageAccountName: ''
 
 steps:
 
@@ -58,7 +59,7 @@ steps:
     inlineScript: |-
       rg=${{ parameters.resourceGroup }}
       kVaultName=${{ parameters.keyVaultName }}
-      blobStorageAccountName=$(az storage account list -g $rg | grep name | grep storage | awk -F "\"" '{print $4}')
+      blobStorageAccountName=${{ parameters.storageAccountName }}
       blobStorageKey=$(az storage account keys list -g $rg -n $blobStorageAccountName | grep value | head -n1 | awk -F "\"" '{print $4}')
       blobStorageConnString="DefaultEndpointsProtocol=https;AccountName=$blobStorageAccountName;AccountKey=$blobStorageKey;EndpointSuffix=core.windows.net"
       cosmosDbAccountName=$(az cosmosdb list --resource-group $rg | grep name | awk -F "\"" '{print $4}')
