@@ -27,9 +27,6 @@ parameters:
   platformOperationServiceConnection: ''
   userObjId: '562b0a82-a156-4a88-987d-5c8eb71c2b9b'
 
-variables:
-  storageAccountResourceName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
-
 jobs:
 - job: aks
   displayName: Deploy AKS
@@ -90,7 +87,7 @@ jobs:
       serviceConnection: ${{ parameters.serviceConnection }}
       resourceGroup: ${{ parameters.resourceGroup }}
       location: ${{ parameters.location }}
-      storageAccountName: $(storageAccountResourceName)
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       blobContainerName: ${{ parameters.blobContainerName }}
 
 ## Deploys EventHubs
@@ -100,7 +97,7 @@ jobs:
       resourceGroup: ${{ parameters.resourceGroup }}
       subscriptionId: ${{ parameters.subscriptionId }}
       eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
-      storageAccountName: $(storageAccountResourceName)
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
 
 ## Deploys Azure Maps
@@ -123,7 +120,7 @@ jobs:
       applicationCode: ${{ parameters.applicationCode }}
       crslplatformKeyvault: ${{ parameters.crslplatformKeyvault }}
       platformOperationServiceConnection: ${{ parameters.platformOperationServiceConnection }}
-      storageAccountName: $(storageAccountResourceName)
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
 
 ## Create Private/Public Key Pair for Identity Gateway
   - template: infra/identitygateway.yaml
@@ -141,7 +138,7 @@ jobs:
       functionApp2Name: ${{ parameters.applicationCode }}-appconfigfuncapp-${{ parameters.deployEnvironment }}
       appInsightsName: ${{ parameters.applicationCode }}-${{ parameters.appInsightsName }}-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
-      storageAccountName: $(storageAccountResourceName)
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
 
@@ -153,7 +150,7 @@ jobs:
       aksName: ${{ parameters.applicationCode }}-${{ parameters.aksName }}-${{ parameters.deployEnvironment }}
       appConfigName: ${{ parameters.applicationCode }}-${{ parameters.appConfigName }}-${{ parameters.deployEnvironment }}
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
-      storageAccountName: $(storageAccountResourceName)
+      storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
       automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
 
