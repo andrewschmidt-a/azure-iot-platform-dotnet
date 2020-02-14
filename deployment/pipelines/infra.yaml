@@ -59,11 +59,12 @@ stages:
 #       environment: IoT_CRSL_Environment_CT
 #       subscriptionId: c6236fd8-0a23-42f3-b997-76d2721591da
 #       applicationCode: crsliot
-#       deployEnvironment: ct  
+#       deployEnvironment: ct
 
 ## CRSL WKBNCH ----
 - stage: DeployCRSLWkBnch
-  dependsOn: []
+  dependsOn:
+  - DeployCRSLQA
   displayName: Deploy To CRSL WorkBench
   jobs:
   - template: templates/approval.yaml
