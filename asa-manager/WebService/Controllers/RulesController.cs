@@ -22,7 +22,7 @@ namespace Mmm.Iot.AsaManager.WebService.Controllers
         private readonly ILogger logger;
 
         public RulesController(
-            IConverter ruleConverter,
+            RulesConverter ruleConverter,
             IKeyGenerator keyGenerator,
             ILogger<RulesController> logger)
         {

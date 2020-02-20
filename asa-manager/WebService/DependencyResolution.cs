@@ -13,6 +13,8 @@ namespace Mmm.Iot.AsaManager.WebService
     {
         protected override void SetupCustomRules(ContainerBuilder builder)
         {
+            builder.RegisterType<RulesConverter>().As<RulesConverter>();
+            builder.RegisterType<DeviceGroupsConverter>().As<DeviceGroupsConverter>();
             var assembly = typeof(StatusService).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(assembly).AsImplementedInterfaces();
         }

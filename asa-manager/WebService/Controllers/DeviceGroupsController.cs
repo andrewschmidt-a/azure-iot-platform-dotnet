@@ -23,7 +23,7 @@ namespace Mmm.Iot.AsaManager.WebService.Controllers
         private readonly ILogger logger;
 
         public DeviceGroupsController(
-            IConverter devicegroupConverter,
+            DeviceGroupsConverter devicegroupConverter,
             IKeyGenerator keyGenerator,
             ILogger<DeviceGroupsController> logger)
         {
