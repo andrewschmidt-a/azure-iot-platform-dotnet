@@ -9,7 +9,7 @@
         "agentVMSize": { "value": "Standard_DS2_v2" },
         "servicePrincipalClientId": {  "value": "" },
         "servicePrincipalClientSecret": { "value": "" },
-        "kubernetesVersion": { "value": "1.15.7" },
+        "kubernetesVersion": { "value": "1.16.4" },
         "networkPlugin": { "value": "kubenet" },
         "omsWorkspaceName": { "value": "" },
         "enableRBAC": { "value": false },
