@@ -120,7 +120,7 @@ steps:
     useConfigurationFile: true
     configurationType: 'inline'
     inline: |
-      apiVersion: extensions/v1
+      apiVersion: networking.k8s.io/v1beta1
       kind: Ingress
       metadata:
         name: ${{ parameters.aksName }}
