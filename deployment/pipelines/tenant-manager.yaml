@@ -1,10 +1,5 @@
 trigger: none
 pr: none
-resources:
-  pipelines:
-  - pipeline: test
-    source: \serenity\test
-    trigger: true
 stages:
 - template: 'templates/service-deploy-env.yaml'
   parameters:
