@@ -1,11 +1,11 @@
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
   name: tls-secret
 spec:
   secretName: tls-secret
   dnsNames:
-  - DNSGIVENNAME.REGION.cloudapp.azure.com 
+  - DNSGIVENNAME.REGION.cloudapp.azure.com
   acme:
     config:
     - http01:

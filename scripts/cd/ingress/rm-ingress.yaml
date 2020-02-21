@@ -4,7 +4,7 @@ metadata:
   name: rm-ingress
   annotations:
     kubernetes.io/ingress.class: nginx
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/configuration-snippet: |
       proxy_set_header X-Source "external";
@@ -52,4 +52,3 @@ spec:
         backend:
           serviceName: webui
           servicePort: 10080
-
