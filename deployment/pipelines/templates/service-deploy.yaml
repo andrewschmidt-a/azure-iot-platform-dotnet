@@ -10,7 +10,7 @@ parameters:
 steps:
 - task: HelmInstaller@1
   inputs:
-    helmVersionToInstall: 'v2.14.3'
+    helmVersionToInstall: 'v2.16.1'
 - task: HelmDeploy@0
   inputs:
     connectionType: 'Azure Resource Manager'
