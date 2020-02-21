@@ -61,5 +61,4 @@ steps:
     azureResourceGroup: ${{ parameters.resourceGroup }}
     kubernetesCluster: ${{ parameters.aksName }}
     command: 'apply'
-    useConfigurationFile: true
-    configuration: 'https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.1/deploy/manifests/00-crds.yaml'
+    arguments: --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.1/deploy/manifests/00-crds.yaml
