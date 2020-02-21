@@ -195,8 +195,7 @@ spec:
               format: date-time
               type: string
           type: object
-  version: v1alpha1
-status:
+  status:
   acceptedNames:
     kind: ""
     plural: ""
@@ -378,7 +377,6 @@ spec:
       - metadata
       - spec
       - status
-  version: v1alpha1
 status:
   acceptedNames:
     kind: ""
@@ -663,7 +661,6 @@ spec:
                 type: object
               type: array
           type: object
-  version: v1alpha1
 status:
   acceptedNames:
     kind: ""
@@ -946,7 +943,6 @@ spec:
                 type: object
               type: array
           type: object
-  version: v1alpha1
 status:
   acceptedNames:
     kind: ""
@@ -1203,7 +1199,6 @@ spec:
       - metadata
       - spec
       - status
-  version: v1alpha1
 status:
   acceptedNames:
     kind: ""

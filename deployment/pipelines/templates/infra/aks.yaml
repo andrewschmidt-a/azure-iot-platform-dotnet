@@ -36,6 +36,17 @@ steps:
       kind: Namespace
       metadata:
         name: ingress-basic
+
+- task: Kubernetes@1
+  displayName: Install the CustomResourceDefinition
+  inputs:
+    connectionType: 'Azure Resource Manager'
+    azureSubscriptionEndpoint: ${{ parameters.serviceConnection }}
+    azureResourceGroup: ${{ parameters.resourceGroup }}
+    kubernetesCluster: ${{ parameters.aksName }}
+    command: 'apply'
+    arguments: --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.1/deploy/manifests/00-crds.yaml
+
 - task: Kubernetes@1
   displayName: Create cert-manager namespace
   inputs:
@@ -53,12 +64,3 @@ steps:
         name: cert-manager
         labels:
           certmanager.k8s.io/disable-validation: "true"
-- task: Kubernetes@1
-  displayName: Install the CustomResourceDefinition
-  inputs:
-    connectionType: 'Azure Resource Manager'
-    azureSubscriptionEndpoint: ${{ parameters.serviceConnection }}
-    azureResourceGroup: ${{ parameters.resourceGroup }}
-    kubernetesCluster: ${{ parameters.aksName }}
-    command: 'apply'
-    arguments: --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.1/deploy/manifests/00-crds.yaml
