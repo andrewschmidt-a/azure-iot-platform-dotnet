@@ -6,6 +6,12 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: certificates.certmanager.k8s.io
 spec:
+  versions:
+    - name: v1
+      # Each version can be enabled/disabled by Served flag.
+      served: true
+      # One and only one version must be marked as the storage version.
+      storage: true
   additionalPrinterColumns:
   - JSONPath: .status.conditions[?(@.type=="Ready")].status
     name: Ready
@@ -205,6 +211,10 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: challenges.certmanager.k8s.io
 spec:
+  versions:
+    - name: v1
+      served: true
+      storage: true
   additionalPrinterColumns:
   - JSONPath: .status.state
     name: State
@@ -384,6 +394,12 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: clusterissuers.certmanager.k8s.io
 spec:
+  versions:
+    - name: v1
+      # Each version can be enabled/disabled by Served flag.
+      served: true
+      # One and only one version must be marked as the storage version.
+      storage: true
   group: certmanager.k8s.io
   names:
     kind: ClusterIssuer
@@ -663,6 +679,10 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: issuers.certmanager.k8s.io
 spec:
+  versions:
+    - name: v1
+      served: true
+      storage: true
   group: certmanager.k8s.io
   names:
     kind: Issuer
@@ -942,6 +962,10 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: orders.certmanager.k8s.io
 spec:
+  versions:
+    - name: v1
+      served: true
+      storage: true
   additionalPrinterColumns:
   - JSONPath: .status.state
     name: State
