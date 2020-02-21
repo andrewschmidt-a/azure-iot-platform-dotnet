@@ -1,7 +1,7 @@
 # Apply this Daemon Set to set the max number of user watches
 # Running out of watches causes a no space left on device issue
 
-apiVersion: extensions/v1beta1
+apiVersion: extensions/v1
 kind: DaemonSet
 metadata:
   name: more-fs-watchers
