@@ -96,7 +96,7 @@ steps:
     chartType: 'Name'
     releaseName: 'cert-manager'
     chartName: 'jetstack/cert-manager'
-    arguments: '--version v0.8.0 --install --force'
+    arguments: '--version v0.13.1 --install --force'
 
 - task: Kubernetes@1
   displayName: Create Cluster Issuer

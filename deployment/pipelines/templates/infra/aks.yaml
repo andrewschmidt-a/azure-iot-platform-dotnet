@@ -62,4 +62,4 @@ steps:
     kubernetesCluster: ${{ parameters.aksName }}
     command: 'apply'
     useConfigurationFile: true
-    configuration: '$(System.DefaultWorkingDirectory)/deployment/charts/ingress/00-crds.yaml'
+    configuration: 'https://raw.githubusercontent.com/jetstack/cert-manager/v0.13.1/deploy/manifests/00-crds.yaml'
