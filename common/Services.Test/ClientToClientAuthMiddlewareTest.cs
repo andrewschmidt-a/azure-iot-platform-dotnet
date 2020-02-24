@@ -27,28 +27,20 @@ namespace Mmm.Iot.Common.Services.Test
             this.mockLogger = new Mock<ILogger<ClientToClientAuthMiddleware>>();
             this.mockRequestDelegate = new Mock<RequestDelegate>();
 
-            this.mockHttpContext
-                .Setup(t => t.Request.Headers)
-                .Returns(new HeaderDictionary(new Dictionary<string, StringValues>()
-                {
-                    {
-                        "ApplicationTenantID",
-                        "test_tenant"
-                    },
-                }));
+            var x = new RequestDelegate(async context =>
+            {
+                await context.Response.WriteAsync("Hello from 2nd delegate.");
+                Assert.Contains(RequestExtension.ContextKeyTenantId, context.Items.Keys);
+            });
 
-            this.mockHttpContext
-                .Setup(t => t.Request.SetTenant(It.IsAny<string>()));
-
-            this.middleware = new ClientToClientAuthMiddleware(this.mockRequestDelegate.Object, this.mockLogger.Object);
+            this.middleware = new ClientToClientAuthMiddleware(x, this.mockLogger.Object);
         }
 
         [Fact]
         [Trait(Constants.Type, Constants.UnitTest)]
         public async Task SetsTenant()
         {
-            await this.middleware.Invoke(this.mockHttpContext.Object);
-            this.mockHttpContext.Verify(m => m.Request.SetTenant(It.IsAny<string>()), Times.Once);
+            await this.middleware.Invoke(new DefaultHttpContext());
         }
     }
 }
