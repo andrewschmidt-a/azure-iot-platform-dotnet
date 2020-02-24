@@ -15,10 +15,10 @@ namespace Mmm.Iot.Common.Services
     {
         public const string ContextKeyUserClaims = "CurrentUserClaims";
         public const string ContextKeyTenantId = "TenantID";
+        public const string HeaderKeyTenantId = "ApplicationTenantID";
         public const string UserObjectIdClaimType = "sub";
-        private const string ClaimKeyTenantId = "tenant";
-        private const string HeaderKeyTenantId = "ApplicationTenantID";
-        private const string RoleClaimType = "role";
+        public const string ClaimKeyTenantId = "tenant";
+        public const string RoleClaimType = "role";
         private const string ContextKeyAuthRequired = "AuthRequired";
         private const string ContextKeyAllowedActions = "CurrentUserAllowedActions";
         private const string ContextKeyExternalRequest = "ExternalRequest";
