@@ -83,7 +83,7 @@ stages:
             displayName: Restore dependencies
 
           - script: |-
-              dotnet publish --nologo --no-restore --no-dependencies --no-self-contained --configuration $(dotnet.configuration) --runtime $(dotnet.runtimeId.production) /p:TargetLatestRuntimePatch=true
+              dotnet publish --self-contained false --no-restore --no-dependencies --configuration $(dotnet.configuration) --runtime $(dotnet.runtimeId.production) /p:TargetLatestRuntimePatch=true
             displayName: Build assemblies
 
           - task: CopyFiles@2
@@ -120,13 +120,6 @@ stages:
         steps:
           - checkout: none
 
-          - task: UseDotNet@2
-            displayName: Install .NET Core SDK
-            inputs:
-              packageType: sdk
-              version: ${{variables.dotnet.sdk.version}}
-              installationPath: $(Agent.ToolsDirectory)/dotnet
-
           - task: DownloadPipelineArtifact@2
             displayName: Download artifacts
             inputs:
@@ -140,7 +133,6 @@ stages:
               command: test
               workingDirectory: $(Build.SourcesDirectory)
               arguments: >-
-                --nologo
                 --no-build
                 --configuration $(dotnet.configuration)
                 --runtime $(dotnet.runtimeId.production)
@@ -150,8 +142,8 @@ stages:
                 "/p:Exclude=\"[Mmm.*.Test*]*\""
 
           - script: |-
-              dotnet tool install --global dotnet-reportgenerator-globaltool
-              reportgenerator -reports:**/coverage.cobertura.xml -targetdir:. -reporttypes:"Cobertura"
+              dotnet tool install --tool-path ./reportgenerator-tool dotnet-reportgenerator-globaltool
+              ./reportgenerator-tool/reportgenerator -reports:**/coverage.cobertura.xml -targetdir:. -reporttypes:"Cobertura"
             displayName: Generate coverage report
 
           - task: PublishCodeCoverageResults@1
