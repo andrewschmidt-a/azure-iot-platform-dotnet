@@ -18,7 +18,7 @@ namespace Mmm.Iot.Common.Services.Test
     {
         private const string MockServiceUri = @"http://mockserviceuri";
 
-        private readonly MockExternalClientHelper mockExternalClientHelper;
+        private readonly Mock<IExternalRequestHelper> mockExternalRequestHelper;
         private readonly Mock<AppConfig> mockConfig;
         private readonly AsaManagerClient client;
         private readonly Random rand;
@@ -30,8 +30,8 @@ namespace Mmm.Iot.Common.Services.Test
                 .Setup(x => x.ExternalDependencies.AsaManagerServiceUrl)
                 .Returns(MockServiceUri);
 
-            this.mockExternalClientHelper = new MockExternalClientHelper();
-            this.client = new AsaManagerClient(this.mockConfig.Object, this.mockExternalClientHelper.ExternalRequestHelper);
+            this.mockExternalRequestHelper = new Mock<IExternalRequestHelper>();
+            this.client = new AsaManagerClient(this.mockConfig.Object, this.mockExternalRequestHelper.Object);
             this.rand = new Random();
         }
 
@@ -46,7 +46,7 @@ namespace Mmm.Iot.Common.Services.Test
 
             this.MockProcessRequestAsync(model);
 
-            var response = await this.client.BeginDeviceGroupsConversionAsync();
+            var response = await this.client.BeginRulesConversionAsync();
 
             this.VerifyProcessRequestAsync<BeginConversionApiModel>("rules");
 
@@ -75,7 +75,7 @@ namespace Mmm.Iot.Common.Services.Test
 
         private void MockProcessRequestAsync<T>(T responseModel)
         {
-            this.mockExternalClientHelper.MockExternalRequestHelper
+            this.mockExternalRequestHelper
                 .Setup(x => x.ProcessRequestAsync<T>(
                     It.Is<HttpMethod>(m => m == HttpMethod.Post),
                     It.IsAny<string>(),
@@ -85,7 +85,7 @@ namespace Mmm.Iot.Common.Services.Test
 
         private void VerifyProcessRequestAsync<T>(string entity)
         {
-            this.mockExternalClientHelper.MockExternalRequestHelper
+            this.mockExternalRequestHelper
                 .Verify(
                     x => x.ProcessRequestAsync<T>(
                         It.Is<HttpMethod>(m => m == HttpMethod.Post),
