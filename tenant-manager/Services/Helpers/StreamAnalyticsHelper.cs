@@ -25,17 +25,22 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
             this.tokenHelper = tokenHelper;
         }
 
-        private delegate Task<T> JobOperationDelegate<T>(string rg, string saJobName);
-
         public async Task<StatusResultServiceModel> StatusAsync()
         {
-            StreamAnalyticsManagementClient client = await this.GetClientAsync();
-            return new StatusResultServiceModel(true, "Alive and well!");
+            try
+            {
+                IStreamAnalyticsManagementClient client = await this.GetClientAsync();
+                return new StatusResultServiceModel(true, "Alive and well!");
+            }
+            catch (Exception e)
+            {
+                return new StatusResultServiceModel(false, $"Unable to get the status of Stream Analytics: {e.Message}");
+            }
         }
 
         public async Task<StreamingJob> GetJobAsync(string saJobName)
         {
-            StreamAnalyticsManagementClient client = await this.GetClientAsync();
+            IStreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
                 return await client.StreamingJobs.GetAsync(this.config.Global.ResourceGroup, saJobName);
@@ -66,7 +71,7 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
 
         public async Task StartAsync(string saJobName)
         {
-            StreamAnalyticsManagementClient client = await this.GetClientAsync();
+            IStreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
                 await client.StreamingJobs.BeginStartAsync(this.config.Global.ResourceGroup, saJobName);
@@ -79,7 +84,7 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
 
         public async Task StopAsync(string saJobName)
         {
-            StreamAnalyticsManagementClient client = await this.GetClientAsync();
+            IStreamAnalyticsManagementClient client = await this.GetClientAsync();
             try
             {
                 await client.StreamingJobs.BeginStopAsync(this.config.Global.ResourceGroup, saJobName);
@@ -90,7 +95,7 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
             }
         }
 
-        private async Task<StreamAnalyticsManagementClient> GetClientAsync()
+        public async Task<IStreamAnalyticsManagementClient> GetClientAsync()
         {
             try
             {

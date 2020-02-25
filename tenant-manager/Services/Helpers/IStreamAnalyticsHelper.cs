@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Threading.Tasks;
+using Microsoft.Azure.Management.StreamAnalytics;
 using Microsoft.Azure.Management.StreamAnalytics.Models;
 using Mmm.Iot.Common.Services;
 
@@ -17,5 +18,7 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
         Task<StreamingJob> GetJobAsync(string saJobName);
 
         bool JobIsActive(StreamingJob job);
+
+        Task<IStreamAnalyticsManagementClient> GetClientAsync();
     }
 }

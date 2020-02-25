@@ -1,4 +1,4 @@
-// <copyright file="DeviceGroupsConfigClientTests.cs" company="3M">
+// <copyright file="DeviceGroupsConfigClientTest.cs" company="3M">
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
@@ -17,7 +17,7 @@ using Xunit;
 
 namespace Mmm.Iot.TenantManager.Services.Test
 {
-    public class DeviceGroupsConfigClientTests
+    public class DeviceGroupsConfigClientTest
     {
         private readonly Mock<ILogger<DeviceGroupsConfigClient>> logger;
         private readonly Mock<IExternalRequestHelper> mockExternalRequestHelper;
@@ -28,7 +28,7 @@ namespace Mmm.Iot.TenantManager.Services.Test
 
         private Random random = new Random();
 
-        public DeviceGroupsConfigClientTests()
+        public DeviceGroupsConfigClientTest()
         {
             this.logger = new Mock<ILogger<DeviceGroupsConfigClient>>();
             this.mockExternalRequestHelper = new Mock<IExternalRequestHelper> { DefaultValue = DefaultValue.Mock };
