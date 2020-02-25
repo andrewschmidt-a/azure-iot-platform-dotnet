@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
@@ -32,9 +33,9 @@ namespace Mmm.Iot.Common.Services.Test
         public AppConfigurationClientTest()
         {
             this.mockConfig = new Mock<AppConfig>();
-            this.mockConfig
-                .Setup(x => x.AppConfigurationConnectionString)
-                .Returns(MockConnectionString);
+
+            // this.mockConfig.Setup(x => x.ExternalDependencies.StorageAdapterServiceUrl).Returns(MockConnectionString);
+            this.mockConfig.Object.AppConfigurationConnectionString = MockConnectionString;
             this.client = new Mock<ConfigurationClient>();
             this.mockResponse = new Mock<Response>();
             this.configurationSetting = new ConfigurationSetting("test", "test");
@@ -49,7 +50,9 @@ namespace Mmm.Iot.Common.Services.Test
             string value = this.rand.NextString();
             Response<ConfigurationSetting> response = Response.FromValue(ConfigurationModelFactory.ConfigurationSetting("test", "test"), this.mockResponse.Object);
             this.client.Setup(c => c.SetConfigurationSettingAsync(It.IsAny<ConfigurationSetting>(), true, It.IsAny<CancellationToken>()))
-    .Returns((ConfigurationSetting cs, bool onlyIfUnchanged, CancellationToken ct) => Task.FromResult(Response.FromValue(cs, new Mock<Response>().Object)));
+
+            // .Returns((ConfigurationSetting cs, bool onlyIfUnchanged, CancellationToken ct) => Task.FromResult(Response.FromValue(cs, new Mock<Response>().Object)));
+            .Returns(Task<Response>.FromResult(response));
 
             // this.client.Setup(x => x.SetConfigurationSettingAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).Returns(Task.FromResult(this.configurationSetting));
             await this.appConfigClient.SetValueAsync(key, value);
@@ -63,7 +66,7 @@ namespace Mmm.Iot.Common.Services.Test
             string value = this.rand.NextString();
             Response<ConfigurationSetting> response = Response.FromValue(ConfigurationModelFactory.ConfigurationSetting("test", "test"), this.mockResponse.Object);
             this.client.Setup(c => c.GetConfigurationSetting("test", It.IsAny<string>(), It.IsAny<CancellationToken>()))
-    .Returns(response);
+            .Returns(response);
 
             // this.client.Setup(x => x.SetConfigurationSettingAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).Returns(Task.FromResult(this.configurationSetting));
             string result = this.appConfigClient.GetValue(key);
@@ -85,18 +88,18 @@ namespace Mmm.Iot.Common.Services.Test
         }
 
         */
-        /*
+
         [Fact]
         public async Task DeleteKeyAsyncTest()
         {
             string key = this.rand.NextString();
+            Response<string> response = Response.FromValue(key, this.mockResponse.Object);
             this.client
-                .Setup(x => x.DeleteConfigurationSettingAsync(It.IsAny<string>()))
-                .ReturnsAsync("success");
+                .Setup(x => x.DeleteConfigurationSettingAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .Returns(Task<Response>.FromResult(this.mockResponse.Object));
 
-            Assert.Equal(result.IsCompleted, key);
-
+            await this.appConfigClient.DeleteKeyAsync(key);
+            Assert.True(true);
         }
-       */
     }
 }
