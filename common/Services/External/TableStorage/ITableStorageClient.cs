@@ -12,9 +12,6 @@ namespace Mmm.Iot.Common.Services.External.TableStorage
 {
     public interface ITableStorageClient : IStatusOperation
     {
-        Task<CloudTable> GetTableAsync(
-            string tableName);
-
         Task<T> InsertAsync<T>(
             string tableName,
             T entity)

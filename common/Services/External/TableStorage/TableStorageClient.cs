@@ -14,13 +14,11 @@ namespace Mmm.Iot.Common.Services.External.TableStorage
 {
     public class TableStorageClient : ITableStorageClient
     {
-        private readonly CloudStorageAccount storageAccount;
-        private CloudTableClient client;
+        private readonly CloudTableClient client;
 
-        public TableStorageClient(AppConfig config)
+        public TableStorageClient(ICloudTableClientFactory clientFactory)
         {
-            this.storageAccount = CloudStorageAccount.Parse(config.Global.StorageAccountConnectionString);
-            this.client = this.storageAccount.CreateCloudTableClient();
+            this.client = clientFactory.Create();
         }
 
         public async Task<StatusResultServiceModel> StatusAsync()
@@ -35,28 +33,6 @@ namespace Mmm.Iot.Common.Services.External.TableStorage
             catch (Exception e)
             {
                 return new StatusResultServiceModel(false, $"Table Storage status check failed: {e.Message}");
-            }
-        }
-
-        public async Task<CloudTable> GetTableAsync(string tableName)
-        {
-            try
-            {
-                CloudTable table = this.client.GetTableReference(tableName);
-                try
-                {
-                    await table.CreateIfNotExistsAsync();
-                }
-                catch (StorageException e)
-                {
-                    throw new Exception($"An error occurred during table.CreateIfNotExistsAsync for the {tableName} table.", e);
-                }
-
-                return table;
-            }
-            catch (StorageException se)
-            {
-                throw new Exception($"An error occurred while attempting to get the {tableName} table and checking if it needed to be created.", se);
             }
         }
 
@@ -138,6 +114,28 @@ namespace Mmm.Iot.Common.Services.External.TableStorage
             catch (StorageException se)
             {
                 throw new Exception($"Unable to perform the requested table operation {operation.OperationType}", se);
+            }
+        }
+
+        private async Task<CloudTable> GetTableAsync(string tableName)
+        {
+            try
+            {
+                CloudTable table = this.client.GetTableReference(tableName);
+                try
+                {
+                    await table.CreateIfNotExistsAsync();
+                }
+                catch (StorageException e)
+                {
+                    throw new Exception($"An error occurred during table.CreateIfNotExistsAsync for the {tableName} table.", e);
+                }
+
+                return table;
+            }
+            catch (StorageException se)
+            {
+                throw new Exception($"An error occurred while attempting to get the {tableName} table and checking if it needed to be created.", se);
             }
         }
     }
