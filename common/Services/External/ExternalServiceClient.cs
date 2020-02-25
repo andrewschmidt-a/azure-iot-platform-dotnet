@@ -11,6 +11,10 @@ namespace Mmm.Iot.Common.Services.External
 {
     public class ExternalServiceClient : IExternalServiceClient
     {
+        public ExternalServiceClient()
+        {
+        }
+
         public ExternalServiceClient(string serviceUri, IExternalRequestHelper requestHelper)
         {
             this.ServiceUri = serviceUri;

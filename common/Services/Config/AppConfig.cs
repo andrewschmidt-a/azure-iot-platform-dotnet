@@ -25,8 +25,8 @@ namespace Mmm.Iot.Common.Services.Config
 
         public IConfiguration Configuration { get; private set; }
 
-        public string AppConfigurationConnectionString { get; set; }
+        public virtual string AppConfigurationConnectionString { get; set; }
 
-        public string ASPNETCORE_URLS { get; set; }
+        public virtual string ASPNETCORE_URLS { get; set; }
     }
 }
