@@ -47,6 +47,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             this.client = documentClient;
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task DeleteDatabaseAsync(string databaseName)
         {
             try
@@ -60,6 +61,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task CreateDatabaseIfNotExistsAsync(
             string databaseName)
         {
@@ -79,6 +81,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task DeleteCollectionAsync(
             string databaseName,
             string id)
@@ -267,6 +270,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             return result;
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task<List<Document>> QueryAllDocumentsAsync(
             string databaseName,
             string colId)
@@ -329,6 +333,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             return docs;
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task<int> QueryCountAsync(
             string databaseName,
             string colId,
@@ -386,6 +391,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
         }
 
+        [ExcludeFromCodeCoverage]
         private void SetValuesFromConfig(AppConfig config)
         {
             if (string.IsNullOrEmpty(config.Global.CosmosDb.DocumentDbConnectionString))
