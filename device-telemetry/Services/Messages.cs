@@ -37,7 +37,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
         private readonly IAppConfigurationClient appConfigurationClient;
 
         private readonly bool timeSeriesEnabled;
-        private readonly DocumentClient documentClient;
+        private readonly IDocumentClient documentClient;
         private readonly string databaseName;
 
         public Messages(

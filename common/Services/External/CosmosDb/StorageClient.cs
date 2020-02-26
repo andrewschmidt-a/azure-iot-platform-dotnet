@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ using Mmm.Iot.Common.Services.Models;
 
 namespace Mmm.Iot.Common.Services.External.CosmosDb
 {
-    public class StorageClient : IStorageClient, IDisposable
+    public class StorageClient : IStorageClient
     {
         private const string ConnectionStringValueRegex = @"^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$";
         private const string StoragePartitionKey = "/deviceId";
@@ -24,7 +25,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
         private Uri storageUri;
         private string storagePrimaryKey;
         private int storageThroughput;
-        private DocumentClient client;
+        private IDocumentClient client;
 
         public StorageClient(AppConfig config, ILogger<StorageClient> logger)
         {
@@ -33,6 +34,21 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             this.client = this.GetDocumentClient();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StorageClient"/> class.
+        /// Constructor used in testing.
+        /// </summary>
+        /// <param name="config"> app config to be used.</param>
+        /// <param name="logger">logger to be used. </param>
+        /// <param name="documentClient"> document client to be used. </param>
+        public StorageClient(AppConfig config, ILogger<StorageClient> logger, IDocumentClient documentClient)
+        {
+            this.SetValuesFromConfig(config);
+            this.logger = logger;
+            this.client = documentClient;
+        }
+
+        [ExcludeFromCodeCoverage]
         public async Task DeleteDatabaseAsync(string databaseName)
         {
             try
@@ -46,6 +62,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task CreateDatabaseIfNotExistsAsync(
             string databaseName)
         {
@@ -65,6 +82,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task DeleteCollectionAsync(
             string databaseName,
             string id)
@@ -195,7 +213,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
         }
 
-        public DocumentClient GetDocumentClient()
+        public IDocumentClient GetDocumentClient()
         {
             if (this.client == null)
             {
@@ -253,6 +271,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             return result;
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task<List<Document>> QueryAllDocumentsAsync(
             string databaseName,
             string colId)
@@ -315,6 +334,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             return docs;
         }
 
+        [ExcludeFromCodeCoverage]
         public async Task<int> QueryCountAsync(
             string databaseName,
             string colId,
@@ -372,14 +392,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
         }
 
-        public void Dispose()
-        {
-            if (this.client != null)
-            {
-                this.client.Dispose();
-            }
-        }
-
+        [ExcludeFromCodeCoverage]
         private void SetValuesFromConfig(AppConfig config)
         {
             if (string.IsNullOrEmpty(config.Global.CosmosDb.DocumentDbConnectionString))

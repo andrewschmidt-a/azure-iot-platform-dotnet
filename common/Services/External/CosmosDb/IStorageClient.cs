@@ -11,7 +11,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
 {
     public interface IStorageClient : IStatusOperation
     {
-        DocumentClient GetDocumentClient();
+        IDocumentClient GetDocumentClient();
 
         Task DeleteDatabaseAsync(string databaseName);
 
