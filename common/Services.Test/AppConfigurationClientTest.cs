@@ -4,14 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
 using Azure.Data.AppConfiguration;
 using Mmm.Iot.Common.Services.Config;
 using Mmm.Iot.Common.Services.External.AppConfiguration;
-using Mmm.Iot.Common.Services.Http;
 using Mmm.Iot.Common.Services.Models;
 using Mmm.Iot.Common.TestHelpers;
 using Moq;
@@ -35,8 +33,6 @@ namespace Mmm.Iot.Common.Services.Test
         {
             this.mockConfig = new Mock<AppConfig>();
             this.mockConfig.Object.AppConfigurationConnectionString = MockConnectionString;
-
-            // this.mockConfig.Setup(x => x.Global.Location).Returns("eastus");
             this.client = new Mock<ConfigurationClient>(MockConnectionString);
             this.mockResponse = new Mock<Response>();
             this.configurationSetting = new ConfigurationSetting("test", "test");
@@ -90,8 +86,6 @@ namespace Mmm.Iot.Common.Services.Test
         [Fact]
         public async Task GetAppConfigStatusReturnsUnhealthyOnExceptionTest()
         {
-            var healthStatus = new StatusResultServiceModel(false, "Unable to retrieve a key from AppConfig.");
-
             Response<ConfigurationSetting> response = Response.FromValue(ConfigurationModelFactory.ConfigurationSetting(string.Empty, string.Empty), this.mockResponse.Object);
             this.client.Setup(c => c.GetConfigurationSettingAsync(string.Empty, It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
