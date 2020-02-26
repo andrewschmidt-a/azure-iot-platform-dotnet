@@ -154,7 +154,7 @@ namespace Mmm.Iot.Config.Services
             var value = JsonConvert.SerializeObject(input, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             var response = await this.client.CreateAsync(DeviceGroupCollectionId, value);
             var responseModel = this.CreateGroupServiceModel(response);
-            await this.asaManager.BeginConversionAsync(DeviceGroupCollectionId);
+            await this.asaManager.BeginDeviceGroupsConversionAsync();
             return responseModel;
         }
 
@@ -162,14 +162,14 @@ namespace Mmm.Iot.Config.Services
         {
             var value = JsonConvert.SerializeObject(input, Formatting.Indented, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
             var response = await this.client.UpdateAsync(DeviceGroupCollectionId, id, value, etag);
-            await this.asaManager.BeginConversionAsync(DeviceGroupCollectionId);
+            await this.asaManager.BeginDeviceGroupsConversionAsync();
             return this.CreateGroupServiceModel(response);
         }
 
         public async Task DeleteDeviceGroupAsync(string id)
         {
             await this.client.DeleteAsync(DeviceGroupCollectionId, id);
-            await this.asaManager.BeginConversionAsync(DeviceGroupCollectionId);
+            await this.asaManager.BeginDeviceGroupsConversionAsync();
         }
 
         public async Task<IEnumerable<PackageServiceModel>> GetAllPackagesAsync()

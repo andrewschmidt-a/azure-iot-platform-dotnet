@@ -89,6 +89,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services.Test", "diagnostic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebService.Test", "diagnostics\WebService.Test\WebService.Test.csproj", "{220F5203-12FF-47D8-8DEE-04622EEC84C1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService.Test", "asa-manager\WebService.Test\WebService.Test.csproj", "{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -507,6 +509,18 @@ Global
 		{220F5203-12FF-47D8-8DEE-04622EEC84C1}.Release|x64.Build.0 = Release|Any CPU
 		{220F5203-12FF-47D8-8DEE-04622EEC84C1}.Release|x86.ActiveCfg = Release|Any CPU
 		{220F5203-12FF-47D8-8DEE-04622EEC84C1}.Release|x86.Build.0 = Release|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Debug|x64.Build.0 = Debug|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Debug|x86.Build.0 = Debug|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Release|x64.ActiveCfg = Release|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Release|x64.Build.0 = Release|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Release|x86.ActiveCfg = Release|Any CPU
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -546,6 +560,7 @@ Global
 		{A11FC68C-7672-4705-B486-B5CB651230A8} = {FB25CB90-3FFE-4321-A454-86EF4E361545}
 		{056C79C3-7B4A-43D0-9BF8-BB1F7BDE4718} = {FB25CB90-3FFE-4321-A454-86EF4E361545}
 		{220F5203-12FF-47D8-8DEE-04622EEC84C1} = {FB25CB90-3FFE-4321-A454-86EF4E361545}
+		{14013D6D-E0B4-4F6F-AF82-E3190D1CD422} = {2C6BD869-D7C8-4B4A-BAB6-5CF026B3844E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE5A6A54-C5FC-423B-88B0-E891CDC68C46}

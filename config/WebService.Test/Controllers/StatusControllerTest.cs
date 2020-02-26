@@ -5,11 +5,11 @@
 using System.Threading.Tasks;
 using Mmm.Iot.Common.Services;
 using Mmm.Iot.Common.Services.Models;
-using Mmm.Iot.IdentityGateway.WebService.Controllers;
+using Mmm.Iot.Config.WebService.Controllers;
 using Moq;
 using Xunit;
 
-namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
+namespace Mmm.Iot.Config.WebService.Test.Controllers
 {
     public class StatusControllerTest
     {
@@ -29,8 +29,9 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             StatusServiceModel statusServiceModel = new StatusServiceModel(true, "Is Alive");
-            statusServiceModel.Dependencies.Add("Table Storage", new StatusResultServiceModel(true, "Is Alive"));
-            statusServiceModel.Dependencies.Add("AzureB2C", new StatusResultServiceModel(true, "Is Alive"));
+            statusServiceModel.Dependencies.Add("Storage Adapter", new StatusResultServiceModel(true, "Is Alive"));
+            statusServiceModel.Dependencies.Add("Device Telemetry", new StatusResultServiceModel(true, "Is Alive"));
+            statusServiceModel.Dependencies.Add("Asa Manager", new StatusResultServiceModel(true, "Is Alive"));
 
             this.statusServiceMock.Setup(x => x.GetStatusAsync()).Returns(Task.FromResult(statusServiceModel));
 
@@ -39,7 +40,7 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
 
             // Assert
             Assert.True(result.Status.IsHealthy);
-            Assert.Equal("2", result.Dependencies.Count.ToString());
+            Assert.Equal("3", result.Dependencies.Count.ToString());
             foreach (StatusResultApiModel dependency in result.Dependencies.Values)
             {
                 Assert.True(dependency.IsHealthy);

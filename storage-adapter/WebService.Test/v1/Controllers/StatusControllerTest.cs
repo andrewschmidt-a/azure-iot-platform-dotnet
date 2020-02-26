@@ -5,11 +5,11 @@
 using System.Threading.Tasks;
 using Mmm.Iot.Common.Services;
 using Mmm.Iot.Common.Services.Models;
-using Mmm.Iot.IdentityGateway.WebService.Controllers;
+using Mmm.Iot.StorageAdapter.WebService.Controllers;
 using Moq;
 using Xunit;
 
-namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
+namespace Mmm.Iot.StorageAdapter.WebService.Test.Controllers
 {
     public class StatusControllerTest
     {
@@ -29,8 +29,8 @@ namespace Mmm.Iot.IdentityGateway.WebService.Test.Controllers
         {
             // Arrange
             StatusServiceModel statusServiceModel = new StatusServiceModel(true, "Is Alive");
-            statusServiceModel.Dependencies.Add("Table Storage", new StatusResultServiceModel(true, "Is Alive"));
-            statusServiceModel.Dependencies.Add("AzureB2C", new StatusResultServiceModel(true, "Is Alive"));
+            statusServiceModel.Dependencies.Add("CosmosDb", new StatusResultServiceModel(true, "Is Alive"));
+            statusServiceModel.Dependencies.Add("App Config", new StatusResultServiceModel(true, "Is Alive"));
 
             this.statusServiceMock.Setup(x => x.GetStatusAsync()).Returns(Task.FromResult(statusServiceModel));
 
