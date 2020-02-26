@@ -47,7 +47,7 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
             }
             catch (CloudException ce)
             {
-                if (ce.Message.Contains("was not found"))
+                if (ce.Message.ToLower().Contains("was not found"))
                 {
                     // Ensure that this cloud exception is for a resource not found exception
                     throw new ResourceNotFoundException($"The stream analytics job {saJobName} does not exist or could not be found.", ce);
@@ -95,7 +95,7 @@ namespace Mmm.Iot.TenantManager.Services.Helpers
             }
         }
 
-        public async Task<IStreamAnalyticsManagementClient> GetClientAsync()
+        public virtual async Task<IStreamAnalyticsManagementClient> GetClientAsync()
         {
             try
             {

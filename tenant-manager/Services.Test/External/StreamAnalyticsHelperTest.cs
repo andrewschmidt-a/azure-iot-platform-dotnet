@@ -3,13 +3,16 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Management.StreamAnalytics;
 using Microsoft.Azure.Management.StreamAnalytics.Models;
 using Microsoft.Extensions.Logging;
+using Microsoft.Rest.Azure;
 using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
 using Mmm.Iot.Common.Services.Helpers;
 using Mmm.Iot.Common.TestHelpers;
 using Mmm.Iot.TenantManager.Services.Helpers;
@@ -67,52 +70,140 @@ namespace Mmm.Iot.TenantManager.Services.Test
             this.helper = this.mockHelper.Object;
         }
 
+        public static IEnumerable<object[]> StreamingJobsWithJobState()
+        {
+            yield return new object[] { new StreamingJob(jobState: "Running"), true };
+            yield return new object[] { new StreamingJob(jobState: "Starting"), true };
+            yield return new object[] { new StreamingJob(jobState: "Stopping"), false };
+            yield return new object[] { new StreamingJob(jobState: "Stopped"), false };
+            yield return new object[] { new StreamingJob(jobState: string.Empty), false };
+            yield return new object[] { new StreamingJob(), false };
+        }
+
         [Fact]
-        public async Task StartAsyncCallsClientBeginStartAsyncTest()
+        public async Task GetJobAsyncReturnsExpectedJobTest()
+        {
+            var jobName = this.random.NextString();
+            var jobId = this.random.NextString();
+            var job = new StreamingJob(id: jobId, name: jobName);
+            var jobHeaders = new StreamingJobsGetHeaders();
+            var clientResponse = new AzureOperationResponse<StreamingJob, StreamingJobsGetHeaders>
+            {
+                Body = job,
+                Headers = jobHeaders,
+            };
+
+            this.mockStreamingJobs
+                .Setup(x => x.GetWithHttpMessagesAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<Dictionary<string, List<string>>>(),
+                    It.IsAny<CancellationToken>()))
+                .ReturnsAsync(clientResponse);
+
+            var jobResponse = await this.helper.GetJobAsync(jobName);
+
+            this.mockStreamingJobs
+                .Verify(
+                    x => x.GetWithHttpMessagesAsync(
+                        It.Is<string>(s => s == MockResourceGroup),
+                        It.Is<string>(s => s == jobName),
+                        It.IsAny<string>(),
+                        It.IsAny<Dictionary<string, List<string>>>(),
+                        It.IsAny<CancellationToken>()),
+                    Times.Once);
+
+            Assert.Equal(jobName, jobResponse.Name);
+            Assert.Equal(jobId, jobResponse.Id);
+        }
+
+        [Fact]
+        public async Task GetJobAsyncThrowsResourceNotFoundExceptionBasedOnCloudExceptionMessageTest()
         {
             var jobName = this.random.NextString();
 
             this.mockStreamingJobs
-                .Setup(x => x.BeginStartAsync(
+                .Setup(x => x.GetWithHttpMessagesAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
-                    It.IsAny<StartStreamingJobParameters>(),
+                    It.IsAny<string>(),
+                    It.IsAny<Dictionary<string, List<string>>>(),
                     It.IsAny<CancellationToken>()))
-                .Verifiable();
+                .ThrowsAsync(new CloudException("job was not found"));
 
-            await this.helper.StartAsync(jobName);
+            await Assert.ThrowsAsync<ResourceNotFoundException>(async () => await this.helper.GetJobAsync(jobName));
 
             this.mockStreamingJobs
                 .Verify(
-                    x => x.BeginStartAsync(
+                    x => x.GetWithHttpMessagesAsync(
                         It.Is<string>(s => s == MockResourceGroup),
                         It.Is<string>(s => s == jobName),
-                        It.IsAny<StartStreamingJobParameters>(),
+                        It.IsAny<string>(),
+                        It.IsAny<Dictionary<string, List<string>>>(),
                         It.IsAny<CancellationToken>()),
                     Times.Once);
         }
 
         [Fact]
-        public async Task StopAsyncCallsClientBeginStopAsyncTest()
+        public async Task GetJobAsyncThrowsCloudExceptionOnNonSpecificCloudExceptionMessageTest()
         {
             var jobName = this.random.NextString();
 
             this.mockStreamingJobs
-                .Setup(x => x.BeginStopAsync(
+                .Setup(x => x.GetWithHttpMessagesAsync(
                     It.IsAny<string>(),
                     It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<Dictionary<string, List<string>>>(),
                     It.IsAny<CancellationToken>()))
-                .Verifiable();
+                .ThrowsAsync(new CloudException());
 
-            await this.helper.StopAsync(jobName);
+            await Assert.ThrowsAsync<CloudException>(async () => await this.helper.GetJobAsync(jobName));
 
             this.mockStreamingJobs
                 .Verify(
-                    x => x.BeginStopAsync(
+                    x => x.GetWithHttpMessagesAsync(
                         It.Is<string>(s => s == MockResourceGroup),
                         It.Is<string>(s => s == jobName),
+                        It.IsAny<string>(),
+                        It.IsAny<Dictionary<string, List<string>>>(),
                         It.IsAny<CancellationToken>()),
                     Times.Once);
+        }
+
+        [Fact]
+        public async Task GetJobAsyncThrowsExceptionOnNonCloudExceptionTest()
+        {
+            var jobName = this.random.NextString();
+
+            this.mockStreamingJobs
+                .Setup(x => x.GetWithHttpMessagesAsync(
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<string>(),
+                    It.IsAny<Dictionary<string, List<string>>>(),
+                    It.IsAny<CancellationToken>()))
+                .ThrowsAsync(new Exception());
+
+            await Assert.ThrowsAsync<Exception>(async () => await this.helper.GetJobAsync(jobName));
+
+            this.mockStreamingJobs
+                .Verify(
+                    x => x.GetWithHttpMessagesAsync(
+                        It.Is<string>(s => s == MockResourceGroup),
+                        It.Is<string>(s => s == jobName),
+                        It.IsAny<string>(),
+                        It.IsAny<Dictionary<string, List<string>>>(),
+                        It.IsAny<CancellationToken>()),
+                    Times.Once);
+        }
+
+        [Theory]
+        [MemberData(nameof(StreamingJobsWithJobState))]
+        public void JobIsActiveReturnsExpectedValueTest(StreamingJob job, bool expectedValue)
+        {
+            Assert.Equal(expectedValue, this.helper.JobIsActive(job));
         }
     }
 }
