@@ -16,7 +16,7 @@ using Mmm.Iot.Common.Services.Models;
 
 namespace Mmm.Iot.Common.Services.External.CosmosDb
 {
-    public class StorageClient : IStorageClient, IDisposable
+    public class StorageClient : IStorageClient
     {
         private const string ConnectionStringValueRegex = @"^AccountEndpoint=(?<endpoint>.*);AccountKey=(?<key>.*);$";
         private const string StoragePartitionKey = "/deviceId";
@@ -24,13 +24,27 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
         private Uri storageUri;
         private string storagePrimaryKey;
         private int storageThroughput;
-        private DocumentClient client;
+        private IDocumentClient client;
 
         public StorageClient(AppConfig config, ILogger<StorageClient> logger)
         {
             this.SetValuesFromConfig(config);
             this.logger = logger;
             this.client = this.GetDocumentClient();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StorageClient"/> class.
+        /// Constructor used in testing.
+        /// </summary>
+        /// <param name="config"> app config to be used.</param>
+        /// <param name="logger">logger to be used. </param>
+        /// <param name="documentClient"> document client to be used. </param>
+        public StorageClient(AppConfig config, ILogger<StorageClient> logger, IDocumentClient documentClient)
+        {
+            this.SetValuesFromConfig(config);
+            this.logger = logger;
+            this.client = documentClient;
         }
 
         public async Task DeleteDatabaseAsync(string databaseName)
@@ -195,7 +209,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
         }
 
-        public DocumentClient GetDocumentClient()
+        public IDocumentClient GetDocumentClient()
         {
             if (this.client == null)
             {
@@ -369,14 +383,6 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             {
                 this.logger.LogError(e, "Error upserting document into collection with collection ID {collectionId}", colId);
                 throw;
-            }
-        }
-
-        public void Dispose()
-        {
-            if (this.client != null)
-            {
-                this.client.Dispose();
             }
         }
 
