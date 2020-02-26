@@ -139,7 +139,7 @@ stages:
                 --logger trx
                 /p:CollectCoverage=true
                 /p:CoverletOutputFormat=cobertura
-                "/p:Exclude=\"[Mmm.*.Test*]*\""
+                "/p:Exclude=\"[Mmm.*.Test*]*%2C[Mmm.*.WebService]Startup%2C[Mmm.*.WebService]Program%2C[*]Mmm.Iot.Common.Services.Config.*\""
 
           - script: |-
               dotnet tool install --tool-path ./reportgenerator-tool dotnet-reportgenerator-globaltool
