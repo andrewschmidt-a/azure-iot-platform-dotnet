@@ -14,16 +14,9 @@ namespace Mmm.Iot.Common.Services.Http
     public class HttpClient : IHttpClient
     {
         private readonly ILogger logger;
-        private readonly System.Net.Http.HttpClient client;
 
         public HttpClient(ILogger<HttpClient> logger)
         {
-            this.logger = logger;
-        }
-
-        public HttpClient(ILogger<HttpClient> logger, System.Net.Http.HttpClient client)
-        {
-            this.client = client;
             this.logger = logger;
         }
 
