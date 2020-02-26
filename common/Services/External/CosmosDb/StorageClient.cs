@@ -15,7 +15,6 @@ using Mmm.Iot.Common.Services.Config;
 using Mmm.Iot.Common.Services.Exceptions;
 using Mmm.Iot.Common.Services.Models;
 
-
 namespace Mmm.Iot.Common.Services.External.CosmosDb
 {
     public class StorageClient : IStorageClient
