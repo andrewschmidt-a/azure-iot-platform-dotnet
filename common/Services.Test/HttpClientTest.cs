@@ -2,6 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -23,18 +24,29 @@ namespace Mmm.Iot.Common.Services.Test
         private const string MockServiceUri = @"http://mockclient";
         private const string AzdsRouteKey = "azds-route-as";
         private readonly Mock<ILogger<HttpClient>> mockLogger;
-        private readonly Mock<System.Net.Http.HttpClient> client;
-        private readonly HttpClient httpclient;
-        private readonly Mock<FakeHttpMessageHandler> fakeHttpMessageHandler;
 
+        // private readonly Mock<HttpClientHandler> mockClientHandler;
+        // private System.Net.Http.HttpClient client;
+        // private HttpClient httpClient;
+
+        // private readonly Mock<System.Net.Http.IHttpClientFactory> mockFactory;
         public HttpClientTest()
         {
             this.mockLogger = new Mock<ILogger<HttpClient>>();
-            this.client = new Mock<System.Net.Http.HttpClient>();
-            this.httpclient = new HttpClient(this.mockLogger.Object);
-            this.fakeHttpMessageHandler = new Mock<FakeHttpMessageHandler>();
+
+            // this.mockClientHandler = new Mock<HttpClientHandler>();
+            // this.client = new Mock<System.Net.Http.HttpClient>(this.mockClientHandler.Object);
+            /*
+            this.mockFactory = new Mock<System.Net.Http.IHttpClientFactory>();
+            this.mockFactory
+                .Setup(x => x.CreateClient())
+                .Returns(this.client.Object);
+            */
+
+            // this.httpClient = new HttpClient(this.mockLogger.Object);
         }
 
+        /*
         [Fact]
         public async Task GetAsyncTest()
         {
@@ -60,16 +72,11 @@ namespace Mmm.Iot.Common.Services.Test
             mockHandler.Protected()
                        .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
                        .ReturnsAsync(new HttpResponseMessage(HttpStatusCode.OK));
-            /*
-            this.client
-                .Setup(x => x.SendAsync(It.IsAny<HttpRequestMessage>()))
-                .ReturnsAsync(response);
-            */
 
             var result = await this.httpclient.GetAsync(It.IsAny<IHttpRequest>());
             Assert.Equal(result.StatusCode, response.StatusCode);
         }
-
+        */
         /*
 
         [Fact]
@@ -191,6 +198,31 @@ namespace Mmm.Iot.Common.Services.Test
             var result = await this.httpclient.OptionsAsync(It.IsAny<IHttpRequest>());
             Assert.Equal(result.StatusCode, response.StatusCode);
         }
+
     */
+        [Fact]
+        public async Task SendAsyncTest()
+        {
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+               .Protected()
+               .Setup<Task<HttpResponseMessage>>(
+                  "SendAsync",
+                  ItExpr.IsAny<HttpRequestMessage>(),
+                  ItExpr.IsAny<CancellationToken>())
+               .ReturnsAsync(new HttpResponseMessage()
+               {
+                   StatusCode = HttpStatusCode.OK,
+                   Content = new StringContent("[{'id':1,'value':'1'}]"),
+               })
+                .Verifiable();
+
+            var client = new Mock<System.Net.Http.HttpClient>(handlerMock.Object);
+
+            var httpClient = new HttpClient(this.mockLogger.Object, client.Object);
+
+            var result = await httpClient.SendAsync(It.IsAny<IHttpRequest>(), It.IsAny<HttpMethod>());
+            Assert.True(result.IsSuccess);
+        }
     }
 }

@@ -11,6 +11,7 @@ using Azure;
 using Azure.Data.AppConfiguration;
 using Mmm.Iot.Common.Services.Config;
 using Mmm.Iot.Common.Services.External.AppConfiguration;
+using Mmm.Iot.Common.Services.Http;
 using Mmm.Iot.Common.Services.Models;
 using Mmm.Iot.Common.TestHelpers;
 using Moq;
@@ -21,76 +22,86 @@ namespace Mmm.Iot.Common.Services.Test
     public class AppConfigurationClientTest
     {
         private const string MockConnectionString = @"Endpoint=https://abc.azconfig.io;Id=1:/1;Secret=1234";
-        private const string AzdsRouteKey = "azds-route-as";
         private readonly Mock<ConfigurationClient> client;
         private readonly Mock<AppConfig> mockConfig;
         private readonly Mock<Response> mockResponse;
         private readonly ConfigurationSetting configurationSetting;
         private readonly AppConfigurationClient appConfigClient;
+        private readonly Mock<IConfigurationClientFactory> mockFactory;
         private readonly Random rand;
         private Dictionary<string, AppConfigCacheValue> cache = new Dictionary<string, AppConfigCacheValue>();
 
         public AppConfigurationClientTest()
         {
             this.mockConfig = new Mock<AppConfig>();
-
-            // this.mockConfig.Setup(x => x.ExternalDependencies.StorageAdapterServiceUrl).Returns(MockConnectionString);
             this.mockConfig.Object.AppConfigurationConnectionString = MockConnectionString;
-            this.client = new Mock<ConfigurationClient>();
+
+            // this.mockConfig.Setup(x => x.Global.Location).Returns("eastus");
+            this.client = new Mock<ConfigurationClient>(MockConnectionString);
             this.mockResponse = new Mock<Response>();
             this.configurationSetting = new ConfigurationSetting("test", "test");
             this.rand = new Random();
-            this.appConfigClient = new AppConfigurationClient(this.mockConfig.Object);
+            this.mockFactory = new Mock<IConfigurationClientFactory>();
+            this.mockFactory
+                .Setup(x => x.Create())
+                .Returns(this.client.Object);
+            this.appConfigClient = new AppConfigurationClient(this.mockConfig.Object, this.mockFactory.Object);
         }
 
         [Fact]
-        public async Task SetValueAsyncTest()
+        public async Task SetAppConfigByKeyAndValueTest()
         {
             string key = this.rand.NextString();
             string value = this.rand.NextString();
             Response<ConfigurationSetting> response = Response.FromValue(ConfigurationModelFactory.ConfigurationSetting("test", "test"), this.mockResponse.Object);
             this.client.Setup(c => c.SetConfigurationSettingAsync(It.IsAny<ConfigurationSetting>(), true, It.IsAny<CancellationToken>()))
-
-            // .Returns((ConfigurationSetting cs, bool onlyIfUnchanged, CancellationToken ct) => Task.FromResult(Response.FromValue(cs, new Mock<Response>().Object)));
             .Returns(Task<Response>.FromResult(response));
 
-            // this.client.Setup(x => x.SetConfigurationSettingAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).Returns(Task.FromResult(this.configurationSetting));
             await this.appConfigClient.SetValueAsync(key, value);
             Assert.True(true);
         }
 
         [Fact]
-        public void GetValueTest()
+        public void GetAppConfigValueByKeyTest()
         {
             string key = this.rand.NextString();
             string value = this.rand.NextString();
             Response<ConfigurationSetting> response = Response.FromValue(ConfigurationModelFactory.ConfigurationSetting("test", "test"), this.mockResponse.Object);
-            this.client.Setup(c => c.GetConfigurationSetting("test", It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            this.client.Setup(c => c.GetConfigurationSetting(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Returns(response);
 
-            // this.client.Setup(x => x.SetConfigurationSettingAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), CancellationToken.None)).Returns(Task.FromResult(this.configurationSetting));
             string result = this.appConfigClient.GetValue(key);
-            Assert.Equal(result, value);
+            Assert.Equal(result, response.Value.Value);
         }
 
-        /*
-
         [Fact]
-        public async Task<StatusResultServiceModel> StatusAsyncTest()
+        public async Task GetAppConfigStatusReturnsHealthyTest()
         {
-            string key1 = this.rand.NextString();
-            string key2 = this.rand.NextString();
+            this.mockConfig.Setup(x => x.Global.Location).Returns("eastus");
 
-            string statusKey = string.Empty;
-            mockConfig.Verify(x => x.GetType().GetProperties().FirstOrDefault(p => p.PropertyType == typeof(string)).Name);
+            Response<ConfigurationSetting> response = Response.FromValue(ConfigurationModelFactory.ConfigurationSetting("test", "test"), this.mockResponse.Object);
+            this.client.Setup(c => c.GetConfigurationSettingAsync("test", It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
 
-            //Assert.Equal
+            StatusResultServiceModel result = await this.appConfigClient.StatusAsync();
+            Assert.True(result.IsHealthy);
         }
 
-        */
+        [Fact]
+        public async Task GetAppConfigStatusReturnsUnhealthyOnExceptionTest()
+        {
+            var healthStatus = new StatusResultServiceModel(false, "Unable to retrieve a key from AppConfig.");
+
+            Response<ConfigurationSetting> response = Response.FromValue(ConfigurationModelFactory.ConfigurationSetting(string.Empty, string.Empty), this.mockResponse.Object);
+            this.client.Setup(c => c.GetConfigurationSettingAsync(string.Empty, It.IsAny<string>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+            StatusResultServiceModel result = await this.appConfigClient.StatusAsync();
+            Assert.False(result.IsHealthy);
+        }
 
         [Fact]
-        public async Task DeleteKeyAsyncTest()
+        public async Task DeleteAppConfigKeyAsyncTest()
         {
             string key = this.rand.NextString();
             Response<string> response = Response.FromValue(key, this.mockResponse.Object);

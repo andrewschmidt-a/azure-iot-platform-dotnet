@@ -24,6 +24,12 @@ namespace Mmm.Iot.Common.Services.External.AppConfiguration
             this.config = config;
         }
 
+        public AppConfigurationClient(AppConfig config, IConfigurationClientFactory clientFactory)
+        {
+            this.client = clientFactory.Create();
+            this.config = config;
+        }
+
         public async Task<StatusResultServiceModel> StatusAsync()
         {
             // Test a key created from one of the configuration variable names
