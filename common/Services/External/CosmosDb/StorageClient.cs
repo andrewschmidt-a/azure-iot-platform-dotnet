@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Mmm.Iot.Common.Services.Config;
 using Mmm.Iot.Common.Services.Exceptions;
 using Mmm.Iot.Common.Services.Models;
-using System.Diagnostics.CodeAnalysis;
+
 
 namespace Mmm.Iot.Common.Services.External.CosmosDb
 {
