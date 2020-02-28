@@ -78,6 +78,7 @@ steps:
       cosmosDbAuthKey=$(az cosmosdb keys list --resource-group $rg --name $cosmosDbAccountName --query primaryMasterKey --output tsv)
       cosmosDbConnection="AccountEndpoint=$cosmosDbEndpoint;AccountKey=$cosmosDbAuthKey;"
       eventhubNamespace=${{ parameters.eventHubName }}
+      ehQueueAuthRule='iothubroutes'
       lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'lifecycle')]".name --output tsv)
       lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
       telemetryEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'telemetry')]".name --output tsv)
