@@ -213,7 +213,7 @@ $SAJobOutputDefinition = @"
             "accountId": "$($cosmosDbAccountName)",
             "accountKey": "$($cosmosDbAccountKey)",
             "database": "$($cosmosDbDatabaseId)",
-            "collectionNamePattern": "alarms"
+            "collectionNamePattern": "alarms-$($tenantId)"
           }
         }
      }
