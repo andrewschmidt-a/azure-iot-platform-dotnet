@@ -67,7 +67,7 @@ steps:
       blobStorageConnString="DefaultEndpointsProtocol=https;AccountName=$blobStorageAccountName;AccountKey=$blobStorageKey;EndpointSuffix=core.windows.net"
       cosmosDbAccountName=${{ parameters.cosmosDBAccount }}
       cosmosDBUri=$(az cosmosdb show -g $rg -n $cosmosDbAccountName | jq -r ".documentEndpoint")
-      cosmosDbAuthKey=$(az cosmosdb keys list --resource-group $rg --name $cosmosDbAccountName --query primaryMasterKey --output tsv)
+      cosmosDBAuthKey=$(az cosmosdb keys list --resource-group $rg --name $cosmosDbAccountName --query primaryMasterKey --output tsv)
       cosmosDBConnection="AccountEndpoint=$cosmosDBUri;AccountKey=$cosmosDBAuthKey;"
       eventhubNamespace=${{ parameters.eventHubName }}
       ehQueueAuthRule='iothubroutes'
@@ -77,7 +77,7 @@ steps:
       lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
       telemetryEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'telemetry')]".name --output tsv)
       telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
-      twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $evNamespace --query "[?contains(name, 'twin-change')]".name --output tsv)
+      twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'twin-change')]".name --output tsv)
       twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
       mapsacct=${{ parameters.mapsName }}
       mapskey=$(az maps account keys list --name $mapsacct --resource-group $rg --query primaryKey --output tsv)
