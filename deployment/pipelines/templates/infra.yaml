@@ -155,6 +155,7 @@ jobs:
       keyVaultName: ${{ parameters.applicationCode }}-${{parameters.keyVaultName}}-${{ parameters.deployEnvironment }}
       storageAccountName: ${{ parameters.applicationCode }}${{ parameters.storageAccountName }}${{ parameters.deployEnvironment }}
       location: ${{ parameters.location }}
+      eventHubName: ${{ parameters.applicationCode }}-${{ parameters.eventHubName }}-${{ parameters.deployEnvironment }}
       automationName: ${{ parameters.applicationCode }}-${{ parameters.automationName }}-${{ parameters.deployEnvironment }}
 
 ## Deploys Automation Account, Runbook, webhook

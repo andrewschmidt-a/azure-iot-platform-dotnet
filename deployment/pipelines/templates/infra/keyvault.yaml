@@ -63,24 +63,24 @@ steps:
       rg=${{ parameters.resourceGroup }}
       kVaultName=${{ parameters.keyVaultName }}
       blobStorageAccountName=${{ parameters.storageAccountName }}
-      blobStorageKey=$(az storage account keys list -g $rg -n $blobStorageAccountName | grep value | head -n1 | awk -F "\"" '{print $4}')
+      blobStorageKey=$(az storage account keys list -g $rg -n $blobStorageAccountName --query "[?contains(keyName, 'key1')]".value --output tsv)
       blobStorageConnString="DefaultEndpointsProtocol=https;AccountName=$blobStorageAccountName;AccountKey=$blobStorageKey;EndpointSuffix=core.windows.net"
       cosmosDbAccountName=${{ parameters.cosmosDBAccount }}
       cosmosDBUri=$(az cosmosdb show -g $rg -n $cosmosDbAccountName | jq -r ".documentEndpoint")
-      cosmosDBAuthKey=$(az cosmosdb list-keys --resource-group $rg --name $cosmosDbAccountName | grep primaryMasterKey | awk -F "\"" '{print $4}')
+      cosmosDbAuthKey=$(az cosmosdb keys list --resource-group $rg --name $cosmosDbAccountName --query primaryMasterKey --output tsv)
       cosmosDBConnection="AccountEndpoint=$cosmosDBUri;AccountKey=$cosmosDBAuthKey;"
       eventhubNamespace=${{ parameters.eventHubName }}
       ehQueueAuthRule='iothubroutes'
       evAccessKeyName=${{ parameters.defaultSASKeyName }}
       evAccessPolicyKey=$(az eventhubs namespace authorization-rule keys list -n $evAccessKeyName -g $rg --namespace-name $eventhubNamespace --query primaryKey -o tsv)
-      lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace| grep name |grep lifecycle| awk -F "\"" '{print $4}'| cut -d "/" -f1)
-      lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
-      telemetryEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace| grep name |grep telemetry| awk -F "\"" '{print $4}'| cut -d "/" -f1)
-      telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
-      twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace| grep name |grep twin-change| awk -F "\"" '{print $4}'| cut -d "/" -f1)
-      twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
+      lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'lifecycle')]".name --output tsv)
+      lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
+      telemetryEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'telemetry')]".name --output tsv)
+      telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
+      twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $evNamespace --query "[?contains(name, 'twin-change')]".name --output tsv)
+      twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
       mapsacct=${{ parameters.mapsName }}
-      mapskey=$(az maps account keys list --name $mapsacct --resource-group $rg | grep primaryKey | awk -F "\"" '{print $4}'| head -1)
+      mapskey=$(az maps account keys list --name $mapsacct --resource-group $rg --query primaryKey --output tsv)
       az keyvault secret set --vault-name $kVaultName --name 'ConfigService--AzureMapsKey' --value $mapskey
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbAuthKey' --value $cosmosDBAuthKey
       az keyvault secret set --vault-name $kVaultName --name 'Global--CosmosDb--DocumentDbConnectionString' --value $cosmosDBConnection

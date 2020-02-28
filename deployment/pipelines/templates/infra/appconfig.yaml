@@ -8,6 +8,7 @@ parameters:
   keyVaultName: ''
   storageAccountName: ''
   automationName: ''
+  eventHubName: ''
 
 steps:
 - task: AzureResourceGroupDeployment@2
@@ -44,13 +45,10 @@ steps:
       jq --arg delim ':' 'reduce (tostream|select(length==2)) as $i ({};
           .[[$i[0][]|tostring]|join($delim)] = $i[1]
       )' $(System.DefaultWorkingDirectory)/deployment/pipelines/templates/infra/app-config-template.json > $(System.DefaultWorkingDirectory)/deployment/pipelines/templates/infra/app-config-template-translated.json 
-      # Import Keys
       az appconfig kv import --yes --name ${{ parameters.appConfigName }} --format json --source file --path "$(System.DefaultWorkingDirectory)/deployment/pipelines/templates/infra/app-config-template-translated.json"
-      # Set KeyVault Keys
       az appconfig kv set --key Global:ClientAuth:Jwt:AadAppId --value $servicePrincipalId --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:AzureActiveDirectory:AppId --value $servicePrincipalId --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:AzureActiveDirectory:AppSecret --value $servicePrincipalKey --name ${{ parameters.appConfigName }} --yes
-      # Set Environment Info
       az appconfig kv set --key Global:ResourceGroup --value ${{ parameters.resourceGroup }} --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:SubscriptionId --value $(az account show | jq -r .id) --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:StorageAccount:Name --value ${{ parameters.storageAccountName }} --name ${{ parameters.appConfigName }} --yes
@@ -73,30 +71,24 @@ steps:
     scriptLocation: 'inlineScript'
     inlineScript: |-
       rg=${{ parameters.resourceGroup }}
-      appInsightName=$(az resource list -g $rg --resource-type "Microsoft.Insights/components" | grep name | grep appinsight | awk -F "\"" '{print $4}')
-      appInsightKey=$(az resource show -g $rg -n $appInsightName --resource-type "Microsoft.Insights/components" --query properties.InstrumentationKey)
-      appInsightKey="${appInsightKey//\"}"
-      # cosmos db connection string
-      cosmosDbAccountName=$(az cosmosdb list --resource-group $rg | grep name | awk -F "\"" '{print $4}')
+      appInsightName=$(az resource list -g $rg --resource-type "Microsoft.Insights/components" --query [].name --output tsv)
+      appInsightKey=$(az resource show -g $rg -n $appInsightName --resource-type "Microsoft.Insights/components" --query properties.InstrumentationKey --output tsv)
+      cosmosDbAccountName=$(az cosmosdb list --resource-group $rg --query [].name --output tsv)
       cosmosDbEndpoint="https://$cosmosDbAccountName.documents.azure.com:443/"
-      cosmosDbAuthKey=$(az cosmosdb list-keys --resource-group $rg --name $cosmosDbAccountName | grep primaryMasterKey | awk -F "\"" '{print $4}')
+      cosmosDbAuthKey=$(az cosmosdb keys list --resource-group $rg --name $cosmosDbAccountName --query primaryMasterKey --output tsv)
       cosmosDbConnection="AccountEndpoint=$cosmosDbEndpoint;AccountKey=$cosmosDbAuthKey;"
-      # event hub connection string
-      evNamespace=$(az eventhubs namespace list --resource-group $rg| grep name| grep eventhub| cut -d "/" -f1| awk -F "\"" '{print $4}')
-      ehQueueAuthRule='iothubroutes'
-      lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $evNamespace| grep name |grep lifecycle| awk -F "\"" '{print $4}'| cut -d "/" -f1)
-      lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
-      telemetryEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $evNamespace| grep name |grep telemetry| awk -F "\"" '{print $4}'| cut -d "/" -f1)
-      telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
-      twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $evNamespace| grep name |grep twin-change| awk -F "\"" '{print $4}'| cut -d "/" -f1)
-      twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule |grep primaryConnectionString | awk -F "\"" '{print $4}')
-      # aks JWT issuer
-      aksName=$(az aks list -g $rg | grep name | grep aks | cut -d "/" -f1| awk -F "\"" '{print $4}')
+      eventhubNamespace=${{ parameters.eventHubName }}
+      lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'lifecycle')]".name --output tsv)
+      lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
+      telemetryEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'telemetry')]".name --output tsv)
+      telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
+      twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'twin-change')]".name --output tsv)
+      twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
+      aksName=$(az aks list -g $rg --query [].name --output tsv)
       jwtIssuer="https://$aksName.${{ parameters.location }}.cloudapp.azure.com/auth"
-      # app config endpoint
-      appConfig=$(az functionapp list --resource-group $rg | grep name | grep appconfig | awk -F "\"" '{print $4}' | head -1)
+      appConfig=$(az functionapp list --resource-group $rg --query "[?contains(name, 'appconfig')]".name --output tsv)
       appConfigEndpoint="https://$appConfig/api/SetAppConfigKey"
-      deviceTwin=$(az functionapp list --resource-group $rg | grep name | grep devicetwin | awk -F "\"" '{print $4}' | tail -1)
+      deviceTwin=$(az functionapp list --resource-group $rg --query "[?contains(name, 'devicetwin')]".name --output tsv)
       deviceTwinFuncUri="https://$deviceTwin.scm.azurewebsites.net"
       # set the keys
       az appconfig kv set --key Global:ClientAuth:Jwt:AuthIssuer --value $jwtIssuer --name ${{ parameters.appConfigName }} --yes
