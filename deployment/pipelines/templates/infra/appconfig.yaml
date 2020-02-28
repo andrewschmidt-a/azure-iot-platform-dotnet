@@ -81,7 +81,7 @@ steps:
       lifecycleEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'lifecycle')]".name --output tsv)
       lifecycleEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $lifecycleEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
       telemetryEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'telemetry')]".name --output tsv)
-      telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $evNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
+      telemetryEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $telemetryEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
       twinchangeEv=$(az eventhubs eventhub list --resource-group $rg --namespace-name $eventhubNamespace --query "[?contains(name, 'twin-change')]".name --output tsv)
       twinchangeEvConn=$(az eventhubs eventhub authorization-rule keys list --resource-group $rg --namespace-name $eventhubNamespace --eventhub-name $twinchangeEv --name $ehQueueAuthRule --query primaryConnectionString --output tsv)
       aksName=$(az aks list -g $rg --query [].name --output tsv)
@@ -102,6 +102,6 @@ steps:
       az appconfig kv set --key TenantManagerService:TwinChangeFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:TelemetryFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key TenantManagerService:LifecycleFunctionUri --value $deviceTwinFuncUri --name ${{ parameters.appConfigName }} --yes
-      az appconfig kv set --key TenantManagerService:EventHubNamespaceName --value $evNamespace --name ${{ parameters.appConfigName }} --yes
+      az appconfig kv set --key TenantManagerService:EventHubNamespaceName --value $eventhubNamespace --name ${{ parameters.appConfigName }} --yes
       az appconfig kv set --key Global:InstrumentationKey --value $appInsightKey --name ${{ parameters.appConfigName }} --yes
     addSpnToEnvironment: true
