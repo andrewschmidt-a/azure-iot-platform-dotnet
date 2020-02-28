@@ -5,6 +5,7 @@
 using System;
 using System.Threading.Tasks;
 using Mmm.Iot.Common.Services.Exceptions;
+using Mmm.Iot.Common.Services.External.CosmosDb;
 using Mmm.Iot.TenantManager.Services.Helpers;
 using Mmm.Iot.TenantManager.Services.Models;
 
@@ -12,19 +13,24 @@ namespace Mmm.Iot.TenantManager.Services
 {
     public class AlertingContainer : IAlertingContainer
     {
+        private const string SaCosmosDbDatabaseName = "pcs-iothub-stream";
         private const string SaNameFormat = "sa-{0}";
+
         private readonly ITenantContainer tenantContainer;
         private readonly IStreamAnalyticsHelper streamAnalyticsHelper;
         private readonly IRunbookHelper runbookHelper;
+        private readonly IStorageClient cosmosDb;
 
         public AlertingContainer(
             ITenantContainer tenantContainer,
             IStreamAnalyticsHelper streamAnalyticsHelper,
-            IRunbookHelper runbookHelper)
+            IRunbookHelper runbookHelper,
+            IStorageClient cosmosDb)
         {
             this.tenantContainer = tenantContainer;
             this.streamAnalyticsHelper = streamAnalyticsHelper;
             this.runbookHelper = runbookHelper;
+            this.cosmosDb = cosmosDb;
         }
 
         public bool SaJobExists(StreamAnalyticsJobModel saJobModel)
@@ -34,6 +40,9 @@ namespace Mmm.Iot.TenantManager.Services
 
         public async Task<StreamAnalyticsJobModel> AddAlertingAsync(string tenantId)
         {
+            // Attempt to create the necessary database if it does not already exist
+            await this.cosmosDb.CreateDatabaseIfNotExistsAsync(SaCosmosDbDatabaseName);
+
             StreamAnalyticsJobModel saJobModel = await this.GetAlertingAsync(tenantId);
             if (this.SaJobExists(saJobModel))
             {
