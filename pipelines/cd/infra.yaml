@@ -3,7 +3,7 @@ pr: none
 # resources:
 #   pipelines:
 #     - pipeline: test
-#       source: serenity-reorg\ci\test
+#       source: azure-iot-services-dotnet\ci\test
 #       trigger: true
 pool:
   vmImage: ubuntu-latest
