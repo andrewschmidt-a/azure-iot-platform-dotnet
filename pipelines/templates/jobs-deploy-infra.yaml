@@ -7,6 +7,7 @@ parameters:
   applicationShortCode:
   environmentCategory:
   platformOperationServiceConnection:
+  k8sVersion:
 
 jobs:
   - template: get-approval.yaml
@@ -65,6 +66,7 @@ jobs:
           echo "variable: tenantId: $(tenantId)"
           echo "variable: userObjId: $(userObjId)"
           echo "variable: aksName: $(aksName)"
+          echo "variable: k8sVersion: ${{parameters.k8sVersion}}"
           echo "variable: appConfigurationName: $(appConfigurationName)"
           echo "variable: appInsightsName: $(appInsightsName)"
           echo "variable: armParametersDirectory: $(armParametersDirectory)"
@@ -130,7 +132,7 @@ jobs:
           templateLocation: Linked artifact
           csmFile: $(armTemplatesDirectory)/aks.json
           csmParametersFile: $(armParametersDirectory)/aks.json
-          overrideParameters: -resourceName $(aksName) -location ${{parameters.locationName}} -dnsPrefix $(aksName)-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey -omsWorkspaceName $(omsWorkspaceName)
+          overrideParameters: -resourceName $(aksName) -location ${{parameters.locationName}} -dnsPrefix $(aksName)-dns -servicePrincipalClientId $servicePrincipalId -servicePrincipalClientSecret $servicePrincipalKey -omsWorkspaceName $(omsWorkspaceName) -kubernetesVersion  ${{parameters.k8sVersion}}
           deploymentMode: Incremental
           addSpnToEnvironment: true
 
