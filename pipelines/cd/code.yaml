@@ -33,8 +33,7 @@ stages:
 
   - stage: crslQa
     displayName: CRSL QA
-    dependsOn:
-      - crslDev
+    dependsOn: []
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -47,8 +46,7 @@ stages:
 
   - stage: crslWkbnch
     displayName: CRSL workbench
-    dependsOn:
-      - crslQa
+    dependsOn: []
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -61,8 +59,7 @@ stages:
 
   - stage: chimDev
     displayName: CHIM dev
-    dependsOn:
-      - crslWkbnch
+    dependsOn: []
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -75,8 +72,7 @@ stages:
 
   - stage: chimQa
     displayName: CHIM QA
-    dependsOn:
-      - crslWkbnch
+    dependsOn: []
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -89,8 +85,7 @@ stages:
 
   - stage: psdDev
     displayName: PSD dev
-    dependsOn:
-      - crslWkbnch
+    dependsOn: []
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
