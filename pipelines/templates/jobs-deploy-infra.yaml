@@ -552,6 +552,10 @@ jobs:
     displayName: Populate Key Vault
     dependsOn:
       - keyVault
+      - storageAccount
+      - eventHub
+      - maps
+      - cosmosDb
     variables:
       - template: variables-deploy-infra.yaml
         parameters:
