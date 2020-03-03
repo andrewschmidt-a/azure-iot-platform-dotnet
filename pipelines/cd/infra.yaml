@@ -124,8 +124,7 @@ stages:
   
   - stage: emdDev
     displayName: EMD dev
-    dependsOn:
-      - crslWkbnch
+    dependsOn: []
     jobs:
       - template: ../templates/jobs-deploy-infra.yaml
         parameters:
