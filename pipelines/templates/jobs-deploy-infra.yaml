@@ -541,12 +541,12 @@ jobs:
             jwtIssuer="https://$(aksName).${{parameters.locationName}}.cloudapp.azure.com/auth"
             az appconfig kv set --key Global:ClientAuth:Jwt:AuthIssuer --value $jwtIssuer --name $(appConfigurationName) --yes
 
-            appConfig=$(az functionapp list --resource-group $(resourceGroupName) --query "[?contains(name, 'appconfig')]".name --output tsv)
+            appConfig=$(az functionapp list --resource-group $(resourceGroupName) --query "[?contains(name, 'appconfig')]".hostNames --output tsv)
             appConfigEndpoint="https://$appConfig/api/SetAppConfigKey"
             az appconfig kv set --key TenantManagerService:SetAppConfigEndpoint --value $appConfigEndpoint --name $(appConfigurationName) --yes
             az appconfig kv set --key TenantManagerService:SetAppConfigFunction --value $appConfigEndpoint --name $(appConfigurationName) --yes
 
-            deviceTwin=$(az functionapp list --resource-group $(resourceGroupName) --query "[?contains(name, 'devicetwin')]".name --output tsv)
+            deviceTwin=$(az functionapp list --resource-group $(resourceGroupName) --query "[?contains(name, 'devicetwin')]".hostNames --output tsv)
             deviceTwinFuncUri="https://$deviceTwin.scm.azurewebsites.net"
             az appconfig kv set --key TenantManagerService:TwinChangeFunctionUri --value $deviceTwinFuncUri --name $(appConfigurationName) --yes
             az appconfig kv set --key TenantManagerService:TelemetryFunctionUri --value $deviceTwinFuncUri --name $(appConfigurationName) --yes
