@@ -491,6 +491,10 @@ jobs:
     displayName: Populate App Configuration
     dependsOn:
       - appConfiguration
+      - function1
+      - function2
+      - appInsights
+
     variables:
       - template: variables-deploy-infra.yaml
         parameters:
@@ -552,6 +556,10 @@ jobs:
     displayName: Populate Key Vault
     dependsOn:
       - keyVault
+      - storageAccount
+      - eventHub
+      - maps
+      - cosmosDb
     variables:
       - template: variables-deploy-infra.yaml
         parameters:
