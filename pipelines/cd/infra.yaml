@@ -35,6 +35,7 @@ stages:
           applicationShortCode: crsl
           environmentCategory: dev
           platformOperationServiceConnection: $(platformOperationServiceConnection)
+          k8sVersion: 1.16.4
 
   - stage: crslQa
     displayName: CRSL QA
@@ -51,6 +52,7 @@ stages:
           applicationShortCode: crsl
           environmentCategory: qa
           platformOperationServiceConnection: $(platformOperationServiceConnection)
+          k8sVersion: 1.15.7
 
   - stage: crslWkbnch
     displayName: CRSL workbench
@@ -67,6 +69,7 @@ stages:
           applicationShortCode: crsl
           environmentCategory: wkbnch
           platformOperationServiceConnection: $(platformOperationServiceConnection)
+          k8sVersion: 1.15.7
 
   - stage: chimDev
     displayName: CHIM dev
@@ -83,6 +86,7 @@ stages:
           applicationShortCode: chim
           environmentCategory: dev
           platformOperationServiceConnection: $(platformOperationServiceConnection)
+          k8sVersion: 1.15.7
 
   - stage: chimQa
     displayName: CHIM QA
@@ -99,6 +103,7 @@ stages:
           applicationShortCode: chim
           environmentCategory: qa
           platformOperationServiceConnection: $(platformOperationServiceConnection)
+          k8sVersion: 1.15.7
 
   - stage: psdDev
     displayName: PSD dev
@@ -115,3 +120,21 @@ stages:
           environmentCategory: dev
           environmentName: IoT_PSD_Environment_DEV
           platformOperationServiceConnection: $(platformOperationServiceConnection)
+          k8sVersion: 1.15.7
+  
+  - stage: emdDev
+    displayName: EMD dev
+    dependsOn:
+      - crslWkbnch
+    jobs:
+      - template: ../templates/jobs-deploy-infra.yaml
+        parameters:
+          subscriptionName: 3M-UDAH02-SpartanIotHub-Dev
+          locationName: $(locationName)
+          subscriptionId: 191495e8-b878-4140-85eb-aae73a7119cd
+          applicationCode: emdiot
+          applicationShortCode: emd
+          environmentCategory: dev
+          environmentName: IoT_EMD_Environment_DEV
+          platformOperationServiceConnection: $(platformOperationServiceConnection)
+          k8sVersion: 1.15.7

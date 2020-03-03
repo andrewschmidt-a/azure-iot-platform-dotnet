@@ -100,3 +100,17 @@ stages:
           applicationShortCode: psd
           environmentCategory: dev
           imageTag: $(resources.pipeline.test.runID)
+
+  - stage: emdDev
+    displayName: EMD dev
+    dependsOn:
+      - crslWkbnch
+    jobs:
+      - template: ../templates/jobs-deploy-code.yaml
+        parameters:
+          environmentName: IoT_EMD_Environment_DEV
+          subscriptionName: 3M-UDAH02-SpartanIotHub-Dev
+          applicationCode: emdiot
+          applicationShortCode: emd
+          environmentCategory: dev
+          imageTag: $(resources.pipeline.test.runID)
