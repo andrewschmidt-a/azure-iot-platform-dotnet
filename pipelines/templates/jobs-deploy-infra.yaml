@@ -546,7 +546,7 @@ jobs:
             az appconfig kv set --key TenantManagerService:SetAppConfigEndpoint --value $appConfigEndpoint --name $(appConfigurationName) --yes
             az appconfig kv set --key TenantManagerService:SetAppConfigFunction --value $appConfigEndpoint --name $(appConfigurationName) --yes
 
-            deviceTwin=$(az functionapp list --resource-group $(resourceGroupName) --query "[?contains(name, 'devicetwin')]".hostNames --output tsv)
+            deviceTwin=$(az functionapp list --resource-group $(resourceGroupName) --query "[?contains(name, 'devicetwin')]".name --output tsv)
             deviceTwinFuncUri="https://$deviceTwin.scm.azurewebsites.net"
             az appconfig kv set --key TenantManagerService:TwinChangeFunctionUri --value $deviceTwinFuncUri --name $(appConfigurationName) --yes
             az appconfig kv set --key TenantManagerService:TelemetryFunctionUri --value $deviceTwinFuncUri --name $(appConfigurationName) --yes
