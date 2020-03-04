@@ -106,7 +106,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureResourceGroupDeployment@2
         displayName: Provision Azure Log Analytics
@@ -201,7 +201,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureResourceGroupDeployment@2
         displayName: Provision Azure Storage Account
@@ -238,7 +238,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureResourceGroupDeployment@2
         displayName: Provision Azure Event Hub
@@ -275,7 +275,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureCLI@2
         displayName: Get Azure service principal ID
@@ -332,7 +332,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureResourceGroupDeployment@2
         displayName: Provision Azure Maps
@@ -369,7 +369,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureResourceGroupDeployment@2
         displayName: Provision Azure App Configuration
@@ -436,7 +436,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureResourceGroupDeployment@2
         displayName: Provision Azure Application Insights
@@ -472,7 +472,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureResourceGroupDeployment@2
         displayName: Provision Azure Cosmos DB
@@ -664,7 +664,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureResourceGroupDeployment@2
         displayName: Create Device Twin Azure Function
@@ -728,7 +728,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureResourceGroupDeployment@2
         displayName: Create App Config Azure Function
@@ -768,7 +768,7 @@ jobs:
 
       - template: apply-arm-tags.yaml
         parameters:
-          environment: ${{parameters.environment}}
+          environment: ${{parameters.environmentName}}
 
       - task: AzureResourceGroupDeployment@2
         displayName: Provision Azure Automation account
