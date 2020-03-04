@@ -860,6 +860,7 @@ jobs:
                   --set controller.replicaCount=2 \
                   --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
                   --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
+                  --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-dns-label-name"="$(aksName)" \
                 2>&1 && break
               n=$[$n+1]
               sleep 1m
