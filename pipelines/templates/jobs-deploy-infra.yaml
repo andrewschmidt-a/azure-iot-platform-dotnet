@@ -541,7 +541,7 @@ jobs:
             jwtIssuer="https://$(aksName).${{parameters.locationName}}.cloudapp.azure.com/auth"
             az appconfig kv set --key Global:ClientAuth:Jwt:AuthIssuer --value $jwtIssuer --name $(appConfigurationName) --yes
 
-            appConfig=$(az functionapp list --resource-group $(resourceGroupName) --query "[?contains(name, 'appconfig')]".name --output tsv)
+            appConfig=$(az functionapp list --resource-group $(resourceGroupName) --query "[?contains(name, 'appconfig')]".hostNames --output tsv)
             appConfigEndpoint="https://$appConfig/api/SetAppConfigKey"
             az appconfig kv set --key TenantManagerService:SetAppConfigEndpoint --value $appConfigEndpoint --name $(appConfigurationName) --yes
             az appconfig kv set --key TenantManagerService:SetAppConfigFunction --value $appConfigEndpoint --name $(appConfigurationName) --yes
