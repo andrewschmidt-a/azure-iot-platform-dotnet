@@ -45,7 +45,7 @@ namespace Mmm.Iot.TenantManager.WebService
         }
 
         [Obsolete]
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppConfig config)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppConfig config, ICorsSetup corsSetup)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -68,6 +68,9 @@ namespace Mmm.Iot.TenantManager.WebService
             double fixedSamplingPercentage = config.Global.FixedSamplingPercentage == 0 ? 10 : config.Global.FixedSamplingPercentage;
             builder.UseSampling(fixedSamplingPercentage);
             builder.Build();
+
+            // Enable CORS - Must be before UseMvc
+            corsSetup.UseMiddleware(app);
 
             app.UseMvc();
         }
