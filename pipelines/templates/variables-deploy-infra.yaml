@@ -14,12 +14,8 @@ variables:
     value: eastus
   - name: armDirectory
     value: pipelines/cd/arm
-  - name: collectionName
-    value: telemetry
   - name: cosmosDbName
     value: iot
-  - name: cosmosDbThroughput
-    value: 1000
   - name: crslPlatformKeyVault
     value: crsliot-platform-akv
   - name: defaultSasKeyName
