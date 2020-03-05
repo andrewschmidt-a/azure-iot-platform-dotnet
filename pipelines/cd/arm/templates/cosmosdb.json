@@ -70,22 +70,6 @@
         "metadata": {
           "description": "The name for the cosmos database"
         }
-      },
-      "throughput": {
-        "type": "int",
-        "defaultValue": 400,
-        "minValue": 400,
-        "maxValue": 25000,
-        "metadata": {
-          "description": "The throughput for the collection"
-        }
-      },
-      "container1Name": {
-        "type": "string",
-        "defaultValue": "container1",
-        "metadata": {
-          "description": "The name for the first SQL container"
-        }
       }
     },
     "variables": {
@@ -143,37 +127,6 @@
         "properties": {
           "resource": {
             "id": "[parameters('databaseName')]"
-          }
-        }
-      },
-      {
-        "type": "Microsoft.DocumentDb/databaseAccounts/apis/databases/containers",
-        "name": "[concat(variables('accountName'), '/sql/', parameters('databaseName'), '/', parameters('container1Name'))]",
-        "apiVersion": "2016-03-31",
-        "dependsOn": [ "[resourceId('Microsoft.DocumentDB/databaseAccounts/apis/databases', variables('accountName'), 'sql', parameters('databaseName'))]" ],
-        "properties": {
-          "resource": {
-            "id": "[parameters('container1Name')]",
-            "partitionKey": {
-              "paths": [
-                "/partitionkey"
-              ],
-              "kind": "Hash"
-            },
-            "indexingPolicy": {
-              "indexingMode": "consistent",
-              "includedPaths": [
-                {
-                  "path": "/*"
-                }
-              ],
-              "excludedPaths": [
-                {
-                  "path": "/\"_etag\"/?"
-                }
-              ]
-            },
-            "throughput": "[parameters('throughput')]"
           }
         }
       }

@@ -50,9 +50,7 @@ jobs:
           echo "variable: armDirectory: $(armDirectory)"
           echo "variable: automationPartialName: $(automationPartialName)"
           echo "variable: blobContainerPartialName: $(blobContainerPartialName)"
-          echo "variable: collectionName: $(collectionName)"
           echo "variable: cosmosDbName: $(cosmosDbName)"
-          echo "variable: cosmosDbThroughput: $(cosmosDbThroughput)"
           echo "variable: cosmosDbAccountPartialName: $(cosmosDbAccountPartialName)"
           echo "variable: crslPlatformKeyVault: $(crslPlatformKeyVault)"
           echo "variable: defaultSasKeyName: $(defaultSasKeyName)"
@@ -484,7 +482,7 @@ jobs:
           templateLocation: Linked artifact
           csmFile: $(armTemplatesDirectory)/cosmosdb.json
           csmParametersFile: $(armParametersDirectory)/cosmosdb.json
-          overrideParameters: -accountName $(cosmosDbAccountName) -location ${{parameters.locationName}} -primaryRegion ${{parameters.locationName}} -databaseName $(cosmosDbName) -throughput $(cosmosDbThroughput) -container1Name $(collectionName)
+          overrideParameters: -accountName $(cosmosDbAccountName) -location ${{parameters.locationName}} -primaryRegion ${{parameters.locationName}} -databaseName $(cosmosDbName)
           deploymentMode: Incremental
 
   - job: populateAppConfiguration
