@@ -38,6 +38,9 @@ namespace Mmm.Iot.IdentityGateway.WebService
             applicationInsightsOptions.EnableAdaptiveSampling = false;
             services.AddApplicationInsightsTelemetry(applicationInsightsOptions);
 
+            // Setup (not enabling yet) CORS
+            services.AddCors();
+
             // Add controllers as services so they'll be resolved.
             services.AddMvc().AddControllersAsServices();
 
@@ -49,7 +52,7 @@ namespace Mmm.Iot.IdentityGateway.WebService
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppConfig config)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppConfig config, ICorsSetup corsSetup)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -69,6 +72,9 @@ namespace Mmm.Iot.IdentityGateway.WebService
             double fixedSamplingPercentage = config.Global.FixedSamplingPercentage == 0 ? 10 : config.Global.FixedSamplingPercentage;
             builder.UseSampling(fixedSamplingPercentage);
             builder.Build();
+
+            // Enable CORS - Must be before UseMvc
+            corsSetup.UseMiddleware(app);
 
             app.UseMiddleware<AuthMiddleware>();
             app.UseMvc();

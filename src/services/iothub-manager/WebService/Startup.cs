@@ -89,6 +89,9 @@ namespace Mmm.Iot.IoTHubManager.WebService
             builder.UseSampling(fixedSamplingPercentage);
             builder.Build();
 
+            // Enable CORS - Must be before UseMvc
+            corsSetup.UseMiddleware(app);
+
             app.UseMvc();
 
             // If you want to dispose of resources that have been resolved in the

@@ -86,6 +86,9 @@ namespace Mmm.Iot.Config.WebService
             builder.UseSampling(fixedSamplingPercentage);
             builder.Build();
 
+            // Enable CORS - Must be before UseMvc
+            corsSetup.UseMiddleware(app);
+
             // app.UseAuthentication();
             app.UseMvc();
         }
