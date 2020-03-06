@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { Trans } from 'react-i18next';
 import { Subject } from 'rxjs';
 import moment from 'moment';
+import { Balloon, BalloonPosition } from '@microsoft/azure-iot-ux-fluent-controls/lib/components/Balloon/Balloon';
 
 import Config from 'app.config';
 import { TelemetryService } from 'services';
@@ -14,7 +15,7 @@ import {
   int,
   svgs,
   translateColumnDefs,
-  DEFAULT_TIME_FORMAT
+  DEFAULT_TIME_FORMAT,
 } from 'utilities';
 import {
   Btn,
@@ -27,7 +28,7 @@ import {
   PropertyRow as Row,
   PropertyCell as Cell,
   SectionDesc,
-  TimeSeriesInsightsLinkContainer
+  TimeSeriesInsightsLinkContainer,
 } from 'components/shared';
 import Flyout from 'components/shared/flyout';
 import { TelemetryChartContainer as TelemetryChart, chartColorObjects } from 'components/pages/dashboard/panels/telemetry';
@@ -37,6 +38,21 @@ import { getEdgeAgentStatusCode } from 'utilities';
 import './deviceDetails.scss';
 
 const Section = Flyout.Section;
+
+const serializeNestedDeviceProperties = (parentName, value) => {
+  if (typeof value !== 'object' || value == null) {
+    var prop = {};
+    prop[parentName] = value;
+    return prop;
+  }
+  else {
+    var nestedProperties = {};
+    Object.entries(value).forEach(([key, value]) => {
+      nestedProperties = { ...nestedProperties, ...serializeNestedDeviceProperties(`${parentName}.${key}`, value) };
+    });
+    return nestedProperties;
+  }
+}
 
 export class DeviceDetails extends Component {
   constructor(props) {
@@ -373,22 +389,35 @@ export class DeviceDetails extends Component {
                         <GridHeader>
                           <Row>
                             <Cell className="col-3">{t('devices.flyouts.details.properties.keyHeader')}</Cell>
-                            <Cell className="col-7">{t('devices.flyouts.details.properties.valueHeader')}</Cell>
+                            <Cell className="col-15">{t('devices.flyouts.details.properties.valueHeader')}</Cell>
                           </Row>
                         </GridHeader>
                         <GridBody>
                           {
                             properties.map(([propertyName, propertyValue], idx) => {
                               const desiredPropertyValue = device.desiredProperties[propertyName];
-                              const displayValue = !desiredPropertyValue || propertyValue === desiredPropertyValue
-                                ? propertyValue.toString()
-                                : t('devices.flyouts.details.properties.syncing', { reportedPropertyValue: propertyValue.toString(), desiredPropertyValue: desiredPropertyValue.toString() });
-                              return (
-                                <Row key={idx}>
-                                  <Cell className="col-3">{propertyName}</Cell>
-                                  <Cell className="col-7">{displayValue}</Cell>
-                                </Row>
-                              );
+                              const serializedProperties = serializeNestedDeviceProperties(propertyName, propertyValue);
+                              const rows = [];
+                              Object.entries(serializedProperties).forEach(([propertyDisplayName, value]) => {
+                                const displayValue = !desiredPropertyValue || value === desiredPropertyValue
+                                  ? value.toString()
+                                  : t('devices.flyouts.details.properties.syncing', { reportedPropertyValue: value.toString(), desiredPropertyValue: desiredPropertyValue.toString() });
+                                const truncatedDisplayName = propertyDisplayName.length <= 20 ? propertyDisplayName : `...${propertyDisplayName.substring(propertyDisplayName.length - 17)}`;
+                                rows.push(
+                                  <Row key={idx}>
+                                    <Cell className="col-3">
+                                      <Balloon
+                                        position={BalloonPosition.Left}
+                                        tooltip={<Trans>{propertyDisplayName}</Trans>}
+                                      >
+                                        {truncatedDisplayName}
+                                      </Balloon>
+                                    </Cell>
+                                    <Cell className="col-15">{displayValue}</Cell>
+                                  </Row>
+                                );
+                              })
+                              return rows;
                             })
                           }
                         </GridBody>
@@ -413,24 +442,24 @@ export class DeviceDetails extends Component {
                     <GridHeader>
                       <Row>
                         <Cell className="col-3">{t('devices.flyouts.details.diagnostics.keyHeader')}</Cell>
-                        <Cell className="col-7">{t('devices.flyouts.details.diagnostics.valueHeader')}</Cell>
+                        <Cell className="col-15">{t('devices.flyouts.details.diagnostics.valueHeader')}</Cell>
                       </Row>
                     </GridHeader>
                     <GridBody>
                       <Row>
                         <Cell className="col-3">{t('devices.flyouts.details.diagnostics.status')}</Cell>
-                        <Cell className="col-7">{device.connected ? t('devices.flyouts.details.connected') : t('devices.flyouts.details.notConnected')}</Cell>
+                        <Cell className="col-15">{device.connected ? t('devices.flyouts.details.connected') : t('devices.flyouts.details.notConnected')}</Cell>
                       </Row>
                       {
                         device.connected &&
                         <ComponentArray>
                           <Row>
                             <Cell className="col-3">{t('devices.flyouts.details.diagnostics.lastMessage')}</Cell>
-                            <Cell className="col-7">{lastMessageTime ? moment(lastMessageTime).format(DEFAULT_TIME_FORMAT) : '---'}</Cell>
+                            <Cell className="col-15">{lastMessageTime ? moment(lastMessageTime).format(DEFAULT_TIME_FORMAT) : '---'}</Cell>
                           </Row>
                           <Row>
                             <Cell className="col-3">{t('devices.flyouts.details.diagnostics.message')}</Cell>
-                            <Cell className="col-7">
+                            <Cell className="col-15">
                               <Btn className="raw-message-button" onClick={this.toggleRawDiagnosticsMessage}>{t('devices.flyouts.details.diagnostics.showMessage')}</Btn>
                             </Cell>
                           </Row>
