@@ -34,7 +34,7 @@ EXPOSE 10080
 RUN touch /app/logs/error.log
 WORKDIR /app
 COPY ./set_env.sh .
-# CORS logic was moved to the common C# class library
+
 RUN chmod +x ./set_env.sh
 COPY ./run.sh .
 RUN chmod +x ./run.sh
