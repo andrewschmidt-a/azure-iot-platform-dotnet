@@ -9,6 +9,7 @@
         "maxStalenessPrefix": { "value": 10 },
         "maxIntervalInSeconds": { "value": 5 },
         "multipleWriteLocations": { "value": false },
-        "automaticFailover": { "value": false }
+        "automaticFailover": { "value": false },
+        "databaseName": { "value": "" }
     }
 }
