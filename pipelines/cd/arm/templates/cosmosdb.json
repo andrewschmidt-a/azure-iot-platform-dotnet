@@ -64,12 +64,6 @@
         "metadata": {
           "description": "Enable automatic failover for regions. Ignored when Multi-Master is enabled"
         }
-      },
-      "databaseName": {
-        "type": "string",
-        "metadata": {
-          "description": "The name for the cosmos database"
-        }
       }
     },
     "variables": {
@@ -117,17 +111,6 @@
         "tags": {
           "[concat('hidden-related:', resourceId('Microsoft.DocumentDB/databaseAccounts', variables('accountName')))]": "Resource",
           "displayName": "databaseAccounts"
-        }
-      },
-      {
-        "type": "Microsoft.DocumentDB/databaseAccounts/apis/databases",
-        "name": "[concat(variables('accountName'), '/sql/', parameters('databaseName'))]",
-        "apiVersion": "2016-03-31",
-        "dependsOn": [ "[resourceId('Microsoft.DocumentDB/databaseAccounts/', variables('accountName'))]" ],
-        "properties": {
-          "resource": {
-            "id": "[parameters('databaseName')]"
-          }
         }
       }
     ]
