@@ -166,6 +166,7 @@ stages:
           - task: MSBuild@1
             inputs:
               solution: '**/*.sln'
+              maximumCpuCount: true
 
           - task: CopyFiles@2
             displayName: Prepare file artifacts
@@ -185,12 +186,12 @@ stages:
             artifact: MSCAArtifact
             displayName: Publish file artifacts
 
-          - task: DownloadPipelineArtifact@2
-            displayName: Download artifacts
-            inputs:
-              source: current
-              artifact: MSCAArtifact
-              path: $(Build.SourcesDirectory)
+          # - task: DownloadPipelineArtifact@2
+          #   displayName: Download artifacts
+          #   inputs:
+          #     source: current
+          #     artifact: MSCAArtifact
+          #     path: $(Build.SourcesDirectory)
 
           - task: AntiMalware@3
             inputs:
@@ -209,7 +210,7 @@ stages:
             inputs:
               InputType: 'Basic'
               Function: 'analyze'
-              AnalyzeTarget: '$(Build.SourcesDirectory)\*.exe'
+              AnalyzeTarget: '$(Build.SourcesDirectory)\*.dll'
             continueOnError: true 
 
           - task: CredScan@2
