@@ -26,7 +26,7 @@ modify_webui_config() {
   echo "Set AuthEnabled"
 
   value=$(_get_configuration "Global:ClientAuth:Jwt:AuthIssuer")
-  sed -i 's@issuer.*@issuer: (window.location.protocol == "https:")?window.location.origin:'$value',@g' /app/webui-config.js
+  sed -i 's@issuer.*@issuer: (window.location.protocol == "https:")?window.location.origin+"/auth":'$value',@g' /app/webui-config.js
   echo "Set Issuer"
 
   value=$(_get_configuration "Global:DevelopmentMode" | sed 's/"//g' )
