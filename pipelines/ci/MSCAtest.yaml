@@ -167,6 +167,7 @@ stages:
             inputs:
               solution: '**/*.sln'
               maximumCpuCount: true
+              Configuration: 'debug'
 
           - task: CopyFiles@2
             displayName: Prepare file artifacts
