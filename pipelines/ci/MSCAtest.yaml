@@ -211,7 +211,7 @@ stages:
             inputs:
               InputType: 'Basic'
               Function: 'analyze'
-              AnalyzeTarget: '*.pdb'
+              AnalyzeTarget: '$(Build.SourcesDirectory)\*.dll'
               AnalyzeVerbose: true
               AnalyzeStatistics: true
             continueOnError: true 
