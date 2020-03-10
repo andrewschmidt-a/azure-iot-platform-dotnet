@@ -236,7 +236,7 @@ stages:
               BinSkimBreakOn: 'Error'
               CredScan: true
               MSRD: false
-              RoslynAnalyzers: false
+              RoslynAnalyzers: true
               RoslynAnalyzersBreakOn: 'Error'
               TSLint: false
               ToolLogsNotFoundAction: 'Standard'
