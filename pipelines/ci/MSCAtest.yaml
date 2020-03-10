@@ -209,7 +209,7 @@ stages:
             inputs:
               InputType: 'Basic'
               Function: 'analyze'
-              AnalyzeTarget: '$(Build.SourcesDirectory)\*.dll;$(Build.SourcesDirectory)\*.exe'
+              AnalyzeTarget: '$(Build.SourcesDirectory)\*.dll'
             continueOnError: true 
 
           - task: CredScan@2
@@ -222,13 +222,6 @@ stages:
               userProvideBuildInfo: 'auto'
             continueOnError: true 
 
-          - task: PublishSecurityAnalysisLogs@2
-            inputs:
-              ArtifactName: 'CodeAnalysisLogs'
-              ArtifactType: 'Container'
-              AllTools: true
-              ToolLogsNotFoundAction: 'Standard'
-
           - task: SdtReport@1
             inputs:
               AllTools: false
@@ -239,6 +232,13 @@ stages:
               RoslynAnalyzers: false
               RoslynAnalyzersBreakOn: 'Error'
               TSLint: false
+              ToolLogsNotFoundAction: 'Standard'            
+
+          - task: PublishSecurityAnalysisLogs@2
+            inputs:
+              ArtifactName: 'CodeAnalysisLogs'
+              ArtifactType: 'Container'
+              AllTools: true
               ToolLogsNotFoundAction: 'Standard'
 
   # - stage: unitTest
