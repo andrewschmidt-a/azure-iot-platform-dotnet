@@ -212,6 +212,8 @@ stages:
               InputType: 'Basic'
               Function: 'analyze'
               AnalyzeTarget: '*.pdb'
+              AnalyzeVerbose: true
+              AnalyzeStatistics: true
             continueOnError: true 
 
           - task: CredScan@2
