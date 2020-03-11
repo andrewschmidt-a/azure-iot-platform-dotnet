@@ -279,7 +279,7 @@ export class DeviceNew extends LinkedComponent {
         formData: {
           ...this.state.formData,
           isEdgeDevice: false,
-          isSimulated: true
+          isSimulated: false
         }
       });
     }
