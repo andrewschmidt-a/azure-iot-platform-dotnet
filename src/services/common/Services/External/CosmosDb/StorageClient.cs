@@ -108,7 +108,6 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             collectionInfo.IndexingPolicy = new IndexingPolicy(
                 new Index[] { index });
             collectionInfo.Id = id;
-            collectionInfo.PartitionKey.Paths.Add(StoragePartitionKey);
 
             // Azure Cosmos DB collections can be reserved with
             // throughput specified in request units/second.
@@ -155,12 +154,9 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 colId,
                 docId);
 
-            await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
             try
             {
-                return await this.client.ReadDocumentAsync(
-                    docUrl,
-                    new RequestOptions());
+                return await this.client.ReadDocumentAsync(docUrl);
             }
             catch (Exception e)
             {
@@ -281,10 +277,9 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 databaseName,
                 colId);
 
-            await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
             try
             {
-                return this.client.CreateDocumentQuery(collectionLink).ToList<Document>();
+                return await Task.FromResult(this.client.CreateDocumentQuery(collectionLink).ToList<Document>());
             }
             catch (Exception e)
             {
@@ -308,21 +303,19 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 queryOptions.EnableScanInQuery = true;
             }
 
-            await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
-
             List<Document> docs = new List<Document>();
             string collectionLink = string.Format(
                 "/dbs/{0}/colls/{1}",
                 databaseName,
                 colId);
 
-            var queryResults = this.client.CreateDocumentQuery<Document>(
+            var queryResults = await Task.FromResult(this.client.CreateDocumentQuery<Document>(
                     collectionLink,
                     querySpec,
                     queryOptions)
                 .AsEnumerable()
                 .Skip(skip)
-                .Take(limit);
+                .Take(limit));
 
             foreach (Document doc in queryResults)
             {

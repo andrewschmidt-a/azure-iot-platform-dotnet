@@ -153,12 +153,12 @@ export class DeviceNew extends LinkedComponent {
       error: undefined,
       successCount: 0,
       changesApplied: false,
-      formData: {
+      formData: {  // start the form as a physical (simulated == false) edge device
         count: 1,
         deviceId: '',
-        isEdgeDevice: deviceOptions.device.value,
+        isEdgeDevice: deviceOptions.edgeDevice.value,
         isGenerateId: deviceIdTypeOptions.manual.value,
-        isSimulated: false,
+        isSimulated: deviceTypeOptions.physical.value,
         deviceModel: undefined,
         authenticationType: authTypeOptions.symmetric.value,
         isGenerateKeys: authKeyTypeOptions.generate.value,
@@ -391,7 +391,7 @@ export class DeviceNew extends LinkedComponent {
 
     const isGenerateId = this.isGenerateIdLink.value === deviceIdTypeOptions.generate.value;
     const deviceName = this.deviceModelLink.value || t('devices.flyouts.new.deviceIdExample.deviceName');
-    const isEdgeDevice = this.deviceLink.value === deviceOptions.device.value;
+    const isEdgeDevice = this.deviceLink.value === deviceOptions.edgeDevice.value;
     const isSimulatedDevice = this.deviceTypeLink.value === deviceTypeOptions.simulated.value;
     const isX509 = this.authenticationTypeLink.value === authTypeOptions.x509.value;
     const isGenerateKeys = this.isGenerateKeysLink.value === authKeyTypeOptions.generate.value;
@@ -407,18 +407,18 @@ export class DeviceNew extends LinkedComponent {
               <FormGroup>
                 <FormLabel>{t(deviceOptions.labelName)}</FormLabel>
                 <Radio
-                  id="device-type-device"
-                  link={this.deviceLink}
-                  value={deviceOptions.device.value}
-                  onChange={this.deviceChange}>
-                  {t(deviceOptions.device.labelName)}
-                </Radio>
-                <Radio
                   id="device-type-edge-device"
                   link={this.deviceLink}
                   value={deviceOptions.edgeDevice.value}
                   onChange={this.deviceChange}>
                   {t(deviceOptions.edgeDevice.labelName)}
+                </Radio>
+                <Radio
+                  id="device-type-device"
+                  link={this.deviceLink}
+                  value={deviceOptions.device.value}
+                  onChange={this.deviceChange}>
+                  {t(deviceOptions.device.labelName)}
                 </Radio>
               </FormGroup>
               {
