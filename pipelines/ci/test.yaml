@@ -102,10 +102,6 @@ stages:
           - checkout: self
             displayName: Checkout repository
 
-          - pwsh: |-
-              '{"sdk":{"version": "$(dotnetCoreSdkVersion)"}}' | Set-Content global.json
-            displayName: Render global.json
-
           - script: |-
               dotnet restore --force --no-cache --no-dependencies --packages .nuget --runtime $(dotnetProductionRuntimeId) /p:TargetLatestRuntimePatch=true
             displayName: Restore dependencies
@@ -244,7 +240,7 @@ stages:
 
           - pwsh: |-
               $assemblyName = (Get-Content src/services/$(serviceName)/WebService/WebService.csproj | Select-String '(?<=<AssemblyName>).*(?=</AssemblyName>)').Matches[0].Value
-              $dockerfileContents = "FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-alpine AS base`nWORKDIR /app`nEXPOSE 80`nCOPY . .`nENTRYPOINT [`"dotnet`", `"$assemblyName.dll`"]"
+              $dockerfileContents = "FROM mcr.microsoft.com/dotnet/core/aspnet:$(dotnetCoreRuntimeVersion)-alpine AS base`nWORKDIR /app`nEXPOSE 80`nCOPY . .`nENTRYPOINT [`"dotnet`", `"$assemblyName.dll`"]"
               Set-Content -Value $dockerfileContents -Path $(dockerfile) -NoNewline -Encoding utf8
             displayName: Generate Dockerfile
             workingDirectory: $(Pipeline.Workspace)/$(publishedFilesArtifactName)
@@ -256,7 +252,7 @@ stages:
               repository: $(dockerHubRepositoryName)/$(serviceName)
               command: buildAndPush
               dockerfile: $(Pipeline.Workspace)/$(publishedFilesArtifactName)/$(dockerfile)
-              buildContext: $(Pipeline.Workspace)/$(publishedFilesArtifactName)/src/services/$(serviceName)/WebService/bin/$(dotnetBuildConfiguration)/$(dotnetTargetFrameworkMoniker)/$(dotnetProductionRuntimeId)/publish
+              buildContext: $(Pipeline.Workspace)/$(publishedFilesArtifactName)/src/services/$(serviceName)/WebService/bin/$(dotnetBuildConfiguration)/netcoreapp$(dotnetCoreRuntimeVersion)/$(dotnetProductionRuntimeId)/publish
               tags: |-
                 $(Build.BuildId)
 

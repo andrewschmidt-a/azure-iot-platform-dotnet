@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Mmm.Iot.Common.Services.Auth;
 using Mmm.Iot.Common.Services.Config;
@@ -33,64 +34,49 @@ namespace Mmm.Iot.Config.WebService
             {
                 c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Config API", Version = "v1" });
             });
-
-            // Setup (not enabling yet) CORS
             services.AddCors();
-
             var applicationInsightsOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
             applicationInsightsOptions.EnableAdaptiveSampling = false;
             services.AddApplicationInsightsTelemetry(applicationInsightsOptions);
-
-            // Add controllers as services so they'll be resolved.
-            services.AddMvc().AddControllersAsServices();
-
-            // Prepare DI container
+            services.AddMvc().AddControllersAsServices().AddNewtonsoftJson();
             services.AddHttpContextAccessor();
             this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
-
-            // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             ICorsSetup corsSetup,
-            IApplicationLifetime appLifetime,
+            IHostApplicationLifetime appLifetime,
             AppConfig config)
         {
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseRouting();
             app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
                 c.RoutePrefix = string.Empty;
             });
-
-            // Check for Authorization header before dispatching requests
+            SetupTelemetry(app, config);
             app.UseMiddleware<AuthMiddleware>();
-
-            // Enable CORS - Must be before UseMvc
-            // see: https://docs.microsoft.com/en-us/aspnet/core/security/cors
             corsSetup.UseMiddleware(app);
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+            appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+        }
 
+        private static void SetupTelemetry(IApplicationBuilder app, AppConfig config)
+        {
             var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
-
             var builder = configuration.DefaultTelemetrySink.TelemetryProcessorChainBuilder;
 
             // Using fixed rate sampling
             double fixedSamplingPercentage = config.Global.FixedSamplingPercentage == 0 ? 10 : config.Global.FixedSamplingPercentage;
             builder.UseSampling(fixedSamplingPercentage);
             builder.Build();
-
-            // Enable CORS - Must be before UseMvc
-            corsSetup.UseMiddleware(app);
-
-            // app.UseAuthentication();
-            app.UseMvc();
         }
     }
 }

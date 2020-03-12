@@ -6,7 +6,7 @@ using System;
 using System.Buffers;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading.Tasks;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -88,7 +88,7 @@ namespace Mmm.Iot.Common.Services.Filters
 
             var result = new ObjectResult(error);
             result.StatusCode = (int)code;
-            result.Formatters.Add(new JsonOutputFormatter(new JsonSerializerSettings(), ArrayPool<char>.Shared));
+            result.Formatters.Add(new SystemTextJsonOutputFormatter(new JsonSerializerOptions()));
 
             this.logger.LogError(e, "Status code was {statusCode}", result.StatusCode);
 

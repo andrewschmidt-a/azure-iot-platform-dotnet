@@ -16,6 +16,7 @@ using Mmm.Iot.Common.Services.External.CosmosDb;
 using Mmm.Iot.Common.Services.Wrappers;
 using Mmm.Iot.StorageAdapter.Services.Helpers;
 using Mmm.Iot.StorageAdapter.Services.Models;
+using Index = Microsoft.Azure.Documents.Index;
 
 namespace Mmm.Iot.StorageAdapter.Services
 {

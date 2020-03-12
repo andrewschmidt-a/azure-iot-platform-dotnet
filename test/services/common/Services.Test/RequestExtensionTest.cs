@@ -8,7 +8,6 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Azure.Core;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using Mmm.Iot.Common.Services.Auth;
@@ -25,7 +24,7 @@ namespace Mmm.Iot.Common.Services.Test
 
         public RequestExtensionTest()
         {
-            this.httpRequest = new DefaultHttpRequest(new DefaultHttpContext());
+            this.httpRequest = new DefaultHttpContext().Request;
             this.mockLogger = new Mock<ILogger>();
         }
 

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Mmm.Iot.Common.Services.Auth;
 
@@ -31,37 +32,29 @@ namespace Mmm.Iot.StorageAdapter.WebService
             {
                 c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Storage Adapter API", Version = "v1" });
             });
-
-            // Add controllers as services so they'll be resolved.
-            services.AddMvc().AddControllersAsServices();
+            services.AddMvc().AddControllersAsServices().AddNewtonsoftJson();
             services.AddHttpContextAccessor();
             this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
-
-            // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
-            IApplicationLifetime appLifetime)
+            IWebHostEnvironment env,
+            IHostApplicationLifetime appLifetime)
         {
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseRouting();
             app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
                 c.RoutePrefix = string.Empty;
             });
-
             app.UseMiddleware<ClientToClientAuthMiddleware>();
-            app.UseMvc();
-
-            // If you want to dispose of resources that have been resolved in the
-            // application container, register for the "ApplicationStopped" event.
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
             appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
         }
     }
