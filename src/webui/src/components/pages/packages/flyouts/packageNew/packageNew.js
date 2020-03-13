@@ -95,55 +95,60 @@ export class PackageNew extends LinkedComponent {
   }
   apply = (event) => {
     event.preventDefault();
-    const { createPackage} = this.props;
+    const { createPackage } = this.props;
     const { packageType, configType, customConfigName, packageFile, fileError, packageJson, uploadedFirmwareSuccessfully } = this.state;
 
-    if (configType == "Firmware" && !uploadedFirmwareSuccessfully){
-      ConfigService.uploadFirmware(packageFile).subscribe((blobData,error)=> {
-        if(error){
+    // reset error status before starting file upload
+    this.setState({
+      fileError: undefined
+    });
+
+    if (configType == "Firmware" && !uploadedFirmwareSuccessfully) {
+      ConfigService.uploadFirmware(packageFile).subscribe(
+        blobData => {
+          // Replace all invalid configuration id values
+          packageJson.id = packageFile.name.toLowerCase().replace(/[^a-z0-9\[\]\-\+\%\_\*\!\']/gi, "_")+"-"+uuid();
+          packageJson.content.deviceContent["properties.desired.softwareConfig"].fileName = packageFile.name;
+          packageJson.content.deviceContent["properties.desired.softwareConfig"].softwareURL = blobData.FileUri;
+          packageJson.content.deviceContent["properties.desired.softwareConfig"].checkSum = blobData.CheckSum;
+          
+          // Replace Configuration Ids in metrics
+          for (const [key, value] of Object.entries(packageJson.metrics.queries)) {
+            packageJson.metrics.queries[key] = value.replace("firmware285", packageJson.id)
+          }
+
+          this.setState({
+            packageJson: packageJson,
+            uploadedFirmwareSuccessfully: true,
+            firmwarePackageName: packageFile.name,
+            packageFile: dataURLtoFile("data:application/json;base64,"+btoa(JSON.stringify(packageJson)), packageFile.name)
+          })
+        },
+        error => {
           this.setState({
             fileError: error
-          })
-          return;
+          });
         }
-        console.log(blobData);
-        // Replace all invalid configuration id values
-        packageJson.id = packageFile.name.toLowerCase().replace(/[^a-z0-9\[\]\-\+\%\_\*\!\']/gi, "_")+"-"+uuid();
-        packageJson.content.deviceContent["properties.desired.softwareConfig"].fileName = packageFile.name;
-        packageJson.content.deviceContent["properties.desired.softwareConfig"].softwareURL = blobData.FileUri;
-        packageJson.content.deviceContent["properties.desired.softwareConfig"].checkSum = blobData.CheckSum;
-        
-        // Replace Configuration Ids in metrics
-        for(const [key, value] of Object.entries(packageJson.metrics.queries) ){
-          packageJson.metrics.queries[key] = value.replace("firmware285", packageJson.id)
-        }
-        this.setState({
-          packageJson: packageJson,
-          uploadedFirmwareSuccessfully: true,
-          firmwarePackageName: packageFile.name,
-          packageFile: dataURLtoFile("data:application/json;base64,"+btoa(JSON.stringify(packageJson)), packageFile.name)
-        })
-      })
-      return;
+      );
     }
+    else {
+      // If configType is 'Custom' concatenate 'Custom' with customConfigName.
+      let configName = '';
+      if (configType === configsEnum.custom) configName = `${configsEnum.custom} - ${customConfigName}`;
+      else configName = configType;
 
-
-    // If configType is 'Custom' concatenate 'Custom' with customConfigName.
-    let configName = '';
-    if (configType === configsEnum.custom) configName = `${configsEnum.custom} - ${customConfigName}`;
-    else configName = configType;
-
-    this.props.logEvent(
-      toDiagnosticsModel(
-        'NewPackage_Apply',
-        {
-          packageType,
-          packageName: packageFile.name
-        })
-    );
-    if (this.formIsValid() && !fileError) {
-      createPackage({ packageType: packageType, configType: configName, packageFile: packageFile });
-      this.setState({ changesApplied: true, configType: configName });
+      this.props.logEvent(
+        toDiagnosticsModel(
+          'NewPackage_Apply',
+          {
+            packageType,
+            packageName: packageFile.name
+          })
+      );
+      if (this.formIsValid() && !fileError) {
+        createPackage({ packageType: packageType, configType: configName, packageFile: packageFile });
+        this.setState({ changesApplied: true, configType: configName });
+      }
     }
   }
 
@@ -161,6 +166,7 @@ export class PackageNew extends LinkedComponent {
   customConfigNameChange = ({ target: { value = {} } }) => {
     this.props.logEvent(toSinglePropertyDiagnosticsModel('NewPackage_CustomConfigType', 'customConfigName', value));
   }
+
   onFirmwareFileSelected = (e) => {
     let file = e.target.files[0];
     if (file.name.length > 50) {
@@ -172,6 +178,7 @@ export class PackageNew extends LinkedComponent {
     this.props.logEvent(toSinglePropertyDiagnosticsModel('NewPackage_FileFirmwareSelect', 'FileName', file.name));
 
   }
+
   onFileSelected = (e) => {
     let file = e.target.files[0];
     if (file.name.length > 50) {
@@ -208,7 +215,6 @@ export class PackageNew extends LinkedComponent {
       }else{
         this.inputElement.click();
       }
-      
     }
   }
 
@@ -224,10 +230,9 @@ export class PackageNew extends LinkedComponent {
       configType,
       packageFile,
       changesApplied,
-      fileError,
-      firmwarePackageName,
       packageJson,
-      uploadedFirmwareSuccessfully } = this.state;
+      uploadedFirmwareSuccessfully,
+      fileError } = this.state;
 
     const summaryCount = 1;
     const packageOptions = packageTypeOptions.map(value => ({
@@ -377,7 +382,6 @@ export class PackageNew extends LinkedComponent {
                     onChange={this.onFirmwareFileSelected} 
                     disabled = {uploadedFirmwareSuccessfully}/>
                   {t('packages.flyouts.new.browseFirmwareText')}
-                  
                 </div>
                 }
                 { uploadedFirmwareSuccessfully && <div>
@@ -394,7 +398,6 @@ export class PackageNew extends LinkedComponent {
                 }
               </div>
             }
-            {fileError && <AjaxError className="new-package-flyout-error" t={t} error={{ message: fileError }} />}
 
             <SummarySection className="new-package-summary">
               <SummaryBody>
@@ -418,6 +421,9 @@ export class PackageNew extends LinkedComponent {
               }
               {/** Displays an error message if one occurs while applying changes. */
                 error && <AjaxError className="new-package-flyout-error" t={t} error={error} />
+              }
+              {
+                fileError && <AjaxError className="new-firmware-flyout-error" t={t} error={fileError} />
               }
               {
                 /** If package is selected, show the buttons for uploading and closing the flyout. */
