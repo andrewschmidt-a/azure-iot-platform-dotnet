@@ -4,9 +4,15 @@ resources:
   pipelines:
     - pipeline: test
       source: azure-iot-services-dotnet\ci\test
-      trigger: true
+      trigger:
+        branches:
+          - master
 pool:
   vmImage: ubuntu-latest
+variables:
+  masterBranch: refs/heads/master/
+  sourceBranch: $[coalesce(variables.resources.pipeline.test.sourceBranch, variables.Build.SourceBranch)]
+  imageTag: $[coalesce(variables.resources.pipeline.test.runID, 'latest')]
 stages:
   - stage: printPipelineResourceVariables
     displayName: Print pipeline resource variables
@@ -21,6 +27,7 @@ stages:
   - stage: crslDev
     displayName: CRSL dev
     dependsOn: []
+    condition: or(eq(variables['resources.pipeline.test.sourceBranch'], variables['masterBranch']), eq(variables['resources.pipeline.test.sourceBranch'], Null), eq(variables['resources.pipeline.test.sourceBranch'], ''))
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -29,11 +36,12 @@ stages:
           applicationCode: crsliot
           applicationShortCode: crsl
           environmentCategory: dev
-          imageTag: $(resources.pipeline.test.runID)
+          imageTag: $(imageTag)
 
   - stage: crslQa
     displayName: CRSL QA
     dependsOn: []
+    condition: or(eq(variables['resources.pipeline.test.sourceBranch'], variables['masterBranch']), eq(variables['resources.pipeline.test.sourceBranch'], Null), eq(variables['resources.pipeline.test.sourceBranch'], ''))
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -42,11 +50,12 @@ stages:
           applicationCode: crsliot
           applicationShortCode: crsl
           environmentCategory: qa
-          imageTag: $(resources.pipeline.test.runID)
+          imageTag: $(imageTag)
 
   - stage: crslWkbnch
     displayName: CRSL workbench
     dependsOn: []
+    condition: or(eq(variables['resources.pipeline.test.sourceBranch'], variables['masterBranch']), eq(variables['resources.pipeline.test.sourceBranch'], Null), eq(variables['resources.pipeline.test.sourceBranch'], ''))
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -55,11 +64,12 @@ stages:
           applicationCode: crsliot
           applicationShortCode: crsl
           environmentCategory: wkbnch
-          imageTag: $(resources.pipeline.test.runID)
+          imageTag: $(imageTag)
 
   - stage: chimDev
     displayName: CHIM dev
     dependsOn: []
+    condition: or(eq(variables['resources.pipeline.test.sourceBranch'], variables['masterBranch']), eq(variables['resources.pipeline.test.sourceBranch'], Null), eq(variables['resources.pipeline.test.sourceBranch'], ''))
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -68,11 +78,12 @@ stages:
           applicationCode: chimiot
           applicationShortCode: chim
           environmentCategory: dev
-          imageTag: $(resources.pipeline.test.runID)
+          imageTag: $(imageTag)
 
   - stage: chimQa
     displayName: CHIM QA
     dependsOn: []
+    condition: or(eq(variables['resources.pipeline.test.sourceBranch'], variables['masterBranch']), eq(variables['resources.pipeline.test.sourceBranch'], Null), eq(variables['resources.pipeline.test.sourceBranch'], ''))
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -81,11 +92,12 @@ stages:
           applicationCode: chimiot
           applicationShortCode: chim
           environmentCategory: qa
-          imageTag: $(resources.pipeline.test.runID)
+          imageTag: $(imageTag)
 
   - stage: psdDev
     displayName: PSD dev
     dependsOn: []
+    condition: or(eq(variables['resources.pipeline.test.sourceBranch'], variables['masterBranch']), eq(variables['resources.pipeline.test.sourceBranch'], Null), eq(variables['resources.pipeline.test.sourceBranch'], ''))
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -94,11 +106,12 @@ stages:
           applicationCode: psdiot
           applicationShortCode: psd
           environmentCategory: dev
-          imageTag: $(resources.pipeline.test.runID)
+          imageTag: $(imageTag)
 
   - stage: emdDev
     displayName: EMD dev
     dependsOn: []
+    condition: or(eq(variables['resources.pipeline.test.sourceBranch'], variables['masterBranch']), eq(variables['resources.pipeline.test.sourceBranch'], Null), eq(variables['resources.pipeline.test.sourceBranch'], ''))
     jobs:
       - template: ../templates/jobs-deploy-code.yaml
         parameters:
@@ -107,4 +120,4 @@ stages:
           applicationCode: emdiot
           applicationShortCode: emd
           environmentCategory: dev
-          imageTag: $(resources.pipeline.test.runID)
+          imageTag: $(imageTag)

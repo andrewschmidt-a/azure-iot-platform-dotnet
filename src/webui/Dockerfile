@@ -15,9 +15,6 @@ RUN \
   pip --no-cache-dir install azure-cli && \
   apk del --purge build
 
-RUN echo "Install App Configuration"     && az extension add -n appconfig
-
-
 MAINTAINER Andrew Schmidt (https://github.com/andrewschmidt-a)
 
 LABEL Tags="Azure,IoT,Solutions,React,SPA"

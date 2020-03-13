@@ -1,12 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <AssemblyName>Mmm.Iot.AsaManager.Services</AssemblyName>
-    <RootNamespace>$(AssemblyName)</RootNamespace>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\common\Services\Services.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <AssemblyName>Mmm.Iot.AsaManager.Services</AssemblyName>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\common\Services\Services.csproj" />
+    </ItemGroup>
 </Project>

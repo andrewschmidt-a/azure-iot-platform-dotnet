@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Mmm.Iot.Common.Services.Auth;
 using Mmm.Iot.Common.Services.Config;
@@ -33,38 +34,43 @@ namespace Mmm.Iot.IdentityGateway.WebService
             {
                 c.SwaggerDoc($"v1", new OpenApiInfo { Title = "Identity Gateway API", Version = "v1" });
             });
-
             var applicationInsightsOptions = new Microsoft.ApplicationInsights.AspNetCore.Extensions.ApplicationInsightsServiceOptions();
             applicationInsightsOptions.EnableAdaptiveSampling = false;
             services.AddApplicationInsightsTelemetry(applicationInsightsOptions);
-
-            // Setup (not enabling yet) CORS
             services.AddCors();
-
-            // Add controllers as services so they'll be resolved.
-            services.AddMvc().AddControllersAsServices();
-
-            // Prepare DI container
+            services.AddMvc().AddControllersAsServices().AddNewtonsoftJson();
             services.AddHttpContextAccessor();
+            services.AddSwaggerGenNewtonsoftSupport();
             this.ApplicationContainer = new DependencyResolution().Setup(services, this.Configuration);
-
-            // Create the IServiceProvider based on the container
             return new AutofacServiceProvider(this.ApplicationContainer);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, AppConfig config, ICorsSetup corsSetup)
+        public void Configure(
+            IApplicationBuilder app,
+            IHostApplicationLifetime appLifetime,
+            IWebHostEnvironment env,
+            AppConfig config,
+            ICorsSetup corsSetup)
         {
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseRouting();
             app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("./swagger/v1/swagger.json", "V1");
                 c.RoutePrefix = string.Empty;
             });
+            SetupTelemetry(app, config);
+            app.UseMiddleware<AuthMiddleware>();
+            corsSetup.UseMiddleware(app);
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+            appLifetime.ApplicationStopped.Register(() => this.ApplicationContainer.Dispose());
+        }
 
+        private static void SetupTelemetry(IApplicationBuilder app, AppConfig config)
+        {
             var configuration = app.ApplicationServices.GetService<TelemetryConfiguration>();
             var builder = configuration.DefaultTelemetrySink.TelemetryProcessorChainBuilder;
 
@@ -72,12 +78,6 @@ namespace Mmm.Iot.IdentityGateway.WebService
             double fixedSamplingPercentage = config.Global.FixedSamplingPercentage == 0 ? 10 : config.Global.FixedSamplingPercentage;
             builder.UseSampling(fixedSamplingPercentage);
             builder.Build();
-
-            // Enable CORS - Must be before UseMvc
-            corsSetup.UseMiddleware(app);
-
-            app.UseMiddleware<AuthMiddleware>();
-            app.UseMvc();
         }
     }
 }

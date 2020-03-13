@@ -1,5 +1,5 @@
 # Prerequisites
-* .NET Core SDK version 2.2
+* .NET Core SDK version 3.1
 * Azure CLI
 
 Ensure the `dotnet` and `az` binaries are available in a terminal
