@@ -1,33 +1,56 @@
 kind: helm-release
 apiVersion: 1.1
 build:
-  context: ../../
-  dockerfile: Dockerfile
+  context: ../../../../
+  dockerfile: ../../Dockerfile
 install:
-  chart: charts/tenant-manager
+  chart: ../../../../charts/mmm-iot-service
   values:
-  - values.dev.yaml?
-  - secrets.dev.yaml?
+    - values.dev.yaml?
+    - secrets.dev.yaml?
   set:
-    replicaCount: 1
-    image:
-      repository: tenant-manager
-      tag: $(tag)
-      pullPolicy: Never
+    nameOverride: tenant-manager
+    deployment:
+      replicaCount: 1
+      probes:
+        enabled: false
+      image:
+        tag: $(tag)
+        pullPolicy: IfNotPresent
     ingress:
-      # enabled: true
+      enabled: true
       annotations:
         kubernetes.io/ingress.class: traefik-azds
       hosts:
-      # This expands to form the service's public URL: [space.s.][rootSpace.]tenant-manager.<random suffix>.<region>.azds.io
-      # Customize the public URL by changing the 'tenant-manager' text between the $(rootSpacePrefix) and $(hostSuffix) tokens
-      # For more information see https://aka.ms/devspaces/routing
-      - $(spacePrefix)$(rootSpacePrefix)tenant-manager$(hostSuffix)
+        - $(spacePrefix)$(rootSpacePrefix)tenant-manager$(hostSuffix)
+      path: /
+      tls: []
 configurations:
   develop:
     build:
-      dockerfile: Dockerfile.develop
+      dockerfile: ../../Dockerfile
       useGitIgnore: true
       args:
-        BUILD_CONFIGURATION: ${BUILD_CONFIGURATION:-Debug}
-        AppConfigurationConnectionString: ${secret.globalsecrets.AppConfigurationConnectionString}
+        SERVICE_NAME: ${SERVICE_NAME:-tenant-manager}
+        WEB_SERVICE_ASSEMBLY_NAME: ${WEB_SERVICE_ASSEMBLY_NAME:-Mmm.Iot.TenantManager.WebService.dll}
+        APP_CONFIGURATION_CONNECTION_STRING: ${secret.globalsecrets.AppConfigurationConnectionString}
+    container:
+      sync:
+        - "**/*"
+      command: [
+        dotnet,
+        bin/Debug/netcoreapp3.1/Mmm.Iot.TenantManager.WebService.dll,
+      ]
+      iterate:
+        processesToKill: [
+          dotnet,
+          vsdbg,
+          Mmm.Iot.TenantManager.WebService
+        ]
+        buildCommands:
+          - [
+              dotnet,
+              build,
+              --configuration,
+              Debug
+            ]

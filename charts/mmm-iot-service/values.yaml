@@ -17,5 +17,8 @@ deployment:
   imagePullSecrets: []
   replicaCount: 1
   image:
+    repository:
     tag:
     pullPolicy: Always
+ingress:
+  enabled: false
