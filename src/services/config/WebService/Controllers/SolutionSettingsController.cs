@@ -4,6 +4,7 @@
 
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Mmm.Iot.Common.Services.Filters;
@@ -45,6 +46,12 @@ namespace Mmm.Iot.Config.WebService.Controllers
         [Authorize("ReadAll")]
         public async Task GetLogoAsync()
         {
+            var syncIOFeature = this.HttpContext.Features.Get<IHttpBodyControlFeature>();
+            if (syncIOFeature != null)
+            {
+                syncIOFeature.AllowSynchronousIO = true;
+            }
+
             var model = await this.storage.GetLogoAsync();
             this.SetImageResponse(model);
         }
@@ -53,6 +60,12 @@ namespace Mmm.Iot.Config.WebService.Controllers
         [Authorize("ReadAll")]
         public async Task SetLogoAsync()
         {
+            var syncIOFeature = this.HttpContext.Features.Get<IHttpBodyControlFeature>();
+            if (syncIOFeature != null)
+            {
+                syncIOFeature.AllowSynchronousIO = true;
+            }
+
             MemoryStream memoryStream = new MemoryStream();
             this.Request.Body.CopyTo(memoryStream);
             byte[] bytes = memoryStream.ToArray();
