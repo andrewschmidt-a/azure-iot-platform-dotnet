@@ -137,70 +137,128 @@ $iotHubTemplate = @"
 }
 "@
 
-$requestHeader = @{
-  "Authorization" = "Bearer " + $data.token
-  "Content-Type" = "application/json"
+# Create IoT Hub using Azure REST API
+function createIoThubUsingRestApi(){
+    $requestHeader = @{
+       "Authorization" = "Bearer " + $data.token
+       "Content-Type" = "application/json"
+    }
+    
+    $iotHubUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)?api-version=2019-03-22-preview"
+    
+    # Create IoT Hub using Azure REST API
+    $result = (Invoke-RestMethod -Method Put -Headers $requestheader -Uri $iotHubUri -Body $iotHubTemplate)          
+    Write-Output $iotHubTemplate    
 }
 
-$iotHubUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)?api-version=2019-03-22-preview"
+# set up the file upload endpoint on the Iot hub
+function createFileUploadEndpoint(){
+    # get the context from exiting storage account
+    $storageAccount = Get-AzStorageAccount -ResourceGroupName $data.resourceGroup `
+                                             -Name $data.storageAccount
+    $ctx = $storageAccount.Context
+    $containerName = [string]::Concat($data.tenantId,'-iot-file-upload')
+    New-AzStorageContainer -Name $containerName -Context $ctx -Permission Off
 
-# Create IoT Hub using Azure REST API
-$result = (Invoke-RestMethod -Method Put -Headers $requestheader -Uri $iotHubUri -Body $iotHubTemplate)
+    # get the storage account connection string 
+    $storageAcctkey = Get-AzStorageAccountKey -Name $data.storageAccount `
+                             -ResourceGroupName $data.resourceGroup
 
-Write-Output $iotHubTemplate
-
-# Wait for IoT Hub to be created
-$tries = 0
-while (($result.properties.state -ne "Active") -and ($tries -lt 30)) {
-   Start-Sleep -Second 15
-   $result = (Invoke-RestMethod -Method Get -Headers $requestheader -Uri $iotHubUri)
-   $tries++
+    if ([string]::IsNullOrEmpty($storageAcctkey)){ 
+         Write-Output "Storage Account key for $($data).storageAccount is empty" 
+    } 
+    else {
+        $storageAcctPrikey = $storageAcctkey.Value[1]
+    }
+    # set up the file upload endpoint on the Iot hub
+    Set-AzIotHub -ResourceGroupName $data.resourceGroup `
+                 -Name $($data.iotHubName)`
+                 -FileUploadNotificationTtl "01:00:00" `
+                 -FileUploadSasUriTtl "01:00:00" `
+                 -EnableFileUploadNotifications $true `
+                 -FileUploadStorageConnectionString "DefaultEndpointsProtocol=https;AccountName=$($data.storageAccount);AccountKey=$storageAcctPrikey;EndpointSuffix=core.windows.net" `
+                 -FileUploadContainerName $containerName `
+                 -FileUploadNotificationMaxDeliveryCount 10
 }
 
 # Load the connection string
-$policy = "iothubowner" 
-$iotHubKeysUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)/IotHubKeys/$policy/listkeys?api-version=2019-03-22-preview"
-$result = (Invoke-RestMethod -Method Post -Headers $requestheader -Uri $iotHubKeysUri)
+function loadPolicyToIoThub(){
+    $policy = "iothubowner" 
+    $iotHubKeysUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)/IotHubKeys/$policy/listkeys?api-version=2019-03-22-preview"
+    $result = (Invoke-RestMethod -Method Post -Headers $requestheader -Uri $iotHubKeysUri)
 
-# Create the connection string
-$sharedAccessKey = $result.primaryKey
-$connectionString = "HostName=$($data.iotHubName).azure-devices.net;SharedAccessKeyName=$policy;SharedAccessKey=$sharedAccessKey"
+    # Create the connection string
+    $sharedAccessKey = $result.primaryKey
+    $connectionString = "HostName=$($data.iotHubName).azure-devices.net;SharedAccessKeyName=$policy;SharedAccessKey=$sharedAccessKey"
+}
 
 # Add DPS to the current iothub
-New-AzIoTDeviceProvisioningService -Name $data.dpsName -Location "eastus" -ResourceGroupName $data.resourceGroup
+function addDPSToIoThub(){
+    New-AzIoTDeviceProvisioningService -Name $data.dpsName -Location "eastus" `
+                                        -ResourceGroupName $data.resourceGroup
 
-Add-AzIoTDeviceProvisioningServiceLinkedHub -ResourceGroupName $data.resourceGroup -Name $data.dpsName -IotHubConnectionString $connectionString -IotHubLocation $data.location
+    Add-AzIoTDeviceProvisioningServiceLinkedHub -ResourceGroupName $data.resourceGroup `
+                                                -Name $data.dpsName `
+                                                -IotHubConnectionString $connectionString `
+                                                -IotHubLocation $data.location    
+}
 
-# Write the IoT Hub connection string to app config
-$requestHeader = @{
-  "Content-Type" = "application/json"
-}
-$appConfigKey = "tenant:$($data.tenantId):iotHubConnectionString"
-$appConfigBody = @"
-{
-     connectionstring : "$appConfigConnectionString", name : "$appConfigKey", value : "$connectionString"
-}
+# Write the IoT Hub connection string to app config (invoke appConfig function)
+function addIoTHubConnStringToAppconfig(){
+    $requestHeader = @{
+       "Content-Type" = "application/json"
+    }
+    $appConfigKey = "tenant:$($data.tenantId):iotHubConnectionString"
+    $appConfigBody = @"
+      {
+        connectionstring : "$appConfigConnectionString", name : "$appConfigKey", value : "$connectionString"
+      }
 "@
-$result = (Invoke-RestMethod -Method Post -Headers $requestheader -Uri $setAppConfigEndpoint -Body $appConfigBody)
+    $result = (Invoke-RestMethod -Method Post -Headers $requestheader -Uri $setAppConfigEndpoint -Body $appConfigBody)      
+}                                            
 
-# Write to table storage
-"Trying to write to table storage"
-$storageAccount = $data.storageAccount
-$tableName = "tenant"
-$table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $tableName -storageAccountName $storageAccount
-$row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
-Write-Output "$($row.RowKey)"
-Write-Output "$($row.PartitionKey)"
-if ($row.RowKey -and $row.PartitionKey) {
-    # If the rowkey and partition key are non-empty values, the row exists.
-    # If the row exists, fill in the fields related to the IoT Hub
-    $row.IsIotHubDeployed = $true
-    $row.IotHubName = $data.iotHubName
-    $row | Update-AzTableRow -Table $table
-    Write-Output "IotHubName and IsIotHubDeployed updated for tenant $($data.tenantId) in tenant table"
-    Write-Output "Finished creating a new IotHub for the Tenant"
-} else {
-    # If the row does not exist, there is a problem with the tenant, it most liekly was deleted or cleaned up before this runbook could complete.
-    Write-Error "No Table Storage row exists for $($data.tenantId) in the tenant table. The row may have been deleted before the IoT Hub could be fully deployed.";
-    Write-Output "Finished creating a new IotHub, however Table Storage could not be updated. This tenant may be in a failing state, or may already be deleted.";
+# Write to table storage <tenant table>
+function writeToTableStorage(){
+    Write-Output ("Trying to write to table storage")
+    $storageAccount = $data.storageAccount
+    $tableName = "tenant"
+    $table = Get-AzTableTable -resourceGroup $data.resourceGroup -tableName $tableName -storageAccountName $storageAccount
+    $row = Get-AzTableRowByPartitionKeyRowKey -Table $table -PartitionKey $data.tenantId[0] -RowKey $data.tenantId
+    Write-Output "$($row.RowKey)"
+    Write-Output "$($row.PartitionKey)"
+    if ($row.RowKey -and $row.PartitionKey) {
+       # If the rowkey and partition key are non-empty values, the row exists.
+       # If the row exists, fill in the fields related to the IoT Hub
+        $row.IsIotHubDeployed = $true
+        $row.IotHubName = $data.iotHubName
+        $row | Update-AzTableRow -Table $table
+        Write-Output "IotHubName and IsIotHubDeployed updated for tenant $($data.tenantId) in tenant table"
+        Write-Output "Finished creating a new IotHub for the Tenant"
+        } 
+        else {
+            # If the row does not exist, there is a problem with the tenant, it most liekly was deleted or cleaned up before this runbook could complete.
+            Write-Error "No Table Storage row exists for $($data.tenantId) in the tenant table. The row may have been deleted before the IoT Hub could be fully deployed.";
+            Write-Output "Finished creating a new IotHub, however Table Storage could not be updated. This tenant may be in a failing state, or may already be deleted.";
+        }    
+}
+
+try {
+    # Call the functions 
+    createIoThubUsingRestApi 
+    # Wait for IoT Hub to be created
+    $tries = 0
+    while (($result.properties.state -ne "Active") -and ($tries -lt 30)) {
+    Start-Sleep -Second 15
+    $result = (Invoke-RestMethod -Method Get -Headers $requestheader -Uri $iotHubUri)
+    $tries++
+    }
+    createFileUploadEndpoint
+    loadPolicyToIoThub
+    addDPSToIoThub
+    addIoTHubConnStringToAppconfig
+    writeToTableStorage
+}
+catch {
+    Write-Error -Message $_.Exception
+    throw $_.Exception
 }
