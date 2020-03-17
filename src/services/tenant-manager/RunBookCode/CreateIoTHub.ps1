@@ -165,20 +165,20 @@ function createFileUploadEndpoint(){
                              -ResourceGroupName $data.resourceGroup
 
     if ([string]::IsNullOrEmpty($storageAcctkey)){ 
-         Write-Output "Storage Account key for $($data).storageAccount is empty" 
+         Write-Output "Failed to retrieve key for $($data.storageAccount)" 
     } 
     else {
         $storageAcctPrikey = $storageAcctkey.Value[1]
-    }
     # set up the file upload endpoint on the Iot hub
-    Set-AzIotHub -ResourceGroupName $data.resourceGroup `
-                 -Name $($data.iotHubName)`
-                 -FileUploadNotificationTtl "01:00:00" `
-                 -FileUploadSasUriTtl "01:00:00" `
-                 -EnableFileUploadNotifications $true `
-                 -FileUploadStorageConnectionString "DefaultEndpointsProtocol=https;AccountName=$($data.storageAccount);AccountKey=$storageAcctPrikey;EndpointSuffix=core.windows.net" `
-                 -FileUploadContainerName $containerName `
-                 -FileUploadNotificationMaxDeliveryCount 10
+        Set-AzIotHub -ResourceGroupName $data.resourceGroup `
+                        -Name $($data.iotHubName)`
+                        -FileUploadNotificationTtl "01:00:00" `
+                        -FileUploadSasUriTtl "01:00:00" `
+                        -EnableFileUploadNotifications $true `
+                        -FileUploadStorageConnectionString "DefaultEndpointsProtocol=https;AccountName=$($data.storageAccount);AccountKey=$storageAcctPrikey;EndpointSuffix=core.windows.net" `
+                        -FileUploadContainerName $containerName `
+                        -FileUploadNotificationMaxDeliveryCount 10
+    }    
 }
 
 # Load the connection string
