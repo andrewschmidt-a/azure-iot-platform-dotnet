@@ -81,7 +81,7 @@ jobs:
           echo "serviceProbesEnabled: $(serviceProbesEnabled)"
         displayName: Print job variables
 
-      - template: step-deploy-individual-service.yaml
+      - template: steps-deploy-individual-service.yaml
         parameters:
           aksName: $(aksName)
           resourceGroupName: $(resourceGroupName)

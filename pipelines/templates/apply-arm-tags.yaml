@@ -2,7 +2,7 @@ parameters:
   environment:
 steps:
   - task: Bash@3
-    displayName: Tag ARM Templates
+    displayName: Tag ARM templates
     inputs:
       targetType: inline
       script: |

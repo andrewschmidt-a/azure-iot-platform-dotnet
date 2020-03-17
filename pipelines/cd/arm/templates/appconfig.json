@@ -20,13 +20,16 @@
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.AppConfiguration/configurationStores",
-            "apiVersion": "2019-02-01-preview",
             "name": "[parameters('appConfigName')]",
+            "type": "Microsoft.AppConfiguration/configurationStores",
+            "apiVersion": "2019-10-01",
             "location": "[parameters('location')]",
             "tags": {},
             "properties": {
                 "endpoint": "[concat('https://', parameters('appConfigName'), '.azconfig.io')]"
+            },
+            "sku": {
+                "name": "standard"
             }
         }
     ]
