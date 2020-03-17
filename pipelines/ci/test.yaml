@@ -507,10 +507,12 @@ stages:
         condition: and(eq(dependencies.getPipelineVariables.outputs['getPipelineVariables.serenityHelmChartWasInstalled'], 'true'), not(failed()))
         steps:
           - checkout: none
+
           - task: HelmInstaller@1
             displayName: Install Helm
             inputs:
               helmVersionToInstall: $(helmVersion)
+
           - task: HelmDeploy@0
             displayName: Uninstall Helm chart
             inputs:
@@ -529,10 +531,12 @@ stages:
         condition: and(eq(dependencies.getPipelineVariables.outputs['getPipelineVariables.kubernetesNamespaceWasCreated'], 'true'), not(failed()))
         steps:
           - checkout: none
+
           - task: HelmInstaller@1
             displayName: Install Helm
             inputs:
               helmVersionToInstall: $(helmVersion)
+
           - task: Kubernetes@1
             displayName: Delete namespace
             inputs:
