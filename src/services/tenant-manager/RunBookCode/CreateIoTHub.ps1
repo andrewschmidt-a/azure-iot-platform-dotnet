@@ -151,7 +151,7 @@ function createIoThubUsingRestApi(){
     Write-Output $iotHubTemplate    
 }
 
-# set up the file upload endpoint on the Iot hub
+# Set up the file upload endpoint on the Iot hub
 function createFileUploadEndpoint(){
     # get the context from exiting storage account
     $storageAccount = Get-AzStorageAccount -ResourceGroupName $data.resourceGroup `
@@ -192,7 +192,7 @@ function loadPolicyToIoThub(){
     $connectionString = "HostName=$($data.iotHubName).azure-devices.net;SharedAccessKeyName=$policy;SharedAccessKey=$sharedAccessKey"
 }
 
-# Add DPS to the current iothub
+# Create DPS and add current iothub to DPS
 function addDPSToIoThub(){
     New-AzIoTDeviceProvisioningService -Name $data.dpsName -Location "eastus" `
                                         -ResourceGroupName $data.resourceGroup
