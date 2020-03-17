@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Moq;
 
 namespace Mmm.Iot.Common.TestHelpers
@@ -34,6 +35,9 @@ namespace Mmm.Iot.Common.TestHelpers
 
             this.mockContext.SetupGet(x => x.Request).Returns(request.Object);
             this.mockContext.SetupGet(x => x.Response).Returns(response.Object);
+
+            var mockHttpBodyControlFeature = new Mock<IHttpBodyControlFeature>();
+            this.mockContext.Setup(t => t.Features.Get<IHttpBodyControlFeature>()).Returns(mockHttpBodyControlFeature.Object);
         }
 
         public HttpContext Object => this.mockContext.Object;
