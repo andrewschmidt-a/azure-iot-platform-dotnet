@@ -73,6 +73,7 @@ $appConfigBody
 $result = (Invoke-RestMethod -ContentType 'application/json' -Method delete -Headers $requestheader -Uri $setAppConfigEndpoint -Body $appConfigBody)
 
 # Remove dps
-Remove-AzIoTDeviceProvisioningService -ResourceGroupName $data.resourceGroup -Name $data.dpsName
+$result = Remove-AzIoTDeviceProvisioningService -ResourceGroupName $data.resourceGroup -Name $data.dpsName -PassThru
+if ($result -eq 'True' ) { Write-Host "DPS $($data.dpsName) deleted successfully" }
 
 "Done"

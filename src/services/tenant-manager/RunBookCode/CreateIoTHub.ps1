@@ -149,6 +149,14 @@ function createIoThubUsingRestApi(){
     # Create IoT Hub using Azure REST API
     $result = (Invoke-RestMethod -Method Put -Headers $requestheader -Uri $iotHubUri -Body $iotHubTemplate)          
     Write-Output $iotHubTemplate    
+
+    # Wait for IoT Hub to be created
+    $tries = 0
+    while (($result.properties.state -ne "Active") -and ($tries -lt 30)) {
+    Start-Sleep -Second 15
+    $result = (Invoke-RestMethod -Method Get -Headers $requestheader -Uri $iotHubUri)
+    $tries++
+    }
 }
 
 # Set up the file upload endpoint on the Iot hub
@@ -178,11 +186,17 @@ function createFileUploadEndpoint(){
                         -FileUploadStorageConnectionString "DefaultEndpointsProtocol=https;AccountName=$($data.storageAccount);AccountKey=$storageAcctPrikey;EndpointSuffix=core.windows.net" `
                         -FileUploadContainerName $containerName `
                         -FileUploadNotificationMaxDeliveryCount 10
+        
+        Write-Output "File Upload endpoint created successfully on $($data.iotHubName)"
     }    
 }
 
 # Load the connection string
 function loadPolicyToIoThub(){
+    $requestHeader = @{
+        "Authorization" = "Bearer " + $data.token
+        "Content-Type" = "application/json"
+     }
     $policy = "iothubowner" 
     $iotHubKeysUri = "https://management.azure.com/subscriptions/$($data.subscriptionId)/resourceGroups/$($data.resourceGroup)/providers/Microsoft.Devices/IotHubs/$($data.iotHubName)/IotHubKeys/$policy/listkeys?api-version=2019-03-22-preview"
     $result = (Invoke-RestMethod -Method Post -Headers $requestheader -Uri $iotHubKeysUri)
@@ -190,21 +204,24 @@ function loadPolicyToIoThub(){
     # Create the connection string
     $sharedAccessKey = $result.primaryKey
     $connectionString = "HostName=$($data.iotHubName).azure-devices.net;SharedAccessKeyName=$policy;SharedAccessKey=$sharedAccessKey"
+    return $connectionString
 }
 
 # Create DPS and add current iothub to DPS
-function addDPSToIoThub(){
+function addDPSToIoThub($connectionString){
     New-AzIoTDeviceProvisioningService -Name $data.dpsName -Location "eastus" `
                                         -ResourceGroupName $data.resourceGroup
 
     Add-AzIoTDeviceProvisioningServiceLinkedHub -ResourceGroupName $data.resourceGroup `
                                                 -Name $data.dpsName `
                                                 -IotHubConnectionString $connectionString `
-                                                -IotHubLocation $data.location    
+                                                -IotHubLocation $data.location
+
+    Write-Output "DPS $($data.dpsName) successfully linked to IoTHub $($data.iotHubName)"    
 }
 
 # Write the IoT Hub connection string to app config (invoke appConfig function)
-function addIoTHubConnStringToAppconfig(){
+function addIoTHubConnStringToAppconfig($connectionString){
     $requestHeader = @{
        "Content-Type" = "application/json"
     }
@@ -244,18 +261,11 @@ function writeToTableStorage(){
 
 try {
     # Call the functions 
-    createIoThubUsingRestApi 
-    # Wait for IoT Hub to be created
-    $tries = 0
-    while (($result.properties.state -ne "Active") -and ($tries -lt 30)) {
-    Start-Sleep -Second 15
-    $result = (Invoke-RestMethod -Method Get -Headers $requestheader -Uri $iotHubUri)
-    $tries++
-    }
+    createIoThubUsingRestApi
     createFileUploadEndpoint
-    loadPolicyToIoThub
-    addDPSToIoThub
-    addIoTHubConnStringToAppconfig
+    $connString = loadPolicyToIoThub
+    addDPSToIoThub -connectionString $connString
+    addIoTHubConnStringToAppconfig -connectionString $connString
     writeToTableStorage
 }
 catch {
