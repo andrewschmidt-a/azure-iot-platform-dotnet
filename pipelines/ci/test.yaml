@@ -508,6 +508,11 @@ stages:
         steps:
           - checkout: none
 
+          - task: HelmInstaller@1
+            displayName: Install Helm
+            inputs:
+              helmVersionToInstall: $(helmVersion)
+
           - task: HelmDeploy@0
             displayName: Uninstall Helm chart
             inputs:
