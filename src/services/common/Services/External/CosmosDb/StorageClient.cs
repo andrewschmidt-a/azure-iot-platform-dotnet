@@ -284,8 +284,15 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
             catch (Exception e)
             {
-                this.logger.LogError(e, "Unable to query collection {colId} for All documents", colId);
-                throw;
+                string messageCheck = "resource not found";
+                if (e.Message.ToLower().Contains(messageCheck) || e.InnerException.Message.ToLower().Contains(messageCheck))
+                {
+                    throw new ResourceNotFoundException(e.Message);
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
 
@@ -304,28 +311,38 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 queryOptions.EnableScanInQuery = true;
             }
 
-            List<Document> docs = new List<Document>();
             string collectionLink = string.Format(
                 "/dbs/{0}/colls/{1}",
                 databaseName,
                 colId);
 
-            var queryResults = await Task.FromResult(this.client.CreateDocumentQuery<Document>(
-                    collectionLink,
-                    querySpec,
-                    queryOptions)
-                .AsEnumerable()
-                .Skip(skip)
-                .Take(limit));
-
-            foreach (Document doc in queryResults)
+            try
             {
-                docs.Add(doc);
+                var queryResults = await Task.FromResult(this.client.CreateDocumentQuery<Document>(
+                        collectionLink,
+                        querySpec,
+                        queryOptions)
+                    .AsEnumerable()
+                    .Skip(skip)
+                    .Take(limit)
+                    .ToList());
+
+                this.logger.LogInformation("Query results count: {count}", queryResults.Count);
+
+                return queryResults;
             }
-
-            this.logger.LogInformation("Query results count: {count}", docs.Count);
-
-            return docs;
+            catch (Exception e)
+            {
+                string messageCheck = "resource not found";
+                if (e.Message.ToLower().Contains(messageCheck) || e.InnerException.Message.ToLower().Contains(messageCheck))
+                {
+                    throw new ResourceNotFoundException(e.Message);
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         [ExcludeFromCodeCoverage]
@@ -337,9 +354,11 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
         {
             if (queryOptions == null)
             {
-                queryOptions = new FeedOptions();
-                queryOptions.EnableCrossPartitionQuery = true;
-                queryOptions.EnableScanInQuery = true;
+                queryOptions = new FeedOptions
+                {
+                    EnableCrossPartitionQuery = true,
+                    EnableScanInQuery = true,
+                };
             }
 
             string collectionLink = string.Format(
