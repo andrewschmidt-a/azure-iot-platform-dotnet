@@ -532,11 +532,6 @@ stages:
         steps:
           - checkout: none
 
-          - task: HelmInstaller@1
-            displayName: Install Helm
-            inputs:
-              helmVersionToInstall: $(helmVersion)
-
           - task: Kubernetes@1
             displayName: Delete namespace
             inputs:
