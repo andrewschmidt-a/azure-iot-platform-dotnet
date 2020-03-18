@@ -11,6 +11,7 @@ using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Logging;
 using Mmm.Iot.Common.Services;
 using Mmm.Iot.Common.Services.Config;
+using Mmm.Iot.Common.Services.Exceptions;
 using Mmm.Iot.Common.Services.External.AppConfiguration;
 using Mmm.Iot.Common.Services.External.CosmosDb;
 using Mmm.Iot.Common.Services.External.TimeSeries;
@@ -126,17 +127,28 @@ namespace Mmm.Iot.DeviceTelemetry.Services
 
             this.logger.LogDebug("Created message query {sql}", sql);
 
-            FeedOptions queryOptions = new FeedOptions();
-            queryOptions.EnableCrossPartitionQuery = true;
-            queryOptions.EnableScanInQuery = true;
+            FeedOptions queryOptions = new FeedOptions
+            {
+                EnableCrossPartitionQuery = true,
+                EnableScanInQuery = true,
+            };
 
-            List<Document> docs = await this.storageClient.QueryDocumentsAsync(
-                this.databaseName,
-                this.CollectionId,
-                queryOptions,
-                sql,
-                skip,
-                limit);
+            List<Document> docs = new List<Document>();
+            try
+            {
+                docs = await this.storageClient.QueryDocumentsAsync(
+                    this.databaseName,
+                    this.CollectionId,
+                    queryOptions,
+                    sql,
+                    skip,
+                    limit);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                this.logger.LogError($"The messages collection {this.CollectionId} did not exist. It was created and an empty messages list was returned.", e);
+                await this.storageClient.CreateCollectionIfNotExistsAsync(this.databaseName, this.CollectionId);
+            }
 
             // Messages to return
             List<Message> messages = new List<Message>();

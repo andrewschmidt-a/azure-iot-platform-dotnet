@@ -306,9 +306,11 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
         {
             if (queryOptions == null)
             {
-                queryOptions = new FeedOptions();
-                queryOptions.EnableCrossPartitionQuery = true;
-                queryOptions.EnableScanInQuery = true;
+                queryOptions = new FeedOptions
+                {
+                    EnableCrossPartitionQuery = true,
+                    EnableScanInQuery = true,
+                };
             }
 
             string collectionLink = string.Format(

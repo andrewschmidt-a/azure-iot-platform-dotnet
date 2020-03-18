@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -97,26 +98,32 @@ namespace Mmm.Iot.DeviceTelemetry.Services
 
             this.logger.LogDebug("Created alarm query {sql}", sql);
 
-            FeedOptions queryOptions = new FeedOptions();
-            queryOptions.EnableCrossPartitionQuery = true;
-            queryOptions.EnableScanInQuery = true;
-
-            List<Document> docs = await this.storageClient.QueryDocumentsAsync(
-                this.databaseName,
-                this.CollectionId,
-                queryOptions,
-                sql,
-                skip,
-                limit);
-
-            List<Alarm> alarms = new List<Alarm>();
-
-            foreach (Document doc in docs)
+            FeedOptions queryOptions = new FeedOptions
             {
-                alarms.Add(new Alarm(doc));
-            }
+                EnableCrossPartitionQuery = true,
+                EnableScanInQuery = true,
+            };
 
-            return alarms;
+            try
+            {
+                List<Document> docs = await this.storageClient.QueryDocumentsAsync(
+                    this.databaseName,
+                    this.CollectionId,
+                    queryOptions,
+                    sql,
+                    skip,
+                    limit);
+
+                return docs
+                    .Select(doc => new Alarm(doc))
+                    .ToList();
+            }
+            catch (ResourceNotFoundException e)
+            {
+                this.logger.LogError($"The alarms collection {this.CollectionId} did not exist. It was created and an empty alarms list was returned.", e);
+                await this.storageClient.CreateCollectionIfNotExistsAsync(this.databaseName, this.CollectionId);
+                return new List<Alarm>();
+            }
         }
 
         public async Task<List<Alarm>> ListByRuleAsync(
@@ -145,25 +152,32 @@ namespace Mmm.Iot.DeviceTelemetry.Services
 
             this.logger.LogDebug("Created alarm by rule query {sql}", sql);
 
-            FeedOptions queryOptions = new FeedOptions();
-            queryOptions.EnableCrossPartitionQuery = true;
-            queryOptions.EnableScanInQuery = true;
-
-            List<Document> docs = await this.storageClient.QueryDocumentsAsync(
-                this.databaseName,
-                this.CollectionId,
-                queryOptions,
-                sql,
-                skip,
-                limit);
-
-            List<Alarm> alarms = new List<Alarm>();
-            foreach (Document doc in docs)
+            FeedOptions queryOptions = new FeedOptions
             {
-                alarms.Add(new Alarm(doc));
-            }
+                EnableCrossPartitionQuery = true,
+                EnableScanInQuery = true,
+            };
 
-            return alarms;
+            try
+            {
+                List<Document> docs = await this.storageClient.QueryDocumentsAsync(
+                    this.databaseName,
+                    this.CollectionId,
+                    queryOptions,
+                    sql,
+                    skip,
+                    limit);
+
+                return docs
+                    .Select(doc => new Alarm(doc))
+                    .ToList();
+            }
+            catch (ResourceNotFoundException e)
+            {
+                this.logger.LogError($"The alarms collection {this.CollectionId} did not exist. It was created and an empty alarms list was returned.", e);
+                await this.storageClient.CreateCollectionIfNotExistsAsync(this.databaseName, this.CollectionId);
+                return new List<Alarm>();
+            }
         }
 
         public async Task<int> GetCountByRuleAsync(
@@ -187,18 +201,26 @@ namespace Mmm.Iot.DeviceTelemetry.Services
                 statusList,
                 StatusKey);
 
-            FeedOptions queryOptions = new FeedOptions();
-            queryOptions.EnableCrossPartitionQuery = true;
-            queryOptions.EnableScanInQuery = true;
+            FeedOptions queryOptions = new FeedOptions
+            {
+                EnableCrossPartitionQuery = true,
+                EnableScanInQuery = true,
+            };
 
-            // request count of alarms for a rule id with given parameters
-            var result = await this.storageClient.QueryCountAsync(
-                this.databaseName,
-                this.CollectionId,
-                queryOptions,
-                sql);
-
-            return result;
+            try
+            {
+                return await this.storageClient.QueryCountAsync(
+                    this.databaseName,
+                    this.CollectionId,
+                    queryOptions,
+                    sql);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                this.logger.LogError($"The alarms collection {this.CollectionId} did not exist. It was created and 0 was returned for the alaram count", e);
+                await this.storageClient.CreateCollectionIfNotExistsAsync(this.databaseName, this.CollectionId);
+                return 0;
+            }
         }
 
         public async Task<Alarm> UpdateAsync(string id, string status)
