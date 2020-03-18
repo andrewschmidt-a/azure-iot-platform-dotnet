@@ -146,7 +146,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
             }
             catch (ResourceNotFoundException e)
             {
-                throw new ResourceNotFoundException("No telemetry messages exist in CosmosDb.", e);
+                throw new ResourceNotFoundException($"No telemetry messages exist in CosmosDb. The telemetry collection {this.CollectionId} does not exist.", e);
             }
 
             // Messages to return
