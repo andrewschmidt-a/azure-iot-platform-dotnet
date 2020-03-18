@@ -120,9 +120,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
             }
             catch (ResourceNotFoundException e)
             {
-                this.logger.LogError($"The alarms collection {this.CollectionId} did not exist. It was created and an empty alarms list was returned.", e);
-                await this.storageClient.CreateCollectionIfNotExistsAsync(this.databaseName, this.CollectionId);
-                return new List<Alarm>();
+                throw new ResourceNotFoundException("No telemetry messages exist in CosmosDb.", e);
             }
         }
 
@@ -174,9 +172,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
             }
             catch (ResourceNotFoundException e)
             {
-                this.logger.LogError($"The alarms collection {this.CollectionId} did not exist. It was created and an empty alarms list was returned.", e);
-                await this.storageClient.CreateCollectionIfNotExistsAsync(this.databaseName, this.CollectionId);
-                return new List<Alarm>();
+                throw new ResourceNotFoundException("No telemetry messages exist in CosmosDb.", e);
             }
         }
 
@@ -217,9 +213,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
             }
             catch (ResourceNotFoundException e)
             {
-                this.logger.LogError($"The alarms collection {this.CollectionId} did not exist. It was created and 0 was returned for the alaram count", e);
-                await this.storageClient.CreateCollectionIfNotExistsAsync(this.databaseName, this.CollectionId);
-                return 0;
+                throw new ResourceNotFoundException("No telemetry messages exist in CosmosDb.", e);
             }
         }
 

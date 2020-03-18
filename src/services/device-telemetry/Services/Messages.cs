@@ -146,8 +146,7 @@ namespace Mmm.Iot.DeviceTelemetry.Services
             }
             catch (ResourceNotFoundException e)
             {
-                this.logger.LogError($"The messages collection {this.CollectionId} did not exist. It was created and an empty messages list was returned.", e);
-                await this.storageClient.CreateCollectionIfNotExistsAsync(this.databaseName, this.CollectionId);
+                throw new ResourceNotFoundException("No telemetry messages exist in CosmosDb.", e);
             }
 
             // Messages to return
