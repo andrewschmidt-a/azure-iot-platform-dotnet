@@ -15,11 +15,21 @@ const optionValues = [
   { value: 'P1M' },
 ];
 
+var currentValue = 'PT1H';
+
 export class TimeIntervalDropdown extends Component {
 
   onChange = (propOnChange) => (value) => {
     this.props.logEvent(toDiagnosticsModel('TimeFilter_Select', {}));
-    if (isFunc(propOnChange)) propOnChange(value);
+    if (isFunc(propOnChange)) 
+    {
+      currentValue = value;
+      propOnChange(value);
+    }
+  }
+
+  static getTimeIntervalDropdownValue (){
+    return currentValue;
   }
 
   render() {
