@@ -137,7 +137,7 @@ const ProvisionedDevice = ({ device, t }) => {
     <div>
       <DeviceDetail label={t('devices.flyouts.new.deviceId.label')} value={id} />
       
-      { formData.authenticationType != authTypeOptions.x509.value && 
+      { device.authentication.authenticationType != authTypeOptions.x509.value && 
         <div>
           <DeviceDetail label={t('devices.flyouts.new.authenticationKey.primaryKey')} value={primaryKey} />
           <DeviceDetail label={t('devices.flyouts.new.authenticationKey.secondaryKey')} value={secondaryKey} />
