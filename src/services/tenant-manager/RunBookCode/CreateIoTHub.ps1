@@ -22,7 +22,7 @@ if (-Not $WebhookData) {
 # Retrieve the data from the Webhook request body
 $data = (ConvertFrom-Json -InputObject $WebhookData.RequestBody)
 
-# Authenticate with the service principle
+# Authenticate with the service principal
 $connectionName = "AzureRunAsConnection"
 try {
     $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName
@@ -33,7 +33,8 @@ try {
                              -CertificateThumbprint $servicePrincipalConnection.CertificateThumbprint `
                              -ServicePrincipal `
                              -Subscription $data.subscriptionId
-    "Logged in."
+
+    "Successfully Logged in using ServicePrincipal"
 }
 catch {
     if (!$servicePrincipalConnection) {
