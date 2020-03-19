@@ -723,16 +723,21 @@ function updateUserTenantTtable($tenantId){
 }
 
 # call the functions 
-createBlobforTenant -tenantId $tenantId
-createCosmosCollection -tenantId $tenantId
-addConsumerGroup -iotHubName $iotHubName
-createSAJob -saJobName $saJobName
-addSAJobInputs -saJobName $saJobName
-addSAJobOutputs -saJobName $saJobName
-addSAJobQuery -saJobName $saJobName
-addSAfunctions -saJobName $saJobName
-updateUserTenantTtable -tenantId $tenantId
-# Start the SA job if required
-#Start-AzStreamAnalyticsJob -Name $saJobName -ResourceGroupName $resourceGroup
-Write-Output "Finished provisioning Stream Analytics Job for the Tenant $tenantId"
-# end 
+try {
+    createBlobforTenant -tenantId $tenantId
+    createCosmosCollection -tenantId $tenantId
+    addConsumerGroup -iotHubName $iotHubName
+    createSAJob -saJobName $saJobName
+    addSAJobInputs -saJobName $saJobName
+    addSAJobOutputs -saJobName $saJobName
+    addSAJobQuery -saJobName $saJobName
+    addSAfunctions -saJobName $saJobName
+    updateUserTenantTtable -tenantId $tenantId
+    # Start the SA job if required
+    #Start-AzStreamAnalyticsJob -Name $saJobName -ResourceGroupName $resourceGroup
+    Write-Output "Finished provisioning Stream Analytics Job for the Tenant $tenantId"
+}
+catch {
+    Write-Error -Message $_.Exception
+    throw $_.Exception
+}
