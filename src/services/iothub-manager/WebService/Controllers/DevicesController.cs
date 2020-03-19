@@ -2,6 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -87,6 +88,13 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
         public async Task<MethodResultApiModel> InvokeDeviceMethodAsync(string id, [FromBody] MethodParameterApiModel parameter)
         {
             return new MethodResultApiModel(await this.deviceService.InvokeDeviceMethodAsync(id, parameter.ToServiceModel()));
+        }
+
+        [HttpGet("{id}")]
+        [Authorize("ReadAll")]
+        public async Task<List<string>> GetDeviceFilesAsync(string id)
+        {
+            return await this.deviceProperties.GetUploadedFilesForDevice("391c8598-409e-4987-93fe-35536b8ff2d1", "test");
         }
     }
 }
