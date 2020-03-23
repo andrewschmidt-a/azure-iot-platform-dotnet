@@ -81,11 +81,11 @@ export class MapPanel extends Component {
 
     const type = document.createElement('div');
     type.classList.add('popup-type');
-    type.innerText = properties.type;
+    type.innerText = properties.cluster ? "Device Cluster" : properties.type;
 
     const name = document.createElement('div');
     name.classList.add('popup-device-name');
-    name.innerText = properties.id;
+    name.innerText = properties.cluster ? `Devices: ${properties.point_count}` : properties.id;
 
     popupContentBox.appendChild(type);
     popupContentBox.appendChild(name);
@@ -139,6 +139,9 @@ export class MapPanel extends Component {
       .reduce(
         (acc, device) => {
           const devicePin = deviceToMapPin(device);
+          if (devicePin.properties.type === undefined) {
+            devicePin.properties.type = "Unknown Device";
+          }
           const category = device.id in devicesInAlert ? devicesInAlert[device.id].severity : 'normal';
           if (category === 'normal' || category === Config.ruleSeverity.warning || category === Config.ruleSeverity.critical) {
             return update(acc, {
