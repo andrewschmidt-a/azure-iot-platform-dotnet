@@ -565,6 +565,7 @@
         "calculationPlaceholder": "Select",
         "timePeriod": "Time period (in minutes)",
         "condition": {
+          "description": "To populate fields, a device must have reported properties with keys in the form of: <0><0>{{format}}</0></0>.",
           "condition": "Condition",
           "field": "Field",
           "fieldPlaceholder": "Select field",
