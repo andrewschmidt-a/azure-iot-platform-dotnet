@@ -3,6 +3,7 @@
 import { stringify } from 'query-string';
 import Config from 'app.config';
 import { HttpClient } from 'utilities/httpClient';
+import { Observable } from 'rxjs';
 import {
   toActiveAlertsModel,
   toAlertForRuleModel,
@@ -52,6 +53,7 @@ export class TelemetryService {
     }
     var body = toTelemetryRequestModel(params);
     return HttpClient.post(`${ENDPOINT}alarms`, body)
+        .catch(error => this.catch404(error))
         .map(toAlertsModel);
   }
 
@@ -62,7 +64,8 @@ export class TelemetryService {
     }
     var body = toTelemetryRequestModel(params);
     return HttpClient.post(`${ENDPOINT}alarmsbyrule`, body)
-        .map(toActiveAlertsModel);
+      .catch(error => this.catch404(error))
+      .map(toActiveAlertsModel);
   }
 
   /** Returns a list of alarms created from a given rule */
@@ -72,13 +75,14 @@ export class TelemetryService {
     }
     var body = toTelemetryRequestModel(params);
     return HttpClient.post(`${ENDPOINT}alarmsbyrule/${id}`, body)
+        .catch(error => this.catch404(error))
         .map(toAlertsForRuleModel);
   }
 
   /** Returns a list of alarms created from a given rule */
   static updateAlertStatus(id, Status) {
     return HttpClient.patch(`${ENDPOINT}alarms/${encodeURIComponent(id)}`, { Status })
-      .map(toAlertForRuleModel);
+        .map(toAlertForRuleModel);
   }
 
   static deleteAlerts(ids) {
@@ -90,6 +94,7 @@ export class TelemetryService {
   static getTelemetryByMessages(params = {}) {
     var body = toTelemetryRequestModel(params);
     return HttpClient.post(`${ENDPOINT}messages`, body)
+        .catch(error => this.catch404(error))
         .map(toMessagesModel);
   }
 
@@ -114,5 +119,13 @@ export class TelemetryService {
   static deleteRule(id) {
     return HttpClient.delete(`${ENDPOINT}rules/${id}`)
       .map(() => ({ deletedRuleId: id }));
+  }
+
+  /*
+    a 404 is thrown by some device telemetry apis when a collection does not exist
+    for instances where this is the case, we want to catch this 404 and simply return no data instead
+  */
+  static catch404(error) {
+    return error.status == 404 ? Observable.of({ messages: {} }) : Observable.throw(error)
   }
 }
