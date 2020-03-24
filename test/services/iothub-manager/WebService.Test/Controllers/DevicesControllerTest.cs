@@ -75,7 +75,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
                 .Setup(x => x.GetUploadedFilesForDevice(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(this.CreateFakeFilesList());
             List<string> expectedFiles = new List<string>(this.CreateFakeFilesList());
-            
+
             // Act
             List<string> files = await this.controller.GetDeviceFilesAsync(deviceId);
 
@@ -88,10 +88,12 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
                 Assert.Equal(files[i], expectedFiles[i]);
             }
         }
+
         public void Dispose()
         {
             this.Dispose(true);
         }
+
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposedValue)
@@ -104,6 +106,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Test.Controllers
                 this.disposedValue = true;
             }
         }
+
         private List<string> CreateFakeFilesList()
         {
             return new List<string>
