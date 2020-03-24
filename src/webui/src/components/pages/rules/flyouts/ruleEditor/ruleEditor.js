@@ -286,20 +286,34 @@ export class RuleEditor extends LinkedComponent {
   }
 
   getConditionFields(devices, modules) {
-    const conditions = new Set(); // Using a set to avoid searching the array multiple times in the every
-    devices.forEach(({ telemetry = {} }) => {
-      Object.values(telemetry).forEach(({ messageSchema: { fields } }) => {
-        Object.keys(fields).forEach((field) => {
-          if (field.toLowerCase().indexOf('unit') === -1) conditions.add(field);
-        })
-      })
-    })
+    const conditions = new Set();  // use a set to avoid searching the array multiple times
+
+    /* Expected schema for field options
+    "reported": {
+      "Telemetry": {
+        "MessageSchema": {
+          "Fields": {
+            "temperature": "Double",
+            ...
+          }
+        }
+      }
+    }
+    */
+    devices.forEach(({ telemetry: { messageSchema: { fields = {} } = {} } = {}  }) => {
+      Object.keys(fields).forEach(field => {
+        if (field.toLowerCase().indexOf('unit') === -1) {
+          // if the field does not contain substring 'unit', add it to the list
+          conditions.add(field);
+        }
+      });
+    });
 
     modules.forEach(({ moduleFields = {} }) => {
       Object.keys(moduleFields).forEach((field) => {
         conditions.add(field);
       })
-    })
+    });
 
     return [...conditions.values()].map(field => ({ label: field, value: field }));
   }
@@ -499,6 +513,13 @@ export class RuleEditor extends LinkedComponent {
                 <Section.Container key={formData.conditions[idx].key}>
                   <Section.Header>{t('rules.flyouts.ruleEditor.condition.condition')} {idx + 1}</Section.Header>
                   <Section.Content>
+                    { idx === 0 && fieldOptions.length === 0 &&
+                      <SectionDesc>
+                        <Trans i18nKey={"rules.flyouts.ruleEditor.condition.description"}>
+                          telemetry.messageSchema.fields.fieldOption
+                        </Trans>
+                      </SectionDesc>
+                    }
                     <FormGroup>
                       <FormLabel isRequired="true">{t('rules.flyouts.ruleEditor.condition.field')}</FormLabel>
                       <FormControl

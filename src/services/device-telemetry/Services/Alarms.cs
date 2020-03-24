@@ -114,9 +114,17 @@ namespace Mmm.Iot.DeviceTelemetry.Services
                     skip,
                     limit);
 
+<<<<<<< HEAD
                 return docs
                     .Select(doc => new Alarm(doc))
                     .ToList();
+=======
+                return docs == null ?
+                    new List<Alarm>() :
+                    docs
+                        .Select(doc => new Alarm(doc))
+                        .ToList();
+>>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
             }
             catch (ResourceNotFoundException e)
             {
@@ -166,9 +174,17 @@ namespace Mmm.Iot.DeviceTelemetry.Services
                     skip,
                     limit);
 
+<<<<<<< HEAD
                 return docs
                     .Select(doc => new Alarm(doc))
                     .ToList();
+=======
+                return docs == null ?
+                    new List<Alarm>() :
+                    docs
+                        .Select(doc => new Alarm(doc))
+                        .ToList();
+>>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
             }
             catch (ResourceNotFoundException e)
             {

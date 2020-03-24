@@ -5,7 +5,7 @@ import { Toggle } from '@microsoft/azure-iot-ux-fluent-controls/lib/components/T
 
 import Config from 'app.config';
 import Flyout from 'components/shared/flyout';
-import { Btn, Indicator } from 'components/shared';
+import { Btn, Indicator, PropertyGrid } from 'components/shared';
 import { svgs, LinkedComponent, isDef } from 'utilities';
 import { ApplicationSettingsContainer } from './applicationSettings.container';
 import { toDiagnosticsModel, toSinglePropertyDiagnosticsModel } from 'services/models';
@@ -28,7 +28,9 @@ export class Settings extends LinkedComponent {
       loading: false,
       toggledSimulation: false,
       madeLogoUpdate: false,
-      alerting: props.alerting
+      alertingState: this.props.alerting.jobState,
+      alertingIsActive: this.props.alerting.isActive,
+      alertingPending: this.props.alerting.jobState == 'Starting' || this.props.alerting.jobState == 'Stopping',
     };
 
     const { t } = this.props;
@@ -47,6 +49,10 @@ export class Settings extends LinkedComponent {
       .map(value => value.length === 0 ? undefined : value);
 
     this.props.getSimulationStatus();
+
+    if (this.state.alertingPending) {
+      this.watchAlertingStatusAndUpdate(10);
+    }
   }
 
   componentWillReceiveProps({
@@ -95,77 +101,76 @@ export class Settings extends LinkedComponent {
     this.props.toggleSimulationStatus(etag, value);
   }
 
-  onAlertingStatusChange = (value) => {
-    //set state of getAlertingPending to true to disable the button while call is being made
-    //set state of alertingState to pending to give user feedback on status of call
-    //set desiredAlertingState to value as value is the end state once the call is complete
-    this.setState({
-      getAlertingPending: true,
-      alertingState: "Pending",
-      desiredAlertingState: value
-    });
+  watchAlertingStatusAndUpdate = (retryCounter) => {
+    if (retryCounter == 0) {
+      // if the retry counter has reached 0, call it quits, leave the slider where it is but keep it pending
+      this.setState({
+        alertingPending: true,  // leaves the slider unclickable
+      });
+      return;
+    }
 
-    var getStatus = (retry) => {
-      TenantService.getAlertingStatus().subscribe((statusModel) => {
-        if (statusModel.jobState == "Starting" || statusModel.jobState == "Stopping") {
-          setTimeout(function () {
-            getStatus(retry - 1);
-          }, 2000);
+    TenantService.getAlertingStatus().subscribe(
+      (statusModel) => {
+        if (statusModel.jobState == 'Starting' || statusModel.jobState == 'Stopping') {
+          setTimeout(() => this.watchAlertingStatusAndUpdate(statusModel, retryCounter - 1), 5000);
         }
         else {
-          changeStatus(statusModel)
+          this.props.updateAlerting(statusModel);
+          this.setState({
+            alertingState: statusModel.jobState,
+            alertingPending: false,
+            alertingIsActive: statusModel.isActive 
+          });
         }
-      })
-    }
-
-    var changeStatus = (statusModel) => {
-      this.setState({ alerting: statusModel }, () => {
-        this.props.logEvent(toSinglePropertyDiagnosticsModel('Settings_Alerting', value ? 'isStarted' : 'isStopped', statusModel));
-      });
-      this.props.updateAlerting(statusModel)
-      if (statusModel.jobState == "Starting" || statusModel.jobState == "Stopping") {
-        getStatus(40);
       }
-    }
+    );
+  }
+
+  onAlertingStatusChange = (value) => {
+    //set state of alertingPending to true to disable the button while call is being made
+    //set state of alertingState to pending to give user feedback on status of call
+    //set alertingIsActive to value as value is the end state once the call is complete
+    this.setState({
+      alertingPending: true,
+      alertingState: this.props.t('settingsFlyout.alertingPending'),
+      alertingIsActive: value
+    });
+
+    const maxRetries = 40;
 
     if (value) {
       TenantService.alertingStart().subscribe(
-        changeStatus,
-        (err) => {
-          //Subscribe onError handling call
-          console.log(err);
+        (statusModel) => {
+          this.props.logEvent(toSinglePropertyDiagnosticsModel('Settings_Alerting', value ? 'isStarted' : 'isStopped', statusModel));
           this.setState({
-            getAlertingPending: false,
-            alertingState: "Failed",
-            desiredAlertingState: !value
-          });
+            alertingState: this.props.t('settingsFlyout.alertingStarting')
+          })
+          this.watchAlertingStatusAndUpdate(maxRetries)
         },
-        () => {
-          //subscribe onComplete call 
+        (err) => {
           this.setState({
-            getAlertingPending: false,
-            alertingState: "Started"
+            alertingPending: false,
+            alertingState: this.props.t('settingsFlyout.alertingChangeFail'),
+            alertingIsActive: !value
           });
         }
       );
     }
     else {
       TenantService.alertingStop().subscribe(
-        changeStatus,
-        (err) => {
-          //Subscribe onError handling call
-          console.log(err);
+        (statusModel) => {
+          this.props.logEvent(toSinglePropertyDiagnosticsModel('Settings_Alerting', value ? 'isStarted' : 'isStopped', statusModel));
           this.setState({
-            getAlertingPending: false,
-            alertingState: "Failed",
-            desiredAlertingState: !value
-          });
+            alertingState: this.props.t('settingsFlyout.alertingStopping'),
+          })
+          this.watchAlertingStatusAndUpdate(maxRetries)
         },
-        () => {
-          //subscribe onComplete call 
+        (err) => {
           this.setState({
-            getAlertingPending: false,
-            alertingState: "Stopped"
+            alertingPending: false,
+            alertingState: this.props.t('settingsFlytout.alertingChangeFail'),
+            alertingIsActive: !value
           });
         }
       );
@@ -234,9 +239,9 @@ export class Settings extends LinkedComponent {
     } = this.props;
     const {
       desiredSimulationState,
-      desiredAlertingState,
+      alertingIsActive,
       alertingState,
-      getAlertingPending,
+      alertingPending,
       loading,
       logoFile,
       applicationName,
@@ -320,11 +325,11 @@ export class Settings extends LinkedComponent {
                       'type': 'button'
                     }
                   }}
-                  on={desiredAlertingState}
-                  disabled={getAlertingPending}
+                  on={alertingIsActive}
+                  disabled={alertingPending}
                   onChange={this.onAlertingStatusChange}
-                  onLabel={t('settingsFlyout.start')}
-                  offLabel={t('settingsFlyout.stop')} />
+                  onLabel={alertingPending ? t('settingsFlyout.loading') : t('settingsFlyout.stop')}
+                  offLabel={alertingPending ? t('settingsFlyout.loading') : t('settingsFlyout.start')} />
               </Section.Content>
             </Section.Container>
             <Section.Container className="simulation-toggle-container">

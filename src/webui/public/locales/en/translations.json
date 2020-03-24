@@ -84,7 +84,6 @@
     "closeTitle": "Close"
   },
   "settingsFlyout": {
-    "alerting": "Advanced Alerting",
     "title": "System settings",
     "version": "Version {{version}}",
     "viewRelNotes": "View release notes",
@@ -98,7 +97,6 @@
     "flowing": "Flowing",
     "optInButton": "Diagnostics",
     "simulationToggle": "Simulation",
-    "alertingToggle": "Start/Stop Alerting",
     "start": "Start",
     "stop": "Stop",
     "stopped": "Stopped",
@@ -106,7 +104,13 @@
     "disable": "Disable",
     "simulationData": "Simulation data",
     "loading": "Loading",
+    "alerting": "Advanced Alerting",
+    "alertingToggle": "Start/Stop Alerting",
     "alertingDescription": "Start or stop advanced alerting. Stopping alerting will minimize the cost of the solution. Rules and alerts will both be deactivated if alerting is turned off.",
+    "alertingStarting": "Starting",
+    "alertingStopping": "Stopping",
+    "alertingChangeFail": "Failed",
+    "alertingPending": "Pending",
     "simulationDescription": "Start or stop simulation of devices. Stopping device simulation will minimize the cost of the solution; no simulated telemetry will be sent to your IoT Hub and alerts will not be generated for simulated devices.",
     "toggleError": "Error updating simulation status",
     "setLogoError": "Error updating logo",
@@ -561,6 +565,7 @@
         "calculationPlaceholder": "Select",
         "timePeriod": "Time period (in minutes)",
         "condition": {
+          "description": "To populate fields, a device must have reported properties with keys in the form of: <0><0>{{format}}</0></0>.",
           "condition": "Condition",
           "field": "Field",
           "fieldPlaceholder": "Select field",

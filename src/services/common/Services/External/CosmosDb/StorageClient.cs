@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Azure.Documents;
@@ -104,20 +105,21 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             string databaseName,
             string id)
         {
-            DocumentCollection collectionInfo = new DocumentCollection();
             RangeIndex index = Index.Range(DataType.String, -1);
-            collectionInfo.IndexingPolicy = new IndexingPolicy(
-                new Index[] { index });
-            collectionInfo.Id = id;
+            DocumentCollection collectionInfo = new DocumentCollection
+            {
+                IndexingPolicy = new IndexingPolicy(new Index[] { index }),
+                Id = id,
+            };
 
             // Azure Cosmos DB collections can be reserved with
             // throughput specified in request units/second.
-            RequestOptions requestOptions = new RequestOptions();
-            requestOptions.OfferThroughput = this.storageThroughput;
-            requestOptions.ConsistencyLevel = ConsistencyLevel.Strong;
+            RequestOptions requestOptions = new RequestOptions
+            {
+                OfferThroughput = this.storageThroughput,
+                ConsistencyLevel = ConsistencyLevel.Strong,
+            };
             string dbUrl = "/dbs/" + databaseName;
-            string colUrl = dbUrl + "/colls/" + id;
-            ResourceResponse<DocumentCollection> response = null;
 
             try
             {
@@ -128,6 +130,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 throw new Exception($"While attempting to create collection {id}, an error occured while attepmting to create its database {databaseName}.", e);
             }
 
+            ResourceResponse<DocumentCollection> response;
             try
             {
                 response = await this.client.CreateDocumentCollectionIfNotExistsAsync(
@@ -159,6 +162,10 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             {
                 return await this.client.ReadDocumentAsync(docUrl);
             }
+            catch (DocumentClientException dce)
+            {
+                throw this.ConvertDocumentClientException(dce);
+            }
             catch (Exception e)
             {
                 this.logger.LogError(e, "Error reading document in collection with collection ID {collectionId}", colId);
@@ -177,6 +184,10 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             try
             {
                 return await this.client.CreateDocumentAsync(colUrl, document, new RequestOptions(), false);
+            }
+            catch (DocumentClientException dce)
+            {
+                throw this.ConvertDocumentClientException(dce);
             }
             catch (Exception e)
             {
@@ -202,6 +213,10 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 return await this.client.DeleteDocumentAsync(
                     docUrl,
                     new RequestOptions());
+            }
+            catch (DocumentClientException dce)
+            {
+                throw this.ConvertDocumentClientException(dce);
             }
             catch (Exception e)
             {
@@ -282,17 +297,30 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             {
                 return await Task.FromResult(this.client.CreateDocumentQuery(collectionLink).ToList<Document>());
             }
-            catch (Exception e)
+            catch (AggregateException ae)
             {
+<<<<<<< HEAD
                 string messageCheck = "resource not found";
                 if (e.Message.ToLower().Contains(messageCheck) || e.InnerException.Message.ToLower().Contains(messageCheck))
                 {
                     throw new ResourceNotFoundException(e.Message);
+=======
+                if (ae.InnerException is DocumentClientException)
+                {
+                    throw this.ConvertDocumentClientException(ae.InnerException as DocumentClientException);
+>>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
                 }
                 else
                 {
                     throw;
                 }
+<<<<<<< HEAD
+=======
+            }
+            catch (DocumentClientException dce)
+            {
+                throw this.ConvertDocumentClientException(dce);
+>>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
             }
         }
 
@@ -320,6 +348,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
 
             try
             {
+<<<<<<< HEAD
                 var queryResults = await Task.FromResult(this.client.CreateDocumentQuery<Document>(
                         collectionLink,
                         querySpec,
@@ -328,22 +357,51 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                     .Skip(skip)
                     .Take(limit)
                     .ToList());
+=======
+                var result = await Task.FromResult(this.client.CreateDocumentQuery<Document>(
+                        collectionLink,
+                        querySpec,
+                        queryOptions));
+
+                var queryResults = result == null ?
+                    new List<Document>() :
+                    result
+                        .AsEnumerable()
+                        .Skip(skip)
+                        .Take(limit)
+                        .ToList();
+>>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
 
                 this.logger.LogInformation("Query results count: {count}", queryResults.Count);
 
                 return queryResults;
             }
+<<<<<<< HEAD
             catch (Exception e)
             {
                 string messageCheck = "resource not found";
                 if (e.Message.ToLower().Contains(messageCheck) || e.InnerException.Message.ToLower().Contains(messageCheck))
                 {
                     throw new ResourceNotFoundException(e.Message);
+=======
+            catch (AggregateException ae)
+            {
+                if (ae.InnerException is DocumentClientException)
+                {
+                    throw this.ConvertDocumentClientException(ae.InnerException as DocumentClientException);
+>>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
                 }
                 else
                 {
                     throw;
                 }
+<<<<<<< HEAD
+=======
+            }
+            catch (DocumentClientException dce)
+            {
+                throw this.ConvertDocumentClientException(dce);
+>>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
             }
         }
 
@@ -369,19 +427,33 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 colId);
 
             await this.CreateCollectionIfNotExistsAsync(databaseName, colId);
-            var resultList = this.client.CreateDocumentQuery(
-                collectionLink,
-                querySpec,
-                queryOptions).ToArray();
 
-            if (resultList.Length > 0)
+            try
             {
-                return (int)resultList[0];
+                var result = this.client.CreateDocumentQuery(
+                    collectionLink,
+                    querySpec,
+                    queryOptions);
+
+                var resultList = result == null ? new Document[0] : result.ToArray();
+
+                return resultList.Length > 0 ? (int)resultList[0] : 0;
             }
-
-            this.logger.LogInformation("No results found for count query '{querySpec}' on collection with ID {collectionId} and database name {databaseName}", querySpec, colId, databaseName);
-
-            return 0;
+            catch (AggregateException ae)
+            {
+                if (ae.InnerException is DocumentClientException)
+                {
+                    throw this.ConvertDocumentClientException(ae.InnerException as DocumentClientException);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            catch (DocumentClientException dce)
+            {
+                throw this.ConvertDocumentClientException(dce);
+            }
         }
 
         public async Task<Document> UpsertDocumentAsync(
@@ -420,8 +492,7 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                 Match match = Regex.Match(config.Global.CosmosDb.DocumentDbConnectionString, ConnectionStringValueRegex);
 
                 // Get the storage uri from the regular expression match
-                Uri storageUriEndpoint;
-                Uri.TryCreate(match.Groups["endpoint"].Value, UriKind.RelativeOrAbsolute, out storageUriEndpoint);
+                Uri.TryCreate(match.Groups["endpoint"].Value, UriKind.RelativeOrAbsolute, out Uri storageUriEndpoint);
                 this.storageUri = storageUriEndpoint;
                 if (string.IsNullOrEmpty(this.storageUri.ToString()))
                 {
@@ -442,6 +513,19 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
 
             // handling exceptions is not necessary here - the value can be left null if not configured.
             this.storageThroughput = config.Global.CosmosDb.Rus;
+        }
+
+        private Exception ConvertDocumentClientException(DocumentClientException e)
+        {
+            switch (e.StatusCode)
+            {
+                case HttpStatusCode.NotFound:
+                    return new ResourceNotFoundException(e.Message, e);
+                case HttpStatusCode.Conflict:
+                    return new ConflictingResourceException(e.Message, e);
+                default:
+                    return e;
+            }
         }
     }
 }
