@@ -90,11 +90,11 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
             return new MethodResultApiModel(await this.deviceService.InvokeDeviceMethodAsync(id, parameter.ToServiceModel()));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("files/{id}")]
         [Authorize("ReadAll")]
         public async Task<List<string>> GetDeviceFilesAsync(string id)
         {
-            return await this.deviceProperties.GetUploadedFilesForDevice("391c8598-409e-4987-93fe-35536b8ff2d1", "test");
+            return await this.deviceProperties.GetUploadedFilesForDevice(this.GetTenantId(), id);
         }
     }
 }
