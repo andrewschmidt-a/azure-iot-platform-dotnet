@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Devices;
@@ -42,6 +43,11 @@ namespace Mmm.Iot.IoTHubManager.Services
         {
             var result = await this.serviceClient.InvokeDeviceMethodAsync(deviceId, parameter.ToAzureModel());
             return new MethodResultServiceModel(result);
+        }
+
+        public async Task SendCloudToDeviceMessage(string deviceId, string message)
+        {
+            await this.serviceClient.SendAsync(deviceId, new Message(Encoding.ASCII.GetBytes(message)));
         }
     }
 }

@@ -88,5 +88,12 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
         {
             return new MethodResultApiModel(await this.deviceService.InvokeDeviceMethodAsync(id, parameter.ToServiceModel()));
         }
+
+        [HttpPost("{id}/c2dmessage")]
+        [Authorize("CreateJobs")]
+        public async Task SendCloudToDeviceAsync(string id, [FromBody] string message)
+        {
+            await this.deviceService.SendCloudToDeviceMessage(id, message);
+        }
     }
 }
