@@ -299,28 +299,18 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
             }
             catch (AggregateException ae)
             {
-<<<<<<< HEAD
-                string messageCheck = "resource not found";
-                if (e.Message.ToLower().Contains(messageCheck) || e.InnerException.Message.ToLower().Contains(messageCheck))
-                {
-                    throw new ResourceNotFoundException(e.Message);
-=======
                 if (ae.InnerException is DocumentClientException)
                 {
                     throw this.ConvertDocumentClientException(ae.InnerException as DocumentClientException);
->>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
                 }
                 else
                 {
                     throw;
                 }
-<<<<<<< HEAD
-=======
             }
             catch (DocumentClientException dce)
             {
                 throw this.ConvertDocumentClientException(dce);
->>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
             }
         }
 
@@ -348,16 +338,6 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
 
             try
             {
-<<<<<<< HEAD
-                var queryResults = await Task.FromResult(this.client.CreateDocumentQuery<Document>(
-                        collectionLink,
-                        querySpec,
-                        queryOptions)
-                    .AsEnumerable()
-                    .Skip(skip)
-                    .Take(limit)
-                    .ToList());
-=======
                 var result = await Task.FromResult(this.client.CreateDocumentQuery<Document>(
                         collectionLink,
                         querySpec,
@@ -370,38 +350,25 @@ namespace Mmm.Iot.Common.Services.External.CosmosDb
                         .Skip(skip)
                         .Take(limit)
                         .ToList();
->>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
 
                 this.logger.LogInformation("Query results count: {count}", queryResults.Count);
 
                 return queryResults;
             }
-<<<<<<< HEAD
-            catch (Exception e)
-            {
-                string messageCheck = "resource not found";
-                if (e.Message.ToLower().Contains(messageCheck) || e.InnerException.Message.ToLower().Contains(messageCheck))
-                {
-                    throw new ResourceNotFoundException(e.Message);
-=======
             catch (AggregateException ae)
             {
                 if (ae.InnerException is DocumentClientException)
                 {
                     throw this.ConvertDocumentClientException(ae.InnerException as DocumentClientException);
->>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
                 }
                 else
                 {
                     throw;
                 }
-<<<<<<< HEAD
-=======
             }
             catch (DocumentClientException dce)
             {
                 throw this.ConvertDocumentClientException(dce);
->>>>>>> d81eab13bee82a59cd3d1426cf6130e5d604f926
             }
         }
 
