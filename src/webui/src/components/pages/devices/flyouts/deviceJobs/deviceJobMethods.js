@@ -3,6 +3,8 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 import { Observable } from 'rxjs';
+import JSONInput from 'react-json-editor-ajrm';
+import locale from 'react-json-editor-ajrm/locale/en';
 
 import { IoTHubManagerService } from 'services';
 import { toSubmitMethodJobRequestModel, toDiagnosticsModel } from 'services/models';
@@ -36,6 +38,9 @@ const initialState = {
   jobName: undefined,
   jobId: undefined,
   methodName: undefined,
+  jsonPayload: {
+    jsObject: {},
+  },
   commonMethods: []
 };
 
@@ -52,6 +57,9 @@ export class DeviceJobMethods extends LinkedComponent {
     this.methodNameLink = this.linkTo('methodName')
       .map(({ value }) => value)
       .check(Validator.notEmpty, () => this.props.t('devices.flyouts.jobs.validation.required'));
+
+    this.jsonPayloadLink = this.linkTo('jsonPayload')
+      .check((jsonPayloadObject) => !jsonPayloadObject.error, () => this.props.t('devices.flyouts.jobs.validation.invalid'));
   }
 
   componentDidMount() {
@@ -89,7 +97,8 @@ export class DeviceJobMethods extends LinkedComponent {
   formIsValid() {
     return [
       this.jobNameLink,
-      this.methodNameLink
+      this.methodNameLink,
+      this.jsonPayloadLink
     ].every(link => !link.error);
   }
 
@@ -132,7 +141,8 @@ export class DeviceJobMethods extends LinkedComponent {
     const {
       t,
       onClose,
-      devices
+      devices,
+      theme
     } = this.props;
     const {
       isPending,
@@ -171,6 +181,12 @@ export class DeviceJobMethods extends LinkedComponent {
             <FormLabel>{t('devices.flyouts.jobs.jobName')}</FormLabel>
             <div className="help-message">{t('devices.flyouts.jobs.jobNameHelpMessage')}</div>
             <FormControl className="long" link={this.jobNameLink} type="text" placeholder={t('devices.flyouts.jobs.jobNameHint')} />
+          </FormGroup>
+
+          <FormGroup>
+            <FormLabel>{t('devices.flyouts.jobs.jsonPayload')}</FormLabel>
+            <div className="help-message">{t('devices.flyouts.jobs.jsonPayloadMessage')}</div>
+            <FormControl link={this.jsonPayloadLink} type="jsoninput" height="200px" theme={theme}/>
           </FormGroup>
 
           <SummarySection>

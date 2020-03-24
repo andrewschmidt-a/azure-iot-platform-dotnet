@@ -53,30 +53,32 @@ export class PackageNew extends LinkedComponent {
       fileError: undefined,
       uploadedFirmwareSuccessfully: false,
       packageJson: {
-        "id": "sampleConfigId",
-        "content": {
-          "deviceContent": {
-            "properties.desired.softwareConfig": {
-              "softwareName": "Firmware",
-              "version": "1.0.0",
-              "softwareURL": "blob_uri",
-              "fileName": "filename",
-              "serialNumber": "",
-              "checkSum": ""
+        jsObject: {
+          "id": "sampleConfigId",
+          "content": {
+            "deviceContent": {
+              "properties.desired.softwareConfig": {
+                "softwareName": "Firmware",
+                "version": "1.0.0",
+                "softwareURL": "blob_uri",
+                "fileName": "filename",
+                "serialNumber": "",
+                "checkSum": ""
+              }
             }
-          }
-        },
-        "metrics": {
-          "queries": {
-            "current": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='Success'",
-            "applying": "SELECT deviceId FROM devices WHERE ( properties.reported.softwareConfig.status='Downloading' OR properties.reported.softwareConfig.status='Verifying' OR properties.reported.softwareConfig.status='Applying')",
-            "rebooting": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='Rebooting'",
-            "error": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='Error'",
-            "rolledback": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='RolledBack'"
-          }
-        },
-        "targetCondition": "",
-        "priority": 20
+          },
+          "metrics": {
+            "queries": {
+              "current": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='Success'",
+              "applying": "SELECT deviceId FROM devices WHERE ( properties.reported.softwareConfig.status='Downloading' OR properties.reported.softwareConfig.status='Verifying' OR properties.reported.softwareConfig.status='Applying')",
+              "rebooting": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='Rebooting'",
+              "error": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='Error'",
+              "rolledback": "SELECT deviceId FROM devices WHERE properties.reported.softwareConfig.status='RolledBack'"
+            }
+          },
+          "targetCondition": "",
+          "priority": 20
+        }
       }
     }
   }
@@ -84,19 +86,11 @@ export class PackageNew extends LinkedComponent {
   componentWillUnmount() {
     this.props.resetPackagesPendingError();
   }
-  packageJSONUpdated = (changeObject) => {
-    console.log(changeObject)
-    var file = undefined;
-    if(changeObject.jsObject){
-      file = dataURLtoFile("data:application/json;base64,"+btoa(JSON.stringify(changeObject.jsObject)), this.state.firmwarePackageName);
-    }
-    console.log(file)
-    this.setState({packageJson: changeObject.jsObject, packageFile:file})
-  }
+
   apply = (event) => {
     event.preventDefault();
     const { createPackage } = this.props;
-    const { packageType, configType, customConfigName, packageFile, fileError, packageJson, uploadedFirmwareSuccessfully } = this.state;
+    const { packageType, configType, customConfigName, fileError, packageJson, packageFile, uploadedFirmwareSuccessfully } = this.state;
 
     // reset error status before starting file upload
     this.setState({
@@ -106,22 +100,23 @@ export class PackageNew extends LinkedComponent {
     if (configType == "Firmware" && !uploadedFirmwareSuccessfully) {
       ConfigService.uploadFirmware(packageFile).subscribe(
         blobData => {
+          var packageJsonObject = packageJson.jsObject;
           // Replace all invalid configuration id values
-          packageJson.id = packageFile.name.toLowerCase().replace(/[^a-z0-9\[\]\-\+\%\_\*\!\']/gi, "_")+"-"+uuid();
-          packageJson.content.deviceContent["properties.desired.softwareConfig"].fileName = packageFile.name;
-          packageJson.content.deviceContent["properties.desired.softwareConfig"].softwareURL = blobData.FileUri;
-          packageJson.content.deviceContent["properties.desired.softwareConfig"].checkSum = blobData.CheckSum;
+          packageJsonObject.id = packageFile.name.toLowerCase().replace(/[^a-z0-9\[\]\-\+\%\_\*\!\']/gi, "_")+"-"+uuid();
+          packageJsonObject.content.deviceContent["properties.desired.softwareConfig"].fileName = packageFile.name;
+          packageJsonObject.content.deviceContent["properties.desired.softwareConfig"].softwareURL = blobData.FileUri;
+          packageJsonObject.content.deviceContent["properties.desired.softwareConfig"].checkSum = blobData.CheckSum;
           
           // Replace Configuration Ids in metrics
-          for (const [key, value] of Object.entries(packageJson.metrics.queries)) {
-            packageJson.metrics.queries[key] = value.replace("firmware285", packageJson.id)
+          for (const [key, value] of Object.entries(packageJsonObject.metrics.queries)) {
+            packageJsonObject.metrics.queries[key] = value.replace("firmware285", packageJsonObject.id)
           }
 
           this.setState({
             packageJson: packageJson,
             uploadedFirmwareSuccessfully: true,
             firmwarePackageName: packageFile.name,
-            packageFile: dataURLtoFile("data:application/json;base64,"+btoa(JSON.stringify(packageJson)), packageFile.name)
+            packageFile: dataURLtoFile("data:application/json;base64,"+btoa(JSON.stringify(packageJsonObject)), packageFile.name)
           })
         },
         error => {
@@ -176,7 +171,6 @@ export class PackageNew extends LinkedComponent {
 
     this.setState({ packageFile: file, fileError: undefined });
     this.props.logEvent(toSinglePropertyDiagnosticsModel('NewPackage_FileFirmwareSelect', 'FileName', file.name));
-
   }
 
   onFileSelected = (e) => {
@@ -198,6 +192,7 @@ export class PackageNew extends LinkedComponent {
   formIsValid = () => {
     return [
       this.packageTypeLink,
+      this.packageJsonLink
     ].every(link => !link.error);
   }
 
@@ -220,6 +215,7 @@ export class PackageNew extends LinkedComponent {
 
   render() {
     const { t,
+      theme,
       isPending,
       error,
       configTypes,
@@ -230,7 +226,6 @@ export class PackageNew extends LinkedComponent {
       configType,
       packageFile,
       changesApplied,
-      packageJson,
       uploadedFirmwareSuccessfully,
       fileError } = this.state;
 
@@ -265,6 +260,9 @@ export class PackageNew extends LinkedComponent {
         this.props.t('packages.flyouts.new.validation.required')
       )
       .check(customConfigValue => customConfigValue.length <= 50, this.props.t('packages.flyouts.new.validation.customConfig'));
+
+    this.packageJsonLink = this.linkTo('packageJson')
+      .check((jsonObject) => !jsonObject.error, () => this.props.t('packages.flyouts.new.validation.invalid'));
 
     const configTypeEnabled = this.packageTypeLink.value === packagesEnum.deviceConfiguration;
     const customTextVisible = configTypeEnabled && this.configTypeLink.value === configsEnum.custom;
@@ -386,14 +384,7 @@ export class PackageNew extends LinkedComponent {
                 }
                 { uploadedFirmwareSuccessfully && <div>
                   <br/>
-                  <JSONInput
-                    id          = 'id'
-                    placeholder = { packageJson }
-                    locale      = { locale }
-                    height      = '550px'
-                    width       = '100%'
-                    onChange    = {this.packageJSONUpdated}
-                />
+                  <FormControl link={this.packageJsonLink} type="jsoninput" height="550px" theme={theme} />
                 </div>
                 }
               </div>

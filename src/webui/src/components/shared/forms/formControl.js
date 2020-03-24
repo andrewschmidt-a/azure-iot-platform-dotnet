@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { Duration } from './duration';
 import { Select } from './select';
 import { ErrorMsg } from './errorMsg';
+import { JsonInput } from './jsoninput';
 import { joinClasses, isFunc, Link } from 'utilities';
 
 import './styles/formControl.scss';
@@ -44,6 +45,8 @@ export class FormControl extends Component {
         return <Duration {...controlProps} />;
       case 'select':
         return <Select {...controlProps} />;
+      case 'jsoninput':
+        return <JsonInput {...controlProps} />;
       default:
         return null; // Unknown form control
     }
@@ -54,7 +57,7 @@ export class FormControl extends Component {
   }
 
   render() {
-    const { type, formGroupId, className, link, error, errorState, ...rest } = this.props;
+    const { type, formGroupId, className, link, error, errorState, theme, ...rest } = this.props;
     const valueOverrides = link ? { value: link.value }: {};
     const errorMsg =
       (typeof errorState === 'undefined' && this.state.edited && !rest.disabled)
@@ -62,11 +65,12 @@ export class FormControl extends Component {
         : '';
     const controlProps = {
       ...rest,
+      theme,
       id: rest.id || formGroupId,
       className: joinClasses('form-control', className, errorState || errorMsg ? 'error' : ''),
       onChange: this.onChange,
       onBlur: this.onBlur,
-      ...valueOverrides
+      ...valueOverrides,
     };
     return (
       <div className="form-control-container">
@@ -84,7 +88,8 @@ FormControl.propTypes = {
     'number',
     'textarea',
     'duration',
-    'select'
+    'select',
+    'jsoninput'
   ]).isRequired,
   errorState: PropTypes.bool,
   formGroupId: PropTypes.string,

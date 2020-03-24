@@ -400,7 +400,8 @@
         "jobNameHelpMessage": "Only letters and numbers are allowed",
         "viewStatus": "View job status",
         "validation": {
-          "required": "Is required"
+          "required": "Is required",
+          "invalid": "invalid entry"
         },
         "tags": {
           "radioLabel": "Tags",
@@ -847,7 +848,8 @@
           "required": "Is required",
           "fileName": "File name greater than 50 characters",
           "fileType": "Invalid file type",
-          "customConfig": "name greater than 50 characters"
+          "customConfig": "name greater than 50 characters",
+          "invalid": "invalid entry"
         }
       }
     },

@@ -3,6 +3,7 @@
 import { connect } from 'react-redux';
 import { withNamespaces } from 'react-i18next';
 import { PackageNew } from './packageNew';
+import { getTheme } from 'store/reducers/appReducer';
 import {
   getCreatePackageError,
   getCreatePackagePendingStatus,
@@ -16,6 +17,7 @@ import { epics as appEpics } from 'store/reducers/appReducer';
 
 // Pass the global info needed
 const mapStateToProps = state => ({
+  theme: getTheme(state),
   isPending: getCreatePackagePendingStatus(state),
   error: getCreatePackageError(state),
   configTypes: getConfigTypes(state),
