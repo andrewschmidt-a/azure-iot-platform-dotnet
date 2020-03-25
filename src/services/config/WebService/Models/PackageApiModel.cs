@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using Mmm.Iot.Config.Services.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -19,18 +20,21 @@ namespace Mmm.Iot.Config.WebService.Models
             this.DateCreated = model.DateCreated;
             this.Content = model.Content;
             this.ConfigType = model.ConfigType;
+            this.Tags = model.Tags;
         }
 
         public PackageApiModel(
                 string content,
                 string name,
                 PackageType type,
-                string configType)
+                string configType,
+                IList<string> tags)
         {
             this.Content = content;
             this.Name = name;
             this.PackageType = type;
             this.ConfigType = configType;
+            this.Tags = tags;
         }
 
         [JsonProperty("Id")]
@@ -52,6 +56,9 @@ namespace Mmm.Iot.Config.WebService.Models
         [JsonProperty("Content")]
         public string Content { get; set; }
 
+        [JsonProperty("Tags")]
+        public IList<string> Tags { get; set; }
+
         public PackageServiceModel ToServiceModel()
         {
             return new PackageServiceModel()
@@ -60,6 +67,7 @@ namespace Mmm.Iot.Config.WebService.Models
                 Name = this.Name,
                 PackageType = this.PackageType,
                 ConfigType = this.ConfigType,
+                Tags = this.Tags,
             };
         }
     }

@@ -31,6 +31,7 @@ namespace Mmm.Iot.Common.Services.Auth
                     "DisableAlerting",
                     "EnableAlerting",
                     "ReadAll",
+                    "TagPackages",
                     "UpdateAlarms",
                     "UpdateDeviceGroups",
                     "UpdateDevices",
