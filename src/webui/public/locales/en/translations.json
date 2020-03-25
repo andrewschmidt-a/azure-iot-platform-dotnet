@@ -384,6 +384,20 @@
         "applySuccess": "devices deleted successfully!",
         "close": "Close"
       },
+      "c2dMessage": {
+        "sendMessage": "Send Message",
+        "title": "Cloud To Device Messages",
+        "header": "Send C2D Messages",
+        "description": "This will send to all selected devices",
+        "simulatedNotSupported": "Sending to simulated devices is not currently supported, this action will only be taken on the physical devices.",
+        "summaryHeader": "Summary",
+        "affected": "Affected devices",
+        "cancel": "Cancel",
+        "apply": "Send",
+        "pending": "Sending to devices... ",
+        "applySuccess": "messages sent successfully!",
+        "close": "Close"
+      },
       "jobs": {
         "title": "Jobs",
         "noDevices": "Oops, we were not able to find any selected devices.",

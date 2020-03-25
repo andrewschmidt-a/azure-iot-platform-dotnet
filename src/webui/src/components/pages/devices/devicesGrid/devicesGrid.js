@@ -7,6 +7,7 @@ import { deviceColumnDefs, defaultDeviceGridProps } from './devicesGridConfig';
 import { DeviceDeleteContainer } from '../flyouts/deviceDelete';
 import { DeviceJobsContainer } from '../flyouts/deviceJobs';
 import { DeviceDetailsContainer } from '../flyouts/deviceDetails';
+import { CloudToDeviceMessageContainer } from '../flyouts/cloudToDeviceMessage';
 import { isFunc, svgs, translateColumnDefs } from 'utilities';
 import { checkboxColumn } from 'components/shared/pcsGrid/pcsGridConfig';
 import { CreateDeviceQueryContainer } from '../flyouts/createDeviceQuery';
@@ -48,6 +49,9 @@ export class DevicesGrid extends Component {
         <Protected permission={permissions.deleteDevices}>
           <Btn svg={svgs.trash} onClick={this.openFlyout('delete')}>{props.t('devices.flyouts.delete.title')}</Btn>
         </Protected>
+        <Protected permission={permissions.createDevices}>
+          <Btn svg={svgs.infoBubble} onClick={this.openFlyout('c2dmessage')}>{props.t('devices.flyouts.c2dMessage.sendMessage')}</Btn>
+        </Protected>
       </ComponentArray>;
   }
 
@@ -77,6 +81,8 @@ export class DevicesGrid extends Component {
         return <DeviceJobsContainer key="jobs-device-key" onClose={this.closeFlyout} devices={this.deviceGridApi.getSelectedRows()} />
       case 'details':
         return <DeviceDetailsContainer key="details-device-key" onClose={this.closeFlyout} deviceId={this.state.softSelectedDeviceId} />
+      case 'c2dmessage':
+        return <CloudToDeviceMessageContainer onClose={this.closeFlyout} devices={this.deviceGridApi.getSelectedRows()} />
       default:
         return null;
     }

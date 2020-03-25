@@ -60,6 +60,10 @@ export class Devices extends Component {
     this.setState({ openFlyoutName: 'new-device' });
     this.props.logEvent(toDiagnosticsModel('Devices_NewClick', {}));
   }
+  openCloudToDeviceFlyout = () => {
+    this.setState({openFlyoutName: 'c2d-message'})
+    this.props.logEvent(toDiagnosticsModel('Devices_C2DClick', {}));
+  }
 
   openCreateDeviceQueryFlyout = () => {
     this.setState({openFlyoutName: 'create-device-query' });
@@ -90,6 +94,8 @@ export class Devices extends Component {
       t: this.props.t
     };
     const newDeviceFlyoutOpen = this.state.openFlyoutName === 'new-device';
+
+    const cloudToDeviceFlyoutOpen = this.state.openFlyoutName === 'c2d-message';
     const simManagementFlyoutOpen = this.state.openFlyoutName === 'sim-management';
     const createDeviceQueryFlyoutOpen = this.state.openFlyoutName === 'create-device-query';
 
