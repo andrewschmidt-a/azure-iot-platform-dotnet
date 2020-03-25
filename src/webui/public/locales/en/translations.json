@@ -711,6 +711,7 @@
     }
   },
   "timeInterval": {
+    "PT15M": "Last 15 minutes",
     "PT1H": "Last hour",
     "P1D": "Last day",
     "P7D": "Last week",

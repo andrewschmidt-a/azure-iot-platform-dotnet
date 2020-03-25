@@ -9,6 +9,7 @@ import { toDiagnosticsModel } from 'services/models';
 import './timeIntervalDropdown.scss';
 
 const optionValues = [
+  { value: 'PT15M'},
   { value: 'PT1H' },
   { value: 'P1D' },
   { value: 'P7D' },
