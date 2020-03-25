@@ -50,7 +50,7 @@ export class DevicesGrid extends Component {
           <Btn svg={svgs.trash} onClick={this.openFlyout('delete')}>{props.t('devices.flyouts.delete.title')}</Btn>
         </Protected>
         <Protected permission={permissions.createDevices}>
-          <Btn svg={svgs.infoBubble} onClick={this.openFlyout('c2dmessage')}>{props.t('devices.flyouts.c2dMessage.sendMessage')}</Btn>
+          <Btn svg={svgs.email} onClick={this.openFlyout('c2dmessage')}>{props.t('devices.flyouts.c2dMessage.sendMessage')}</Btn>
         </Protected>
       </ComponentArray>;
   }
