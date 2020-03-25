@@ -16,5 +16,7 @@ namespace Mmm.Iot.IoTHubManager.Services
             DevicePropertyServiceModel devicePropertyServiceModel);
 
         Task<bool> TryRecreateListAsync(bool force = false);
+
+        Task<List<string>> GetUploadedFilesForDevice(string tenantId, string deviceId);
     }
 }

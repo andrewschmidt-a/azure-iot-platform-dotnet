@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Mmm.Iot.Common.Services.Config;
 using Mmm.Iot.Common.Services.Exceptions;
 using Mmm.Iot.Common.Services.External.StorageAdapter;
@@ -24,12 +26,15 @@ namespace Mmm.Iot.IoTHubManager.Services
         private const string WhitelistReportedPrefix = "reported.";
         private const string TagPrefix = "Tags.";
         private const string ReportedPrefix = "Properties.Reported.";
+        private const string FileuploadContainerPrefix = "file-upload";
         private readonly IStorageAdapterClient storageClient;
         private readonly IDevices devices;
         private readonly ILogger logger;
         private readonly string whitelist;
         private readonly long ttl;
         private readonly long rebuildTimeout;
+        private readonly string deviceFileAccessDuration;
+        private readonly string storageConnectionString;
         private readonly TimeSpan serviceQueryInterval = TimeSpan.FromSeconds(10);
         private DateTime devicePropertiesLastUpdated;
 
@@ -44,6 +49,8 @@ namespace Mmm.Iot.IoTHubManager.Services
             this.whitelist = config.IotHubManagerService.DevicePropertiesCache.Whitelist;
             this.ttl = config.IotHubManagerService.DevicePropertiesCache.Ttl;
             this.rebuildTimeout = config.IotHubManagerService.DevicePropertiesCache.RebuildTimeout;
+            this.deviceFileAccessDuration = config.Global.PackageSharedAccessExpiryTime;
+            this.storageConnectionString = config.Global.StorageAccountConnectionString;
             this.devices = devices;
         }
 
@@ -233,6 +240,37 @@ namespace Mmm.Iot.IoTHubManager.Services
             }
         }
 
+        public async Task<List<string>> GetUploadedFilesForDevice(string tenantId, string deviceId)
+        {
+            List<string> result = null;
+            string deviceBlobFileContainer = $"{tenantId}-{FileuploadContainerPrefix}/{deviceId}";
+
+            // Retrieve storage account from connection string.
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(this.storageConnectionString);
+
+            // Create the blob client.
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+
+            // Retrieve reference to a previously created container.
+            CloudBlobContainer blobContainer = blobClient.GetContainerReference($"{tenantId}-{FileuploadContainerPrefix}");
+
+            CloudBlobDirectory blobDirectory = blobContainer.GetDirectoryReference(deviceId);
+
+            // Gets List of Blobs
+            BlobContinuationToken continuationToken = null;
+            var blobResults = await blobDirectory.ListBlobsSegmentedAsync(true, BlobListingDetails.All, null, continuationToken, null, null);
+            if (blobResults != null)
+            {
+                var deviceFileUris = blobResults.Results.Select(file => this.GetBlobSasUri(blobClient, deviceBlobFileContainer, file.Uri.Segments.Last(), this.deviceFileAccessDuration));
+                if (deviceFileUris != null)
+                {
+                    result = deviceFileUris.ToList();
+                }
+            }
+
+            return result;
+        }
+
         private static void ParseWhitelist(
             string whitelist,
             out DeviceTwinName fullNameWhitelist,
@@ -269,6 +307,23 @@ namespace Mmm.Iot.IoTHubManager.Services
                 Tags = new HashSet<string>(regexTags),
                 ReportedProperties = new HashSet<string>(regexReported),
             };
+        }
+
+        private string GetBlobSasUri(CloudBlobClient cloudBlobClient, string containerName, string blobName, string timeoutDuration)
+        {
+            string[] time = timeoutDuration.Split(':');
+            CloudBlobContainer container = cloudBlobClient.GetContainerReference(containerName);
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(blobName);
+            SharedAccessBlobPolicy sasConstraints = new SharedAccessBlobPolicy();
+            sasConstraints.SharedAccessStartTime = DateTimeOffset.UtcNow.AddMinutes(-5);
+            sasConstraints.SharedAccessExpiryTime = DateTimeOffset.UtcNow.AddHours(Convert.ToDouble(time[0])).AddMinutes(Convert.ToDouble(time[1])).AddSeconds(Convert.ToDouble(time[2]));
+            sasConstraints.Permissions = SharedAccessBlobPermissions.Read | SharedAccessBlobPermissions.Write;
+
+            // Generate the shared access signature on the blob, setting the constraints directly on the signature.
+            string sasBlobToken = blockBlob.GetSharedAccessSignature(sasConstraints);
+
+            // Return the URI string for the container, including the SAS token.
+            return blockBlob.Uri + sasBlobToken;
         }
 
         private async Task<DeviceTwinName> GetValidNamesAsync()
