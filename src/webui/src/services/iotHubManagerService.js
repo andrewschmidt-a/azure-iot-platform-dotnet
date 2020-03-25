@@ -130,7 +130,7 @@ export class IoTHubManagerService {
   static sendCloudToDeviceMessages(id, message) {
     return HttpClient.post(`${ENDPOINT}devices/${id}/c2dmessage`, message, {
       headers: {
-        "Content-Type": "plain/text"
+        "Content-Type": "text/plain"
       }
     })
   }
