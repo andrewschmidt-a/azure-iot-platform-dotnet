@@ -37,7 +37,8 @@ export const permissions = {
   deleteTenant: "DeleteTenant",
   
   enableAlerting: "EnableAlerting",
-  disableAlerting: "DisableAlerting"
+  disableAlerting: "DisableAlerting",
+  sendC2DMessage: "SendC2DMessages"
 };
 
 export const toUserModel = (user = {}) => camelCaseReshape(user, {

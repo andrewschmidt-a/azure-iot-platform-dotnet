@@ -29,6 +29,7 @@ module.exports = {
                 "DeleteTenant",
                 "EnableAlerting",
                 "DisableAlerting",
+                "SendC2DMessages",
                 "TagPackages"
             ]
         },

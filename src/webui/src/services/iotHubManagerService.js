@@ -125,4 +125,9 @@ export class IoTHubManagerService {
     return HttpClient.post(`${ENDPOINT}modules`, query)
       .map(toDeploymentsModel);
   }
+
+  /** Sends Cloud to device message */
+  static sendCloudToDeviceMessages(id, message) {
+    return HttpClient.post(`${ENDPOINT}devices/${id}/c2dmessage`, "\""+message+"\"")
+  }
 }

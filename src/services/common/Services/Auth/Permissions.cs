@@ -38,6 +38,7 @@ namespace Mmm.Iot.Common.Services.Auth
                     "UpdateRules",
                     "UpdateSimManagement",
                     "UserManage",
+                    "SendC2DMessages",
                 }
             },
             {

@@ -57,6 +57,7 @@ import TrashIconPath from 'assets/icons/trash.svg';
 import UploadIconPath from 'assets/icons/upload.svg';
 import WarningIconPath from 'assets/icons/warning.svg';
 import XIconPath from 'assets/icons/x.svg';
+import EmailOpenIconPath from 'assets/icons/email-open.svg'
 
 /** A helper object mapping svg names to their paths */
 export const svgs = {
@@ -94,6 +95,7 @@ export const svgs = {
   disableToggle: DisableToggleIconPath,
   disabled: DisabledIconPath,
   edit: EditIconPath,
+  email: EmailOpenIconPath,
   ellipsis: EllipsisIconPath,
   enableToggle: EnableToggleIconPath,
   error: ErrorIconPath,
