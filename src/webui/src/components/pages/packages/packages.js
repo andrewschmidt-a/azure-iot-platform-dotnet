@@ -61,6 +61,7 @@ export class Packages extends Component {
   render() {
     const { t, packages, error, isPending, fetchPackages, lastUpdated } = this.props;
     const gridProps = {
+      fetchPackages,
       rowData: isPending ? undefined : packages || [],
       onContextMenuChange: this.onContextMenuChange,
       t: this.props.t

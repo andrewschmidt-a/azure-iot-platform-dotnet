@@ -369,6 +369,67 @@ namespace Mmm.Iot.Config.Services
             }
         }
 
+        public async Task<PackageServiceModel> AddPackageTagAsync(string id, string tag)
+        {
+            var existingPackage = await this.GetPackageAsync(id);
+            if (string.IsNullOrEmpty(tag))
+            {
+                return existingPackage;
+            }
+
+            if (existingPackage.Tags == null)
+            {
+                existingPackage.Tags = new List<string>();
+            }
+
+            if (existingPackage.Tags.Contains(tag, StringComparer.InvariantCultureIgnoreCase))
+            {
+                return existingPackage;
+            }
+
+            existingPackage.Tags.Add(tag);
+            var value = JsonConvert.SerializeObject(
+                existingPackage,
+                Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                });
+            var response = await this.client.UpdateAsync(PackagesCollectionId, id, value, existingPackage.ETag);
+            return this.CreatePackageServiceModel(response);
+        }
+
+        public async Task<PackageServiceModel> RemovePackageTagAsync(string id, string tag)
+        {
+            var existingPackage = await this.GetPackageAsync(id);
+            if (string.IsNullOrEmpty(tag))
+            {
+                return existingPackage;
+            }
+
+            if (existingPackage?.Tags == null)
+            {
+                return existingPackage;
+            }
+
+            var existingTag = existingPackage.Tags.FirstOrDefault(t => t.Equals(tag, StringComparison.OrdinalIgnoreCase));
+            if (existingTag == null)
+            {
+                return existingPackage;
+            }
+
+            existingPackage.Tags.Remove(existingTag);
+            var value = JsonConvert.SerializeObject(
+                existingPackage,
+                Formatting.Indented,
+                new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore,
+                });
+            var response = await this.client.UpdateAsync(PackagesCollectionId, id, value, existingPackage.ETag);
+            return this.CreatePackageServiceModel(response);
+        }
+
         private string GetBlobSasUri(CloudBlobClient cloudBlobClient, string containerName, string blobName, string timeoutDuration)
         {
             string[] time = timeoutDuration.Split(':');
@@ -408,6 +469,12 @@ namespace Mmm.Iot.Config.Services
         {
             var output = JsonConvert.DeserializeObject<PackageServiceModel>(input.Data);
             output.Id = input.Key;
+            output.ETag = input.ETag;
+            if (output.Tags == null)
+            {
+                output.Tags = new List<string>();
+            }
+
             return output;
         }
 

@@ -3,8 +3,6 @@
 import React from 'react';
 import { Trans } from 'react-i18next';
 import { Link } from "react-router-dom";
-import JSONInput from 'react-json-editor-ajrm';
-import locale    from 'react-json-editor-ajrm/locale/en';
 import {
   packageTypeOptions,
   packagesEnum,

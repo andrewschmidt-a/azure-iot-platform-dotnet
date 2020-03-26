@@ -838,11 +838,15 @@
     "total": "total packages",
     "new": "New Package",
     "delete": "Delete",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
     "grid": {
       "name": "Name",
       "packageType": "Package Type",
       "configType": "Configuration Type",
-      "dateCreated": "Date Created"
+      "dateCreated": "Date Created",
+      "active": "Active",
+      "tags": "Tags"
     },
     "flyouts": {
       "new": {

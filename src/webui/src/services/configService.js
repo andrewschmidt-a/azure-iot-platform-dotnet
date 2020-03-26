@@ -19,6 +19,8 @@ import { Observable } from '../../node_modules/rxjs';
 
 const ENDPOINT = Config.serviceUrls.config;
 
+export const INACTIVE_PACKAGE_TAG = 'reserved.inactive';
+
 /** Contains methods for calling the config service */
 export class ConfigService {
 
@@ -131,6 +133,26 @@ export class ConfigService {
   static getFilteredPackages(packageType, configType) {
     return HttpClient.get(`${ENDPOINT}packages?packagetype=${packageType}&configtype=${configType}`)
       .map(toPackagesModel);
+  }
+
+  static activatePackage(id) {
+    return HttpClient.delete(`${ENDPOINT}packages/${id}/tags/${INACTIVE_PACKAGE_TAG}`)
+      .map(toPackageModel);
+  }
+
+  static deactivatePackage(id) {
+    return HttpClient.put(`${ENDPOINT}packages/${id}/tags/${INACTIVE_PACKAGE_TAG}`)
+    .map(toPackageModel);
+  }
+
+  static addPackageTag(id, tag) {
+    return HttpClient.put(`${ENDPOINT}packages/${id}/tags/${tag}`)
+      .map(toPackageModel);
+  }
+
+  static removePackageTag(id, tag) {
+    return HttpClient.delete(`${ENDPOINT}packages/${id}/tags/${tag}`)
+      .map(toPackageModel);
   }
 
   /** Returns all the account's packages */
