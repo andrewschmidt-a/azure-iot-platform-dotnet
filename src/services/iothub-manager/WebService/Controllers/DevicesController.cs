@@ -2,9 +2,11 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Mmm.Iot.Common.Services;
 using Mmm.Iot.Common.Services.Filters;
 using Mmm.Iot.IoTHubManager.Services;
 using Mmm.Iot.IoTHubManager.WebService.Models;
@@ -94,6 +96,12 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
         public async Task SendCloudToDeviceAsync(string id, [FromBody] string message)
         {
             await this.deviceService.SendCloudToDeviceMessage(id, message);
+        }
+        [HttpGet("files/{id}")]
+        [Authorize("ReadAll")]
+        public async Task<List<string>> GetDeviceFilesAsync(string id)
+        {
+            return await this.deviceProperties.GetUploadedFilesForDevice(this.GetTenantId(), id);
         }
     }
 }

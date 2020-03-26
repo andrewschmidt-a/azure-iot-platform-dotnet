@@ -86,7 +86,7 @@ export class Dashboard extends Component {
     // Telemetry stream - START
     const onPendingStart = () => this.setState({ telemetryIsPending: true });
 
-    const getTelemetryStream = ({ deviceIds = [] }) => TelemetryService.getTelemetryByDeviceIdP15M(deviceIds)
+    const getTelemetryStream = ({ deviceIds = [] }) => TelemetryService.getTelemetryByDeviceId(deviceIds, TimeIntervalDropdown.getTimeIntervalDropdownValue())
       .merge(
         this.telemetryRefresh$ // Previous request complete
           .delay(Config.telemetryRefreshInterval) // Wait to refresh

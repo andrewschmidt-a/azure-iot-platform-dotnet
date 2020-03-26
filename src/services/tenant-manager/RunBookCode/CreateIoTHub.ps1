@@ -53,81 +53,86 @@ $data.token
 
 # Define template for creating IoT Hub
 $iotHubTemplate = @"
-{  
-  "name":"$($data.iotHubName)",
-  "type":"Microsoft.Devices/IotHubs",
-  "location":"$($data.location)",
-  "sku":{  
-    "name":"S1",
-    "tier":"Standard",
-    "capacity":1
-  },
+{
+    "name": "$($data.iotHubName)",
+    "type": "Microsoft.Devices/IotHubs",
+    "location": "$($data.location)",
+    "sku": {
+        "name": "S1",
+        "tier": "Standard",
+        "capacity":1
+    },
     "properties": {
-        "routing":{  
-            "enrichments":[  
-                {  
-                    "key":"tenant",
-                    "value":"$($data.tenantId)",
-                    "endpointNames":[  
+        "routing": {
+            "enrichments": [
+                {
+                    "key": "tenant",
+                    "value": "$($data.tenantId)",
+                    "endpointNames": [
                         "event-hub-telemetry", "event-hub-twin-change", "event-hub-lifecycle" 
+                    ]
+                },
+                {
+                    "key": "batchedTelemetry",
+                    "value": "$$twin.properties.desired.batchedTelemetry",
+                    "endpointNames": [
+                        "event-hub-telemetry"
                     ]
                 }
             ],
-            "endpoints":{  
-                "serviceBusQueues":[  
+            "endpoints": {
+                "serviceBusQueues": [
 
                 ],
-                "serviceBusTopics":[  
+                "serviceBusTopics": [
 
                 ],
-                "eventHubs":[  
+                "eventHubs": [
                     {
-            "connectionString": "$($data.telemetryEventHubConnString)",
-            "name": "event-hub-telemetry",
-            "subscriptionId": "$($data.subscriptionId)",
-            "resourceGroup": "$($data.resourceGroup)"
-          },
+                        "connectionString": "$($data.telemetryEventHubConnString)",
+                        "name": "event-hub-telemetry",
+                        "subscriptionId": "$($data.subscriptionId)",
+                        "resourceGroup": "$($data.resourceGroup)"
+                    },
                     {
-            "connectionString": "$($data.twinChangeEventHubConnString)",
-            "name": "event-hub-twin-change",
-            "subscriptionId": "$($data.subscriptionId)",
-            "resourceGroup": "$($data.resourceGroup)"
-          },
+                        "connectionString": "$($data.twinChangeEventHubConnString)",
+                        "name": "event-hub-twin-change",
+                        "subscriptionId": "$($data.subscriptionId)",
+                        "resourceGroup": "$($data.resourceGroup)"
+                    },
                     {
-            "connectionString": "$($data.lifecycleEventHubConnString)",
-            "name": "event-hub-lifecycle",
-            "subscriptionId": "$($data.subscriptionId)",
-            "resourceGroup": "$($data.resourceGroup)"
-          }
+                        "connectionString": "$($data.lifecycleEventHubConnString)",
+                        "name": "event-hub-lifecycle",
+                        "subscriptionId": "$($data.subscriptionId)",
+                        "resourceGroup": "$($data.resourceGroup)"
+                    }
                 ],
-                "storageContainers":[  
-
-                ]
+                "storageContainers": []
             },
-            "routes":[  
-                {  
+            "routes": [
+                {
                     "name": "telemetry",
-                    "source":"DeviceMessages",
-                    "condition":"true",
-                    "endpointNames":[  
+                    "source": "DeviceMessages",
+                    "condition": "true",
+                    "endpointNames": [
                         "event-hub-telemetry"
                     ],
                     "isEnabled":true
                 },
-                {  
+                {
                     "name": "lifecycle",
-                    "source":"DeviceLifecycleEvents",
-                    "condition":"true",
-                    "endpointNames":[  
+                    "source": "DeviceLifecycleEvents",
+                    "condition": "true",
+                    "endpointNames": [
                         "event-hub-lifecycle"
                     ],
                     "isEnabled":true
                 },
-                {  
+                {
                     "name": "twin-change",
-                    "source":"TwinChangeEvents",
-                    "condition":"true",
-                    "endpointNames":[  
+                    "source": "TwinChangeEvents",
+                    "condition": "true",
+                    "endpointNames": [
                         "event-hub-twin-change"
                     ],
                     "isEnabled":true

@@ -31,7 +31,7 @@ export const toDeviceModel = (device = {}) => {
     'authentication': 'authentication'
   });
   // TODO: Remove this once device simulation has removed FirmwareUpdate from supportedMethods of devices
-  const methods = (modelData.methods ? modelData.methods.split(',') : [])
+  const methods = (modelData.methods && typeof modelData.methods === 'string' ? modelData.methods.split(',') : [])
     .filter((methodName) => methodName !== "FirmwareUpdate");
   return update(modelData, {
     methods: { $set: methods },
@@ -129,7 +129,7 @@ export const toSubmitPropertiesJobRequestModel = (devices, { jobName, updatedPro
   return request;
 };
 
-export const toSubmitMethodJobRequestModel = (devices, { jobName, methodName }) => {
+export const toSubmitMethodJobRequestModel = (devices, { jobName, methodName, jsonPayload = {} }) => {
   const jobId = jobName ? jobName + '-' + uuid() : uuid();
   const deviceIds = devices.map(({ id }) => `'${id}'`).join(',');
   const request = {
@@ -138,7 +138,7 @@ export const toSubmitMethodJobRequestModel = (devices, { jobName, methodName }) 
     MaxExecutionTimeInSeconds: 0,
     MethodParameter: {
       Name: methodName,
-      JsonPayload: ''
+      JsonPayload: jsonPayload.json
     }
   };
   return request;

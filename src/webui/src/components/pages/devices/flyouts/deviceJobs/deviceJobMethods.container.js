@@ -2,11 +2,15 @@
 
 import { connect } from 'react-redux';
 import { DeviceJobMethods } from './deviceJobMethods';
-import { epics as appEpics } from 'store/reducers/appReducer';
+import { epics as appEpics, getTheme } from 'store/reducers/appReducer';
+
+const mapStateToProps = state => ({
+  theme: getTheme(state)
+});
 
 // Wrap the dispatch method
 const mapDispatchToProps = dispatch => ({
   logEvent: diagnosticsModel => dispatch(appEpics.actions.logEvent(diagnosticsModel))
 });
 
-export const DeviceJobMethodsContainer = connect(null, mapDispatchToProps)(DeviceJobMethods);
+export const DeviceJobMethodsContainer = connect(mapStateToProps, mapDispatchToProps)(DeviceJobMethods);

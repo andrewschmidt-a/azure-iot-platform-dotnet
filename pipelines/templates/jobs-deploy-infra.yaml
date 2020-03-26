@@ -812,6 +812,8 @@ jobs:
                 "DeviceStreamDatabaseId"="iot" \
                 "DevicePropertiesCacheDatabaseId"="pcs-storage" \
                 "WhiteList"="tags.*,reported.*,reported.Protocol,reported.SupportedMethods,reported.DeviceMethodStatus,reported.FirmwareUpdateStatus" \
+                "BatchThreshold"="12" \
+                "BatchWriteDelay"="85" \
               --resource-group $(resourceGroupName)
 
   - job: function2

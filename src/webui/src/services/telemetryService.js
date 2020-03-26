@@ -98,6 +98,16 @@ export class TelemetryService {
         .map(toMessagesModel);
   }
 
+  static getTelemetryByDeviceId(devices = [], timeInterval) {
+    console.log(timeInterval);
+    return TelemetryService.getTelemetryByMessages({
+      from: 'NOW-'+ timeInterval,
+      to: 'NOW',
+      order: 'desc',
+      devices
+    });
+  }
+
   static getTelemetryByDeviceIdP1M(devices = []) {
     return TelemetryService.getTelemetryByMessages({
       from: 'NOW-PT1M',

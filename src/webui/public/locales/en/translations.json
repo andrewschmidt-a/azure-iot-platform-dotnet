@@ -414,7 +414,8 @@
         "jobNameHelpMessage": "Only letters and numbers are allowed",
         "viewStatus": "View job status",
         "validation": {
-          "required": "Is required"
+          "required": "Is required",
+          "invalid": "invalid entry"
         },
         "tags": {
           "radioLabel": "Tags",
@@ -437,7 +438,9 @@
           "firmwareVersion": "Firmware Version",
           "firmwareVersionHint": "1.0.1",
           "firmwareUri": "Firmware URI",
-          "firmwareUriHint": "Enter firmware URI value"
+          "firmwareUriHint": "Enter firmware URI value",
+          "jsonPayload": "Payload (optional)",
+          "jsonPayloadMessage": "Enter a valid JSON request payload for the device method."
         },
         "properties": {
           "radioLabel": "Properties",
@@ -730,6 +733,7 @@
     }
   },
   "timeInterval": {
+    "PT15M": "Last 15 minutes",
     "PT1H": "Last hour",
     "P1D": "Last day",
     "P7D": "Last week",
@@ -861,7 +865,8 @@
           "required": "Is required",
           "fileName": "File name greater than 50 characters",
           "fileType": "Invalid file type",
-          "customConfig": "name greater than 50 characters"
+          "customConfig": "name greater than 50 characters",
+          "invalid": "invalid entry"
         }
       }
     },

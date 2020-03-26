@@ -9,17 +9,28 @@ import { toDiagnosticsModel } from 'services/models';
 import './timeIntervalDropdown.scss';
 
 const optionValues = [
+  { value: 'PT15M'},
   { value: 'PT1H' },
   { value: 'P1D' },
   { value: 'P7D' },
   { value: 'P1M' },
 ];
 
+var currentValue = 'PT1H';
+
 export class TimeIntervalDropdown extends Component {
 
   onChange = (propOnChange) => (value) => {
     this.props.logEvent(toDiagnosticsModel('TimeFilter_Select', {}));
-    if (isFunc(propOnChange)) propOnChange(value);
+    if (isFunc(propOnChange)) 
+    {
+      currentValue = value;
+      propOnChange(value);
+    }
+  }
+
+  static getTimeIntervalDropdownValue (){
+    return currentValue;
   }
 
   render() {

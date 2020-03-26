@@ -10,7 +10,7 @@ import { toDiagnosticsModel } from 'services/models';
 
 import './telemetryChart.scss';
 
-const maxDatums = 100; // Max telemetry messages for the telemetry graph
+const maxDatums = 1000; // Max telemetry messages for the telemetry graph
 
 // Extend the immutability helper to include object autovivification
 update.extend('$auto', (val, obj) => update(obj || {}, val));
