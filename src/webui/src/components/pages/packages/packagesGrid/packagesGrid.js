@@ -6,6 +6,7 @@ import { Btn, ComponentArray, PcsGrid, Protected } from 'components/shared';
 import { isFunc, translateColumnDefs, svgs } from 'utilities';
 import { checkboxColumn } from 'components/shared/pcsGrid/pcsGridConfig';
 import { PackageDeleteContainer } from '../modals';
+import { ConfigService } from 'services/configService';
 
 import './packagesGrid.scss';
 
@@ -20,7 +21,8 @@ export class PackagesGrid extends Component {
     // Set the initial state
     this.state = {
       ...closedModalState,
-      hardSelectedPackages: []
+      hardSelectedPackages: [],
+      packageActivationPending: false,
     };
 
     this.columnDefs = [
@@ -28,15 +30,11 @@ export class PackagesGrid extends Component {
       packagesColumnDefs.name,
       packagesColumnDefs.packageType,
       packagesColumnDefs.configType,
-      packagesColumnDefs.dateCreated
+      packagesColumnDefs.dateCreated,
+      packagesColumnDefs.active,
+      // We will not fully implement tagging at this time - just the active / inactive field
+      // packagesColumnDefs.tags
     ];
-
-    this.contextBtns =
-      <ComponentArray>
-        <Protected permission={permissions.deletePackages}>
-          <Btn svg={svgs.trash} onClick={this.openModal('delete-package')}>{props.t('packages.delete')}</Btn>
-        </Protected>
-      </ComponentArray>;
   }
 
   getOpenModal = () => {
@@ -51,6 +49,25 @@ export class PackagesGrid extends Component {
     return null;
   }
 
+  getSingleSelectionContextBtns = (showActivateButton) => {
+    return (
+      <ComponentArray>
+          <Protected permission={permissions.tagPackages}>
+            <Btn
+              svg={showActivateButton ? svgs.checkmark : svgs.cancelX}
+              onClick={showActivateButton ? this.activatePackage : this.deactivatePackage}
+              disable={this.state.packageActivationPending}
+            >
+              {showActivateButton ? this.props.t('packages.activate') : this.props.t('packages.deactivate')}
+            </Btn>
+          </Protected>
+        <Protected permission={permissions.deletePackages}>
+          <Btn svg={svgs.trash} onClick={this.openModal('delete-package')}>{this.props.t('packages.delete')}</Btn>
+        </Protected>
+      </ComponentArray>
+    );
+  }
+
   /**
    * Handles context filter changes and calls any hard select props method
    *
@@ -59,10 +76,10 @@ export class PackagesGrid extends Component {
   onHardSelectChange = (selectedPackages) => {
     const { onContextMenuChange, onHardSelectChange } = this.props;
     if (isFunc(onContextMenuChange)) {
-      onContextMenuChange(selectedPackages.length === 1 ? this.contextBtns : null);
       this.setState({
-        hardSelectedPackages: selectedPackages
+        hardSelectedPackages: selectedPackages,
       });
+      onContextMenuChange(selectedPackages.length === 1 ? this.getSingleSelectionContextBtns(!selectedPackages[0].active) : null);
     }
     if (isFunc(onHardSelectChange)) {
       onHardSelectChange(selectedPackages);
@@ -74,6 +91,31 @@ export class PackagesGrid extends Component {
   openModal = (modalName) => () => this.setState({
     openModalName: modalName
   });
+
+  activatePackage = () => {
+    this.updateSelectedPackagesActiveStatus(true);
+  }
+
+  deactivatePackage = () => {
+    this.updateSelectedPackagesActiveStatus(false);
+  }
+
+  updateSelectedPackagesActiveStatus = (isActivate) => {
+    this.setState({ packageActivationPending: true });
+    const statusFunc = isActivate ? ConfigService.activatePackage : ConfigService.deactivatePackage;
+    statusFunc(this.state.hardSelectedPackages[0].id)
+      .subscribe(
+        () => {
+          this.props.fetchPackages();
+        },
+        error => {
+          // do nothing
+        },
+        () => {
+          this.setState({ packageActivationPending: false });
+        }
+      );
+  }
 
   render() {
     const gridProps = {

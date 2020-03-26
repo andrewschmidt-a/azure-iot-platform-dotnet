@@ -251,7 +251,8 @@ export class DeploymentNew extends LinkedComponent {
 
     const isPackageTypeSelected = packageType === packagesEnum.edgeManifest || (packageType !== '' && configType !== '');
     const isDeviceGroupSelected = deviceGroupId !== undefined;
-    const packageOptions = packages.map(this.toPackageSelectOption);
+    // Only show active packages
+    const packageOptions = packages.filter(value => value.active).map(this.toPackageSelectOption);
     const deviceGroupOptions = deviceGroups.map(this.toDeviceGroupSelectOption);
     const packageTypeSelectOptions = packageTypeOptions.map(value => ({
       label: getPackageTypeTranslation(value, t),

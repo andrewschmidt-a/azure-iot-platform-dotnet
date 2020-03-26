@@ -2,6 +2,7 @@
 
 export * from './connectionStatusRenderer/connectionStatusRenderer';
 export * from './countRenderer/countRenderer';
+export * from './isActivePackageRenderer/isActivePackageRenderer';
 export * from './isSimulatedRenderer/isSimulatedRenderer';
 export * from './glimmerRenderer/glimmerRenderer';
 export * from './lastTriggerRenderer/lastTriggerRenderer';

@@ -2,6 +2,7 @@
 
 import update from 'immutability-helper';
 import { camelCaseReshape, reshape, getItems, stringToBoolean, base64toHEX } from 'utilities';
+import { INACTIVE_PACKAGE_TAG } from '../configService';
 
 export const toDeviceGroupModel = (deviceGroup = {}) => camelCaseReshape(deviceGroup, {
   'id': 'id',
@@ -107,14 +108,17 @@ export const toPackagesModel = (response = {}) => getItems(response)
   .map(toPackageModel);
 
 export const toPackageModel = (response = {}) => {
-  return camelCaseReshape(response, {
+  var dataModel = camelCaseReshape(response, {
     'id': 'id',
     'packageType': 'packageType',
     'configType': 'configType',
     'name': 'name',
     'dateCreated': 'dateCreated',
-    'content': 'content'
+    'content': 'content',
+    'tags': 'tags'
   });
+  dataModel.active = !(dataModel.tags || []).includes(INACTIVE_PACKAGE_TAG);
+  return dataModel;
 };
 
 export const toConfigTypesModel = (response = {}) => getItems(response);
