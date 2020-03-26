@@ -92,7 +92,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
         }
 
         [HttpPost("{id}/c2dmessage")]
-        [Authorize("CreateJobs")]
+        [Authorize("SendC2DMessages")]
         public async Task SendCloudToDeviceAsync(string id, [FromBody] string message)
         {
             await this.deviceService.SendCloudToDeviceMessage(id, message);
