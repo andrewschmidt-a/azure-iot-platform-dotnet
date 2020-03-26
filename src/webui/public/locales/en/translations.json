@@ -424,7 +424,9 @@
           "firmwareVersion": "Firmware Version",
           "firmwareVersionHint": "1.0.1",
           "firmwareUri": "Firmware URI",
-          "firmwareUriHint": "Enter firmware URI value"
+          "firmwareUriHint": "Enter firmware URI value",
+          "jsonPayload": "Payload (optional)",
+          "jsonPayloadMessage": "Enter a valid JSON request payload for the device method."
         },
         "properties": {
           "radioLabel": "Properties",

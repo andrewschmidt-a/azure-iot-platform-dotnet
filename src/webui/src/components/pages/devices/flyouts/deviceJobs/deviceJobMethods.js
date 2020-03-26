@@ -184,8 +184,8 @@ export class DeviceJobMethods extends LinkedComponent {
           </FormGroup>
 
           <FormGroup>
-            <FormLabel>{t('devices.flyouts.jobs.jsonPayload')}</FormLabel>
-            <div className="help-message">{t('devices.flyouts.jobs.jsonPayloadMessage')}</div>
+            <FormLabel>{t('devices.flyouts.jobs.methods.jsonPayload')}</FormLabel>
+            <div className="help-message">{t('devices.flyouts.jobs.methods.jsonPayloadMessage')}</div>
             <FormControl link={this.jsonPayloadLink} type="jsoninput" height="200px" theme={theme}/>
           </FormGroup>
 
