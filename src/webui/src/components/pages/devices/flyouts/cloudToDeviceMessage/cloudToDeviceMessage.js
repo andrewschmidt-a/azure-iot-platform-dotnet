@@ -111,10 +111,6 @@ export class CloudToDeviceMessage extends LinkedComponent {
     }
   }
 
-  // messageJSONUpdated = (changeObject) => {
-  //   this.setState({json : changeObject.jsObject})
-  // }
-
   render() {
     const { t, onClose, theme } = this.props;
     const {
@@ -138,19 +134,10 @@ export class CloudToDeviceMessage extends LinkedComponent {
               <div className="device-c2dMessage-header">{t('devices.flyouts.c2dMessage.header')}</div>
               <div className="device-c2dMessage-descr">{t('devices.flyouts.c2dMessage.description')}</div>
               <FormGroup>
-                {/* <FormLabel>{t('devices.flyouts.jobs.jsonPayload')}</FormLabel> */}
                 <br/>
                 <div className="help-message">{t('devices.flyouts.c2dMessage.jsonPayloadMessage')}</div>
                 <FormControl link={this.jsonPayloadLink} type="jsoninput" height="200px" theme={theme}/>
               </FormGroup>
-              {/* <JSONInput
-                    id          = 'id'
-                    placeholder = { this.state.json }
-                    locale      = { locale }
-                    height      = '550px'
-                    width       = '100%'
-                    onChange    = {this.messageJSONUpdated}
-                /> */}
               {
                 containsSimulatedDevices &&
                 <div className="simulated-device-selected">
