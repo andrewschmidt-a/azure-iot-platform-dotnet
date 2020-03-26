@@ -2,13 +2,18 @@
 
 import React, { Component } from 'react';
 import { Observable } from 'rxjs';
+
+import { Link } from "react-router-dom";
 import JSONInput from 'react-json-editor-ajrm';
 import locale    from 'react-json-editor-ajrm/locale/en';
-
+import { LinkedComponent } from 'utilities';
 import { IoTHubManagerService } from 'services';
 import { svgs } from 'utilities';
 import { permissions } from 'services/models';
 import {
+  FormGroup,
+  FormLabel,
+  FormControl,
   AjaxError,
   Btn,
   BtnToolbar,
@@ -25,7 +30,7 @@ import {
 
 import './cloudToDeviceMessage.scss';
 
-export class CloudToDeviceMessage extends Component {
+export class CloudToDeviceMessage extends LinkedComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,10 +41,14 @@ export class CloudToDeviceMessage extends Component {
       error: undefined,
       successCount: 0,
       changesApplied: false,
-      json: {
-        "message": "Text to send to devices"
+      jsonPayload:{
+        jsObject:{
+          "message": "Message to send to device"
+        }
       }
     };
+    this.jsonPayloadLink = this.linkTo('jsonPayload')
+      .check((jsonPayloadObject) => !jsonPayloadObject.error, () => this.props.t('devices.flyouts.c2dMessage.validation.invalid'));
   }
 
   componentDidMount() {
@@ -77,7 +86,7 @@ export class CloudToDeviceMessage extends Component {
 
     this.subscription = Observable.from(this.state.physicalDevices)
       .flatMap(({ id }) =>
-        IoTHubManagerService.sendCloudToDeviceMessages(id, JSON.stringify(this.state.json))
+        IoTHubManagerService.sendCloudToDeviceMessages(id, JSON.stringify(this.state.jsonPayload.jsObject))
           .map(() => id)
       )
       .subscribe(
@@ -102,12 +111,12 @@ export class CloudToDeviceMessage extends Component {
     }
   }
 
-  messageJSONUpdated = (changeObject) => {
-    this.setState({json : changeObject.jsObject})
-  }
+  // messageJSONUpdated = (changeObject) => {
+  //   this.setState({json : changeObject.jsObject})
+  // }
 
   render() {
-    const { t, onClose } = this.props;
+    const { t, onClose, theme } = this.props;
     const {
       physicalDevices,
       containsSimulatedDevices,
@@ -128,15 +137,20 @@ export class CloudToDeviceMessage extends Component {
             <form className="device-c2dMessage-container" onSubmit={this.sendCloudToDeviceMessage}>
               <div className="device-c2dMessage-header">{t('devices.flyouts.c2dMessage.header')}</div>
               <div className="device-c2dMessage-descr">{t('devices.flyouts.c2dMessage.description')}</div>
-               
-              <JSONInput
+              <FormGroup>
+                {/* <FormLabel>{t('devices.flyouts.jobs.jsonPayload')}</FormLabel> */}
+                <br/>
+                <div className="help-message">{t('devices.flyouts.c2dMessage.jsonPayloadMessage')}</div>
+                <FormControl link={this.jsonPayloadLink} type="jsoninput" height="200px" theme={theme}/>
+              </FormGroup>
+              {/* <JSONInput
                     id          = 'id'
                     placeholder = { this.state.json }
                     locale      = { locale }
                     height      = '550px'
                     width       = '100%'
                     onChange    = {this.messageJSONUpdated}
-                />
+                /> */}
               {
                 containsSimulatedDevices &&
                 <div className="simulated-device-selected">

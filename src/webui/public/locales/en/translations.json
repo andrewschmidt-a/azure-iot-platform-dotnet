@@ -396,7 +396,11 @@
         "apply": "Send",
         "pending": "Sending to devices... ",
         "applySuccess": "messages sent successfully!",
-        "close": "Close"
+        "close": "Close",
+        "validation":{
+          "invalid": "Json is not valid!"
+        },
+        "jsonPayloadMessage": "Message payload for devices:"
       },
       "jobs": {
         "title": "Jobs",
