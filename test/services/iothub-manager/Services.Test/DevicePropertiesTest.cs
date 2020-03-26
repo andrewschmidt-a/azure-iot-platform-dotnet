@@ -115,6 +115,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
                 mockStorageAdapterClient.Object,
                 new AppConfig
                 {
+                    Global = new GlobalConfig(),
                     IotHubManagerService = new IotHubManagerServiceConfig
                     {
                         DevicePropertiesCache = new DevicePropertiesCacheConfig
@@ -166,6 +167,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
                 mockStorageAdapterClient.Object,
                 new AppConfig
                 {
+                    Global = new GlobalConfig(),
                     IotHubManagerService = new IotHubManagerServiceConfig
                     {
                         DevicePropertiesCache = new DevicePropertiesCacheConfig
@@ -217,6 +219,7 @@ namespace Mmm.Iot.IoTHubManager.Services.Test
                 mockStorageAdapterClient.Object,
                 new AppConfig
                 {
+                    Global = new GlobalConfig(),
                     IotHubManagerService = new IotHubManagerServiceConfig
                     {
                         DevicePropertiesCache = new DevicePropertiesCacheConfig

@@ -133,6 +133,16 @@ namespace Mmm.Iot.Config.Services.Test
         private readonly Mock<IAsaManagerClient> mockAsaManager;
         private readonly Storage storage;
         private readonly Random rand;
+        private string packageId = "myId";
+        private List<string> tags = new List<string>
+        {
+            "alpha",
+            "namespace.alpha",
+            "alphanum3ric",
+            "namespace.alphanum3ric",
+            "1234567890",
+            "namespace.1234567890",
+        };
 
         public StorageTest()
         {
@@ -736,7 +746,7 @@ namespace Mmm.Iot.Config.Services.Test
             this.mockClient
                 .Setup(x => x.CreateAsync(
                        It.Is<string>(i => i == collectionId),
-                       It.Is<string>(i => this.IsMatchingPackage(i, value))))
+                       It.IsAny<string>()))
                 .ReturnsAsync(new ValueApiModel
                 {
                     Key = key,
@@ -776,7 +786,7 @@ namespace Mmm.Iot.Config.Services.Test
             this.mockClient
                 .Setup(x => x.CreateAsync(
                        It.Is<string>(i => i == collectionId),
-                       It.Is<string>(i => this.IsMatchingPackage(i, value))))
+                       It.IsAny<string>()))
                 .ReturnsAsync(new ValueApiModel
                 {
                     Key = key,
@@ -932,6 +942,96 @@ namespace Mmm.Iot.Config.Services.Test
                         It.Is<string>(s => s == PackagesCollectionId),
                         It.Is<string>(s => s == packageId)),
                     Times.Once);
+        }
+
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        [InlineData("alpha", 1)]
+        [InlineData("namespace.alpha", 1)]
+        [InlineData("alphanum3ric", 1)]
+        [InlineData("namespace.alphanum3ric", 1)]
+        [InlineData("1234567890", 1)]
+        [InlineData("namespace.1234567890", 1)]
+        [InlineData(null, 0)]
+#pragma warning disable SA1122
+        [InlineData("", 0)]
+#pragma warning restore SA1122
+        public async Task PackageTagsCanBeAdded(string tag, int expectedTagCount)
+        {
+            // Arrange
+            this.mockClient.Setup(m => m.GetAsync(Storage.PackagesCollectionId, this.packageId)).ReturnsAsync(new ValueApiModel { Data = @"{""Tags"": []}" });
+            this.mockClient.Setup(m => m.UpdateAsync(Storage.PackagesCollectionId, this.packageId, It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new ValueApiModel { Data = $@"{{""Tags"": [""{tag}""]}}" });
+
+            // Act
+            var package = await this.storage.AddPackageTagAsync(this.packageId, tag);
+
+            // Assert
+            Assert.Equal(expectedTagCount, package.Tags.Count);
+            if (expectedTagCount > 0)
+            {
+                Assert.Contains(tag, package.Tags);
+            }
+        }
+
+        [Theory]
+        [Trait(Constants.Type, Constants.UnitTest)]
+        [InlineData("alpha", 5)]
+        [InlineData("namespace.alpha", 5)]
+        [InlineData("alphanum3ric", 5)]
+        [InlineData("namespace.alphanum3ric", 5)]
+        [InlineData("1234567890", 5)]
+        [InlineData("namespace.1234567890", 5)]
+        [InlineData("non-existent-tag", 6)]
+        [InlineData(null, 6)]
+#pragma warning disable SA1122
+        [InlineData("", 6)]
+#pragma warning restore SA1122
+        public async Task PackageTagsCanBeRemoved(string tag, int expectedTagCount)
+        {
+            // Arrange
+            var value = new ValueApiModel { Key = this.packageId, Data = JsonConvert.SerializeObject(new PackageServiceModel { Tags = this.tags.ToList() }) };
+            this.mockClient.Setup(m => m.GetAsync(Storage.PackagesCollectionId, this.packageId)).ReturnsAsync(value);
+            this.mockClient.Setup(m => m.UpdateAsync(Storage.PackagesCollectionId, this.packageId, It.IsAny<string>(), It.IsAny<string>()))
+                .ReturnsAsync((string c, string id, string v, string e) =>
+                    {
+                        return new ValueApiModel { Key = id, Data = v };
+                    });
+
+            // Act
+            var result = await this.storage.RemovePackageTagAsync(this.packageId, tag);
+
+            // Assert
+            Assert.Equal(expectedTagCount, result.Tags.Count);
+        }
+
+        [Fact]
+        public async Task AddingPackageTagsIsCaseInsensitive()
+        {
+            // Arrange
+            var tag = "myTaG";
+            this.mockClient.Setup(m => m.GetAsync(Storage.PackagesCollectionId, this.packageId)).ReturnsAsync(new ValueApiModel { Data = $@"{{""Tags"": [""{tag}""]}}" });
+
+            // Act
+            var package = await this.storage.AddPackageTagAsync(this.packageId, tag);
+
+            // Assert
+            Assert.Equal(1, package.Tags.Count);
+            Assert.Contains(tag, package.Tags);
+        }
+
+        [Fact]
+        public async Task RemovingPackageTagsIsCaseInsensitive()
+        {
+            // Arrange
+            var tag = "myTaG";
+            this.mockClient.Setup(m => m.GetAsync(Storage.PackagesCollectionId, this.packageId)).ReturnsAsync(new ValueApiModel { Data = $@"{{""Tags"": [""{tag}""]}}" });
+            this.mockClient.Setup(m => m.UpdateAsync(Storage.PackagesCollectionId, this.packageId, It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new ValueApiModel { Data = @"{""Tags"": []}" });
+
+            // Act
+            var package = await this.storage.RemovePackageTagAsync(this.packageId, "MYtAg");
+
+            // Assert
+            this.mockClient.Verify(m => m.UpdateAsync(Storage.PackagesCollectionId, this.packageId, It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
 
         private bool IsMatchingPackage(string pkgJson, string originalPkgJson)

@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -22,6 +23,7 @@ namespace Mmm.Iot.Config.WebService.Controllers
     [TypeFilter(typeof(ExceptionsFilterAttribute))]
     public class PackagesController : Controller
     {
+        public const string InactivePackageTag = "reserved.inactive";
         private readonly IStorage storage;
 
         public PackagesController(IStorage storage)
@@ -67,6 +69,50 @@ namespace Mmm.Iot.Config.WebService.Controllers
             }
 
             return new PackageApiModel(await this.storage.GetPackageAsync(id));
+        }
+
+        [HttpPut("{id:required}/tags/reserved.inactive")]
+        [Authorize("TagPackages")]
+        public async Task<ActionResult<PackageApiModel>> DeactivatePackageAsync(string id)
+        {
+            return await this.AddTagAsync(id, InactivePackageTag);
+        }
+
+        [HttpDelete("{id:required}/tags/reserved.inactive")]
+        [Authorize("TagPackages")]
+        public async Task<ActionResult<PackageApiModel>> ActivatePackageAsync(string id)
+        {
+            return await this.RemoveTagAsync(id, InactivePackageTag);
+        }
+
+        [HttpPut("{id:required}/tags/{tag:required:regex(^(?!reserved\\.)[[a-zA-Z0-9\\.]]+$)}")]
+        [Authorize("TagPackages")]
+        public async Task<ActionResult<PackageApiModel>> AddTagAsync(string id, string tag)
+        {
+            var package = await this.storage.AddPackageTagAsync(id, tag);
+            return new PackageApiModel(package);
+        }
+
+        [HttpDelete("{id:required}/tags/{tag:required:regex(^(?!reserved\\.)[[a-zA-Z0-9\\.]]+$)}")]
+        [Authorize("TagPackages")]
+        public async Task<ActionResult<PackageApiModel>> RemoveTagAsync(string id, string tag)
+        {
+            var package = await this.storage.RemovePackageTagAsync(id, tag);
+            return new PackageApiModel(package);
+        }
+
+        [HttpDelete("{id:required}/tags")]
+        [Authorize("TagPackages")]
+        public async Task<ActionResult<PackageApiModel>> RemoveTagsAsync(string id)
+        {
+            var package = await this.GetAsync(id);
+            PackageApiModel modifiedPackage = null;
+            foreach (var tag in package.Tags)
+            {
+                modifiedPackage = (await this.RemoveTagAsync(id, tag)).Value;
+            }
+
+            return modifiedPackage;
         }
 
         [HttpPost]
@@ -116,7 +162,8 @@ namespace Mmm.Iot.Config.WebService.Controllers
                 packageContent,
                 package.FileName,
                 uploadedPackageType,
-                configType);
+                configType,
+                new List<string>());
 
             return new PackageApiModel(await this.storage.AddPackageAsync(packageToAdd.ToServiceModel()));
         }

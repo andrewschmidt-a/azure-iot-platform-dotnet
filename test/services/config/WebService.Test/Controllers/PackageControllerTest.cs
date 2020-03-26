@@ -14,8 +14,11 @@ using Mmm.Iot.Common.TestHelpers;
 using Mmm.Iot.Config.Services;
 using Mmm.Iot.Config.Services.Models;
 using Mmm.Iot.Config.WebService.Controllers;
+using Mmm.Iot.Config.WebService.Models;
 using Mmm.Platform.IoT.Common.Services.Models;
 using Moq;
+using TestStack.Dossier;
+using TestStack.Dossier.EquivalenceClasses;
 using Xunit;
 
 namespace Mmm.Iot.Config.WebService.Test.Controllers
@@ -27,10 +30,24 @@ namespace Mmm.Iot.Config.WebService.Test.Controllers
         private readonly Mock<IStorage> mockStorage;
         private readonly PackagesController controller;
         private readonly Random rand;
+        private readonly AnonymousValueFixture any;
         private Mock<HttpContext> mockHttpContext;
         private Mock<HttpRequest> mockHttpRequest;
         private IDictionary<object, object> contextItems;
         private bool disposedValue = false;
+        private List<string> tags = new List<string>
+        {
+            "alpha",
+            "namespace.alpha",
+            "alphanum3ric",
+            "namespace.alphanum3ric",
+            "1234567890",
+            "namespace.1234567890",
+            null,
+            string.Empty,
+        };
+
+        private string packageId = "myId";
 
         public PackageControllerTest()
         {
@@ -54,6 +71,7 @@ namespace Mmm.Iot.Config.WebService.Test.Controllers
             };
             this.mockHttpContext.Setup(m => m.Items).Returns(this.contextItems);
             this.rand = new Random();
+            this.any = new AnonymousValueFixture();
         }
 
         [Theory]
@@ -268,6 +286,102 @@ namespace Mmm.Iot.Config.WebService.Test.Controllers
             {
                 Assert.True(expectException);
             }
+        }
+
+        [Fact]
+        public async Task PackageTagsCanBeAdded()
+        {
+            // Arrange
+            var tag = this.any.String();
+            this.mockStorage.Setup(m => m.AddPackageTagAsync(this.packageId, tag)).ReturnsAsync(new PackageServiceModel { Tags = new List<string> { tag } });
+
+            // Act
+            var result = await this.controller.AddTagAsync(this.packageId, tag);
+
+            // Assert
+            Assert.IsType<ActionResult<PackageApiModel>>(result);
+            Assert.Null(result.Result);
+            Assert.NotNull(result.Value);
+            Assert.Contains(tag, result.Value.Tags);
+        }
+
+        [Fact]
+        public async Task PackageTagsCanBeRemoved()
+        {
+            // Arrange
+            var tag = this.any.String();
+            this.mockStorage.Setup(m => m.RemovePackageTagAsync(this.packageId, tag)).ReturnsAsync(new PackageServiceModel { Tags = this.tags.Except(new[] { tag }).ToList() });
+
+            // Act
+            var result = await this.controller.RemoveTagAsync(this.packageId, tag);
+
+            // Assert
+            Assert.IsType<ActionResult<PackageApiModel>>(result);
+            Assert.Null(result.Result);
+            Assert.NotNull(result.Value);
+            Assert.DoesNotContain(tag, result.Value.Tags);
+        }
+
+        [Fact]
+        public async Task AllPackageTagsCanBeRemoved()
+        {
+            // Arrange
+            this.mockStorage.Setup(m => m.GetPackageAsync(this.packageId)).ReturnsAsync(new PackageServiceModel { Tags = this.tags });
+            this.mockStorage.Setup(m => m.RemovePackageTagAsync(this.packageId, It.IsAny<string>())).ReturnsAsync((string pid, string t) =>
+            {
+                this.tags = this.tags.Except(new[] { t }.ToList()).ToList();
+                return new PackageServiceModel { Tags = this.tags };
+            });
+
+            // Act
+            var result = await this.controller.RemoveTagsAsync(this.packageId);
+
+            // Assert
+            Assert.IsType<ActionResult<PackageApiModel>>(result);
+            Assert.Null(result.Result);
+            Assert.NotNull(result.Value);
+            Assert.Empty(result.Value.Tags);
+        }
+
+        [Fact]
+        public async Task PackagesCanBeActivated()
+        {
+            // Arrange
+            this.tags.Add(PackagesController.InactivePackageTag);
+            this.mockStorage.Setup(m => m.RemovePackageTagAsync(this.packageId, PackagesController.InactivePackageTag)).ReturnsAsync((string pid, string t) =>
+            {
+                this.tags = this.tags.Except(new[] { t }.ToList()).ToList();
+                return new PackageServiceModel { Tags = this.tags };
+            });
+
+            // Act
+            var result = await this.controller.ActivatePackageAsync(this.packageId);
+
+            // Assert
+            Assert.IsType<ActionResult<PackageApiModel>>(result);
+            Assert.Null(result.Result);
+            Assert.NotNull(result.Value);
+            Assert.DoesNotContain(PackagesController.InactivePackageTag, result.Value.Tags);
+        }
+
+        [Fact]
+        public async Task PackagesCanBeDeactivated()
+        {
+            // Arrange
+            this.mockStorage.Setup(m => m.AddPackageTagAsync(this.packageId, PackagesController.InactivePackageTag)).ReturnsAsync((string pid, string t) =>
+            {
+                this.tags.Add(t);
+                return new PackageServiceModel { Tags = this.tags };
+            });
+
+            // Act
+            var result = await this.controller.DeactivatePackageAsync(this.packageId);
+
+            // Assert
+            Assert.IsType<ActionResult<PackageApiModel>>(result);
+            Assert.Null(result.Result);
+            Assert.NotNull(result.Value);
+            Assert.Contains(PackagesController.InactivePackageTag, result.Value.Tags);
         }
 
         protected virtual void Dispose(bool disposing)

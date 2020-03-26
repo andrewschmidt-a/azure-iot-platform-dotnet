@@ -28,7 +28,8 @@ module.exports = {
                 "DeleteUsers",
                 "DeleteTenant",
                 "EnableAlerting",
-                "DisableAlerting"
+                "DisableAlerting",
+                "TagPackages"
             ]
         },
         {

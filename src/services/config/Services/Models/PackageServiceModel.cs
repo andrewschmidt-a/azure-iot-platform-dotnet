@@ -2,6 +2,7 @@
 // Copyright (c) 3M. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -22,5 +23,9 @@ namespace Mmm.Iot.Config.Services.Models
         public string Content { get; set; }
 
         public string DateCreated { get; set; }
+
+        public string ETag { get; set; }
+
+        public IList<string> Tags { get; set; }
     }
 }
