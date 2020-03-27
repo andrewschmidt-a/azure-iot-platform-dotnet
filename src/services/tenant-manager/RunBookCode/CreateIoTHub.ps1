@@ -49,6 +49,7 @@ catch {
 # Get data
 $appConfigConnectionString = $data.appConfigConnectionString
 $setAppConfigEndpoint = $data.setAppConfigEndpoint
+$batchedTelemetryProperty = '$twin.properties.desired.batchedTelemetry';
 $data.token
 
 # Define template for creating IoT Hub
@@ -74,7 +75,7 @@ $iotHubTemplate = @"
                 },
                 {
                     "key": "batchedTelemetry",
-                    "value": "$$twin.properties.desired.batchedTelemetry",
+                    "value": "$($batchedTelemetryProperty)",
                     "endpointNames": [
                         "event-hub-telemetry"
                     ]
