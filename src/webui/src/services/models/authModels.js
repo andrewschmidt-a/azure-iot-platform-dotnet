@@ -38,7 +38,8 @@ export const permissions = {
   
   enableAlerting: "EnableAlerting",
   disableAlerting: "DisableAlerting",
-  sendC2DMessage: "SendC2DMessages"
+  sendC2DMessage: "SendC2DMessages",
+  tagPackage: "TagPackages"
 };
 
 export const toUserModel = (user = {}) => camelCaseReshape(user, {
