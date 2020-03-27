@@ -97,6 +97,7 @@ namespace Mmm.Iot.IoTHubManager.WebService.Controllers
         {
             await this.deviceService.SendCloudToDeviceMessage(id, message);
         }
+
         [HttpGet("files/{id}")]
         [Authorize("ReadAll")]
         public async Task<List<string>> GetDeviceFilesAsync(string id)
