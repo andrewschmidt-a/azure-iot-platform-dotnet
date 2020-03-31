@@ -19,5 +19,9 @@ control your devices.
 See [here](./docs/DEVELOPMENT.md) for detailed instructions on getting setup for development.
 
 # License
-Copyright (c) Microsoft Corporation. All rights reserved.
+Copyright (c) 3M. All rights reserved.
 Licensed under the [MIT](LICENSE) License.
+
+# Attribution
+With much gratitude we worked off of the solid base that the IoT Solutions teams at Microsoft created!
+https://github.com/Azure/azure-iot-pcs-remote-monitoring-dotnet
