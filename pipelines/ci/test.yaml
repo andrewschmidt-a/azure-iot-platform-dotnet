@@ -479,7 +479,7 @@ stages:
     displayName: Cleanup
     dependsOn:
       - functionalTest
-    condition: always()
+    condition: and(succeededOrFailed(), eq(variables['runCleanupStage'], 'true'))
     jobs:
       - job: getPipelineVariables
         displayName: Get pipeline variables
