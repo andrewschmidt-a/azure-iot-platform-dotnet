@@ -12,7 +12,7 @@ pool:
 variables:
   masterBranch: refs/heads/master/
   sourceBranch: $[coalesce(variables.resources.pipeline.test.sourceBranch, variables.Build.SourceBranch)]
-  imageTag: $[coalesce('latest')]
+  imageTag: 'latest'
 stages:
   - stage: printPipelineResourceVariables
     displayName: Print pipeline resource variables
