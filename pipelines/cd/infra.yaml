@@ -20,4 +20,4 @@ stages:
           applicationShortCode: iotd
           environmentCategory: test
           platformOperationServiceConnection: $(platformOperationServiceConnection)
-          k8sVersion: 1.16.4
+          k8sVersion: 1.16.7
