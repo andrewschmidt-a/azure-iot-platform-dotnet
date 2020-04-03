@@ -1,18 +1,18 @@
 trigger: none
 pr: none
-resources:
-  pipelines:
-    - pipeline: test
-      source: azure-iot-services-dotnet.ci.test
-      trigger:
-        branches:
-          - master
+# resources:
+#   pipelines:
+#     - pipeline: test
+#       source: azure-iot-services-dotnet.ci.test
+#       trigger:
+#         branches:
+#           - master
 pool:
   vmImage: ubuntu-latest
 variables:
   masterBranch: refs/heads/master/
   sourceBranch: $[coalesce(variables.resources.pipeline.test.sourceBranch, variables.Build.SourceBranch)]
-  imageTag: $[coalesce(variables.resources.pipeline.test.runID, 'latest')]
+  imageTag: $[coalesce('latest')]
 stages:
   - stage: printPipelineResourceVariables
     displayName: Print pipeline resource variables
